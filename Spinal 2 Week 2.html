@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spinal Anatomy II - Week 2 Complete Master Quiz</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-hover: #002244;
+            --bg-light: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --border-color: #cdd6e0;
+            --correct-bg: #e8f8f5;
+            --correct-border: #2ecc71;
+            --correct-text: #1e8449;
+            --incorrect-bg: #fadbd8;
+            --incorrect-border: #e74c3c;
+            --incorrect-text: #78281f;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .sticky-header h1 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .score-tracker {
+            font-size: 0.95rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .quiz-body {
+            padding: 15px;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            font-size: 0.95rem;
+            touch-action: manipulation;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .option-item strong {
+            margin-right: 8px;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: var(--correct-text) !important;
+            font-weight: 600;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: var(--incorrect-text) !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .feedback-box {
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            color: var(--correct-text);
+        }
+
+        .feedback-box.incorrect {
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            color: var(--incorrect-text);
+        }
+
+        .summary-card {
+            background: var(--primary);
+            color: white;
+            padding: 22px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            color: var(--primary);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 12px;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="sticky-header">
+        <h1>Spinal Week 2 Master Quiz</h1>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 25 (0%)</div>
+    </div>
+
+    <div class="quiz-body" id="quiz-body"></div>
+
+    <div class="quiz-body">
+        <div class="summary-card" id="final-summary" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <p id="final-score-text" style="font-size: 1.15rem;"></p>
+            <button class="btn" id="reset-btn">Reset & Retake Quiz</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "1. What visual orientation analogy was used in lecture for the Splenius capitis and Splenius cervicis muscles?",
+            options: [
+                "They extend out and up like Batman wings",
+                "They run parallel like train tracks",
+                "They wrap horizontally like a kidney belt",
+                "They form an inverted chevron pointing toward C2"
+            ],
+            correct: 0,
+            explanation: "Dr. Phillip described Splenius capitis and cervicis as going 'out and up like Batman wings' in the upper cervical back."
+        },
+        {
+            question: "2. What are the origin attachment sites for the Splenius Capitis muscle?",
+            options: [
+                "Ligamentum nuchae and spinous processes of C7 to T4",
+                "Spinous processes of T3 to T6",
+                "Transverse processes of C1 to C4",
+                "Iliac crest and medial sacral crest"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis originates from the lower nuchal ligament and spinous processes of C7 through T4."
+        },
+        {
+            question: "3. What are the insertion attachment sites for Splenius Capitis?",
+            options: [
+                "Mastoid process of temporal bone and superior nuchal line",
+                "Transverse processes of C1 to C4",
+                "Spinous processes of C2 to C5",
+                "Ribs 3 through 6"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis reaches the skull, inserting onto the mastoid process and superior nuchal line."
+        },
+        {
+            question: "4. How do the insertion sites differentiate Splenius Capitis from Splenius Cervicis?",
+            options: [
+                "Splenius Capitis attaches to the skull (mastoid/nuchal line); Splenius Cervicis attaches to cervical TPs (C1-C4)",
+                "Splenius Capitis attaches to ribs; Splenius Cervicis attaches to the scapula",
+                "Splenius Capitis inserts on SPs; Splenius Cervicis inserts on the clavicle",
+                "There is no structural difference; they share identical insertion sites"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis reaches the skull ('capitis'), while Splenius Cervicis stops at cervical transverse processes C1–C4 ('cervicis')."
+        },
+        {
+            question: "5. What nerve supply innervates both Splenius Capitis and Splenius Cervicis?",
+            options: [
+                "Dorsal rami of cervical spinal nerves",
+                "Ventral rami of thoracic nerves (intercostals)",
+                "Dorsal scapular nerve (C5)",
+                "Spinal accessory nerve (CN XI)"
+            ],
+            correct: 0,
+            explanation: "Both splenius muscles are innervated by the dorsal rami of cervical spinal nerves."
+        },
+        {
+            question: "6. Which nerve rami innervate Serratus Posterior Superior and Serratus Posterior Inferior?",
+            options: [
+                "Ventral rami of thoracic spinal nerves (intercostal nerves)",
+                "Dorsal rami of thoracic spinal nerves",
+                "Dorsal scapular nerve (C5)",
+                "Cervical plexus dorsal rami"
+            ],
+            correct: 0,
+            explanation: "Unlike the Erector Spinae group (dorsal rami), Serratus Posterior muscles are innervated by the VENTRAL rami of thoracic intercostal nerves."
+        },
+        {
+            question: "7. What functional role do the Serratus Posterior muscles perform relative to the deep Erector Spinae group?",
+            options: [
+                "They act as protective belts keeping the Erector Spinae muscles from popping outward",
+                "They act as primary flexors of the lumbar spine",
+                "They rotate the glenoid cavity superiorly",
+                "They attach directly to the hyoid bone to aid swallowing"
+            ],
+            correct: 0,
+            explanation: "Lecture notes compare Serratus Posterior Superior and Inferior to 'belts' holding down the 'I love spaghetti' (Erector Spinae) muscles."
+        },
+        {
+            question: "8. What is the respiratory action of Serratus Posterior Superior during forced breathing?",
+            options: [
+                "Elevates upper ribs (ribs 2–5) during forced inspiration",
+                "Depresses lower ribs during forced expiration",
+                "Compresses the abdominal cavity",
+                "Stabilizes the central tendon of the diaphragm"
+            ],
+            correct: 0,
+            explanation: "Serratus Posterior Superior elevates ribs 2–5 to expand thoracic volume during forced inspiration."
+        },
+        {
+            question: "9. What is the respiratory action of Serratus Posterior Inferior during forced breathing?",
+            options: [
+                "Stabilizes lower ribs (ribs 9–12) to prevent them from diving in too quickly during forced expiration",
+                "Elevates upper ribs during forced inspiration",
+                "Protracted costal cartilage elevation",
+                "Assists in vocal cord tension"
+            ],
+            correct: 0,
+            explanation: "Serratus Posterior Inferior pulls downward on ribs 9–12, acting as a belt to stabilize them during forced expiration."
+        },
+        {
+            question: "10. What mnemonic represents the lateral-to-medial column arrangement of the Erector Spinae group?",
+            options: [
+                "I Love Spaghetti (Iliocostalis, Longissimus, Spinalis)",
+                "Some Lovers Try Positions (Scaphoid, Lunate, Triquetrum, Pisiform)",
+                "Every Student Studies Hard (Erector, Semispinalis, Spinalis, Multifidus)",
+                "Cervical Thoracic Lumbar (Capitis, Transverse, Longissimus)"
+            ],
+            correct: 0,
+            explanation: "The standard lateral-to-medial mnemonic taught in lecture is 'I Love Spaghetti' (Iliocostalis = lateral, Longissimus = intermediate, Spinalis = medial)."
+        },
+        {
+            question: "11. What nerve rami supply motor innervation to all three columns of the Erector Spinae muscle group?",
+            options: [
+                "Dorsal rami of spinal nerves",
+                "Ventral rami of intercostal nerves",
+                "Sympathetic trunk ganglion branches",
+                "Phrenic nerve roots (C3-C5)"
+            ],
+            correct: 0,
+            explanation: "All Erector Spinae columns (Iliocostalis, Longissimus, Spinalis) are innervated by the dorsal rami of spinal nerves."
+        },
+        {
+            question: "12. Why are Erector Spinae muscles far more effective at spinal EXTENSION than LATERAL FLEXION?",
+            options: [
+                "Their fiber orientation lies far more posterior to the axis of motion than lateral",
+                "They are innervated by ventral rami instead of dorsal rami",
+                "They lack attachments to ribs and transverse processes",
+                "They only contract during closed kinetic chain movements"
+            ],
+            correct: 0,
+            explanation: "Because their mass and leverage vectors sit posterior to the spinal axis of rotation, extension is biomechanically much stronger than lateral flexion."
+        },
+        {
+            question: "13. What are the 3 regional divisions of the Iliocostalis column?",
+            options: [
+                "Iliocostalis Lumborum, Thoracis, and Cervicis",
+                "Iliocostalis Capitis, Thoracis, and Lumborum",
+                "Iliocostalis Sacralis, Lumbalis, and Cervicis",
+                "Iliocostalis Superior, Middle, and Inferior"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis contains Lumborum, Thoracis, and Cervicis (it lacks a Capitis division)."
+        },
+        {
+            question: "14. Which regional division is completely ABSENT in the Iliocostalis column?",
+            options: [
+                "Iliocostalis Capitis",
+                "Iliocostalis Cervicis",
+                "Iliocostalis Thoracis",
+                "Iliocostalis Lumborum"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis does not extend to the skull; it lacks an 'Iliocostalis Capitis'."
+        },
+        {
+            question: "15. What is the insertion site of Iliocostalis Lumborum?",
+            options: [
+                "Inferior borders of the lower 6 ribs",
+                "Transverse processes of C1-C4",
+                "Mastoid process of temporal bone",
+                "Spinous processes of T1-T6"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis Lumborum originates from the iliac/sacral crests and L-spine SPs, inserting onto the lower 6 ribs."
+        },
+        {
+            question: "16. What is the origin and insertion of Iliocostalis Thoracis?",
+            options: [
+                "Origin: Lower 6 ribs | Insertion: Upper 6 ribs",
+                "Origin: Iliac crest | Insertion: Lower 6 ribs",
+                "Origin: Ribs 3-6 | Insertion: TPs C4-C6",
+                "Origin: SPs T11-L2 | Insertion: SPs T4-T8"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis Thoracis runs rib-to-rib: originating on the lower 6 ribs and inserting on the upper 6 ribs."
+        },
+        {
+            question: "17. What are the 3 regional divisions of the Longissimus column?",
+            options: [
+                "Longissimus Thoracis, Cervicis, and Capitis",
+                "Longissimus Lumborum, Thoracis, and Cervicis",
+                "Longissimus Sacralis, Thoracis, and Capitis",
+                "Longissimus Superior, Media, and Inferior"
+            ],
+            correct: 0,
+            explanation: "Longissimus contains Thoracis, Cervicis, and Capitis (it lacks a Lumborum division)."
+        },
+        {
+            question: "18. Which regional division is completely ABSENT in the Longissimus column?",
+            options: [
+                "Longissimus Lumborum",
+                "Longissimus Capitis",
+                "Longissimus Cervicis",
+                "Longissimus Thoracis"
+            ],
+            correct: 0,
+            explanation: "Longissimus does not have a 'Longissimus Lumborum' (emphasized in lecture as a classic midterm differentiator)."
+        },
+        {
+            question: "19. What is the insertion site of Longissimus Capitis?",
+            options: [
+                "Mastoid process of the temporal bone",
+                "Transverse processes of C2-C6",
+                "Lower 6 ribs",
+                "Spinous processes of C2-C4"
+            ],
+            correct: 0,
+            explanation: "Longissimus Capitis extends up to insert onto the mastoid process of the temporal bone."
+        },
+        {
+            question: "20. What fan-like structural characteristic distinguishes Longissimus Capitis from other erector muscles?",
+            options: [
+                "Its fibers radiate outward in a fan-like orientation toward the mastoid process rather than running straight vertically",
+                "It attaches exclusively to costal cartilages",
+                "It is innervated by cranial nerve XI",
+                "It lacks muscle spindles"
+            ],
+            correct: 0,
+            explanation: "Longissimus Capitis has a broader, fan-like fiber distribution giving it enhanced lateral stabilization mechanics for the head."
+        },
+        {
+            question: "21. What are the 2 main regional divisions of the Spinalis column?",
+            options: [
+                "Spinalis Thoracis and Spinalis Cervicis",
+                "Spinalis Capitis and Spinalis Lumborum",
+                "Spinalis Sacralis and Spinalis Thoracis",
+                "Spinalis Dorsalis and Spinalis Lumbalis"
+            ],
+            correct: 0,
+            explanation: "The Spinalis column is divided into Spinalis Thoracis and Spinalis Cervicis."
+        },
+        {
+            question: "22. Which division of the Spinalis column is frequently ABSENT in cadaveric dissections?",
+            options: [
+                "Spinalis Cervicis",
+                "Spinalis Thoracis",
+                "Iliocostalis Thoracis",
+                "Longissimus Capitis"
+            ],
+            correct: 0,
+            explanation: "Dr. Phillip highlighted that Spinalis Cervicis is frequently absent in human cadavers."
+        },
+        {
+            question: "23. What upper extremity muscle was compared in lecture to Spinalis Cervicis regarding anatomical variability?",
+            options: [
+                "Palmaris brevis (or Palmaris longus)",
+                "Biceps brachii short head",
+                "Anconeus",
+                "Brachioradialis"
+            ],
+            correct: 0,
+            explanation: "Lecture notes compare the inconsistent presence of Spinalis Cervicis in the back to Palmaris brevis in the hand."
+        },
+        {
+            question: "24. Why does the Spinalis group act almost exclusively as postural extensors rather than lateral flexors?",
+            options: [
+                "They attach directly adjacent to the spinous processes along the midline, lacking a lateral lever arm",
+                "They are innervated by anterior thoracic nerves",
+                "They contain no type I slow-twitch muscle fibers",
+                "Their origins cross the sagittal plane diagonally"
+            ],
+            correct: 0,
+            explanation: "Because Spinalis muscles hug the midline spinous processes, they lack the lateral distance needed to create leverage for lateral flexion."
+        },
+        {
+            question: "25. Why have National Board examiners shifted from strict 'Origin/Insertion' terminology to 'Attachment Sites'?",
+            options: [
+                "Functional reversal occurs in closed kinetic chain movements where origins move toward insertions",
+                "Muscles no longer possess tendon insertions",
+                "Innervations vary between cadavers",
+                "Board questions are moving away from biomechanics"
+            ],
+            correct: 0,
+            explanation: "In closed kinetic chain mechanics, traditional origins and insertions reverse, making 'attachment sites' a more accurate term."
+        }
+    ];
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let answeredCount = 0;
+    let correctCount = 0;
+
+    function renderQuiz() {
+        const quizContainer = document.getElementById('quiz-body');
+        quizContainer.innerHTML = '';
+
+        questions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${qIndex}`;
+
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = q.question;
+            card.appendChild(qText);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
+
+            q.options.forEach((opt, optIndex) => {
+                const optItem = document.createElement('li');
+                optItem.className = 'option-item';
+                optItem.id = `opt-${qIndex}-${optIndex}`;
+                
+                const label = document.createElement('strong');
+                label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
+                
+                const text = document.createTextNode(` ${opt}`);
+                
+                optItem.appendChild(label);
+                optItem.appendChild(text);
+
+                optItem.addEventListener('click', function() {
+                    selectAnswer(qIndex, optIndex);
+                });
+
+                optionsList.appendChild(optItem);
+            });
+
+            card.appendChild(optionsList);
+
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-box';
+            feedback.id = `feedback-${qIndex}`;
+            card.appendChild(feedback);
+
+            quizContainer.appendChild(card);
+        });
+    }
+
+    function selectAnswer(qIndex, optIndex) {
+        if (userAnswers[qIndex] !== null) return;
+
+        const q = questions[qIndex];
+        userAnswers[qIndex] = optIndex;
+        answeredCount++;
+
+        const isCorrect = (optIndex === q.correct);
+        if (isCorrect) correctCount++;
+
+        for (let i = 0; i < q.options.length; i++) {
+            const optEl = document.getElementById(`opt-${qIndex}-${i}`);
+            optEl.classList.add('disabled');
+
+            if (i === q.correct) {
+                optEl.classList.add('correct');
+            } else if (i === optIndex && !isCorrect) {
+                optEl.classList.add('incorrect');
+            }
+        }
+
+        const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+        feedbackEl.classList.add('show');
+        if (isCorrect) {
+            feedbackEl.classList.add('correct');
+            feedbackEl.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+        } else {
+            feedbackEl.classList.add('incorrect');
+            feedbackEl.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
+        }
+
+        updateHeaderScore();
+
+        if (answeredCount === questions.length) {
+            showFinalSummary();
+        }
+    }
+
+    function updateHeaderScore() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        document.getElementById('score-tracker').innerText = `Score: ${correctCount} / ${questions.length} (${percent}%)`;
+    }
+
+    function showFinalSummary() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        const summaryBox = document.getElementById('final-summary');
+        summaryBox.style.display = 'block';
+        document.getElementById('final-score-text').innerText = `Final Score: ${correctCount} out of ${questions.length} (${percent}%)`;
+        summaryBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        userAnswers = new Array(questions.length).fill(null);
+        answeredCount = 0;
+        correctCount = 0;
+        document.getElementById('final-summary').style.display = 'none';
+        updateHeaderScore();
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderQuiz();
+        document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+    });
+</script>
+</body>
+</html>
