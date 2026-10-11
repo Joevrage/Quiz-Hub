@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Microbiology Week 1 Board Review Quiz</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f9;
+            --card-bg: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --primary-accent: #2563eb;
+            --correct-color: #10b981;
+            --correct-bg: #ecfdf5;
+            --incorrect-color: #ef4444;
+            --incorrect-bg: #fef2f2;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        /* Sticky Real-Time Score Header */
+        .header-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
+            padding: 12px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+
+        .score-box {
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: var(--bg-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+
+        /* Container & Cards */
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-accent);
+            background-color: #f0f7ff;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Feedback States */
+        .option-btn.correct-choice {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-color) !important;
+            color: #065f46 !important;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect-choice {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-color) !important;
+            color: #991b1b !important;
+            font-weight: 600;
+        }
+
+        .option-btn.dimmed {
+            opacity: 0.5;
+        }
+
+        .explanation-box {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box.correct {
+            background-color: var(--correct-bg);
+            border-left: 4px solid var(--correct-color);
+            color: #064e3b;
+        }
+
+        .explanation-box.incorrect {
+            background-color: var(--incorrect-bg);
+            border-left: 4px solid var(--incorrect-color);
+            color: #7f1d1d;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .summary-card.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .reset-btn {
+            background-color: var(--primary-accent);
+            color: #ffffff;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-sticky">
+        <div class="header-container">
+            <div class="header-title">Microbiology: Week 1 Review</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 25 (0%)</div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="quizContainer"></div>
+
+    <div class="quiz-container">
+        <div class="summary-card" id="summaryCard">
+            <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
+            <div class="summary-score" id="finalScore">0 / 25</div>
+            <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "Which category of bacteria contains all organisms of medical importance?",
+                options: ["Archaea", "Eubacteria", "Eukaryotes", "Prions"],
+                correct: 1,
+                explanation: "Eubacteria comprises all bacteria of medical importance to humans and animals. Archaea consists of evolutionarily distinct, non-pathogenic organisms often found in extreme environments."
+            },
+            {
+                question: "What is the standard size range for most bacteria?",
+                options: ["10 to 250 nm", "0.2 to 5 μm", "7 to 10 μm", "10 to 100 μm"],
+                correct: 1,
+                explanation: "Bacteria typically range in size from 0.2 to 5 micrometers (μm). Viruses range between 10 to 250 nanometers (nm), and human red blood cells are around 7 μm."
+            },
+            {
+                question: "Which historical scientist provided early experimental evidence disproving spontaneous generation by demonstrating that maggots do not spontaneously arise from rotting meat?",
+                options: ["Louis Pasteur", "Anton von Leeuwenhoek", "Francesco Redi", "Robert Koch"],
+                correct: 2,
+                explanation: "Francesco Redi performed the 1668 jar experiment with covered and uncovered meat, verifying that maggots do not spontaneously generate from non-living meat."
+            },
+            {
+                question: "Anton von Leeuwenhoek is referred to as the 'Father of Microbiology' primarily due to which contribution?",
+                options: ["Developing the first rabies vaccine", "Manufacturing single-lens microscopes and observing live bacteria", "Proving the germ theory of disease using postulates", "Inventing heat pasteurization"],
+                correct: 1,
+                explanation: "Leeuwenhoek utilized exceptional lens-grinding skills to craft the first single-lens microscopes, becoming the first individual to observe live bacteria and protozoa."
+            },
+            {
+                question: "Which structural feature is present in eukaryotic plasma membranes but is absent in most prokaryotic plasma membranes?",
+                options: ["Phospholipid bilayer", "Integral membrane proteins", "Sterols (e.g., cholesterol)", "Selective permeability"],
+                correct: 2,
+                explanation: "Most prokaryotic cell membranes lack sterols (such as cholesterol), which are present in eukaryotic cell membranes to maintain structural integrity."
+            },
+            {
+                question: "What is the size composition of prokaryotic cytoplasmic ribosomes?",
+                options: ["80S total (60S and 40S subunits)", "70S total (50S and 30S subunits)", "60S total (40S and 20S subunits)", "90S total"],
+                correct: 1,
+                explanation: "Prokaryotes possess 70S ribosomes (comprising 50S and 30S subunits), whereas cytoplasmic eukaryotic ribosomes are 80S (60S and 40S subunits)."
+            },
+            {
+                question: "How long ago do bacteria-like prokaryotic cells first appear in the fossil record?",
+                options: ["1.8 billion years ago", "3.5 billion years ago", "4.5 billion years ago", "500 million years ago"],
+                correct: 1,
+                explanation: "Fossil records in ancient rocks indicate that prokaryotic bacteria-like cells appeared at least 3.5 billion years ago. Eukaryotic cells appeared around 1.8 billion years ago."
+            },
+            {
+                question: "Which medical term is defined as the complete removal or destruction of ALL viable microorganisms, including bacterial endospores and viruses?",
+                options: ["Disinfection", "Sterilization", "Bacteriostasis", "Sanitization"],
+                correct: 1,
+                explanation: "Sterilization refers to the total destruction or removal of all forms of microbial life, including resistant bacterial endospores and viruses."
+            },
+            {
+                question: "What is the key differentiator between Pathogenicity and Virulence?",
+                options: ["Pathogenicity refers to the degree of damage, while virulence is the capability to cause disease", "Pathogenicity is the ability to cause disease, while virulence is the degree/severity of pathogenicity", "Pathogenicity applies only to viruses, while virulence applies only to bacteria", "Pathogenicity is non-quantitative, while virulence measures host immune response"],
+                correct: 1,
+                explanation: "Pathogenicity is the qualitative ability of an organism to cause harm/disease in a host. Virulence is the quantitative degree or intensity of pathogenicity."
+            },
+            {
+                question: "Which of the following describes an opportunistic pathogen?",
+                options: ["Causes severe disease in healthy individuals with intact immune systems", "Causes infection when host defenses are compromised or when established outside its normal habitat", "Lacks all virulence factors and cannot cause harm", "Spreads exclusively via airborne transmission"],
+                correct: 1,
+                explanation: "Opportunistic pathogens cause disease when the host's immune system is weakened or when the microbe moves into an atypical anatomical body site."
+            },
+            {
+                question: "What is the relationship between the size of inoculum (infectious dose) and an organism's virulence?",
+                options: ["A higher infectious dose indicates higher virulence", "A lower infectious dose indicates higher virulence", "Infectious dose is unrelated to virulence", "Infectious dose only applies to eukaryotic parasites"],
+                correct: 1,
+                explanation: "The lower the infectious dose (minimum number of microbes required to initiate infection), the higher the virulence of the pathogen."
+            },
+            {
+                question: "Which structure serves as the primary appendage for bacterial motility?",
+                options: ["Pili", "Fimbriae", "Flagella", "Glycocalyx"],
+                correct: 2,
+                explanation: "Flagella are the only motile appendages in bacteria. Fimbriae and pili function primarily in attachment, adherence, and conjugation."
+            },
+            {
+                question: "What protein subunit polymerizes to construct the helical filament of a bacterial flagellum?",
+                options: ["Pilina", "Tubulin", "Flagellin", "Actin"],
+                correct: 2,
+                explanation: "The rigid helical filament of the bacterial flagellum is composed of repeating protein subunits called flagellin."
+            },
+            {
+                question: "Which non-genetic regulatory mechanism involves an end-product binding to an allosteric site to instantly shut down the initial enzyme in a pathway?",
+                options: ["Operon repression", "Feedback inhibition", "Transcriptional induction", "Frameshift mutation"],
+                correct: 1,
+                explanation: "Feedback inhibition is a non-genetic control mechanism where the end product binds to an enzyme's allosteric site, providing immediate pathway control."
+            },
+            {
+                question: "In the LAC operon system, what substance acts as the genetic inducer to remove the repressor from the operator?",
+                options: ["Glucose", "Lactose", "Arginine", "Cyclic AMP"],
+                correct: 1,
+                explanation: "Lactose acts as the genetic inducer. When present, it binds to the repressor protein, causing it to fall off the operator and enabling transcription."
+            },
+            {
+                question: "Which enzyme category is continuously produced by the bacterial cell regardless of environmental substrate concentration?",
+                options: ["Inducible enzymes", "Repressible enzymes", "Constitutive enzymes", "Exoenzymes"],
+                correct: 2,
+                explanation: "Constitutive enzymes (such as glycolytic enzymes) are produced constantly by the cell and remain present at fixed levels."
+            },
+            {
+                question: "What type of horizontal gene transfer requires direct cell-to-cell contact between bacterial cells?",
+                options: ["Transformation", "Transduction", "Conjugation", "Transposition"],
+                correct: 2,
+                explanation: "Conjugation requires direct physical contact between donor and recipient cells (usually via a sex pilus) to transfer genetic material."
+            },
+            {
+                question: "The process where a bacterium takes up naked, free DNA fragments from its surrounding environment is called:",
+                options: ["Transduction", "Transformation", "Conjugation", "Recombination"],
+                correct: 1,
+                explanation: "Transformation involves the uptake of naked, soluble DNA directly from the external environment into a competent bacterial cell."
+            },
+            {
+                question: "Transduction is a mechanism of genetic transfer mediated by which vehicle?",
+                options: ["Sex pili", "Bacterial viruses (Bacteriophages)", "Plasmids", "Exotoxins"],
+                correct: 1,
+                explanation: "Transduction involves genetic transfer mediated by bacterial viruses (bacteriophages) carrying host DNA from one cell to another."
+            },
+            {
+                question: "Ultraviolet (UV) radiation induces genetic mutations in bacterial DNA primarily by causing:",
+                options: ["Single and double-strand breaks via free radicals", "Cross-links between adjacent pyrimidines (thymine dimers)", "Removal of amino groups from purines", "Frameshift insertions"],
+                correct: 1,
+                explanation: "Ultraviolet radiation is a physical mutagen that causes cross-linking between adjacent pyrimidine bases (creating thymine dimers)."
+            },
+            {
+                question: "Ionizing radiation (e.g., X-rays, Gamma rays) damages bacterial genetic material by:",
+                options: ["Creating pyrimidine dimers", "Forming free radicals that break single or double DNA strands", "Inserting intercalating agents between base pairs", "Blocking RNA polymerase movement"],
+                correct: 1,
+                explanation: "Ionizing radiation forms high-energy free radicals that break sugar-phosphate backbones, resulting in single or double-stranded DNA breaks."
+            },
+            {
+                question: "Which bacterial exoenzyme functions as an invasive virulence factor by degrading the protective mucous layer of host mucosal membranes?",
+                options: ["Keratinase", "Mucinase", "Hyaluronidase", "Coagulase"],
+                correct: 1,
+                explanation: "Mucinase digests the protective coating on mucous membranes, allowing pathogens to penetrate epithelial linings."
+            },
+            {
+                question: "Which bacterial exoenzyme breaks down the structural protein component found in human skin, hair, and nails?",
+                options: ["Mucinase", "Keratinase", "Collagenase", "Streptokinase"],
+                correct: 1,
+                explanation: "Keratinase degrades keratin, the principal structural protein component of skin, hair, and nails, aiding invasion."
+            },
+            {
+                question: "Which mode of pathogen transmission is generally considered the most virulent due to rapid dispersion and inhalation risk?",
+                options: ["Direct contact", "Fecal-oral route", "Airborne transmission", "Vector-borne transmission"],
+                correct: 2,
+                explanation: "Airborne transmission allows respiratory pathogens to disperse widely over distances, making it one of the most virulent entry modes."
+            },
+            {
+                question: "In prokaryotic gene expression, transcription and translation occur simultaneously in which location?",
+                options: ["Inside the nucleus", "In the cytoplasm", "On the outer membrane", "Inside periplasmic space"],
+                correct: 1,
+                explanation: "Because prokaryotes lack a nuclear envelope separating genomic DNA from ribosomes, transcription and translation occur concurrently in the cytoplasm."
+            }
+        ];
+
+        let currentAnswers = new Array(questions.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <button class="option-btn" 
+                                id="btn-${index}-${optIdx}" 
+                                onclick="selectOption(${index}, ${optIdx})">
+                            ${String.fromCharCode(65 + optIdx)}. ${opt}
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-header">Question ${index + 1} of ${questions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options-list">${optionsHTML}</div>
+                    <div class="explanation-box" id="exp-${index}"></div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(qIdx, selectedOptIdx) {
+            if (currentAnswers[qIdx] !== null) return; // Prevent changing answer
+
+            currentAnswers[qIdx] = selectedOptIdx;
+            const q = questions[qIdx];
+            const isCorrect = selectedOptIdx === q.correct;
+
+            // Highlight buttons
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
+                btn.disabled = true;
+
+                if (optIdx === q.correct) {
+                    btn.classList.add('correct-choice');
+                } else if (optIdx === selectedOptIdx) {
+                    btn.classList.add('incorrect-choice');
+                } else {
+                    btn.classList.add('dimmed');
+                }
+            });
+
+            // Display Explanation
+            const expBox = document.getElementById(`exp-${qIdx}`);
+            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
+            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
+
+            updateScore();
+        }
+
+        function updateScore() {
+            const answeredCount = currentAnswers.filter(a => a !== null).length;
+            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
+                return ans === questions[idx].correct ? acc + 1 : acc;
+            }, 0);
+
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            
+            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${questions.length} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${(answeredCount / questions.length) * 100}%`;
+
+            if (answeredCount === questions.length) {
+                showSummary(correctCount, percentage);
+            }
+        }
+
+        function showSummary(correctCount, percentage) {
+            const summaryCard = document.getElementById('summaryCard');
+            const finalScore = document.getElementById('finalScore');
+            const feedback = document.getElementById('summaryFeedback');
+
+            finalScore.innerText = `${correctCount} / ${questions.length} (${percentage}%)`;
+
+            if (percentage >= 90) {
+                feedback.innerText = "Excellent mastery of Week 1 Microbiology concepts!";
+            } else if (percentage >= 75) {
+                feedback.innerText = "Solid understanding! Review missed topics before board exams.";
+            } else {
+                feedback.innerText = "Good attempt. Re-read Lecture 1-3 slides and retake the quiz to reinforce weak areas.";
+            }
+
+            summaryCard.classList.add('visible');
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            currentAnswers = new Array(questions.length).fill(null);
+            document.getElementById('summaryCard').classList.remove('visible');
+            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${questions.length} (0%)`;
+            document.getElementById('progressBar').style.width = '0%';
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize on load
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
