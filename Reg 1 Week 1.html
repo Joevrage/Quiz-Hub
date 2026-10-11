@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reg 1 Week 1: Comprehensive Anatomy Practice Quiz</title>
+  <style>
+    :root {
+      --primary-color: #1a365d;
+      --secondary-color: #2b6cb0;
+      --accent-color: #3182ce;
+      --bg-color: #f7fafc;
+      --card-bg: #ffffff;
+      --text-main: #2d3748;
+      --text-muted: #718096;
+      --correct-bg: #c6f6d5;
+      --correct-border: #38a169;
+      --correct-text: #22543d;
+      --incorrect-bg: #fed7d7;
+      --incorrect-border: #e53e3e;
+      --incorrect-text: #742a2a;
+      --border-color: #e2e8f0;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+    }
+
+    .header-banner {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: #ffffff;
+      padding: 28px 20px 20px;
+      text-align: center;
+    }
+
+    .header-banner h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .header-banner p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .sticky-score-bar {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: var(--card-bg);
+      border-bottom: 2px solid var(--border-color);
+      padding: 12px 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .score-text {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary-color);
+    }
+
+    .progress-bar-container {
+      width: 45%;
+      background-color: var(--border-color);
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .quiz-container {
+      max-width: 850px;
+      margin: 20px auto 40px;
+      padding: 0 16px;
+    }
+
+    .question-card {
+      background-color: var(--card-bg);
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .question-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--accent-color);
+      margin-bottom: 6px;
+      letter-spacing: 0.05em;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 18px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 14px 18px;
+      background-color: #ffffff;
+      border: 1.5px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 0.98rem;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.15s ease-in-out;
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background-color: #ebf8ff;
+      border-color: var(--accent-color);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+    }
+
+    .explanation-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      display: none;
+    }
+
+    .explanation-box.correct {
+      display: block;
+      background-color: var(--correct-bg);
+      border-left: 5px solid var(--correct-border);
+      color: var(--correct-text);
+    }
+
+    .explanation-box.incorrect {
+      display: block;
+      background-color: var(--incorrect-bg);
+      border-left: 5px solid var(--incorrect-border);
+      color: var(--incorrect-text);
+    }
+
+    .summary-card {
+      display: none;
+      background-color: var(--card-bg);
+      border-radius: 12px;
+      border: 2px solid var(--accent-color);
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-top: 30px;
+    }
+
+    .summary-card h2 {
+      color: var(--primary-color);
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+
+    .final-score-badge {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--secondary-color);
+      margin: 16px 0;
+    }
+
+    .summary-message {
+      font-size: 1.05rem;
+      color: var(--text-main);
+      margin-bottom: 24px;
+    }
+
+    .reset-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      border: none;
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background-color: var(--secondary-color);
+    }
+
+    @media (max-width: 600px) {
+      .header-banner h1 {
+        font-size: 1.4rem;
+      }
+
+      .sticky-score-bar {
+        padding: 10px 14px;
+      }
+
+      .score-text {
+        font-size: 0.88rem;
+      }
+
+      .progress-bar-container {
+        width: 35%;
+      }
+
+      .question-card {
+        padding: 18px;
+      }
+
+      .option-btn {
+        padding: 12px 14px;
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header-banner">
+  <h1>Reg 1 Week 1 Board Prep Quiz</h1>
+  <p>Pectoral, Scapular, and Shoulder Regions (25 High-Yield Questions)</p>
+</div>
+
+<div class="sticky-score-bar">
+  <span id="score-text" class="score-text">Score: 0 / 25 (0%)</span>
+  <div class="progress-bar-container">
+    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+  </div>
+  <span id="progress-text" class="score-text">0 / 25</span>
+</div>
+
+<div class="quiz-container">
+  <div id="quiz-questions"></div>
+
+  <div id="summary-card" class="summary-card">
+    <h2>Quiz Complete!</h2>
+    <div id="final-score-badge" class="final-score-badge">0%</div>
+    <p id="summary-message" class="summary-message"></p>
+    <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "Which of the following muscles is categorized as a DEEP posterior axio-appendicular (extrinsic shoulder) muscle?",
+    options: [
+      "Trapezius",
+      "Latissimus dorsi",
+      "Levator scapulae",
+      "Teres major"
+    ],
+    correct: 2,
+    explanation: "Correct! The deep posterior axio-appendicular (extrinsic shoulder) muscles are the levator scapulae and rhomboids (minor and major)[cite: 4]. Trapezius and latissimus dorsi are superficial extrinsic muscles, while teres major is a intrinsic scapulohumeral muscle[cite: 4]."
+  },
+  {
+    question: "What is the full origin of the trapezius muscle according to standard lecture specifications?",
+    options: [
+      "Medial 1/3 of superior nuchal line, EOP, nuchal ligament, and SP C7-T12",
+      "Entire superior nuchal line, EOP, and SP C1-T12",
+      "Transverse processes of C1-C4 and spinous processes of C7-T5",
+      "Lateral 1/3 of clavicle, acromion, and spine of scapula"
+    ],
+    correct: 0,
+    explanation: "Correct! The trapezius originates from the medial 1/3 of the superior nuchal line, external occipital protuberance (EOP), nuchal ligament, and spinous processes of C7-T12[cite: 2, 4]."
+  },
+  {
+    question: "Which nerve motorically innervates the trapezius muscle?",
+    options: [
+      "Dorsal scapular nerve (C5)",
+      "Spinal accessory nerve (CN XI)",
+      "Thoracodorsal nerve (C6-C8)",
+      "Axillary nerve (C5-C6)"
+    ],
+    correct: 1,
+    explanation: "Correct! Motor innervation to the trapezius is provided by the Spinal Accessory Nerve (CN XI), with sensory branches arising from C3-C4[cite: 2, 4]."
+  },
+  {
+    question: "Superior (upward) rotation of the scapular glenoid cavity is achieved through the combined co-contraction of which muscle fibers?",
+    options: [
+      "Middle trapezius and levator scapulae",
+      "Descending (superior) and ascending (inferior) trapezius fibers",
+      "Rhomboid major and minor",
+      "Latissimus dorsi and teres major"
+    ],
+    correct: 1,
+    explanation: "Correct! The descending (superior/pulling up) and ascending (inferior/pulling down) fibers of the trapezius co-contract to rotate the scapula upward/superiorly[cite: 2, 3]."
+  },
+  {
+    question: "Where does the latissimus dorsi muscle insert on the humerus?",
+    options: [
+      "Greater tubercle (superior facet)",
+      "Lesser tubercle",
+      "Intertubercular groove (bicipital groove) floor / medial lip",
+      "Deltoid tuberosity"
+    ],
+    correct: 2,
+    explanation: "Correct! The latissimus dorsi inserts directly into the floor / medial lip of the intertubercular groove (bicipital groove) of the humerus[cite: 2, 4]."
+  },
+  {
+    question: "When the arms are FIXED (such as during climbing), what is the primary functional action of the latissimus dorsi?",
+    options: [
+      "Protracts the scapula",
+      "Raises the body/trunk toward the arms",
+      "Elevates the clavicle",
+      "Superiorly rotates the glenoid cavity"
+    ],
+    correct: 1,
+    explanation: "Correct! When the trunk is mobile and arms are fixed (e.g., during climbing or pull-ups), the latissimus dorsi raises the body/trunk upward[cite: 2, 3]."
+  },
+  {
+    question: "What is the origin and insertion of the levator scapulae muscle?",
+    options: [
+      "Origin: TPs C1-C4 | Insertion: Superior portion of medial border of scapula",
+      "Origin: SPs C7-T1 | Insertion: Spine of scapula",
+      "Origin: Costal junction rib 1 | Insertion: Clavicle",
+      "Origin: SPs T2-T5 | Insertion: Medial border of scapula"
+    ],
+    correct: 0,
+    explanation: "Correct! Levator scapulae originates from the transverse processes (TPs) of C1-C4 and inserts into the superior portion of the medial border of the scapula[cite: 2, 4]."
+  },
+  {
+    question: "Regarding muscle origins, how do you correctly distinguish rhomboid minor from rhomboid major?",
+    options: [
+      "Rhomboid minor is superficial to rhomboid major",
+      "Rhomboid minor originates superiorly (SP C7-T1), whereas major originates inferiorly (SP T2-T5)",
+      "Rhomboid minor is deep to rhomboid major",
+      "Rhomboid minor originates on TPs C1-C4, whereas major originates on SPs C7-T1"
+    ],
+    correct: 1,
+    explanation: "Correct! 'Minor over major' refers strictly to superior vs. inferior origin (minor is superior at C7-T1, major is inferior at T2-T5), NOT superficial vs. deep[cite: 2, 3]."
+  },
+  {
+    question: "Which single nerve innervates levator scapulae, rhomboid minor, AND rhomboid major?",
+    options: [
+      "Long thoracic nerve (C5-C7)",
+      "Thoracodorsal nerve (C6-C8)",
+      "Dorsal scapular nerve (C5)",
+      "Suprascapular nerve (C5-C6)"
+    ],
+    correct: 2,
+    explanation: "Correct! The dorsal scapular nerve (C5, may receive branches from C3-C4) innervates levator scapulae, rhomboid minor, and rhomboid major[cite: 2, 4]."
+  },
+  {
+    question: "What nerve innervates BOTH the deltoid muscle and the teres minor muscle?",
+    options: [
+      "Axillary nerve (C5-C6)",
+      "Suprascapular nerve (C5-C6)",
+      "Lower subscapular nerve (C6-C7)",
+      "Radial nerve (C5-T1)"
+    ],
+    correct: 0,
+    explanation: "Correct! The axillary nerve (C5-C6) innervates both the deltoid muscle and the teres minor muscle[cite: 2, 4]."
+  },
+  {
+    question: "Which part of the deltoid muscle is primarily responsible for arm FLEXION and MEDIAL ROTATION?",
+    options: [
+      "Anterior (clavicular) part",
+      "Middle (acromial) part",
+      "Posterior (spinal) part",
+      "All three parts act identically"
+    ],
+    correct: 0,
+    explanation: "Correct! The anterior (clavicular) part flexes and medially rotates the humerus; the middle part abducts; the posterior part extends and laterally rotates[cite: 2]."
+  },
+  {
+    question: "Where does the teres major muscle insert, and what nerve innervates it?",
+    options: [
+      "Intertubercular groove (medial lip) | Lower subscapular nerve (C6-C7)",
+      "Greater tubercle (middle facet) | Suprascapular nerve (C5-C6)",
+      "Lesser tubercle | Upper subscapular nerve (C5-C6)",
+      "Deltoid tuberosity | Axillary nerve (C5-C6)"
+    ],
+    correct: 0,
+    explanation: "Correct! Teres major inserts into the medial lip of the intertubercular groove of the humerus and is innervated by the lower subscapular nerve (C6-C7)[cite: 2, 4]."
+  },
+  {
+    question: "Which four muscles comprise the intrinsic rotator cuff (SITS) group?",
+    options: [
+      "Supraspinatus, Infraspinatus, Teres major, Subscapularis",
+      "Supraspinatus, Infraspinatus, Teres minor, Subscapularis",
+      "Serratus anterior, Infraspinatus, Teres minor, Subscapularis",
+      "Supraspinatus, Subclavius, Teres minor, Subscapularis"
+    ],
+    correct: 1,
+    explanation: "Correct! The rotator cuff consists of Supraspinatus, Infraspinatus, Teres minor, and Subscapularis (SITS)[cite: 2, 4]. Note: Teres MAJOR is NOT a rotator cuff muscle[cite: 3]."
+  },
+  {
+    question: "Which rotator cuff tendon is most commonly ruptured or subjected to degenerative tendonitis?",
+    options: [
+      "Subscapularis tendon",
+      "Supraspinatus tendon",
+      "Infraspinatus tendon",
+      "Teres minor tendon"
+    ],
+    correct: 1,
+    explanation: "Correct! The supraspinatus tendon is the most commonly ruptured rotator cuff tendon because it passes beneath the acromion and supports the weight of the upper limb[cite: 2, 3]."
+  },
+  {
+    question: "Match the correct humeral insertion facet for Supraspinatus, Infraspinatus, and Teres Minor:",
+    options: [
+      "Supraspinatus = Superior facet | Infraspinatus = Middle facet | Teres minor = Inferior facet (all on Greater Tubercle)",
+      "Supraspinatus = Lesser tubercle | Infraspinatus = Greater tubercle | Teres minor = Bicipital groove",
+      "Supraspinatus = Middle facet | Infraspinatus = Superior facet | Teres minor = Inferior facet",
+      "Supraspinatus = Inferior facet | Infraspinatus = Middle facet | Teres minor = Superior facet"
+    ],
+    correct: 0,
+    explanation: "Correct! All three insert on the greater tubercle: Supraspinatus (superior facet), Infraspinatus (middle facet), and Teres minor (inferior facet)[cite: 2, 4]. Subscapularis inserts on the lesser tubercle[cite: 2, 4]."
+  },
+  {
+    question: "Which two rotator cuff muscles share the primary functional action of LATERAL (external) ROTATION of the humerus?",
+    options: [
+      "Supraspinatus and Subscapularis",
+      "Infraspinatus and Teres minor",
+      "Subscapularis and Teres major",
+      "Supraspinatus and Infraspinatus"
+    ],
+    correct: 1,
+    explanation: "Correct! Infraspinatus and Teres minor both insert on the posterior aspect of the greater tubercle and function as lateral (external) rotators of the arm[cite: 2, 4]."
+  },
+  {
+    question: "What nerve(s) innervate the subscapularis muscle?",
+    options: [
+      "Suprascapular nerve (C5-C6) only",
+      "Upper and lower subscapular nerves (C5-C7)",
+      "Axillary nerve (C5-C6) only",
+      "Thoracodorsal nerve (C6-C8)"
+    ],
+    correct: 1,
+    explanation: "Correct! Subscapularis is innervated by BOTH the upper subscapular nerve and lower subscapular nerve (C5-C7)[cite: 2, 4]."
+  },
+  {
+    question: "What are the two distinct origin heads of the pectoralis major muscle?",
+    options: [
+      "Clavicular head (medial 1/2 clavicle) and Sternocostal head (sternum & costal cartilages 1-6)",
+      "Acromial head and Clavicular head",
+      "Costal head (ribs 3-5) and Scapular head",
+      "Superior head and Inferior head"
+    ],
+    correct: 0,
+    explanation: "Correct! Pectoralis major has a clavicular head (medial 1/2 of clavicle) and a sternocostal head (sternum and upper 6 costal cartilages)[cite: 2, 4]."
+  },
+  {
+    question: "Which rule accurately describes the nerve supply to Pectoralis Major vs. Pectoralis Minor?",
+    options: [
+      "Pectoralis major gets Lateral Pectoral Nerve only; Pectoralis minor gets Medial Pectoral Nerve only",
+      "Pectoralis major gets BOTH Lateral and Medial Pectoral Nerves; Pectoralis minor gets Medial Pectoral Nerve ONLY",
+      "Pectoralis minor gets BOTH nerves; Pectoralis major gets Lateral Pectoral Nerve only",
+      "Both muscles receive both lateral and medial pectoral nerves equally"
+    ],
+    correct: 1,
+    explanation: "Correct! Pectoralis major receives both lateral and medial pectoral nerves, whereas pectoralis minor receives ONLY the medial pectoral nerve[cite: 2]."
+  },
+  {
+    question: "What is the insertion and primary action of the pectoralis minor muscle?",
+    options: [
+      "Coracoid process of scapula | Stabilizes/depresses scapula",
+      "Lateral lip of bicipital groove | Adducts and medially rotates humerus",
+      "Clavicle | Elevates clavicle",
+      "Medial border of scapula | Protracts scapula"
+    ],
+    correct: 0,
+    explanation: "Correct! Pectoralis minor inserts into the coracoid process of the scapula and functions to stabilize and depress the scapula[cite: 2, 4]."
+  },
+  {
+    question: "What is the origin, insertion, and innervation of the subclavius muscle?",
+    options: [
+      "Origin: Rib 1 costal junction | Insertion: Inferior surface of clavicle | Nerve: Nerve to subclavius (C5-C6)",
+      "Origin: Clavicle | Insertion: Coracoid process | Nerve: Lateral pectoral nerve",
+      "Origin: Sternum | Insertion: Rib 1 | Nerve: Medial pectoral nerve",
+      "Origin: Ribs 3-5 | Insertion: Clavicle | Nerve: Subscapular nerve"
+    ],
+    correct: 0,
+    explanation: "Correct! Subclavius originates at the costal junction of rib 1, inserts on the inferior surface of the clavicle, and is innervated by the nerve to subclavius (C5-C6)[cite: 2, 4]."
+  },
+  {
+    question: "Which muscle originates on the external lateral surfaces of ribs 1-8 (or 9) and is nicknamed the 'boxer's muscle'?",
+    options: [
+      "Pectoralis major",
+      "Serratus anterior",
+      "Latissimus dorsi",
+      "Subclavius"
+    ],
+    correct: 1,
+    explanation: "Correct! Serratus anterior originates on ribs 1-8/9, inserts on the anterior medial border of the scapula, protracts the scapula, and is known as the boxer's muscle[cite: 2, 3, 4]."
+  },
+  {
+    question: "Damage to the Long Thoracic Nerve (C5-C7) paralyzes serratus anterior and results in which clinical sign?",
+    options: [
+      "Ape hand deformity",
+      "Winged scapula (scapular winging)",
+      "Wrist drop",
+      "Frozen shoulder"
+    ],
+    correct: 1,
+    explanation: "Correct! The long thoracic nerve innervates serratus anterior. Loss of function prevents the scapula from being held flat against the thoracic cage, causing a 'winged scapula'[cite: 2, 4]."
+  },
+  {
+    question: "From ANTERIOR to POSTERIOR, what are the three layers comprising the 'Subscapularis Sandwich'?",
+    options: [
+      "Serratus anterior (bread) -> Subscapularis (filling) -> Scapula (bread)",
+      "Pectoralis major -> Subscapularis -> Serratus anterior",
+      "Scapula -> Subscapularis -> Serratus anterior",
+      "Subscapularis -> Serratus anterior -> Scapula"
+    ],
+    correct: 0,
+    explanation: "Correct! From anterior to posterior, the layers are Serratus anterior, Subscapularis, and Scapula[cite: 2, 3]. Sandwiches are named for the filling in the middle (Subscapularis)[cite: 3]."
+  },
+  {
+    question: "Which mnemonic/rule correctly identifies the attachments along the intertubercular (bicipital) groove of the humerus?",
+    options: [
+      "'Lady between two majors': Pectoralis major (lateral lip), Latissimus dorsi (floor), Teres major (medial lip)",
+      "'Lady between two majors': Teres major (lateral lip), Latissimus dorsi (floor), Pectoralis major (medial lip)",
+      "'Three majors in a row': Pectoralis major, Teres major, Greater major",
+      "'SITS in a groove': Supraspinatus, Infraspinatus, Teres minor, Subscapularis"
+    ],
+    correct: 0,
+    explanation: "Correct! 'A lady between two majors' describes the bicipital groove attachments: Pectoralis major on the lateral lip, Latissimus dorsi ('lady') on the floor, and Teres major on the medial lip[cite: 2, 4]."
+  }
+];
+
+let answeredCount = 0;
+let correctCount = 0;
+
+function renderQuiz() {
+  const container = document.getElementById('quiz-questions');
+  container.innerHTML = '';
+
+  quizData.forEach((q, index) => {
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q-card-${index}`;
+
+    let optionsHTML = '';
+    q.options.forEach((opt, optIdx) => {
+      optionsHTML += `
+        <button class="option-btn" id="opt-${index}-${optIdx}" onclick="checkAnswer(${index}, ${optIdx})">
+          <span style="font-weight:700; margin-right:8px;">${String.fromCharCode(65 + optIdx)}.</span>
+          <span>${opt}</span>
+        </button>
+      `;
+    });
+
+    card.innerHTML = `
+      <div class="question-number">Question ${index + 1} of 25</div>
+      <div class="question-text">${q.question}</div>
+      <div class="options-grid">${optionsHTML}</div>
+      <div class="explanation-box" id="explanation-${index}"></div>
+    `;
+
+    container.appendChild(card);
+  });
+}
+
+function checkAnswer(qIdx, selectedOptIdx) {
+  const q = quizData[qIdx];
+  const explanationBox = document.getElementById(`explanation-${qIdx}`);
+  const selectedBtn = document.getElementById(`opt-${qIdx}-${selectedOptIdx}`);
+
+  // Disable options for this question once clicked
+  q.options.forEach((_, optIdx) => {
+    const btn = document.getElementById(`opt-${qIdx}-${optIdx}`);
+    btn.disabled = true;
+    if (optIdx === q.correct) {
+      btn.classList.add('correct');
+    }
+  });
+
+  if (selectedOptIdx === q.correct) {
+    correctCount++;
+    explanationBox.className = 'explanation-box correct';
+    explanationBox.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+  } else {
+    selectedBtn.classList.add('incorrect');
+    explanationBox.className = 'explanation-box incorrect';
+    explanationBox.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
+  }
+
+  answeredCount++;
+  updateTracker();
+
+  if (answeredCount === quizData.length) {
+    showSummary();
+  }
+}
+
+function updateTracker() {
+  const percentage = Math.round((correctCount / Math.max(1, answeredCount)) * 100);
+  document.getElementById('score-text').innerText = `Score: ${correctCount} / 25 (${percentage}%)`;
+  document.getElementById('progress-text').innerText = `${answeredCount} / 25`;
+  
+  const progressPercent = (answeredCount / quizData.length) * 100;
+  document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+}
+
+function showSummary() {
+  const summaryCard = document.getElementById('summary-card');
+  const finalScoreBadge = document.getElementById('final-score-badge');
+  const summaryMessage = document.getElementById('summary-message');
+
+  const percentage = Math.round((correctCount / quizData.length) * 100);
+  finalScoreBadge.innerText = `${percentage}% (${correctCount}/25)`;
+
+  if (percentage >= 90) {
+    summaryMessage.innerText = "Mastery Level Achieved! Excellent work. You have locked down the key attachment sites, innervation rules, and clinical differentiators for Reg 1 Week 1.";
+  } else if (percentage >= 75) {
+    summaryMessage.innerText = "Strong Performance! Review the explanations for any missed questions, specifically focusing on nerve branches and attachments.";
+  } else {
+    summaryMessage.innerText = "Good Practice Run! Go back over the lecture slides and review muscle origins, insertions, and innervation rules before retaking.";
+  }
+
+  summaryCard.style.display = 'block';
+  summaryCard.scrollIntoView({ behavior: 'smooth' });
+}
+
+function resetQuiz() {
+  answeredCount = 0;
+  correctCount = 0;
+  document.getElementById('summary-card').style.display = 'none';
+  updateTracker();
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Initialize quiz
+renderQuiz();
+</script>
+
+</body>
+</html>
