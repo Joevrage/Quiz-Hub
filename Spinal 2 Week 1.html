@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spinal Anatomy II - Week 1 Comprehensive Assessment</title>
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-hover: #002244;
+            --bg-light: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+            --border-color: #cdd6e0;
+            --correct-bg: #e8f8f5;
+            --correct-border: #2ecc71;
+            --correct-text: #1e8449;
+            --incorrect-bg: #fadbd8;
+            --incorrect-border: #e74c3c;
+            --incorrect-text: #78281f;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .sticky-header h1 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .score-tracker {
+            font-size: 0.95rem;
+            font-weight: bold;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .quiz-body {
+            padding: 15px;
+        }
+
+        .question-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .option-item {
+            background-color: #fff;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.15s ease, border-color 0.15s ease;
+            font-size: 0.95rem;
+            touch-action: manipulation;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .option-item strong {
+            margin-right: 8px;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: var(--correct-text) !important;
+            font-weight: 600;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: var(--incorrect-text) !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .feedback-box {
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 12px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.4;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            color: var(--correct-text);
+        }
+
+        .feedback-box.incorrect {
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            color: var(--incorrect-text);
+        }
+
+        .summary-card {
+            background: var(--primary);
+            color: white;
+            padding: 22px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            color: var(--primary);
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 12px;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="sticky-header">
+        <h1>Spinal Week 1 Assessment</h1>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 15 (0%)</div>
+    </div>
+
+    <div class="quiz-body" id="quiz-body"></div>
+
+    <div class="quiz-body">
+        <div class="summary-card" id="final-summary" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <p id="final-score-text" style="font-size: 1.15rem;"></p>
+            <button class="btn" id="reset-btn">Reset & Retake Quiz</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "1. In an open kinetic chain movement, how is a muscle's 'Origin' traditionally defined?",
+            options: [
+                "The distal or lateral attachment that moves during contraction",
+                "The proximal or medial attachment that stays stationary during contraction",
+                "The attachment that always crosses two or more joints",
+                "The insertion site that converts motor impulses into kinetic energy"
+            ],
+            correct: 1,
+            explanation: "Origin is defined in open kinetic chains as the proximal/medial attachment that remains fixed/stationary while the insertion moves."
+        },
+        {
+            question: "2. How do origin and insertion functionally behave during closed kinetic chain movements (e.g., push-ups vs. bicep curls)?",
+            options: [
+                "They remain identical regardless of movement style",
+                "Origin and insertion can functionally flip because the distal end becomes fixed while the proximal end moves",
+                "The origin undergoes complete sensory denervation",
+                "The insertion converts entirely into an elastic ligamentous anchor"
+            ],
+            correct: 1,
+            explanation: "Dr. Phillip highlighted that in closed kinetic chain movements (like push-ups), the distal attachment is fixed and the proximal attachment moves toward it, flipping the traditional origin/insertion roles."
+        },
+        {
+            question: "3. What nerve supplies primary motor innervation to the Trapezius muscle?",
+            options: [
+                "Dorsal Scapular Nerve (C5)",
+                "Thoracodorsal Nerve (C6–C8)",
+                "Spinal Accessory Nerve (Cranial Nerve XI)",
+                "Long Thoracic Nerve (C5–C7)"
+            ],
+            correct: 2,
+            explanation: "Trapezius is primarily innervated by Cranial Nerve XI (Spinal Accessory Nerve), with sensory contributions from C3–C4."
+        },
+        {
+            question: "4. Which fiber division of the Trapezius is responsible for scapular ELEVATION (e.g., shoulder shrugs)?",
+            options: [
+                "Superior (Upper) fibers",
+                "Middle fibers",
+                "Inferior (Lower) fibers",
+                "Deep subscapular fibers"
+            ],
+            correct: 0,
+            explanation: "Superior fibers pull upward on the scapular spine, acromion, and lateral clavicle to elevate the scapula."
+        },
+        {
+            question: "5. How is SUPERIOR (upward) ROTATION of the scapula defined biomechanically?",
+            options: [
+                "Displacement of the superior angle medially toward C2",
+                "Lateral and upward displacement of the inferior angle of the scapula",
+                "Anterior tilt of the coracoid process",
+                "Inferior migration of the glenoid fossa during adduction"
+            ],
+            correct: 1,
+            explanation: "Superior rotation is specifically defined by the lateral and upward movement of the inferior angle of the scapula."
+        },
+        {
+            question: "6. Which two fiber groups of the Trapezius act as a force couple to produce superior rotation of the scapula?",
+            options: [
+                "Superior fibers pulling upward and Inferior fibers pulling down on the medial spine",
+                "Middle fibers and Levator Scapulae",
+                "Inferior fibers and Rhomboid Major",
+                "Superior fibers and Latissimus Dorsi"
+            ],
+            correct: 0,
+            explanation: "Superior trapezius fibers pull up laterally while inferior fibers depress the medial end of the scapular spine, creating rotational torque."
+        },
+        {
+            question: "7. Which of the following is NOT an attachment site for the Latissimus Dorsi?",
+            options: [
+                "Spinous processes of T7–L5",
+                "Thoracolumbar fascia and Iliac crest",
+                "Intertubercular (bicipital) groove of the humerus",
+                "Mastoid process of the temporal bone"
+            ],
+            correct: 3,
+            explanation: "Latissimus Dorsi originates from SPs T7–L5, thoracolumbar fascia, and iliac crest, and inserts into the intertubercular groove of the humerus. It does not attach to the mastoid process."
+        },
+        {
+            question: "8. What nerve innervates the Latissimus Dorsi muscle?",
+            options: [
+                "Thoracodorsal nerve (C6–C8)",
+                "Dorsal scapular nerve (C5)",
+                "Spinal accessory nerve (CN XI)",
+                "Axillary nerve (C5–C6)"
+            ],
+            correct: 0,
+            explanation: "Latissimus Dorsi is innervated by the thoracodorsal nerve (C6–C8), which enters near the axilla and travels through the muscle."
+        },
+        {
+            question: "9. What are the 3 primary actions of Latissimus Dorsi on the humerus?",
+            options: [
+                "Flexion, Lateral rotation, and Abduction",
+                "Extension, Medial rotation, and Adduction",
+                "Elevation, Superior rotation, and Protraction",
+                "Inversion, Eversion, and Pronation"
+            ],
+            correct: 1,
+            explanation: "Latissimus Dorsi extends, medially rotates, and adducts the humerus (the classic swimmer's stroke / pull-up muscle movement)."
+        },
+        {
+            question: "10. What rule governs the spatial relationship of minor and major muscles in Layer 2 (and across human anatomy)?",
+            options: [
+                "Majors are always superior to Minors",
+                "Minors are always superior to Majors",
+                "Minors are situated anterior to Majors",
+                "Majors possess dual cranial nerve innervations"
+            ],
+            correct: 1,
+            explanation: "Dr. Phillip emphasized the anatomical rule: 'Minors above majors' (e.g., Rhomboid Minor superior to Rhomboid Major)."
+        },
+        {
+            question: "11. What single nerve root supplies primary motor innervation to ALL Layer 2 muscles (Levator Scapulae, Rhomboid Minor, Rhomboid Major)?",
+            options: [
+                "C3 via Cervical Plexus",
+                "C5 via Dorsal Scapular Nerve",
+                "C7 via Radial Nerve",
+                "C8 via Thoracodorsal Nerve"
+            ],
+            correct: 1,
+            explanation: "All Layer 2 muscles share primary innervation from nerve root C5 via the Dorsal Scapular Nerve."
+        },
+        {
+            question: "12. What secondary cervical spine movement occurs if the Levator Scapulae contracts while the scapula is held FIXED?",
+            options: [
+                "Contralateral rotation with hyperflexion",
+                "Ipsilateral lateral flexion with cervical extension",
+                "Pure cervical protraction",
+                "Axial decompression"
+            ],
+            correct: 1,
+            explanation: "When the scapula is stabilized, contracting the posterior-positioned Levator Scapulae pulls the cervical TPs backward and laterally, causing ipsilateral lateral flexion with extension."
+        },
+        {
+            question: "13. What is the insertion site of the Rhomboid Minor muscle?",
+            options: [
+                "Mastoid process",
+                "Medial border of the scapula at the level of the spine of the scapula",
+                "Lateral 1/3 of the clavicle",
+                "Transverse processes of C1–C4"
+            ],
+            correct: 1,
+            explanation: "Rhomboid Minor inserts specifically at the medial border of the scapula at the level of the scapular spine (originating at SP C7–T1)."
+        },
+        {
+            question: "14. Which 3 anatomical structures form the boundaries of the Triangle of Auscultation?",
+            options: [
+                "Trapezius (superior/medial), Latissimus Dorsi (inferior), and Scapula medial border (lateral)",
+                "Levator Scapulae, Rhomboid Minor, and Clavicle",
+                "Sternocleidomastoid, Trapezius, and Omohyoid",
+                "Erector Spinae, Multifidus, and Rib 12"
+            ],
+            correct: 0,
+            explanation: "The Triangle of Auscultation is bounded by Trapezius superiorly/medially, Latissimus Dorsi inferiorly, and the medial border of the scapula (or Rhomboid Major) laterally."
+        },
+        {
+            question: "15. Why is the Triangle of Auscultation clinically valuable during physical examination?",
+            options: [
+                "It contains the primary pulse point for the subclavian artery",
+                "It has thin muscular coverage over ribs 6–7, allowing clear stethoscope listening of lung sounds",
+                "It is the direct injection site for dorsal rami nerve blocks",
+                "It houses the spinal accessory lymph node chain"
+            ],
+            correct: 1,
+            explanation: "Due to thin muscular overlap over the 6th and 7th intercostal spaces, clinicians use this triangle for stethoscope auscultation of pulmonary breath sounds."
+        }
+    ];
+
+    let userAnswers = new Array(questions.length).fill(null);
+    let answeredCount = 0;
+    let correctCount = 0;
+
+    function renderQuiz() {
+        const quizContainer = document.getElementById('quiz-body');
+        quizContainer.innerHTML = '';
+
+        questions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${qIndex}`;
+
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = q.question;
+            card.appendChild(qText);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
+
+            q.options.forEach((opt, optIndex) => {
+                const optItem = document.createElement('li');
+                optItem.className = 'option-item';
+                optItem.id = `opt-${qIndex}-${optIndex}`;
+                
+                const label = document.createElement('strong');
+                label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
+                
+                const text = document.createTextNode(` ${opt}`);
+                
+                optItem.appendChild(label);
+                optItem.appendChild(text);
+
+                optItem.addEventListener('click', function() {
+                    selectAnswer(qIndex, optIndex);
+                });
+
+                optionsList.appendChild(optItem);
+            });
+
+            card.appendChild(optionsList);
+
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-box';
+            feedback.id = `feedback-${qIndex}`;
+            card.appendChild(feedback);
+
+            quizContainer.appendChild(card);
+        });
+    }
+
+    function selectAnswer(qIndex, optIndex) {
+        if (userAnswers[qIndex] !== null) return;
+
+        const q = questions[qIndex];
+        userAnswers[qIndex] = optIndex;
+        answeredCount++;
+
+        const isCorrect = (optIndex === q.correct);
+        if (isCorrect) correctCount++;
+
+        for (let i = 0; i < q.options.length; i++) {
+            const optEl = document.getElementById(`opt-${qIndex}-${i}`);
+            optEl.classList.add('disabled');
+
+            if (i === q.correct) {
+                optEl.classList.add('correct');
+            } else if (i === optIndex && !isCorrect) {
+                optEl.classList.add('incorrect');
+            }
+        }
+
+        const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+        feedbackEl.classList.add('show');
+        if (isCorrect) {
+            feedbackEl.classList.add('correct');
+            feedbackEl.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+        } else {
+            feedbackEl.classList.add('incorrect');
+            feedbackEl.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
+        }
+
+        updateHeaderScore();
+
+        if (answeredCount === questions.length) {
+            showFinalSummary();
+        }
+    }
+
+    function updateHeaderScore() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        document.getElementById('score-tracker').innerText = `Score: ${correctCount} / ${questions.length} (${percent}%)`;
+    }
+
+    function showFinalSummary() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        const summaryBox = document.getElementById('final-summary');
+        summaryBox.style.display = 'block';
+        document.getElementById('final-score-text').innerText = `Final Score: ${correctCount} out of ${questions.length} (${percent}%)`;
+        summaryBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        userAnswers = new Array(questions.length).fill(null);
+        answeredCount = 0;
+        correctCount = 0;
+        document.getElementById('final-summary').style.display = 'none';
+        updateHeaderScore();
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderQuiz();
+        document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+    });
+</script>
+</body>
+</html>
