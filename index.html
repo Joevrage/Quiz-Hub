@@ -5,50 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Hub - Master Base</title>
     <style>
-        /* Base Variables (Default: Clash of Clans Village) */
+        /* =========================================================
+           1. CLASH OF CLANS THEME (DEFAULT)
+           ========================================================= */
         :root {
             --bg-color: #4a7c29;
-            --bg-pattern-1: #5a8c39;
-            --bg-pattern-2: #5a8c39;
-            --card-bg: #8b5a2b;
-            --card-border: #4a2e16;
-            --card-shadow: #2a180b;
+            --bg-pattern: #5a8c39;
             --header-bg: rgba(0, 0, 0, 0.4);
             --header-border: #ffcc00;
             --logo-color: #ffcc00;
             --logo-box-bg: transparent;
             --logo-box-text: #ffcc00;
+            --card-bg: #8b5a2b;
+            --card-border: #4a2e16;
+            --card-shadow: #2a180b;
             --title-color: #ffffff;
-            --subtitle-color: #ffcc00;
+            --badge-color: #ffcc00;
             --btn-bg-top: #ff9900;
             --btn-bg-bottom: #ff5500;
             --btn-border: #ffffff;
             --btn-shadow: #992200;
             --btn-text: #ffffff;
-            --meta-display: block;
         }
 
-        /* Alternate Theme (Dark / Orange Hub Mode) */
+        /* =========================================================
+           2. HUB THEME (TOGGLED)
+           ========================================================= */
         body.hub-mode {
             --bg-color: #0f0f0f;
-            --bg-pattern-1: #0f0f0f;
-            --bg-pattern-2: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --card-border: #282828;
-            --card-shadow: transparent;
+            --bg-pattern: #0f0f0f;
             --header-bg: #0f0f0f;
             --header-border: #222222;
             --logo-color: #ffffff;
             --logo-box-bg: #ff9900;
             --logo-box-text: #000000;
+            --card-bg: #1a1a1a;
+            --card-border: #282828;
+            --card-shadow: transparent;
             --title-color: #ffffff;
-            --subtitle-color: #ff9900;
+            --badge-color: #888888;
             --btn-bg-top: #ff9900;
             --btn-bg-bottom: #ff9900;
             --btn-border: #ff9900;
             --btn-shadow: transparent;
             --btn-text: #000000;
-            --meta-display: flex;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,8 +57,8 @@
             font-family: Arial, sans-serif; 
             background: var(--bg-color);
             background-image: 
-                radial-gradient(var(--bg-pattern-1) 15%, transparent 16%),
-                radial-gradient(var(--bg-pattern-2) 15%, transparent 16%);
+                radial-gradient(var(--bg-pattern) 15%, transparent 16%),
+                radial-gradient(var(--bg-pattern) 15%, transparent 16%);
             background-size: 60px 60px;
             background-position: 0 0, 30px 30px;
             color: var(--title-color); 
@@ -72,8 +72,8 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            max-width: 1000px; 
-            margin: 0 auto 20px auto; 
+            max-width: 1050px; 
+            margin: 0 auto 25px auto; 
             background: var(--header-bg); 
             padding: 12px 20px; 
             border-radius: 8px; 
@@ -107,6 +107,11 @@
             font-weight: bold;
         }
 
+        /* Hide Builder Stats in Hub Mode */
+        body.hub-mode .builder-stats {
+            display: none;
+        }
+
         .stat-badge {
             background: #222;
             padding: 6px 12px;
@@ -115,15 +120,24 @@
             color: #fff;
         }
 
-        .village-grid {
-            max-width: 1000px;
+        .main-container {
+            max-width: 1050px;
             margin: 0 auto;
+        }
+
+        /* =========================================================
+           LAYOUT 1: CLASH OF CLANS VILLAGE GRID
+           ========================================================= */
+        .clash-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
         }
 
-        /* Module Card */
+        body.hub-mode .clash-grid {
+            display: none; /* Hide when Hub mode is active */
+        }
+
         .building-card {
             background: var(--card-bg);
             border: 3px solid var(--card-border);
@@ -134,12 +148,6 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: transform 0.15s, border-color 0.15s;
-        }
-
-        .building-card:hover {
-            transform: translateY(-3px);
-            border-color: #ff9900;
         }
 
         .building-header {
@@ -154,52 +162,34 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 8px;
             border-radius: 8px;
-            border: 1px solid #ff9900;
+            border: 1px solid #ffcc00;
         }
 
         .building-title {
             font-size: 18px;
             font-weight: 900;
-            color: var(--title-color);
+            color: #ffffff;
         }
 
         .level-badge {
             font-size: 11px;
-            color: var(--subtitle-color);
+            color: #ffcc00;
             margin-top: 2px;
             text-transform: uppercase;
         }
 
-        /* Video-Style Rating Meta Bar (Hub Mode) */
-        .card-meta {
-            display: var(--meta-display);
-            justify-content: space-between;
-            font-size: 11px;
-            color: #888888;
-            margin-top: 10px;
-            padding-top: 8px;
-            border-top: 1px solid #282828;
-        }
-
-        .rating {
-            color: #22c55e;
-            font-weight: bold;
-        }
-
-        /* Action Buttons */
         .attack-btn {
-            background: linear-gradient(to bottom, var(--btn-bg-top), var(--btn-bg-bottom));
-            border: 1px solid var(--btn-border);
+            background: linear-gradient(to bottom, #ff9900, #ff5500);
+            border: 1px solid #ffffff;
             border-radius: 6px;
             padding: 10px;
             text-align: center;
             font-weight: 900;
             font-size: 13px;
             text-transform: uppercase;
-            box-shadow: 0 3px 0 var(--btn-shadow);
-            color: var(--btn-text);
+            box-shadow: 0 3px 0 #992200;
+            color: #ffffff;
             margin-top: 10px;
-            transition: background 0.2s;
         }
 
         .multi-btn-group {
@@ -212,6 +202,35 @@
             flex: 1;
             margin-top: 0;
         }
+
+        /* =========================================================
+           LAYOUT 2: VIDEO HUB GRID (ACTIVE IN HUB MODE)
+           ========================================================= */
+        .hub-grid-layout {
+            display: none; /* Hidden by default */
+        }
+
+        body.hub-mode .hub-grid-layout {
+            display: block; /* Shown when Hub mode is active */
+        }
+
+        .course-section { margin-bottom: 30px; }
+        .course-title { color: #ff9900; font-size: 16px; border-bottom: 1px solid #282828; padding-bottom: 6px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+        
+        .hub-card { background-color: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #282828; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
+        .hub-card:hover { transform: translateY(-3px); border-color: #ff9900; }
+        
+        .card-thumbnail { background-color: #242424; height: 125px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #282828; }
+        .thumbnail-icon { font-size: 38px; }
+        
+        .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #ff9900; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #ff9900; }
+        
+        .card-info { padding: 12px; }
+        .quiz-card-title { font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
+        .quiz-card-meta { font-size: 11px; color: #888888; display: flex; justify-content: space-between; }
+        .rating { color: #22c55e; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -228,132 +247,240 @@
         </div>
     </div>
 
-    <!-- Main Grid -->
-    <div class="village-grid">
+    <div class="main-container">
 
-        <!-- Biochem -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🧪</div>
-                    <div>
-                        <div class="building-title">Biochem</div>
-                        <div class="level-badge">Town Hall Level 1</div>
+        <!-- =========================================================
+             1. CLASH OF CLANS LAYOUT (ACTIVE BY DEFAULT)
+             ========================================================= -->
+        <div class="clash-grid">
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🧪</div>
+                        <div>
+                            <div class="building-title">Biochem</div>
+                            <div class="level-badge">Town Hall Level 1</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <a href="Biochem%20Week%201.html" style="text-decoration: none;">
-                <div class="attack-btn">Attack Week 1</div>
-            </a>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">98% rating</span>
-            </div>
-        </div>
-
-        <!-- GenPath -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🔬</div>
-                    <div>
-                        <div class="building-title">GenPath</div>
-                        <div class="level-badge">Town Hall Level 1</div>
-                    </div>
-                </div>
-            </div>
-            <a href="Gen%20Path%20Week%201.html" style="text-decoration: none;">
-                <div class="attack-btn">Attack Week 1</div>
-            </a>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">100% rating</span>
-            </div>
-        </div>
-
-        <!-- Microbio -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🧫</div>
-                    <div>
-                        <div class="building-title">Microbio</div>
-                        <div class="level-badge">Town Hall Level 1</div>
-                    </div>
-                </div>
-            </div>
-            <a href="Microbio%20Week%201.html" style="text-decoration: none;">
-                <div class="attack-btn">Attack Week 1</div>
-            </a>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">96% rating</span>
-            </div>
-        </div>
-
-        <!-- Reg 1 -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🦴</div>
-                    <div>
-                        <div class="building-title">Reg 1</div>
-                        <div class="level-badge">Town Hall Level 1</div>
-                    </div>
-                </div>
-            </div>
-            <a href="Reg%201%20Week%201.html" style="text-decoration: none;">
-                <div class="attack-btn">Attack Week 1</div>
-            </a>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">99% rating</span>
-            </div>
-        </div>
-
-        <!-- Spinal 2 -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🩺</div>
-                    <div>
-                        <div class="building-title">Spinal 2</div>
-                        <div class="level-badge">Town Hall Level 2</div>
-                    </div>
-                </div>
-            </div>
-            <div class="multi-btn-group">
-                <a href="Spinal%202%20Week%201.html" style="text-decoration: none; flex: 1;">
-                    <div class="attack-btn">Week 1</div>
-                </a>
-                <a href="Spinal%202%20Week%202.html" style="text-decoration: none; flex: 1;">
-                    <div class="attack-btn">Week 2</div>
+                <a href="Biochem%20Week%201.html" style="text-decoration: none;">
+                    <div class="attack-btn">Attack Week 1</div>
                 </a>
             </div>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">97% rating</span>
+
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🔬</div>
+                        <div>
+                            <div class="building-title">GenPath</div>
+                            <div class="level-badge">Town Hall Level 1</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="Gen%20Path%20Week%201.html" style="text-decoration: none;">
+                    <div class="attack-btn">Attack Week 1</div>
+                </a>
+            </div>
+
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🧫</div>
+                        <div>
+                            <div class="building-title">Microbio</div>
+                            <div class="level-badge">Town Hall Level 1</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="Microbio%20Week%201.html" style="text-decoration: none;">
+                    <div class="attack-btn">Attack Week 1</div>
+                </a>
+            </div>
+
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🦴</div>
+                        <div>
+                            <div class="building-title">Reg 1</div>
+                            <div class="level-badge">Town Hall Level 1</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="Reg%201%20Week%201.html" style="text-decoration: none;">
+                    <div class="attack-btn">Attack Week 1</div>
+                </a>
+            </div>
+
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🩺</div>
+                        <div>
+                            <div class="building-title">Spinal 2</div>
+                            <div class="level-badge">Town Hall Level 2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Spinal%202%20Week%201.html" style="text-decoration: none; flex: 1;">
+                        <div class="attack-btn">Week 1</div>
+                    </a>
+                    <a href="Spinal%202%20Week%202.html" style="text-decoration: none; flex: 1;">
+                        <div class="attack-btn">Week 2</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🫀</div>
+                        <div>
+                            <div class="building-title">Sys Phys</div>
+                            <div class="level-badge">Town Hall Level 1</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="Sys%20Phys%20Week%201.html" style="text-decoration: none;">
+                    <div class="attack-btn">Attack Week 1</div>
+                </a>
             </div>
         </div>
 
-        <!-- Sys Phys -->
-        <div class="building-card">
-            <div>
-                <div class="building-header">
-                    <div class="building-icon">🫀</div>
-                    <div>
-                        <div class="building-title">Sys Phys</div>
-                        <div class="level-badge">Town Hall Level 1</div>
-                    </div>
+        <!-- =========================================================
+             2. VIDEO HUB LAYOUT (ACTIVE WHEN LOGO IS CLICKED)
+             ========================================================= -->
+        <div class="hub-grid-layout">
+            
+            <div class="course-section">
+                <h2 class="course-title">Biochem</h2>
+                <div class="quiz-grid">
+                    <a href="Biochem%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧪</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Biochem - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
                 </div>
             </div>
-            <a href="Sys%20Phys%20Week%201.html" style="text-decoration: none;">
-                <div class="attack-btn">Attack Week 1</div>
-            </a>
-            <div class="card-meta">
-                <span>By Joe</span>
-                <span class="rating">95% rating</span>
+
+            <div class="course-section">
+                <h2 class="course-title">GenPath</h2>
+                <div class="quiz-grid">
+                    <a href="Gen%20Path%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">GenPath - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Microbio</h2>
+                <div class="quiz-grid">
+                    <a href="Microbio%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Microbio - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">96% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Reg 1</h2>
+                <div class="quiz-grid">
+                    <a href="Reg%201%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Reg 1 - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Spinal 2</h2>
+                <div class="quiz-grid">
+                    <a href="Spinal%202%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Spinal 2 - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">Week 2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Spinal 2 - Week 2 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Sys Phys</h2>
+                <div class="quiz-grid">
+                    <a href="Sys%20Phys%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Week 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Sys Phys - Week 1 Quiz</div>
+                            <div class="quiz-card-meta">
+                                <span>By Joe</span>
+                                <span class="rating">95% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -361,12 +488,12 @@
     <script>
         const logo = document.getElementById('logoToggle');
         
-        // Remember mode across page reloads
+        // Check saved preference on load
         if (localStorage.getItem('quizHubTheme') === 'dark') {
             document.body.classList.add('hub-mode');
         }
 
-        // Toggle theme when clicking the Quiz Hub logo
+        // Toggle layout and theme on click
         logo.addEventListener('click', () => {
             document.body.classList.toggle('hub-mode');
             if (document.body.classList.contains('hub-mode')) {
