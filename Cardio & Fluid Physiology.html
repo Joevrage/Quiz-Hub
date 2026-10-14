@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cardio & Fluid Physiology Quiz</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* States */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        /* Explanation */
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        /* Summary Card */
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Cardio & Fluid Physiology</div>
+        <div id="score-header">Score: 0 / 25 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 25</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Normally, all three main fluid compartments of the body have almost the exact same ratio of ions to water. What is this state called?",
+                options: [
+                    { text: "Gibbs-Donnan effect", correct: false },
+                    { text: "Osmotic equilibrium", correct: true },
+                    { text: "Hydrostatic balance", correct: false },
+                    { text: "Oncotic stasis", correct: false }
+                ],
+                explanation: "The intravascular space, interstitium, and intracellular space must maintain osmotic equilibrium, meaning they have roughly the same osmolality."
+            },
+            {
+                question: "Which of the following circumventricular organs acts as a primary osmoreceptor to detect hyperosmolar states in the blood?",
+                options: [
+                    { text: "Subfornical organ (SFO)", correct: true },
+                    { text: "Pineal gland", correct: false },
+                    { text: "Area postrema", correct: false },
+                    { text: "Edinger-Westphal nucleus", correct: false }
+                ],
+                explanation: "The subfornical organ (SFO) and the organum vasculosum of the lamina terminalis (OVLT) act as highly sensitive osmoreceptors in the brain."
+            },
+            {
+                question: "When osmoreceptors are triggered, they send axons to stimulate the primary thirst center. What is the anatomical name of this thirst center?",
+                options: [
+                    { text: "Organum vasculosum of the lamina terminalis (OVLT)", correct: false },
+                    { text: "Supraoptic nucleus (SON)", correct: false },
+                    { text: "Median preoptic nucleus (MnPO)", correct: true },
+                    { text: "Paraventricular nucleus (PVN)", correct: false }
+                ],
+                explanation: "The SFO and OVLT stimulate the hypothalamic thirst center, specifically the median preoptic nucleus (MnPO), causing the human to drink water."
+            },
+            {
+                question: "According to the lecture, a mere 1% increase in blood saltiness will trigger the immediate release of which hormone?",
+                options: [
+                    { text: "Aldosterone", correct: false },
+                    { text: "Angiotensin II", correct: false },
+                    { text: "Antidiuretic hormone (ADH)", correct: true },
+                    { text: "Epinephrine", correct: false }
+                ],
+                explanation: "A 1% increase in blood saltiness triggers the release of ADH (vasopressin) as the quickest fix to dilute the blood."
+            },
+            {
+                question: "Which of the following is NOT an accepted alternative name for Antidiuretic Hormone (ADH)?",
+                options: [
+                    { text: "Arginine vasopressin", correct: false },
+                    { text: "Vasopressin", correct: false },
+                    { text: "AVP", correct: false },
+                    { text: "Aldosterone", correct: true }
+                ],
+                explanation: "ADH is also known as vasopressin, arginine vasopressin, and AVP. Aldosterone is a completely different hormone."
+            },
+            {
+                question: "Which specific neurons in the hypothalamus are responsible for synthesizing and releasing ADH?",
+                options: [
+                    { text: "Parvocellular neurons", correct: false },
+                    { text: "Magnocellular neurons", correct: true },
+                    { text: "Chromaffin cells", correct: false },
+                    { text: "Pyramidal cells", correct: false }
+                ],
+                explanation: "Magnocellular neurons, which live in the supraoptic and paraventricular nuclei of the hypothalamus, secrete ADH."
+            },
+            {
+                question: "In which two hypothalamic nuclei do the magnocellular neurons reside?",
+                options: [
+                    { text: "Supraoptic and paraventricular nuclei", correct: true },
+                    { text: "Arcuate and ventromedial nuclei", correct: false },
+                    { text: "Suprachiasmatic and preoptic nuclei", correct: false },
+                    { text: "Dentate and fastigial nuclei", correct: false }
+                ],
+                explanation: "The magnocellular neurons that produce ADH live in the supraoptic nucleus and the paraventricular nucleus."
+            },
+            {
+                question: "What is the specific action of ADH on the nephron?",
+                options: [
+                    { text: "It causes the reabsorption of both sodium and water.", correct: false },
+                    { text: "It causes the reabsorption of free water and NOT salt.", correct: true },
+                    { text: "It causes the excretion of potassium.", correct: false },
+                    { text: "It causes the excretion of free water.", correct: false }
+                ],
+                explanation: "ADH causes the nephron to reabsorb free water without salt, which dilutes the hyperosmolar blood."
+            },
+            {
+                question: "To exert its effects, ADH binds to V2 receptors on principal cells and causes the insertion of which specific channels into the apical membrane?",
+                options: [
+                    { text: "Aquaporin-4", correct: false },
+                    { text: "Aquaporin-2", correct: true },
+                    { text: "GLUT4", correct: false },
+                    { text: "SGLT2", correct: false }
+                ],
+                explanation: "ADH causes the insertion of Aquaporin-2 channels into the apical surface of the principal cells, allowing water to stream back into the body."
+            },
+            {
+                question: "In patients with diabetes insipidus, what is the status of the ADH mechanism?",
+                options: [
+                    { text: "It is hyperactive, causing severe water retention.", correct: false },
+                    { text: "It is dysfunctional, meaning ADH cannot properly signal water reabsorption.", correct: true },
+                    { text: "It only reabsorbs salt instead of water.", correct: false },
+                    { text: "It is completely normal, but thirst is absent.", correct: false }
+                ],
+                explanation: "Patients with diabetes insipidus have a messed up ADH mechanism, meaning they lack this crucial defense against hyperosmolality."
+            },
+            {
+                question: "What is the primary physiological job of the circulatory system?",
+                options: [
+                    { text: "To produce red blood cells in the bone marrow.", correct: false },
+                    { text: "To synthesize plasma proteins like albumin.", correct: false },
+                    { text: "To deliver survival-needing substances to the cell and haul away waste products.", correct: true },
+                    { text: "To generate action potentials for the heart.", correct: false }
+                ],
+                explanation: "The circulatory system (heart, blood, blood vessels) is designed to deliver nutrients and oxygen to tissues and haul away cellular waste."
+            },
+            {
+                question: "In the proximal end of a capillary, why is fluid pushed out into the interstitium?",
+                options: [
+                    { text: "Because oncotic pressure is much higher than hydrostatic pressure.", correct: false },
+                    { text: "Because hydrostatic pressure (created by the heart) is higher than oncotic pressure.", correct: true },
+                    { text: "Because the capillary actively pumps water out using ATP.", correct: false },
+                    { text: "Because albumin levels drop significantly in the proximal capillary.", correct: false }
+                ],
+                explanation: "Blood fluid is pushed out in the proximal capillary because the high hydrostatic pressure (generated by the heart) overcomes the oncotic pressure."
+            },
+            {
+                question: "In the distal capillary (venous side), what force pulls fluid and waste products back into the blood?",
+                options: [
+                    { text: "Hydrostatic pressure", correct: false },
+                    { text: "Atmospheric pressure", correct: false },
+                    { text: "Oncotic pressure", correct: true },
+                    { text: "Osmotic pressure from sodium alone", correct: false }
+                ],
+                explanation: "In the distal capillary, oncotic pressure (generated by albumin) is greater than hydrostatic pressure, pulling fluid and waste back in."
+            },
+            {
+                question: "Which specific protein is primarily responsible for generating the oncotic pressure that pulls fluid back into the distal capillary?",
+                options: [
+                    { text: "Fibrinogen", correct: false },
+                    { text: "Hemoglobin", correct: false },
+                    { text: "Albumin", correct: true },
+                    { text: "Globulin", correct: false }
+                ],
+                explanation: "Albumin is the massive blood protein that cannot cross the capillary wall, creating the oncotic (colloid osmotic) pressure."
+            },
+            {
+                question: "Which of the following is an explicit waste product that is pulled from the interstitium into the distal capillary?",
+                options: [
+                    { text: "Glucose", correct: false },
+                    { text: "Oxygen", correct: false },
+                    { text: "Free radicals", correct: true },
+                    { text: "Insulin", correct: false }
+                ],
+                explanation: "Waste products listed in the lecture that are pulled into the distal capillary include H+ (hydrogen ions), CO2 (carbon dioxide), and free radicals."
+            },
+            {
+                question: "In an arteriole, the release of what specific ion into the cytosol stimulates actin and myosin to contract?",
+                options: [
+                    { text: "Sodium", correct: false },
+                    { text: "Potassium", correct: false },
+                    { text: "Calcium", correct: true },
+                    { text: "Chloride", correct: false }
+                ],
+                explanation: "A large quantity of calcium released within the cytosol stimulates actin and myosin to contract, narrowing the arteriole lumen (vasoconstriction)."
+            },
+            {
+                question: "What are the two primary hemodynamic results of arteriole vasoconstriction?",
+                options: [
+                    { text: "Decreased blood pressure and decreased afterload.", correct: false },
+                    { text: "Increased blood pressure and increased afterload.", correct: true },
+                    { text: "Increased blood pressure and decreased afterload.", correct: false },
+                    { text: "Decreased blood pressure and increased afterload.", correct: false }
+                ],
+                explanation: "Constricting the arterioles creates resistance, which causes an increase in systemic blood pressure and an increase in afterload on the heart."
+            },
+            {
+                question: "When norepinephrine binds to an alpha-1 receptor on an arteriole, it activates a GPCR signaling cascade. What enzyme does this GPCR activate first?",
+                options: [
+                    { text: "Adenylyl cyclase", correct: false },
+                    { text: "Phospholipase C", correct: true },
+                    { text: "Protein Kinase A", correct: false },
+                    { text: "Tyrosine kinase", correct: false }
+                ],
+                explanation: "The slide clearly shows the GPCR activating Phospholipase C, which cleaves PIP2 into IP3 and DAG, eventually leading to calcium release."
+            },
+            {
+                question: "What type of nerve fiber releases Acetylcholine (ACh) to cause arteriole vasodilation in the skin during heat stress?",
+                options: [
+                    { text: "Parasympathetic cholinergic fiber", correct: false },
+                    { text: "Sympathetic adrenergic fiber", correct: false },
+                    { text: "Sympathetic cholinergic fiber", correct: true },
+                    { text: "Somatic motor fiber", correct: false }
+                ],
+                explanation: "Sympathetic cholinergic fibers uniquely release ACh to cause skin arteriole vasodilation and stimulate eccrine sweat glands during heat stress."
+            },
+            {
+                question: "In addition to skin arterioles, what other structure do sympathetic cholinergic fibers innervate to help cool the body?",
+                options: [
+                    { text: "Apocrine sweat glands", correct: false },
+                    { text: "Eccrine sweat glands", correct: true },
+                    { text: "Sebaceous glands", correct: false },
+                    { text: "Arrector pili muscles", correct: false }
+                ],
+                explanation: "These fibers go to the eccrine sweat glands to produce sweat, which evaporates and sucks heat out of the blood."
+            },
+            {
+                question: "According to the 'Beaver Dam Concept' discussed in lecture, what happens to the pressure UPSTREAM from a physical restriction (like a dam or vasoconstriction)?",
+                options: [
+                    { text: "It completely stops moving.", correct: false },
+                    { text: "It significantly diminishes.", correct: false },
+                    { text: "It remains unchanged.", correct: false },
+                    { text: "It causes a backup of water/pressure.", correct: true }
+                ],
+                explanation: "A beaver dam causes a backup of water and pressure upstream, analogous to how vasoconstriction increases blood pressure upstream in the arteries."
+            },
+            {
+                question: "According to the 'Beaver Dam Concept', what happens to the pressure DOWNSTREAM from a restriction?",
+                options: [
+                    { text: "It experiences a diminishment of pressure/water.", correct: true },
+                    { text: "It experiences a massive surge in pressure.", correct: false },
+                    { text: "It remains identical to upstream pressure.", correct: false },
+                    { text: "It reverses flow direction.", correct: false }
+                ],
+                explanation: "Downstream from the dam (or constricted arteriole), there is a diminishment of water flow and pressure."
+            },
+            {
+                question: "What is the fundamental difference between cytosol and cytoplasm?",
+                options: [
+                    { text: "Cytosol is extracellular, while cytoplasm is intracellular.", correct: false },
+                    { text: "Cytoplasm contains the organelles, while cytosol is just the fluid (mostly water).", correct: true },
+                    { text: "Cytosol contains the nucleus, while cytoplasm does not.", correct: false },
+                    { text: "They are completely synonymous terms in physiology.", correct: false }
+                ],
+                explanation: "Cytoplasm refers to the entire contents of the cell (including organelles) except the nucleus, whereas cytosol is just the aqueous fluid."
+            },
+            {
+                question: "What specific signaling cascade must insulin trigger to cause the translocation of GLUT4 transporters?",
+                options: [
+                    { text: "cAMP -> PKA", correct: false },
+                    { text: "IP3 -> DAG -> Calcium", correct: false },
+                    { text: "IRS -> PI3K -> AKT", correct: true },
+                    { text: "JAK -> STAT", correct: false }
+                ],
+                explanation: "Insulin binds to its receptor and triggers the IRS -> PI3K -> AKT cascade, which acts as a ferry boat to drop GLUT4 transporters into the cell membrane."
+            },
+            {
+                question: "Which of the following is true regarding a permeable membrane placed between two unequal solutions?",
+                options: [
+                    { text: "Water will aggressively move to the side with more solutes.", correct: false },
+                    { text: "The solutes will be permanently trapped on one side.", correct: false },
+                    { text: "Solutes will simply equalize with no net osmotic pressure or permanent water movement.", correct: true },
+                    { text: "The membrane will rupture from hydrostatic pressure.", correct: false }
+                ],
+                explanation: "If the membrane is fully permeable (not semi-permeable), the solutes just diffuse across and equalize, so no osmotic gradient is formed."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = "";
+                if(percentage >= 90) feedback = "Outstanding! You have mastered the circulatory and fluid physiology concepts.";
+                else if (percentage >= 75) feedback = "Solid work! Review the specific nuclei and vascular pathways to perfect your score.";
+                else if (percentage >= 60) feedback = "Good effort, but you'll need to review the specific hemodynamics and ADH mechanisms more closely.";
+                else feedback = "Keep studying! This is challenging board-level material. Review the slide notes and try again.";
+                
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() {
+            initQuiz();
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
