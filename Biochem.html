@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Biochem Week 2 Practice</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* States */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        /* Explanation */
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        /* Summary Card */
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Biochem Week 2 Quiz</div>
+        <div id="score-header">Score: 0 / 25 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 25</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "According to the Week 2 lecture, where does the Krebs cycle (citric acid cycle) take place?",
+                options: [
+                    { text: "Cytosol", correct: false },
+                    { text: "Inner mitochondrial membrane", correct: false },
+                    { text: "Mitochondrial matrix", correct: true },
+                    { text: "Golgi apparatus", correct: false }
+                ],
+                explanation: "Based on the Week 2 lecture, glycolysis occurs in the cytosol, the Krebs cycle occurs in the mitochondrial matrix, and oxidative phosphorylation occurs in the inner mitochondrial membrane."
+            },
+            {
+                question: "Which of the following processes exclusively occurs in the inner mitochondrial membrane?",
+                options: [
+                    { text: "Glycolysis", correct: false },
+                    { text: "Gluconeogenesis", correct: false },
+                    { text: "Krebs cycle", correct: false },
+                    { text: "Oxidative phosphorylation", correct: true }
+                ],
+                explanation: "The lecture specifies that oxidative phosphorylation (which includes the electron transport chain and ATP synthase) is located on the inner mitochondrial membrane."
+            },
+            {
+                question: "After pyruvate enters the mitochondria via the MPC, what enzyme complex converts it into acetyl-CoA?",
+                options: [
+                    { text: "Lactate dehydrogenase", correct: false },
+                    { text: "Pyruvate dehydrogenase complex (PDC)", correct: true },
+                    { text: "Isocitrate dehydrogenase", correct: false },
+                    { text: "Pyruvate carboxylase", correct: false }
+                ],
+                explanation: "According to the notes, the giant enzyme Pyruvate Dehydrogenase Complex (PDC) grabs pyruvate and converts it into acetyl-CoA inside the mitochondria."
+            },
+            {
+                question: "In the first step of the Krebs cycle, acetyl-CoA combines with which molecule to form citrate?",
+                options: [
+                    { text: "Malate", correct: false },
+                    { text: "Oxaloacetate", correct: true },
+                    { text: "Succinyl-CoA", correct: false },
+                    { text: "Alpha-ketoglutarate", correct: false }
+                ],
+                explanation: "The notes emphasize that acetyl-CoA combines with oxaloacetate—the ending molecule of the Krebs cycle—to create citrate and start the cycle."
+            },
+            {
+                question: "What is the physiological purpose of converting glucose to glucose-6-phosphate immediately upon entering the cell?",
+                options: [
+                    { text: "To actively transport it into the mitochondria", correct: false },
+                    { text: "To immediately generate 2 ATP", correct: false },
+                    { text: "To trap the glucose in the cytosol and destroy the outward concentration gradient", correct: true },
+                    { text: "To stimulate the release of glucagon", correct: false }
+                ],
+                explanation: "The lecture states that hexokinase attaches a phosphate to glucose to 'trap' it in the cytosol, preventing the concentration gradient from reversing and sending glucose back out of the cell."
+            },
+            {
+                question: "Which of the following is true regarding Hexokinase 4 (Glucokinase)?",
+                options: [
+                    { text: "It is strictly insulin-dependent.", correct: false },
+                    { text: "It is found primarily in skeletal muscle and adipose tissue.", correct: false },
+                    { text: "It is the primary hexokinase found in hepatocytes and pancreatic beta cells and is not insulin-dependent.", correct: true },
+                    { text: "It is the rate-limiting enzyme of the Krebs cycle.", correct: false }
+                ],
+                explanation: "The lecture notes specify that Hexokinase 4 (glucokinase) is found in the liver and pancreatic beta cells and is NOT insulin-dependent, unlike Hexokinase 2."
+            },
+            {
+                question: "Which hexokinase isozyme is insulin-dependent and found in skeletal muscle, heart, and adipose tissue?",
+                options: [
+                    { text: "Hexokinase 1", correct: false },
+                    { text: "Hexokinase 2", correct: true },
+                    { text: "Hexokinase 3", correct: false },
+                    { text: "Hexokinase 4", correct: false }
+                ],
+                explanation: "Hexokinase 2 (HK2) is explicitly listed in the notes as being insulin-dependent and located in skeletal muscle, heart, and adipose tissue."
+            },
+            {
+                question: "What is the rate-limiting enzyme of glycolysis?",
+                options: [
+                    { text: "Hexokinase", correct: false },
+                    { text: "Phosphofructokinase-1 (PFK1)", correct: true },
+                    { text: "Pyruvate kinase", correct: false },
+                    { text: "Lactate dehydrogenase", correct: false }
+                ],
+                explanation: "The lecture highlights that the conversion of fructose-6-phosphate to fructose-1,6-bisphosphate via Phosphofructokinase-1 (PFK1) is the highly regulated rate-limiting step of glycolysis."
+            },
+            {
+                question: "High intracellular levels of which molecule will bind to PFK1's allosteric site and actively stimulate glycolysis?",
+                options: [
+                    { text: "ATP", correct: false },
+                    { text: "NADH", correct: false },
+                    { text: "Glucose", correct: false },
+                    { text: "AMP", correct: true }
+                ],
+                explanation: "According to the notes, low cellular energy is indicated by high levels of AMP. AMP binds to the allosteric site of PFK1 to speed up the enzyme and drive glycolysis forward."
+            },
+            {
+                question: "What is the rate-limiting step (enzyme) of the Krebs cycle?",
+                options: [
+                    { text: "Citrate synthase", correct: false },
+                    { text: "Isocitrate dehydrogenase", correct: true },
+                    { text: "Alpha-ketoglutarate dehydrogenase", correct: false },
+                    { text: "Succinate dehydrogenase", correct: false }
+                ],
+                explanation: "The lecture explicitly identifies isocitrate dehydrogenase as the most regulated, rate-limiting step of the TCA (Krebs) cycle."
+            },
+            {
+                question: "Which molecules act to inhibit isocitrate dehydrogenase in the Krebs cycle?",
+                options: [
+                    { text: "ATP and NADH", correct: true },
+                    { text: "ADP and AMP", correct: false },
+                    { text: "FADH2 and GTP", correct: false },
+                    { text: "Glucose and Pyruvate", correct: false }
+                ],
+                explanation: "Isocitrate dehydrogenase is inhibited by increased levels of ATP and NADH (which signal that the cell already has plenty of energy)."
+            },
+            {
+                question: "Under anaerobic conditions, why does pyruvate begin to back up in the cytosol rather than entering the Krebs cycle?",
+                options: [
+                    { text: "The mitochondria actively excrete pyruvate.", correct: false },
+                    { text: "The electron transport chain stops, leaving no NAD+ available to power the pyruvate dehydrogenase complex.", correct: true },
+                    { text: "Lactate dehydrogenase inhibits the MPC transporter.", correct: false },
+                    { text: "Glucose completely stops entering the cell without oxygen.", correct: false }
+                ],
+                explanation: "Without oxygen, the ETC stops, meaning NADH cannot drop off its electrons. This creates a severe shortage of NAD+, which the Pyruvate Dehydrogenase Complex (PDC) requires to function."
+            },
+            {
+                question: "To prevent the buildup of pyruvate during anaerobic glycolysis, what enzyme converts pyruvate into lactate?",
+                options: [
+                    { text: "Pyruvate carboxylase", correct: false },
+                    { text: "Lactate dehydrogenase (LDH)", correct: true },
+                    { text: "Phosphofructokinase-1", correct: false },
+                    { text: "Glucose-6-phosphatase", correct: false }
+                ],
+                explanation: "The lecture notes state that Lactate Dehydrogenase (LDH) grabs the backed-up pyruvate in the cytosol and morphs it into lactate, completely bypassing the mitochondria."
+            },
+            {
+                question: "Why do red blood cells rely exclusively on anaerobic glycolysis to generate ATP?",
+                options: [
+                    { text: "They lack a nucleus.", correct: false },
+                    { text: "They lack mitochondria.", correct: true },
+                    { text: "They lack hexokinase.", correct: false },
+                    { text: "They carry too much oxygen, which inhibits the Krebs cycle.", correct: false }
+                ],
+                explanation: "The lecture explicitly points out that some cells, like red blood cells, have no mitochondria and therefore cannot run the Krebs cycle or oxidative phosphorylation."
+            },
+            {
+                question: "What is the name of the cycle where muscle lactate is sent to the liver, converted to glucose via gluconeogenesis, and sent back to the muscle?",
+                options: [
+                    { text: "Krebs Cycle", correct: false },
+                    { text: "Cori Cycle", correct: true },
+                    { text: "Urea Cycle", correct: false },
+                    { text: "Pentose Phosphate Pathway", correct: false }
+                ],
+                explanation: "The Cori cycle is defined in the notes as the recycling of lactate (via the MCT transporter) to the hepatocytes, which use it to re-generate glucose to feed back to the anaerobic tissues."
+            },
+            {
+                question: "The liver can synthesize de novo glucose (gluconeogenesis) from all of the following substrates EXCEPT:",
+                options: [
+                    { text: "Lactate", correct: false },
+                    { text: "Glycerol", correct: false },
+                    { text: "Amino Acids", correct: false },
+                    { text: "Fatty Acids", correct: true }
+                ],
+                explanation: "The board favorite question mentioned in the lecture: Gluconeogenesis can use lactate, glycerol, and protein (amino acids) to make the carbon skeleton of glucose, but it CANNOT use fatty acids."
+            },
+            {
+                question: "If fatty acids cannot be used as a substrate to make glucose, what is their role during fasting/gluconeogenesis?",
+                options: [
+                    { text: "They are excreted directly in the urine.", correct: false },
+                    { text: "They are run through beta-oxidation to generate the ATP required to power gluconeogenesis.", correct: true },
+                    { text: "They are converted into glycogen.", correct: false },
+                    { text: "They bind to and activate PFK1.", correct: false }
+                ],
+                explanation: "The lecture notes clarify that while fatty acids can't make glucose directly, they are run through 'beta oxidation of fatty acids' to yield the ATP needed to drive the gluconeogenesis process."
+            },
+            {
+                question: "During gluconeogenesis, where does glycerol (derived from fat breakdown) enter the pathway?",
+                options: [
+                    { text: "It is converted into Pyruvate.", correct: false },
+                    { text: "It is converted into Oxaloacetate.", correct: false },
+                    { text: "It is converted into Dihydroxyacetone phosphate (DHAP).", correct: true },
+                    { text: "It is converted into Fructose-6-phosphate.", correct: false }
+                ],
+                explanation: "The notes explicitly show that the fat breakdown product glycerol is fed into gluconeogenesis by being converted into dihydroxyacetone phosphate (DHAP)."
+            },
+            {
+                question: "What is the rate-limiting enzyme for glycogenolysis (the breakdown of glycogen into glucose)?",
+                options: [
+                    { text: "Glycogen phosphorylase", correct: true },
+                    { text: "Glucose-6-phosphatase", correct: false },
+                    { text: "PEPCK", correct: false },
+                    { text: "Hexokinase", correct: false }
+                ],
+                explanation: "Glycogen phosphorylase is identified in the notes as the rate-limiting step that breaks down the tree of glycogen molecules into glucose-1-phosphate."
+            },
+            {
+                question: "In the liver, what 'taser' enzyme removes the phosphate from glucose-6-phosphate so that free glucose can be released into the bloodstream?",
+                options: [
+                    { text: "Hexokinase", correct: false },
+                    { text: "Glucose-6-phosphatase", correct: true },
+                    { text: "Phosphofructokinase", correct: false },
+                    { text: "Pyruvate carboxylase", correct: false }
+                ],
+                explanation: "Glucose-6-phosphatase acts like a 'taser' to rip the phosphate off number 6 carbon, allowing the free glucose to leave the hepatocyte and enter the blood."
+            },
+            {
+                question: "Because glucagon is not a steroid hormone, it must use a second messenger system to stimulate glycogenolysis. Which system does it use?",
+                options: [
+                    { text: "IP3 / DAG", correct: false },
+                    { text: "cAMP / PKA", correct: true },
+                    { text: "Tyrosine kinase", correct: false },
+                    { text: "cGMP", correct: false }
+                ],
+                explanation: "The lecture states that glucagon binds to hepatocytes and sets off a cAMP / PKA second messenger system to deliver its message."
+            },
+            {
+                question: "Upon insulin binding to its receptor, what is the correct sequential order of the intracellular signaling cascade?",
+                options: [
+                    { text: "PI3K -> IRS -> AKT", correct: false },
+                    { text: "IRS -> PI3K -> AKT", correct: true },
+                    { text: "AKT -> PI3K -> IRS", correct: false },
+                    { text: "IRS -> AKT -> PI3K", correct: false }
+                ],
+                explanation: "The notes emphasize that you definitely need to know the 'IRS -> PI3K -> AKT signaling cascade' that insulin uses."
+            },
+            {
+                question: "The ultimate result of the IRS -> PI3K -> AKT signaling cascade is the movement of GLUT4 transporters to the cell membrane. What is this movement called?",
+                options: [
+                    { text: "Transcription", correct: false },
+                    { text: "Translation", correct: false },
+                    { text: "Translocation (or trafficking)", correct: true },
+                    { text: "Beta-oxidation", correct: false }
+                ],
+                explanation: "The lecture refers to the movement and insertion of GLUT4 transporters into the cell membrane as translocation or trafficking."
+            },
+            {
+                question: "According to the cell review, which organelle acts as the 'Amazon warehouse' by modifying, sorting, and packaging proteins?",
+                options: [
+                    { text: "Rough endoplasmic reticulum", correct: false },
+                    { text: "Golgi apparatus", correct: true },
+                    { text: "Nucleolus", correct: false },
+                    { text: "Lysosome", correct: false }
+                ],
+                explanation: "The Week 2 introductory review explicitly defines the Golgi apparatus as the 'Amazon warehouse' that modifies, sorts, and packages proteins."
+            },
+            {
+                question: "Which specialized cellular organelle acts as the 'hazardous waste' stomach responsible for breaking down dangerous molecules like hydrogen peroxide?",
+                options: [
+                    { text: "Lysosome", correct: false },
+                    { text: "Peroxisome", correct: true },
+                    { text: "Mitochondria", correct: false },
+                    { text: "Nucleus", correct: false }
+                ],
+                explanation: "While the lysosome is the general stomach, the lecture explicitly identifies the peroxisome as the 'special stomach' for hazardous waste and hydrogen peroxide."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = "";
+                if(percentage >= 90) feedback = "Outstanding! You have mastered the biochem pathways and enzyme regulations.";
+                else if (percentage >= 75) feedback = "Solid work! Review the specific rate-limiting enzymes and substrates to perfect your score.";
+                else if (percentage >= 60) feedback = "Good effort, but you'll need to review the specific pathways (glycolysis, gluconeogenesis, Krebs) more closely.";
+                else feedback = "Keep studying! This is challenging board-level material. Review the slide notes and try again.";
+                
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() {
+            initQuiz();
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
