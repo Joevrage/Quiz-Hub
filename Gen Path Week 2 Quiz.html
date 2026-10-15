@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 2 General Pathology & Immunology Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --accent-orange: #ff9900;
+            --text-white: #ffffff;
+            --text-dim: #b0b0b0;
+            --correct-green: #2e7d32;
+            --incorrect-red: #c62828;
+            --border-color: #333333;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            padding-bottom: 40px;
+        }
+
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: #141414;
+            border-bottom: 2px solid var(--accent-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-orange);
+        }
+
+        .score-tracker {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: #252525;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-orange);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .quiz-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            color: var(--accent-orange);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            line-height: 1.5;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: #252525;
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not([disabled]) {
+            background-color: #333333;
+            border-color: var(--accent-orange);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-green) !important;
+            border-color: #4caf50 !important;
+            color: #fff !important;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-red) !important;
+            border-color: #ef5350 !important;
+            color: #fff !important;
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
+
+        .explanation {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background-color: #222222;
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: var(--text-dim);
+            display: none;
+        }
+
+        .explanation span {
+            color: var(--text-white);
+            font-weight: 600;
+        }
+
+        .summary-card {
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-orange);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .summary-title {
+            font-size: 1.8rem;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent-orange);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            margin-top: 15px;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-header">
+        <div class="header-title">ChiroMed Quiz Hub: Week 2</div>
+        <div class="score-tracker" id="score-display">Score: 0 / 40 (0%)</div>
+    </div>
+
+    <div class="container" id="quiz-container">
+        <!-- Questions injected by JS -->
+    </div>
+
+    <div class="container">
+        <div class="summary-card" id="summary-card">
+            <div class="summary-title">Quiz Completed!</div>
+            <div class="summary-score" id="final-score">0%</div>
+            <p id="summary-feedback" style="color: var(--text-dim);"></p>
+            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "Which white blood cell acts as the primary first responder against acute bacterial infections?",
+                options: ["Eosinophil", "Neutrophil", "Monocyte", "Basophil"],
+                correct: 1,
+                explanation: "Neutrophils (PMNs) are the most abundant leukocytes and serve as the first responders in acute bacterial responses."
+            },
+            {
+                question: "What enzyme in neutrophils produces reactive oxygen species (ROS) to degrade ingested pathogens?",
+                options: ["Myeloperoxidase", "Lysozyme", "Protease", "Histaminase"],
+                correct: 0,
+                explanation: "Myeloperoxidase generates reactive oxygen species (ROS) which create a toxic environment that degrades bacteria and ultimately kills the neutrophil."
+            },
+            {
+                question: "An elevation in circulating monocytes (monocytosis) is clinically indicative of which process?",
+                options: ["Acute viral flare", "Parasitic invasion", "Chronic infection", "Type I hypersensitivity"],
+                correct: 2,
+                explanation: "Monocytes are large, slower-moving phagocytes; an increase in their count signals chronicity of infection."
+            },
+            {
+                question: "Which white blood cells are classified as agranular leukocytes?",
+                options: ["Neutrophils & Basophils", "Eosinophils & Monocytes", "Monocytes & Lymphocytes", "Basophils & Lymphocytes"],
+                correct: 2,
+                explanation: "Agranular leukocytes are mononuclear cells consisting of Monocytes and Lymphocytes (B-cells, T-cells, NK cells)."
+            },
+            {
+                question: "Major Basic Protein (MBP) is released by which leukocyte to combat helminthic infections?",
+                options: ["Basophil", "Eosinophil", "Neutrophil", "Macrophage"],
+                correct: 1,
+                explanation: "Eosinophils use Major Basic Protein (MBP) specifically to fight helminthic parasites (worms)."
+            },
+            {
+                question: "Degranulation of mast cells and basophils is triggered by the cross-linking of which surface immunoglobulin?",
+                options: ["IgA", "IgG", "IgM", "IgE"],
+                correct: 3,
+                explanation: "IgE antibodies bind to allergen receptors on mast cells and basophils, triggering degranulation and histamine release."
+            },
+            {
+                question: "What is the specific tissue counterpart name for macrophages located in the liver?",
+                options: ["Dust cells", "Langerhans cells", "Kupffer cells", "Microglia"],
+                correct: 2,
+                explanation: "Tissue-specific macrophages in the liver are known as Kupffer cells."
+            },
+            {
+                question: "Pro-inflammatory M1 macrophages secrete Interleukin-1 (IL-1), which acts functionally as a(n):",
+                options: ["Anti-inflammatory signal", "Endogenous pyrogen", "Growth factor", "Clotting factor"],
+                correct: 1,
+                explanation: "IL-1 acts as an endogenous pyrogen that directly influences body temperature to induce fever."
+            },
+            {
+                question: "What vasoactive mediator is produced by M1 macrophages that causes vasodilation and perpetuates inflammation?",
+                options: ["Nitric Oxide (NO)", "Histamine", "Major Basic Protein", "Myeloperoxidase"],
+                correct: 0,
+                explanation: "M1 macrophages produce Nitric Oxide (NO), a vasodilator that maintains chronic inflammation and slows tissue healing."
+            },
+            {
+                question: "M2 macrophages promote tissue repair and resolution of inflammation primarily through the secretion of:",
+                options: ["Tumor Necrosis Factor alpha", "Growth factors", "Interleukin-6", "Nitric oxide"],
+                correct: 1,
+                explanation: "M2 macrophages produce growth factors to repair damaged tissues while cleaning up cellular debris."
+            },
+            {
+                question: "MHC Class I molecules are expressed on which of the following cell types?",
+                options: ["Only Macrophages", "Only Antigen Presenting Cells", "All nucleated cells", "Only B-lymphocytes"],
+                correct: 2,
+                explanation: "MHC Class I is present on all nucleated cells in the body, displaying endogenous antigens."
+            },
+            {
+                question: "Which cell surface co-receptor pairs with MHC Class II during antigen presentation?",
+                options: ["CD4+", "CD8+", "CD14", "CD19"],
+                correct: 0,
+                explanation: "MHC Class II interacts specifically with CD4+ Helper T-lymphocytes (Rule of 8: 2 x 4 = 8)."
+            },
+            {
+                question: "Which T-cell subset recognizes antigen fragments presented on MHC Class I molecules?",
+                options: ["CD4+ Helper T-cell", "CD8+ Cytotoxic T-cell", "Regulatory T-cell", "Naive B-cell"],
+                correct: 1,
+                explanation: "MHC Class I presents endogenous antigens to CD8+ Cytotoxic (Killer) T-cells (Rule of 8: 1 x 8 = 8)."
+            },
+            {
+                question: "Antigens originating from outside the cell (exogenous) are processed and displayed via which pathway and MHC class?",
+                options: ["Endogenous pathway / MHC I", "Exogenous pathway / MHC II", "Cross-presentation / MHC I", "Intrinsic pathway / MHC II"],
+                correct: 1,
+                explanation: "Exogenous antigens are ingested, processed in phagolysosomes, and presented on MHC Class II molecules."
+            },
+            {
+                question: "What is cross-presentation?",
+                options: ["Presentation of MHC I to CD4 T-cells", "Processing of exogenous antigens onto MHC Class I for CD8 T-cell activation", "Secretory release of immunoglobulins", "Degranulation of mast cells"],
+                correct: 1,
+                explanation: "Cross-presentation is a mechanism used by APCs (mainly dendritic cells) to present exogenous antigens on MHC Class I to directly activate CD8+ T-cells."
+            },
+            {
+                question: "Human Leukocyte Antigen (HLA) B27 positivity is strongly associated with which clinical condition?",
+                options: ["Rheumatoid Arthritis", "Ankylosing Spondylitis", "Systemic Lupus", "Multiple Sclerosis"],
+                correct: 1,
+                explanation: "HLA-B27 is an MHC Class I genetic marker associated with Ankylosing Spondylitis."
+            },
+            {
+                question: "HLA-DR4 marker presence is clinically associated with an increased susceptibility to:",
+                options: ["Ankylosing Spondylitis", "Rheumatoid Arthritis", "Gouty Arthritis", "Osteoarthritis"],
+                correct: 1,
+                explanation: "HLA-DR4 is an MHC Class II marker linked to Rheumatoid Arthritis."
+            },
+            {
+                question: "Which of the following is NOT one of the three professional Antigen-Presenting Cells (APCs)?",
+                options: ["Dendritic cell", "Macrophage", "B-cell", "Neutrophil"],
+                correct: 3,
+                explanation: "The three professional APCs are Macrophages, Dendritic cells, and B-lymphocytes. Neutrophils are phagocytes but not APCs."
+            },
+            {
+                question: "How do B-lymphocytes internalize antigens prior to presenting them on MHC II?",
+                options: ["Phagocytosis", "Endocytosis via Immunoglobulin receptors", "Pinocytosis", "Diapedesis"],
+                correct: 1,
+                explanation: "B-cells interact with antigens using surface immunoglobulin receptors (IgD/IgM) and internalize them via receptor-mediated endocytosis."
+            },
+            {
+                question: "What term describes the exact molecular region of an antigen recognized by immune cell receptors?",
+                options: ["PAMP", "Epitope (Antigenic determinant)", "DAMP", "Haptoglobin"],
+                correct: 1,
+                explanation: "An epitope or antigenic determinant is the specific part of an antigen recognized by T-cell receptors, B-cell receptors, or antibodies."
+            },
+            {
+                question: "Toll-Like Receptors (TLRs) on innate immune cells recognize which conserved microbial structures?",
+                options: ["Pathogen-Associated Molecular Patterns (PAMPs)", "Human Leukocyte Antigens (HLAs)", "Major Histocompatibility Complexes", "Immunoglobulins"],
+                correct: 0,
+                explanation: "TLRs are Pattern Recognition Receptors (PRRs) that bind to pathogen-shared structures known as PAMPs."
+            },
+            {
+                question: "What are DAMPs (Damage-Associated Molecular Patterns)?",
+                options: ["Viral DNA fragments", "Molecular patterns displayed by injured or dying host cells", "Extracellular bacterial toxins", "Fungal cell wall components"],
+                correct: 1,
+                explanation: "DAMPs are chemical signals displayed by injured, old, or dying host cells that identify them to scavenger phagocytes for removal."
+            },
+            {
+                question: "What is Step 3 in the process of leukocyte extravasation (chemotaxis)?",
+                options: ["Rolling", "Diapedesis", "Arrest / Adhesion (Margination/Pavementing)", "Activation"],
+                correct: 2,
+                explanation: "The sequential steps of extravasation are: 1. Rolling, 2. Activation, 3. Arrest/Adhesion (Margination & Pavementing), 4. Transendothelial migration (Diapedesis)."
+            },
+            {
+                question: "In the intrinsic coagulation cascade, which contact factor initiates the conversion cascade down to fibrin?",
+                options: ["Factor VII", "Factor XII (Hageman Factor)", "Factor X", "Prothrombin"],
+                correct: 1,
+                explanation: "Factor XII (Hageman contact factor) triggers the intrinsic coagulation cascade leading to thrombin activation and fibrin formation."
+            },
+            {
+                question: "Blood Plasma minus its clotting factors yields which remaining fluid component?",
+                options: ["Whole blood", "Buffy coat", "Serum", "Exudate"],
+                correct: 2,
+                explanation: "Whole Blood - Cells = Plasma; Plasma - Clotting Factors = Serum."
+            },
+            {
+                question: "Which equation correctly defines Blood Plasma?",
+                options: ["Whole blood - Clotting factors", "Whole blood - Cells", "Serum + Fibrinogen", "Buffy coat + Erythrocytes"],
+                correct: 1,
+                explanation: "Plasma is whole blood with all cellular components (RBCs, WBCs, Platelets) removed."
+            },
+            {
+                question: "What white blood cell relative abundance ordering is represented by 'Never Let Monkeys Eat Bananas'?",
+                options: ["Neutrophils > Lymphocytes > Monocytes > Eosinophils > Basophils", "Neutrophils > Monocytes > Lymphocytes > Basophils > Eosinophils", "Lymphocytes > Neutrophils > Monocytes > Eosinophils > Basophils", "Monocytes > Neutrophils > Lymphocytes > Eosinophils > Basophils"],
+                correct: 0,
+                explanation: "The standard differential percentage ranking from most to least abundant is Neutrophils (60%), Lymphocytes (30%), Monocytes (8%), Eosinophils (1.5-2%), Basophils (0-0.5%)."
+            },
+            {
+                question: "Which cytokine is released by mast cells to recruit eosinophils to sites of allergic inflammation?",
+                options: ["Interleukin-1", "Interleukin-5", "Interleukin-6", "TNF-alpha"],
+                correct: 1,
+                explanation: "Mast cells release Interleukin-5 (IL-5) to attract and activate eosinophils during allergic responses."
+            },
+            {
+                question: "Natural Killer (NK) cells are lymphocytes that participate in innate responses because they do NOT require:",
+                options: ["Cytokine stimulation", "Phagocytic vacuoles", "MHC Class I recognition", "Perforins"],
+                correct: 2,
+                explanation: "Unlike CD8+ T-cells, NK cells do not depend on MHC Class I antigen presentation to destroy target cells."
+            },
+            {
+                question: "What structural feature characterizes granular leukocytes under light microscopy?",
+                options: ["Single round nucleus", "Segmented, multi-lobed nucleus", "Absence of cytoplasm", "Biconcave shape"],
+                correct: 1,
+                explanation: "Granular leukocytes (neutrophils, eosinophils, basophils) possess segmented, multi-lobed nuclei and cytoplasmic granules."
+            },
+            {
+                question: "Which innate chemical barrier component is secreted by sebaceous glands in the skin?",
+                options: ["Cerumen", "Sebum", "Lysozyme", "Mucus"],
+                correct: 1,
+                explanation: "Sebum is an oily secretion produced by sebaceous glands that provides a chemical protective barrier on the skin."
+            },
+            {
+                question: "Which mechanism is used by a host cell infected with a virus to present viral peptides on its surface?",
+                options: ["Exogenous pathway via MHC II", "Endogenous pathway via MHC I", "Cross-presentation via MHC II", "Receptor-mediated endocytosis"],
+                correct: 1,
+                explanation: "Viruses infect cells intracellularly; viral proteins synthesized inside are processed via the endogenous pathway and presented on MHC Class I."
+            },
+            {
+                question: "Extracellular bacterial infections engulfed by macrophages are presented via which mechanism?",
+                options: ["Endogenous pathway to CD8+ cells", "Exogenous pathway via MHC Class II to CD4+ T-cells", "Cross-presentation to CD4+ cells", "Direct activation of B-cell receptors"],
+                correct: 1,
+                explanation: "Extracellular bacteria are ingested by APCs, processed in phagolysosomes, and presented on MHC Class II to CD4+ Helper T-cells."
+            },
+            {
+                question: "What is the tissue counterpart name for macrophages present in the Central Nervous System (CNS)?",
+                options: ["Kupffer cells", "Alveolar macrophages", "Microglia", "Langerhans cells"],
+                correct: 2,
+                explanation: "Microglia are the specialized resident macrophages of the Central Nervous System."
+            },
+            {
+                question: "Langerhans cells represent the tissue macrophage resident in which organ?",
+                options: ["Lungs", "Skin", "Peripheral Nerves", "Spleen"],
+                correct: 1,
+                explanation: "Langerhans cells are resident dendritic/macrophage cells in the skin (epidermis)."
+            },
+            {
+                question: "Which cytokine secreted by inflammatory macrophages is known as the 'death factor' or cachectin?",
+                options: ["IL-1", "IL-6", "TNF-alpha", "IFN-gamma"],
+                correct: 2,
+                explanation: "Tumor Necrosis Factor-alpha (TNF-alpha) is referred to as the death factor and mediates systemic inflammatory responses."
+            },
+            {
+                question: "The process by which leukocytes adhere to endothelial walls before squeezing through vessel walls is termed:",
+                options: ["Chemotaxis", "Margination and Pavementing", "Diapedesis", "Phagocytosis"],
+                correct: 1,
+                explanation: "Margination (moving to vessel margin) and Pavementing (docking/flattening along endothelium) precede diapedesis."
+            },
+            {
+                question: "Diapedesis (transendothelial migration) refers to:",
+                options: ["Rolling of cells along vessel wall", "Leukocytes squeezing between endothelial cells into surrounding tissue", "Engulfment of foreign particles", "Degranulation of chemical mediators"],
+                correct: 1,
+                explanation: "Diapedesis is the active migration of leukocytes through intact capillary walls into damaged tissues."
+            },
+            {
+                question: "What is the function of lysozyme found within neutrophil granules and mucosal secretions?",
+                options: ["Generating nitric oxide", "Degrading bacterial cell walls", "Inhibiting histamine", "Activating prothrombin"],
+                correct: 1,
+                explanation: "Lysozyme is an antimicrobial enzyme that degrades bacterial cell walls."
+            },
+            {
+                question: "An individual born without functional innate immunity barriers would lack which key characteristic?",
+                options: ["Immediate, rapid response with no prior antigen exposure needed", "High specificity for mutated proteins", "Memory T-cell formation", "Antibody class switching"],
+                correct: 0,
+                explanation: "Innate immunity is primitive, present at birth, immediate/rapid, non-specific, and lacks immunological memory."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredCount = 0;
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'quiz-card';
+                card.id = `card-${index}`;
+
+                const qNum = document.createElement('div');
+                qNum.className = 'question-number';
+                qNum.innerText = `Question ${index + 1} of ${quizData.length}`;
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = item.question;
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                item.options.forEach((opt, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = `${String.fromCharCode(65 + optIdx)}. ${opt}`;
+                    btn.onclick = () => handleAnswer(index, optIdx);
+                    optionsGrid.appendChild(btn);
+                });
+
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp-${index}`;
+                exp.innerHTML = `<span>Explanation:</span> ${item.explanation}`;
+
+                card.appendChild(qNum);
+                card.appendChild(qText);
+                card.appendChild(optionsGrid);
+                card.appendChild(exp);
+
+                container.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qIndex, selectedOpt) {
+            const card = document.getElementById(`card-${qIndex}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            const exp = document.getElementById(`exp-${qIndex}`);
+            const correctOpt = quizData[qIndex].correct;
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedOpt === correctOpt) {
+                buttons[selectedOpt].classList.add('correct');
+                currentScore++;
+            } else {
+                buttons[selectedOpt].classList.add('incorrect');
+                buttons[correctOpt].classList.add('correct');
+            }
+
+            exp.style.display = 'block';
+            answeredCount++;
+
+            updateHeader();
+
+            if (answeredCount === quizData.length) {
+                showSummary();
+            }
+        }
+
+        function updateHeader() {
+            const pct = Math.round((currentScore / quizData.length) * 100);
+            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${quizData.length} (${pct}%)`;
+        }
+
+        function showSummary() {
+            const pct = Math.round((currentScore / quizData.length) * 100);
+            const summaryCard = document.getElementById('summary-card');
+            const finalScore = document.getElementById('final-score');
+            const feedback = document.getElementById('summary-feedback');
+
+            finalScore.innerText = `${pct}%`;
+
+            if (pct >= 90) {
+                feedback.innerText = "Mastery demonstrated! Excellent grasp of cellular immunity concepts.";
+            } else if (pct >= 75) {
+                feedback.innerText = "Great job! Review missed explanations to solidify high-yield points.";
+            } else {
+                feedback.innerText = "Good effort! Recommend reviewing Week 2 lecture notes and retaking the quiz.";
+            }
+
+            summaryCard.style.display = 'block';
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            currentScore = 0;
+            answeredCount = 0;
+            updateHeader();
+            document.getElementById('summary-card').style.display = 'none';
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
