@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forearm: Muscle, Nerve & Action Drill (By Daelin)</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --accent-orange: #ff9900;
+            --text-white: #ffffff;
+            --text-dim: #b0b0b0;
+            --correct-green: #28a745;
+            --incorrect-red: #dc3545;
+            --border-color: #333333;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            padding-bottom: 40px;
+        }
+
+        /* Sticky Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--accent-orange);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--accent-orange);
+        }
+
+        .score-tracker {
+            font-size: 1.1rem;
+            font-weight: bold;
+            background-color: #2a2a2a;
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--accent-orange);
+        }
+
+        /* Main Container */
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            color: var(--accent-orange);
+            font-size: 0.9rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+
+        /* Options */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            color: var(--text-white);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent-orange);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-green) !important;
+            color: #ffffff !important;
+            border-color: var(--correct-green) !important;
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-red) !important;
+            color: #ffffff !important;
+            border-color: var(--incorrect-red) !important;
+        }
+
+        /* Feedback Box */
+        .explanation-box {
+            margin-top: 15px;
+            padding: 12px 15px;
+            border-radius: 6px;
+            background-color: #222222;
+            border-left: 4px solid var(--accent-orange);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        /* Final Results Summary */
+        .results-card {
+            display: none;
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-orange);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .results-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--accent-orange);
+            margin: 15px 0;
+        }
+
+        .restart-btn {
+            background-color: var(--accent-orange);
+            color: #000000;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        .restart-btn:hover {
+            background-color: #ffaa22;
+            transform: scale(1.03);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Forearm Drill (By Daelin)</div>
+        <div class="score-tracker" id="score-display">Score: 0 / 60 (0%)</div>
+    </header>
+
+    <div class="quiz-container">
+        <div id="questions-wrapper"></div>
+
+        <div id="results-wrapper" class="results-card">
+            <h2>Drill Completed!</h2>
+            <div class="results-score" id="final-percentage">0%</div>
+            <p id="final-stats">You scored 0 out of 60.</p>
+            <p id="performance-feedback" style="color: var(--text-dim); margin-bottom: 20px;"></p>
+            <button class="restart-btn" onclick="resetQuiz()">Retake Drill</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                q: "Q1. What are the origin and insertion of pronator teres?",
+                options: [
+                    "A. Origin: Lateral supracondylar ridge of humerus. Insertion: Dorsal base of second metacarpal.",
+                    "B. Origin: Distal quarter of anterior ulna. Insertion: Lateral surface of the middle radius.",
+                    "C. Origin: Medial epicondyle of humerus and coronoid process of ulna. Insertion: Lateral olecranon and proximal posterior ulna.",
+                    "D. Origin: Medial epicondyle of humerus and coronoid process of ulna. Insertion: Lateral surface of the middle radius."
+                ],
+                correct: 3,
+                exp: "Pronator teres originates from the medial epicondyle of the humerus and the coronoid process of the ulna, inserting on the lateral surface of the middle radius."
+            },
+            {
+                q: "Q2. What nerve or nerves innervate pronator teres?",
+                options: [
+                    "A. Median nerve (direct muscular branches)",
+                    "B. Anterior interosseous nerve (from median nerve)",
+                    "C. Ulnar nerve",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 0,
+                exp: "Pronator teres is innervated directly by muscular branches of the median nerve."
+            },
+            {
+                q: "Q3. Which muscle pronates the forearm and also assists elbow flexion?",
+                options: [
+                    "A. Anconeus",
+                    "B. Flexor digitorum superficialis",
+                    "C. Pronator teres",
+                    "D. Extensor digiti minimi"
+                ],
+                correct: 2,
+                exp: "Pronator teres pronates the forearm and contributes to elbow flexion."
+            },
+            {
+                q: "Q4. What are the origin and insertion of flexor carpi radialis?",
+                options: [
+                    "A. Origin: Lateral supracondylar ridge of humerus. Insertion: Distal radius near the styloid process.",
+                    "B. Origin: Medial epicondyle of humerus. Insertion: Base of second metacarpal.",
+                    "C. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Base of second metacarpal.",
+                    "D. Origin: Medial epicondyle of humerus. Insertion: Extensor expansions of digits 2-5."
+                ],
+                correct: 1,
+                exp: "Flexor carpi radialis originates from the medial epicondyle via the common flexor tendon and inserts into the base of the 2nd metacarpal."
+            },
+            {
+                q: "Q5. What nerve or nerves innervate flexor carpi radialis?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Radial nerve (before its terminal division)",
+                    "D. Posterior interosseous nerve (from radial nerve)"
+                ],
+                correct: 1,
+                exp: "Flexor carpi radialis receives direct muscular branches from the median nerve."
+            },
+            {
+                q: "Q6. Which muscle flexes and abducts the wrist?",
+                options: [
+                    "A. Flexor carpi radialis",
+                    "B. Abductor pollicis longus",
+                    "C. Flexor digitorum superficialis",
+                    "D. Extensor digiti minimi"
+                ],
+                correct: 0,
+                exp: "Flexor carpi radialis produces wrist flexion and radial deviation (abduction)."
+            },
+            {
+                q: "Q7. What are the origin and insertion of palmaris longus?",
+                options: [
+                    "A. Origin: Posterior radius, posterior ulna, and interosseous membrane. Insertion: Base of first metacarpal.",
+                    "B. Origin: Medial epicondyle of humerus. Insertion: Base of second metacarpal.",
+                    "C. Origin: Posterior middle ulna and adjacent interosseous membrane. Insertion: Flexor retinaculum and palmar aponeurosis.",
+                    "D. Origin: Medial epicondyle of humerus. Insertion: Flexor retinaculum and palmar aponeurosis."
+                ],
+                correct: 3,
+                exp: "Palmaris longus originates from the medial epicondyle and inserts into the flexor retinaculum and palmar aponeurosis."
+            },
+            {
+                q: "Q8. What nerve or nerves innervate palmaris longus?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 1,
+                exp: "Palmaris longus is innervated by direct muscular branches of the median nerve."
+            },
+            {
+                q: "Q9. Which muscle flexes the wrist and tenses the palmar aponeurosis?",
+                options: [
+                    "A. Pronator teres",
+                    "B. Flexor digitorum superficialis",
+                    "C. Palmaris longus",
+                    "D. Supinator"
+                ],
+                correct: 2,
+                exp: "Palmaris longus tenses the palmar aponeurosis and assists in flexing the wrist."
+            },
+            {
+                q: "Q10. What are the origin and insertion of flexor carpi ulnaris?",
+                options: [
+                    "A. Origin: Medial epicondyle of humerus, olecranon, and posterior border of ulna. Insertion: Pisiform, hook of hamate, and base of fifth metacarpal.",
+                    "B. Origin: Posterior distal ulna and adjacent interosseous membrane. Insertion: Pisiform, hook of hamate, and base of fifth metacarpal.",
+                    "C. Origin: Medial epicondyle of humerus, olecranon, and posterior border of ulna. Insertion: Anterior, lateral, and posterior surfaces of proximal radius.",
+                    "D. Origin: Lateral epicondyle of humerus and posterior border of ulna. Insertion: Base of fifth metacarpal."
+                ],
+                correct: 0,
+                exp: "Flexor carpi ulnaris originates from the medial epicondyle and posterior ulna/olecranon, inserting onto the pisiform, hook of hamate, and base of the 5th metacarpal."
+            },
+            {
+                q: "Q11. What nerve or nerves innervate flexor carpi ulnaris?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Posterior interosseous nerve (from radial nerve)",
+                    "D. Anterior interosseous nerve (from median nerve)"
+                ],
+                correct: 0,
+                exp: "Flexor carpi ulnaris is innervated exclusively by the ulnar nerve."
+            },
+            {
+                q: "Q12. Which muscle flexes and adducts the wrist?",
+                options: [
+                    "A. Extensor pollicis brevis",
+                    "B. Flexor digitorum superficialis",
+                    "C. Flexor carpi ulnaris",
+                    "D. Supinator"
+                ],
+                correct: 2,
+                exp: "Flexor carpi ulnaris flexes and adducts (ulnar deviates) the wrist joint."
+            },
+            {
+                q: "Q13. What are the origin and insertion of flexor digitorum superficialis?",
+                options: [
+                    "A. Origin: Lateral supracondylar ridge of humerus. Insertion: Distal radius near the styloid process.",
+                    "B. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Extensor expansion of fifth digit.",
+                    "C. Origin: Distal quarter of anterior ulna. Insertion: Middle phalanges of digits 2-5.",
+                    "D. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Middle phalanges of digits 2-5."
+                ],
+                correct: 3,
+                exp: "Flexor digitorum superficialis originates from the medial epicondyle, coronoid process, and anterior radius, inserting into the middle phalanges of digits 2-5."
+            },
+            {
+                q: "Q14. What nerve or nerves innervate flexor digitorum superficialis?",
+                options: [
+                    "A. Deep branch of radial nerve",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Ulnar nerve"
+                ],
+                correct: 1,
+                exp: "Flexor digitorum superficialis is innervated by direct muscular branches from the median nerve."
+            },
+            {
+                q: "Q15. Which muscle primarily flexes the PIP joints of digits 2-5?",
+                options: [
+                    "A. Flexor digitorum superficialis",
+                    "B. Abductor pollicis longus",
+                    "C. Brachioradialis",
+                    "D. Pronator teres"
+                ],
+                correct: 0,
+                exp: "Flexor digitorum superficialis flexes digits 2-5 at the proximal interphalangeal (PIP) joints."
+            },
+            {
+                q: "Q16. What are the origin and insertion of flexor digitorum profundus?",
+                options: [
+                    "A. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Base of distal phalanx of thumb.",
+                    "B. Origin: Proximal anterior ulna and adjacent interosseous membrane. Insertion: Extensor expansion of fifth digit.",
+                    "C. Origin: Lateral epicondyle of humerus. Insertion: Bases of distal phalanges of digits 2-5.",
+                    "D. Origin: Proximal anterior ulna and adjacent interosseous membrane. Insertion: Bases of distal phalanges of digits 2-5."
+                ],
+                correct: 3,
+                exp: "Flexor digitorum profundus originates from the proximal anterior ulna and interosseous membrane, inserting into the distal phalanges of digits 2-5."
+            },
+            {
+                q: "Q17. What nerve or nerves innervate flexor digitorum profundus?",
+                options: [
+                    "A. Posterior interosseous nerve laterally and radial nerve medially",
+                    "B. Median nerve laterally and posterior interosseous nerve medially",
+                    "C. Ulnar nerve laterally and anterior interosseous nerve medially",
+                    "D. Anterior interosseous nerve laterally and ulnar nerve medially"
+                ],
+                correct: 3,
+                exp: "Flexor digitorum profundus is dual-innervated: Anterior Interosseous Nerve laterally (digits 2-3) and Ulnar Nerve medially (digits 4-5)."
+            },
+            {
+                q: "Q18. Which muscle flexes the DIP joints of digits 2-5?",
+                options: [
+                    "A. Flexor carpi radialis",
+                    "B. Supinator",
+                    "C. Flexor carpi ulnaris",
+                    "D. Flexor digitorum profundus"
+                ],
+                correct: 3,
+                exp: "Flexor digitorum profundus is the only muscle that flexes the distal interphalangeal (DIP) joints of digits 2-5."
+            },
+            {
+                q: "Q19. What are the origin and insertion of flexor pollicis longus?",
+                options: [
+                    "A. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Base of distal phalanx of thumb.",
+                    "B. Origin: Lateral epicondyle of humerus and supinator crest of ulna. Insertion: Base of distal phalanx of thumb.",
+                    "C. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Extensor expansion of second digit.",
+                    "D. Origin: Lateral epicondyle of humerus and supinator crest of ulna. Insertion: Anterior, lateral, and posterior surfaces of proximal radius."
+                ],
+                correct: 0,
+                exp: "Flexor pollicis longus arises from the anterior radius and interosseous membrane, inserting at the base of the distal phalanx of the thumb."
+            },
+            {
+                q: "Q20. What nerve or nerves innervate flexor pollicis longus?",
+                options: [
+                    "A. Posterior interosseous nerve (from radial nerve)",
+                    "B. Deep branch of radial nerve",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 2,
+                exp: "Flexor pollicis longus is innervated by the anterior interosseous nerve, a branch of the median nerve."
+            },
+            {
+                q: "Q21. Which muscle flexes the IP joint of the thumb?",
+                options: [
+                    "A. Extensor pollicis brevis",
+                    "B. Extensor digitorum",
+                    "C. Extensor pollicis longus",
+                    "D. Flexor pollicis longus"
+                ],
+                correct: 3,
+                exp: "Flexor pollicis longus flexes the interphalangeal (IP) joint of digit 1 (thumb)."
+            },
+            {
+                q: "Q22. What are the origin and insertion of pronator quadratus?",
+                options: [
+                    "A. Origin: Distal quarter of anterior ulna. Insertion: Dorsal base of second metacarpal.",
+                    "B. Origin: Lateral epicondyle of humerus. Insertion: Distal quarter of anterior radius.",
+                    "C. Origin: Distal quarter of anterior ulna. Insertion: Distal quarter of anterior radius.",
+                    "D. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Middle phalanges of digits 2-5."
+                ],
+                correct: 2,
+                exp: "Pronator quadratus originates from the distal 1/4 of the anterior ulna and inserts on the distal 1/4 of the anterior radius."
+            },
+            {
+                q: "Q23. What nerve or nerves innervate pronator quadratus?",
+                options: [
+                    "A. Median nerve (direct muscular branches)",
+                    "B. Radial nerve (before its terminal division)",
+                    "C. Deep branch of radial nerve",
+                    "D. Anterior interosseous nerve (from median nerve)"
+                ],
+                correct: 3,
+                exp: "Pronator quadratus is innervated by the anterior interosseous nerve (median nerve branch)."
+            },
+            {
+                q: "Q24. Which pair of forearm muscles produces pronation?",
+                options: [
+                    "A. Pronator teres and Pronator quadratus",
+                    "B. Flexor carpi radialis and Flexor carpi ulnaris",
+                    "C. Flexor pollicis longus and Abductor pollicis longus",
+                    "D. Extensor digitorum and Extensor carpi ulnaris"
+                ],
+                correct: 0,
+                exp: "Pronator teres (proximal) and pronator quadratus (distal) work together to pronate the forearm."
+            },
+            {
+                q: "Q25. What are the origin and insertion of anconeus?",
+                options: [
+                    "A. Origin: Lateral epicondyle of humerus. Insertion: Lateral olecranon and proximal posterior ulna.",
+                    "B. Origin: Posterior radius, posterior ulna, and interosseous membrane. Insertion: Lateral olecranon and proximal posterior ulna.",
+                    "C. Origin: Medial epicondyle of humerus and coronoid process of ulna. Insertion: Lateral surface of the middle radius.",
+                    "D. Origin: Lateral epicondyle of humerus. Insertion: Base of distal phalanx of thumb."
+                ],
+                correct: 0,
+                exp: "Anconeus originates from the lateral epicondyle and inserts on the lateral olecranon and proximal posterior ulna."
+            },
+            {
+                q: "Q26. What nerve or nerves innervate anconeus?",
+                options: [
+                    "A. Posterior interosseous nerve (from radial nerve)",
+                    "B. Radial nerve (before its terminal division)",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Ulnar nerve"
+                ],
+                correct: 1,
+                exp: "Anconeus is innervated directly by branches of the main radial nerve before its terminal division."
+            },
+            {
+                q: "Q27. Which muscle assists triceps in extending the elbow and helps stabilize the elbow?",
+                options: [
+                    "A. Extensor pollicis brevis",
+                    "B. Extensor digiti minimi",
+                    "C. Anconeus",
+                    "D. Flexor carpi radialis"
+                ],
+                correct: 2,
+                exp: "Anconeus assists the triceps during terminal elbow extension and stabilizes the elbow joint."
+            },
+            {
+                q: "Q28. What are the origin and insertion of brachioradialis?",
+                options: [
+                    "A. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Distal radius near the styloid process.",
+                    "B. Origin: Lateral supracondylar ridge of humerus. Insertion: Base of proximal phalanx of thumb.",
+                    "C. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Middle phalanges of digits 2-5.",
+                    "D. Origin: Lateral supracondylar ridge of humerus. Insertion: Distal radius near the styloid process."
+                ],
+                correct: 3,
+                exp: "Brachioradialis originates on the lateral supracondylar ridge of the humerus and inserts near the radial styloid process."
+            },
+            {
+                q: "Q29. What nerve or nerves innervate brachioradialis?",
+                options: [
+                    "A. Median nerve (direct muscular branches)",
+                    "B. Posterior interosseous nerve (from radial nerve)",
+                    "C. Radial nerve (before its terminal division)",
+                    "D. Ulnar nerve"
+                ],
+                correct: 2,
+                exp: "Brachioradialis is innervated directly by the radial nerve prior to its division into superficial and deep branches."
+            },
+            {
+                q: "Q30. Which muscle flexes the elbow most effectively with the forearm in neutral rotation?",
+                options: [
+                    "A. Flexor carpi ulnaris",
+                    "B. Extensor carpi radialis longus",
+                    "C. Brachioradialis",
+                    "D. Extensor indicis"
+                ],
+                correct: 2,
+                exp: "Brachioradialis acts as a powerful elbow flexor when the forearm is in mid-pronation / neutral rotation."
+            },
+            {
+                q: "Q31. What are the origin and insertion of extensor carpi radialis longus?",
+                options: [
+                    "A. Origin: Posterior middle ulna and adjacent interosseous membrane. Insertion: Dorsal base of second metacarpal.",
+                    "B. Origin: Lateral supracondylar ridge of humerus. Insertion: Distal radius near the styloid process.",
+                    "C. Origin: Lateral supracondylar ridge of humerus. Insertion: Dorsal base of second metacarpal.",
+                    "D. Origin: Posterior radius and adjacent interosseous membrane. Insertion: Base of proximal phalanx of thumb."
+                ],
+                correct: 2,
+                exp: "Extensor carpi radialis longus originates from the lateral supracondylar ridge and inserts into the dorsal base of the 2nd metacarpal."
+            },
+            {
+                q: "Q32. What nerve or nerves innervate extensor carpi radialis longus?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 3,
+                exp: "Extensor carpi radialis longus receives innervation from the main radial nerve before it bifurcates."
+            },
+            {
+                q: "Q33. Which pair of muscles extends and abducts the wrist?",
+                options: [
+                    "A. Extensor digitorum and Extensor carpi ulnaris",
+                    "B. Extensor carpi radialis longus and Extensor carpi radialis brevis",
+                    "C. Flexor carpi radialis and Flexor carpi ulnaris",
+                    "D. Extensor pollicis brevis and Extensor pollicis longus"
+                ],
+                correct: 1,
+                exp: "Extensor carpi radialis longus and brevis jointly extend the wrist and produce radial deviation (abduction)."
+            },
+            {
+                q: "Q34. What are the origin and insertion of extensor carpi radialis brevis?",
+                options: [
+                    "A. Origin: Posterior distal ulna and adjacent interosseous membrane. Insertion: Dorsal base of third metacarpal.",
+                    "B. Origin: Lateral epicondyle of humerus. Insertion: Dorsal base of third metacarpal.",
+                    "C. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Middle phalanges of digits 2-5.",
+                    "D. Origin: Lateral epicondyle of humerus. Insertion: Lateral surface of the middle radius."
+                ],
+                correct: 1,
+                exp: "Extensor carpi radialis brevis originates from the lateral epicondyle and inserts at the dorsal base of the 3rd metacarpal."
+            },
+            {
+                q: "Q35. What nerve or nerves innervate extensor carpi radialis brevis?",
+                options: [
+                    "A. Median nerve (direct muscular branches)",
+                    "B. Anterior interosseous nerve (from median nerve)",
+                    "C. Deep branch of radial nerve",
+                    "D. Ulnar nerve"
+                ],
+                correct: 2,
+                exp: "Extensor carpi radialis brevis is innervated by the deep branch of the radial nerve."
+            },
+            {
+                q: "Q36. Which pair of wrist extensors also produces radial deviation?",
+                options: [
+                    "A. Flexor carpi radialis and Flexor carpi ulnaris",
+                    "B. Extensor digitorum and Extensor carpi ulnaris",
+                    "C. Extensor carpi radialis longus and Extensor carpi radialis brevis",
+                    "D. Extensor pollicis brevis and Extensor pollicis longus"
+                ],
+                correct: 2,
+                exp: "Extensor carpi radialis longus and brevis both perform extension and radial deviation of the wrist."
+            },
+            {
+                q: "Q37. What are the origin and insertion of extensor digitorum?",
+                options: [
+                    "A. Origin: Lateral epicondyle of humerus. Insertion: Base of distal phalanx of thumb.",
+                    "B. Origin: Medial epicondyle of humerus. Insertion: Base of second metacarpal.",
+                    "C. Origin: Lateral epicondyle of humerus. Insertion: Extensor expansions of digits 2-5.",
+                    "D. Origin: Proximal anterior ulna and adjacent interosseous membrane. Insertion: Extensor expansions of digits 2-5."
+                ],
+                correct: 2,
+                exp: "Extensor digitorum originates on the lateral epicondyle and inserts via extensor expansions into digits 2-5."
+            },
+            {
+                q: "Q38. What nerve or nerves innervate extensor digitorum?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Posterior interosseous nerve (from radial nerve)",
+                    "C. Deep branch of radial nerve",
+                    "D. Anterior interosseous nerve (from median nerve)"
+                ],
+                correct: 1,
+                exp: "Extensor digitorum is innervated by the posterior interosseous nerve (continuation of deep radial)."
+            },
+            {
+                q: "Q39. Which muscle extends all four fingers (digits 2-5) and assists wrist extension?",
+                options: [
+                    "A. Anconeus",
+                    "B. Extensor digitorum",
+                    "C. Flexor carpi radialis",
+                    "D. Extensor carpi radialis longus"
+                ],
+                correct: 1,
+                exp: "Extensor digitorum extends digits 2-5 and aids in wrist extension."
+            },
+            {
+                q: "Q40. What are the origin and insertion of extensor digiti minimi?",
+                options: [
+                    "A. Origin: Lateral epicondyle of humerus. Insertion: Distal quarter of anterior radius.",
+                    "B. Origin: Proximal anterior ulna and adjacent interosseous membrane. Insertion: Bases of distal phalanges of digits 2-5.",
+                    "C. Origin: Lateral epicondyle of humerus. Insertion: Extensor expansion of fifth digit.",
+                    "D. Origin: Posterior distal ulna and adjacent interosseous membrane. Insertion: Extensor expansion of fifth digit."
+                ],
+                correct: 2,
+                exp: "Extensor digiti minimi originates from the lateral epicondyle and inserts into the extensor expansion of the 5th digit."
+            },
+            {
+                q: "Q41. What nerve or nerves innervate extensor digiti minimi?",
+                options: [
+                    "A. Anterior interosseous nerve (from median nerve)",
+                    "B. Median nerve (direct muscular branches)",
+                    "C. Ulnar nerve",
+                    "D. Posterior interosseous nerve (from radial nerve)"
+                ],
+                correct: 3,
+                exp: "Extensor digiti minimi is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q42. Which muscle specifically assists independent extension of the little finger?",
+                options: [
+                    "A. Extensor digiti minimi",
+                    "B. Flexor carpi radialis",
+                    "C. Brachioradialis",
+                    "D. Abductor pollicis longus"
+                ],
+                correct: 0,
+                exp: "Extensor digiti minimi provides independent extension for digit 5 (pinky)."
+            },
+            {
+                q: "Q43. What are the origin and insertion of extensor carpi ulnaris?",
+                options: [
+                    "A. Origin: Distal quarter of anterior ulna. Insertion: Distal quarter of anterior radius.",
+                    "B. Origin: Lateral epicondyle of humerus and posterior border of ulna. Insertion: Middle phalanges of digits 2-5.",
+                    "C. Origin: Proximal anterior ulna and adjacent interosseous membrane. Insertion: Base of fifth metacarpal.",
+                    "D. Origin: Lateral epicondyle of humerus and posterior border of ulna. Insertion: Base of fifth metacarpal."
+                ],
+                correct: 3,
+                exp: "Extensor carpi ulnaris originates from the lateral epicondyle and posterior border of the ulna, inserting at the base of the 5th metacarpal."
+            },
+            {
+                q: "Q44. What nerve or nerves innervate extensor carpi ulnaris?",
+                options: [
+                    "A. Deep branch of radial nerve",
+                    "B. Anterior interosseous nerve (from median nerve)",
+                    "C. Posterior interosseous nerve (from radial nerve)",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 2,
+                exp: "Extensor carpi ulnaris is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q45. Which muscle extends and adducts the wrist?",
+                options: [
+                    "A. Flexor digitorum superficialis",
+                    "B. Extensor carpi radialis brevis",
+                    "C. Flexor carpi ulnaris",
+                    "D. Extensor carpi ulnaris"
+                ],
+                correct: 3,
+                exp: "Extensor carpi ulnaris extends and adducts (ulnar deviates) the wrist."
+            },
+            {
+                q: "Q46. What are the origin and insertion of supinator?",
+                options: [
+                    "A. Origin: Medial epicondyle of humerus. Insertion: Base of second metacarpal.",
+                    "B. Origin: Lateral epicondyle of humerus and supinator crest of ulna. Insertion: Anterior, lateral, and posterior surfaces of proximal radius.",
+                    "C. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Anterior, lateral, and posterior surfaces of proximal radius.",
+                    "D. Origin: Lateral epicondyle of humerus and supinator crest of ulna. Insertion: Lateral surface of the middle radius."
+                ],
+                correct: 1,
+                exp: "Supinator originates from the lateral epicondyle and supinator crest, inserting broadly across the proximal radius."
+            },
+            {
+                q: "Q47. What nerve or nerves innervate supinator?",
+                options: [
+                    "A. Deep branch of radial nerve",
+                    "B. Radial nerve (before its terminal division)",
+                    "C. Median nerve (direct muscular branches)",
+                    "D. Posterior interosseous nerve (from radial nerve)"
+                ],
+                correct: 0,
+                exp: "Supinator is innervated by the deep branch of the radial nerve as it pierces through the muscle belly."
+            },
+            {
+                q: "Q48. Which muscle is primarily responsible for forearm supination among the following choices?",
+                options: [
+                    "A. Extensor carpi radialis longus",
+                    "B. Supinator",
+                    "C. Pronator quadratus",
+                    "D. Flexor digitorum superficialis"
+                ],
+                correct: 1,
+                exp: "Supinator acts directly to rotate the radius back into supination."
+            },
+            {
+                q: "Q49. What are the origin and insertion of abductor pollicis longus?",
+                options: [
+                    "A. Origin: Medial epicondyle of humerus, coronoid process of ulna, and anterior radius. Insertion: Base of first metacarpal.",
+                    "B. Origin: Posterior radius, posterior ulna, and interosseous membrane. Insertion: Base of first metacarpal.",
+                    "C. Origin: Posterior radius, posterior ulna, and interosseous membrane. Insertion: Base of second metacarpal.",
+                    "D. Origin: Lateral epicondyle of humerus. Insertion: Extensor expansions of digits 2-5."
+                ],
+                correct: 1,
+                exp: "Abductor pollicis longus arises from the posterior radius, posterior ulna, and interosseous membrane, inserting on the base of the 1st metacarpal."
+            },
+            {
+                q: "Q50. What nerve or nerves innervate abductor pollicis longus?",
+                options: [
+                    "A. Ulnar nerve",
+                    "B. Anterior interosseous nerve (from median nerve)",
+                    "C. Posterior interosseous nerve (from radial nerve)",
+                    "D. Radial nerve (before its terminal division)"
+                ],
+                correct: 2,
+                exp: "Abductor pollicis longus is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q51. Which muscle abducts the thumb at the CMC joint?",
+                options: [
+                    "A. Abductor pollicis longus",
+                    "B. Extensor carpi ulnaris",
+                    "C. Flexor carpi radialis",
+                    "D. Pronator teres"
+                ],
+                correct: 0,
+                exp: "Abductor pollicis longus abducts the thumb at the carpometacarpal (CMC) joint."
+            },
+            {
+                q: "Q52. What are the origin and insertion of extensor pollicis brevis?",
+                options: [
+                    "A. Origin: Posterior radius and adjacent interosseous membrane. Insertion: Lateral surface of the middle radius.",
+                    "B. Origin: Anterior radius and adjacent interosseous membrane. Insertion: Base of distal phalanx of thumb.",
+                    "C. Origin: Posterior radius and adjacent interosseous membrane. Insertion: Base of proximal phalanx of thumb.",
+                    "D. Origin: Lateral epicondyle of humerus. Insertion: Base of proximal phalanx of thumb."
+                ],
+                correct: 2,
+                exp: "Extensor pollicis brevis originates on the posterior radius and interosseous membrane, inserting into the base of the proximal phalanx of the thumb."
+            },
+            {
+                q: "Q53. What nerve or nerves innervate extensor pollicis brevis?",
+                options: [
+                    "A. Posterior interosseous nerve (from radial nerve)",
+                    "B. Radial nerve (before its terminal division)",
+                    "C. Median nerve (direct muscular branches)",
+                    "D. Ulnar nerve"
+                ],
+                correct: 0,
+                exp: "Extensor pollicis brevis is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q54. Which short thumb extensor primarily extends the proximal phalanx at the MCP joint?",
+                options: [
+                    "A. Abductor pollicis longus",
+                    "B. Brachioradialis",
+                    "C. Flexor carpi ulnaris",
+                    "D. Extensor pollicis brevis"
+                ],
+                correct: 3,
+                exp: "Extensor pollicis brevis extends the thumb's proximal phalanx at the metacarpophalangeal (MCP) joint."
+            },
+            {
+                q: "Q55. What are the origin and insertion of extensor pollicis longus?",
+                options: [
+                    "A. Origin: Lateral epicondyle of humerus. Insertion: Base of distal phalanx of thumb.",
+                    "B. Origin: Posterior middle ulna and adjacent interosseous membrane. Insertion: Base of distal phalanx of thumb.",
+                    "C. Origin: Posterior middle ulna and adjacent interosseous membrane. Insertion: Dorsal base of second metacarpal.",
+                    "D. Origin: Medial epicondyle of humerus. Insertion: Flexor retinaculum and palmar aponeurosis."
+                ],
+                correct: 1,
+                exp: "Extensor pollicis longus originates from the posterior middle ulna and interosseous membrane, inserting on the base of the distal phalanx of the thumb."
+            },
+            {
+                q: "Q56. What nerve or nerves innervate extensor pollicis longus?",
+                options: [
+                    "A. Deep branch of radial nerve",
+                    "B. Posterior interosseous nerve (from radial nerve)",
+                    "C. Anterior interosseous nerve (from median nerve)",
+                    "D. Median nerve (direct muscular branches)"
+                ],
+                correct: 1,
+                exp: "Extensor pollicis longus is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q57. Which muscle extends the distal phalanx of the thumb at the IP joint?",
+                options: [
+                    "A. Flexor carpi ulnaris",
+                    "B. Pronator teres",
+                    "C. Extensor digiti minimi",
+                    "D. Extensor pollicis longus"
+                ],
+                correct: 3,
+                exp: "Extensor pollicis longus extends the thumb's distal phalanx at the interphalangeal (IP) joint."
+            },
+            {
+                q: "Q58. What are the origin and insertion of extensor indicis?",
+                options: [
+                    "A. Origin: Posterior distal ulna and adjacent interosseous membrane. Insertion: Base of proximal phalanx of thumb.",
+                    "B. Origin: Posterior distal ulna and adjacent interosseous membrane. Insertion: Extensor expansion of second digit.",
+                    "C. Origin: Lateral supracondylar ridge of humerus. Insertion: Extensor expansion of second digit.",
+                    "D. Origin: Lateral epicondyle of humerus. Insertion: Lateral olecranon and proximal posterior ulna."
+                ],
+                correct: 1,
+                exp: "Extensor indicis originates on the posterior distal ulna and interosseous membrane, inserting into the extensor expansion of digit 2 (index finger)."
+            },
+            {
+                q: "Q59. What nerve or nerves innervate extensor indicis?",
+                options: [
+                    "A. Deep branch of radial nerve",
+                    "B. Ulnar nerve",
+                    "C. Median nerve (direct muscular branches)",
+                    "D. Posterior interosseous nerve (from radial nerve)"
+                ],
+                correct: 3,
+                exp: "Extensor indicis is innervated by the posterior interosseous nerve."
+            },
+            {
+                q: "Q60. Which muscle specifically assists independent extension of the index finger?",
+                options: [
+                    "A. Abductor pollicis longus",
+                    "B. Extensor pollicis brevis",
+                    "C. Pronator teres",
+                    "D. Extensor indicis"
+                ],
+                correct: 3,
+                exp: "Extensor indicis allows independent extension of the index finger (digit 2)."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredCount = 0;
+
+        function renderQuiz() {
+            const wrapper = document.getElementById('questions-wrapper');
+            wrapper.innerHTML = '';
+
+            quizData.forEach((item, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                const qNum = document.createElement('div');
+                qNum.className = 'question-number';
+                qNum.innerText = `Question ${qIndex + 1} of 60`;
+                card.appendChild(qNum);
+
+                const qText = document.createElement('div');
+                qText.className = 'question-text';
+                qText.innerText = item.q;
+                card.appendChild(qText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                item.options.forEach((optText, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = optText;
+                    btn.id = `q${qIndex}-opt${oIndex}`;
+                    btn.onclick = () => selectOption(qIndex, oIndex);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+
+                const expBox = document.createElement('div');
+                expBox.className = 'explanation-box';
+                expBox.id = `exp-${qIndex}`;
+                card.appendChild(expBox);
+
+                wrapper.appendChild(card);
+            });
+        }
+
+        function selectOption(qIndex, selectedIndex) {
+            const question = quizData[qIndex];
+            const expBox = document.getElementById(`exp-${qIndex}`);
+            
+            question.options.forEach((_, oIndex) => {
+                const btn = document.getElementById(`q${qIndex}-opt${oIndex}`);
+                btn.disabled = true;
+                if (oIndex === question.correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            if (selectedIndex === question.correct) {
+                currentScore++;
+            } else {
+                const selectedBtn = document.getElementById(`q${qIndex}-opt${selectedIndex}`);
+                selectedBtn.classList.add('incorrect');
+            }
+
+            answeredCount++;
+
+            expBox.innerHTML = `<strong>Explanation:</strong> ${question.exp}`;
+            expBox.style.display = 'block';
+
+            const percentage = Math.round((currentScore / 60) * 100);
+            document.getElementById('score-display').innerText = `Score: ${currentScore} / 60 (${percentage}%)`;
+
+            if (answeredCount === 60) {
+                showFinalResults(percentage);
+            }
+        }
+
+        function showFinalResults(percentage) {
+            const resultsCard = document.getElementById('results-wrapper');
+            document.getElementById('final-percentage').innerText = `${percentage}%`;
+            document.getElementById('final-stats').innerText = `You answered ${currentScore} out of 60 questions correctly.`;
+
+            let feedback = "";
+            if (percentage >= 90) {
+                feedback = "Mastery demonstrated! Outstanding recall of all forearm muscle origins, insertions, innervations, and actions.";
+            } else if (percentage >= 75) {
+                feedback = "Great job! Re-review the specific nerve branches (Anterior vs. Posterior Interosseous) to perfect your score.";
+            } else {
+                feedback = "Good practice run. Go over the deep vs. superficial extensor and flexor tables and retake the drill.";
+            }
+
+            document.getElementById('performance-feedback').innerText = feedback;
+            resultsCard.style.display = 'block';
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            currentScore = 0;
+            answeredCount = 0;
+            document.getElementById('score-display').innerText = `Score: 0 / 60 (0%)`;
+            document.getElementById('results-wrapper').style.display = 'none';
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
