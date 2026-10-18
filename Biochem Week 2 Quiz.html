@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biochemistry Week 2 Master Review & Interactive Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --card-border: #2a2a2a;
+            --text-main: #ffffff;
+            --text-muted: #aaaaaa;
+            --accent-orange: #ff9900;
+            --accent-orange-hover: #e68a00;
+            --correct-green: #2e7d32;
+            --correct-bg: #1b4d1e;
+            --incorrect-red: #c62828;
+            --incorrect-bg: #4a1515;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 60px;
+            line-height: 1.5;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--accent-orange);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+        }
+
+        .score-tracker {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: #252525;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #333;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .quiz-intro {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .quiz-intro h1 {
+            color: var(--accent-orange);
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .quiz-intro p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: border-color 0.2s ease;
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .question-number {
+            background-color: var(--accent-orange);
+            color: #000;
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .option-btn {
+            background-color: #222222;
+            color: var(--text-main);
+            border: 1px solid #333333;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.95rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #2a2a2a;
+            border-color: var(--accent-orange);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            margin-right: 12px;
+            color: var(--accent-orange);
+            flex-shrink: 0;
+        }
+
+        /* Option States */
+        .option-btn.correct-choice {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-green) !important;
+            color: #ffffff !important;
+        }
+
+        .option-btn.incorrect-choice {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-red) !important;
+            color: #ffffff !important;
+        }
+
+        .option-btn.dimmed {
+            opacity: 0.4;
+        }
+
+        /* Feedback Explanation Box */
+        .explanation-box {
+            display: none;
+            background-color: #141414;
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 0 8px 8px 0;
+            padding: 16px;
+            margin-top: 16px;
+            font-size: 0.92rem;
+            color: #dddddd;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .explanation-title {
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Results Card */
+        #results-card {
+            display: none;
+            background-color: var(--card-bg);
+            border: 2px solid var(--accent-orange);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 8px 24px rgba(255, 153, 0, 0.2);
+        }
+
+        #results-card h2 {
+            color: var(--accent-orange);
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .final-score-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .final-percentage {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            margin-bottom: 16px;
+        }
+
+        .feedback-message {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .retake-btn {
+            background-color: var(--accent-orange);
+            color: #000000;
+            font-weight: 700;
+            font-size: 1.05rem;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 28px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        .retake-btn:hover {
+            background-color: var(--accent-orange-hover);
+        }
+
+        .retake-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 600px) {
+            .sticky-header {
+                padding: 12px 14px;
+            }
+            .header-title {
+                font-size: 0.95rem;
+            }
+            .score-tracker {
+                font-size: 0.95rem;
+                padding: 4px 10px;
+            }
+            .container {
+                padding: 0 12px;
+            }
+            .question-card {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-header">
+        <div class="header-title">Biochem Week 2 Practice Hub</div>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 40 (0%)</div>
+    </div>
+
+    <div class="container">
+        <div class="quiz-intro">
+            <h1>Week 2 Biochemistry Master Quiz</h1>
+            <p>Comprehensive Board-Style Active Recall Practice: Histidine Titration, Buffer Kinetics, Peptide Bond Dynamics, Collagen Synthesis, Catecholamine/Serotonin Pathways, and RNA Splicing Mechanics.</p>
+        </div>
+
+        <div id="quiz-questions-container"></div>
+
+        <div id="results-card">
+            <h2>Quiz Complete!</h2>
+            <div class="final-score-text" id="final-score-text">You scored 0 out of 40</div>
+            <div class="final-percentage" id="final-percentage">0%</div>
+            <p class="feedback-message" id="feedback-message"></p>
+            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const rawQuestions = [
+            {
+                question: "What are the three specific pKa values associated with the complete titration of Histidine?",
+                options: [
+                    "pKa1 = 1.82, pKa2 = 6.0, pKa3 = 9.17",
+                    "pKa1 = 2.34, pKa2 = 9.60, pKa3 = 12.48",
+                    "pKa1 = 1.82, pKa2 = 3.90, pKa3 = 9.17",
+                    "pKa1 = 2.10, pKa2 = 4.25, pKa3 = 10.53"
+                ],
+                correctIndex: 0,
+                explanation: "Histidine features three distinct ionizable groups: pKa1 = 1.82 for the alpha-carboxyl group, pKa2 = 6.0 for the imidazole side chain ring, and pKa3 = 9.17 for the alpha-amino group."
+            },
+            {
+                question: "What is the net electrical charge of Histidine Form A at a pH below 1.82 (fully protonated state)?",
+                options: [
+                    "+2",
+                    "+1",
+                    "0",
+                    "-1"
+                ],
+                correctIndex: 0,
+                explanation: "At pH < 1.82, all ionizable groups are fully protonated: the alpha-carboxyl group is neutral (-COOH = 0), the imidazole ring is protonated (+1), and the alpha-amino group is protonated (-NH3+ = +1), giving a net charge of +2."
+            },
+            {
+                question: "Which Histidine ionic species represents Form B (existing between pH 1.82 and 6.0)?",
+                options: [
+                    "Alpha-COO- (-1), Imidazole (+1), Alpha-NH3+ (+1) -> Net Charge +1",
+                    "Alpha-COOH (0), Imidazole (+1), Alpha-NH3+ (+1) -> Net Charge +2",
+                    "Alpha-COO- (-1), Imidazole (0), Alpha-NH3+ (+1) -> Net Charge 0",
+                    "Alpha-COO- (-1), Imidazole (0), Alpha-NH2 (0) -> Net Charge -1"
+                ],
+                correctIndex: 0,
+                explanation: "As pH rises above pKa1 (1.82), the alpha-carboxyl group loses a proton to become -COO- (-1). The imidazole (+1) and alpha-amino (+1) remain protonated, producing Form B with a net charge of +1."
+            },
+            {
+                question: "How is the Isoelectric Point (pI) calculated for Histidine based on its titration curve?",
+                options: [
+                    "pI = (pKa2 + pKa3) / 2 = (6.0 + 9.17) / 2 = 7.59",
+                    "pI = (pKa1 + pKa2) / 2 = (1.82 + 6.0) / 2 = 3.91",
+                    "pI = (pKa1 + pKa3) / 2 = (1.82 + 9.17) / 2 = 5.50",
+                    "pI = (pKa1 + pKa2 + pKa3) / 3 = 5.66"
+                ],
+                correctIndex: 0,
+                explanation: "The isoelectric point (pI) is the average of the two pKa values that border the electrically neutral zwitterion form (Form C). For Histidine, Form C exists between pKa2 (6.0) and pKa3 (9.17), giving pI = (6.0 + 9.17) / 2 = 7.585 (~7.59)."
+            },
+            {
+                question: "Why does Histidine serve as an effective physiological buffer in blood and cytosol near pH 7.4?",
+                options: [
+                    "Its imidazole side chain pKa of 6.0 allows both protonated (+1) and unprotonated (neutral) forms to exist near physiological pH.",
+                    "Its alpha-carboxyl group pKa of 1.82 buffers strongly at neutral pH.",
+                    "It forms covalent disulfide bonds that absorb excess hydrogen ions.",
+                    "Its side chain is fully deprotonated at pH 7.4, preventing any H+ exchange."
+                ],
+                correctIndex: 0,
+                explanation: "Histidine's imidazole side chain has a pKa of 6.0. Because this is within ~1 pH unit of physiological pH (7.4), Histidine is the only standard amino acid whose side chain buffers effectively in biological fluids."
+            },
+            {
+                question: "What specific chemical property enables the imidazole ring of Histidine to undergo tautomerism?",
+                options: [
+                    "A non-delocalized lone pair on the ring nitrogen that protrudes in the plane of the ring to accept H+",
+                    "A permanent double bond that prevents hydrogen exchange",
+                    "An extra carboxyl group attached directly to the ring structure",
+                    "Complete hydrophobic shielding by adjacent leucine residues"
+                ],
+                correctIndex: 0,
+                explanation: "The basic site on the imidazole ring is a nitrogen atom whose lone pair of electrons protrudes in the plane of the ring (not delocalized in the pi-system), allowing it to readily accept and donate protons near physiological pH."
+            },
+            {
+                question: "According to Le Chatelier's principle, what happens in a bicarbonate buffer system when cellular respiration increases arterial [H+]?",
+                options: [
+                    "The equilibrium shifts to the left, forming H2CO3 which dissociates into CO2 and H2O to be exhaled.",
+                    "The equilibrium shifts to the right, generating more free HCO3- and H+ ions.",
+                    "The buffer system collapses and metabolic alkalosis immediately ensues.",
+                    "Carbonic anhydrase is irreversibly inhibited by excess proton accumulation."
+                ],
+                correctIndex: 0,
+                explanation: "Adding excess H+ pushes the reaction H+ + HCO3- <-> H2CO3 <-> H2O + CO2 to the left, consuming the excess protons and forming CO2 gas, which is then expired by the lungs."
+            },
+            {
+                question: "What chemical phenomenon imparts a rigid, non-rotatable character to the peptide bond?",
+                options: [
+                    "Resonance delocalization of the nitrogen lone pair across the carbonyl group, creating partial double-bond character",
+                    "Formation of an intramolecular disulfide bridge between adjacent alpha-carbons",
+                    "Ionic salt bridges formed between alpha-carboxyl and alpha-amino ends",
+                    "Steric locking by large aromatic tyrosine side chains"
+                ],
+                correctIndex: 0,
+                explanation: "Delocalization of the lone pair of electrons on the amide nitrogen toward the carbonyl oxygen gives the C-N peptide bond a 40% partial double-bond character, making it rigid and planar."
+            },
+            {
+                question: "Around which specific single bonds in a polypeptide backbone can free rotation occur?",
+                options: [
+                    "The phi (φ) bond (Cα-N) and psi (ψ) bond (Cα-C)",
+                    "The peptide C-N bond and the carbonyl C=O bond",
+                    "The side chain R-group ester bond and the disulfide bond",
+                    "The omega (ω) peptide linkage and the 5'-phosphate bond"
+                ],
+                correctIndex: 0,
+                explanation: "Free rotation in the polypeptide backbone is strictly restricted to the single sigma bonds attached to the central alpha-carbon: the phi (φ) bond between N and Cα, and the psi (ψ) bond between Cα and the carbonyl C."
+            },
+            {
+                question: "Why do virtually all peptide bonds in native proteins adopt the trans configuration rather than the cis configuration?",
+                options: [
+                    "To prevent steric hindrance between R-group side chains attached to adjacent alpha-carbons",
+                    "Because cis peptide bonds cannot form hydrogen bonds in alpha-helices",
+                    "Trans peptide bonds require less ATP energy during ribosomal translation",
+                    "The cis configuration is chemically impossible for L-amino acids"
+                ],
+                correctIndex: 0,
+                explanation: "In the cis configuration, adjacent R-group side chains are oriented on the same side of the peptide bond, causing severe steric collision. The trans configuration places R-groups on opposite sides, minimizing steric hindrance."
+            },
+            {
+                question: "What specific ribosomal enzyme activity catalyzes the condensation reaction that forms a peptide bond during translation?",
+                options: [
+                    "Peptidyl transferase (a ribozyme function of the large ribosomal subunit)",
+                    "Aminoacyl-tRNA synthetase",
+                    "RNA polymerase II",
+                    "Signal peptidase"
+                ],
+                correctIndex: 0,
+                explanation: "Peptidyl transferase is the ribozyme activity embedded within the 23S/28S rRNA of the large ribosomal subunit that catalyzes peptide bond formation between the P-site and A-site amino acids."
+            },
+            {
+                question: "What primary amino acid sequence motif is characteristic of collagen?",
+                options: [
+                    "Gly-X-Y repeat sequence",
+                    "Cys-X-X-Cys motif",
+                    "His-HA-His repeat sequence",
+                    "Glu-Lys-Asp triplet repeat"
+                ],
+                correctIndex: 0,
+                explanation: "Collagen possesses a unique primary structure consisting of repeating Gly-X-Y triplets, where X is frequently Proline and Y is frequently Hydroxyproline or Hydroxylysine."
+            },
+            {
+                question: "Why must Glycine occur at every third position in the collagen polypeptide chain?",
+                options: [
+                    "Glycine is the smallest amino acid (R = H) and is the only residue small enough to fit inside the crowded central core of the triple helix.",
+                    "Glycine forms essential covalent disulfide bonds across adjacent chains.",
+                    "Glycine provides the carboxylic acid group required for lysyl oxidation.",
+                    "Glycine introduces the sharp 100-degree turn necessary for beta-sheet folding."
+                ],
+                correctIndex: 0,
+                explanation: "The three strands of the collagen triple helix pack tightly together around a central axis. Only Glycine's single hydrogen atom side chain is small enough to fit within this constrained inner space."
+            },
+            {
+                question: "What structural role is played by Proline residues in collagen pro-alpha chains?",
+                options: [
+                    "The rigid pyrrolidine ring of proline causes sharp kinks that facilitate left-handed helical twisting.",
+                    "Proline forms interchain salt bridges that stabilize the quaternary structure.",
+                    "Proline donates hydrogen bonds from its free primary amine group.",
+                    "Proline binds copper ions necessary for extracellular cross-linking."
+                ],
+                correctIndex: 0,
+                explanation: "Proline's ring structure restricts geometry, introducing necessary structural turns and kinks that dictate the tight left-handed helical conformation of individual collagen alpha-chains."
+            },
+            {
+                question: "Which post-translational modifications are essential for stabilizing the collagen triple helix, and which cofactors do their enzymes require?",
+                options: [
+                    "Hydroxylation of proline and lysine residues; requiring Vitamin C (ascorbate) and Fe2+",
+                    "Carboxylation of glutamate residues; requiring Vitamin K and Ca2+",
+                    "Phosphorylation of serine residues; requiring ATP and Mg2+",
+                    "Methylation of histidine residues; requiring SAM and Vitamin B12"
+                ],
+                correctIndex: 0,
+                explanation: "Prolyl and lysyl hydroxylases convert proline and lysine residues to hydroxyproline and hydroxylysine. These reactions strictly require Vitamin C (ascorbate) to maintain iron in the reduced Fe2+ state."
+            },
+            {
+                question: "What clinical pathology results from impaired prolyl/lysyl hydroxylation due to Vitamin C deficiency?",
+                options: [
+                    "Scurvy, characterized by fragile blood vessels, bleeding gums, and impaired wound healing",
+                    "Ehlers-Danlos Syndrome Type IV, caused by defective type III collagen cleavage",
+                    "Osteogenesis Imperfecta Type I, caused by point mutations in COL1A1",
+                    "Menkes Kinky Hair Disease, caused by impaired copper transport"
+                ],
+                correctIndex: 0,
+                explanation: "Without Vitamin C, prolyl hydroxylase cannot form hydroxyproline residues necessary for interchain hydrogen bonding. The resulting unstable tropocollagen fails to form strong fibrils, causing Scurvy."
+            },
+            {
+                question: "What is the overall structural organization of mature tropocollagen?",
+                options: [
+                    "A right-handed triple-helix composed of three left-handed alpha-chains",
+                    "A left-handed alpha-helix composed of three right-handed beta-strands",
+                    "A antiparallel beta-barrel containing 12 transmembrane strands",
+                    "A globular tetramer with four heme-binding hydrophobic pockets"
+                ],
+                correctIndex: 0,
+                explanation: "Individual collagen alpha-chains form left-handed helices. Three of these left-handed strands wrap around each other in a right-handed superhelical coiled-coil to form tropocollagen."
+            },
+            {
+                question: "What coenzyme is required by Phenylalanine hydroxylase (PAH) to convert Phenylalanine to Tyrosine?",
+                options: [
+                    "Tetrahydrobiopterin (BH4)",
+                    "Pyridoxal phosphate (PLP / B6)",
+                    "Thiamine pyrophosphate (TPP)",
+                    "Flavin adenine dinucleotide (FAD)"
+                ],
+                correctIndex: 0,
+                explanation: "Phenylalanine hydroxylase requires Tetrahydrobiopterin (BH4) as a donor of reducing equivalents to hydroxylate Phenylalanine into Tyrosine."
+            },
+            {
+                question: "Which classic metabolic inborn error results from an inherited deficiency of Phenylalanine hydroxylase (PAH)?",
+                options: [
+                    "Phenylketonuria (PKU)",
+                    "Alkaptoneuria",
+                    "Maple Syrup Urine Disease (MSUD)",
+                    "Homocystinuria"
+                ],
+                correctIndex: 0,
+                explanation: "PAH deficiency blocks the conversion of Phenylalanine to Tyrosine, resulting in toxic accumulation of Phenylalanine and phenylketones (phenylpyruvate, phenylacetate) causing PKU."
+            },
+            {
+                question: "What is the correct 5-step pathway in the synthesis of Epinephrine from Phenylalanine?",
+                options: [
+                    "Phenylalanine -> Tyrosine -> L-DOPA -> Dopamine -> Norepinephrine -> Epinephrine",
+                    "Phenylalanine -> L-DOPA -> Tyrosine -> Dopamine -> Epinephrine -> Norepinephrine",
+                    "Tyrosine -> Phenylalanine -> Dopamine -> L-DOPA -> Norepinephrine -> Epinephrine",
+                    "Phenylalanine -> Tyrosine -> Dopamine -> L-DOPA -> Norepinephrine -> Epinephrine"
+                ],
+                correctIndex: 0,
+                explanation: "The complete catecholamine synthesis pathway proceeds sequentially: Phenylalanine -> Tyrosine -> L-DOPA -> Dopamine -> Norepinephrine -> Epinephrine."
+            },
+            {
+                question: "Which enzyme catalyzes the rate-limiting step of catecholamine biosynthesis?",
+                options: [
+                    "Tyrosine hydroxylase",
+                    "DOPA decarboxylase",
+                    "Dopamine beta-hydroxylase",
+                    "Phenylethanolamine N-methyltransferase (PNMT)"
+                ],
+                correctIndex: 0,
+                explanation: "Tyrosine hydroxylase converts Tyrosine to L-DOPA. This hydroxylation reaction requires BH4 and Fe2+ and is the rate-limiting regulatory enzyme of catecholamine synthesis."
+            },
+            {
+                question: "Which cofactor is required by DOPA decarboxylase to convert L-DOPA into Dopamine?",
+                options: [
+                    "Pyridoxal phosphate (PLP / Vitamin B6)",
+                    "Tetrahydrobiopterin (BH4)",
+                    "Ascorbic acid (Vitamin C)",
+                    "S-adenosylmethionine (SAM)"
+                ],
+                correctIndex: 0,
+                explanation: "Decarboxylation of L-DOPA to form Dopamine is catalyzed by DOPA decarboxylase (Aromatic L-amino acid decarboxylase), which strictly requires Pyridoxal phosphate (PLP / Vitamin B6)."
+            },
+            {
+                question: "What enzyme converts Norepinephrine to Epinephrine in the adrenal medulla, and what methyl donor does it use?",
+                options: [
+                    "Phenylethanolamine N-methyltransferase (PNMT), using S-adenosylmethionine (SAM)",
+                    "Dopamine beta-hydroxylase, using Vitamin C",
+                    "Catechol-O-methyltransferase (COMT), using Tetrahydrofolate",
+                    "Monoamine oxidase (MAO), using NAD+"
+                ],
+                correctIndex: 0,
+                explanation: "PNMT catalyzes the N-methylation of Norepinephrine to Epinephrine in the adrenal medulla, using S-adenosylmethionine (SAM) as the methyl group donor."
+            },
+            {
+                question: "What is the 2-step pathway and cofactor requirement for synthesizing Serotonin from Tryptophan?",
+                options: [
+                    "Tryptophan -> 5-HTP (via Tryptophan hydroxylase, BH4) -> Serotonin (via Decarboxylase, PLP/B6)",
+                    "Tryptophan -> Serotonin (via Tryptophan decarboxylase, B12)",
+                    "Tryptophan -> Melatonin (via Hydroxylase, BH4) -> Serotonin (via SAM)",
+                    "Tryptophan -> Tyrosine (via PAH, BH4) -> Serotonin (via PLP)"
+                ],
+                correctIndex: 0,
+                explanation: "Tryptophan is first hydroxylated to 5-hydroxytryptophan (5-HTP) by Tryptophan hydroxylase (requiring BH4). 5-HTP is then decarboxylated by Aromatic L-amino acid decarboxylase (requiring PLP/B6) to form Serotonin (5-HT)."
+            },
+            {
+                question: "What structure is attached to the 5' end of eukaryotic pre-mRNA during early nuclear processing?",
+                options: [
+                    "7-methylguanosine cap attached via an atypical 5'-to-5' triphosphate linkage",
+                    "Polyadenylate tail consisting of 200 adenine nucleotides",
+                    "Small nuclear ribonucleoprotein U1 complex",
+                    "3'-CCA trinucleotide sequence"
+                ],
+                correctIndex: 0,
+                explanation: "Early in transcription, a 7-methylguanosine cap is added to the 5' end of pre-mRNA through a unique 5'-to-5' triphosphate bridge to protect against exonucleases and promote translation initiation."
+            },
+            {
+                question: "How is the 3' Poly-A tail added to eukaryotic pre-mRNA?",
+                options: [
+                    "Poly(A) polymerase adds ~200 Adenine residues to the cleaved 3' end without a template.",
+                    "RNA Polymerase II transcribes a long poly-T template strand.",
+                    "Spliceosomes ligate pre-formed poly-A oligonucleotides.",
+                    "Peptidyl transferase attaches adenine nucleotides during termination."
+                ],
+                correctIndex: 0,
+                explanation: "Following cleavage downstream of the AAUAAA signal, Poly(A) polymerase adds 100-250 adenine nucleotides to the 3' end using ATP, requiring no DNA template."
+            },
+            {
+                question: "What ribonucleoprotein complexes make up the eukaryotic Spliceosome?",
+                options: [
+                    "snRNPs U1, U2, U4, U5, and U6",
+                    "rRNA 18S, 28S, and 5.8S subunits",
+                    "eIF1, eIF2, eIF3, and eIF4F complexes",
+                    "Rho factor and NusA protein complexes"
+                ],
+                correctIndex: 0,
+                explanation: "The spliceosome is assembled from five small nuclear ribonucleoproteins (snRNPs designated U1, U2, U4, U5, and U6) along with auxiliary protein factors."
+            },
+            {
+                question: "What invariant dinucleotide sequences define the 5' and 3' boundaries of eukaryotic introns?",
+                options: [
+                    "5' GU and 3' AG",
+                    "5' AU and 3' GC",
+                    "5' AT and 3' CG",
+                    "5' CA and 3' UG"
+                ],
+                correctIndex: 0,
+                explanation: "Nearly all eukaryotic nuclear pre-mRNA introns begin with the invariant sequence GU at the 5' splice donor site and end with AG at the 3' splice acceptor site."
+            },
+            {
+                question: "What chemical intermediate is produced during the first transesterification step of pre-mRNA splicing?",
+                options: [
+                    "An intron lariat structure linked by a 2'-5' phosphodiester bond to an internal branch-point Adenosine",
+                    "A circular exon loop joined by a 3'-5' peptide bond",
+                    "A linear excised intron fragment with a 5'-phosphate cap",
+                    "A double-stranded RNA hairpin bound to U3 snRNP"
+                ],
+                correctIndex: 0,
+                explanation: "The 2'-OH group of an internal branch-point Adenosine attacks the 5' splice site GU phosphate, forming a branched lariat structure held together by an unusual 2'-5' phosphodiester bond."
+            },
+            {
+                question: "Patients with Systemic Lupus Erythematosus (SLE) frequently produce autoantibodies against which spliceosomal component?",
+                options: [
+                    "Anti-Smith (anti-Sm) antibodies directed against core snRNP proteins",
+                    "Anti-RNA Polymerase I antibodies directed against nucleolar DNA",
+                    "Anti-EF-2 antibodies directed against elongation factors",
+                    "Anti-tRNA synthetase antibodies directed against aminoacyl complexes"
+                ],
+                correctIndex: 0,
+                explanation: "Anti-Smith (anti-Sm) antibodies, which are highly specific for SLE, target the common core proteins present inside snRNPs (U1, U2, U4/U6, U5)."
+            },
+            {
+                question: "Why does Tetrahydrobiopterin (BH4) deficiency produce severe progressive neurological symptoms even if dietary Phenylalanine is restricted?",
+                options: [
+                    "BH4 is also required by Tyrosine hydroxylase and Tryptophan hydroxylase, impairing synthesis of Dopamine, Norepinephrine, and Serotonin.",
+                    "BH4 is a mandatory structural component of myelin basic protein.",
+                    "BH4 deficiency blocks the uptake of glucose across the blood-brain barrier.",
+                    "BH4 directly inhibits acetylcholinesterase in autonomic ganglia."
+                ],
+                correctIndex: 0,
+                explanation: "Restricting phenylalanine prevents toxic phenylketone buildup, but because BH4 is an essential cofactor for Tyrosine hydroxylase and Tryptophan hydroxylase, BH4 deficiency impairs neurotransmitter synthesis (dopamine, serotonin)."
+            },
+            {
+                question: "What happens to the chemical properties of the alpha-amino and alpha-carboxyl groups when amino acids are incorporated into a polypeptide chain?",
+                options: [
+                    "Their ionizable acid-base influence is lost in peptide bond formation, making side-chain R-groups responsible for overall protein properties.",
+                    "They remain fully ionizable and dictate the isoelectric point of the folded protein.",
+                    "They form permanent covalent bonds with surrounding lipid membranes.",
+                    "They spontaneously convert into basic imidazole ring structures."
+                ],
+                correctIndex: 0,
+                explanation: "During peptide bond condensation, the alpha-amino and alpha-carboxyl functional groups are consumed. Thus, except for the terminal N- and C-ends, the physical and chemical properties of a protein depend entirely on its R-group side chains."
+            },
+            {
+                question: "Which amino acid derivative branches off L-DOPA to produce skin and hair pigmentation?",
+                options: [
+                    "Melanin (via Dopaquinone)",
+                    "Melatonin (via Serotonin acetylation)",
+                    "Creatine (via Guanidinoacetate)",
+                    "Thyroxine (via Iodination)"
+                ],
+                correctIndex: 0,
+                explanation: "In melanocytes, L-DOPA is oxidized by Tyrosinase to dopaquinone, which polymerizes to produce Melanin pigment. (This is distinct from Melatonin, which is derived from Tryptophan/Serotonin)."
+            },
+            {
+                question: "What is the primary cellular function of snRNP U1 during pre-mRNA spliceosome assembly?",
+                options: [
+                    "Base-pairing with the conserved 5' GU splice donor site of the intron",
+                    "Binding to the 3' Poly-A tail to initiate cleavage",
+                    "Catalyzing the second transesterification step between exons",
+                    "Attaching the 7-methylguanosine cap to the 5' end"
+                ],
+                correctIndex: 0,
+                explanation: "The U1 snRNP contains an RNA component that directly recognizes and base-pairs with the complementary invariant sequence at the 5' GU splice donor site of the intron."
+            },
+            {
+                question: "What physical property dictates how integral membrane proteins embed within the cell membrane?",
+                options: [
+                    "They present an outer lipophilic surface composed of nonpolar hydrophobic R-groups that interact favorably with membrane lipids.",
+                    "They present a highly charged basic outer surface that forms ionic bonds with fatty acid tails.",
+                    "They contain continuous repeating sequences of hydrophilic hydroxyproline residues.",
+                    "They rely on covalent peptide bonds formed with cholesterol molecules."
+                ],
+                correctIndex: 0,
+                explanation: "Integral membrane proteins fold so that hydrophobic nonpolar side chains (Val, Leu, Ile, Phe) face outward, creating a lipophilic domain that stably integrates into the nonpolar lipid bilayer."
+            },
+            {
+                question: "Which enzyme deficiency causes Tyrosinemia Type I, and what metabolic odor is characteristic of affected patients?",
+                options: [
+                    "Fumarylacetoacetate hydrolase deficiency; causing a cabbage-like odor",
+                    "Homogentisate oxidase deficiency; causing dark black urine",
+                    "Branched-chain alpha-keto acid dehydrogenase deficiency; causing a maple syrup odor",
+                    "Phenylalanine hydroxylase deficiency; causing a mousy odor"
+                ],
+                correctIndex: 0,
+                explanation: "Tyrosinemia Type I is caused by a deficiency in fumarylacetoacetate hydrolase, leading to accumulation of fumarylacetoacetate and metabolites that impart a characteristic cabbage-like odor."
+            },
+            {
+                question: "How does the imidazole ring of Histidine act as a proton relay in active sites of enzymes like serine proteases?",
+                options: [
+                    "It accepts a proton from serine at neutral pH and donates it to the leaving peptide fragment due to its pKa ~ 6.0.",
+                    "It forms a permanent covalent ester bond with the substrate carbonyl carbon.",
+                    "It hydrolyzes ATP to drive conformational shifting of the active site.",
+                    "It irreversibly binds zinc ions to block substrate entry."
+                ],
+                correctIndex: 0,
+                explanation: "Because Histidine's imidazole ring has a pKa near 6.0, it can easily alternate between unprotonated base and protonated acid forms at physiological pH, making it an ideal general acid-base catalyst in enzyme active sites."
+            },
+            {
+                question: "What thermodynamic state is achieved when a protein undergoes complete denaturation?",
+                options: [
+                    "Loss of secondary, tertiary, and quaternary structure resulting in a massive increase in conformational entropy (+ΔS)",
+                    "Cleavage of primary peptide bonds resulting in free amino acid monomers",
+                    "Formation of rigid, irreversible covalent disulfide networks",
+                    "A dramatic decrease in entropy as hydrophobic residues face water"
+                ],
+                correctIndex: 0,
+                explanation: "Denaturation unwinds the highly organized native protein state into a random coil. While primary peptide bonds remain intact, breaking non-covalent interactions causes a sharp increase in disorder/entropy (+ΔS)."
+            },
+            {
+                question: "What is the function of small nuclear RNA (snRNA) within snRNP particles?",
+                options: [
+                    "Providing sequence specificity by base-pairing with conserved pre-mRNA intron boundaries and catalyzing splicing",
+                    "Translating mRNA sequences into ribosomal protein components",
+                    "Transporting amino acids to the active peptidyl transferase site",
+                    "Capping the 3' end of pre-mRNA with adenine repeats"
+                ],
+                correctIndex: 0,
+                explanation: "snRNAs are the catalytic and recognition components of snRNPs. They base-pair specifically with intron splice sites and branch points, guiding spliceosome alignment and transesterification."
+            },
+            {
+                question: "What is the net electrical charge of Histidine Form C at its Isoelectric Point (pI = 7.59)?",
+                options: [
+                    "0",
+                    "+1",
+                    "+2",
+                    "-1"
+                ],
+                correctIndex: 0,
+                explanation: "Form C is the zwitterionic form of Histidine where the alpha-carboxyl group is deprotonated (-1), the alpha-amino group is protonated (+1), and the imidazole side chain is unprotonated/neutral (0), yielding a net charge of 0."
+            }
+        ];
+
+        // Helper to shuffle array in place
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        let processedQuestions = [];
+        let currentScore = 0;
+        let answeredCount = 0;
+
+        function initializeQuiz() {
+            currentScore = 0;
+            answeredCount = 0;
+            updateScoreDisplay();
+
+            const container = document.getElementById('quiz-questions-container');
+            container.innerHTML = '';
+            document.getElementById('results-card').style.display = 'none';
+
+            // Clone and process questions with randomized choices
+            processedQuestions = rawQuestions.map((q, index) => {
+                const optionsObj = q.options.map((optText, optIdx) => ({
+                    text: optText,
+                    isCorrect: optIdx === q.correctIndex
+                }));
+
+                // Shuffle options to ensure even distribution across A, B, C, D
+                shuffleArray(optionsObj);
+
+                return {
+                    id: index,
+                    question: q.question,
+                    options: optionsObj,
+                    explanation: q.explanation,
+                    answered: false
+                };
+            });
+
+            // Render Questions
+            processedQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${qIndex}`;
+
+                const prefixes = ['A', 'B', 'C', 'D'];
+
+                let optionsHTML = q.options.map((opt, oIdx) => `
+                    <button class="option-btn" 
+                            id="btn-${qIndex}-${oIdx}" 
+                            onclick="handleOptionClick(${qIndex}, ${oIdx})">
+                        <span class="option-prefix">${prefixes[oIdx]}.</span>
+                        <span>${escapeHTML(opt.text)}</span>
+                    </button>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-number">Q${qIndex + 1}</span>
+                        <div class="question-text">${escapeHTML(q.question)}</div>
+                    </div>
+                    <div class="options-list">
+                        ${optionsHTML}
+                    </div>
+                    <div class="explanation-box" id="exp-${qIndex}">
+                        <div class="explanation-title">
+                            <span>💡 Board Review Context</span>
+                        </div>
+                        <div>${escapeHTML(q.explanation)}</div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+            );
+        }
+
+        function handleOptionClick(questionIndex, selectedOptionIndex) {
+            const q = processedQuestions[questionIndex];
+            if (q.answered) return;
+
+            q.answered = true;
+            answeredCount++;
+
+            const selectedOption = q.options[selectedOptionIndex];
+            const isCorrect = selectedOption.isCorrect;
+
+            if (isCorrect) {
+                currentScore++;
+            }
+
+            // Lock all options for this question & highlight correct/incorrect
+            q.options.forEach((opt, oIdx) => {
+                const btn = document.getElementById(`btn-${questionIndex}-${oIdx}`);
+                btn.disabled = true;
+
+                if (opt.isCorrect) {
+                    btn.classList.add('correct-choice');
+                } else if (oIdx === selectedOptionIndex && !isCorrect) {
+                    btn.classList.add('incorrect-choice');
+                } else {
+                    btn.classList.add('dimmed');
+                }
+            });
+
+            // Show explanation
+            const expBox = document.getElementById(`exp-${questionIndex}`);
+            expBox.style.display = 'block';
+
+            updateScoreDisplay();
+
+            // Check if quiz complete
+            if (answeredCount === processedQuestions.length) {
+                showFinalResults();
+            }
+        }
+
+        function updateScoreDisplay() {
+            const total = rawQuestions.length;
+            const percentage = Math.round((currentScore / total) * 100);
+            const tracker = document.getElementById('score-tracker');
+            tracker.textContent = `Score: ${currentScore} / ${total} (${percentage}%)`;
+        }
+
+        function showFinalResults() {
+            const total = processedQuestions.length;
+            const percentage = Math.round((currentScore / total) * 100);
+
+            document.getElementById('final-score-text').textContent = `You scored ${currentScore} out of ${total}`;
+            document.getElementById('final-percentage').textContent = `${percentage}%`;
+
+            let msg = '';
+            if (percentage >= 90) {
+                msg = "Outstanding Mastery! You have thoroughly mastered Week 2 Biochemistry concepts for board examination.";
+            } else if (percentage >= 75) {
+                msg = "Solid Performance! Good grasp of pathways and titration kinetics. Review the explanations for missed items.";
+            } else if (percentage >= 60) {
+                msg = "Developing Mastery. Focus review on Histidine pKa transitions, collagen cofactors, and catecholamine steps.";
+            } else {
+                msg = "Requires Focused Review. Re-read course transcript notes and re-test with flashcards before retaking.";
+            }
+
+            document.getElementById('feedback-message').textContent = msg;
+            
+            const resultsCard = document.getElementById('results-card');
+            resultsCard.style.display = 'block';
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                initializeQuiz();
+            }, 300);
+        }
+
+        // Initialize quiz on load
+        window.addEventListener('DOMContentLoaded', initializeQuiz);
+    </script>
+</body>
+</html>
