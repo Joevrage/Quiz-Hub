@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Microbiology Quiz 2 Interactive Practice Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --primary-accent: #ff9900;
+            --correct-color: #10b981;
+            --correct-bg: #064e3b;
+            --incorrect-color: #ef4444;
+            --incorrect-bg: #7f1d1d;
+            --border-color: #333333;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        .header-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: #141414;
+            border-bottom: 2px solid var(--primary-accent);
+            padding: 14px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+
+        .score-box {
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #262626;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background-color: #222222;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-accent);
+            background-color: #2a2a2a;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct-choice {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-color) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect-choice {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-color) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-btn.dimmed {
+            opacity: 0.35;
+        }
+
+        .explanation-box {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box.correct {
+            background-color: #042f22;
+            border-left: 4px solid var(--correct-color);
+            color: #a7f3d0;
+        }
+
+        .explanation-box.incorrect {
+            background-color: #450a0a;
+            border-left: 4px solid var(--incorrect-color);
+            color: #fca5a5;
+        }
+
+        .summary-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--primary-accent);
+            display: none;
+        }
+
+        .summary-card.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-accent);
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 16px;
+        }
+
+        .summary-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .reset-btn {
+            background-color: var(--primary-accent);
+            color: #000000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background-color: #e68a00;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-sticky">
+        <div class="header-container">
+            <div class="header-title">Microbiology: Quiz 2 Practice Hub</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 30 (0%)</div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <div class="quiz-container" id="quizContainer"></div>
+
+    <div class="quiz-container">
+        <div class="summary-card" id="summaryCard">
+            <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
+            <div class="summary-score" id="finalScore">0 / 30</div>
+            <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "During which phase of the bacterial growth curve is the rate of cell division equal to the rate of cell death due to nutrient exhaustion?",
+                options: ["Lag phase", "Log (Exponential) phase", "Stationary phase", "Death phase"],
+                correct: 2,
+                explanation: "In the Stationary phase, cell population flattens out as the rate of new cell division equals the rate of dying cells caused by nutrient depletion and metabolic waste accumulation."
+            },
+            {
+                question: "Bacteria that thrive at normal human body temperature (~37°C) and comprise the majority of human pathogens belong to which temperature class?",
+                options: ["Psychrophiles", "Mesophiles", "Thermophiles", "Extreme Thermophiles"],
+                correct: 1,
+                explanation: "Mesophiles have optimal growth temperatures between 20°C and 40°C, making them uniquely adapted to colonize human tissue."
+            },
+            {
+                question: "Which set of protective enzymes allows aerobes to neutralize toxic reactive oxygen species (ROS)?",
+                options: ["Superoxide dismutase, peroxidase, and catalase", "Amylase, lipase, and protease", "DNA polymerase, ligase, and helicase", "Coagulase, kinase, and hyaluronidase"],
+                correct: 0,
+                explanation: "Superoxide dismutase (SOD), peroxidase, and catalase break down hazardous oxygen radicals (like superoxide O2- and hydrogen peroxide H2O2) into harmless water and oxygen."
+            },
+            {
+                question: "Which type of ecological association involves two organisms living in close physical contact where both organisms derive mutual benefit?",
+                options: ["Commensalism", "Mutualism", "Parasitism", "Synergism"],
+                correct: 1,
+                explanation: "Mutualism is a obligate or symbiotic interaction where both species benefit from the association."
+            },
+            {
+                question: "What non-symbiotic interaction occurs when one microorganism secretes chemical substances (like antibiotics or bacteriocins) that destroy or inhibit another microbe?",
+                options: ["Synergism", "Commensalism", "Antagonism (Antibiosis)", "Mutualism"],
+                correct: 2,
+                explanation: "Antagonism (or antibiosis) is an inhibitory interaction where one organism releases antimicrobial chemicals to outcompete neighboring species."
+            },
+            {
+                question: "Which indirect bacterial measurement technique uses a spectrophotometer to quantify liquid culture cloudiness?",
+                options: ["Flow Cytometry", "Turbidity", "Direct Microscopic Count", "Direct Plate Count"],
+                correct: 1,
+                explanation: "Turbidity measures culture cloudiness via spectrophotometry; higher absorbance values correspond to greater bacterial cell density."
+            },
+            {
+                question: "In non-genetic pathway regulation, what occurs during feedback inhibition?",
+                options: ["The substrate destroys the ribosome", "The end-product binds to an enzyme's allosteric site to immediately shut down the initial reaction", "The corepressor binds directly to messenger RNA", "RNA polymerase is degraded"],
+                correct: 1,
+                explanation: "Feedback inhibition is a non-genetic control mechanism where the accumulated end-product binds to the allosteric site of the first enzyme in the pathway, shutting down further synthesis instantly."
+            },
+            {
+                question: "In the LAC operon system, what substance functions as the genetic inducer to clear the operator?",
+                options: ["Glucose", "Lactose", "Arginine", "Cyclic AMP"],
+                correct: 1,
+                explanation: "Lactose acts as the genetic inducer. When present, it binds to the repressor protein, causing it to detach from the operator and allowing transcription to proceed."
+            },
+            {
+                question: "Which type of horizontal gene transfer requires direct physical cell-to-cell contact between bacterial cells via a sex pilus?",
+                options: ["Transformation", "Transduction", "Conjugation", "Transposition"],
+                correct: 2,
+                explanation: "Conjugation involves the transfer of genetic material (usually plasmids) directly between donor and recipient bacteria through a conjugation tube/sex pilus."
+            },
+            {
+                question: "Transformation is defined as a mechanism where a competent bacterium takes up:",
+                options: ["DNA carried by a bacteriophage virus", "Naked, free DNA fragments directly from its surrounding liquid environment", "Plasmid DNA through a sex pilus", "Exotoxins secreted by neighboring cells"],
+                correct: 1,
+                explanation: "Transformation is the uptake of naked, soluble extracellular DNA from the environment into a competent recipient cell."
+            },
+            {
+                question: "Transduction is horizontal gene transfer mediated by which vehicle?",
+                options: ["Sex pili", "Bacterial viruses (Bacteriophages)", "Plasmids", "Endoflagella"],
+                correct: 1,
+                explanation: "Transduction is genetic transfer mediated by bacterial viruses (bacteriophages) carrying host DNA from one cell to another."
+            },
+            {
+                question: "Ultraviolet (UV) radiation damages bacterial DNA primarily by causing:",
+                options: ["Single and double-strand backbone breaks", "Cross-links between adjacent pyrimidines (thymine dimers)", "Removal of amino groups from purines", "Frameshift deletions"],
+                correct: 1,
+                explanation: "UV light is non-ionizing radiation that induces pyrimidine dimers (cross-linking adjacent thymine or cytosine bases), blocking replication and transcription."
+            },
+            {
+                question: "Ionizing radiation (e.g., X-rays, Gamma rays) damages microbial genetic material by:",
+                options: ["Forming thymine dimers", "Generating high-energy free radicals that cause single- and double-strand DNA breaks", "Inserting intercalating dyes into the double helix", "Blocking ribosome assembly"],
+                correct: 1,
+                explanation: "Ionizing radiation creates hydroxyl free radicals that sever sugar-phosphate backbones, resulting in fatal double-stranded DNA breaks."
+            },
+            {
+                question: "Which bacterial exoenzyme acts as an invasive factor by degrading the protective mucous layer of host mucosal membranes?",
+                options: ["Keratinase", "Mucinase", "Hyaluronidase", "Coagulase"],
+                correct: 1,
+                explanation: "Mucinase digests the protective mucous coating on mucosal membranes, allowing pathogens to penetrate epithelial boundaries."
+            },
+            {
+                question: "Which mode of pathogen transmission is considered the most virulent due to rapid dispersion and inhalation potential?",
+                options: ["Direct contact", "Fecal-oral route", "Airborne transmission", "Vector-borne transmission"],
+                correct: 2,
+                explanation: "Airborne transmission allows microscopic droplet nuclei to travel long distances, presenting a high inhalation and dispersion risk."
+            },
+            {
+                question: "Organisms that feed specifically on dead and decaying organic matter are classified as:",
+                options: ["Photoautotrophs", "Saprophytes (Saprobes)", "Obligate intracellular parasites", "Lithotrophs"],
+                correct: 1,
+                explanation: "Saprophytes (or saprobes) are heterotrophic decomposers that digest dead organic matter."
+            },
+            {
+                question: "An organism that requires elevated salt concentrations (high osmotic pressure) to survive is termed a:",
+                options: ["Acidophile", "Halophile", "Psychrophile", "Alkaliphile"],
+                correct: 1,
+                explanation: "Halophiles are adapted to high-salt environments and require osmotic pressure from salt to maintain cell wall integrity."
+            },
+            {
+                question: "What replication mechanism synthesizes DNA continuously off a circular template in plasmids and bacteriophages?",
+                options: ["Theta replication", "Rolling circle replication", "Semiconservative replication", "Okazaki fragmentation"],
+                correct: 1,
+                explanation: "Rolling circle replication nicks one strand of circular DNA and synthesizes a single directional strand off the circular template like paper unrolling."
+            },
+            {
+                question: "Which automated counting method uses lasers, fluidics, and fluorescence to count and sort live vs. dead cells?",
+                options: ["Turbidity", "Direct Plate Count", "Flow Cytometry", "Hemocytometer count"],
+                correct: 2,
+                explanation: "Flow cytometry uses laser light and fluorescent dyes to analyze, count, and sort individual cells passing through a liquid stream."
+            },
+            {
+                question: "Which industrial bacterium is prominent alongside yeast in carrying out alcoholic fermentation?",
+                options: ["Escherichia coli", "Zymomonas mobilis", "Staphylococcus aureus", "Clostridium perfringens"],
+                correct: 1,
+                explanation: "Zymomonas mobilis is a key bacterial species involved in alcoholic fermentation pathways converting pyruvic acid into ethanol and CO2."
+            },
+            {
+                question: "Which enzyme category is produced only when its specific substrate is present in the environment?",
+                options: ["Constitutive enzymes", "Inducible enzymes", "Exoenzymes", "Endoenzymes"],
+                correct: 1,
+                explanation: "Inducible enzymes are expressed only in response to the presence of their specific substrate (e.g., lactase produced when lactose is present)."
+            },
+            {
+                question: "What is the relationship between the Infectious Dose (inoculum size) and a pathogen's Virulence?",
+                options: ["A higher infectious dose indicates higher virulence", "A lower infectious dose indicates higher virulence", "Infectious dose is unrelated to virulence", "Infectious dose applies only to viruses"],
+                correct: 1,
+                explanation: "The lower the infectious dose required to establish disease, the more virulent the microorganism."
+            },
+            {
+                question: "What term describes an interaction where one species benefits while the host is neither helped nor harmed?",
+                options: ["Mutualism", "Commensalism", "Parasitism", "Synergism"],
+                correct: 1,
+                explanation: "Commensalism is a symbiotic association where one partner benefits and the host experiences no harm or benefit."
+            },
+            {
+                question: "Bacteria that require oxygen for cellular respiration but are harmed by normal atmospheric concentrations are:",
+                options: ["Obligate aerobes", "Microaerophiles", "Aerotolerant anaerobes", "Obligate anaerobes"],
+                correct: 1,
+                explanation: "Microaerophiles require oxygen at low concentrations (typically 2-10%) and are damaged by standard atmospheric oxygen levels (21%)."
+            },
+            {
+                question: "During which phase of bacterial growth are cells dividing at their maximum geometric rate?",
+                options: ["Lag phase", "Log (Exponential) phase", "Stationary phase", "Death phase"],
+                correct: 1,
+                explanation: "The Log (Exponential) phase is characterized by rapid binary fission where the population doubles at a constant geometric rate."
+            },
+            {
+                question: "Which exoenzyme degrades the structural component found in skin, hair, and nails?",
+                options: ["Mucinase", "Keratinase", "Hyaluronidase", "Collagenase"],
+                correct: 1,
+                explanation: "Keratinase degrades keratin, aiding fungal and bacterial invasion through integumentary barriers."
+            },
+            {
+                question: "Why do prokaryotes perform transcription and translation simultaneously in the cytoplasm?",
+                options: ["They lack nuclear membranes separating DNA from cytoplasmic ribosomes", "Their ribosomes are 80S", "They possess linear chromosomes", "They lack cell walls"],
+                correct: 0,
+                explanation: "Because prokaryotes lack a nuclear envelope, mRNA transcripts are immediately translated by ribosomes in the cytoplasm while transcription is still ongoing."
+            },
+            {
+                question: "Which type of operon is normally active ('ON') until shut down by an abundance of its synthesized product?",
+                options: ["Inducible operon", "Repressible operon", "Constitutive operon", "Allosteric operon"],
+                correct: 1,
+                explanation: "Repressible operons (like the tryptophan operon) are active by default and turn off when the end-product binds to the repressor protein."
+            },
+            {
+                question: "What type of organism grows in extreme cold environments with optimal temperatures below 15°C?",
+                options: ["Psychrophile", "Mesophile", "Thermophile", "Acidophile"],
+                correct: 0,
+                explanation: "Psychrophiles are obligate cold-loving microbes with optimal growth temperatures around 15°C or lower."
+            },
+            {
+                question: "Antagonistic microbial interactions that result in the secretion of antibiotics to suppress neighboring microbes are termed:",
+                options: ["Mutualism", "Antibiosis", "Synergism", "Commensalism"],
+                correct: 1,
+                explanation: "Antibiosis is an antagonistic interaction where one organism produces chemical inhibitors to eliminate competing microbes."
+            }
+        ];
+
+        let currentAnswers = new Array(questions.length).fill(null);
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <button class="option-btn" 
+                                id="btn-${index}-${optIdx}" 
+                                onclick="selectOption(${index}, ${optIdx})">
+                            ${String.fromCharCode(65 + optIdx)}. ${opt}
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-header">Question ${index + 1} of ${questions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options-list">${optionsHTML}</div>
+                    <div class="explanation-box" id="exp-${index}"></div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(qIdx, selectedOptIdx) {
+            if (currentAnswers[qIdx] !== null) return;
+
+            currentAnswers[qIdx] = selectedOptIdx;
+            const q = questions[qIdx];
+            const isCorrect = selectedOptIdx === q.correct;
+
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
+                btn.disabled = true;
+
+                if (optIdx === q.correct) {
+                    btn.classList.add('correct-choice');
+                } else if (optIdx === selectedOptIdx) {
+                    btn.classList.add('incorrect-choice');
+                } else {
+                    btn.classList.add('dimmed');
+                }
+            });
+
+            const expBox = document.getElementById(`exp-${qIdx}`);
+            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
+            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
+
+            updateScore();
+        }
+
+        function updateScore() {
+            const answeredCount = currentAnswers.filter(a => a !== null).length;
+            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
+                return ans === questions[idx].correct ? acc + 1 : acc;
+            }, 0);
+
+            const percentage = Math.round((correctCount / questions.length) * 100);
+            
+            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${questions.length} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${(answeredCount / questions.length) * 100}%`;
+
+            if (answeredCount === questions.length) {
+                showSummary(correctCount, percentage);
+            }
+        }
+
+        function showSummary(correctCount, percentage) {
+            const summaryCard = document.getElementById('summaryCard');
+            const finalScore = document.getElementById('finalScore');
+            const feedback = document.getElementById('summaryFeedback');
+
+            finalScore.innerText = `${correctCount} / ${questions.length} (${percentage}%)`;
+
+            if (percentage >= 90) {
+                feedback.innerText = "Outstanding! You have mastered all Quiz 2 Microbiology material!";
+            } else if (percentage >= 75) {
+                feedback.innerText = "Solid job! Review operon regulation and growth curve phases before the exam.";
+            } else {
+                feedback.innerText = "Good practice run. Re-read Lecture notes for Quiz 2 and retake the quiz!";
+            }
+
+            summaryCard.classList.add('visible');
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            currentAnswers = new Array(questions.length).fill(null);
+            document.getElementById('summaryCard').classList.remove('visible');
+            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${questions.length} (0%)`;
+            document.getElementById('progressBar').style.width = '0%';
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
