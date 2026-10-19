@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Microbiology Quiz 2 Interactive Practice Hub</title>
+    <title>Microbiology Quiz 2 Material Review</title>
     <style>
+        /* =========================================================
+           QUIZ HUB DARK THEME
+           ========================================================= */
         :root {
             --bg-color: #0f0f0f;
             --card-bg: #1a1a1a;
+            --card-border: #282828;
             --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
+            --text-secondary: #aaaaaa;
             --primary-accent: #ff9900;
-            --correct-color: #10b981;
-            --correct-bg: #064e3b;
+            --correct-color: #22c55e;
+            --correct-bg: rgba(34, 197, 94, 0.15);
+            --correct-border: #22c55e;
             --incorrect-color: #ef4444;
-            --incorrect-bg: #7f1d1d;
-            --border-color: #333333;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
-            --shadow-md: 0 4px 8px rgba(0,0,0,0.7);
+            --incorrect-bg: rgba(239, 68, 68, 0.15);
+            --incorrect-border: #ef4444;
+            --border-color: #282828;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.5);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.7);
         }
 
         * {
@@ -28,26 +34,28 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-primary);
             line-height: 1.5;
             padding-bottom: 40px;
+            user-select: none;
         }
 
+        /* Sticky Score Header */
         .header-sticky {
             position: -webkit-sticky;
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: #141414;
-            border-bottom: 2px solid var(--primary-accent);
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--border-color);
             padding: 14px 20px;
             box-shadow: var(--shadow-sm);
         }
 
         .header-container {
-            max-width: 800px;
+            max-width: 850px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -56,23 +64,26 @@
 
         .header-title {
             font-size: 1.1rem;
-            font-weight: 700;
+            font-weight: 800;
             color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .score-box {
-            font-size: 1rem;
-            font-weight: 600;
-            background-color: #262626;
-            padding: 6px 14px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background-color: #0f0f0f;
+            color: var(--primary-accent);
+            padding: 6px 16px;
             border-radius: 20px;
-            border: 1px solid var(--border-color);
-            color: #ffffff;
+            border: 1px solid var(--primary-accent);
         }
 
+        /* Progress Bar */
         .progress-bar-container {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background-color: var(--border-color);
             position: absolute;
             bottom: 0;
@@ -86,19 +97,20 @@
             transition: width 0.3s ease;
         }
 
+        /* Quiz Container & Cards */
         .quiz-container {
-            max-width: 800px;
-            margin: 20px auto;
+            max-width: 850px;
+            margin: 25px auto;
             padding: 0 16px;
         }
 
         .question-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
         }
 
         .question-header {
@@ -107,36 +119,38 @@
             color: var(--primary-accent);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         .question-text {
             font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
             color: var(--text-primary);
+            line-height: 1.4;
         }
 
         .options-list {
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .option-btn {
             width: 100%;
             text-align: left;
-            padding: 14px 16px;
+            padding: 14px 18px;
             font-size: 0.95rem;
             color: var(--text-primary);
             background-color: #222222;
-            border: 1.5px solid var(--border-color);
+            border: 1.5px solid var(--card-border);
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
             align-items: center;
+            line-height: 1.3;
         }
 
         .option-btn:hover:not(:disabled) {
@@ -148,29 +162,31 @@
             cursor: default;
         }
 
+        /* Option Feedback States */
         .option-btn.correct-choice {
             background-color: var(--correct-bg) !important;
-            border-color: var(--correct-color) !important;
+            border-color: var(--correct-border) !important;
             color: #ffffff !important;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .option-btn.incorrect-choice {
             background-color: var(--incorrect-bg) !important;
-            border-color: var(--incorrect-color) !important;
+            border-color: var(--incorrect-border) !important;
             color: #ffffff !important;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .option-btn.dimmed {
-            opacity: 0.35;
+            opacity: 0.4;
         }
 
+        /* Explanation Box */
         .explanation-box {
-            margin-top: 16px;
-            padding: 14px 16px;
+            margin-top: 18px;
+            padding: 16px 18px;
             border-radius: 8px;
-            font-size: 0.9rem;
+            font-size: 0.92rem;
             line-height: 1.5;
             display: none;
         }
@@ -181,24 +197,39 @@
         }
 
         .explanation-box.correct {
-            background-color: #042f22;
-            border-left: 4px solid var(--correct-color);
-            color: #a7f3d0;
+            background-color: var(--correct-bg);
+            border: 1px solid var(--correct-border);
+            color: #e2e8f0;
         }
 
         .explanation-box.incorrect {
-            background-color: #450a0a;
-            border-left: 4px solid var(--incorrect-color);
-            color: #fca5a5;
+            background-color: var(--incorrect-bg);
+            border: 1px solid var(--incorrect-border);
+            color: #e2e8f0;
         }
 
+        .explanation-title {
+            font-weight: 800;
+            margin-bottom: 6px;
+            font-size: 1rem;
+        }
+
+        .explanation-box.correct .explanation-title {
+            color: var(--correct-color);
+        }
+
+        .explanation-box.incorrect .explanation-title {
+            color: var(--incorrect-color);
+        }
+
+        /* Summary Card */
         .summary-card {
             background-color: var(--card-bg);
             border-radius: 12px;
-            padding: 32px 24px;
+            padding: 36px 24px;
             text-align: center;
             box-shadow: var(--shadow-md);
-            border: 1px solid var(--primary-accent);
+            border: 2px solid var(--primary-accent);
             display: none;
         }
 
@@ -208,39 +239,48 @@
         }
 
         .summary-title {
-            font-size: 1.5rem;
-            font-weight: 700;
+            font-size: 1.6rem;
+            font-weight: 900;
+            color: #ffffff;
             margin-bottom: 12px;
-            color: var(--primary-accent);
+            text-transform: uppercase;
         }
 
         .summary-score {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #ffffff;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--primary-accent);
             margin-bottom: 16px;
         }
 
         .summary-text {
             font-size: 1rem;
             color: var(--text-secondary);
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
         .reset-btn {
-            background-color: var(--primary-accent);
-            color: #000000;
+            background: linear-gradient(to bottom, #ff9900, #ff5500);
+            color: #ffffff;
             border: none;
-            padding: 12px 28px;
+            padding: 14px 32px;
             font-size: 1rem;
-            font-weight: 700;
-            border-radius: 8px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            box-shadow: 0 4px 0 #992200;
+            transition: all 0.2s ease;
         }
 
         .reset-btn:hover {
-            background-color: #e68a00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #992200;
+        }
+
+        .reset-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #992200;
         }
 
         @keyframes fadeIn {
@@ -251,208 +291,327 @@
 </head>
 <body>
 
+    <!-- Sticky Score Tracker -->
     <div class="header-sticky">
         <div class="header-container">
-            <div class="header-title">Microbiology: Quiz 2 Practice Hub</div>
-            <div class="score-box" id="scoreDisplay">Score: 0 / 30 (0%)</div>
+            <div class="header-title">Microbio Quiz 2 Review</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 27 (0%)</div>
         </div>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" id="progressBar"></div>
         </div>
     </div>
 
+    <!-- Main Question Container -->
     <div class="quiz-container" id="quizContainer"></div>
 
+    <!-- Final Summary Container -->
     <div class="quiz-container">
         <div class="summary-card" id="summaryCard">
             <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
-            <div class="summary-score" id="finalScore">0 / 30</div>
+            <div class="summary-score" id="finalScore">0 / 27</div>
             <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
             <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
     </div>
 
     <script>
+        /* =========================================================
+           QUIZ 2 QUESTION SET (Lecture 2 through Lecture 3: Measuring Growth)
+           Answer key indices randomized across 0 (A), 1 (B), 2 (C), 3 (D)
+           ========================================================= */
         const questions = [
             {
-                question: "During which phase of the bacterial growth curve is the rate of cell division equal to the rate of cell death due to nutrient exhaustion?",
-                options: ["Lag phase", "Log (Exponential) phase", "Stationary phase", "Death phase"],
+                question: "According to the lecture, what material marks the beginning of the scope for Quiz 2 right after Endospores?",
+                options: [
+                    "Abiogenesis and biogenesis experiments",
+                    "Bacterial cell wall synthesis and penicillin target sites",
+                    "Bacterial shapes, arrangements, and unusual bacteria",
+                    "Glycolysis and fermentation pathways"
+                ],
                 correct: 2,
-                explanation: "In the Stationary phase, cell population flattens out as the rate of new cell division equals the rate of dying cells caused by nutrient depletion and metabolic waste accumulation."
+                explanation: "The lecture transcript explicitly notes that right after endospores, bacterial shapes, arrangements, and unusual bacteria mark the start of Quiz 2 material[cite: 3, 5]."
             },
             {
-                question: "Bacteria that thrive at normal human body temperature (~37°C) and comprise the majority of human pathogens belong to which temperature class?",
-                options: ["Psychrophiles", "Mesophiles", "Thermophiles", "Extreme Thermophiles"],
+                question: "Which bacterial morphology term describes spherical cells arranged in characteristic chain-like patterns?",
+                options: [
+                    "Staphylococci",
+                    "Streptococci",
+                    "Sarcina",
+                    "Coccobacilli"
+                ],
                 correct: 1,
-                explanation: "Mesophiles have optimal growth temperatures between 20°C and 40°C, making them uniquely adapted to colonize human tissue."
+                explanation: "Streptococci are cocci that divide in a single plane and remain attached to form chain-like arrangements[cite: 2, 5]."
             },
             {
-                question: "Which set of protective enzymes allows aerobes to neutralize toxic reactive oxygen species (ROS)?",
-                options: ["Superoxide dismutase, peroxidase, and catalase", "Amylase, lipase, and protease", "DNA polymerase, ligase, and helicase", "Coagulase, kinase, and hyaluronidase"],
+                question: "Which bacterial arrangement is characterized by cocci dividing in perpendicular planes to form regular cubical packets of 8 or more cells?",
+                options: [
+                    "Tetrads",
+                    "Streptobacilli",
+                    "Sarcina",
+                    "Staphylococci"
+                ],
+                correct: 2,
+                explanation: "Sarcina refers to a cubical packet of 8, 16, or more cocci resulting from division along three perpendicular planes[cite: 2, 5]."
+            },
+            {
+                question: "How are staphylococcal cellular arrangements produced during bacterial division?",
+                options: [
+                    "Division in multiple random planes forming irregular grape-like clusters",
+                    "Division along a single axis without separation forming long chains",
+                    "Division in two fixed perpendicular planes forming flat groups of four",
+                    "Endospore germination yielding branching filament networks"
+                ],
                 correct: 0,
-                explanation: "Superoxide dismutase (SOD), peroxidase, and catalase break down hazardous oxygen radicals (like superoxide O2- and hydrogen peroxide H2O2) into harmless water and oxygen."
+                explanation: "Staphylococci divide in multiple random planes, creating irregular clusters that resemble bunches of grapes[cite: 2, 5]."
             },
             {
-                question: "Which type of ecological association involves two organisms living in close physical contact where both organisms derive mutual benefit?",
-                options: ["Commensalism", "Mutualism", "Parasitism", "Synergism"],
-                correct: 1,
-                explanation: "Mutualism is a obligate or symbiotic interaction where both species benefit from the association."
-            },
-            {
-                question: "What non-symbiotic interaction occurs when one microorganism secretes chemical substances (like antibiotics or bacteriocins) that destroy or inhibit another microbe?",
-                options: ["Synergism", "Commensalism", "Antagonism (Antibiosis)", "Mutualism"],
+                question: "Which bacterial genus is clinically unique because its species completely lack a peptidoglycan cell wall and contain sterols in their plasma membrane?",
+                options: [
+                    "Chlamydia",
+                    "Rickettsia",
+                    "Mycoplasma",
+                    "Mycobacterium"
+                ],
                 correct: 2,
-                explanation: "Antagonism (or antibiosis) is an inhibitory interaction where one organism releases antimicrobial chemicals to outcompete neighboring species."
+                explanation: "Mycoplasma species lack a cell wall entirely and stabilize their plasma membrane using sterols acquired from the environment[cite: 1, 2]."
             },
             {
-                question: "Which indirect bacterial measurement technique uses a spectrophotometer to quantify liquid culture cloudiness?",
-                options: ["Flow Cytometry", "Turbidity", "Direct Microscopic Count", "Direct Plate Count"],
+                question: "Why are Rickettsia and Chlamydia classified as obligate intracellular bacteria?",
+                options: [
+                    "They require acidic endosomal environments to synthesize peptidoglycan",
+                    "They cannot reproduce or generate sufficient ATP outside of a host cell",
+                    "They possess eukaryotic 80S ribosomes that require host cytoplasmic factors",
+                    "They lack plasma membranes and rely on host phospholipid bilayers"
+                ],
                 correct: 1,
-                explanation: "Turbidity measures culture cloudiness via spectrophotometry; higher absorbance values correspond to greater bacterial cell density."
+                explanation: "Rickettsia and Chlamydia are obligate intracellular parasites because they rely on host metabolic machinery and host cells to survive and replicate[cite: 1, 2]."
             },
             {
-                question: "In non-genetic pathway regulation, what occurs during feedback inhibition?",
-                options: ["The substrate destroys the ribosome", "The end-product binds to an enzyme's allosteric site to immediately shut down the initial reaction", "The corepressor binds directly to messenger RNA", "RNA polymerase is degraded"],
+                question: "Which unusual bacterial group is responsible for vector-borne diseases such as Rocky Mountain Spotted Fever and Typhus?",
+                options: [
+                    "Mycoplasma species",
+                    "Rickettsia species",
+                    "Cyanobacteria",
+                    "Archaea"
+                ],
                 correct: 1,
-                explanation: "Feedback inhibition is a non-genetic control mechanism where the accumulated end-product binds to the allosteric site of the first enzyme in the pathway, shutting down further synthesis instantly."
+                explanation: "Rickettsia species are obligate intracellular bacteria transmitted by arthropod vectors (ticks, lice, fleas) causing diseases like Rocky Mountain Spotted Fever and typhus[cite: 1, 2]."
             },
             {
-                question: "In the LAC operon system, what substance functions as the genetic inducer to clear the operator?",
-                options: ["Glucose", "Lactose", "Arginine", "Cyclic AMP"],
-                correct: 1,
-                explanation: "Lactose acts as the genetic inducer. When present, it binds to the repressor protein, causing it to detach from the operator and allowing transcription to proceed."
-            },
-            {
-                question: "Which type of horizontal gene transfer requires direct physical cell-to-cell contact between bacterial cells via a sex pilus?",
-                options: ["Transformation", "Transduction", "Conjugation", "Transposition"],
+                question: "Which classification includes human bacterial pathogens that utilize pre-formed organic compounds for both their carbon and energy sources?",
+                options: ["Photoautotrophs", "Chemoautotrophs", "Chemoheterotrophs", "Photoheterotrophs"],
                 correct: 2,
-                explanation: "Conjugation involves the transfer of genetic material (usually plasmids) directly between donor and recipient bacteria through a conjugation tube/sex pilus."
+                explanation: "Chemoheterotrophs derive both carbon and energy from organic substrates; nearly all human bacterial pathogens fall into this category[cite: 1, 2]."
             },
             {
-                question: "Transformation is defined as a mechanism where a competent bacterium takes up:",
-                options: ["DNA carried by a bacteriophage virus", "Naked, free DNA fragments directly from its surrounding liquid environment", "Plasmid DNA through a sex pilus", "Exotoxins secreted by neighboring cells"],
+                question: "What term defines organisms that live exclusively on dead or decaying organic matter to obtain nutrients?",
+                options: [
+                    "Obligate parasites",
+                    "Saprophytes (Saprobes)",
+                    "Lithoautotrophs",
+                    "Commensals"
+                ],
                 correct: 1,
-                explanation: "Transformation is the uptake of naked, soluble extracellular DNA from the environment into a competent recipient cell."
+                explanation: "Saprophytes (or saprobes) decompose dead organic material to obtain nutrients[cite: 1, 2]."
             },
             {
-                question: "Transduction is horizontal gene transfer mediated by which vehicle?",
-                options: ["Sex pili", "Bacterial viruses (Bacteriophages)", "Plasmids", "Endoflagella"],
+                question: "Human pathogens typically grow best at human body temperature (~37°C). Into which temperature preference group do they fall?",
+                options: [
+                    "Psychrophiles",
+                    "Mesophiles",
+                    "Thermophiles",
+                    "Hyperthermophiles"
+                ],
                 correct: 1,
-                explanation: "Transduction is genetic transfer mediated by bacterial viruses (bacteriophages) carrying host DNA from one cell to another."
+                explanation: "Mesophiles have optimal growth temperatures between 20°C and 40°C, encompassing human body temperature (37°C) and most human pathogens[cite: 1, 2]."
             },
             {
-                question: "Ultraviolet (UV) radiation damages bacterial DNA primarily by causing:",
-                options: ["Single and double-strand backbone breaks", "Cross-links between adjacent pyrimidines (thymine dimers)", "Removal of amino groups from purines", "Frameshift deletions"],
-                correct: 1,
-                explanation: "UV light is non-ionizing radiation that induces pyrimidine dimers (cross-linking adjacent thymine or cytosine bases), blocking replication and transcription."
-            },
-            {
-                question: "Ionizing radiation (e.g., X-rays, Gamma rays) damages microbial genetic material by:",
-                options: ["Forming thymine dimers", "Generating high-energy free radicals that cause single- and double-strand DNA breaks", "Inserting intercalating dyes into the double helix", "Blocking ribosome assembly"],
-                correct: 1,
-                explanation: "Ionizing radiation creates hydroxyl free radicals that sever sugar-phosphate backbones, resulting in fatal double-stranded DNA breaks."
-            },
-            {
-                question: "Which bacterial exoenzyme acts as an invasive factor by degrading the protective mucous layer of host mucosal membranes?",
-                options: ["Keratinase", "Mucinase", "Hyaluronidase", "Coagulase"],
-                correct: 1,
-                explanation: "Mucinase digests the protective mucous coating on mucosal membranes, allowing pathogens to penetrate epithelial boundaries."
-            },
-            {
-                question: "Which mode of pathogen transmission is considered the most virulent due to rapid dispersion and inhalation potential?",
-                options: ["Direct contact", "Fecal-oral route", "Airborne transmission", "Vector-borne transmission"],
-                correct: 2,
-                explanation: "Airborne transmission allows microscopic droplet nuclei to travel long distances, presenting a high inhalation and dispersion risk."
-            },
-            {
-                question: "Organisms that feed specifically on dead and decaying organic matter are classified as:",
-                options: ["Photoautotrophs", "Saprophytes (Saprobes)", "Obligate intracellular parasites", "Lithotrophs"],
-                correct: 1,
-                explanation: "Saprophytes (or saprobes) are heterotrophic decomposers that digest dead organic matter."
-            },
-            {
-                question: "An organism that requires elevated salt concentrations (high osmotic pressure) to survive is termed a:",
-                options: ["Acidophile", "Halophile", "Psychrophile", "Alkaliphile"],
-                correct: 1,
-                explanation: "Halophiles are adapted to high-salt environments and require osmotic pressure from salt to maintain cell wall integrity."
-            },
-            {
-                question: "What replication mechanism synthesizes DNA continuously off a circular template in plasmids and bacteriophages?",
-                options: ["Theta replication", "Rolling circle replication", "Semiconservative replication", "Okazaki fragmentation"],
-                correct: 1,
-                explanation: "Rolling circle replication nicks one strand of circular DNA and synthesizes a single directional strand off the circular template like paper unrolling."
-            },
-            {
-                question: "Which automated counting method uses lasers, fluidics, and fluorescence to count and sort live vs. dead cells?",
-                options: ["Turbidity", "Direct Plate Count", "Flow Cytometry", "Hemocytometer count"],
-                correct: 2,
-                explanation: "Flow cytometry uses laser light and fluorescent dyes to analyze, count, and sort individual cells passing through a liquid stream."
-            },
-            {
-                question: "Which industrial bacterium is prominent alongside yeast in carrying out alcoholic fermentation?",
-                options: ["Escherichia coli", "Zymomonas mobilis", "Staphylococcus aureus", "Clostridium perfringens"],
-                correct: 1,
-                explanation: "Zymomonas mobilis is a key bacterial species involved in alcoholic fermentation pathways converting pyruvic acid into ethanol and CO2."
-            },
-            {
-                question: "Which enzyme category is produced only when its specific substrate is present in the environment?",
-                options: ["Constitutive enzymes", "Inducible enzymes", "Exoenzymes", "Endoenzymes"],
-                correct: 1,
-                explanation: "Inducible enzymes are expressed only in response to the presence of their specific substrate (e.g., lactase produced when lactose is present)."
-            },
-            {
-                question: "What is the relationship between the Infectious Dose (inoculum size) and a pathogen's Virulence?",
-                options: ["A higher infectious dose indicates higher virulence", "A lower infectious dose indicates higher virulence", "Infectious dose is unrelated to virulence", "Infectious dose applies only to viruses"],
-                correct: 1,
-                explanation: "The lower the infectious dose required to establish disease, the more virulent the microorganism."
-            },
-            {
-                question: "What term describes an interaction where one species benefits while the host is neither helped nor harmed?",
-                options: ["Mutualism", "Commensalism", "Parasitism", "Synergism"],
-                correct: 1,
-                explanation: "Commensalism is a symbiotic association where one partner benefits and the host experiences no harm or benefit."
-            },
-            {
-                question: "Bacteria that require oxygen for cellular respiration but are harmed by normal atmospheric concentrations are:",
-                options: ["Obligate aerobes", "Microaerophiles", "Aerotolerant anaerobes", "Obligate anaerobes"],
-                correct: 1,
-                explanation: "Microaerophiles require oxygen at low concentrations (typically 2-10%) and are damaged by standard atmospheric oxygen levels (21%)."
-            },
-            {
-                question: "During which phase of bacterial growth are cells dividing at their maximum geometric rate?",
-                options: ["Lag phase", "Log (Exponential) phase", "Stationary phase", "Death phase"],
-                correct: 1,
-                explanation: "The Log (Exponential) phase is characterized by rapid binary fission where the population doubles at a constant geometric rate."
-            },
-            {
-                question: "Which exoenzyme degrades the structural component found in skin, hair, and nails?",
-                options: ["Mucinase", "Keratinase", "Hyaluronidase", "Collagenase"],
-                correct: 1,
-                explanation: "Keratinase degrades keratin, aiding fungal and bacterial invasion through integumentary barriers."
-            },
-            {
-                question: "Why do prokaryotes perform transcription and translation simultaneously in the cytoplasm?",
-                options: ["They lack nuclear membranes separating DNA from cytoplasmic ribosomes", "Their ribosomes are 80S", "They possess linear chromosomes", "They lack cell walls"],
+                question: "Which microbial temperature group is adapted to cold environments (optimal growth around 15°C or below) and can grow at 0°C?",
+                options: [
+                    "Psychrophiles",
+                    "Mesophiles",
+                    "Thermophiles",
+                    "Alkaliphiles"
+                ],
                 correct: 0,
-                explanation: "Because prokaryotes lack a nuclear envelope, mRNA transcripts are immediately translated by ribosomes in the cytoplasm while transcription is still ongoing."
+                explanation: "Psychrophiles thrive in cold temperatures (0°C to 15°C)[cite: 1, 2]."
             },
             {
-                question: "Which type of operon is normally active ('ON') until shut down by an abundance of its synthesized product?",
-                options: ["Inducible operon", "Repressible operon", "Constitutive operon", "Allosteric operon"],
+                question: "An organism that grows optimally in oxygen but can also survive and ferment in the absence of oxygen is classified as a(n):",
+                options: [
+                    "Obligate aerobe",
+                    "Facultative anaerobe",
+                    "Obligate anaerobe",
+                    "Microaerophile"
+                ],
                 correct: 1,
-                explanation: "Repressible operons (like the tryptophan operon) are active by default and turn off when the end-product binds to the repressor protein."
+                explanation: "Facultative anaerobes utilize oxygen when available for aerobic respiration, but switch to fermentation or anaerobic respiration when oxygen is absent[cite: 1, 2]."
             },
             {
-                question: "What type of organism grows in extreme cold environments with optimal temperatures below 15°C?",
-                options: ["Psychrophile", "Mesophile", "Thermophile", "Acidophile"],
+                question: "Why is oxygen toxic to obligate anaerobes?",
+                options: [
+                    "Oxygen inactivates cytoplasmic 70S ribosomes instantly",
+                    "They lack protective enzymes like superoxide dismutase (SOD) and catalase to detoxify reactive oxygen species",
+                    "Oxygen degrades peptidoglycan cross-links in Gram-positive cell walls",
+                    "Oxygen prevents binary fission by binding to origin of replication sites"
+                ],
+                correct: 1,
+                explanation: "Obligate anaerobes lack enzymes such as superoxide dismutase (SOD) and catalase/peroxidase, causing accumulation of lethal reactive oxygen species (ROS) in the presence of oxygen[cite: 1, 2]."
+            },
+            {
+                question: "Which enzyme detoxifies superoxide free radicals ($O_2^-$) by converting them into hydrogen peroxide ($H_2O_2$) and oxygen?",
+                options: [
+                    "Catalase",
+                    "Peroxidase",
+                    "Superoxide dismutase (SOD)",
+                    "Coagulase"
+                ],
+                correct: 2,
+                explanation: "Superoxide dismutase (SOD) converts superoxide radicals into hydrogen peroxide and molecular oxygen: $2O_2^- + 2H^+ \rightarrow H_2O_2 + O_2$[cite: 1, 2]."
+            },
+            {
+                question: "Which test differentiates Staphylococcus (catalase-positive) from Streptococcus (catalase-negative) by observing gas bubble formation upon adding hydrogen peroxide?",
+                options: [
+                    "Oxidase test",
+                    "Catalase test",
+                    "Coagulase test",
+                    "Urease test"
+                ],
+                correct: 1,
+                explanation: "The catalase test uses hydrogen peroxide ($H_2O_2$). Catalase-positive organisms break it down into $H_2O$ and oxygen gas ($O_2$), producing visible bubbling[cite: 1, 2]."
+            },
+            {
+                question: "Microaerophiles require which environmental condition for optimal growth?",
+                options: [
+                    "Atmospheric oxygen levels (21% $O_2$)",
+                    "Complete absence of oxygen",
+                    "Low concentrations of oxygen (typically 2% to 10% $O_2$)",
+                    "High salt concentrations (>15% NaCl) regardless of oxygen"
+                ],
+                correct: 2,
+                explanation: "Microaerophiles require reduced oxygen levels (2–10%) and are harmed by higher atmospheric oxygen levels[cite: 1, 2]."
+            },
+            {
+                question: "Organisms that adapt to or require high osmotic pressure and elevated salt concentrations are classified as:",
+                options: [
+                    "Acidophiles",
+                    "Halophiles",
+                    "Barophiles",
+                    "Psychrophiles"
+                ],
+                correct: 1,
+                explanation: "Halophiles thrive in environments with high salt (NaCl) concentrations and high osmotic pressure[cite: 1, 2]."
+            },
+            {
+                question: "What type of symbiotic relationship exists when one organism benefits while the host is neither helped nor harmed?",
+                options: [
+                    "Mutualism",
+                    "Commensalism",
+                    "Parasitism",
+                    "Synergism"
+                ],
+                correct: 1,
+                explanation: "Commensalism is a relationship where one organism benefits and the other remains unaffected[cite: 1, 2]."
+            },
+            {
+                question: "Which term describes a non-symbiotic relationship where two or more free-living organisms cooperate and share nutrients to produce a result neither could achieve alone?",
+                options: [
+                    "Antagonism",
+                    "Synergism",
+                    "Parasitism",
+                    "Commensalism"
+                ],
+                correct: 1,
+                explanation: "Synergism is an inter-relationship where participating organisms cooperate and share benefits[cite: 1, 2]."
+            },
+            {
+                question: "An antagonistic interaction in which one microorganism produces specific inhibitory chemical substances (such as antibiotics) that suppress or kill competing microbes is known as:",
+                options: [
+                    "Mutualism",
+                    "Antibiosis",
+                    "Commensalism",
+                    "Neutralism"
+                ],
+                correct: 1,
+                explanation: "Antibiosis (an example of microbial antagonism) occurs when one species secretes inhibitory chemicals into the environment to damage or destroy competitors[cite: 1, 2]."
+            },
+            {
+                question: "What is the primary mechanism of asexual reproduction in most bacteria, where one parent cell splits into two equal daughter cells?",
+                options: [
+                    "Budding",
+                    "Binary fission (Binary transverse fission)",
+                    "Sporulation",
+                    "Fragmentation"
+                ],
+                correct: 1,
+                explanation: "Binary fission is the primary asexual division process in prokaryotes[cite: 1, 2]."
+            },
+            {
+                question: "The time required for a bacterial population to double in number through binary fission is called the:",
+                options: [
+                    "Lag period",
+                    "Generation time (Doubling time)",
+                    "Stationary index",
+                    "Thermal death time"
+                ],
+                correct: 1,
+                explanation: "Generation time (or doubling time) is the duration required for a bacterial population to undergo one round of binary fission and double in size[cite: 1, 2]."
+            },
+            {
+                question: "During which phase of the bacterial growth curve are cells metabolically active and synthesizing enzymes, but NOT yet actively dividing?",
+                options: [
+                    "Lag phase",
+                    "Log (Exponential) phase",
+                    "Stationary phase",
+                    "Death phase"
+                ],
                 correct: 0,
-                explanation: "Psychrophiles are obligate cold-loving microbes with optimal growth temperatures around 15°C or lower."
+                explanation: "During the Lag phase, cells adjust to their new environment, synthesize necessary enzymes, and grow in size without an immediate increase in cell number[cite: 1, 2]."
             },
             {
-                question: "Antagonistic microbial interactions that result in the secretion of antibiotics to suppress neighboring microbes are termed:",
-                options: ["Mutualism", "Antibiosis", "Synergism", "Commensalism"],
+                question: "During which phase of the bacterial growth curve are cells dividing at a maximum constant rate, making them most susceptible to antibiotics like penicillin?",
+                options: [
+                    "Lag phase",
+                    "Log (Exponential) phase",
+                    "Stationary phase",
+                    "Decline phase"
+                ],
                 correct: 1,
-                explanation: "Antibiosis is an antagonistic interaction where one organism produces chemical inhibitors to eliminate competing microbes."
+                explanation: "The Log (Exponential) phase is characterized by maximum growth rate and cell wall synthesis, rendering cells highly vulnerable to cell-wall targeting antibiotics[cite: 1, 2]."
+            },
+            {
+                question: "What causes a bacterial population to enter the Stationary Phase of growth?",
+                options: [
+                    "Reactivation of endospore formation genes across all species",
+                    "Depletion of essential nutrients and accumulation of toxic metabolic waste products",
+                    "Exposure to ultraviolet light and radiation in culture flasks",
+                    "Complete loss of flagellar motility in liquid media"
+                ],
+                correct: 1,
+                explanation: "Nutrient exhaustion and accumulation of organic acids/toxic waste slow growth until the rate of cell division equals the rate of cell death[cite: 1, 2]."
+            },
+            {
+                question: "Which bacterial growth measurement method relies on a spectrophotometer to gauge light transmission/absorbance through a liquid broth culture?",
+                options: [
+                    "Direct Microscopic Count",
+                    "Turbidity measurement",
+                    "Standard Plate Count",
+                    "Flow Cytometry"
+                ],
+                correct: 1,
+                explanation: "Turbidity measures the cloudiness of a culture using a spectrophotometer; greater absorbance corresponds to higher cell density[cite: 1, 2]."
+            },
+            {
+                question: "According to the transcript, which advanced method of measuring bacterial growth utilizes sheath fluid, lasers, and detectors to count/sort cells, but hasn't fully appeared on board exams yet?",
+                options: [
+                    "Standard Plate Count",
+                    "Turbidity measurement",
+                    "Flow Cytometry",
+                    "Direct Petroff-Hausser counting"
+                ],
+                correct: 2,
+                explanation: "The transcript explicitly mentions that flow cytometry uses fluidics and lasers to count/sort cells, noting it as an advanced method that 'boards hasn't quite caught up to... just yet'[cite: 3]."
             }
         ];
 
@@ -473,7 +632,7 @@
                         <button class="option-btn" 
                                 id="btn-${index}-${optIdx}" 
                                 onclick="selectOption(${index}, ${optIdx})">
-                            ${String.fromCharCode(65 + optIdx)}. ${opt}
+                            <span style="margin-right: 10px; font-weight: 800; color: var(--primary-accent);">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
                         </button>
                     `;
                 });
@@ -490,7 +649,7 @@
         }
 
         function selectOption(qIdx, selectedOptIdx) {
-            if (currentAnswers[qIdx] !== null) return;
+            if (currentAnswers[qIdx] !== null) return; // Lock question once clicked
 
             currentAnswers[qIdx] = selectedOptIdx;
             const q = questions[qIdx];
@@ -511,7 +670,10 @@
 
             const expBox = document.getElementById(`exp-${qIdx}`);
             expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
-            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
+            expBox.innerHTML = `
+                <div class="explanation-title">${isCorrect ? '✓ Correct' : '✗ Incorrect'}</div>
+                <div>${q.explanation}</div>
+            `;
 
             updateScore();
         }
@@ -540,11 +702,11 @@
             finalScore.innerText = `${correctCount} / ${questions.length} (${percentage}%)`;
 
             if (percentage >= 90) {
-                feedback.innerText = "Outstanding! You have mastered all Quiz 2 Microbiology material!";
+                feedback.innerText = "Outstanding mastery of Microbio Quiz 2 material!";
             } else if (percentage >= 75) {
-                feedback.innerText = "Solid job! Review operon regulation and growth curve phases before the exam.";
+                feedback.innerText = "Solid understanding! Review growth curve phases and oxygen enzymes before the test.";
             } else {
-                feedback.innerText = "Good practice run. Re-read Lecture notes for Quiz 2 and retake the quiz!";
+                feedback.innerText = "Good effort. Re-read the lecture transcript on bacterial growth and retry!";
             }
 
             summaryCard.classList.add('visible');
