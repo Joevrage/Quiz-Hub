@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Circulatory System Basics - Interactive Quiz</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* Sticky Header */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        /* Options */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* States */
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        /* Explanation */
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        /* Summary Card */
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Circulatory System Basics</div>
+        <div id="score-header">Score: 0 / 20 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 20</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // 20 Questions explicitly formatted for even randomization (5 A's, 5 B's, 5 C's, 5 D's). 
+        // Focuses heavily on the provided week 2 circulatory system notes and transcripts.
+        const quizData = [
+            // Target: Correct A (Index 0)
+            {
+                question: "According to the lecture, which of the following lists the primary components of the circulatory system?",
+                options: [
+                    { text: "Heart, blood, and blood vessels", correct: true },
+                    { text: "Lungs, trachea, and bronchi", correct: false },
+                    { text: "Brain, spinal cord, and peripheral nerves", correct: false },
+                    { text: "Liver, kidneys, and spleen", correct: false }
+                ],
+                explanation: "The circulatory system is explicitly defined as being made up of the heart, blood, and blood vessels[cite: 1, 3]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the primary function of the circulatory system in relation to cellular needs?",
+                options: [
+                    { text: "To synthesize RNA and DNA", correct: false },
+                    { text: "To deliver survival-needing substances (O2, nutrients) and haul away waste", correct: true },
+                    { text: "To actively transport sodium across the blood-brain barrier", correct: false },
+                    { text: "To generate action potentials for muscle contraction", correct: false }
+                ],
+                explanation: "The primary job of the circulatory system is to deliver survival-needing substances (like oxygen, hormones, and nutrients) to the tissue/cells and remove their waste products[cite: 1, 3]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Which of the following is considered a nitrogenous waste product that the circulatory system must remove?",
+                options: [
+                    { text: "Glucose", correct: false },
+                    { text: "Bicarbonate", correct: false },
+                    { text: "Creatinine", correct: true },
+                    { text: "Lactic acid", correct: false }
+                ],
+                explanation: "Creatinine is a nitrogenous waste product (a breakdown product of creatine) that must be carried away by the circulatory system[cite: 1, 3]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "As arteries move further away from the heart toward the periphery, what happens to their relative size?",
+                options: [
+                    { text: "They become significantly thicker and larger in diameter.", correct: false },
+                    { text: "They transition directly into large veins.", correct: false },
+                    { text: "Their size remains entirely constant.", correct: false },
+                    { text: "They get progressively smaller.", correct: true }
+                ],
+                explanation: "Arteries get smaller as they move away from the heart and head toward the periphery, eventually becoming arterioles and then capillaries[cite: 1, 3]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "Which blood vessels physically connect the arterial system to the capillaries?",
+                options: [
+                    { text: "Arterioles", correct: true },
+                    { text: "Venules", correct: false },
+                    { text: "Muscular arteries", correct: false },
+                    { text: "Vena cava", correct: false }
+                ],
+                explanation: "Arterioles are the specific division of arteries that directly connect to and feed the capillaries[cite: 1, 3]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "Which of the following describes the general pattern of blood oxygenation in the systemic circuit?",
+                options: [
+                    { text: "Veins always carry oxygenated blood to the tissues.", correct: false },
+                    { text: "Most arteries carry oxygenated blood away from the heart, and most veins carry deoxygenated blood toward the heart.", correct: true },
+                    { text: "All capillaries carry exclusively deoxygenated blood.", correct: false },
+                    { text: "The vena cava carries the most highly oxygenated blood in the body.", correct: false }
+                ],
+                explanation: "In the systemic circuit, most arteries carry oxygenated blood away from the heart, while most veins carry deoxygenated (CO2-rich) blood back toward the heart[cite: 1, 3]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Which of the following explicitly defines the components of the 'microcirculation'?",
+                options: [
+                    { text: "Aorta, vena cava, and muscular arteries", correct: false },
+                    { text: "Lymphatic vessels, lymph nodes, and spleen", correct: false },
+                    { text: "Arterioles, capillaries, and venules", correct: true },
+                    { text: "Proximal capillaries, distal capillaries, and medium veins", correct: false }
+                ],
+                explanation: "The microcirculation is specifically defined as consisting of arterioles, capillaries, and venules. This was highlighted as a very important test concept[cite: 1, 3]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which blood vessels are primarily responsible for controlling blood flow and, consequently, blood pressure?",
+                options: [
+                    { text: "Large veins", correct: false },
+                    { text: "The aorta", correct: false },
+                    { text: "Capillaries", correct: false },
+                    { text: "Arterioles (and to some extent, venules)", correct: true }
+                ],
+                explanation: "Arterioles (and venules) are the primary controllers of blood flow through the capillary beds and are a major controller of overall blood pressure[cite: 1, 3]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "In the systemic loop, where does the most significant drop in hydrostatic blood pressure occur?",
+                options: [
+                    { text: "Once blood enters the arterioles", correct: true },
+                    { text: "Inside the left ventricle", correct: false },
+                    { text: "Within the vena cava", correct: false },
+                    { text: "In the large elastic arteries", correct: false }
+                ],
+                explanation: "The most significant drop in inter-blood vessel hydrostatic pressure occurs once the blood leaves the small arteries and enters the arterioles[cite: 1, 3]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the primary cause of the pressure drop as blood moves through the vascular system?",
+                options: [
+                    { text: "Gravity pulling blood downward", correct: false },
+                    { text: "Friction stealing energy as blood scrapes against the vessel walls", correct: true },
+                    { text: "The heart physically relaxing during diastole", correct: false },
+                    { text: "White blood cells absorbing the pressure", correct: false }
+                ],
+                explanation: "Friction between the blood and the blood vessel walls steals energy, which is the primary reason hydrostatic pressure is lost as blood travels[cite: 3]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "The blood vessel wall is generally composed of three layers (tunics). What is the innermost layer called?",
+                options: [
+                    { text: "Tunica media", correct: false },
+                    { text: "Tunica adventitia", correct: false },
+                    { text: "Tunica intima", correct: true },
+                    { text: "Tunica externa", correct: false }
+                ],
+                explanation: "The Tunica intima (or interna) is the innermost layer of the blood vessel that is 'intimate' or 'cuddling' with the blood[cite: 1, 3]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "What specific cell type primarily makes up the tunica intima?",
+                options: [
+                    { text: "Smooth muscle cells", correct: false },
+                    { text: "Fibroblasts", correct: false },
+                    { text: "Stratified squamous epithelium", correct: false },
+                    { text: "Endothelial cells", correct: true }
+                ],
+                explanation: "The tunica intima is mainly made up of endothelial cells, which are a specialized type of epithelial cell[cite: 1]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "Which layer of the blood vessel is very thick, primarily composed of smooth muscle, and controls the lumen size?",
+                options: [
+                    { text: "Tunica media", correct: true },
+                    { text: "Tunica intima", correct: false },
+                    { text: "Tunica adventitia", correct: false },
+                    { text: "Endothelium", correct: false }
+                ],
+                explanation: "The tunica media is the muscular middle layer, mainly made of smooth muscle cells, which controls the size of the vessel lumen[cite: 1]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "The circulatory system is divided into two main divisions. What are they?",
+                options: [
+                    { text: "The arterial system and the venous system", correct: false },
+                    { text: "The cardiovascular system and the lymphatic system", correct: true },
+                    { text: "The pulmonary system and the respiratory system", correct: false },
+                    { text: "The systemic system and the microcirculation", correct: false }
+                ],
+                explanation: "The two primary divisions of the circulatory system are the cardiovascular system and the lymphatic system[cite: 1, 2]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "What is the specific function of the pulmonary loop (pulmonary system)?",
+                options: [
+                    { text: "To deliver nutrients to the brain", correct: false },
+                    { text: "To pump blood from the left heart to the toes", correct: false },
+                    { text: "To pump blood from the right heart to the lungs for gas exchange and back to the left heart", correct: true },
+                    { text: "To actively transport lymph fluid back to the vena cava", correct: false }
+                ],
+                explanation: "The pulmonary system pumps blood from the right heart to the lungs for gas exchange only, and then returns it to the left heart[cite: 1, 2]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which side of the heart works much harder because it must drive blood through the extensive systemic loop?",
+                options: [
+                    { text: "Right atrium", correct: false },
+                    { text: "Right ventricle", correct: false },
+                    { text: "Left atrium", correct: false },
+                    { text: "Left ventricle (Left heart)", correct: true }
+                ],
+                explanation: "The left heart (specifically the left ventricle) has to work very hard to pump blood into every nook and cranny of the entire body, which is why it is much larger than the right heart[cite: 1]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "Which of the following is a mechanism that helps pump venous blood back to the heart from the lower, gravity-dependent extremities?",
+                options: [
+                    { text: "The calf muscle pump (mainly the soleus)", correct: true },
+                    { text: "The Windkessel effect", correct: false },
+                    { text: "Active transport by the tunica intima", correct: false },
+                    { text: "The high hydrostatic pressure of the vena cava", correct: false }
+                ],
+                explanation: "The calf muscle pump (mainly the soleus muscle) helps squeeze blood through the veins against gravity when walking or standing[cite: 1]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "In what specific anatomical region is the heart located within the thoracic cavity?",
+                options: [
+                    { text: "The superior mediastinum", correct: false },
+                    { text: "The middle mediastinum (a division of the inferior mediastinum)", correct: true },
+                    { text: "The anterior mediastinum", correct: false },
+                    { text: "The pleural cavity", correct: false }
+                ],
+                explanation: "The heart sits in the chest cavity in a region specifically called the middle mediastinum, which is the middle division of the inferior mediastinum[cite: 1]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "According to the professor's explicit instruction, what forces blood through all the vessels and back to the heart?",
+                options: [
+                    { text: "Osmotic equilibrium", correct: false },
+                    { text: "The lymphatic system", correct: false },
+                    { text: "High hydrostatic pressure created by the heart", correct: true },
+                    { text: "The Gibbs-Donnan effect", correct: false }
+                ],
+                explanation: "The lecture explicitly states: 'Memorize this! The heart creates high hydrostatic pressure which pushes blood through all vessels and back to the heart!'[cite: 1, 4]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "What happens to the movement of a solute (like sodium) if a fully permeable membrane is placed between two solutions with unequal concentrations?",
+                options: [
+                    { text: "Water actively transports the solute against its gradient.", correct: false },
+                    { text: "A massive osmotic pressure gradient is generated.", correct: false },
+                    { text: "The solute is completely blocked from moving.", correct: false },
+                    { text: "The solutes simply equalize across the membrane, resulting in no net movement or osmotic pressure.", correct: true }
+                ],
+                explanation: "If a membrane is fully permeable, solutes will just pass through and equalize, meaning there will be no osmotic gradient or movement[cite: 4]."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = "";
+                if(percentage >= 90) feedback = "Outstanding! You have mastered the Week 2 Circulatory System concepts.";
+                else if (percentage >= 75) feedback = "Solid work! Review the specific tunic layers and pressure drops to perfect your score.";
+                else if (percentage >= 60) feedback = "Good effort, but you'll need to review the microcirculation components more closely.";
+                else feedback = "Keep studying! Review the specific slide notes on systemic vs pulmonary loops and try again.";
+                
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() {
+            initQuiz();
+        }
+
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
