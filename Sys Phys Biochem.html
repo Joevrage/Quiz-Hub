@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sys Phys: Biochem</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Sys Phys: Biochem</div>
+        <div id="score-header">Score: 0 / 24 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 24</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Target: A
+            {
+                question: "What is the overarching physiological definition of cellular respiration?",
+                options: [
+                    { text: "The glucose-fueled process that cells use to make life-sustaining ATP.", correct: true },
+                    { text: "The physical exchange of oxygen and carbon dioxide in the lungs.", correct: false },
+                    { text: "The anaerobic breakdown of glucose into lactate.", correct: false },
+                    { text: "The process of synthesizing glycogen for long-term energy storage.", correct: false }
+                ],
+                explanation: "Cellular respiration is formally defined as the overarching biological process that cells use to generate life-sustaining ATP, fueled primarily by glucose[cite: 2, 5, 8]."
+            },
+            // Target: B
+            {
+                question: "What are the three primary components of cellular respiration?",
+                options: [
+                    { text: "Gluconeogenesis, beta-oxidation, and the Cori cycle", correct: false },
+                    { text: "Glycolysis, the Krebs cycle, and oxidative phosphorylation", correct: true },
+                    { text: "Anaerobic glycolysis, the urea cycle, and oxidative phosphorylation", correct: false },
+                    { text: "Glycogenolysis, the Krebs cycle, and the electron transport chain", correct: false }
+                ],
+                explanation: "Cellular respiration is composed of three distinct phases: glycolysis, the Krebs cycle, and oxidative phosphorylation[cite: 2, 5]."
+            },
+            // Target: C
+            {
+                question: "Which of the following correctly matches the processes of cellular respiration to their specific locations within the cell?",
+                options: [
+                    { text: "Glycolysis (Inner membrane), Krebs cycle (Matrix), Oxidative phosphorylation (Cytosol)", correct: false },
+                    { text: "Glycolysis (Matrix), Krebs cycle (Cytosol), Oxidative phosphorylation (Outer membrane)", correct: false },
+                    { text: "Glycolysis (Cytosol), Krebs cycle (Mitochondrial matrix), Oxidative phosphorylation (Inner mitochondrial membrane)", correct: true },
+                    { text: "Glycolysis (Cytosol), Krebs cycle (Inner membrane), Oxidative phosphorylation (Matrix)", correct: false }
+                ],
+                explanation: "Glycolysis occurs in the cytosol, the Krebs cycle takes place in the mitochondrial matrix, and oxidative phosphorylation happens across the inner mitochondrial membrane[cite: 2, 5]."
+            },
+            // Target: D
+            {
+                question: "Which of the following is true regarding anaerobic cellular respiration in humans?",
+                options: [
+                    { text: "It occurs exclusively in the mitochondria of red blood cells.", correct: false },
+                    { text: "It generates 28 ATP molecules per glucose.", correct: false },
+                    { text: "It is the primary energy source during periods of rest.", correct: false },
+                    { text: "There is no anaerobic cellular respiration in humans; true cellular respiration requires oxygen.", correct: true }
+                ],
+                explanation: "While humans utilize anaerobic glycolysis when oxygen is scarce, true cellular respiration strictly requires oxygen. There is no anaerobic cellular respiration in human physiology[cite: 2, 5]."
+            },
+            // Target: A
+            {
+                question: "What is the precise cellular location and net ATP yield of anaerobic glycolysis?",
+                options: [
+                    { text: "Cytosol; net yield of 2 ATP", correct: true },
+                    { text: "Mitochondrial matrix; net yield of 2 ATP", correct: false },
+                    { text: "Inner mitochondrial membrane; net yield of 28 ATP", correct: false },
+                    { text: "Cytosol; net yield of 28 ATP", correct: false }
+                ],
+                explanation: "Anaerobic glycolysis occurs strictly within the cytosol and yields a net total of 2 ATP molecules per glucose[cite: 2, 5]."
+            },
+            // Target: B
+            {
+                question: "Why do mature red blood cells rely exclusively on anaerobic glycolysis for ATP production?",
+                options: [
+                    { text: "They lack a nucleus.", correct: false },
+                    { text: "They lack mitochondria and therefore cannot run the Krebs cycle or oxidative phosphorylation.", correct: true },
+                    { text: "They carry too much oxygen, which inhibits the electron transport chain.", correct: false },
+                    { text: "They lack the hexokinase enzyme required for aerobic respiration.", correct: false }
+                ],
+                explanation: "Red blood cells lack mitochondria, meaning they physically cannot run the Krebs cycle or oxidative phosphorylation, forcing them to rely purely on anaerobic glycolysis[cite: 2]."
+            },
+            // Target: C
+            {
+                question: "What is the physiological purpose of converting glucose into glucose-6-phosphate immediately upon entering the cell?",
+                options: [
+                    { text: "To actively transport it into the mitochondria.", correct: false },
+                    { text: "To rapidly stimulate the release of insulin.", correct: false },
+                    { text: "To trap the glucose in the cytosol and destroy any potential outgoing concentration gradient.", correct: true },
+                    { text: "To immediately generate 2 ATP molecules.", correct: false }
+                ],
+                explanation: "Phosphorylating glucose into glucose-6-phosphate disguises and traps the molecule inside the cytosol, ensuring the concentration gradient keeps flowing inward so glucose cannot escape[cite: 2, 5, 8]."
+            },
+            // Target: D
+            {
+                question: "Which specific enzyme catalyzes the irreversible first step of glycolysis that traps glucose inside the cell?",
+                options: [
+                    { text: "Phosphofructokinase-1", correct: false },
+                    { text: "Glucose-6-phosphatase", correct: false },
+                    { text: "Lactate dehydrogenase", correct: false },
+                    { text: "Hexokinase", correct: true }
+                ],
+                explanation: "Hexokinase is the critical enzyme responsible for phosphorylating glucose into glucose-6-phosphate, completing the first irreversible step of glycolysis and trapping the sugar[cite: 2, 5, 8]."
+            },
+            // Target: A
+            {
+                question: "Which hexokinase isozyme, also known as glucokinase, is NOT insulin-dependent and is primarily located in hepatocytes and pancreatic beta cells?",
+                options: [
+                    { text: "Hexokinase 4", correct: true },
+                    { text: "Hexokinase 1", correct: false },
+                    { text: "Hexokinase 2", correct: false },
+                    { text: "Hexokinase 3", correct: false }
+                ],
+                explanation: "Hexokinase 4 (glucokinase) is specifically found in the liver and pancreatic beta cells and is uniquely non-insulin-dependent[cite: 2, 5, 8]."
+            },
+            // Target: B
+            {
+                question: "Which hexokinase isozyme is strictly insulin-dependent and is found primarily in skeletal muscle, heart, and adipose tissue?",
+                options: [
+                    { text: "Hexokinase 1", correct: false },
+                    { text: "Hexokinase 2", correct: true },
+                    { text: "Hexokinase 3", correct: false },
+                    { text: "Hexokinase 4", correct: false }
+                ],
+                explanation: "Hexokinase 2 is strictly insulin-dependent and serves as the primary trapper in skeletal muscle, cardiac tissue, and adipose (fat) tissue[cite: 2]."
+            },
+            // Target: C
+            {
+                question: "Once glucose-6-phosphate is formed, it can be routed into three primary biochemical pathways. Which of the following is NOT one of those pathways?",
+                options: [
+                    { text: "Glycolysis", correct: false },
+                    { text: "Glycogenesis", correct: false },
+                    { text: "Beta-oxidation", correct: true },
+                    { text: "Pentose phosphate pathway", correct: false }
+                ],
+                explanation: "Glucose-6-phosphate can enter glycolysis (to make ATP), glycogenesis (to store as glycogen), or the pentose phosphate pathway (to make ribose for DNA/RNA). Beta-oxidation is strictly for breaking down fatty acids[cite: 5, 8]."
+            },
+            // Target: D
+            {
+                question: "What specific enzyme catalyzes the rate-limiting step of glycolysis by converting fructose-6-phosphate into fructose-1,6-bisphosphate?",
+                options: [
+                    { text: "Hexokinase", correct: false },
+                    { text: "Isocitrate dehydrogenase", correct: false },
+                    { text: "Pyruvate dehydrogenase complex", correct: false },
+                    { text: "Phosphofructokinase-1 (PFK-1)", correct: true }
+                ],
+                explanation: "Phosphofructokinase-1 (PFK-1) catalyzes the conversion of fructose-6-phosphate to fructose-1,6-bisphosphate, serving as the highly regulated rate-limiting step of glycolysis[cite: 2, 5, 8]."
+            },
+            // Target: A
+            {
+                question: "High intracellular levels of which molecule will bind to PFK-1 and actively stimulate glycolysis, driving the reaction forward?",
+                options: [
+                    { text: "AMP", correct: true },
+                    { text: "ATP", correct: false },
+                    { text: "NADH", correct: false },
+                    { text: "Glucose", correct: false }
+                ],
+                explanation: "High levels of AMP indicate low cellular energy, which binds to PFK-1 and stimulates it to drive glycolysis forward and produce more ATP. Conversely, high ATP inhibits PFK-1[cite: 2]."
+            },
+            // Target: B
+            {
+                question: "In the transition step immediately following glycolysis, the Pyruvate Dehydrogenase Complex (PDC) converts pyruvate into which molecule?",
+                options: [
+                    { text: "Oxaloacetate", correct: false },
+                    { text: "Acetyl-CoA", correct: true },
+                    { text: "Citrate", correct: false },
+                    { text: "Lactate", correct: false }
+                ],
+                explanation: "Inside the mitochondria, the giant Pyruvate Dehydrogenase Complex (PDC) grabs pyruvate and converts it into Acetyl-CoA to prepare for the Krebs cycle[cite: 2]."
+            },
+            // Target: C
+            {
+                question: "In the first step of the Krebs cycle, Acetyl-CoA combines with which specific molecule to form citrate?",
+                options: [
+                    { text: "Pyruvate", correct: false },
+                    { text: "Alpha-ketoglutarate", correct: false },
+                    { text: "Oxaloacetate", correct: true },
+                    { text: "Malate", correct: false }
+                ],
+                explanation: "To start the Krebs cycle domino chain, Acetyl-CoA combines with oxaloacetate (the final molecule of the cycle) to form citrate[cite: 2]."
+            },
+            // Target: D
+            {
+                question: "What is the rate-limiting enzyme of the Krebs (Citric Acid) cycle?",
+                options: [
+                    { text: "Phosphofructokinase-1", correct: false },
+                    { text: "Pyruvate dehydrogenase", correct: false },
+                    { text: "Citrate synthase", correct: false },
+                    { text: "Isocitrate dehydrogenase", correct: true }
+                ],
+                explanation: "Isocitrate dehydrogenase is the rate-limiting enzyme of the Krebs cycle, controlling the conversion of isocitrate into alpha-ketoglutarate[cite: 2]."
+            },
+            // Target: A
+            {
+                question: "Under anaerobic conditions, pyruvate backs up because the lack of oxygen stops the electron transport chain. What specific cytosolic enzyme converts this backed-up pyruvate into lactate?",
+                options: [
+                    { text: "Lactate dehydrogenase", correct: true },
+                    { text: "Pyruvate carboxylase", correct: false },
+                    { text: "Hexokinase", correct: false },
+                    { text: "Glucose-6-phosphatase", correct: false }
+                ],
+                explanation: "When the PDC shuts down due to a lack of NAD+, pyruvate builds up. Lactate dehydrogenase steps in to convert that excess pyruvate into lactate to keep anaerobic glycolysis running[cite: 2]."
+            },
+            // Target: B
+            {
+                question: "What is the name of the cycle where muscle lactate is sent to the liver, converted back to glucose via gluconeogenesis, and sent back to the muscle?",
+                options: [
+                    { text: "Krebs cycle", correct: false },
+                    { text: "Cori cycle", correct: true },
+                    { text: "Urea cycle", correct: false },
+                    { text: "Pentose phosphate pathway", correct: false }
+                ],
+                explanation: "The Cori cycle recycles lactate from anaerobic muscle back to the liver, where it undergoes gluconeogenesis to become glucose, which is then shipped back to fuel the muscle[cite: 2]."
+            },
+            // Target: C
+            {
+                question: "Which of the following substrates is NOT capable of providing the carbon skeleton to create new glucose during gluconeogenesis?",
+                options: [
+                    { text: "Lactate", correct: false },
+                    { text: "Amino acids", correct: false },
+                    { text: "Fatty acids", correct: true },
+                    { text: "Glycerol", correct: false }
+                ],
+                explanation: "Gluconeogenesis uses lactate, amino acids, and glycerol to build the carbon skeleton of new glucose. Fatty acids cannot be used as a structural substrate for glucose[cite: 2]."
+            },
+            // Target: D
+            {
+                question: "If fatty acids cannot be used as a structural substrate to make glucose, what is their crucial role during gluconeogenesis?",
+                options: [
+                    { text: "They bind to and activate PFK-1.", correct: false },
+                    { text: "They are converted directly into glycogen.", correct: false },
+                    { text: "They are excreted directly into the urine.", correct: false },
+                    { text: "They undergo beta-oxidation to generate the ATP required to power gluconeogenesis.", correct: true }
+                ],
+                explanation: "Fatty acids are run through beta-oxidation to yield the massive amounts of ATP required to drive the energy-expensive process of gluconeogenesis[cite: 2]."
+            },
+            // Target: A
+            {
+                question: "When insulin binds to its cellular tyrosine kinase receptor, what specific intracellular signaling cascade is triggered to allow glucose entry?",
+                options: [
+                    { text: "IRS activates PI3K -> AKT -> GLUT4 translocation", correct: true },
+                    { text: "cAMP -> PKA -> Calcium release", correct: false },
+                    { text: "IP3 -> DAG -> Calmodulin", correct: false },
+                    { text: "JAK -> STAT -> Gene transcription", correct: false }
+                ],
+                explanation: "Insulin binding triggers the IRS -> PI3K -> AKT signaling cascade, which acts as a ferry boat to trigger the translocation (trafficking) of GLUT4 storage vesicles to the plasma membrane[cite: 6, 8, 9]."
+            },
+            // Target: B
+            {
+                question: "How is the 'fed state' (or absorptive state) generally defined in terms of metabolic timing?",
+                options: [
+                    { text: "The period of intense exercise when muscles rely on glycogen.", correct: false },
+                    { text: "The first 4 hours after eating when glucose is abundant in the blood.", correct: true },
+                    { text: "The state of starvation when the body switches to beta-oxidation.", correct: false },
+                    { text: "The state of deep sleep when gluconeogenesis peaks.", correct: false }
+                ],
+                explanation: "The fed state is defined as the first 4 hours following a meal when there is plenty of dietary glucose floating around in the bloodstream[cite: 2, 9]."
+            },
+            // Target: C
+            {
+                question: "Where does glycerol (derived from fat breakdown) enter the gluconeogenesis pathway?",
+                options: [
+                    { text: "It is converted directly into Pyruvate.", correct: false },
+                    { text: "It is converted into Oxaloacetate.", correct: false },
+                    { text: "It is converted into Dihydroxyacetone phosphate (DHAP).", correct: true },
+                    { text: "It is converted into Fructose-6-phosphate.", correct: false }
+                ],
+                explanation: "Glycerol specifically enters the gluconeogenesis pathway by being converted into dihydroxyacetone phosphate (DHAP)[cite: 2]."
+            },
+            // Target: D
+            {
+                question: "Where does gluconeogenesis (the creation of new sugar during fasting) primarily occur?",
+                options: [
+                    { text: "Red blood cells and skeletal muscle", correct: false },
+                    { text: "Adipose tissue and the brain", correct: false },
+                    { text: "The spleen and white blood cells", correct: false },
+                    { text: "Hepatocytes (liver cells) and PCT cells", correct: true }
+                ],
+                explanation: "Gluconeogenesis is a specialized process run primarily in hepatocytes (liver cells) and the proximal convoluted tubule (PCT) cells of the kidney during fasting states[cite: 5]."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 85 ? "Excellent work! You've mastered the biochemical pathways and enzymes." : "Review the specific hexokinase isozymes, rate-limiting steps, and the Cori cycle.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
