@@ -1,791 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reg 1 Week 1: Practice Quiz</title>
-  <style>
-    :root {
-      --primary-color: #1a365d;
-      --secondary-color: #2b6cb0;
-      --accent-color: #3182ce;
-      --bg-color: #f7fafc;
-      --card-bg: #ffffff;
-      --text-main: #2d3748;
-      --text-muted: #718096;
-      --correct-bg: #c6f6d5;
-      --correct-border: #38a169;
-      --correct-text: #22543d;
-      --incorrect-bg: #fed7d7;
-      --incorrect-border: #e53e3e;
-      --incorrect-text: #742a2a;
-      --border-color: #e2e8f0;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cardio & Fluid Physiology Quiz</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; padding-bottom: 80px; }
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-main);
-      line-height: 1.6;
-      margin: 0;
-      padding: 0;
-    }
+        header {
+            position: sticky; top: 0; background-color: var(--bg-card); border-bottom: 2px solid var(--accent);
+            padding: 1rem; text-align: center; z-index: 1000; display: flex; justify-content: space-between;
+            align-items: center; font-size: 1.1rem; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .header-title { color: var(--text-main); }
+        #score-header { color: var(--accent); }
 
-    .header-banner {
-      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-      color: #ffffff;
-      padding: 28px 20px 20px;
-      text-align: center;
-    }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
 
-    .header-banner h1 {
-      margin: 0 0 6px 0;
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
+        .question-card {
+            background-color: var(--bg-card); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
+            border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .question-number { font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 700; }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-main); }
 
-    .header-banner p {
-      margin: 0;
-      font-size: 0.95rem;
-      opacity: 0.9;
-    }
+        .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn {
+            background-color: #262626; border: 2px solid var(--border-color); border-radius: 6px; padding: 1rem;
+            text-align: left; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; color: var(--text-main); font-weight: 500;
+        }
+        .option-btn:hover:not(:disabled) { background-color: #333333; border-color: var(--accent); }
+        .option-btn:disabled { cursor: default; }
 
-    .sticky-score-bar {
-      position: -webkit-sticky;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background-color: var(--card-bg);
-      border-bottom: 2px solid var(--border-color);
-      padding: 12px 20px;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      max-width: 900px;
-      margin: 0 auto;
-    }
+        .option-btn.correct { background-color: var(--correct-bg); border-color: var(--correct-border); color: #ffffff; }
+        .option-btn.incorrect { background-color: var(--incorrect-bg); border-color: var(--incorrect-border); color: #ffffff; }
 
-    .score-text {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--primary-color);
-    }
+        .explanation {
+            margin-top: 1.25rem; padding: 1rem; border-radius: 6px; background-color: #262626;
+            border-left: 4px solid var(--accent); font-size: 0.95rem; display: none; color: #e5e5e5; animation: fadeIn 0.3s ease-in;
+        }
+        .explanation strong { display: block; margin-bottom: 0.4rem; font-size: 1.05rem; }
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
 
-    .progress-bar-container {
-      width: 45%;
-      background-color: var(--border-color);
-      height: 10px;
-      border-radius: 5px;
-      overflow: hidden;
-    }
+        #summary-card {
+            background-color: var(--bg-card); border-radius: 8px; padding: 2.5rem 1.5rem; text-align: center;
+            border: 2px solid var(--accent); margin-top: 2rem; display: none;
+        }
+        #summary-card h2 { margin-bottom: 1rem; color: var(--text-main); font-size: 1.8rem; }
+        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+        #final-feedback { margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-muted); }
 
-    .progress-bar-fill {
-      height: 100%;
-      width: 0%;
-      background-color: var(--accent-color);
-      transition: width 0.3s ease;
-    }
+        .reset-btn {
+            background-color: var(--accent); color: var(--bg-main); border: none; padding: 1rem 2.5rem;
+            font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: 700; transition: background-color 0.2s;
+        }
+        .reset-btn:hover { background-color: var(--accent-hover); }
 
-    .quiz-container {
-      max-width: 850px;
-      margin: 20px auto 40px;
-      padding: 0 16px;
-    }
-
-    .question-card {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .question-number {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--accent-color);
-      margin-bottom: 6px;
-      letter-spacing: 0.05em;
-    }
-
-    .question-text {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--primary-color);
-      margin-bottom: 18px;
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .option-btn {
-      width: 100%;
-      text-align: left;
-      padding: 14px 18px;
-      background-color: #ffffff;
-      border: 1.5px solid var(--border-color);
-      border-radius: 8px;
-      font-size: 0.98rem;
-      color: var(--text-main);
-      cursor: pointer;
-      transition: all 0.15s ease-in-out;
-      line-height: 1.4;
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      background-color: #ebf8ff;
-      border-color: var(--accent-color);
-    }
-
-    .option-btn:disabled {
-      cursor: default;
-    }
-
-    .option-btn.correct {
-      background-color: var(--correct-bg) !important;
-      border-color: var(--correct-border) !important;
-      color: var(--correct-text) !important;
-      font-weight: 600;
-    }
-
-    .option-btn.incorrect {
-      background-color: var(--incorrect-bg) !important;
-      border-color: var(--incorrect-border) !important;
-      color: var(--incorrect-text) !important;
-    }
-
-    .explanation-box {
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 8px;
-      font-size: 0.92rem;
-      line-height: 1.5;
-      display: none;
-    }
-
-    .explanation-box.correct {
-      display: block;
-      background-color: var(--correct-bg);
-      border-left: 5px solid var(--correct-border);
-      color: var(--correct-text);
-    }
-
-    .explanation-box.incorrect {
-      display: block;
-      background-color: var(--incorrect-bg);
-      border-left: 5px solid var(--incorrect-border);
-      color: var(--incorrect-text);
-    }
-
-    .summary-card {
-      display: none;
-      background-color: var(--card-bg);
-      border-radius: 12px;
-      border: 2px solid var(--accent-color);
-      padding: 32px 24px;
-      text-align: center;
-      box-shadow: var(--shadow-md);
-      margin-top: 30px;
-    }
-
-    .summary-card h2 {
-      color: var(--primary-color);
-      margin-top: 0;
-      font-size: 1.8rem;
-    }
-
-    .final-score-badge {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--secondary-color);
-      margin: 16px 0;
-    }
-
-    .summary-message {
-      font-size: 1.05rem;
-      color: var(--text-main);
-      margin-bottom: 24px;
-    }
-
-    .reset-btn {
-      background-color: var(--primary-color);
-      color: #ffffff;
-      border: none;
-      padding: 14px 32px;
-      font-size: 1rem;
-      font-weight: 600;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-    }
-
-    .reset-btn:hover {
-      background-color: var(--secondary-color);
-    }
-
-    @media (max-width: 600px) {
-      .header-banner h1 {
-        font-size: 1.4rem;
-      }
-
-      .sticky-score-bar {
-        padding: 10px 14px;
-      }
-
-      .score-text {
-        font-size: 0.88rem;
-      }
-
-      .progress-bar-container {
-        width: 35%;
-      }
-
-      .question-card {
-        padding: 18px;
-      }
-
-      .option-btn {
-        padding: 12px 14px;
-        font-size: 0.92rem;
-      }
-    }
-  </style>
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        button { -webkit-tap-highlight-color: transparent; }
+    </style>
 </head>
 <body>
 
-<div class="header-banner">
-  <h1>Reg 1 Week 1 Practice Quiz</h1>
-  <p>Pectoral, Scapular, & Shoulder Regions (35 High-Yield Questions)</p>
-</div>
+    <header>
+        <div class="header-title">Cardio & Fluid Physiology</div>
+        <div id="score-header">Score: 0 / 14 (0%)</div>
+    </header>
 
-<div class="sticky-score-bar">
-  <span id="score-text" class="score-text">Score: 0 / 35 (0%)</span>
-  <div class="progress-bar-container">
-    <div id="progress-bar-fill" class="progress-bar-fill"></div>
-  </div>
-  <span id="progress-text" class="score-text">0 / 35</span>
-</div>
+    <div class="container">
+        <div id="quiz-container"></div>
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 14</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
 
-<div class="quiz-container">
-  <div id="quiz-questions"></div>
+    <script>
+        const quizData = [
+            {
+                question: "What is the smallest member of the tracheobronchial tree (conducting airway) before transitioning to the respiratory unit?",
+                options: [
+                    { text: "Alveolar duct", correct: false },
+                    { text: "Respiratory bronchiole", correct: false },
+                    { text: "Segmental bronchus", correct: false },
+                    { text: "Terminal bronchiole", correct: true }
+                ],
+                explanation: "The terminal bronchiole is the smallest member of the conducting airway (tracheobronchial tree). Students frequently miss this by choosing the respiratory bronchiole. The respiratory bronchiole is part of the respiratory unit where gas exchange occurs[cite: 3, 10]."
+            },
+            {
+                question: "Which of the following describes the cellular makeup of a standard capillary?",
+                options: [
+                    { text: "A single layer of smooth muscle cells", correct: false },
+                    { text: "Two layers of cuboidal cells", correct: false },
+                    { text: "Four endothelial cells surrounded by pericytes", correct: true },
+                    { text: "A continuous layer of transitional epithelium", correct: false }
+                ],
+                explanation: "A standard capillary is formed by four endothelial cells that wrap around to create the lumen, and they are covered by pericytes[cite: 3, 10]."
+            },
+            {
+                question: "Normally, what is the relationship of osmolality between the intravascular space, interstitium, and intracellular space?",
+                options: [
+                    { text: "The intracellular space is significantly more concentrated.", correct: false },
+                    { text: "The intravascular space has a drastically lower osmolality.", correct: false },
+                    { text: "They all have almost exactly the same ratio of ions to water (osmotic equilibrium).", correct: true },
+                    { text: "The interstitium maintains a much higher concentration of sodium.", correct: false }
+                ],
+                explanation: "Under normal physiological conditions, all three compartments have almost the same osmolality to maintain osmotic equilibrium[cite: 10]."
+            },
+            {
+                question: "According to the Gibbs-Donnan effect, why is the intravascular space slightly saltier (higher osmolality) than the interstitium?",
+                options: [
+                    { text: "Because the heart pumps sodium directly into the blood.", correct: false },
+                    { text: "Because albumin carries a massive negative charge, drawing positively charged sodium ions into the blood.", correct: true },
+                    { text: "Because lymphatic vessels selectively remove water from the plasma.", correct: false },
+                    { text: "Because the basement membrane repels positively charged ions.", correct: false }
+                ],
+                explanation: "Albumin is trapped in the blood vessels and is highly negatively charged. This negative charge tends to pull and hold positively charged ions (like sodium) in the blood, making it slightly saltier[cite: 3]."
+            },
+            {
+                question: "Which of the following is NOT an accepted alternative name for Antidiuretic Hormone (ADH)?",
+                options: [
+                    { text: "Vasopressin", correct: false },
+                    { text: "Aldosterone", correct: true },
+                    { text: "Arginine vasopressin", correct: false },
+                    { text: "AVP", correct: false }
+                ],
+                explanation: "ADH is also commonly called vasopressin, arginine vasopressin, and AVP. Aldosterone is a completely different hormone[cite: 5]."
+            },
+            {
+                question: "What specific cellular waste products must be removed from the interstitium to prevent necrosis?",
+                options: [
+                    { text: "Glucose, oxygen, and ATP", correct: false },
+                    { text: "Carbon dioxide, hydrogen ions, free radicals, urea, and creatinine", correct: true },
+                    { text: "Sodium, potassium, and chloride", correct: false },
+                    { text: "Insulin, glucagon, and epinephrine", correct: false }
+                ],
+                explanation: "Waste products that must be removed to prevent cellular necrosis include carbon dioxide, lactic/metabolic acids, hydrogen ions, free radicals, urea, ammonia, creatinine, and bilirubin[cite: 7, 10]."
+            },
+            {
+                question: "Which specific valve separates the left atrium from the left ventricle?",
+                options: [
+                    { text: "Aortic valve", correct: false },
+                    { text: "Tricuspid valve", correct: false },
+                    { text: "Mitral valve", correct: true },
+                    { text: "Pulmonary valve", correct: false }
+                ],
+                explanation: "The mitral valve lies between the left atrium and left ventricle. This is a common question that students miss on exams[cite: 6]."
+            },
+            {
+                question: "Where exactly is the heart located within the thoracic cavity?",
+                options: [
+                    { text: "The superior mediastinum", correct: false },
+                    { text: "The posterior mediastinum", correct: false },
+                    { text: "The anterior portion of the superior mediastinum", correct: false },
+                    { text: "The middle mediastinum (part of the inferior mediastinum)", correct: true }
+                ],
+                explanation: "The heart is located in the inferior mediastinum, specifically within the middle mediastinum. The superior mediastinum contains structures like the aortic arch and brachiocephalic trunk[cite: 6]."
+            },
+            {
+                question: "Which of the following structures resides in the superior mediastinum?",
+                options: [
+                    { text: "The heart", correct: false },
+                    { text: "The mitral valve", correct: false },
+                    { text: "The aortic arch", correct: true },
+                    { text: "The descending abdominal aorta", correct: false }
+                ],
+                explanation: "The aortic arch and brachiocephalic trunk live in the superior mediastinum, while the heart itself lives in the middle part of the inferior mediastinum[cite: 6]."
+            },
+            {
+                question: "Why does the left ventricle have significantly more muscle mass than the right ventricle?",
+                options: [
+                    { text: "It must pump blood against high resistance through the entire systemic loop.", correct: true },
+                    { text: "It must pump blood directly upward into the brain.", correct: false },
+                    { text: "It handles a larger volume of blood per minute than the right ventricle.", correct: false },
+                    { text: "It only pumps blood to the lungs, which require high pressure.", correct: false }
+                ],
+                explanation: "The left heart is thick and muscular because it must pump blood through the systemic loop to every nook and cranny of the body. The right heart has an easy job pumping only to the lungs (pulmonary circuit)[cite: 6]."
+            },
+            {
+                question: "The circulatory system is broadly divided into which two main systems?",
+                options: [
+                    { text: "The arterial system and the venous system", correct: false },
+                    { text: "The cardiovascular system and the lymphatic system", correct: true },
+                    { text: "The systemic loop and the pulmonary loop", correct: false },
+                    { text: "The macrocirculation and the microcirculation", correct: false }
+                ],
+                explanation: "The circulatory system consists of two primary divisions: the cardiovascular system and the lymphatic system[cite: 6]."
+            },
+            {
+                question: "According to the basement membrane slides (a heavily tested board topic), which of the following is NOT one of the three layers of the basement membrane?",
+                options: [
+                    { text: "Lamina lucida", correct: false },
+                    { text: "Lamina densa", correct: false },
+                    { text: "Reticular lamina", correct: false },
+                    { text: "Tunica media", correct: true }
+                ],
+                explanation: "The basement membrane is composed of the lamina lucida, lamina densa, and reticular lamina. The tunica media is a muscular layer of a blood vessel, not the basement membrane[cite: 7]."
+            },
+            {
+                question: "What part of the airway consists of the respiratory bronchiole, alveolar ducts, and alveolar sacs, and is defined by its ability to exchange gases?",
+                options: [
+                    { text: "The conductive airway", correct: false },
+                    { text: "The tracheobronchial tree", correct: false },
+                    { text: "The respiratory unit", correct: true },
+                    { text: "The primary bronchus", correct: false }
+                ],
+                explanation: "The respiratory unit (or acinus) is where gas exchange actually occurs. It includes the respiratory bronchioles, alveolar ducts, and alveolar sacs[cite: 3, 10]."
+            },
+            {
+                question: "Which specific neurons in the hypothalamus synthesize and release Antidiuretic Hormone (ADH)?",
+                options: [
+                    { text: "Parvocellular neurons", correct: false },
+                    { text: "Magnocellular neurons", correct: true },
+                    { text: "Pyramidal neurons", correct: false },
+                    { text: "Chromaffin cells", correct: false }
+                ],
+                explanation: "Magnocellular neurons residing in the supraoptic and paraventricular nuclei of the hypothalamus produce and release ADH[cite: 5]."
+            }
+        ];
 
-  <div id="summary-card" class="summary-card">
-    <h2>Quiz Complete!</h2>
-    <div id="final-score-badge" class="final-score-badge">0%</div>
-    <p id="summary-message" class="summary-message"></p>
-    <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
-  </div>
-</div>
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
 
-<script>
-const quizData = [
-  {
-    question: "Which muscle group includes levator scapulae and the rhomboid muscles?",
-    options: [
-      "Superficial posterior axio-appendicular muscles",
-      "Deep posterior axio-appendicular muscles",
-      "Scapulohumeral muscles",
-      "Anterior axio-appendicular muscles"
-    ],
-    correct: 1,
-    explanation: "Correct! The deep posterior axio-appendicular muscles are levator scapulae, rhomboid minor, and rhomboid major. Trapezius and latissimus dorsi form the superficial layer."
-  },
-  {
-    question: "During dissection of the posterior thoracic region, which muscle sits SUPERFICIALLY and must be reflected to expose the underlying rhomboids and levator scapulae?",
-    options: [
-      "Latissimus dorsi",
-      "Trapezius",
-      "Serratus anterior",
-      "Infraspinatus"
-    ],
-    correct: 1,
-    explanation: "Correct! Trapezius forms the superficial layer of the posterior axio-appendicular group. Reflecting the trapezius reveals the deep posterior layer."
-  },
-  {
-    question: "When dissecting the anterior chest wall from superficial to deep, which muscle lies directly superficial to Pectoralis Minor and Subclavius?",
-    options: [
-      "Serratus anterior",
-      "Pectoralis major",
-      "Clavicle",
-      "Coracobrachialis"
-    ],
-    correct: 1,
-    explanation: "Correct! Pectoralis major forms the superficial layer of the anterior axio-appendicular region; it must be reflected to expose pectoralis minor and subclavius."
-  },
-  {
-    question: "What is the complete origin of the trapezius muscle according to lecture specifications?",
-    options: [
-      "Medial third of superior nuchal line, EOP, nuchal ligament, and spinous processes of C7-T12",
-      "Entire superior nuchal line, EOP, nuchal ligament, and spinous processes of C1-T12",
-      "Transverse processes of C1-C4 and spinous processes of C7-T5",
-      "Lateral third of clavicle, acromion, and spine of scapula"
-    ],
-    correct: 0,
-    explanation: "Correct! Trapezius originates from the medial third of the superior nuchal line, external occipital protuberance (EOP), nuchal ligament, and spinous processes of C7 through T12."
-  },
-  {
-    question: "Which nerve provides MOTOR innervation to the trapezius muscle?",
-    options: [
-      "Dorsal scapular nerve (C5)",
-      "Spinal accessory nerve (CN XI)",
-      "Thoracodorsal nerve (C6-C8)",
-      "Axillary nerve (C5-C6)"
-    ],
-    correct: 1,
-    explanation: "Correct! Motor innervation to the trapezius is provided by the Spinal Accessory Nerve (CN XI), while sensory branches arise from C3-C4."
-  },
-  {
-    question: "Superior rotation of the scapular glenoid cavity is achieved through the combined co-contraction of which trapezius fibers?",
-    options: [
-      "Middle fibers and levator scapulae",
-      "Descending and ascending fibers",
-      "Middle and ascending fibers",
-      "Descending and middle fibers"
-    ],
-    correct: 1,
-    explanation: "Correct! Descending fibers pull the scapula upward, and ascending fibers pull the medial scapula downward; together they co-contract to rotate the glenoid cavity superiorly."
-  },
-  {
-    question: "What is the primary action of the middle fibers of the trapezius muscle?",
-    options: [
-      "Elevates the scapula",
-      "Depresses the scapula",
-      "Retracts the scapula",
-      "Protracts the scapula"
-    ],
-    correct: 2,
-    explanation: "Correct! The horizontally oriented middle fibers of trapezius pull the scapula medially toward the spinal column, causing scapular retraction."
-  },
-  {
-    question: "What action is performed specifically by the ascending fibers of the trapezius muscle?",
-    options: [
-      "Elevates the scapula",
-      "Depresses the scapula",
-      "Protracts the scapula",
-      "Flexes the humerus"
-    ],
-    correct: 1,
-    explanation: "Correct! The ascending fibers originate inferiorly (T6-T12) and travel superiorly to attach at the scapular spine, pulling the scapula downward (depression) when contracted."
-  },
-  {
-    question: "Where does the latissimus dorsi muscle insert on the humerus?",
-    options: [
-      "Superior facet of greater tubercle",
-      "Lesser tubercle of humerus",
-      "Floor of intertubercular groove",
-      "Deltoid tuberosity of humerus"
-    ],
-    correct: 2,
-    explanation: "Correct! Latissimus dorsi inserts directly into the floor / medial lip of the intertubercular groove (bicipital groove) of the humerus."
-  },
-  {
-    question: "When the arms are FIXED during climbing, what is the specific functional action of the latissimus dorsi?",
-    options: [
-      "Protracts the scapula",
-      "Raises the trunk toward the arms",
-      "Elevates the clavicle",
-      "Superiorly rotates the glenoid cavity"
-    ],
-    correct: 1,
-    explanation: "Correct! When the origin is mobile and the insertion at the arms is fixed (such as during climbing), latissimus dorsi contracts to raise the trunk upward."
-  },
-  {
-    question: "Which nerve innervates the latissimus dorsi muscle?",
-    options: [
-      "Dorsal scapular nerve (C5)",
-      "Thoracodorsal nerve (C6-C8)",
-      "Long thoracic nerve (C5-C7)",
-      "Lower subscapular nerve (C6-C7)"
-    ],
-    correct: 1,
-    explanation: "Correct! Latissimus dorsi is innervated by the thoracodorsal nerve (C6-C8)."
-  },
-  {
-    question: "What is the origin of the levator scapulae muscle?",
-    options: [
-      "Transverse processes of C1-C4",
-      "Spinous processes of C7-T1",
-      "Costal junction of rib 1",
-      "Spinous processes of T2-T5"
-    ],
-    correct: 0,
-    explanation: "Correct! Levator scapulae originates from the transverse processes of C1-C4 and inserts into the superior portion of the medial border of the scapula."
-  },
-  {
-    question: "If the scapula is held stationary, what secondary neck action can levator scapulae assist with?",
-    options: [
-      "Cervical extension and lateral flexion",
-      "Cervical flexion and medial rotation",
-      "Protraction of the mandible",
-      "Elevation of the hyoid bone"
-    ],
-    correct: 0,
-    explanation: "Correct! Because levator scapulae attaches to C1-C4 transverse processes, when the scapula is fixed, it can assist with lateral flexion and extension of the cervical spine."
-  },
-  {
-    question: "Regarding muscle origins, how do you correctly distinguish rhomboid minor from rhomboid major?",
-    options: [
-      "Rhomboid minor originates superiorly at C7-T1, while major originates inferiorly at T2-T5",
-      "Rhomboid minor originates inferiorly at T2-T5, while major originates superiorly at C7-T1",
-      "Rhomboid minor lies superficial to rhomboid major",
-      "Rhomboid minor lies deep to rhomboid major"
-    ],
-    correct: 0,
-    explanation: "Correct! 'Minor over major' refers strictly to superior vs. inferior origin (minor originates superiorly at C7-T1, major inferiorly at T2-T5), NOT superficial vs. deep."
-  },
-  {
-    question: "Which single nerve innervates levator scapulae, rhomboid minor, AND rhomboid major?",
-    options: [
-      "Long thoracic nerve (C5-C7)",
-      "Thoracodorsal nerve (C6-C8)",
-      "Dorsal scapular nerve (C5)",
-      "Suprascapular nerve (C5-C6)"
-    ],
-    correct: 2,
-    explanation: "Correct! Dorsal scapular nerve (C5, with sensory fibers from C3-C4) innervates levator scapulae, rhomboid minor, and rhomboid major."
-  },
-  {
-    question: "Why do chronically rounded shoulders cause tight, painful rhomboids, and what exercise helps relieve them?",
-    options: [
-      "The rhomboids are chronically shortened; perform chest dips",
-      "The rhomboids are chronically over-stretched; perform active scapular retraction",
-      "The rhomboids are paralyzed; perform push-ups",
-      "The rhomboids are inflamed due to nerve impingement at T12"
-    ],
-    correct: 1,
-    explanation: "Correct! In rounded shoulder posture, rhomboids become over-stretched and fatigued. Performing active scapular retraction strengthens and calms them down."
-  },
-  {
-    question: "What nerve innervates BOTH the deltoid muscle and the teres minor muscle?",
-    options: [
-      "Axillary nerve (C5-C6)",
-      "Suprascapular nerve (C5-C6)",
-      "Lower subscapular nerve (C6-C7)",
-      "Radial nerve (C5-T1)"
-    ],
-    correct: 0,
-    explanation: "Correct! Axillary nerve (C5-C6) innervates both the deltoid muscle and the teres minor muscle."
-  },
-  {
-    question: "Where do all three parts of the deltoid muscle converge and insert?",
-    options: [
-      "Greater tubercle of humerus",
-      "Lesser tubercle of humerus",
-      "Deltoid tuberosity of humerus",
-      "Intertubercular groove of humerus"
-    ],
-    correct: 2,
-    explanation: "Correct! All three parts (anterior, middle, and posterior) of the deltoid converge to insert on the deltoid tuberosity of the humerus."
-  },
-  {
-    question: "Which part of the deltoid muscle is primarily responsible for arm FLEXION and MEDIAL ROTATION?",
-    options: [
-      "Anterior part",
-      "Middle part",
-      "Posterior part",
-      "All three parts"
-    ],
-    correct: 0,
-    explanation: "Correct! Anterior (clavicular) part flexes and medially rotates the humerus; middle part abducts; posterior part extends and laterally rotates."
-  },
-  {
-    question: "When evaluating a single standard view in lab, how many heads or parts of the deltoid can typically be visualized at once?",
-    options: [
-      "All three parts simultaneously",
-      "Two parts maximum",
-      "One part only",
-      "Deltoid parts cannot be distinguished"
-    ],
-    correct: 1,
-    explanation: "Correct! As noted in lab lectures, a standard anterior or posterior view allows you to see only 2 parts at a time due to muscle curvature."
-  },
-  {
-    question: "Where does the teres major muscle insert, and what nerve innervates it?",
-    options: [
-      "Intertubercular groove medial lip | Lower subscapular nerve",
-      "Greater tubercle middle facet | Suprascapular nerve",
-      "Lesser tubercle | Upper subscapular nerve",
-      "Deltoid tuberosity | Axillary nerve"
-    ],
-    correct: 0,
-    explanation: "Correct! Teres major originates from the dorsal surface of the inferior angle of the scapula, inserts into the medial lip of the intertubercular groove, and is innervated by the lower subscapular nerve (C6-C7)."
-  },
-  {
-    question: "Which statement correctly differentiates Teres Major from Teres Minor?",
-    options: [
-      "Teres major is a rotator cuff muscle, whereas teres minor is not",
-      "Teres minor is a rotator cuff muscle, whereas teres major is not",
-      "Both teres major and teres minor belong to the rotator cuff",
-      "Neither teres major nor teres minor belongs to the rotator cuff"
-    ],
-    correct: 1,
-    explanation: "Correct! Teres minor is part of the SITS rotator cuff group. Teres major is an intrinsic scapulohumeral muscle, but NOT part of the rotator cuff."
-  },
-  {
-    question: "Which rotator cuff tendon is most commonly ruptured or subjected to degenerative tendonitis?",
-    options: [
-      "Subscapularis tendon",
-      "Supraspinatus tendon",
-      "Infraspinatus tendon",
-      "Teres minor tendon"
-    ],
-    correct: 1,
-    explanation: "Correct! Supraspinatus tendon is the most commonly ruptured rotator cuff tendon because it passes beneath the acromion process and supports the weight of the upper limb."
-  },
-  {
-    question: "Match the correct humeral insertion facets for Supraspinatus, Infraspinatus, and Teres Minor:",
-    options: [
-      "Supraspinatus on superior facet, Infraspinatus on middle facet, Teres minor on inferior facet",
-      "Supraspinatus on middle facet, Infraspinatus on superior facet, Teres minor on inferior facet",
-      "Supraspinatus on inferior facet, Infraspinatus on middle facet, Teres minor on superior facet",
-      "Supraspinatus on lesser tubercle, Infraspinatus on greater tubercle, Teres minor on bicipital groove"
-    ],
-    correct: 0,
-    explanation: "Correct! All three insert on the greater tubercle of the humerus: Supraspinatus on the superior facet, Infraspinatus on the middle facet, and Teres minor on the inferior facet."
-  },
-  {
-    question: "Which two rotator cuff muscles share the primary functional action of LATERAL ROTATION of the humerus?",
-    options: [
-      "Supraspinatus and Subscapularis",
-      "Infraspinatus and Teres minor",
-      "Subscapularis and Teres major",
-      "Supraspinatus and Infraspinatus"
-    ],
-    correct: 1,
-    explanation: "Correct! Infraspinatus and Teres minor both insert on the posterior aspect of the greater tubercle and function as lateral (external) rotators of the arm."
-  },
-  {
-    question: "Where does the Subscapularis muscle insert, and what is its primary action?",
-    options: [
-      "Lesser tubercle of humerus | Medial rotation of humerus",
-      "Greater tubercle of humerus | Abduction of humerus",
-      "Deltoid tuberosity | Extension of humerus",
-      "Medial lip of bicipital groove | Lateral rotation of humerus"
-    ],
-    correct: 0,
-    explanation: "Correct! Subscapularis originates in the subscapular fossa, inserts onto the lesser tubercle of the humerus, and acts as a powerful medial rotator of the arm."
-  },
-  {
-    question: "Which nerve or nerves innervate the Subscapularis muscle?",
-    options: [
-      "Suprascapular nerve (C5-C6) only",
-      "Upper and lower subscapular nerves (C5-C7)",
-      "Axillary nerve (C5-C6) only",
-      "Thoracodorsal nerve (C6-C8)"
-    ],
-    correct: 1,
-    explanation: "Correct! Subscapularis receives dual innervation from both the upper subscapular nerve and lower subscapular nerve (C5-C7)."
-  },
-  {
-    question: "Which systemic or endocrine clinical correlation is emerging as a potential symptom linked to rotator cuff issues and frozen shoulder?",
-    options: [
-      "Hyperthyroidism",
-      "Perimenopause and menopause",
-      "Cushing's syndrome",
-      "Addison's disease"
-    ],
-    correct: 1,
-    explanation: "Correct! As noted in the lecture transcript, shoulder stiffness and rotator cuff issues (like frozen shoulder) have a strong clinical correlation with perimenopause and menopause."
-  },
-  {
-    question: "What are the two distinct origin heads of the Pectoralis Major muscle?",
-    options: [
-      "Clavicular head and Sternocostal head",
-      "Acromial head and Clavicular head",
-      "Costal head and Scapular head",
-      "Superior head and Inferior head"
-    ],
-    correct: 0,
-    explanation: "Correct! Pectoralis major has a clavicular head (medial half of clavicle) and a sternocostal head (sternum and costal cartilages 1-6)."
-  },
-  {
-    question: "Which rule accurately describes the nerve supply to Pectoralis Major vs. Pectoralis Minor?",
-    options: [
-      "Pectoralis major gets Lateral Pectoral Nerve only; Pectoralis minor gets Medial Pectoral Nerve only",
-      "Pectoralis major gets both Lateral and Medial Pectoral Nerves; Pectoralis minor gets Medial Pectoral Nerve only",
-      "Pectoralis minor gets both Lateral and Medial Pectoral Nerves; Pectoralis major gets Lateral Pectoral Nerve only",
-      "Both muscles receive both Lateral and Medial Pectoral Nerves"
-    ],
-    correct: 1,
-    explanation: "Correct! Pectoralis major receives both lateral and medial pectoral nerves, whereas Pectoralis minor receives ONLY the medial pectoral nerve."
-  },
-  {
-    question: "What is the insertion and primary action of the Pectoralis Minor muscle?",
-    options: [
-      "Coracoid process of scapula | Stabilizes and depresses scapula",
-      "Lateral lip of bicipital groove | Adducts and medially rotates humerus",
-      "Inferior surface of clavicle | Elevates and stabilizes clavicle",
-      "Medial border of scapula | Protracts and rotates scapula"
-    ],
-    correct: 0,
-    explanation: "Correct! Pectoralis minor inserts into the coracoid process of the scapula and functions to stabilize and depress the scapula."
-  },
-  {
-    question: "What is the origin, insertion, and innervation of the Subclavius muscle?",
-    options: [
-      "Origin: Costal junction of rib 1 | Insertion: Inferior surface of clavicle | Nerve: Nerve to subclavius",
-      "Origin: Medial half of clavicle | Insertion: Coracoid process | Nerve: Lateral pectoral nerve",
-      "Origin: Body of sternum | Insertion: Rib 1 | Nerve: Medial pectoral nerve",
-      "Origin: Anterior ribs 3-5 | Insertion: Clavicle | Nerve: Subscapular nerve"
-    ],
-    correct: 0,
-    explanation: "Correct! Subclavius originates at the costal junction of rib 1, inserts on the inferior surface of the clavicle, and is innervated by the nerve to subclavius (C5-C6)."
-  },
-  {
-    question: "Damage to the Long Thoracic Nerve paralyzes serratus anterior and results in which classic clinical sign?",
-    options: [
-      "Ape hand deformity",
-      "Winged scapula",
-      "Wrist drop",
-      "Frozen shoulder"
-    ],
-    correct: 1,
-    explanation: "Correct! Long thoracic nerve innervates serratus anterior. Paralyzing this muscle prevents the medial border of the scapula from holding flat against the thoracic cage, causing a winged scapula."
-  },
-  {
-    question: "From ANTERIOR to POSTERIOR, what are the three anatomical layers comprising the 'Subscapularis Sandwich'?",
-    options: [
-      "Serratus anterior -> Subscapularis -> Scapula",
-      "Pectoralis major -> Subscapularis -> Serratus anterior",
-      "Scapula -> Subscapularis -> Serratus anterior",
-      "Subscapularis -> Serratus anterior -> Scapula"
-    ],
-    correct: 0,
-    explanation: "Correct! From anterior to posterior, the sequence is Serratus anterior, Subscapularis, and Scapula. Sandwiches are named for the structure in the middle (Subscapularis)."
-  },
-  {
-    question: "Which mnemonic or rule correctly identifies the attachments along the intertubercular groove of the humerus?",
-    options: [
-      "Pectoralis major on lateral lip, Latissimus dorsi on floor, Teres major on medial lip",
-      "Teres major on lateral lip, Latissimus dorsi on floor, Pectoralis major on medial lip",
-      "Pectoralis major on lateral lip, Teres major on floor, Latissimus dorsi on medial lip",
-      "Supraspinatus on lateral lip, Infraspinatus on floor, Teres minor on medial lip"
-    ],
-    correct: 0,
-    explanation: "Correct! 'A lady between two majors' describes the bicipital groove attachments: Pectoralis major on the lateral lip, Latissimus dorsi ('lady') on the floor, and Teres major on the medial lip."
-  }
-];
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
 
-let answeredCount = 0;
-let correctCount = 0;
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
 
-function renderQuiz() {
-  const container = document.getElementById('quiz-questions');
-  container.innerHTML = '';
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
 
-  quizData.forEach((q, index) => {
-    const card = document.createElement('div');
-    card.className = 'question-card';
-    card.id = `q-card-${index}`;
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
 
-    let optionsHTML = '';
-    q.options.forEach((opt, optIdx) => {
-      optionsHTML += `
-        <button class="option-btn" id="opt-${index}-${optIdx}" onclick="checkAnswer(${index}, ${optIdx})">
-          <span style="font-weight:700; margin-right:8px;">${String.fromCharCode(65 + optIdx)}.</span>
-          <span>${opt}</span>
-        </button>
-      `;
-    });
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
 
-    card.innerHTML = `
-      <div class="question-number">Question ${index + 1} of 35</div>
-      <div class="question-text">${q.question}</div>
-      <div class="options-grid">${optionsHTML}</div>
-      <div class="explanation-box" id="explanation-${index}"></div>
-    `;
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
 
-    container.appendChild(card);
-  });
-}
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
 
-function checkAnswer(qIdx, selectedOptIdx) {
-  const q = quizData[qIdx];
-  const explanationBox = document.getElementById(`explanation-${qIdx}`);
-  const selectedBtn = document.getElementById(`opt-${qIdx}-${selectedOptIdx}`);
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
 
-  q.options.forEach((_, optIdx) => {
-    const btn = document.getElementById(`opt-${qIdx}-${optIdx}`);
-    btn.disabled = true;
-    if (optIdx === q.correct) {
-      btn.classList.add('correct');
-    }
-  });
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
 
-  if (selectedOptIdx === q.correct) {
-    correctCount++;
-    explanationBox.className = 'explanation-box correct';
-    explanationBox.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
-  } else {
-    selectedBtn.classList.add('incorrect');
-    explanationBox.className = 'explanation-box incorrect';
-    explanationBox.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
-  }
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
 
-  answeredCount++;
-  updateTracker();
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
 
-  if (answeredCount === quizData.length) {
-    showSummary();
-  }
-}
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 75 ? "Excellent work! You've mastered the clinical details from the lecture." : "Keep reviewing! Focus heavily on the details the professor explicitly called out.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
 
-function updateTracker() {
-  const percentage = Math.round((correctCount / Math.max(1, answeredCount)) * 100);
-  document.getElementById('score-text').innerText = `Score: ${correctCount} / 35 (${percentage}%)`;
-  document.getElementById('progress-text').innerText = `${answeredCount} / 35`;
-  
-  const progressPercent = (answeredCount / quizData.length) * 100;
-  document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
-}
-
-function showSummary() {
-  const summaryCard = document.getElementById('summary-card');
-  const finalScoreBadge = document.getElementById('final-score-badge');
-  const summaryMessage = document.getElementById('summary-message');
-
-  const percentage = Math.round((correctCount / quizData.length) * 100);
-  finalScoreBadge.innerText = `${percentage}% (${correctCount}/35)`;
-
-  if (percentage >= 90) {
-    summaryMessage.innerText = "Mastery Level Achieved! Outstanding performance across all 35 high-yield topics, nerve rules, and attachment sites for Week 1.";
-  } else if (percentage >= 75) {
-    summaryMessage.innerText = "Strong Performance! Review the detailed explanations above for any missed questions, specifically focusing on nerve branches and facet attachments.";
-  } else {
-    summaryMessage.innerText = "Good Practice Run! Go back over the Week 1 slide deck and transcript before retaking the quiz.";
-  }
-
-  summaryCard.style.display = 'block';
-  summaryCard.scrollIntoView({ behavior: 'smooth' });
-}
-
-function resetQuiz() {
-  answeredCount = 0;
-  correctCount = 0;
-  document.getElementById('summary-card').style.display = 'none';
-  updateTracker();
-  renderQuiz();
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-renderQuiz();
-</script>
-
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
 </body>
 </html>
