@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sys Phys: Cell Basics</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Sys Phys: Cell Basics</div>
+        <div id="score-header">Score: 0 / 16 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 16</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Target: Correct A (Index 0)
+            {
+                question: "How is a biological cell fundamentally defined in human physiology?",
+                options: [
+                    { text: "The structural and functional unit of life.", correct: true },
+                    { text: "A semi-permeable aqueous container.", correct: false },
+                    { text: "A microscopic protein-synthesizing factory.", correct: false },
+                    { text: "The primary source of extracellular fluid.", correct: false }
+                ],
+                explanation: "The cell is classically defined as the foundational structural and functional unit of life."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the primary function of the plasma membrane?",
+                options: [
+                    { text: "To synthesize ribosomal RNA for cellular replication.", correct: false },
+                    { text: "To act as the physical border holding the cellular components together.", correct: true },
+                    { text: "To generate ATP through oxidative phosphorylation.", correct: false },
+                    { text: "To store and regulate intracellular calcium.", correct: false }
+                ],
+                explanation: "The plasma membrane is the physical border that holds the cell together, effectively acting as the cell's 'outside skin'."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "What is the glycocalyx?",
+                options: [
+                    { text: "A hard protein shell found only in plant cells.", correct: false },
+                    { text: "The internal scaffolding composed of microtubules.", correct: false },
+                    { text: "A complex layer of carbohydrates and proteins located on the external surface of the plasma membrane.", correct: true },
+                    { text: "An enzyme strictly responsible for breaking down intracellular glycogen.", correct: false }
+                ],
+                explanation: "The glycocalyx is a complex, sticky 'nest' of carbohydrates and proteins coating the outer surface of the plasma membrane."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "What is the primary anatomical difference between the cytoplasm and the cytosol?",
+                options: [
+                    { text: "Cytoplasm is found outside the cell; cytosol is found inside.", correct: false },
+                    { text: "There is no functional difference; the terms are synonymous.", correct: false },
+                    { text: "Cytosol includes the nucleus, whereas cytoplasm does not.", correct: false },
+                    { text: "Cytoplasm contains the organelles, whereas the cytosol is strictly the fluid itself.", correct: true }
+                ],
+                explanation: "The cytoplasm includes the cytosol fluid plus all the organelles (except the nucleus), whereas the cytosol refers strictly to the aqueous fluid component."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "During interphase, when a cell is not actively dividing, human cellular DNA exists in a relaxed, uncoiled form specifically known as what?",
+                options: [
+                    { text: "Chromatin", correct: true },
+                    { text: "Chromatids", correct: false },
+                    { text: "Centromeres", correct: false },
+                    { text: "Plasmids", correct: false }
+                ],
+                explanation: "When a cell is not dividing, its DNA exists in a thread-like, relaxed state known as chromatin to allow for normal gene expression."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the function of a ribosome, and where are they primarily located within the cell?",
+                options: [
+                    { text: "They digest cellular waste; floating exclusively in the cytosol.", correct: false },
+                    { text: "They build proteins; located in the cytosol and on the rough endoplasmic reticulum.", correct: true },
+                    { text: "They generate ATP; attached to the inner mitochondrial membrane.", correct: false },
+                    { text: "They synthesize lipids; attached to the smooth endoplasmic reticulum.", correct: false }
+                ],
+                explanation: "Ribosomes are the 'protein factories' of the cell. They are found floating freely in the cytosol as well as attached to the rough endoplasmic reticulum."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Which cellular organelle is studded with ribosomes and initiates protein processing?",
+                options: [
+                    { text: "Golgi apparatus", correct: false },
+                    { text: "Smooth endoplasmic reticulum", correct: false },
+                    { text: "Rough endoplasmic reticulum", correct: true },
+                    { text: "Lysosome", correct: false }
+                ],
+                explanation: "The rough endoplasmic reticulum is studded with ribosomes and is responsible for initiating protein processing before sending those proteins to the Golgi apparatus."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which intracellular organelle is specialized for steroid hormone synthesis, lipid production, and calcium storage?",
+                options: [
+                    { text: "Rough endoplasmic reticulum", correct: false },
+                    { text: "Mitochondria", correct: false },
+                    { text: "Lysosome", correct: false },
+                    { text: "Smooth endoplasmic reticulum", correct: true }
+                ],
+                explanation: "The smooth endoplasmic reticulum lacks ribosomes and focuses on lipid and steroid synthesis, as well as acting as a critical calcium reservoir (such as the sarcoplasmic reticulum in muscle)."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "Which intracellular organelle is specialized for sorting, modifying, and packaging proteins, acting as the cell's distribution warehouse?",
+                options: [
+                    { text: "Golgi apparatus", correct: true },
+                    { text: "Rough endoplasmic reticulum", correct: false },
+                    { text: "Nucleolus", correct: false },
+                    { text: "Peroxisome", correct: false }
+                ],
+                explanation: "The Golgi apparatus serves as the cell's distribution center, taking in raw proteins, modifying them, and packaging them into vesicles for their final destination."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "Which organelle is primarily responsible for generating ATP through the process of oxidative phosphorylation?",
+                options: [
+                    { text: "Golgi apparatus", correct: false },
+                    { text: "Mitochondria", correct: true },
+                    { text: "Rough endoplasmic reticulum", correct: false },
+                    { text: "Nucleolus", correct: false }
+                ],
+                explanation: "Mitochondria are the powerhouses of the cell, responsible for generating massive amounts of ATP through oxidative phosphorylation."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Which cellular organelle acts as the general 'stomach' of the cell, picking up and breaking down broken cellular parts and large debris?",
+                options: [
+                    { text: "Peroxisome", correct: false },
+                    { text: "Centrosome", correct: false },
+                    { text: "Lysosome", correct: true },
+                    { text: "Smooth endoplasmic reticulum", correct: false }
+                ],
+                explanation: "Lysosomes function as the general stomach of the cell, using powerful hydrolytic enzymes to pick up and dismantle broken cellular parts."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which organelle contains the enzyme catalase and specializes in breaking down highly toxic, hazardous metabolic waste like hydrogen peroxide?",
+                options: [
+                    { text: "Ribosome", correct: false },
+                    { text: "Golgi apparatus", correct: false },
+                    { text: "Lysosome", correct: false },
+                    { text: "Peroxisome", correct: true }
+                ],
+                explanation: "Peroxisomes contain catalase and act as a specialized 'hazardous waste stomach' to safely break down toxic metabolic byproducts like hydrogen peroxide."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "What is the primary function of centrosomes (and their constituent centrioles) within the cell?",
+                options: [
+                    { text: "They coordinate microtubule assembly to split the cell during mitosis.", correct: true },
+                    { text: "They act as the primary site of anaerobic glycolysis.", correct: false },
+                    { text: "They modify and package lipids into exocytotic vesicles.", correct: false },
+                    { text: "They synthesize ribosomal RNA within the nucleolus.", correct: false }
+                ],
+                explanation: "Centrosomes (composed of centrioles) function as the microtubule-organizing centers that pull the cell apart during mitotic cell division."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the correct hierarchical organization of biological structures from simplest to most complex?",
+                options: [
+                    { text: "Cells -> Organs -> Tissues -> Organ Systems", correct: false },
+                    { text: "Cells -> Tissues -> Organs -> Organ Systems", correct: true },
+                    { text: "Tissues -> Cells -> Organs -> Organ Systems", correct: false },
+                    { text: "Organs -> Tissues -> Cells -> Organ Systems", correct: false }
+                ],
+                explanation: "Cells with similar phenotypes form tissues, tissues combine to form organs, and organs group together to form organ systems."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Which specific component of the cell contains the vast majority of its genetic material (DNA)?",
+                options: [
+                    { text: "Endoplasmic reticulum", correct: false },
+                    { text: "Golgi apparatus", correct: false },
+                    { text: "Nucleus", correct: true },
+                    { text: "Lysosome", correct: false }
+                ],
+                explanation: "The nucleus houses the cell's chromosomal DNA."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "What structural feature explicitly differentiates the rough endoplasmic reticulum from the smooth endoplasmic reticulum?",
+                options: [
+                    { text: "The rough ER lacks an internal lumen.", correct: false },
+                    { text: "The rough ER is composed strictly of carbohydrates.", correct: false },
+                    { text: "The rough ER is completely disconnected from the nuclear envelope.", correct: false },
+                    { text: "The presence of attached ribosomes on the rough ER.", correct: true }
+                ],
+                explanation: "The rough ER gets its name and 'rough' appearance from the thousands of protein-synthesizing ribosomes studded across its surface."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 85 ? "Excellent work! You've mastered the foundational cellular structures." : "Review the specific organelle functions and the differences between cytoplasm and cytosol.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
