@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sys Phys: Circulatory System & Airway</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Sys Phys: Circulatory System & Airway</div>
+        <div id="score-header">Score: 0 / 28 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 28</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Target A
+            {
+                question: "What is the primary functional difference between the lower airway's tracheobronchial tree and the respiratory unit (acinus)?",
+                options: [
+                    { text: "The respiratory unit exchanges gases, whereas the tracheobronchial tree exclusively conducts air.", correct: true },
+                    { text: "The tracheobronchial tree contains alveoli, whereas the respiratory unit does not.", correct: false },
+                    { text: "The respiratory unit represents the proximal third of the airway.", correct: false },
+                    { text: "The tracheobronchial tree actively filters oxygen from carbon dioxide.", correct: false }
+                ],
+                explanation: "The lower airway consists of two parts. The tracheobronchial tree simply conducts air and does not contain alveoli. Gas exchange occurs exclusively within the respiratory unit (acinus)[cite: 4]."
+            },
+            // Target B
+            {
+                question: "Which anatomical structure represents the smallest (most distal) division of the tracheobronchial tree before transitioning into the respiratory unit?",
+                options: [
+                    { text: "Respiratory bronchiole", correct: false },
+                    { text: "Terminal bronchiole", correct: true },
+                    { text: "Alveolar duct", correct: false },
+                    { text: "Segmental bronchus", correct: false }
+                ],
+                explanation: "The terminal bronchiole is the final and smallest segment of the conductive tracheobronchial tree. A common mistake is confusing this with the respiratory bronchiole, which is where the respiratory unit begins[cite: 4]."
+            },
+            // Target C
+            {
+                question: "Which three structures specifically comprise the respiratory unit where gas exchange actively occurs?",
+                options: [
+                    { text: "Trachea, primary bronchi, and lobar bronchi", correct: false },
+                    { text: "Terminal bronchioles, segmental bronchi, and alveolar sacs", correct: false },
+                    { text: "Respiratory bronchioles, alveolar ducts, and alveolar sacs", correct: true },
+                    { text: "Arterioles, capillaries, and postcapillary venules", correct: false }
+                ],
+                explanation: "The respiratory unit (acinus) consists entirely of respiratory bronchioles, alveolar ducts, and alveolar sacs. These are the only structures capable of gas exchange[cite: 4]."
+            },
+            // Target D
+            {
+                question: "Are the structures of the respiratory unit considered anatomical extensions of the tracheobronchial tree?",
+                options: [
+                    { text: "Yes, it is the distal continuation of the conducting zone.", correct: false },
+                    { text: "Yes, but only the respiratory bronchioles are included.", correct: false },
+                    { text: "Only the alveolar sacs are structurally excluded.", correct: false },
+                    { text: "No, the respiratory unit is distinctly separate and is NOT part of the tracheobronchial tree.", correct: true }
+                ],
+                explanation: "The respiratory unit (acinus), which is where gas exchange occurs, is explicitly NOT part of the tracheobronchial tree. They are functionally and anatomically distinct divisions[cite: 4, 8]."
+            },
+            // Target A
+            {
+                question: "What are the three foundational structural components that make up the circulatory system?",
+                options: [
+                    { text: "The heart, blood, and blood vessels", correct: true },
+                    { text: "The lungs, kidneys, and liver", correct: false },
+                    { text: "The central nervous system, peripheral nerves, and ganglia", correct: false },
+                    { text: "The lymphatic ducts, lymph nodes, and spleen", correct: false }
+                ],
+                explanation: "The circulatory system is fundamentally constructed from three parts: the heart, the blood, and the blood vessels[cite: 5]."
+            },
+            // Target B
+            {
+                question: "The circulatory system is functionally divided into two overarching systems. What are they?",
+                options: [
+                    { text: "The arterial system and the venous system", correct: false },
+                    { text: "The cardiovascular system and the lymphatic system", correct: true },
+                    { text: "The pulmonary loop and the systemic loop", correct: false },
+                    { text: "The macrocirculation and the microcirculation", correct: false }
+                ],
+                explanation: "The entire circulatory system is functionally divided into two major systems: the cardiovascular system and the lymphatic system[cite: 7]."
+            },
+            // Target C
+            {
+                question: "In addition to the heart and the negative pressure of inspiration, what acts as a critical pump to drive venous blood from the lower extremities against gravity?",
+                options: [
+                    { text: "The continuous pulsation of the capillary beds", correct: false },
+                    { text: "The rhythmic expansion of the ascending aorta", correct: false },
+                    { text: "The calf muscle pump", correct: true },
+                    { text: "The peristaltic contraction of the lymphatic vessels", correct: false }
+                ],
+                explanation: "The calf muscle pump (specifically the soleus muscle) contracts during movement, squeezing veins and utilizing one-way valves to ratchet blood upward against gravity[cite: 5]."
+            },
+            // Target D
+            {
+                question: "How do the lungs act as a secondary suction pump to assist in cardiovascular circulation?",
+                options: [
+                    { text: "Positive intrathoracic pressure forces blood into the left atrium.", correct: false },
+                    { text: "Alveolar expansion actively squeezes the pulmonary veins.", correct: false },
+                    { text: "The diaphragm directly compresses the descending aorta.", correct: false },
+                    { text: "Inspiration creates negative intrathoracic pressure, which sucks venous blood toward the right heart.", correct: true }
+                ],
+                explanation: "Inspiration naturally creates a negative intrathoracic pressure. This vacuum-like effect sucks venous blood out of the trunk and lower extremities and pulls it into the right side of the heart[cite: 4, 7]."
+            },
+            // Target A
+            {
+                question: "Which specific valve anatomically regulates blood flow from the left atrium into the left ventricle?",
+                options: [
+                    { text: "Mitral valve (Bicuspid / Left AV valve)", correct: true },
+                    { text: "Tricuspid valve (Right AV valve)", correct: false },
+                    { text: "Aortic semilunar valve", correct: false },
+                    { text: "Pulmonary semilunar valve", correct: false }
+                ],
+                explanation: "The mitral valve, strictly known as the bicuspid or left AV valve, separates the left atrium from the left ventricle[cite: 4, 7]."
+            },
+            // Target B
+            {
+                question: "Which specific valve anatomically separates the right atrium from the right ventricle?",
+                options: [
+                    { text: "Mitral valve", correct: false },
+                    { text: "Tricuspid valve (Right AV valve)", correct: true },
+                    { text: "Aortic semilunar valve", correct: false },
+                    { text: "Pulmonary semilunar valve", correct: false }
+                ],
+                explanation: "The tricuspid valve, also known as the right atrioventricular (AV) valve, regulates blood flow between the right atrium and the right ventricle[cite: 4, 7]."
+            },
+            // Target C
+            {
+                question: "Why does the left ventricle contain substantially more myocardium than the right ventricle?",
+                options: [
+                    { text: "It pumps a significantly greater volume of blood per minute than the right ventricle.", correct: false },
+                    { text: "It receives blood under lower oxygen tension than the right heart.", correct: false },
+                    { text: "It must generate high pressure to overcome the extensive resistance of the entire systemic circuit.", correct: true },
+                    { text: "It pumps against zero resistance due to elastic compliance.", correct: false }
+                ],
+                explanation: "The left ventricle must overcome the high resistance of the systemic circuit to perfuse the entire body, requiring a much larger and more muscular wall than the right ventricle (which only pumps to the lungs)[cite: 7]."
+            },
+            // Target D
+            {
+                question: "In what specific anatomical division of the thoracic cavity does the heart reside?",
+                options: [
+                    { text: "The superior mediastinum", correct: false },
+                    { text: "The anterior mediastinum", correct: false },
+                    { text: "The posterior mediastinum", correct: false },
+                    { text: "The middle mediastinum (a division of the inferior mediastinum)", correct: true }
+                ],
+                explanation: "The heart sits within the pericardial sac located squarely in the middle mediastinum, which is the central division of the inferior mediastinum[cite: 4, 7]."
+            },
+            // Target A
+            {
+                question: "Which two arteries branch directly off the aortic arch in normal human anatomy?",
+                options: [
+                    { text: "Left common carotid artery and left subclavian artery", correct: true },
+                    { text: "Right common carotid artery and right subclavian artery", correct: false },
+                    { text: "Brachiocephalic trunk and right coronary artery", correct: false },
+                    { text: "Pulmonary artery and left coronary artery", correct: false }
+                ],
+                explanation: "The left common carotid and left subclavian arteries branch directly off the aortic arch. Their right-sided counterparts branch off the brachiocephalic trunk, creating a distinct anatomical asymmetry[cite: 4]."
+            },
+            // Target B
+            {
+                question: "Which major vascular structures reside in the superior mediastinum, located superior to the heart itself?",
+                options: [
+                    { text: "The coronary sinus and superior vena cava", correct: false },
+                    { text: "The aortic arch and the brachiocephalic trunk", correct: true },
+                    { text: "The descending aorta and pulmonary trunk", correct: false },
+                    { text: "The mitral valve and tricuspid valve", correct: false }
+                ],
+                explanation: "The aortic arch and the brachiocephalic trunk reside within the superior mediastinum[cite: 4]."
+            },
+            // Target C
+            {
+                question: "The ligamentum arteriosum is a fibrous connective tissue remnant linking the pulmonary trunk to the aortic arch. What fetal structure did this originate from?",
+                options: [
+                    { text: "Foramen ovale", correct: false },
+                    { text: "Umbilical vein", correct: false },
+                    { text: "Ductus arteriosus", correct: true },
+                    { text: "Ductus venosus", correct: false }
+                ],
+                explanation: "The ligamentum arteriosum is the remnant of the fetal ductus arteriosus, which acted as a pressure relief valve bypassing the non-functional fetal lungs[cite: 4]."
+            },
+            // Target D
+            {
+                question: "Which three specific vessels comprise the microcirculation where tissue servicing occurs?",
+                options: [
+                    { text: "Small arteries, medium arteries, and large arteries", correct: false },
+                    { text: "Lymphatic vessels, veins, and venules", correct: false },
+                    { text: "The heart, the aorta, and the vena cava", correct: false },
+                    { text: "Arterioles, capillaries, and venules", correct: true }
+                ],
+                explanation: "The microcirculation is explicitly defined as the network consisting of arterioles, capillaries, and venules. Larger vessels act merely as conduit pipes[cite: 4, 5]."
+            },
+            // Target A
+            {
+                question: "The innermost layer of an artery or vein is the tunica intima. What type of cells form this boundary?",
+                options: [
+                    { text: "Simple squamous endothelial cells", correct: true },
+                    { text: "Smooth muscle cells", correct: false },
+                    { text: "Transitional epithelial cells", correct: false },
+                    { text: "Stratified squamous cells", correct: false }
+                ],
+                explanation: "The tunica intima, which directly contacts the blood, is lined entirely by simple squamous endothelial cells[cite: 5]."
+            },
+            // Target B
+            {
+                question: "Histologically, what prominent structural feature is present in arteries but notably absent in veins?",
+                options: [
+                    { text: "Tunica intima", correct: false },
+                    { text: "Internal elastic lamina", correct: true },
+                    { text: "Endothelial cells", correct: false },
+                    { text: "Tunica externa", correct: false }
+                ],
+                explanation: "Arteries possess a prominent internal elastic lamina (giving them a wavy appearance to withstand high pressure), which veins strictly lack[cite: 5]."
+            },
+            // Target C
+            {
+                question: "A typical capillary wall is composed of what specific cellular arrangement?",
+                options: [
+                    { text: "A single layer of smooth muscle cells surrounded by an elastic lamina", correct: false },
+                    { text: "Two layers of cuboidal cells embedded in dense connective tissue", correct: false },
+                    { text: "One to four endothelial cells wrapped to form a lumen, surrounded by a basement membrane and scattered pericytes", correct: true },
+                    { text: "A continuous sheet of transitional epithelial cells", correct: false }
+                ],
+                explanation: "A standard capillary wall consists solely of one to four endothelial cells wrapped together, supported on the abluminal surface by a basement membrane and pericytes. It lacks a tunica media[cite: 4, 5]."
+            },
+            // Target D
+            {
+                question: "Which type of capillary features tight junctions, is relatively non-leaky, and forms critical structures like the blood-brain barrier?",
+                options: [
+                    { text: "Fenestrated capillaries", correct: false },
+                    { text: "Sinusoidal capillaries", correct: false },
+                    { text: "Discontinuous capillaries", correct: false },
+                    { text: "Continuous capillaries", correct: true }
+                ],
+                explanation: "Continuous capillaries have tight junctions, are relatively non-leaky, and are essential for forming the blood-brain barrier[cite: 4]."
+            },
+            // Target A
+            {
+                question: "Which capillary type features filter pores with diaphragmatic lids and is typically found in the renal glomerulus?",
+                options: [
+                    { text: "Fenestrated capillaries", correct: true },
+                    { text: "Continuous capillaries", correct: false },
+                    { text: "Sinusoidal capillaries", correct: false },
+                    { text: "Lacteals", correct: false }
+                ],
+                explanation: "Fenestrated capillaries contain small pores (fenestrations) with diaphragmatic lids, allowing for specialized filtration in organs like the kidneys[cite: 4]."
+            },
+            // Target B
+            {
+                question: "Which capillary type is highly permeable, contains large intercellular clefts with minimal pericytes, and is found in the liver, spleen, and bone marrow?",
+                options: [
+                    { text: "Continuous capillaries", correct: false },
+                    { text: "Sinusoidal (discontinuous) capillaries", correct: true },
+                    { text: "Fenestrated capillaries", correct: false },
+                    { text: "Lymphatic capillaries", correct: false }
+                ],
+                explanation: "Sinusoidal (discontinuous) capillaries are the leakiest capillary type, containing the fewest pericytes to allow massive fluid and cellular exchange in the liver, spleen, and bone marrow[cite: 4]."
+            },
+            // Target C
+            {
+                question: "According to the histological breakdown of blood vessels, what are the three layers of the basement membrane?",
+                options: [
+                    { text: "Lamina lucida, tunica media, and reticular lamina", correct: false },
+                    { text: "Tunica intima, tunica media, and tunica externa", correct: false },
+                    { text: "Lamina lucida, lamina densa, and reticular lamina", correct: true },
+                    { text: "Stratum corneum, stratum lucidum, and stratum basale", correct: false }
+                ],
+                explanation: "The basement membrane consists of three distinct layers: the lamina lucida, lamina densa, and reticular lamina[cite: 4]."
+            },
+            // Target D
+            {
+                question: "The basal lamina is a specific sub-component of the basement membrane. Which two layers form the basal lamina?",
+                options: [
+                    { text: "Lamina densa and reticular lamina", correct: false },
+                    { text: "Tunica intima and tunica media", correct: false },
+                    { text: "Lamina lucida and reticular lamina", correct: false },
+                    { text: "Lamina lucida and lamina densa", correct: true }
+                ],
+                explanation: "The basal lamina consists solely of the top two layers of the basement membrane: the lamina lucida and the lamina densa[cite: 4]."
+            },
+            // Target A
+            {
+                question: "The classic triopathy of diabetes is characterized by chronic microvascular damage to which three regions?",
+                options: [
+                    { text: "Retinopathy, neuropathy, and nephropathy", correct: true },
+                    { text: "Cardiomyopathy, encephalopathy, and gastropathy", correct: false },
+                    { text: "Dermatopathy, myopathy, and hepatopathy", correct: false },
+                    { text: "Atherosclerosis, hypertension, and claudication", correct: false }
+                ],
+                explanation: "Chronic microvascular damage in diabetes causes a highly tested triad of complications: retinopathy (eyes), neuropathy (nerves), and nephropathy (kidneys)[cite: 4]."
+            },
+            // Target B
+            {
+                question: "During inspiration, what mechanism causes the physiological splitting of the second heart sound (S2)?",
+                options: [
+                    { text: "The mitral valve closes slightly slower than the tricuspid valve.", correct: false },
+                    { text: "Negative intrathoracic pressure draws venous blood into the right heart, delaying pulmonic valve closure.", correct: true },
+                    { text: "Positive intrathoracic pressure forces blood out of the left heart rapidly.", correct: false },
+                    { text: "The aortic valve stiffens and snaps shut faster due to increased oxygenation.", correct: false }
+                ],
+                explanation: "Inspiration creates negative intrathoracic pressure, pulling extra venous blood into the right heart. This increased stroke volume takes longer to eject, delaying the closure of the pulmonic valve relative to the aortic valve[cite: 4]."
+            },
+            // Target C
+            {
+                question: "What physiological response occurs if local tissue waste products, such as CO2, hydrogen ions, and adenosine, accumulate around vascular smooth muscle?",
+                options: [
+                    { text: "They stimulate intense vasoconstriction to trap blood in the tissue.", correct: false },
+                    { text: "They trigger the release of antidiuretic hormone to dilute the waste.", correct: false },
+                    { text: "They stimulate vasodilation, increasing local blood flow to wash the waste products away.", correct: true },
+                    { text: "They block capillaries to prevent further waste accumulation.", correct: false }
+                ],
+                explanation: "Local waste products like adenosine, CO2, and hydrogen ions soak into vascular smooth muscle and stimulate vasodilation, increasing local blood perfusion to wash the toxic buildup away[cite: 7]."
+            },
+            // Target D
+            {
+                question: "What life-threatening condition occurs if all arterioles and capillaries in the body simultaneously vasodilate (such as during anaphylaxis)?",
+                options: [
+                    { text: "Hypertonic encephalopathy", correct: false },
+                    { text: "Severe hypertension and stroke", correct: false },
+                    { text: "Pulmonary edema", correct: false },
+                    { text: "Hypovolemic shock due to a massive plummet in systemic blood pressure", correct: true }
+                ],
+                explanation: "The body's blood volume cannot fill all capillaries simultaneously. If all arterioles and capillaries dilate at once, systemic blood pressure plummets catastrophically, resulting in hypovolemic shock[cite: 4]."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 85 ? "Excellent work! You've mastered the circulatory boundaries and airway distinctions." : "Review the members of the right/left heart, the microcirculation, and the tracheobronchial tree.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
