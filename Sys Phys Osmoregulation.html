@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sys Phys: Fluid Dynamics & Osmoregulation</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
+            text-align: center;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .header-title {
+            color: var(--text-main);
+        }
+
+        #score-header {
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #ffffff;
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
+            display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
+        }
+
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button {
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Fluids & Osmoregulation</div>
+        <div id="score-header">Score: 0 / 24 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container">
+            <!-- Questions injected via JS -->
+        </div>
+
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 24</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Target: Correct A (Index 0)
+            {
+                question: "What percentage of an adult's body weight is comprised of intracellular fluid (ICF)?",
+                options: [
+                    { text: "40%", correct: true },
+                    { text: "60%", correct: false },
+                    { text: "15%", correct: false },
+                    { text: "5%", correct: false }
+                ],
+                explanation: "Total body water accounts for approximately 60% of body weight, divided into intracellular fluid (40%), interstitial fluid (15%), and intravascular fluid (5%)."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the physiological definition of osmolality?",
+                options: [
+                    { text: "The absolute volume of fluid in the extracellular space.", correct: false },
+                    { text: "The ratio between dissolved particles (solutes) and body water.", correct: true },
+                    { text: "The amount of albumin present in the intravascular space.", correct: false },
+                    { text: "The hydrostatic pressure generated by ventricular contraction.", correct: false }
+                ],
+                explanation: "Osmolality represents the ratio of dissolved solutes to fluid within a specific compartment[cite: 9]."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "Under normal physiological conditions, what is the osmolality relationship between the intravascular space, interstitium, and intracellular space?",
+                options: [
+                    { text: "The intravascular space is drastically lower in osmolality.", correct: false },
+                    { text: "The intracellular space maintains zero solutes.", correct: false },
+                    { text: "All three compartments maintain osmotic equilibrium with almost the same ratio of ions to water.", correct: true },
+                    { text: "The interstitium is significantly more concentrated than the plasma.", correct: false }
+                ],
+                explanation: "Normally, all three compartments maintain osmotic equilibrium, meaning they have almost exactly the same osmolality[cite: 9]."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "During an acute hyperosmolar state, what immediate buffering shift occurs to protect the extracellular fluid?",
+                options: [
+                    { text: "Cells absorb sodium from the ECF to equalize ion levels.", correct: false },
+                    { text: "Water is actively pumped into the cells via ATPases.", correct: false },
+                    { text: "Cells immediately undergo apoptosis to release pure water into the plasma.", correct: false },
+                    { text: "Water moves out of the intracellular fluid via osmosis to dilute the ECF, causing cells to shrink.", correct: true }
+                ],
+                explanation: "The intracellular fluid acts as an immediate osmotic buffer. Water leaves the cells via osmosis to dilute the concentrated extracellular fluid, resulting in cellular shrinkage."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "What specific physiological outcome occurs if a cell loses more than 10% of its water volume to buffer the extracellular fluid?",
+                options: [
+                    { text: "Intracellular organelles fail, resulting in cell death.", correct: true },
+                    { text: "The cell actively absorbs albumin to replace the water.", correct: false },
+                    { text: "The cell initiates massive mitosis to share the osmotic load.", correct: false },
+                    { text: "The cell reverses the Gibbs-Donnan effect to pull water back.", correct: false }
+                ],
+                explanation: "A 10% loss of cellular water volume is a critical threshold; beyond this point, intracellular organelles fail and the cell undergoes necrosis."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "If brain cells lose more than 10% of their water volume due to a hyperosmolar extracellular environment, what life-threatening clinical condition occurs?",
+                options: [
+                    { text: "Hypotonic encephalopathy", correct: false },
+                    { text: "Hypertonic encephalopathy", correct: true },
+                    { text: "Diabetic retinopathy", correct: false },
+                    { text: "Gibbs-Donnan syndrome", correct: false }
+                ],
+                explanation: "Severe cellular shrinkage in the central nervous system leads to hypertonic (or hypernatremic) encephalopathy."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "What are the classic clinical signs of hypertonic encephalopathy?",
+                options: [
+                    { text: "Tachycardia, hypertension, and excessive sweating", correct: false },
+                    { text: "Blindness, peripheral numbness, and kidney failure", correct: false },
+                    { text: "Lethargy, confusion, and stupor", correct: true },
+                    { text: "Extreme thirst, frequent urination, and edema", correct: false }
+                ],
+                explanation: "As brain cells shrink and lose functional integrity, the patient presents with progressive neurological depression, including lethargy, confusion, and stupor."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "If the extracellular fluid becomes excessively hypotonic and cells gain more than 10% of their water volume, what condition arises?",
+                options: [
+                    { text: "Gibbs-Donnan syndrome", correct: false },
+                    { text: "Diabetic neuropathy", correct: false },
+                    { text: "Hyperglycemic shock", correct: false },
+                    { text: "Hypotonic encephalopathy", correct: true }
+                ],
+                explanation: "When cells take on too much water (gaining >10%), they swell and can rupture, leading to hypotonic encephalopathy, which can trigger seizures and death."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "Which specific circumventricular organs lack a normal blood-brain barrier and serve as primary osmoreceptors?",
+                options: [
+                    { text: "Subfornical organ (SFO) and organum vasculosum of the lamina terminalis (OVLT)", correct: true },
+                    { text: "Area postrema and pineal gland", correct: false },
+                    { text: "Median preoptic nucleus and choroid plexus", correct: false },
+                    { text: "Supraoptic and paraventricular nuclei", correct: false }
+                ],
+                explanation: "The SFO and OVLT act as the primary osmoreceptors, sensing blood osmolality and sending projection signals down to the hypothalamus."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "Which specific hypothalamic neurons possess their own osmoreceptors and can directly sense blood osmolality?",
+                options: [
+                    { text: "Parvocellular neurons", correct: false },
+                    { text: "Magnocellular neurons", correct: true },
+                    { text: "Purkinje cells", correct: false },
+                    { text: "Pyramidal neurons", correct: false }
+                ],
+                explanation: "Magnocellular neurons, in addition to receiving signals from the SFO and OVLT, possess their own receptors allowing them to directly sense systemic osmolality."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "In which specific hypothalamic nuclei do ADH-producing magnocellular neurons reside?",
+                options: [
+                    { text: "Arcuate and ventromedial nuclei", correct: false },
+                    { text: "Suprachiasmatic and preoptic nuclei", correct: false },
+                    { text: "Supraoptic and paraventricular nuclei", correct: true },
+                    { text: "Dentate and fastigial nuclei", correct: false }
+                ],
+                explanation: "Magnocellular neurons that synthesize and release Antidiuretic Hormone (ADH) are located strictly in the supraoptic and paraventricular nuclei of the hypothalamus."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which central nervous system structure serves as the primary thirst center when stimulated by osmoreceptor input?",
+                options: [
+                    { text: "Supraoptic nucleus", correct: false },
+                    { text: "Organum vasculosum of the lamina terminalis (OVLT)", correct: false },
+                    { text: "Subfornical organ (SFO)", correct: false },
+                    { text: "Median preoptic nucleus (MnPO)", correct: true }
+                ],
+                explanation: "The SFO and OVLT detect hyperosmolality and relay that signal to the median preoptic nucleus (MnPO), which generates the physiological sensation of thirst."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "What are the recognized alternative names for Antidiuretic Hormone (ADH)?",
+                options: [
+                    { text: "Vasopressin, Arginine vasopressin, and AVP", correct: true },
+                    { text: "Aldosterone, Angiotensin II, and Renin", correct: false },
+                    { text: "Oxytocin, Cortisol, and Epinephrine", correct: false },
+                    { text: "Glucagon, Insulin, and Somatostatin", correct: false }
+                ],
+                explanation: "ADH is commonly referred to interchangeably as Vasopressin, Arginine vasopressin, and AVP in clinical and board contexts."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "What is the primary physiological action of ADH on the renal collecting system?",
+                options: [
+                    { text: "It stimulates simultaneous sodium and water reabsorption.", correct: false },
+                    { text: "It promotes the reabsorption of free water without salt.", correct: true },
+                    { text: "It blocks aquaporin channels to produce highly dilute urine.", correct: false },
+                    { text: "It increases potassium and hydrogen excretion.", correct: false }
+                ],
+                explanation: "ADH causes the insertion of aquaporin-2 channels into principal cells, allowing the reabsorption of free water back into the bloodstream to dilute hyperosmolar plasma."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "How does diabetes insipidus alter a patient's systemic osmolarity?",
+                options: [
+                    { text: "The patient loses salt and water equally, maintaining baseline equilibrium.", correct: false },
+                    { text: "The patient retains massive amounts of free water, causing severe hypotonic encephalopathy.", correct: false },
+                    { text: "The patient excessively loses free water but not sodium, leading to a highly concentrated hyperosmolar state.", correct: true },
+                    { text: "The patient excessively loses sodium, causing the blood to become severely hypotonic.", correct: false }
+                ],
+                explanation: "Diabetes insipidus is characterized by an inability to retain water. The patient excessively loses free water while retaining sodium, causing the blood to become dangerously hyperosmolar."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "What physiological principle explains why the intravascular space maintains a slightly higher osmolality than the interstitium?",
+                options: [
+                    { text: "Active endothelial vesicular transport", correct: false },
+                    { text: "The continuous breakdown of red blood cells", correct: false },
+                    { text: "Capillary hydrostatic pressure", correct: false },
+                    { text: "The Gibbs-Donnan effect", correct: true }
+                ],
+                explanation: "The Gibbs-Donnan effect dictates that large, trapped, negatively charged plasma proteins create a slight osmotic gradient, making the plasma marginally saltier than the interstitium[cite: 9]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "What specific mechanism drives the Gibbs-Donnan effect within the capillaries?",
+                options: [
+                    { text: "Albumin is highly negatively charged and traps positively charged cations like sodium in the vascular lumen.", correct: true },
+                    { text: "Endothelial cells actively pump sodium into the blood via ATPases.", correct: false },
+                    { text: "Lymphatic vessels selectively siphon free water out of the plasma.", correct: false },
+                    { text: "The basement membrane repels negatively charged ions from entering the interstitium.", correct: false }
+                ],
+                explanation: "Albumin cannot pass through the capillary wall and carries a strong negative charge. This charge pulls and holds positively charged cations (like Na+) inside the vessel, elevating the plasma osmolality[cite: 9]."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "Which force primarily drives the filtration of plasma water and nutrients out of the proximal capillary and into the interstitium?",
+                options: [
+                    { text: "Plasma oncotic pressure", correct: false },
+                    { text: "Capillary hydrostatic pressure", correct: true },
+                    { text: "Interstitial hydrostatic pressure", correct: false },
+                    { text: "Active endothelial symport", correct: false }
+                ],
+                explanation: "At the proximal (arteriolar) end of the capillary, the high capillary hydrostatic pressure generated by the heart overcomes the oncotic pressure, physically pushing fluid into the interstitium."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "What specific physiological force is responsible for pulling interstitial fluid and metabolic waste back into the distal capillary?",
+                options: [
+                    { text: "Capillary hydrostatic pressure", correct: false },
+                    { text: "Interstitial hydrostatic pressure", correct: false },
+                    { text: "Plasma oncotic pressure", correct: true },
+                    { text: "Active endothelial vesicular transport", correct: false }
+                ],
+                explanation: "At the distal (venous) end of the capillary, hydrostatic pressure drops significantly. This allows plasma oncotic pressure to dominate and pull fluid and waste back into the bloodstream."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which specific blood protein is primarily responsible for generating the plasma oncotic pressure?",
+                options: [
+                    { text: "Fibrinogen", correct: false },
+                    { text: "Globulin", correct: false },
+                    { text: "Hemoglobin", correct: false },
+                    { text: "Albumin", correct: true }
+                ],
+                explanation: "Albumin is the most abundant plasma protein and is primarily responsible for generating the colloid osmotic (oncotic) pressure that reabsorbs interstitial fluid[cite: 9]."
+            },
+            // Target: Correct A (Index 0)
+            {
+                question: "How do nutrients (like sodium and glucose) and metabolic wastes (like carbon dioxide) primarily cross the capillary membrane?",
+                options: [
+                    { text: "Simple diffusion down their respective concentration gradients", correct: true },
+                    { text: "Active transport utilizing ATP", correct: false },
+                    { text: "Receptor-mediated endocytosis", correct: false },
+                    { text: "Strictly via bulk flow of water", correct: false }
+                ],
+                explanation: "While some molecules are transported via bulk flow, the primary driving force for the exchange of nutrients and dissolved gases (like CO2) is simple diffusion down their concentration gradients."
+            },
+            // Target: Correct B (Index 1)
+            {
+                question: "In a patient with severe burns, massive amounts of albumin are lost into the interstitial space. What is the direct clinical consequence of this loss?",
+                options: [
+                    { text: "Rapid onset of hypotonic encephalopathy", correct: false },
+                    { text: "Severe tissue edema due to the loss of plasma oncotic pressure", correct: true },
+                    { text: "Severe hypertension due to excessive intravascular fluid retention", correct: false },
+                    { text: "Instantaneous failure of capillary hydrostatic pressure", correct: false }
+                ],
+                explanation: "Without albumin in the intravascular space, the blood loses its oncotic pressure. Fluid cannot be pulled back into the distal capillaries, resulting in profound interstitial edema."
+            },
+            // Target: Correct C (Index 2)
+            {
+                question: "While cells act as an immediate osmotic buffer, which organ serves as the long-term physiological correction for excessive sodium retention?",
+                options: [
+                    { text: "Liver", correct: false },
+                    { text: "Spleen", correct: false },
+                    { text: "Kidneys", correct: true },
+                    { text: "Lungs", correct: false }
+                ],
+                explanation: "The kidneys provide the long-term fix for removing excess sodium, though they may take 2 to 3 days to fully clear an acute osmotic load."
+            },
+            // Target: Correct D (Index 3)
+            {
+                question: "Which of the following describes the three primary mechanisms that can induce a systemic hyperosmolar state?",
+                options: [
+                    { text: "Overproduction of albumin, excessive water intake, and hypoglycemia", correct: false },
+                    { text: "Hyponatremia, cellular apoptosis, and vasodilation", correct: false },
+                    { text: "A gain-of-function mutation in glucokinase, hypoventilation, and excessive sweating", correct: false },
+                    { text: "Insufficient water intake, excessive water loss, and excessive solute retention", correct: true }
+                ],
+                explanation: "A hyperosmolar state is caused by three primary distinct etiologies: a lack of water intake, excessive free water loss, or the retention/intake of excess solutes."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 85 ? "Excellent work! You have mastered fluid balance, Starling forces, and osmoregulation." : "Review the 10% buffering rules, ADH synthesis sites, and the Gibbs-Donnan equilibrium.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
