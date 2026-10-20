@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Airway & Cardiovascular Histology Quiz</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; padding-bottom: 80px; }
+
+        header {
+            position: sticky; top: 0; background-color: var(--bg-card); border-bottom: 2px solid var(--accent);
+            padding: 1rem; text-align: center; z-index: 1000; display: flex; justify-content: space-between;
+            align-items: center; font-size: 1.1rem; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .header-title { color: var(--text-main); }
+        #score-header { color: var(--accent); }
+
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+
+        .question-card {
+            background-color: var(--bg-card); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;
+            border: 1px solid var(--border-color); box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        .question-number { font-size: 0.85rem; color: var(--accent); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 700; }
+        .question-text { font-size: 1.15rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--text-main); }
+
+        .options-container { display: flex; flex-direction: column; gap: 0.75rem; }
+        .option-btn {
+            background-color: #262626; border: 2px solid var(--border-color); border-radius: 6px; padding: 1rem;
+            text-align: left; font-size: 1rem; cursor: pointer; transition: all 0.2s ease; color: var(--text-main); font-weight: 500;
+        }
+        .option-btn:hover:not(:disabled) { background-color: #333333; border-color: var(--accent); }
+        .option-btn:disabled { cursor: default; }
+
+        .option-btn.correct { background-color: var(--correct-bg); border-color: var(--correct-border); color: #ffffff; }
+        .option-btn.incorrect { background-color: var(--incorrect-bg); border-color: var(--incorrect-border); color: #ffffff; }
+
+        .explanation {
+            margin-top: 1.25rem; padding: 1rem; border-radius: 6px; background-color: #262626;
+            border-left: 4px solid var(--accent); font-size: 0.95rem; display: none; color: #e5e5e5; animation: fadeIn 0.3s ease-in;
+        }
+        .explanation strong { display: block; margin-bottom: 0.4rem; font-size: 1.05rem; }
+        .explanation .correct-text { color: var(--correct-border); }
+        .explanation .incorrect-text { color: var(--incorrect-border); }
+
+        #summary-card {
+            background-color: var(--bg-card); border-radius: 8px; padding: 2.5rem 1.5rem; text-align: center;
+            border: 2px solid var(--accent); margin-top: 2rem; display: none;
+        }
+        #summary-card h2 { margin-bottom: 1rem; color: var(--text-main); font-size: 1.8rem; }
+        .score-display { font-size: 3.5rem; font-weight: 800; color: var(--accent); margin-bottom: 1rem; }
+        #final-feedback { margin-bottom: 2rem; font-size: 1.1rem; color: var(--text-muted); }
+
+        .reset-btn {
+            background-color: var(--accent); color: var(--bg-main); border: none; padding: 1rem 2.5rem;
+            font-size: 1.1rem; border-radius: 6px; cursor: pointer; font-weight: 700; transition: background-color 0.2s;
+        }
+        .reset-btn:hover { background-color: var(--accent-hover); }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        button { -webkit-tap-highlight-color: transparent; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Airway & Cardio Histology</div>
+        <div id="score-header">Score: 0 / 12 (0%)</div>
+    </header>
+
+    <div class="container">
+        <div id="quiz-container"></div>
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 12</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // Q1: Target A (Index 0)
+            {
+                question: "According to the slide Study Tip, which statement correctly describes the relationship between the respiratory unit (acinus) and the tracheobronchial tree?",
+                options: [
+                    { text: "The respiratory unit is where gas exchange occurs and is NOT part of the tracheobronchial tree.", correct: true },
+                    { text: "The respiratory unit represents the proximal third of the tracheobronchial tree.", correct: false },
+                    { text: "The tracheobronchial tree includes all alveoli, whereas the respiratory unit does not.", correct: false },
+                    { text: "The respiratory unit is merely a histological synonym for the conducting airway.", correct: false }
+                ],
+                explanation: "The slide explicitly highlights: 'Study Tip: the respiratory unit (acinus), which is where gas exchange occurs, is NOT part of the tracheobronchial tree. Always on the exam.' The tracheobronchial tree only conducts air without participating in gas exchange."
+            },
+            // Q2: Target B (Index 1)
+            {
+                question: "What is the smallest (most distal) member of the tracheobronchial tree (conducting airway)?",
+                options: [
+                    { text: "Respiratory bronchiole", correct: false },
+                    { text: "Terminal bronchiole", correct: true },
+                    { text: "Alveolar duct", correct: false },
+                    { text: "Segmental bronchus", correct: false }
+                ],
+                explanation: "The terminal bronchiole is the smallest member of the tracheobronchial tree. A common exam trap is picking respiratory bronchiole, which is actually part of the respiratory unit."
+            },
+            // Q3: Target C (Index 2)
+            {
+                question: "The respiratory unit (acinus) is defined by its ability to exchange gases. What are the three members that comprise this unit?",
+                options: [
+                    { text: "Trachea, primary bronchi, and lobar bronchi", correct: false },
+                    { text: "Terminal bronchioles, segmental bronchi, and alveolar sacs", correct: false },
+                    { text: "Respiratory bronchioles, alveolar ducts, and alveolar sacs", correct: true },
+                    { text: "Arterioles, capillaries, and postcapillary venules", correct: false }
+                ],
+                explanation: "The respiratory unit consists exclusively of respiratory bronchioles, alveolar ducts, and alveolar sacs."
+            },
+            // Q4: Target D (Index 3)
+            {
+                question: "A standard capillary wall is formed by which specific cellular arrangement?",
+                options: [
+                    { text: "A single layer of smooth muscle cells surrounded by an elastic lamina", correct: false },
+                    { text: "Two layers of cuboidal cells embedded in dense connective tissue", correct: false },
+                    { text: "A continuous sheet of transitional epithelial cells", correct: false },
+                    { text: "Four simple squamous endothelial cells surrounded by pericytes", correct: true }
+                ],
+                explanation: "A standard capillary is formed by four simple squamous endothelial cells wrapped together to form a tube, supported externally by pericytes."
+            },
+            // Q5: Target A (Index 0)
+            {
+                question: "Which valve separates the left atrium from the left ventricle (noted by the lecturer as a question missed by 30% of students)?",
+                options: [
+                    { text: "Mitral valve (Bicuspid / Left AV valve)", correct: true },
+                    { text: "Tricuspid valve (Right AV valve)", correct: false },
+                    { text: "Aortic semilunar valve", correct: false },
+                    { text: "Pulmonary semilunar valve", correct: false }
+                ],
+                explanation: "The mitral (bicuspid / left AV) valve separates the left atrium from the left ventricle. The tricuspid valve separates the right atrium from the right ventricle."
+            },
+            // Q6: Target B (Index 1)
+            {
+                question: "In what specific anatomical division of the mediastinum does the heart reside?",
+                options: [
+                    { text: "Superior mediastinum", correct: false },
+                    { text: "Middle mediastinum (part of the inferior mediastinum)", correct: true },
+                    { text: "Anterior mediastinum", correct: false },
+                    { text: "Posterior mediastinum", correct: false }
+                ],
+                explanation: "The heart sits within the pericardial sac located strictly in the middle mediastinum (the middle division of the inferior mediastinum)."
+            },
+            // Q7: Target C (Index 2)
+            {
+                question: "Which great vascular structure is located in the superior mediastinum rather than the middle mediastinum?",
+                options: [
+                    { text: "Coronary sinus", correct: false },
+                    { text: "Mitral valve", correct: false },
+                    { text: "Aortic arch", correct: true },
+                    { text: "Left ventricle", correct: false }
+                ],
+                explanation: "The aortic arch and the brachiocephalic trunk reside in the superior mediastinum, superior to the heart itself."
+            },
+            // Q8: Target D (Index 3)
+            {
+                question: "According to the basement membrane slides, which of the following is NOT one of the three recognized layers of the basement membrane?",
+                options: [
+                    { text: "Lamina lucida", correct: false },
+                    { text: "Lamina densa", correct: false },
+                    { text: "Reticular lamina", correct: false },
+                    { text: "Tunica media", correct: true }
+                ],
+                explanation: "The basement membrane consists of three layers: lamina lucida, lamina densa, and reticular lamina. The tunica media is the muscular middle layer of a blood vessel."
+            },
+            // Q9: Target A (Index 0)
+            {
+                question: "The 'classic triopathy of diabetes' was highlighted as a definite exam question. It features microvascular damage to which three regions?",
+                options: [
+                    { text: "Retinopathy, neuropathy, and nephropathy", correct: true },
+                    { text: "Cardiomyopathy, encephalopathy, and gastropathy", correct: false },
+                    { text: "Dermatopathy, myopathy, and hepatopathy", correct: false },
+                    { text: "Atherosclerosis, hypertension, and claudication", correct: false }
+                ],
+                explanation: "The classic diabetic triopathy caused by chronic microvascular damage consists of retinopathy (eyes), neuropathy (nerves), and nephropathy (kidneys)."
+            },
+            // Q10: Target B (Index 1)
+            {
+                question: "Why does the left ventricle have substantially more myocardium than the right ventricle?",
+                options: [
+                    { text: "It pumps against zero resistance due to elastic compliance.", correct: false },
+                    { text: "It must generate high pressure to overcome the extensive resistance of the systemic circuit.", correct: true },
+                    { text: "It pumps a significantly greater volume of blood per minute than the right ventricle.", correct: false },
+                    { text: "It receives blood under lower oxygen tension than the right heart.", correct: false }
+                ],
+                explanation: "The left ventricle must overcome high systemic resistance to perfuse the entire body, whereas the right ventricle only pumps into the low-pressure pulmonary circuit."
+            },
+            // Q11: Target C (Index 2)
+            {
+                question: "The circulatory system is divided into two broad divisions. What are they?",
+                options: [
+                    { text: "The arterial system and the venous system", correct: false },
+                    { text: "The pulmonary system and the bronchial system", correct: false },
+                    { text: "The cardiovascular system and the lymphatic system", correct: true },
+                    { text: "The macrocirculation and the portal system", correct: false }
+                ],
+                explanation: "The two primary functional divisions of the circulatory system are the cardiovascular system and the lymphatic system."
+            },
+            // Q12: Target D (Index 3)
+            {
+                question: "The innermost layer of a blood vessel wall that directly contacts the flowing blood is the tunica intima. What type of cells compose this layer?",
+                options: [
+                    { text: "Smooth muscle cells", correct: false },
+                    { text: "Transitional epithelial cells", correct: false },
+                    { text: "Stratified squamous cells", correct: false },
+                    { text: "Simple squamous endothelial cells", correct: true }
+                ],
+                explanation: "The tunica intima is lined by endothelial cells, which are specialized simple squamous epithelial cells."
+            }
+        ];
+
+        let currentScore = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        function initQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
+            
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            window.scrollTo(0, 0);
+
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
+
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
+                });
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
+
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
+            });
+        }
+
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+            
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (data.options[idx].correct) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
+                currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+            } else {
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+            }
+            
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
+
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
+            }
+        }
+
+        function updateScoreDisplay() {
+            let percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
+
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
+                
+                let percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+                
+                let feedback = percentage >= 85 ? "Outstanding mastery of airway, mediastinal, and histological boundaries!" : "Review the specific differences between conducting and respiratory units, as well as the mediastinal divisions.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800); 
+        }
+
+        function resetQuiz() { initQuiz(); }
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>
