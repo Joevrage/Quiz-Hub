@@ -408,7 +408,17 @@
         let answeredQuestions = new Set();
         const totalQuestions = quizData.length;
 
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
         function initQuiz() {
+            shuffleArray(quizData);
+            quizData.forEach(q => shuffleArray(q.options));
+            
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
             currentScore = 0;
