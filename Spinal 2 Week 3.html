@@ -644,6 +644,12 @@
                 copyBtn.innerText = "Copy TSV to Clipboard";
             }, 2000);
         }
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
 
         // Initialize Quiz Function
         function initQuiz() {
@@ -651,6 +657,9 @@
             score = 0;
             updateHeader();
 
+            shuffleArray(quizData);
+            quizData.forEach(q => shuffleArray(q.options));
+            
             const container = document.getElementById("quiz-container");
             container.innerHTML = "";
             document.getElementById("summary-card").style.display = "none";
