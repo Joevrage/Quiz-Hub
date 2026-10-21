@@ -2,545 +2,506 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chiropractic Biomechanical Listings Mastery Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sublux Analysis: Listings & Biomechanics Quiz</title>
     <style>
         :root {
             --bg-color: #0f0f0f;
             --card-bg: #1a1a1a;
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --primary-accent: #ff9900;
-            --correct-color: #22c55e;
+            --card-border: #282828;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --accent-orange: #ff9900;
             --correct-bg: #14532d;
-            --incorrect-color: #ef4444;
+            --correct-border: #22c55e;
             --incorrect-bg: #7f1d1d;
-            --border-color: #333333;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
-            --shadow-md: 0 4px 10px rgba(0,0,0,0.7);
+            --incorrect-border: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            -webkit-tap-highlight-color: transparent;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-primary);
-            line-height: 1.5;
-            padding-bottom: 40px;
+            color: var(--text-main);
+            padding: 20px 15px 60px 15px;
+            user-select: none;
         }
 
-        .header-sticky {
-            position: -webkit-sticky;
+        .sticky-header {
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: var(--card-bg);
-            border-bottom: 2px solid var(--primary-accent);
+            background: rgba(15, 15, 15, 0.96);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--accent-orange);
             padding: 12px 20px;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .header-container {
             max-width: 850px;
-            margin: 0 auto;
+            margin: -20px auto 25px auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .header-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--primary-accent);
+        .hub-title {
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
 
-        .score-box {
-            font-size: 0.95rem;
-            font-weight: 600;
-            background-color: #262626;
-            color: #ffffff;
-            padding: 6px 14px;
+        .hub-badge {
+            background-color: var(--accent-orange);
+            color: #000;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .score-counter {
+            font-size: 15px;
+            font-weight: bold;
+            color: var(--accent-orange);
+            background: #242424;
+            padding: 5px 12px;
             border-radius: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 6px;
-            background-color: var(--border-color);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--primary-accent);
-            transition: width 0.3s ease;
+            border: 1px solid #333;
         }
 
         .quiz-container {
             max-width: 850px;
-            margin: 20px auto;
-            padding: 0 16px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .question-card {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            transition: border-color 0.2s;
         }
 
-        .question-header {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--primary-accent);
+        .question-card:hover {
+            border-color: #383838;
+        }
+
+        .q-number {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--accent-orange);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+            display: block;
         }
 
-        .question-text {
-            font-size: 1.05rem;
+        .q-text {
+            font-size: 15px;
             font-weight: 600;
-            margin-bottom: 18px;
-            color: var(--text-primary);
+            line-height: 1.45;
+            margin-bottom: 16px;
+            color: #f3f4f6;
         }
 
-        .options-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 9px;
         }
 
         .option-btn {
-            width: 100%;
+            background-color: #242424;
+            border: 1px solid #333;
+            color: #e5e7eb;
+            padding: 12px 14px;
+            border-radius: 6px;
             text-align: left;
-            padding: 13px 16px;
-            font-size: 0.95rem;
-            color: var(--text-primary);
-            background-color: #262626;
-            border: 1.5px solid var(--border-color);
-            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background-color 0.15s, border-color 0.15s;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.35;
         }
 
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--primary-accent);
-            background-color: #333333;
+        .option-btn:hover:not(.locked) {
+            background-color: #2e2e2e;
+            border-color: var(--accent-orange);
         }
 
-        .option-btn:disabled {
+        .option-key {
+            font-weight: 900;
+            color: var(--accent-orange);
+            min-width: 18px;
+        }
+
+        .option-btn.locked {
             cursor: default;
         }
 
-        .option-btn.correct-choice {
+        .option-btn.correct {
             background-color: var(--correct-bg) !important;
-            border-color: var(--correct-color) !important;
+            border-color: var(--correct-border) !important;
             color: #ffffff !important;
-            font-weight: 600;
+            font-weight: bold;
         }
 
-        .option-btn.incorrect-choice {
+        .option-btn.incorrect {
             background-color: var(--incorrect-bg) !important;
-            border-color: var(--incorrect-color) !important;
+            border-color: var(--incorrect-border) !important;
             color: #ffffff !important;
-            font-weight: 600;
-        }
-
-        .option-btn.dimmed {
-            opacity: 0.35;
         }
 
         .explanation-box {
-            margin-top: 16px;
-            padding: 14px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            line-height: 1.5;
             display: none;
+            margin-top: 14px;
+            padding: 12px 14px;
+            background-color: #121212;
+            border-left: 3px solid var(--accent-orange);
+            border-radius: 4px;
+            font-size: 13.5px;
+            line-height: 1.45;
+            color: #d1d5db;
         }
 
-        .explanation-box.visible {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .explanation-box.correct {
-            background-color: var(--correct-bg);
-            border-left: 4px solid var(--correct-color);
-            color: #d1fae5;
-        }
-
-        .explanation-box.incorrect {
-            background-color: var(--incorrect-bg);
-            border-left: 4px solid var(--incorrect-color);
-            color: #fee2e2;
-        }
-
-        .summary-card {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            padding: 32px 24px;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--primary-accent);
-            display: none;
-        }
-
-        .summary-card.visible {
-            display: block;
-            animation: fadeIn 0.4s ease;
-        }
-
-        .summary-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .summary-score {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--primary-accent);
-            margin-bottom: 16px;
-        }
-
-        .summary-text {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-
-        .reset-btn {
-            background-color: var(--primary-accent);
-            color: #000000;
-            border: none;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .reset-btn:hover {
-            background-color: #e68a00;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        .explanation-box strong {
+            color: var(--accent-orange);
         }
     </style>
 </head>
 <body>
 
-    <div class="header-sticky">
-        <div class="header-container">
-            <div class="header-title">Biomechanical Listings Mastery Hub</div>
-            <div class="score-box" id="scoreDisplay">Score: 0 / 24 (0%)</div>
+    <header class="sticky-header">
+        <div class="hub-title">
+            <span>Sublux</span><span class="hub-badge">Listings</span>
         </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBar"></div>
-        </div>
-    </div>
+        <div class="score-counter" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
 
-    <div class="quiz-container" id="quizContainer"></div>
-
-    <div class="quiz-container">
-        <div class="summary-card" id="summaryCard">
-            <div class="summary-title" id="summaryTitle">Assessment Complete</div>
-            <div class="summary-score" id="finalScore">0 / 24</div>
-            <div class="summary-text" id="summaryFeedback">Performance feedback will appear here.</div>
-            <button class="reset-btn" onclick="resetQuiz()">Retake Assessment</button>
-        </div>
-    </div>
+    <main class="quiz-container" id="quizContainer"></main>
 
     <script>
         const quizData = [
-            // ATLAS (C1) SUBLUXATIONS
             {
-                question: "Lateral and AP open-mouth radiographs reveal the atlas plane line is divergent anteriorly relative to the odontoid (anterior-superior tilt). The right lateral mass is wider and displaced lateral to C2, and on the vertex view, the right transverse process is rotated posteriorly. What is the Palmer-Gonstead atlas listing?",
-                options: ["ASRP", "ASRA", "AIRP", "ASLP"],
-                correct: 0,
-                explanation: "First letter: 'A' = Anterior atlas plane line (superior tilt anteriorly). Second letter: 'S' = Superior atlas plane line. Third letter: 'R' = Right lateral mass displacement (larger/wider lateral mass on the right). Fourth letter: 'P' = Posterior rotation of the right transverse process relative to the left."
-            },
-            {
-                question: "Analysis of C1 demonstrates an anterior-inferior atlas plane line on the lateral cervical film. The right lateral mass is displaced laterally, and on rotation analysis, the right transverse process has rotated anteriorly. What is the designated 4-letter atlas listing?",
-                options: ["AIRP", "AIRA", "AILP", "ASRA"],
+                q: "What is the primary anatomical reference point utilized for constructing spinal listings from C2 down to L5 in the Palmer–Gonstead listing system?",
+                options: [
+                    "Vertebral body",
+                    "Spinous process",
+                    "Transverse process",
+                    "Superior articular facet"
+                ],
                 correct: 1,
-                explanation: "'A' = Atlas plane line anterior; 'I' = Inferior tilt of atlas plane line relative to horizontal; 'R' = Right lateral displacement; 'A' = Anterior rotation of the right transverse process (indicated on the side of lateral mass shift)."
+                exp: "In the Palmer–Gonstead system, the reference point for segments C2 through L5 is strictly the spinous process. Diversified cervical listings use the vertebral body instead."
             },
             {
-                question: "Radiographic and motion palpation findings indicate an atlas with an open wedge anteriorly/superiorly. The left lateral mass is prominent laterally on APOM, and rotation testing indicates the left transverse process has rotated anteriorly. What is the listing?",
-                options: ["ASLA", "ASLP", "AILA", "ASRA"],
-                correct: 0,
-                explanation: "ASLA denotes: 'A' = Anterior atlas, 'S' = Superior plane line, 'L' = Left lateral mass shift, 'A' = Anterior rotation of the left transverse process."
-            },
-            {
-                question: "C1 motion palpation and imaging reveal that the atlas plane line is inferior on the lateral film. The left lateral mass exhibits lateral displacement on the open-mouth view, and the vertex view demonstrates posterior rotation of the left transverse process. What is the listing?",
-                options: ["AILA", "ASLP", "AIRP", "AILP"],
-                correct: 3,
-                explanation: "'A' = Anterior; 'I' = Inferior tilt; 'L' = Left lateral mass displacement; 'P' = Posterior rotation of that left transverse process."
-            },
-            {
-                question: "On an AP open-mouth film, the right lateral mass of C1 shows lateral overhang without any observable transverse process rotation on the vertex view, while the lateral film shows a superior atlas plane line. What is the listing?",
-                options: ["ASR", "ASL", "AIR", "ASRA"],
-                correct: 0,
-                explanation: "When no rotational component (A or P) is present on the side of lateral shift, the listing concludes as a 3-letter designation: ASR (Anterior, Superior, Right)."
-            },
-            {
-                question: "An APOM radiograph demonstrates left lateral mass overhang of the atlas with an inferior atlas plane line. Radiographic rotational analysis reveals no transverse process rotation on the side of lateral shift. What is the listing?",
-                options: ["ASL", "AIL", "AILA", "AILP"],
+                q: "A patient presents with an L5 PLS listing. When performing motion palpation on this segment, which set of motion restrictions will be identified?",
+                options: [
+                    "Reduced extension, reduced right rotation, and reduced right lateral flexion",
+                    "Reduced extension, reduced left rotation, and reduced left lateral flexion",
+                    "Reduced extension, reduced left rotation, and reduced right lateral flexion",
+                    "Reduced flexion, reduced right rotation, and reduced left lateral flexion"
+                ],
                 correct: 1,
-                explanation: "Inferior atlas plane line ('I') with left lateral mass shift ('L') and zero rotational divergence yields the 3-letter listing AIL."
-            },
-
-            // OCCIPUT (C0) SUBLUXATIONS
-            {
-                question: "Occipital analysis reveals that the occiput has extended (condyles slid anteriorly) on the atlas, the right condyle is wedged superiorly (lateral flexion right), and the right condyle has rotated anteriorly. What is the Palmer/Gonstead occiput listing?",
-                options: ["AS-RS-RA", "AS-RS-RP", "PS-RS-RA", "AS-LS-LA"],
-                correct: 0,
-                explanation: "First pair: 'AS' = Anterior-Superior condylar glide (extension of C0 on C1). Second pair: 'RS' = Right Superior (lateral flexion to the right). Third pair: 'RA' = Right Anterior (anterior rotation of the right condyle)."
+                exp: "PLS indicates posteriority (reduced extension), spinous rotated left (stuck left rotation = reduced left rotation), and open wedging on the left/same side (unable to laterally bend back to the left = reduced left lateral flexion)."
             },
             {
-                question: "Assessment of the atlanto-occipital joint demonstrates occipital flexion fixation (condyles displaced posteriorly/superiorly on atlas facets). The right condyle is superior, and the right condyle is rotated posteriorly. What is the designated occiput listing?",
-                options: ["AS-RS-RP", "PS-RS-RP", "PS-RS-RA", "PS-LS-LP"],
+                q: "A Palmer–Gonstead listing with wedging on the opposite side of spinous rotation (such as PLI or PRI) is classified as which type of listing?",
+                options: [
+                    "Simple listing",
+                    "Rotary listing",
+                    "Coupled listing",
+                    "Translational listing"
+                ],
                 correct: 1,
-                explanation: "'PS' = Posterior-Superior condylar fixation (occipital flexion malposition). 'RS' = Right Superior (right lateral wedging). 'RP' = Right Posterior (posterior rotation of the right occipital condyle)."
+                exp: "When the wedge is on the opposite side of spinous rotation (PLI or PRI), it is designated as a Rotary listing. When on the same side (PLS or PRS), it is a Simple listing."
             },
             {
-                question: "On radiographic evaluation of C0-C1, the occiput is extended on the atlas. The left condyle is found to be superior on the open-mouth view, and rotation analysis demonstrates posterior rotation of the left condyle. What is the listing?",
-                options: ["AS-LS-LP", "AS-LS-LA", "PS-LS-LP", "AS-RS-RP"],
-                correct: 0,
-                explanation: "'AS' indicates anterior extension fixation; 'LS' indicates Left Superior lateral tilt; 'LP' indicates Left Posterior condylar rotation."
+                q: "When adjusting a lumbar rotary listing such as L4 PLI, what specific regional anatomical contact point is utilized, and how is it suffixed in notes?",
+                options: [
+                    "Lamina; PLI-la",
+                    "Transverse process; PLI-t",
+                    "Mammillary process; PLI-m",
+                    "Spinous process; PLI-sp"
+                ],
+                correct: 2,
+                exp: "For lumbar rotary listings (PLI / PRI), the preferred contact point on the side of the open wedge is the mammillary process, denoted with the suffix '-m' (e.g., PLI-m)."
             },
             {
-                question: "Biomechanical evaluation of the craniocervical junction shows posterior condylar displacement (PS), left superior tilt (LS), and anterior rotation of the left occipital condyle. What is the listing?",
-                options: ["PS-LS-LA", "PS-LS-LP", "AS-LS-LA", "PS-RS-RA"],
-                correct: 0,
-                explanation: "The listing is PS-LS-LA: Posterior-Superior glide, Left Superior lateral tilt, and Left Anterior condylar rotation."
-            },
-
-            // PELVIS / ILIUM SUBLUXATIONS (GONSTEAD)
-            {
-                question: "During pelvic analysis, the right ilium demonstrates a decreased vertical measurement of the obturator foramen on radiograph, an elevated PSIS, a lowered ASIS, and an apparent elongated leg on the right side in the prone position. What is the primary ilium listing?",
-                options: ["AS Ilium", "PI Ilium", "IN Ilium", "EX Ilium"],
-                correct: 0,
-                explanation: "An AS (Anterior-Superior) ilium rotates anteriorly and superiorly on the sacrum, resulting in a smaller/flattened obturator foramen vertical diameter, elevated PSIS, lowered ASIS, and an anatomical/functional long leg."
-            },
-            {
-                question: "A patient presents with a low right gluteal fold and a short leg on the right in the prone position. An AP pelvic radiograph reveals an increased vertical height of the right obturator foramen and an increased vertical height of the right innominate bone. What is the listing?",
-                options: ["PI Ilium", "AS Ilium", "EX Ilium", "IN Ilium"],
-                correct: 0,
-                explanation: "A PI (Posterior-Inferior) ilium listing causes the PSIS to rotate down and back, increasing the vertical measurement of the obturator foramen and the iliac shadow while creating a functional short leg on that side."
-            },
-            {
-                question: "Radiographic evaluation of the pelvis reveals a widened iliac bone shadow from the SI joint to the lateral crest on the left, coupled with a narrowed transverse measurement of the left obturator foramen. Foot flare on the left is internally rotated. What is the listing?",
-                options: ["IN Ilium", "EX Ilium", "PI Ilium", "AS Ilium"],
-                correct: 0,
-                explanation: "An IN (Internal) ilium rotates toward the pelvic midline, widening the iliac wing on an AP radiograph, narrowing the horizontal diameter of the obturator foramen, and promoting internal foot flare (toe-in)."
-            },
-            {
-                question: "Pelvic examination reveals external toe-flare on the right side during ambulation. Radiographic measurement shows a narrower iliac wing on the right and an increased transverse diameter of the right obturator foramen. What is the listing?",
-                options: ["IN Ilium", "EX Ilium", "PI-IN Ilium", "AS-IN Ilium"],
+                q: "For a thoracic rotary listing such as T6 PRI, which anatomical landmark represents the primary contact point on the side of the wedge?",
+                options: [
+                    "Spinous process",
+                    "Transverse process (-t)",
+                    "Mammillary process (-m)",
+                    "Lamina (-la)"
+                ],
                 correct: 1,
-                explanation: "An EX (External) ilium rotates away from the midline, presenting radiographically with a narrowed iliac wing, a wider transverse obturator foramen, and external foot flare (toe-out)."
+                exp: "In the thoracic spine, rotary listings contact the transverse process on the side of the wedge, designated with '-t' (e.g., PRI-t). Cervical uses lamina (-la) and lumbar uses mammillary (-m)."
             },
             {
-                question: "A patient exhibits a right functional short leg, an elevated and wider right obturator foramen, and a narrowed right iliac wing on an AP radiograph. What is the compound ilium listing?",
-                options: ["PI-EX", "PI-IN", "AS-EX", "AS-IN"],
-                correct: 0,
-                explanation: "Short leg + elongated vertical obturator = PI. Narrowed iliac wing + widened transverse obturator = EX. Combined listing = PI-EX."
+                q: "In the cervical spine (C2–C7), the Diversified system references the vertebral body. A Palmer–Gonstead listing of PL translates to which Diversified listing?",
+                options: [
+                    "Body Left",
+                    "Body Right",
+                    "Body Posterior",
+                    "Body Anterior"
+                ],
+                correct: 1,
+                exp: "Because a spinous process rotated to the left (PL) forces the anterior/vertebral body to swing posterior on the right side, a Palmer–Gonstead PL translates directly to a Diversified Body Right."
             },
             {
-                question: "On the left side, the patient presents with a functional long leg, a decreased vertical height of the obturator foramen, and a widened iliac wing from SI joint to lateral margin. What is the compound ilium listing?",
-                options: ["AS-IN", "AS-EX", "PI-IN", "PI-EX"],
-                correct: 0,
-                explanation: "Long leg + decreased vertical obturator dimension = AS. Widened iliac wing = IN. Combined listing = AS-IN."
+                q: "If an examiner identifies a Diversified 'Body Left' listing at C5, what motion palpation rotational restriction is present?",
+                options: [
+                    "Reduced left rotation",
+                    "Reduced right rotation",
+                    "Reduced lateral flexion only",
+                    "Reduced cervical flexion only"
+                ],
+                correct: 1,
+                exp: "A Body Left means the spinous is rotated to the right (PR). A right spinous malposition cannot rotate back into right rotation, meaning it has reduced right rotation."
             },
             {
-                question: "Analysis shows a right innominate with a short leg, increased vertical obturator height, and a widened ilium on the AP pelvic view with toe-in presentation. What is the compound listing?",
-                options: ["PI-IN", "PI-EX", "AS-IN", "AS-EX"],
-                correct: 0,
-                explanation: "Short leg + tall vertical obturator = PI. Widened ilium + toe-in = IN. Combined listing = PI-IN."
+                q: "When motion palpating a T4 PRS listing, what dynamic biomechanical limitation in lateral flexion will be elicited?",
+                options: [
+                    "Reduced left lateral flexion",
+                    "Reduced right lateral flexion",
+                    "Reduced extension only",
+                    "Unrestricted bilateral lateral flexion"
+                ],
+                correct: 1,
+                exp: "In a PRS listing, the wedging is on the right side (same side as spinous rotation). Because it is fixated open on the right and closed on the left, it cannot tilt back into right lateral flexion."
             },
             {
-                question: "Pelvic analysis demonstrates a left anterior-superior pelvic tilt (flattened vertical obturator) combined with an externally rotated hemipelvis (narrowed iliac wing and toe-out flare). What is the compound listing?",
-                options: ["AS-EX", "AS-IN", "PI-EX", "PI-IN"],
-                correct: 0,
-                explanation: "Anterior-superior rotation (AS) combined with external rotation (EX) forms the AS-EX listing."
-            },
-
-            // SACRUM & EXTREMITIES
-            {
-                question: "Motion palpation of the sacrum reveals hypermobility on the left, but on the right, the sacral base is locked posterior and inferior relative to the right ilium with localized edema at the upper right SI joint. What is the sacral listing?",
-                options: ["P-R (Right Posterior Sacrum)", "P-L (Left Posterior Sacrum)", "Base Posterior (BP)", "Anterior-Inferior Sacrum"],
-                correct: 0,
-                explanation: "Posterior-inferior subluxation of the right sacral base relative to the ilium is designated as a Right Posterior Sacrum (P-R)."
+                q: "What is the primary anatomical reference landmark used to formulate all ilium (innominate) subluxation listings?",
+                options: [
+                    "Anterior Superior Iliac Spine (ASIS)",
+                    "Ischial tuberosity",
+                    "Posterior Superior Iliac Spine (PSIS)",
+                    "Sacral base"
+                ],
+                correct: 2,
+                exp: "The Posterior Superior Iliac Spine (PSIS) is the universal anatomical reference point for all ilium subluxation listings (PI, AS, EX, IN)."
             },
             {
-                question: "On a lateral lumbar-pelvic radiograph, the sacral base angle is significantly increased, the lumbosacral angle is acute, and bilateral deep sacral sulci palpate posterior-to-anterior with restricted nutation. What is the listing?",
-                options: ["Base Posterior (BP)", "Base Anterior (Anterior Sacrum)", "Rotated Sacrum Left", "Rotated Sacrum Right"],
-                correct: 0,
-                explanation: "A Base Posterior (BP) sacrum listing indicates posterior displacement of the entire sacral base relative to the fifth lumbar vertebra, restricting anterior sacral nutation."
+                q: "When evaluating a subluxation between the sacrum and the L5 vertebra at the disc level, what is the anatomical reference point and resulting listing?",
+                options: [
+                    "Sacral apex; Apex Posterior (AP)",
+                    "Sacral base; Base Posterior (BP)",
+                    "Sacral ala; P-R",
+                    "Sacral canal; S1 Retrolisthesis"
+                ],
+                correct: 1,
+                exp: "When the sacrum subluxates relative to L5 at the disc level, the reference point is the sacral base, and posterior rocking of this base is listed as Base Posterior (BP)."
             },
             {
-                question: "During knee evaluation, the tibia displays an abnormal lateral tilt relative to the femur with opening on medial joint stress (cubitus valgus equivalent at the knee), and the tibial plateau resists medial glide. What is the tibial listing?",
-                options: ["Abducted Tibia (Valgus)", "Adducted Tibia (Varus)", "Posterior Tibia", "Internal Tibia"],
-                correct: 0,
-                explanation: "An Abducted Tibia listing represents a valgus malposition of the knee joint with restricted medial glide and stress localized across the medial collateral ligament."
+                q: "How must a sacral subluxation at the right sacroiliac joint involving posterior rotation of the sacral ala be formally documented to distinguish it from spinal listings?",
+                options: [
+                    "PR",
+                    "P-R",
+                    "R-Sacrum",
+                    "Sacral PR-m"
+                ],
+                correct: 1,
+                exp: "Sacral SI joint listings require a hyphen (P-R or P-L). Without the dash, 'PR' would designate a spinal vertebra spinous right listing (such as C2 or L5 PR)."
             },
             {
-                question: "Evaluation of the patella demonstrates that it is fixed toward the superolateral aspect of the femoral trochlea, resisting inferior and medial glides during extension. What is the patellar listing?",
-                options: ["Superior-Lateral Patella", "Superior-Medial Patella", "Inferior-Lateral Patella", "Inferior-Medial Patella"],
+                q: "Which pair of compound ilium listings are categorized as 'married' because their individual components reinforce each other's biomechanical effects?",
+                options: [
+                    "PIEx and ASIn",
+                    "PIIn and ASEx",
+                    "PI and AS",
+                    "EX and IN"
+                ],
                 correct: 0,
-                explanation: "The patella most frequently displaces superiorly and laterally (Superior-Lateral Patella) due to the lateral pull of the vastus lateralis and the Q-angle vector, resisting inferior and medial translation."
+                exp: "PIEx and ASIn are the 'married' listings. PI and EX both cause functional leg shortening and toe-in; AS and IN both cause functional leg lengthening and toe-out."
             },
             {
-                question: "A runner presents with lateral foot pain. Motion palpation reveals that the cuboid has dropped toward the plantar surface and resists dorsally directed springing. What is the tarsal listing?",
-                options: ["Plantar (Inferior) Cuboid", "Dorsal (Superior) Cuboid", "Medial Navicular", "Plantar Cuneiform"],
-                correct: 0,
-                explanation: "A Plantar (Subluxated/Dropped) Cuboid is the classic cuboid listing, presenting with a prominent bony point on the plantar lateral foot and restricted dorsal mobilization."
+                q: "On radiographic and visual examination, which classic finding corresponds to an isolated PI (posterior-inferior) ilium listing?",
+                options: [
+                    "Decreased vertical innominate height and smaller obturator foramen",
+                    "Increased vertical innominate height and larger obturator foramen",
+                    "Narrowed obturator foramen and elevated gluteal fold",
+                    "Widened innominate transverse width and toe-out flare"
+                ],
+                correct: 1,
+                exp: "A PI ilium causes the innominate to rock back and down, which on AP pelvic radiography increases vertical innominate height, increases obturator foramen dimensions, and lowers the gluteal fold."
             },
             {
-                question: "Following an inversion ankle sprain, the distal fibula is tender and palpates prominent anteriorly, resisting posterior glide relative to the distal tibia. What is the fibular listing?",
-                options: ["Anterior Distal Fibula", "Posterior Distal Fibula", "Superior Proximal Fibula", "Inferior Distal Fibula"],
+                q: "What is the primary anatomical reference landmark used for establishing Atlas (C1) subluxation listings?",
+                options: [
+                    "Posterior arch of atlas",
+                    "Anterior arch (tubercle) of atlas",
+                    "Odontoid process of axis",
+                    "Lateral mass transverse process"
+                ],
+                correct: 1,
+                exp: "Atlas listings always reference the anterior arch (anterior tubercle) of C1, which is why all Palmer atlas listings start with the letter 'A'."
+            },
+            {
+                q: "Why are all Palmer-Gonstead Atlas listings prefixed with an 'A' (Anterior) rather than a 'P' (Posterior)?",
+                options: [
+                    "The posterior arch is cartilage and cannot be palpated",
+                    "Posterior subluxation of C1 on C2 is structurally impossible without fracture of the dens or rupture of the transverse ligament",
+                    "The atlas facets face exclusively anteriorly and cannot translate posteriorly",
+                    "Palmer protocol arbitrarily chose anteriority to avoid confusion with the pelvis"
+                ],
+                correct: 1,
+                exp: "Atlas listings always begin with 'A' because posterior subluxation of atlas on axis is considered anatomically impossible without catastrophic disruption of the dens and transverse ligament."
+            },
+            {
+                q: "In an Atlas listing of ASRP, what specific mechanical displacement does the final letter 'P' indicate?",
+                options: [
+                    "The entire atlas has shifted directly posterior relative to C2",
+                    "The right lateral mass of the atlas has rotated posterior on the side of laterality",
+                    "The patient exhibits posterior head carriage",
+                    "The left transverse process has rotated anteriorly"
+                ],
+                correct: 1,
+                exp: "In ASRP, A = Anterior, S = Superior, R = Right laterality (side of contact), and P = the right lateral mass has rotated Posterior on that side of laterality."
+            },
+            {
+                q: "What is the universal anatomical reference point for formulating Occiput (C0) subluxation listings?",
+                options: [
+                    "External occipital protuberance (Inion)",
+                    "Foramen magnum",
+                    "Base/condyles of the occiput (posterior portion of occiput)",
+                    "Mastoid process of the temporal bone"
+                ],
+                correct: 2,
+                exp: "The reference point for Occiput listings is the base/condyles of the occiput (the posterior aspect of the skull/condyles articulating with C1)."
+            },
+            {
+                q: "In the Occiput listing PS-RS-RA, how is the subluxation mechanically decoded?",
+                options: [
+                    "Posterior-Superior condyle, Right-Superior laterality, Right condyle rotated Anterior",
+                    "Posterior Sacrum, Right Sacral Ala, Right Anterior rotation",
+                    "Primary Superior, Right Shift, Rotational Atlas",
+                    "Posterior-Superior condyle, Right Sacrum, Reduced Abduction"
+                ],
                 correct: 0,
-                explanation: "Inversion sprains with plantarflexion frequently drag the distal fibula anteriorly and inferiorly, locking it in an Anterior Distal Fibula listing that resists posterior drawer glide."
+                exp: "PS-RS-RA decodes as: PS = Posterior-Superior occiput rock, RS = Right side went Superior (laterality/wedge side), RA = the right side rotated Anterior."
+            },
+            {
+                q: "What are the testable subluxation listings recognized for the Coccyx?",
+                options: [
+                    "P, P-R, P-L",
+                    "A, A-R, A-L",
+                    "PI, AS, EX, IN",
+                    "AI, AS, ASR, ASL"
+                ],
+                correct: 1,
+                exp: "According to the pelvic listing protocols, Coccyx subluxations misalign anteriorly and are listed as: A (Anterior), A-R (Anterior-Right), and A-L (Anterior-Left)."
+            },
+            {
+                q: "On lateral radiograph, what finding confirms an actual spondylolisthesis at L5 rather than a Base Posterior (BP) sacrum?",
+                options: [
+                    "L5 is anterior to S1, but L4 remains aligned with S1",
+                    "L5 has slipped anterior relative to both S1 and L4",
+                    "The L5-S1 disc space opens widely in the posterior aspect",
+                    "The sacral base angle exceeds 60 degrees"
+                ],
+                correct: 1,
+                exp: "As emphasized in lecture, to distinguish an anterior spondylolisthesis from a BP sacrum, you must check L4: in a true L5 spondylolisthesis, L5 is anterior to both S1 and L4 above it. In BP sacrum, L4 and L5 remain aligned while the sacrum alone rocks backward."
             }
         ];
 
-        let activeQuestions = [];
-        let currentAnswers = [];
-
+        // Fisher-Yates Shuffle
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
-            return array;
+        }
+
+        let answeredCount = 0;
+        let correctCount = 0;
+
+        function updateScore() {
+            const total = quizData.length;
+            const pct = answeredCount === 0 ? 0 : Math.round((correctCount / answeredCount) * 100);
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${answeredCount} (${pct}%)`;
         }
 
         function renderQuiz() {
-            activeQuestions = shuffleArray(JSON.parse(JSON.stringify(quizData)));
-            currentAnswers = new Array(activeQuestions.length).fill(null);
-
+            shuffleArray(quizData);
             const container = document.getElementById('quizContainer');
             container.innerHTML = '';
 
-            activeQuestions.forEach((q, index) => {
+            quizData.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
-                card.id = `q-card-${index}`;
+                card.id = `qCard_${index}`;
 
-                let optionsHTML = '';
-                q.options.forEach((opt, optIdx) => {
-                    optionsHTML += `
-                        <button class="option-btn" 
-                                id="btn-${index}-${optIdx}" 
-                                onclick="selectOption(${index}, ${optIdx})">
-                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
-                        </button>
-                    `;
+                const qNum = document.createElement('span');
+                qNum.className = 'q-number';
+                qNum.textContent = `Question ${index + 1} of ${quizData.length}`;
+                card.appendChild(qNum);
+
+                const qText = document.createElement('div');
+                qText.className = 'q-text';
+                qText.textContent = item.q;
+                card.appendChild(qText);
+
+                const optGrid = document.createElement('div');
+                optGrid.className = 'options-grid';
+
+                const optKeys = ['A', 'B', 'C', 'D'];
+                item.options.forEach((optStr, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerHTML = `<span class="option-key">${optKeys[optIdx]}.</span> <span>${optStr}</span>`;
+
+                    btn.addEventListener('click', () => {
+                        handleChoice(index, optIdx, card, item);
+                    });
+
+                    optGrid.appendChild(btn);
                 });
 
-                card.innerHTML = `
-                    <div class="question-header">Question ${index + 1} of ${activeQuestions.length}</div>
-                    <div class="question-text">${q.question}</div>
-                    <div class="options-list">${optionsHTML}</div>
-                    <div class="explanation-box" id="exp-${index}"></div>
-                `;
+                card.appendChild(optGrid);
+
+                const expBox = document.createElement('div');
+                expBox.className = 'explanation-box';
+                expBox.id = `exp_${index}`;
+                expBox.innerHTML = `<strong>Explanation:</strong> ${item.exp}`;
+                card.appendChild(expBox);
 
                 container.appendChild(card);
             });
 
-            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${activeQuestions.length} (0%)`;
-            document.getElementById('progressBar').style.width = '0%';
-        }
-
-        function selectOption(qIdx, selectedOptIdx) {
-            if (currentAnswers[qIdx] !== null) return;
-
-            currentAnswers[qIdx] = selectedOptIdx;
-            const q = activeQuestions[qIdx];
-            const isCorrect = selectedOptIdx === q.correct;
-
-            q.options.forEach((_, optIdx) => {
-                const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
-                btn.disabled = true;
-
-                if (optIdx === q.correct) {
-                    btn.classList.add('correct-choice');
-                } else if (optIdx === selectedOptIdx) {
-                    btn.classList.add('incorrect-choice');
-                } else {
-                    btn.classList.add('dimmed');
-                }
-            });
-
-            const expBox = document.getElementById(`exp-${qIdx}`);
-            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
-            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
-
             updateScore();
         }
 
-        function updateScore() {
-            const answeredCount = currentAnswers.filter(a => a !== null).length;
-            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
-                return ans === activeQuestions[idx].correct ? acc + 1 : acc;
-            }, 0);
+        function handleChoice(qIdx, chosenIdx, cardElement, item) {
+            const buttons = cardElement.querySelectorAll('.option-btn');
+            if (buttons[0].classList.contains('locked')) return; // already answered
 
-            const percentage = Math.round((correctCount / activeQuestions.length) * 100);
-            
-            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${activeQuestions.length} (${percentage}%)`;
-            document.getElementById('progressBar').style.width = `${(answeredCount / activeQuestions.length) * 100}%`;
+            buttons.forEach(btn => btn.classList.add('locked'));
 
-            if (answeredCount === activeQuestions.length) {
-                showSummary(correctCount, percentage);
-            }
-        }
-
-        function showSummary(correctCount, percentage) {
-            const summaryCard = document.getElementById('summaryCard');
-            const finalScore = document.getElementById('finalScore');
-            const feedback = document.getElementById('summaryFeedback');
-
-            finalScore.innerText = `${correctCount} / ${activeQuestions.length} (${percentage}%)`;
-
-            if (percentage >= 90) {
-                feedback.innerText = "Mastery demonstrated across upper cervical (Atlas/Occiput), pelvic (PI/AS/IN/EX), and peripheral listings!";
-            } else if (percentage >= 75) {
-                feedback.innerText = "Solid clinical reasoning. Revisit 4-letter atlas rotation and compound ilium listings.";
+            answeredCount++;
+            if (chosenIdx === item.correct) {
+                correctCount++;
+                buttons[chosenIdx].classList.add('correct');
             } else {
-                feedback.innerText = "Review the directional rules for atlas lateral mass overhang and pelvic radiographic landmarks.";
+                buttons[chosenIdx].classList.add('incorrect');
+                buttons[item.correct].classList.add('correct');
             }
 
-            summaryCard.classList.add('visible');
-            summaryCard.scrollIntoView({ behavior: 'smooth' });
-        }
+            const exp = document.getElementById(`exp_${qIdx}`);
+            exp.style.display = 'block';
 
-        function resetQuiz() {
-            document.getElementById('summaryCard').classList.remove('visible');
-            renderQuiz();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateScore();
         }
 
         window.onload = renderQuiz;
