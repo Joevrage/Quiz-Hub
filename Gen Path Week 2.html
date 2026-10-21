@@ -11,8 +11,10 @@
             --accent-orange: #ff9900;
             --text-white: #ffffff;
             --text-dim: #b0b0b0;
-            --correct-green: #2e7d32;
-            --incorrect-red: #c62828;
+            --correct-green-bg: #14532d;
+            --correct-green-border: #22c55e;
+            --incorrect-red-bg: #7f1d1d;
+            --incorrect-red-border: #ef4444;
             --border-color: #333333;
         }
 
@@ -111,14 +113,14 @@
         }
 
         .option-btn.correct {
-            background-color: var(--correct-green) !important;
-            border-color: #4caf50 !important;
+            background-color: var(--correct-green-bg) !important;
+            border-color: var(--correct-green-border) !important;
             color: #fff !important;
         }
 
         .option-btn.incorrect {
-            background-color: var(--incorrect-red) !important;
-            border-color: #ef5350 !important;
+            background-color: var(--incorrect-red-bg) !important;
+            border-color: var(--incorrect-red-border) !important;
             color: #fff !important;
         }
 
@@ -192,7 +194,7 @@
     </div>
 
     <div class="container" id="quiz-container">
-        <!-- Questions injected by JS -->
+        <!-- Rendered by JavaScript -->
     </div>
 
     <div class="container">
@@ -205,304 +207,276 @@
     </div>
 
     <script>
-        const quizData = [
-            // Quiz 2 Question 1
+        const originalQuizData = [
             {
                 question: "Which of the following is NOT a category of the body's layers of defensive strategies?",
                 options: ["thrombocytes", "cutaneous membrane", "cerumen", "chemical secretions"],
                 correct: 0,
                 explanation: "The body's three layers of defense are physical barriers (cutaneous membrane), chemical secretions (cerumen, sweat, sebum), and cellular barriers (leukocytes). Thrombocytes (platelets) are blood components involved in coagulation."
             },
-            // Quiz 2 Question 2
             {
                 question: "Which of the following is an agranular leukocyte?",
-                options: ["mast cell", "neutrophil", "eosinophil", "monocyte"],
-                correct: 3,
+                options: ["mast cell", "monocyte", "neutrophil", "eosinophil"],
+                correct: 1,
                 explanation: "Monocytes and lymphocytes are agranular (mononuclear) leukocytes. Neutrophils, eosinophils, basophils, and mast cells are granular leukocytes."
             },
-            // Quiz 2 Question 3
             {
                 question: "Which of the following refers to the WBC approaching the endothelial wall?",
                 options: ["diapedesis", "pavementing", "margination", "docking to adhesion molecules"],
                 correct: 2,
                 explanation: "Margination is the first step of extravasation where the WBC leaves the central blood flow stream and approaches the vascular endothelium."
             },
-            // Quiz 2 Question 4
             {
                 question: "Removal of the clotting factors from the plasma results in:",
                 options: ["sebum", "cerumen", "plasma", "serum"],
                 correct: 3,
                 explanation: "Whole Blood - Formed Elements = Plasma. Plasma - Clotting Factors = Serum."
             },
-            // Quiz 2 Question 5
             {
                 question: "Cells which protect the body by changing their shape and engulfing germs are called:",
-                options: ["granulocytes", "natural killers", "phagocytes", "lymphocytes"],
-                correct: 2,
+                options: ["phagocytes", "granulocytes", "natural killers", "lymphocytes"],
+                correct: 0,
                 explanation: "Phagocytes (e.g., neutrophils, macrophages) protect the host via phagocytosis—engulfing microbes and cellular debris."
             },
-            // Quiz 2 Question 6
             {
                 question: "When the total WBC count has increased in the blood and is composed of abnormal WBCs this would be called:",
                 options: ["hematopoiesis", "leukemia", "leukocytosis", "polycythemia"],
                 correct: 1,
                 explanation: "Leukemia is a neoplastic disease defined by dramatically increased production of abnormal/cancerous WBCs. An elevation of normal WBCs is leukocytosis."
             },
-            // Quiz 2 Question 7
             {
                 question: "Which of the following contain the chemicals for vasodilation and increased capillary permeability for the inflammatory response?",
                 options: ["neutrophils and thrombocytes", "eosinophils and monocytes", "basophils and mast cells", "mast cells and neutrophils"],
                 correct: 2,
                 explanation: "Basophils (circulating) and mast cells (tissue-resident) contain preformed granules rich in histamine, which causes acute vasodilation and increases vascular permeability."
             },
-            // Quiz 2 Question 8
             {
                 question: "Pus formation illustrates the paradox of _____ fighting _____ but also releasing toxic _____",
-                options: ["eosinophils; parasites; histamine", "lymphocytes; bacteria; unpaired electrons", "neutrophils; bacteria; ROS", "basophils; viruses; ROS"],
-                correct: 2,
+                options: ["eosinophils; parasites; histamine", "lymphocytes; bacteria; unpaired electrons", "basophils; viruses; ROS", "neutrophils; bacteria; ROS"],
+                correct: 3,
                 explanation: "Neutrophils fight acute bacterial infections using myeloperoxidase to form Reactive Oxygen Species (ROS). The ROS kill bacteria but also destroy the neutrophil, spilling toxic contents that create pus."
             },
-            // Quiz 2 Question 9
             {
                 question: "Which of the following is NOT performing hematopoiesis in adults?",
-                options: ["vertebral bodies", "sternum", "skull", "scaphoid"],
-                correct: 3,
+                options: ["scaphoid", "vertebral bodies", "sternum", "skull"],
+                correct: 0,
                 explanation: "Adult hematopoiesis occurs in red marrow located in flat bones (sternum, skull, ribs, vertebrae) and proximal epiphyses. Carpal bones like the scaphoid contain yellow marrow and do not perform active hematopoiesis."
             },
-            // Quiz 2 Question 10
             {
                 question: "Leukocytes use the blood to _____ and localize at sites of infection by using _____",
-                options: ["produce more soldiers; epigenetic markers", "practice immunity; electromagnetic stimuli", "circulate; chemotactic guidance", "gain access to O2; plasma protein rafts"],
-                correct: 2,
+                options: ["produce more soldiers; epigenetic markers", "circulate; chemotactic guidance", "practice immunity; electromagnetic stimuli", "gain access to O2; plasma protein rafts"],
+                correct: 1,
                 explanation: "Leukocytes use the cardiovascular system as a transport highway to circulate, then use chemotactic guidance (chemokines) to navigate toward injured or infected tissues."
             },
-            // Quiz 2 Question 11
             {
                 question: "Which chemical signal causes vasodilation and capillary permeability and is famously up-regulated in allergic reactions?",
                 options: ["norepinephrine", "major basic protein", "histamine", "myeloperoxidase"],
                 correct: 2,
                 explanation: "Histamine released by mast cells and basophils triggers vasodilation and vascular permeability, serving as the core mediator in type I hypersensitivity and allergic reactions."
             },
-            // Quiz 2 Question 12
             {
                 question: "What is the least abundant white blood cell?",
-                options: ["monocyte", "basophil", "mast cell", "neutrophil"],
-                correct: 1,
+                options: ["monocyte", "mast cell", "neutrophil", "basophil"],
+                correct: 3,
                 explanation: "Using the differential mnemonic 'Never Let Monkeys Eat Bananas', Basophils are the least abundant leukocyte (0–0.5% of total WBC count)."
             },
-            // Quiz 2 Question 13
             {
                 question: "What is the largest leukocyte?",
                 options: ["monocyte", "basophil", "erythrocyte", "eosinophil"],
                 correct: 0,
                 explanation: "Monocytes are the physically largest agranular leukocytes in peripheral circulation."
             },
-            // Quiz 2 Question 14
             {
                 question: "Which of the following is least related to red bone marrow activity?",
                 options: ["ribs and sternum", "fibrin", "hematopoiesis", "leukemia"],
                 correct: 1,
                 explanation: "Red bone marrow performs hematopoiesis in flat bones (ribs/sternum) and is the origin site of leukemia. Fibrin is an insoluble plasma clot protein cleaved from fibrinogen by thrombin, least directly related to bone marrow cell formation."
             },
-            // Question 15
             {
                 question: "What enzyme in neutrophils produces reactive oxygen species (ROS) to degrade ingested pathogens?",
-                options: ["Myeloperoxidase", "Lysozyme", "Protease", "Histaminase"],
-                correct: 0,
+                options: ["Lysozyme", "Protease", "Myeloperoxidase", "Histaminase"],
+                correct: 2,
                 explanation: "Myeloperoxidase (MPO) in neutrophil primary granules generates reactive oxygen species (ROS) that induce lethal oxidative stress on ingested bacteria."
             },
-            // Question 16
             {
                 question: "An elevation in circulating monocytes (monocytosis) is clinically indicative of which process?",
-                options: ["Acute viral flare", "Parasitic invasion", "Chronic infection", "Type I hypersensitivity"],
-                correct: 2,
+                options: ["Acute viral flare", "Parasitic invasion", "Type I hypersensitivity", "Chronic infection"],
+                correct: 3,
                 explanation: "Monocytes are slower-arriving, long-lived phagocytes; elevated monocyte counts signal a chronic infection or long-term inflammatory process."
             },
-            // Question 17
             {
                 question: "Major Basic Protein (MBP) is released by which leukocyte to combat helminthic infections?",
-                options: ["Basophil", "Eosinophil", "Neutrophil", "Macrophage"],
-                correct: 1,
+                options: ["Eosinophil", "Basophil", "Neutrophil", "Macrophage"],
+                correct: 0,
                 explanation: "Eosinophils utilize Major Basic Protein (MBP) from their cytoplasmic granules to destroy helminthic parasites (worms)."
             },
-            // Question 18
             {
                 question: "Degranulation of mast cells and basophils is triggered by the cross-linking of which surface immunoglobulin?",
-                options: ["IgA", "IgG", "IgM", "IgE"],
-                correct: 3,
+                options: ["IgA", "IgE", "IgG", "IgM"],
+                correct: 1,
                 explanation: "Antigen cross-linking of IgE antibodies bound to Fc-epsilon receptors on mast cells/basophils triggers immediate degranulation and histamine release."
             },
-            // Question 19
             {
                 question: "What is the specific tissue counterpart name for macrophages located in the liver?",
                 options: ["Dust cells", "Langerhans cells", "Kupffer cells", "Microglia"],
                 correct: 2,
                 explanation: "Resident tissue macrophages in the hepatic sinusoids are called Kupffer cells."
             },
-            // Question 20
             {
                 question: "Pro-inflammatory M1 macrophages secrete Interleukin-1 (IL-1), which acts functionally as a(n):",
-                options: ["Anti-inflammatory signal", "Endogenous pyrogen", "Growth factor", "Clotting factor"],
-                correct: 1,
+                options: ["Anti-inflammatory signal", "Growth factor", "Clotting factor", "Endogenous pyrogen"],
+                correct: 3,
                 explanation: "IL-1 secreted by M1 macrophages acts as an endogenous pyrogen that resets the hypothalamic thermostat to induce fever."
             },
-            // Question 21
             {
                 question: "What vasoactive mediator is produced by M1 macrophages that causes vasodilation and perpetuates inflammation?",
                 options: ["Nitric Oxide (NO)", "Histamine", "Major Basic Protein", "Myeloperoxidase"],
                 correct: 0,
                 explanation: "M1 macrophages produce Nitric Oxide (NO), a potent vasodilator that sustains chronic inflammatory responses."
             },
-            // Question 22
             {
                 question: "M2 macrophages promote tissue repair and resolution of inflammation primarily through the secretion of:",
                 options: ["Tumor Necrosis Factor alpha", "Growth factors", "Interleukin-6", "Nitric oxide"],
                 correct: 1,
                 explanation: "M2 macrophages secrete growth factors and anti-inflammatory cytokines to repair damaged matrix and rebuild damaged tissues."
             },
-            // Question 23
             {
                 question: "MHC Class I molecules are expressed on which of the following cell types?",
                 options: ["Only Macrophages", "Only Antigen Presenting Cells", "All nucleated cells", "Only B-lymphocytes"],
                 correct: 2,
                 explanation: "MHC Class I is present on virtually all nucleated cells in the body, presenting endogenous intracellular peptide antigens."
             },
-            // Question 24
             {
                 question: "Which cell surface co-receptor pairs with MHC Class II during antigen presentation?",
-                options: ["CD4+", "CD8+", "CD14", "CD19"],
-                correct: 0,
+                options: ["CD8+", "CD14", "CD19", "CD4+"],
+                correct: 3,
                 explanation: "MHC Class II pairs with CD4+ Helper T-cells (Rule of 8: 2 x 4 = 8)."
             },
-            // Question 25
             {
                 question: "Which T-cell subset recognizes antigen fragments presented on MHC Class I molecules?",
-                options: ["CD4+ Helper T-cell", "CD8+ Cytotoxic T-cell", "Regulatory T-cell", "Naive B-cell"],
-                correct: 1,
+                options: ["CD8+ Cytotoxic T-cell", "CD4+ Helper T-cell", "Regulatory T-cell", "Naive B-cell"],
+                correct: 0,
                 explanation: "MHC Class I presents endogenous viral/tumor antigens to CD8+ Cytotoxic T-cells (Rule of 8: 1 x 8 = 8)."
             },
-            // Question 26
             {
                 question: "Antigens originating from outside the cell (exogenous) are processed and displayed via which pathway and MHC class?",
                 options: ["Endogenous pathway / MHC I", "Exogenous pathway / MHC II", "Cross-presentation / MHC I", "Intrinsic pathway / MHC II"],
                 correct: 1,
                 explanation: "Exogenous extracellular antigens are internalized by phagocytosis/endocytosis, processed in phagolysosomes, and loaded onto MHC Class II molecules."
             },
-            // Question 27
             {
                 question: "What is cross-presentation?",
-                options: ["Presentation of MHC I to CD4 T-cells", "Processing of exogenous antigens onto MHC Class I for CD8 T-cell activation", "Secretory release of immunoglobulins", "Degranulation of mast cells"],
-                correct: 1,
+                options: ["Presentation of MHC I to CD4 T-cells", "Secretory release of immunoglobulins", "Processing of exogenous antigens onto MHC Class I for CD8 T-cell activation", "Degranulation of mast cells"],
+                correct: 2,
                 explanation: "Cross-presentation is a specialized pathway in professional APCs (mainly dendritic cells) that diverts exogenous antigens onto MHC Class I to activate CD8+ T-cells."
             },
-            // Question 28
             {
                 question: "Human Leukocyte Antigen (HLA) B27 positivity is strongly associated with which clinical condition?",
-                options: ["Rheumatoid Arthritis", "Ankylosing Spondylitis", "Systemic Lupus", "Multiple Sclerosis"],
-                correct: 1,
+                options: ["Rheumatoid Arthritis", "Systemic Lupus", "Multiple Sclerosis", "Ankylosing Spondylitis"],
+                correct: 3,
                 explanation: "HLA-B27 is a specific MHC Class I genetic variant strongly associated with Ankylosing Spondylitis."
             },
-            // Question 29
             {
                 question: "HLA-DR4 marker presence is clinically associated with an increased susceptibility to:",
-                options: ["Ankylosing Spondylitis", "Rheumatoid Arthritis", "Gouty Arthritis", "Osteoarthritis"],
-                correct: 1,
+                options: ["Rheumatoid Arthritis", "Ankylosing Spondylitis", "Gouty Arthritis", "Osteoarthritis"],
+                correct: 0,
                 explanation: "HLA-DR4 is an MHC Class II genetic allele associated with susceptibility to Rheumatoid Arthritis."
             },
-            // Question 30
             {
                 question: "Which of the following is NOT one of the three professional Antigen-Presenting Cells (APCs)?",
-                options: ["Dendritic cell", "Macrophage", "B-cell", "Neutrophil"],
-                correct: 3,
+                options: ["Dendritic cell", "Neutrophil", "Macrophage", "B-cell"],
+                correct: 1,
                 explanation: "The three professional APCs expressing surface MHC Class II are Macrophages, Dendritic cells, and B-cells. Neutrophils are phagocytes, not professional APCs."
             },
-            // Question 31
             {
                 question: "How do B-lymphocytes internalize antigens prior to presenting them on MHC II?",
-                options: ["Phagocytosis", "Endocytosis via Immunoglobulin receptors", "Pinocytosis", "Diapedesis"],
-                correct: 1,
+                options: ["Phagocytosis", "Pinocytosis", "Endocytosis via Immunoglobulin receptors", "Diapedesis"],
+                correct: 2,
                 explanation: "B-lymphocytes bind specific soluble antigens using surface immunoglobulin receptors (BCRs) and internalize them via receptor-mediated endocytosis."
             },
-            // Question 32
             {
                 question: "What term describes the exact molecular region of an antigen recognized by immune cell receptors?",
-                options: ["PAMP", "Epitope (Antigenic determinant)", "DAMP", "Haptoglobin"],
-                correct: 1,
+                options: ["PAMP", "DAMP", "Haptoglobin", "Epitope (Antigenic determinant)"],
+                correct: 3,
                 explanation: "An epitope or antigenic determinant is the precise 3D surface fragment of an antigen bound by antibodies or lymphocyte receptors."
             },
-            // Question 33
             {
                 question: "Toll-Like Receptors (TLRs) on innate immune cells recognize which conserved microbial structures?",
                 options: ["Pathogen-Associated Molecular Patterns (PAMPs)", "Human Leukocyte Antigens (HLAs)", "Major Histocompatibility Complexes", "Immunoglobulins"],
                 correct: 0,
                 explanation: "TLRs are innate pattern recognition receptors (PRRs) that bind broad, conserved microbial structures known as PAMPs."
             },
-            // Question 34
             {
                 question: "What are DAMPs (Damage-Associated Molecular Patterns)?",
                 options: ["Viral DNA fragments", "Molecular patterns displayed by injured or dying host cells", "Extracellular bacterial toxins", "Fungal cell wall components"],
                 correct: 1,
                 explanation: "DAMPs are endogenous chemical signals released or displayed by injured, necrotic, or dying host cells to recruit scavenger phagocytes."
             },
-            // Question 35
             {
                 question: "In the intrinsic coagulation cascade, which contact factor initiates the conversion cascade down to fibrin?",
-                options: ["Factor VII", "Factor XII (Hageman Factor)", "Factor X", "Prothrombin"],
-                correct: 1,
+                options: ["Factor VII", "Factor X", "Factor XII (Hageman Factor)", "Prothrombin"],
+                correct: 2,
                 explanation: "Factor XII (Hageman contact factor) is activated upon contacting damaged negative subendothelial collagen, initiating the intrinsic cascade."
             },
-            // Question 36
             {
                 question: "Which cytokine is released by mast cells to recruit eosinophils to sites of allergic inflammation?",
-                options: ["Interleukin-1", "Interleukin-5", "Interleukin-6", "TNF-alpha"],
-                correct: 1,
+                options: ["Interleukin-1", "Interleukin-6", "TNF-alpha", "Interleukin-5"],
+                correct: 3,
                 explanation: "Interleukin-5 (IL-5) is released during allergic responses to selectively attract, activate, and prolong the survival of eosinophils."
             },
-            // Question 37
             {
                 question: "Natural Killer (NK) cells are lymphocytes that participate in innate responses because they do NOT require:",
-                options: ["Cytokine stimulation", "Phagocytic vacuoles", "MHC Class I recognition", "Perforins"],
-                correct: 2,
+                options: ["MHC Class I recognition", "Cytokine stimulation", "Phagocytic vacuoles", "Perforins"],
+                correct: 0,
                 explanation: "NK cells do not require specific antigen presentation on MHC Class I to initiate lysis; they target cells lacking normal self-MHC Class I molecules."
             },
-            // Question 38
             {
                 question: "What is the tissue counterpart name for macrophages present in the Central Nervous System (CNS)?",
-                options: ["Kupffer cells", "Alveolar macrophages", "Microglia", "Langerhans cells"],
-                correct: 2,
+                options: ["Kupffer cells", "Microglia", "Alveolar macrophages", "Langerhans cells"],
+                correct: 1,
                 explanation: "Microglia are resident mononuclear phagocytes of the Central Nervous System."
             },
-            // Question 39
             {
                 question: "Langerhans cells represent the tissue macrophage resident in which organ?",
-                options: ["Lungs", "Skin", "Peripheral Nerves", "Spleen"],
-                correct: 1,
+                options: ["Lungs", "Peripheral Nerves", "Skin", "Spleen"],
+                correct: 2,
                 explanation: "Langerhans cells are resident dendritic cells/macrophages located within the epidermal layer of the skin."
             },
-            // Question 40
             {
                 question: "Which cytokine secreted by inflammatory macrophages is known as the 'death factor' or cachectin?",
-                options: ["IL-1", "IL-6", "TNF-alpha", "IFN-gamma"],
-                correct: 2,
+                options: ["IL-1", "IL-6", "IFN-gamma", "TNF-alpha"],
+                correct: 3,
                 explanation: "Tumor Necrosis Factor-alpha (TNF-a) is termed the 'death factor' and cachectin due to its role in cell necrosis and systemic cachexia."
             }
         ];
 
+        let activeQuizData = [];
         let currentScore = 0;
         let answeredCount = 0;
 
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         function renderQuiz() {
+            // Dynamic Fisher-Yates question shuffle on render/load
+            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(originalQuizData)));
+
             const container = document.getElementById('quiz-container');
             container.innerHTML = '';
 
-            quizData.forEach((item, index) => {
+            activeQuizData.forEach((item, index) => {
                 const card = document.createElement('div');
                 card.className = 'quiz-card';
                 card.id = `card-${index}`;
 
                 const qNum = document.createElement('div');
                 qNum.className = 'question-number';
-                qNum.innerText = `Question ${index + 1} of ${quizData.length}`;
+                qNum.innerText = `Question ${index + 1} of ${activeQuizData.length}`;
 
                 const qText = document.createElement('div');
                 qText.className = 'question-text';
@@ -531,14 +505,17 @@
 
                 container.appendChild(card);
             });
+
+            updateHeader();
         }
 
         function handleAnswer(qIndex, selectedOpt) {
             const card = document.getElementById(`card-${qIndex}`);
             const buttons = card.querySelectorAll('.option-btn');
             const exp = document.getElementById(`exp-${qIndex}`);
-            const correctOpt = quizData[qIndex].correct;
+            const correctOpt = activeQuizData[qIndex].correct;
 
+            // Instant lock-in: Disable all options for this question
             buttons.forEach(btn => btn.disabled = true);
 
             if (selectedOpt === correctOpt) {
@@ -554,18 +531,20 @@
 
             updateHeader();
 
-            if (answeredCount === quizData.length) {
+            if (answeredCount === activeQuizData.length) {
                 showSummary();
             }
         }
 
         function updateHeader() {
-            const pct = Math.round((currentScore / quizData.length) * 100);
-            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${quizData.length} (${pct}%)`;
+            const total = activeQuizData.length;
+            const pct = total === 0 ? 0 : Math.round((currentScore / total) * 100);
+            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${pct}%)`;
         }
 
         function showSummary() {
-            const pct = Math.round((currentScore / quizData.length) * 100);
+            const total = activeQuizData.length;
+            const pct = Math.round((currentScore / total) * 100);
             const summaryCard = document.getElementById('summary-card');
             const finalScore = document.getElementById('final-score');
             const feedback = document.getElementById('summary-feedback');
@@ -573,11 +552,11 @@
             finalScore.innerText = `${pct}%`;
 
             if (pct >= 90) {
-                feedback.innerText = "Mastery demonstrated! Excellent grasp of cellular immunity concepts.";
+                feedback.innerText = "Mastery demonstrated! Outstanding recall of immunology and cellular defense concepts.";
             } else if (pct >= 75) {
-                feedback.innerText = "Great job! Review missed explanations to solidify high-yield points.";
+                feedback.innerText = "Great job! Review the questions you missed to reinforce high-yield points.";
             } else {
-                feedback.innerText = "Good effort! Recommend reviewing Week 2 lecture notes and retaking the quiz.";
+                feedback.innerText = "Good effort! Consider reviewing Week 2 lecture notes and retrying the assessment.";
             }
 
             summaryCard.style.display = 'block';
@@ -587,7 +566,6 @@
         function resetQuiz() {
             currentScore = 0;
             answeredCount = 0;
-            updateHeader();
             document.getElementById('summary-card').style.display = 'none';
             renderQuiz();
             window.scrollTo({ top: 0, behavior: 'smooth' });
