@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subluxation Analysis: Listings & Biomechanical Restrictions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0f0f0f;
+      color: #ffffff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    .custom-accent {
+      color: #ff9900;
+    }
+    .bg-accent {
+      background-color: #ff9900;
+    }
+    .border-accent {
+      border-color: #ff9900;
+    }
+    .option-btn {
+      transition: all 0.2s ease-in-out;
+      background-color: #262626;
+      border: 1px solid #404040;
+    }
+    .option-btn:hover:not(:disabled) {
+      background-color: #333333;
+      border-color: #ff9900;
+    }
+    .option-btn:disabled {
+      cursor: default;
+    }
+    .correct-choice {
+      background-color: #14532d !important;
+      border-color: #22c55e !important;
+      color: #ffffff !important;
+    }
+    .incorrect-choice {
+      background-color: #7f1d1d !important;
+      border-color: #ef4444 !important;
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center pb-16">
+
+  <!-- Sticky Top Bar -->
+  <header class="sticky top-0 z-50 w-full bg-[#1a1a1a]/95 backdrop-blur border-b border-[#333333] py-3 px-4 sm:px-8 shadow-md">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="h-3 w-3 rounded-full bg-accent inline-block"></span>
+        <h1 class="text-lg font-bold tracking-tight text-white">Spinous Listings & Motion Restrictions</h1>
+      </div>
+      <div class="flex items-center space-x-4 text-sm font-semibold">
+        <div id="scoreBox" class="bg-[#262626] border border-[#404040] px-4 py-1.5 rounded-full text-[#ff9900]">
+          Score: <span id="currentScore">0</span> / <span id="totalQuestions">0</span> (<span id="scorePercent">0%</span>)
+        </div>
+        <button id="resetBtn" onclick="resetQuiz()" class="text-xs bg-[#333333] hover:bg-[#404040] text-gray-300 px-3 py-1.5 rounded-lg border border-gray-600 transition">
+          Restart
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Quiz Container -->
+  <main class="w-full max-w-4xl px-4 sm:px-6 mt-8 flex flex-col space-y-6">
+    <div class="bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 shadow-xl">
+      <h2 class="text-xl font-bold text-[#ff9900] mb-1">Spinous Positions, Motion Restrictions & Contact Points</h2>
+      <p class="text-sm text-gray-400">Clinical drill testing Palmer-Gonstead three-letter listings, body right/left Diversified correlations, contact points, and dynamic motion restrictions.</p>
+    </div>
+
+    <!-- Container for dynamic questions -->
+    <div id="quizContainer" class="flex flex-col space-y-6"></div>
+  </main>
+
+  <script>
+    const quizData = [
+      {
+        question: "In the Palmer-Gonstead spinal listing system from C2 through L5, what anatomical structure serves as the constant reference point for designating rotational malposition?",
+        options: [
+          "Vertebral body",
+          "Pedicle",
+          "Spinous process",
+          "Transverse process"
+        ],
+        correct: 2,
+        explanation: "From C2 to L5 in the Palmer-Gonstead system, the spinous process is the universal reference point relative to the subjacent vertebra."
+      },
+      {
+        question: "Motion palpation of a lumbar segment reveals restricted extension, restricted left rotation, and restricted left lateral flexion. What is the corresponding Palmer-Gonstead listing?",
+        options: [
+          "PLS",
+          "PLI",
+          "PRS",
+          "PRI"
+        ],
+        correct: 0,
+        explanation: "A spinous rotated left (PL) malposition resists moving back into right rotation (restricted left body rotation / restricted left rotation). A superior wedge on the same side as spinous rotation (S) creates an open wedge on the left that restricts left lateral flexion. Thus, restricted extension + restricted left rotation + restricted left lateral flexion corresponds to PLS."
+      },
+      {
+        question: "A lumbar segment is determined to have a PLI listing. Which motion restrictions are expected upon dynamic motion palpation?",
+        options: [
+          "Reduced extension, reduced right rotation, and reduced right lateral flexion",
+          "Reduced extension, reduced left rotation, and reduced right lateral flexion",
+          "Reduced flexion, reduced right rotation, and reduced left lateral flexion",
+          "Reduced extension, reduced left rotation, and reduced left lateral flexion"
+        ],
+        correct: 1,
+        explanation: "A PLI listing denotes posteriority (P), spinous rotated left (L, restricting left rotation), and an inferior open wedge on the opposite side of spinous rotation (I = right-sided open wedge, restricting right lateral flexion). Extension is restricted due to the posterior misalignment."
+      },
+      {
+        question: "Palpation of an L4 segment reveals that the spinous process has rotated to the right and there is an open wedge on the right side. What is the static listing, and what is the designated adjusting contact point?",
+        options: [
+          "PRI-m; contact right mammillary process",
+          "PRS; contact spinous process",
+          "PLS; contact spinous process",
+          "PLI-m; contact left mammillary process"
+        ],
+        correct: 1,
+        explanation: "Spinous rotated right (PR) with an open wedge on the same side as spinous rotation is designated as a 'simple' listing (PRS). Simple listings (PRS, PLS) utilize the spinous process as the contact point."
+      },
+      {
+        question: "A thoracic segment at T5 is determined to have a PRI listing. Which segmental contact point is indicated for the adjustment?",
+        options: [
+          "Left lamina",
+          "Spinous process",
+          "Left transverse process",
+          "Right mammillary process"
+        ],
+        correct: 2,
+        explanation: "A PRI listing is a rotary listing (wedge on the side opposite spinous rotation). In the thoracic spine, rotary listings (PRI-t, PLI-t) are contacted on the transverse process on the side of open wedging (left transverse process for PRI)."
+      },
+      {
+        question: "An adjustment is scheduled for a patient with a cervical PLI listing at C4. What is the designated segmental contact point?",
+        options: [
+          "Spinous process",
+          "Right articular pillar/lamina (PLI-la)",
+          "Left transverse process",
+          "Left mammillary process"
+        ],
+        correct: 1,
+        explanation: "Rotary listings in the cervical spine (C2-C7) utilize the lamina/articular pillar on the side of open wedging (PLI-la contacts the right lamina/pillar)."
+      },
+      {
+        question: "In the Diversified cervical system (C2-C7), the vertebral body is used as the reference point instead of the spinous process. A Palmer-Gonstead listing of PL (spinous rotated left) corresponds to which Diversified listing?",
+        options: [
+          "Body Left",
+          "Body Right",
+          "Body Anterior",
+          "Body Superior"
+        ],
+        correct: 1,
+        explanation: "When the spinous process rotates to the left (PL), the anterior vertebral body rotates towards the right. Because Diversified uses the body as its reference point, this is termed 'Body Right'."
+      },
+      {
+        question: "A cervical segment is diagnosed with a 'Body Left' listing in the Diversified system. When assessing this segment with motion palpation, which rotational movement is restricted?",
+        options: [
+          "Right rotation",
+          "Left rotation",
+          "Neutral zero position",
+          "Bilateral rotation equally"
+        ],
+        correct: 0,
+        explanation: "A 'Body Left' means the vertebral body is rotated to the left (corresponding to a spinous rotated right, PR). Because the vertebra is malpositioned with body left / spinous right, it resists rotating to the right (restricted right rotation)."
+      },
+      {
+        question: "During active isolated lateral flexion of the thoracic spine (excluding lumbar movement), normal spinal coupling biomechanics dictate that the thoracic spinous processes rotate toward the:",
+        options: [
+          "Concavity of the curve",
+          "Convexity of the curve",
+          "Anterior midline",
+          "Ipsilateral side of flexion"
+        ],
+        correct: 1,
+        explanation: "During thoracic lateral flexion, the thoracic spinous processes rotate toward the convexity of the curve. This mirrors cervical biomechanics, where lateral bending couples with spinous rotation toward the convex side."
+      },
+      {
+        question: "A patient presents with an open wedge on the left side of L2 and the spinous process rotated to the right. What is the correct listing and its suffix notation?",
+        options: [
+          "PRS-sp",
+          "PRI-m",
+          "PLS-sp",
+          "PLI-m"
+        ],
+        correct: 1,
+        explanation: "The spinous process has rotated to the right (PR). The open wedge is on the left side (opposite the spinous rotation), making it an inferior/rotary listing (PRI). In the lumbar spine, rotary listings utilize the mammillary process, denoted as PRI-m."
+      },
+      {
+        question: "On a lateral lumbar radiograph, L5 exhibits posterior positional dyskinesia relative to the sacrum without lateral tilting or rotation. In the Palmer-Gonstead system, how is a purely posterior translation designated?",
+        options: [
+          "P",
+          "Retrolisthesis Grade 3",
+          "AI",
+          "Base Posterior"
+        ],
+        correct: 0,
+        explanation: "A purely posterior translation of a vertebra from C2 to L5 without spinous rotation or lateral wedging is designated simply by the single letter 'P'."
+      },
+      {
+        question: "In the orthopedic listing correlation framework, a Palmer-Gonstead listing of PRS corresponds to which dynamic motion restriction profile?",
+        options: [
+          "Flexion restriction, right rotational restriction, right lateral flexion restriction",
+          "Extension restriction, right rotational restriction, right lateral flexion restriction",
+          "Extension restriction, left rotational restriction, left lateral flexion restriction",
+          "Flexion restriction, left rotational restriction, right lateral flexion restriction"
+        ],
+        correct: 1,
+        explanation: "PRS represents: Posterior (extension restriction), Spinous Right (right rotational restriction / left body rotation malposition), and Superior wedge on the right (right lateral flexion restriction / unable to laterally bend right)."
+      }
+    ];
+
+    let currentQuestions = [];
+    let score = 0;
+    let answeredCount = 0;
+
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function renderQuiz() {
+      currentQuestions = shuffleArray(quizData);
+      score = 0;
+      answeredCount = 0;
+      updateScoreUI();
+
+      const container = document.getElementById("quizContainer");
+      container.innerHTML = "";
+
+      currentQuestions.forEach((item, index) => {
+        const questionCard = document.createElement("div");
+        questionCard.className = "bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 shadow-lg flex flex-col space-y-4";
+        questionCard.id = `qCard_${index}`;
+
+        const questionHeader = document.createElement("div");
+        questionHeader.className = "flex items-start justify-between gap-4";
+        questionHeader.innerHTML = `
+          <span class="text-xs font-bold uppercase tracking-wider text-[#ff9900] bg-[#ff9900]/10 px-2.5 py-1 rounded-md border border-[#ff9900]/20">
+            Question ${index + 1}
+          </span>
+        `;
+
+        const questionText = document.createElement("p");
+        questionText.className = "text-base sm:text-lg font-medium text-white leading-relaxed";
+        questionText.textContent = item.question;
+
+        const optionsGroup = document.createElement("div");
+        optionsGroup.className = "grid grid-cols-1 gap-2.5 pt-2";
+        optionsGroup.id = `optionsGroup_${index}`;
+
+        item.options.forEach((optText, optIdx) => {
+          const letter = String.fromCharCode(65 + optIdx);
+          const btn = document.createElement("button");
+          btn.className = "option-btn text-left p-3.5 rounded-xl text-sm sm:text-base font-normal flex items-start space-x-3 w-full";
+          btn.id = `q${index}_opt${optIdx}`;
+          btn.onclick = () => handleAnswer(index, optIdx);
+          btn.innerHTML = `
+            <span class="font-bold text-gray-400 select-none">${letter}.</span>
+            <span class="text-gray-200 flex-1">${optText}</span>
+          `;
+          optionsGroup.appendChild(btn);
+        });
+
+        const feedbackBox = document.createElement("div");
+        feedbackBox.id = `feedback_${index}`;
+        feedbackBox.className = "hidden mt-3 p-4 rounded-xl border text-sm leading-relaxed";
+
+        questionCard.appendChild(questionHeader);
+        questionCard.appendChild(questionText);
+        questionCard.appendChild(optionsGroup);
+        questionCard.appendChild(feedbackBox);
+
+        container.appendChild(questionCard);
+      });
+    }
+
+    function handleAnswer(questionIdx, selectedIdx) {
+      const q = currentQuestions[questionIdx];
+      const optionsGroup = document.getElementById(`optionsGroup_${questionIdx}`);
+      const buttons = optionsGroup.querySelectorAll("button");
+      const feedbackBox = document.getElementById(`feedback_${questionIdx}`);
+
+      buttons.forEach(btn => btn.disabled = true);
+
+      const isCorrect = (selectedIdx === q.correct);
+
+      if (isCorrect) {
+        score++;
+        buttons[selectedIdx].classList.add("correct-choice");
+        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#14532d]/40 border-[#22c55e] text-green-200";
+        feedbackBox.innerHTML = `
+          <div class="font-bold text-green-400 mb-1 flex items-center space-x-1.5">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
+            <span>Correct</span>
+          </div>
+          <div>${q.explanation}</div>
+        `;
+      } else {
+        buttons[selectedIdx].classList.add("incorrect-choice");
+        buttons[q.correct].classList.add("correct-choice");
+        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#7f1d1d]/40 border-[#ef4444] text-red-200";
+        feedbackBox.innerHTML = `
+          <div class="font-bold text-red-400 mb-1 flex items-center space-x-1.5">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            <span>Incorrect</span>
+          </div>
+          <div>${q.explanation}</div>
+        `;
+      }
+
+      feedbackBox.classList.remove("hidden");
+      answeredCount++;
+      updateScoreUI();
+    }
+
+    function updateScoreUI() {
+      const total = currentQuestions.length;
+      const currentScoreEl = document.getElementById("currentScore");
+      const totalQuestionsEl = document.getElementById("totalQuestions");
+      const scorePercentEl = document.getElementById("scorePercent");
+
+      currentScoreEl.textContent = score;
+      totalQuestionsEl.textContent = total;
+      
+      const pct = answeredCount > 0 ? Math.round((score / total) * 100) : 0;
+      scorePercentEl.textContent = `${pct}%`;
+    }
+
+    function resetQuiz() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderQuiz();
+    }
+
+    window.onload = function() {
+      renderQuiz();
+    };
+  </script>
+</body>
+</html>
