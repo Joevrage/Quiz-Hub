@@ -1,345 +1,569 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Subluxation Analysis: Listings & Biomechanical Restrictions</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background-color: #0f0f0f;
-      color: #ffffff;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-    .custom-accent {
-      color: #ff9900;
-    }
-    .bg-accent {
-      background-color: #ff9900;
-    }
-    .border-accent {
-      border-color: #ff9900;
-    }
-    .option-btn {
-      transition: all 0.2s ease-in-out;
-      background-color: #262626;
-      border: 1px solid #404040;
-    }
-    .option-btn:hover:not(:disabled) {
-      background-color: #333333;
-      border-color: #ff9900;
-    }
-    .option-btn:disabled {
-      cursor: default;
-    }
-    .correct-choice {
-      background-color: #14532d !important;
-      border-color: #22c55e !important;
-      color: #ffffff !important;
-    }
-    .incorrect-choice {
-      background-color: #7f1d1d !important;
-      border-color: #ef4444 !important;
-      color: #ffffff !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reg 1: Biomechanical Listings & Extremity Mastery Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --primary-accent: #ff9900;
+            --correct-color: #22c55e;
+            --correct-bg: #14532d;
+            --incorrect-color: #ef4444;
+            --incorrect-bg: #7f1d1d;
+            --border-color: #333333;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.5);
+            --shadow-md: 0 4px 10px rgba(0,0,0,0.7);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.5;
+            padding-bottom: 40px;
+        }
+
+        .header-sticky {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--card-bg);
+            border-bottom: 2px solid var(--primary-accent);
+            padding: 12px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+        }
+
+        .score-box {
+            font-size: 0.95rem;
+            font-weight: 600;
+            background-color: #262626;
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-accent);
+            transition: width 0.3s ease;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 16px;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .question-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: var(--text-primary);
+        }
+
+        .options-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            background-color: #262626;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary-accent);
+            background-color: #333333;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct-choice {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-color) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect-choice {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-color) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-btn.dimmed {
+            opacity: 0.4;
+        }
+
+        .explanation-box {
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .explanation-box.visible {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box.correct {
+            background-color: var(--correct-bg);
+            border-left: 4px solid var(--correct-color);
+            color: #d1fae5;
+        }
+
+        .explanation-box.incorrect {
+            background-color: var(--incorrect-bg);
+            border-left: 4px solid var(--incorrect-color);
+            color: #fee2e2;
+        }
+
+        .summary-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--primary-accent);
+            display: none;
+        }
+
+        .summary-card.visible {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .summary-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-accent);
+            margin-bottom: 16px;
+        }
+
+        .summary-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .reset-btn {
+            background-color: var(--primary-accent);
+            color: #000000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background-color: #e68a00;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pb-16">
+<body>
 
-  <!-- Sticky Top Bar -->
-  <header class="sticky top-0 z-50 w-full bg-[#1a1a1a]/95 backdrop-blur border-b border-[#333333] py-3 px-4 sm:px-8 shadow-md">
-    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-      <div class="flex items-center space-x-2">
-        <span class="h-3 w-3 rounded-full bg-accent inline-block"></span>
-        <h1 class="text-lg font-bold tracking-tight text-white">Spinous Listings & Motion Restrictions</h1>
-      </div>
-      <div class="flex items-center space-x-4 text-sm font-semibold">
-        <div id="scoreBox" class="bg-[#262626] border border-[#404040] px-4 py-1.5 rounded-full text-[#ff9900]">
-          Score: <span id="currentScore">0</span> / <span id="totalQuestions">0</span> (<span id="scorePercent">0%</span>)
+    <div class="header-sticky">
+        <div class="header-container">
+            <div class="header-title">Listings & Biomechanical Analysis Hub</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 15 (0%)</div>
         </div>
-        <button id="resetBtn" onclick="resetQuiz()" class="text-xs bg-[#333333] hover:bg-[#404040] text-gray-300 px-3 py-1.5 rounded-lg border border-gray-600 transition">
-          Restart
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Quiz Container -->
-  <main class="w-full max-w-4xl px-4 sm:px-6 mt-8 flex flex-col space-y-6">
-    <div class="bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 shadow-xl">
-      <h2 class="text-xl font-bold text-[#ff9900] mb-1">Spinous Positions, Motion Restrictions & Contact Points</h2>
-      <p class="text-sm text-gray-400">Clinical drill testing Palmer-Gonstead three-letter listings, body right/left Diversified correlations, contact points, and dynamic motion restrictions.</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
     </div>
 
-    <!-- Container for dynamic questions -->
-    <div id="quizContainer" class="flex flex-col space-y-6"></div>
-  </main>
+    <div class="quiz-container" id="quizContainer"></div>
 
-  <script>
-    const quizData = [
-      {
-        question: "In the Palmer-Gonstead spinal listing system from C2 through L5, what anatomical structure serves as the constant reference point for designating rotational malposition?",
-        options: [
-          "Vertebral body",
-          "Pedicle",
-          "Spinous process",
-          "Transverse process"
-        ],
-        correct: 2,
-        explanation: "From C2 to L5 in the Palmer-Gonstead system, the spinous process is the universal reference point relative to the subjacent vertebra."
-      },
-      {
-        question: "Motion palpation of a lumbar segment reveals restricted extension, restricted left rotation, and restricted left lateral flexion. What is the corresponding Palmer-Gonstead listing?",
-        options: [
-          "PLS",
-          "PLI",
-          "PRS",
-          "PRI"
-        ],
-        correct: 0,
-        explanation: "A spinous rotated left (PL) malposition resists moving back into right rotation (restricted left body rotation / restricted left rotation). A superior wedge on the same side as spinous rotation (S) creates an open wedge on the left that restricts left lateral flexion. Thus, restricted extension + restricted left rotation + restricted left lateral flexion corresponds to PLS."
-      },
-      {
-        question: "A lumbar segment is determined to have a PLI listing. Which motion restrictions are expected upon dynamic motion palpation?",
-        options: [
-          "Reduced extension, reduced right rotation, and reduced right lateral flexion",
-          "Reduced extension, reduced left rotation, and reduced right lateral flexion",
-          "Reduced flexion, reduced right rotation, and reduced left lateral flexion",
-          "Reduced extension, reduced left rotation, and reduced left lateral flexion"
-        ],
-        correct: 1,
-        explanation: "A PLI listing denotes posteriority (P), spinous rotated left (L, restricting left rotation), and an inferior open wedge on the opposite side of spinous rotation (I = right-sided open wedge, restricting right lateral flexion). Extension is restricted due to the posterior misalignment."
-      },
-      {
-        question: "Palpation of an L4 segment reveals that the spinous process has rotated to the right and there is an open wedge on the right side. What is the static listing, and what is the designated adjusting contact point?",
-        options: [
-          "PRI-m; contact right mammillary process",
-          "PRS; contact spinous process",
-          "PLS; contact spinous process",
-          "PLI-m; contact left mammillary process"
-        ],
-        correct: 1,
-        explanation: "Spinous rotated right (PR) with an open wedge on the same side as spinous rotation is designated as a 'simple' listing (PRS). Simple listings (PRS, PLS) utilize the spinous process as the contact point."
-      },
-      {
-        question: "A thoracic segment at T5 is determined to have a PRI listing. Which segmental contact point is indicated for the adjustment?",
-        options: [
-          "Left lamina",
-          "Spinous process",
-          "Left transverse process",
-          "Right mammillary process"
-        ],
-        correct: 2,
-        explanation: "A PRI listing is a rotary listing (wedge on the side opposite spinous rotation). In the thoracic spine, rotary listings (PRI-t, PLI-t) are contacted on the transverse process on the side of open wedging (left transverse process for PRI)."
-      },
-      {
-        question: "An adjustment is scheduled for a patient with a cervical PLI listing at C4. What is the designated segmental contact point?",
-        options: [
-          "Spinous process",
-          "Right articular pillar/lamina (PLI-la)",
-          "Left transverse process",
-          "Left mammillary process"
-        ],
-        correct: 1,
-        explanation: "Rotary listings in the cervical spine (C2-C7) utilize the lamina/articular pillar on the side of open wedging (PLI-la contacts the right lamina/pillar)."
-      },
-      {
-        question: "In the Diversified cervical system (C2-C7), the vertebral body is used as the reference point instead of the spinous process. A Palmer-Gonstead listing of PL (spinous rotated left) corresponds to which Diversified listing?",
-        options: [
-          "Body Left",
-          "Body Right",
-          "Body Anterior",
-          "Body Superior"
-        ],
-        correct: 1,
-        explanation: "When the spinous process rotates to the left (PL), the anterior vertebral body rotates towards the right. Because Diversified uses the body as its reference point, this is termed 'Body Right'."
-      },
-      {
-        question: "A cervical segment is diagnosed with a 'Body Left' listing in the Diversified system. When assessing this segment with motion palpation, which rotational movement is restricted?",
-        options: [
-          "Right rotation",
-          "Left rotation",
-          "Neutral zero position",
-          "Bilateral rotation equally"
-        ],
-        correct: 0,
-        explanation: "A 'Body Left' means the vertebral body is rotated to the left (corresponding to a spinous rotated right, PR). Because the vertebra is malpositioned with body left / spinous right, it resists rotating to the right (restricted right rotation)."
-      },
-      {
-        question: "During active isolated lateral flexion of the thoracic spine (excluding lumbar movement), normal spinal coupling biomechanics dictate that the thoracic spinous processes rotate toward the:",
-        options: [
-          "Concavity of the curve",
-          "Convexity of the curve",
-          "Anterior midline",
-          "Ipsilateral side of flexion"
-        ],
-        correct: 1,
-        explanation: "During thoracic lateral flexion, the thoracic spinous processes rotate toward the convexity of the curve. This mirrors cervical biomechanics, where lateral bending couples with spinous rotation toward the convex side."
-      },
-      {
-        question: "A patient presents with an open wedge on the left side of L2 and the spinous process rotated to the right. What is the correct listing and its suffix notation?",
-        options: [
-          "PRS-sp",
-          "PRI-m",
-          "PLS-sp",
-          "PLI-m"
-        ],
-        correct: 1,
-        explanation: "The spinous process has rotated to the right (PR). The open wedge is on the left side (opposite the spinous rotation), making it an inferior/rotary listing (PRI). In the lumbar spine, rotary listings utilize the mammillary process, denoted as PRI-m."
-      },
-      {
-        question: "On a lateral lumbar radiograph, L5 exhibits posterior positional dyskinesia relative to the sacrum without lateral tilting or rotation. In the Palmer-Gonstead system, how is a purely posterior translation designated?",
-        options: [
-          "P",
-          "Retrolisthesis Grade 3",
-          "AI",
-          "Base Posterior"
-        ],
-        correct: 0,
-        explanation: "A purely posterior translation of a vertebra from C2 to L5 without spinous rotation or lateral wedging is designated simply by the single letter 'P'."
-      },
-      {
-        question: "In the orthopedic listing correlation framework, a Palmer-Gonstead listing of PRS corresponds to which dynamic motion restriction profile?",
-        options: [
-          "Flexion restriction, right rotational restriction, right lateral flexion restriction",
-          "Extension restriction, right rotational restriction, right lateral flexion restriction",
-          "Extension restriction, left rotational restriction, left lateral flexion restriction",
-          "Flexion restriction, left rotational restriction, right lateral flexion restriction"
-        ],
-        correct: 1,
-        explanation: "PRS represents: Posterior (extension restriction), Spinous Right (right rotational restriction / left body rotation malposition), and Superior wedge on the right (right lateral flexion restriction / unable to laterally bend right)."
-      }
-    ];
+    <div class="quiz-container">
+        <div class="summary-card" id="summaryCard">
+            <div class="summary-title" id="summaryTitle">Assessment Complete</div>
+            <div class="summary-score" id="finalScore">0 / 15</div>
+            <div class="summary-text" id="summaryFeedback">Performance feedback will appear here.</div>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Assessment</button>
+        </div>
+    </div>
 
-    let currentQuestions = [];
-    let score = 0;
-    let answeredCount = 0;
+    <script>
+        const quizData = [
+            {
+                question: "During passive glenohumeral evaluation, the humerus displays a firm elastic end-feel with restriction primarily in external rotation and extension, while the humeral head palpates prominent anteriorly in the fossa. What is the subluxation listing of the humerus?",
+                options: [
+                    "Anterior-Superior (A-S)",
+                    "Anterior-Inferior (A-I)",
+                    "Posterior-Superior (P-S)",
+                    "Posterior-Inferior (P-I)"
+                ],
+                correct: 1,
+                explanation: "Anterior and inferior displacement represents the classic and most frequent glenohumeral subluxation listing (A-I). Loss of normal posterior glide restricts external rotation and extension, with the humeral head tracking anteriorly and inferiorly relative to the glenoid rim."
+            },
+            {
+                question: "A patient presents with pain over the bicipital groove. Motion palpation reveals restriction during terminal flexion and internal rotation of the humerus, with palpable fullness in the posterior glenohumeral joint space. What is the designated humeral listing?",
+                options: [
+                    "Posterior-Inferior (P-I)",
+                    "Anterior-Inferior (A-I)",
+                    "Posterior-Superior (P-S)",
+                    "Superior (S)"
+                ],
+                correct: 2,
+                explanation: "A Posterior-Superior (P-S) humeral listing manifests with restriction during internal rotation, horizontal adduction, and flexion, causing the humeral head to migrate posteriorly and superiorly toward the acromial arch."
+            },
+            {
+                question: "During static and motion palpation of the distal radioulnar joint, the radial head resists posterior-to-anterior (P-A) glide and pronation is significantly restricted. What is the listing of the proximal radius?",
+                options: [
+                    "Anterior Radial Head (A)",
+                    "Posterior Radial Head (P)",
+                    "Distal Radial Head (Inf)",
+                    "Medial Radial Head (M)"
+                ],
+                correct: 1,
+                explanation: "A Posterior Radial Head (P) listing is characterized by a failure of the radial head to glide anteriorly during pronation. Because the radial head moves posteriorly during supination and anteriorly during pronation, fixation in a posterior position limits pronation."
+            },
+            {
+                question: "Following a fall onto a dorsiflexed hand, a patient exhibits painful wrist flexion and paresthesia along the lateral three digits. Palpation of the palmar wrist reveals a tender bony prominence deep to the flexor retinaculum with restricted dorsal glide. What is the carpal listing?",
+                options: [
+                    "Dorsal Scaphoid",
+                    "Anterior Lunate (Palmar Lunate)",
+                    "Posterior Lunate (Dorsal Lunate)",
+                    "Rotated Capitate"
+                ],
+                correct: 1,
+                explanation: "The lunate is the most frequently dislocated or subluxated carpal bone. It displaces anteriorly (palmar direction) into the carpal tunnel, directly compressing the median nerve and creating pain with wrist flexion."
+            },
+            {
+                question: "Assessment of the scapulothoracic articulation demonstrates prominence of the inferior angle away from the thoracic wall with limitation of upward rotation during abduction. What is the scapular listing?",
+                options: [
+                    "Anterior-Superior Scapula",
+                    "Inferior Angle Medial (IAM)",
+                    "Inferior Angle Lateral (IAL)",
+                    "Lateral Flaring (LF)"
+                ],
+                correct: 1,
+                explanation: "An Inferior Angle Medial (IAM) listing occurs when the inferior angle shifts toward the vertebral spine, often associated with serratus anterior inhibition, impeding normal upward rotation during glenohumeral elevation."
+            },
+            {
+                question: "Motion palpation of the scaphoid reveals a hard stop when attempting to induce palmar-to-dorsal glide, alongside tenderness in the anatomical snuffbox. What is the listing?",
+                options: [
+                    "Posterior Scaphoid (Dorsal Scaphoid)",
+                    "Anterior Scaphoid (Palmar Scaphoid)",
+                    "Medial Scaphoid",
+                    "Rotated Triquetrum"
+                ],
+                correct: 1,
+                explanation: "An Anterior (Palmar) Scaphoid subluxation causes the scaphoid tubercle to project palmarward, restricting dorsal translation and extension of the radiocarpal joint."
+            },
+            {
+                question: "In static analysis of the elbow, the carrying angle is pathologically reduced (cubitus varus), and the proximal ulna resists lateral glide during joint play testing. What is the ulnar listing?",
+                options: [
+                    "Abducted Ulna (Valgus)",
+                    "Adducted Ulna (Varus)",
+                    "Posterior Ulna",
+                    "Anterior Ulna"
+                ],
+                correct: 1,
+                explanation: "An Adducted Ulna listing corresponds to a medial deviation of the forearm (cubitus varus deformity), presenting with loss of normal lateral joint play and medial translation of the olecranon relative to the trochlea."
+            },
+            {
+                question: "Evaluation of the acromioclavicular (A-C) joint reveals an elevated lateral clavicular margin that resists inferior glide during stress testing. What is the listing?",
+                options: [
+                    "Inferior Clavicle",
+                    "Superior Clavicle",
+                    "Anterior-Inferior Clavicle",
+                    "Posterior-Medial Clavicle"
+                ],
+                correct: 1,
+                explanation: "The lateral end of the clavicle most commonly subluxates superiorly at the AC joint (Superior Clavicle listing) due to downward displacement of the shoulder girdle and rupture/sprain of the coracoclavicular and acromioclavicular ligaments."
+            },
+            {
+                question: "Palpation of the sternoclavicular (S-C) joint reveals the medial clavicular head is prominent anteriorly and superiorly relative to the sternal manubrium. What is the listing?",
+                options: [
+                    "Posterior-Superior S-C",
+                    "Anterior-Superior S-C",
+                    "Anterior-Inferior S-C",
+                    "Posterior-Inferior S-C"
+                ],
+                correct: 1,
+                explanation: "The sternal end of the clavicle typically subluxates Anteriorly and Superiorly (A-S S-C listing), creating a palpable prominence at the sternal notch that fails to glide inferiorly during shoulder elevation."
+            },
+            {
+                question: "During midcarpal evaluation, the capitate demonstrates a distinct dorsal step-off and lack of palmar glide upon extension. What is the listing?",
+                options: [
+                    "Anterior Capitate",
+                    "Posterior Capitate",
+                    "Rotated Hamate",
+                    "Medial Trapezoid"
+                ],
+                correct: 1,
+                explanation: "A Posterior (Dorsal) Capitate listing presents with a dorsal step-off and loss of anterior glide, commonly caused by hyperflexion forces on the wrist."
+            },
+            {
+                question: "A patient presents with difficulty during full terminal supination. The radial head palpates anteriorly and resists posterior springing. What is the listing?",
+                options: [
+                    "Posterior Radial Head",
+                    "Anterior Radial Head",
+                    "Proximal Radial Head",
+                    "Lateral Radial Head"
+                ],
+                correct: 1,
+                explanation: "An Anterior Radial Head listing traps the radius in an anterior position, mechanically restricting terminal supination (which demands posterior radial head displacement)."
+            },
+            {
+                question: "In Gonstead spinal listing terminology, a motor unit exhibiting a right-sided spinous process rotation accompanied by right-sided lateral flexion (inferiority on the right) is designated as:",
+                options: [
+                    "PL-I",
+                    "PR-I",
+                    "PLS",
+                    "PRS"
+                ],
+                correct: 1,
+                explanation: "In Gonstead notation, 'P' indicates posteriority, 'R' indicates spinous rotation to the right, and '-I' indicates inferiority/lateral wedge on the side of spinous rotation (right)."
+            },
+            {
+                question: "A lumbar vertebra is found to have posterior translation, spinous rotation to the left, and a wider intervertebral disc space on the right side (wedging open on the right). What is the listing?",
+                options: [
+                    "PLI-Sp",
+                    "PLS",
+                    "PRI",
+                    "PRS"
+                ],
+                correct: 1,
+                explanation: "PLS denotes Posteriority (P), spinous rotation to the Left (L), and Superiority/open wedge on the side opposite spinous rotation (S)."
+            },
+            {
+                question: "Motion palpation of the second carpometacarpal joint demonstrates restricted dorsal-to-palmar translation and local tenderness at the metacarpal base. What is the listing?",
+                options: [
+                    "Anterior Metacarpal Base",
+                    "Posterior Metacarpal Base",
+                    "Lateral Metacarpal Shaft",
+                    "Distal Metacarpal Head"
+                ],
+                correct: 1,
+                explanation: "Metacarpal bases typically subluxate in a Posterior (Dorsal) direction relative to the distal carpal row, producing localized dorsal joint line tenderness and restricted palmar translation."
+            },
+            {
+                question: "In Palmer-Gonstead cervical upper cervical analysis, an Atlas listing of ASRP indicates which spatial orientation of the C1 segment?",
+                options: [
+                    "Anterior, Superior on the Right, Posterior rotation of the Right transverse process",
+                    "Anterior, Superior on the Left, Posterior rotation of the Left transverse process",
+                    "Atlas Subluxation Right Posterior with no lateral tilt",
+                    "Anterior, Superior on the Right, Anterior rotation of the Right transverse process"
+                ],
+                correct: 0,
+                explanation: "ASRP designates Atlas (A) Anterior, (S) Superior atlas plane line, (R) Right lateral displacement, and (P) Posterior rotation of the right transverse process."
+            }
+        ];
 
-    function shuffleArray(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
+        let activeQuestions = [];
+        let currentAnswers = [];
 
-    function renderQuiz() {
-      currentQuestions = shuffleArray(quizData);
-      score = 0;
-      answeredCount = 0;
-      updateScoreUI();
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
-      const container = document.getElementById("quizContainer");
-      container.innerHTML = "";
+        function renderQuiz() {
+            activeQuestions = shuffleArray(JSON.parse(JSON.stringify(quizData)));
+            currentAnswers = new Array(activeQuestions.length).fill(null);
 
-      currentQuestions.forEach((item, index) => {
-        const questionCard = document.createElement("div");
-        questionCard.className = "bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 shadow-lg flex flex-col space-y-4";
-        questionCard.id = `qCard_${index}`;
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
 
-        const questionHeader = document.createElement("div");
-        questionHeader.className = "flex items-start justify-between gap-4";
-        questionHeader.innerHTML = `
-          <span class="text-xs font-bold uppercase tracking-wider text-[#ff9900] bg-[#ff9900]/10 px-2.5 py-1 rounded-md border border-[#ff9900]/20">
-            Question ${index + 1}
-          </span>
-        `;
+            activeQuestions.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
 
-        const questionText = document.createElement("p");
-        questionText.className = "text-base sm:text-lg font-medium text-white leading-relaxed";
-        questionText.textContent = item.question;
+                let optionsHTML = '';
+                q.options.forEach((opt, optIdx) => {
+                    optionsHTML += `
+                        <button class="option-btn" 
+                                id="btn-${index}-${optIdx}" 
+                                onclick="selectOption(${index}, ${optIdx})">
+                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
+                        </button>
+                    `;
+                });
 
-        const optionsGroup = document.createElement("div");
-        optionsGroup.className = "grid grid-cols-1 gap-2.5 pt-2";
-        optionsGroup.id = `optionsGroup_${index}`;
+                card.innerHTML = `
+                    <div class="question-header">Question ${index + 1} of ${activeQuestions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options-list">${optionsHTML}</div>
+                    <div class="explanation-box" id="exp-${index}"></div>
+                `;
 
-        item.options.forEach((optText, optIdx) => {
-          const letter = String.fromCharCode(65 + optIdx);
-          const btn = document.createElement("button");
-          btn.className = "option-btn text-left p-3.5 rounded-xl text-sm sm:text-base font-normal flex items-start space-x-3 w-full";
-          btn.id = `q${index}_opt${optIdx}`;
-          btn.onclick = () => handleAnswer(index, optIdx);
-          btn.innerHTML = `
-            <span class="font-bold text-gray-400 select-none">${letter}.</span>
-            <span class="text-gray-200 flex-1">${optText}</span>
-          `;
-          optionsGroup.appendChild(btn);
-        });
+                container.appendChild(card);
+            });
 
-        const feedbackBox = document.createElement("div");
-        feedbackBox.id = `feedback_${index}`;
-        feedbackBox.className = "hidden mt-3 p-4 rounded-xl border text-sm leading-relaxed";
+            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${activeQuestions.length} (0%)`;
+            document.getElementById('progressBar').style.width = '0%';
+        }
 
-        questionCard.appendChild(questionHeader);
-        questionCard.appendChild(questionText);
-        questionCard.appendChild(optionsGroup);
-        questionCard.appendChild(feedbackBox);
+        function selectOption(qIdx, selectedOptIdx) {
+            if (currentAnswers[qIdx] !== null) return;
 
-        container.appendChild(questionCard);
-      });
-    }
+            currentAnswers[qIdx] = selectedOptIdx;
+            const q = activeQuestions[qIdx];
+            const isCorrect = selectedOptIdx === q.correct;
 
-    function handleAnswer(questionIdx, selectedIdx) {
-      const q = currentQuestions[questionIdx];
-      const optionsGroup = document.getElementById(`optionsGroup_${questionIdx}`);
-      const buttons = optionsGroup.querySelectorAll("button");
-      const feedbackBox = document.getElementById(`feedback_${questionIdx}`);
+            q.options.forEach((_, optIdx) => {
+                const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
+                btn.disabled = true;
 
-      buttons.forEach(btn => btn.disabled = true);
+                if (optIdx === q.correct) {
+                    btn.classList.add('correct-choice');
+                } else if (optIdx === selectedOptIdx) {
+                    btn.classList.add('incorrect-choice');
+                } else {
+                    btn.classList.add('dimmed');
+                }
+            });
 
-      const isCorrect = (selectedIdx === q.correct);
+            const expBox = document.getElementById(`exp-${qIdx}`);
+            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
+            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
 
-      if (isCorrect) {
-        score++;
-        buttons[selectedIdx].classList.add("correct-choice");
-        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#14532d]/40 border-[#22c55e] text-green-200";
-        feedbackBox.innerHTML = `
-          <div class="font-bold text-green-400 mb-1 flex items-center space-x-1.5">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-            <span>Correct</span>
-          </div>
-          <div>${q.explanation}</div>
-        `;
-      } else {
-        buttons[selectedIdx].classList.add("incorrect-choice");
-        buttons[q.correct].classList.add("correct-choice");
-        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#7f1d1d]/40 border-[#ef4444] text-red-200";
-        feedbackBox.innerHTML = `
-          <div class="font-bold text-red-400 mb-1 flex items-center space-x-1.5">
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-            <span>Incorrect</span>
-          </div>
-          <div>${q.explanation}</div>
-        `;
-      }
+            updateScore();
+        }
 
-      feedbackBox.classList.remove("hidden");
-      answeredCount++;
-      updateScoreUI();
-    }
+        function updateScore() {
+            const answeredCount = currentAnswers.filter(a => a !== null).length;
+            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
+                return ans === activeQuestions[idx].correct ? acc + 1 : acc;
+            }, 0);
 
-    function updateScoreUI() {
-      const total = currentQuestions.length;
-      const currentScoreEl = document.getElementById("currentScore");
-      const totalQuestionsEl = document.getElementById("totalQuestions");
-      const scorePercentEl = document.getElementById("scorePercent");
+            const percentage = Math.round((correctCount / activeQuestions.length) * 100);
+            
+            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${activeQuestions.length} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${(answeredCount / activeQuestions.length) * 100}%`;
 
-      currentScoreEl.textContent = score;
-      totalQuestionsEl.textContent = total;
-      
-      const pct = answeredCount > 0 ? Math.round((score / total) * 100) : 0;
-      scorePercentEl.textContent = `${pct}%`;
-    }
+            if (answeredCount === activeQuestions.length) {
+                showSummary(correctCount, percentage);
+            }
+        }
 
-    function resetQuiz() {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderQuiz();
-    }
+        function showSummary(correctCount, percentage) {
+            const summaryCard = document.getElementById('summaryCard');
+            const finalScore = document.getElementById('finalScore');
+            const feedback = document.getElementById('summaryFeedback');
 
-    window.onload = function() {
-      renderQuiz();
-    };
-  </script>
+            finalScore.innerText = `${correctCount} / ${activeQuestions.length} (${percentage}%)`;
+
+            if (percentage >= 90) {
+                feedback.innerText = "Mastery demonstrated across all extremity and spinal listing configurations!";
+            } else if (percentage >= 75) {
+                feedback.innerText = "Solid clinical reasoning. Review the rotational and directional carpal/radial listings.";
+            } else {
+                feedback.innerText = "Good initial run. Re-evaluate directional biomechanics and retake the module.";
+            }
+
+            summaryCard.classList.add('visible');
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            document.getElementById('summaryCard').classList.remove('visible');
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
 </body>
 </html>
+```eof
+
+The generated file `Extremity_Spine_Listings_Quiz.html` includes:
+- **Comprehensive Listing Coverage**: Tests anterior-inferior (A-I) vs. posterior-superior (P-S) glenohumeral listings, anterior vs. posterior radial head listings, palmar vs. dorsal lunate subluxations, scapulothoracic listings (IAM vs. IAL), adducted/abducted ulna listings, SC/AC joint directions, and Gonstead spinal vector rules (PR-I, PLS, ASRP).
+- **Tight Distractor Symmetry**: All answer choices share parallel visual lengths and identical formatting styles, preventing telegraphing of the correct answer.
+- **Full Quiz Hub Features**: Retains the dark theme (#0f0f0f / #1a1a1a), real-time sticky score tracking, Fisher-Yates randomization on page load, and instant visual feedback with explanations.
