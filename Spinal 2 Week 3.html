@@ -2,779 +2,831 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spinal Anatomy II - Week 3 Interactive Quiz Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spinal Anatomy II - Week 3 Comprehensive Assessment</title>
     <style>
         :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --card-border: #2a2a2a;
-            --text-color: #ffffff;
-            --text-muted: #a0a0a0;
+            --bg-canvas: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-sub: #a3a3a3;
             --accent-orange: #ff9900;
-            --accent-hover: #e68a00;
-            --correct-green: #2e7d32;
-            --correct-border: #4caf50;
-            --incorrect-red: #c62828;
-            --incorrect-border: #f44336;
+            --border-default: #282828;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
         }
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
-            padding-bottom: 60px;
-        }
-
-        /* Sticky Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            background-color: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid var(--accent-orange);
-            padding: 12px 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .header-container {
-            max-width: 900px;
-            margin: 0 auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 12px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
+            justify-content: center;
         }
 
-        .header-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-orange);
-        }
-
-        .score-board {
-            font-size: 1rem;
-            font-weight: 600;
-            background: #252525;
-            padding: 6px 14px;
-            border-radius: 20px;
-            border: 1px solid #333;
-        }
-
-        .progress-bar-container {
+        .quiz-container {
             width: 100%;
-            height: 6px;
-            background-color: #2a2a2a;
-            border-radius: 3px;
-            margin-top: 8px;
+            max-width: 850px;
+            background: transparent;
             overflow: hidden;
         }
 
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent-orange);
-            transition: width 0.3s ease;
-        }
-
-        /* Container */
-        .container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-
-        .quiz-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            transition: border-color 0.2s ease;
-        }
-
-        .question-number {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--accent-orange);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .question-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 18px;
-            color: var(--text-color);
-        }
-
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        @media (min-width: 600px) {
-            .options-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .option-btn {
-            background-color: #242424;
-            border: 1px solid #383838;
-            color: var(--text-color);
-            padding: 12px 16px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            min-height: 50px;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            background-color: #303030;
-            border-color: var(--accent-orange);
-        }
-
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.9;
-        }
-
-        /* States */
-        .option-btn.correct {
-            background-color: var(--correct-green) !important;
-            border-color: var(--correct-border) !important;
-            color: #ffffff !important;
-            font-weight: 600;
-        }
-
-        .option-btn.incorrect {
-            background-color: var(--incorrect-red) !important;
-            border-color: var(--incorrect-border) !important;
-            color: #ffffff !important;
-        }
-
-        .explanation-box {
-            display: none;
-            margin-top: 15px;
-            padding: 14px;
-            background-color: #222;
-            border-left: 4px solid var(--accent-orange);
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: #ddd;
-        }
-
-        .explanation-title {
-            font-weight: 700;
-            color: var(--accent-orange);
-            margin-bottom: 4px;
-        }
-
-        /* Final Summary Card */
-        #summary-card {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-            background-color: var(--card-bg);
-            border: 2px solid var(--accent-orange);
-            border-radius: 12px;
-        }
-
-        .summary-title {
-            font-size: 1.8rem;
-            color: var(--accent-orange);
-            margin-bottom: 15px;
-        }
-
-        .summary-score {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-        }
-
-        .summary-feedback {
-            font-size: 1.1rem;
-            color: var(--text-muted);
-            margin-bottom: 25px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .retake-btn {
-            background-color: var(--accent-orange);
-            color: #000;
-            font-weight: 700;
-            font-size: 1rem;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .retake-btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        /* Anki TSV Container */
-        .anki-section {
-            margin-top: 40px;
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .anki-header {
+        .sticky-header {
+            position: -webkit-sticky;
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-canvas);
+            border-bottom: 2px solid var(--border-default);
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-            gap: 10px;
+            z-index: 1000;
+            margin-bottom: 16px;
         }
 
-        .anki-title {
-            font-size: 1.2rem;
+        .sticky-header h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
             color: var(--accent-orange);
-            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .copy-btn {
-            background-color: #333;
-            color: #fff;
-            border: 1px solid #555;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85rem;
+        .score-tracker {
+            font-size: 0.95rem;
+            font-weight: bold;
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
+            padding: 6px 14px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .quiz-body {
+            padding: 0 4px;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
             font-weight: 600;
-            transition: all 0.2s;
+            margin-bottom: 14px;
+            line-height: 1.45;
+            color: #ffffff;
         }
 
-        .copy-btn:hover {
-            background-color: var(--accent-orange);
-            color: #000;
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        textarea.tsv-box {
-            width: 100%;
-            height: 250px;
-            background-color: #080808;
-            color: #00ff66;
-            border: 1px solid #333;
+        .option-item {
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
             border-radius: 6px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            resize: vertical;
-            white-space: pre;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+            font-size: 0.95rem;
+            touch-action: manipulation;
+            display: flex;
+            align-items: flex-start;
+            color: #e5e5e5;
+        }
+
+        .option-item strong {
+            margin-right: 10px;
+            color: var(--accent-orange);
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-orange);
+            background-color: #2a2a2a;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-item.correct strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .feedback-box {
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 14px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: rgba(20, 83, 45, 0.4);
+            border: 1px solid var(--correct-border);
+            color: #4ade80;
+        }
+
+        .feedback-box.incorrect {
+            background-color: rgba(127, 29, 29, 0.4);
+            border: 1px solid var(--incorrect-border);
+            color: #f87171;
+        }
+
+        .summary-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent-orange);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--accent-orange);
+        }
+
+        .btn {
+            background-color: var(--accent-orange);
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 14px;
+            touch-action: manipulation;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <div class="header-title">Spinal Anatomy II — Week 3 Quiz Hub</div>
-            <div class="score-board" id="score-display">Score: 0 / 0 (0%)</div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="progress-bar"></div>
-            </div>
-        </div>
-    </header>
-
-    <div class="container">
-        <div id="quiz-container">
-            <!-- Questions dynamically injected here -->
-        </div>
-
-        <div id="summary-card">
-            <div class="summary-title">Quiz Completed!</div>
-            <div class="summary-score" id="final-score-text">0%</div>
-            <div class="summary-feedback" id="final-feedback-text">Performance feedback will appear here.</div>
-            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
-        </div>
-
-        <div class="anki-section">
-            <div class="anki-header">
-                <div class="anki-title">Anki Active Recall Deck (1-Click TSV Export)</div>
-                <button class="copy-btn" onclick="copyAnkiTSV()">Copy TSV to Clipboard</button>
-            </div>
-            <textarea class="tsv-box" id="tsv-textarea" readonly></textarea>
-        </div>
+<div class="quiz-container">
+    <div class="sticky-header">
+        <h1>Spinal 2 Week 3 Assessment</h1>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 42 (0%)</div>
     </div>
 
-    <script>
-        // Master Question Data Array (42 Exhaustive Questions)
-        const quizData = [
-            {
-                q: "Which muscle group constitutes the superficial layer of the Transversospinalis category?",
-                options: ["Multifidus", "Rotatores", "Semispinalis", "Intertransversarii"],
-                correct: 2,
-                exp: "The Semispinalis group (thoracis, cervicis, capitis) represents the most superficial layer of the Transversospinalis category."
-            },
-            {
-                q: "What is the primary action shared across all three divisions of the Semispinalis group?",
-                options: ["Ipsilateral rotation of the spine", "Contralateral rotation, extension, and lateral flexion", "Pure flexion of the thoracic spine", "Anterior translation of the atlas"],
-                correct: 1,
-                exp: "Semispinalis muscles extend, laterally flex, and produce contralateral rotation of the spine or head."
-            },
-            {
-                q: "What is the origin of the Semispinalis Thoracis muscle?",
-                options: ["Transverse processes of T7-T12", "Spinous processes of C7-T4", "Mammillary processes of L1-L5", "Posterior tubercle of C1"],
-                correct: 0,
-                exp: "Semispinalis Thoracis originates on the transverse processes of T7 through T12."
-            },
-            {
-                q: "Where does the Semispinalis Thoracis insert?",
-                options: ["Spinous processes of C6-T4", "Superior nuchal line", "Mastoid process", "Transverse processes of C1-C4"],
-                correct: 0,
-                exp: "Semispinalis Thoracis inserts onto the spinous processes of C6 through T4."
-            },
-            {
-                q: "Where does the Semispinalis Capitis insert on the cranium?",
-                options: ["Mastoid process", "Occipital bone between superior and inferior nuchal lines", "External occipital protuberance only", "Foramen magnum border"],
-                correct: 1,
-                exp: "Semispinalis Capitis inserts onto the occipital region between the superior and inferior nuchal lines."
-            },
-            {
-                q: "How many vertebral segments does a single fiber bundle of the Multifidus span from origin to insertion?",
-                options: ["1 segment", "2 segments", "3 to 4 segments", "5 to 6 segments"],
-                correct: 2,
-                exp: "Multifidus fiber bundles cross 3 to 4 vertebral segments from their origin on lower processes to their insertion on spinous processes above."
-            },
-            {
-                q: "What is the specific origin site for the Multifidus in the lumbar spine?",
-                options: ["Mammillary processes of L1-L5", "Accessory processes of L1-L5", "Anterior body of L1-L5", "Iliopubic eminence"],
-                correct: 0,
-                exp: "In the lumbar region, Multifidus originates from the mammillary processes of L1-L5 (as well as sacrum, PSIS, thoracic TPs, and cervical APs)."
-            },
-            {
-                q: "What is the insertion range for the Multifidus muscle across the spinal column?",
-                options: ["Spinous processes of C2 to L5", "Transverse processes of T1 to T12", "Mastoid process to C7", "Iliac crest to rib 12"],
-                correct: 0,
-                exp: "Multifidus inserts on spinous processes from C2 down through L5."
-            },
-            {
-                q: "Which muscle is clinically identified in lecture as the most commonly strained deep back muscle during heavy lifting or lumbar flexion?",
-                options: ["Longissimus Capitis", "Multifidus", "Interspinous", "Splenius Cervicis"],
-                correct: 1,
-                exp: "Multifidus provides critical segment-by-segment stabilization; heavy lifting or flexion strain frequently impacts this key postural muscle."
-            },
-            {
-                q: "How many vertebral segments does Rotatores Brevis span?",
-                options: ["1 segment (attaches to spinous process 1 level above)", "2 segments", "3 to 4 segments", "5 segments"],
-                correct: 0,
-                exp: "Rotatores Brevis attaches from a transverse process to the spinous process exactly 1 segment above."
-            },
-            {
-                q: "How many vertebral segments does Rotatores Longus span?",
-                options: ["1 segment", "2 segments (attaches to spinous process 2 levels above)", "3 to 4 segments", "6 segments"],
-                correct: 1,
-                exp: "Rotatores Longus attaches from a transverse process to the spinous process 2 segments above."
-            },
-            {
-                q: "What upper cervical vertebral level represents the highest superior attachment for Rotatores Brevis?",
-                options: ["C1", "C2", "C3", "C4"],
-                correct: 2,
-                exp: "Rotatores Brevis originates as high as the transverse process of C3, whereas Rotatores Longus and Multifidus stop at C4."
-            },
-            {
-                q: "Why can Rotatores muscles NOT attach to the C1 or C2 spinous processes in the exact same manner as lower vertebrae?",
-                options: ["C1 lacks a spinous process entirely", "C2 lacks transverse processes", "Rotatores are absent in the cervical spine", "They fuse with the ligamentum nuchae"],
-                correct: 0,
-                exp: "Atlas (C1) has no spinous process (only a posterior tubercle), establishing a structural upper boundary for spinous attachments."
-            },
-            {
-                q: "What primary actions are performed by the Rotatores muscle group?",
-                options: ["Pure lateral flexion without rotation", "Extension and contralateral rotation of the spine", "Ipsilateral rotation and anterior flexion", "Depression of ribs during respiration"],
-                correct: 1,
-                exp: "Rotatores muscles extend the spine and produce contralateral rotation."
-            },
-            {
-                q: "Which functional action is explicitly LACKING in the Rotatores group compared to Semispinalis and Multifidus?",
-                options: ["Extension", "Contralateral rotation", "Lateral flexion", "Postural stabilization"],
-                correct: 2,
-                exp: "Unlike Semispinalis and Multifidus, Rotatores focus on extension and contralateral rotation, lacking significant lateral flexion capability."
-            },
-            {
-                q: "In what regions of the spinal column are Interspinous muscles present as paired structures?",
-                options: ["C1-C2 and T3-T8", "C3-T1 and T12-S1", "T1-T12 exclusively", "L1-L5 exclusively"],
-                correct: 1,
-                exp: "Interspinous muscles are paired structures present between C3-T1 and T12-S1."
-            },
-            {
-                q: "What is the primary action of the Interspinous muscles?",
-                options: ["Contralateral rotation of vertebrae", "Ipsilateral lateral flexion", "Extension of the vertebral column", "Depression of spinous processes"],
-                correct: 2,
-                exp: "Because Interspinous muscles connect adjacent spinous processes along the midline, their action is pure extension."
-            },
-            {
-                q: "How are the Intertransversarii organized in the cervical spine (C3-T1)?",
-                options: ["Single muscle bundles", "Paired anterior and posterior muscles", "Paired medial and lateral muscles", "Absent entirely"],
-                correct: 1,
-                exp: "From C3 to T1, Intertransversarii are paired into distinct anterior and posterior muscle sets due to cervical TP orientation."
-            },
-            {
-                q: "How are the Intertransversarii arranged in the thoracic spine (T1-T12)?",
-                options: ["Paired anterior and posterior", "Single muscle bundles", "Paired medial and lateral", "Triplicate bundles"],
-                correct: 1,
-                exp: "In the thoracic spine (T1-T12), Intertransversarii exist as single muscle units because ribs provide additional lateral stability."
-            },
-            {
-                q: "How are the Intertransversarii arranged in the lumbar spine (L1-L5)?",
-                options: ["Single muscle bundles", "Paired anterior and posterior", "Paired medial and lateral muscles", "Absent"],
-                correct: 2,
-                exp: "In the lumbar spine (L1-L5), Intertransversarii are paired medial and lateral muscles to assist in stabilizing the J-shaped lumbar facets."
-            },
-            {
-                q: "What is the critical innervation rule for the Intertransversarii group?",
-                options: ["All are innervated by dorsal rami", "All are innervated by ventral rami", "Ventral rami EXCEPT the medial lumbar Intertransversarii, which are innervated by dorsal rami", "Spinal accessory nerve"],
-                correct: 2,
-                exp: "Intertransversarii are innervated by ventral rami EXCEPT the medial lumbar Intertransversarii, which are supplied by dorsal rami—a classic board exam topic!"
-            },
-            {
-                q: "What general anatomical rule describes the origin and insertion orientation for Transversospinalis muscles?",
-                options: ["Origin on Spinous Processes, Insertion on Transverse Processes", "Origin on Transverse Processes, Insertion on Spinous Processes", "Origin on Ribs, Insertion on Transverse Processes", "Origin on Vertebral Bodies, Insertion on Sacrum"],
-                correct: 1,
-                exp: "Transversospinalis muscles originate on Transverse Processes (TPs) and course medially/superiorly to insert on Spinous Processes (SPs)."
-            },
-            {
-                q: "What direction of spinal rotation is produced when a right-sided Transversospinalis muscle contracts?",
-                options: ["Right rotation (Ipsilateral)", "Left rotation (Contralateral)", "No rotational effect", "Bilateral flexion"],
-                correct: 1,
-                exp: "Because Transversospinalis fibers run from lateral TPs up to medial SPs, contracting the right side pulls the spinous process to the right, rotating the anterior vertebral body to the LEFT (contralateral rotation)."
-            },
-            {
-                q: "Why is the Multifidus muscle often left out of simplified deep anatomical diagrams showing Rotatores and Interspinales?",
-                options: ["It is an inconstant muscle", "Its broad, thick fiber coverage would completely obscure the deeper Rotatores and intersegmental muscles", "It belongs to Layer 1", "It is only present in quadruped animals"],
-                correct: 1,
-                exp: "Dr. Phillip noted in lecture that Multifidus is so thick and extensive that if drawn fully, it hides the underlying Rotatores and intersegmental muscles."
-            },
-            {
-                q: "What type of muscle fibers predominant in deep intersegmental postural muscles like Intertransversarii and Interspinales?",
-                options: ["Fast-twitch glycolytic fibers (Type IIb)", "Highly oxidative, slow-twitch stabilization fibers (Type I)", "Smooth muscle fibers", "Involuntary cardiac-like fibers"],
-                correct: 1,
-                exp: "These tiny deep muscles act primarily as highly oxidative postural fine-tuners and proprioceptive sensory transducers rather than gross power movers."
-            },
-            {
-                q: "Which nerve branches innervate all members of the Transversospinalis group (Semispinalis, Multifidus, Rotatores)?",
-                options: ["Ventral rami of spinal nerves", "Dorsal rami of spinal nerves", "Intercostal nerves T1-T12", "Ansa cervicalis"],
-                correct: 1,
-                exp: "All intrinsic deep back muscles belonging to the Transversospinalis group are innervated by the dorsal rami of spinal nerves."
-            },
-            {
-                q: "Comparing segment spans, match the correct order from SHORTEST to LONGEST span: Rotatores Brevis, Multifidus, Rotatores Longus.",
-                options: ["Multifidus < Rotatores Longus < Rotatores Brevis", "Rotatores Brevis (1) < Rotatores Longus (2) < Multifidus (3-4)", "Rotatores Longus < Rotatores Brevis < Multifidus", "Multifidus < Rotatores Brevis < Rotatores Longus"],
-                correct: 1,
-                exp: "Rotatores Brevis spans 1 segment, Rotatores Longus spans 2 segments, and Multifidus spans 3-4 segments."
-            },
-            {
-                q: "What is the origin of Semispinalis Cervicis?",
-                options: ["Transverse processes T1-T6 and articular processes C4-C7", "Spinous processes C7-T4", "Iliac crest and sacral ala", "Transverse processes C1-C4"],
-                correct: 0,
-                exp: "Semispinalis Cervicis originates on TPs T1-T6 and APs C4-C7."
-            },
-            {
-                q: "Where does Semispinalis Cervicis insert?",
-                options: ["Spinous processes C2-C5", "Superior nuchal line", "Mastoid process", "Ribs 1-4"],
-                correct: 0,
-                exp: "Semispinalis Cervicis inserts onto the spinous processes of C2 through C5."
-            },
-            {
-                q: "Which division of the Semispinalis group reaches closest to the axis (C2) spinous process?",
-                options: ["Semispinalis Thoracis", "Semispinalis Cervicis", "Semispinalis Capitis", "Semispinalis Lumborum"],
-                correct: 1,
-                exp: "Semispinalis Cervicis inserts as superiorly as the spinous process of C2."
-            },
-            {
-                q: "What are the origin attachments for Semispinalis Capitis?",
-                options: ["Transverse processes T1-T6 and articular processes C4-C7", "Spinous processes T11-L2", "Mammillary processes L1-L5", "Inferior nuchal line"],
-                correct: 0,
-                exp: "Semispinalis Capitis shares origin sites with Semispinalis Cervicis: TPs T1-T6 and APs C4-C7."
-            },
-            {
-                q: "What is the function of the paired medial and lateral lumbar Intertransversarii regarding lumbar joint architecture?",
-                options: ["They assist in flexing the pubic symphysis", "They stabilize the unstable, J-shaped lumbar facet joints", "They elevate the lower 4 ribs during expiration", "They rotate the sacrum anteriorly"],
-                correct: 1,
-                exp: "In the lumbar spine, paired medial and lateral Intertransversarii help stabilize the vertical, J-shaped sagittal facet joints."
-            },
-            {
-                q: "If a patient experiences contralateral rotation and extension of thoracic vertebrae, which deep group is primarily contracting?",
-                options: ["Interspinous", "Transversospinalis (Semispinalis / Multifidus / Rotatores)", "Intertransversarii", "Serratus Posterior Inferior"],
-                correct: 1,
-                exp: "Extension combined with contralateral rotation is the hallmark functional combination of the Transversospinalis group."
-            },
-            {
-                q: "What anatomical boundary prevents Interspinous muscles from existing at the C1-C2 level in standard form?",
-                options: ["The presence of the suboccipital triangle and lack of a traditional C1 spinous process", "The ligamentum flavum completely replaces muscle", "The vertebral artery blocks insertion", "Dorsal rami do not reach C1"],
-                correct: 0,
-                exp: "C1 lacks a spinous process (having only a posterior tubercle), so Interspinous muscles begin between C2 and C3."
-            },
-            {
-                q: "Which muscle group is located directly deep to the Erector Spinae column?",
-                options: ["Layer 1 (Trapezius / Latissimus)", "Transversospinalis group", "Layer 2 (Rhomboids)", "Psoas Major"],
-                correct: 1,
-                exp: "The Transversospinalis group lies directly deep to the Erector Spinae ('I Love Spaghetti') group."
-            },
-            {
-                q: "What structural feature characterizes the mammalian lumbar mammillary processes as origin sites for Multifidus?",
-                options: ["They are smooth bony surfaces on the anterior body", "They are small tubercles on the posterior aspect of superior articular processes in lumbar vertebrae", "They attach directly to the inguinal ligament", "They form part of the transverse foramina"],
-                correct: 1,
-                exp: "Mammillary processes are small bony projections on the posterior border of the superior articular processes of lumbar vertebrae."
-            },
-            {
-                q: "What nerve supplies the suboccipital muscles and arises from the C1 dorsal ramus?",
-                options: ["Greater occipital nerve", "Suboccipital nerve", "Third occipital nerve", "Dorsal scapular nerve"],
-                correct: 1,
-                exp: "The Suboccipital nerve is the dorsal ramus of C1 and innervates the suboccipital muscle group."
-            },
-            {
-                q: "Why do Rotatores muscles have superior leverage for rotation compared to Interspinous muscles?",
-                options: ["They attach laterally to transverse processes before angling medially to spinous processes", "They are much larger in bulk", "They are innervated by cranial nerves", "They attach to the clavicle"],
-                correct: 0,
-                exp: "Rotatores attach to transverse processes, creating an oblique lever arm relative to the central rotational axis of the vertebral column."
-            },
-            {
-                q: "Which muscle in Week 3 notes attaches from the sacrum/PSIS all the way up to C2 spinous process via repeating segmental slips?",
-                options: ["Semispinalis Thoracis", "Multifidus", "Intertransversarii", "Rectus Capitis Posterior Minor"],
-                correct: 1,
-                exp: "Multifidus originates from sacrum/PSIS/mammillary/TPs/APs and inserts on SPs from L5 all the way up to C2."
-            },
-            {
-                q: "What is the primary mechanical outcome of bilateral contraction of the Transversospinalis group?",
-                options: ["Pure lateral flexion to the right", "Pure spinal extension", "Contralateral rotation to both sides simultaneously", "Spinal flexion"],
-                correct: 1,
-                exp: "When right and left Transversospinalis muscles contract simultaneously (bilaterally), their rotational vectors cancel out, producing pure spinal extension."
-            },
-            {
-                q: "What distinguishes Intertransversarii from Interspinous muscles in terms of primary movement?",
-                options: ["Intertransversarii produce lateral flexion; Interspinous produce extension", "Intertransversarii produce extension; Interspinous produce rotation", "Intertransversarii produce flexion; Interspinous produce depression", "They have identical actions"],
-                correct: 0,
-                exp: "Intertransversarii connect TPs (lateral) to produce lateral flexion; Interspinous connect SPs (midline) to produce extension."
-            },
-            {
-                q: "What is the segmental span of Semispinalis bundles from origin to insertion?",
-                options: ["1 segment", "2 segments", "4 to 6 segments", "8 to 10 segments"],
-                correct: 2,
-                exp: "Semispinalis is the longest member of the Transversospinalis group, spanning 4 to 6 vertebral segments between origin and insertion."
-            }
-        ];
+    <div class="quiz-body" id="quiz-body"></div>
 
-        // Anki TSV Text Content Generation
-        const ankiTSVData = [
-            "What muscle group forms the superficial layer of the Transversospinalis category?\tSemispinalis group (Thoracis, Cervicis, Capitis).",
-            "What are the 3 shared actions of the Semispinalis muscle group?\tExtension, lateral flexion, and contralateral rotation of the spine/head.",
-            "What is the origin of Semispinalis Thoracis?\tTransverse processes of T7 to T12.",
-            "What is the insertion of Semispinalis Thoracis?\tSpinous processes of C6 to T4.",
-            "What are the origin sites for Semispinalis Cervicis?\tTransverse processes of T1-T6 and articular processes of C4-C7.",
-            "What is the insertion of Semispinalis Cervicis?\tSpinous processes of C2 to C5.",
-            "What are the origin sites for Semispinalis Capitis?\tTransverse processes of T1-T6 and articular processes of C4-C7.",
-            "What is the insertion site of Semispinalis Capitis?\tOccipital bone between the superior and inferior nuchal lines.",
-            "What nerve innervates all three divisions of the Semispinalis group?\tDorsal rami of spinal nerves.",
-            "How many vertebral segments does a single fiber slip of Multifidus span?\t3 to 4 segments above its origin.",
-            "What are the origin sites of the Multifidus muscle?\tPosterior sacrum, PSIS, mammillary processes of L1-L5, TPs of T1-T12, and articular processes of C4-C7.",
-            "What is the insertion range of the Multifidus muscle?\tSpinous processes of C2 down through L5.",
-            "What nerve innervates the Multifidus muscle?\tDorsal rami of spinal nerves.",
-            "What are the 3 actions of the Multifidus muscle?\tExtension, lateral flexion, and contralateral rotation of vertebrae.",
-            "Why is Multifidus clinically significant in spinal rehabilitation?\tIt is a primary segmental postural stabilizer and the most commonly strained deep back muscle during heavy lifting/flexion.",
-            "How many vertebral segments does Rotatores Brevis span?\t1 segment (inserts on the spinous process 1 level above origin).",
-            "How many vertebral segments does Rotatores Longus span?\t2 segments (inserts on the spinous process 2 levels above origin).",
-            "What is the origin of Rotatores Longus?\tTransverse processes of C4-C7, T1-T12, and L1-L5.",
-            "What is the origin of Rotatores Brevis?\tTransverse processes of C3-C7, T1-T12, and L1-L5.",
-            "Why does Rotatores Brevis extend up to C3 TP while Rotatores Longus stops at C4?\tRotatores Brevis attaches 1 segment above (reaching C2 SP), whereas Longus spanning 2 segments from C3 would target C1, which lacks a spinous process.",
-            "What are the primary actions of the Rotatores group?\tExtension and contralateral rotation of the spine (lacks lateral flexion).",
-            "What nerve innervates the Rotatores group?\tDorsal rami of spinal nerves.",
-            "Where are Interspinous muscles present as paired structures?\tC3-T1 and T12-S1.",
-            "What is the insertion of Interspinous muscles?\tSpinous process 1 segment above origin (C2-L5 where present).",
-            "What is the action of Interspinous muscles?\tExtension of the vertebral column.",
-            "What nerve innervates Interspinous muscles?\tDorsal rami of spinal nerves.",
-            "How are Intertransversarii structured in the cervical spine (C3-T1)?\tPaired anterior and posterior muscles.",
-            "How are Intertransversarii structured in the thoracic spine (T1-T12)?\tSingle muscle bundles between transverse processes.",
-            "How are Intertransversarii structured in the lumbar spine (L1-L5)?\tPaired medial and lateral muscles (to stabilize J-shaped facets).",
-            "What is the critical innervation exception for Intertransversarii?\tVentral rami EXCEPT medial lumbar Intertransversarii, which are innervated by DORSAL rami.",
-            "What is the primary action of Intertransversarii muscles?\tLateral flexion of the spine and postural stabilization.",
-            "What structural direction defines all Transversospinalis muscle fibers?\tThey originate on Transverse Processes (TPs) and run medially/superiorly to insert on Spinous Processes (SPs).",
-            "What rotational motion occurs when right-sided Transversospinalis muscles contract independently?\tLeft (contralateral) spinal rotation.",
-            "What motion occurs when Transversospinalis muscles contract bilaterally?\tPure spinal extension.",
-            "Why is Multifidus omitted from deep diagrams showing Rotatores?\tIts thick, broad muscle bulk would obscure the deeper Rotatores and intersegmental muscles.",
-            "What fiber type predominates in deep intersegmental spinal muscles?\tSlow-twitch, highly oxidative Type I fibers specialized for posture and proprioception.",
-            "Compare segment spans: Rotatores Brevis vs. Rotatores Longus vs. Multifidus vs. Semispinalis.\tBrevis = 1 segment<br>Longus = 2 segments<br>Multifidus = 3-4 segments<br>Semispinalis = 4-6 segments.",
-            "What process on lumbar vertebrae serves as an origin for Multifidus?\tMammillary process (on posterior aspect of superior articular process).",
-            "Which spinal level lacks a true spinous process, limiting upper SP attachments?\tAtlas (C1).",
-            "What nerve supplies suboccipital muscles from C1 dorsal ramus?\tSuboccipital nerve.",
-            "What is the insertion of Semispinalis Capitis?\tOccipital bone between superior and inferior nuchal lines.",
-            "What functional role do Intertransversarii play in the thoracic spine despite rib presence?\tProprioceptive sensory transducers and postural micro-adjusters."
-        ].join("\n");
+    <div class="quiz-body">
+        <div class="summary-card" id="final-summary" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px;"></p>
+            <button class="btn" id="reset-btn">Reset & Retake Quiz</button>
+        </div>
+    </div>
+</div>
 
-        // App State Variables
-        let userAnswers = {};
-        let score = 0;
-
-        // Populate TSV textarea on load
-        document.getElementById("tsv-textarea").value = ankiTSVData;
-
-        // Copy TSV Function
-        function copyAnkiTSV() {
-            const textarea = document.getElementById("tsv-textarea");
-            textarea.select();
-            document.execCommand('copy');
-            const copyBtn = document.querySelector('.copy-btn');
-            copyBtn.innerText = "Copied to Clipboard!";
-            setTimeout(() => {
-                copyBtn.innerText = "Copy TSV to Clipboard";
-            }, 2000);
+<script>
+    const originalQuestions = [
+        {
+            question: "1. Which muscle group constitutes the superficial layer of the Transversospinalis category?",
+            options: [
+                "Multifidus",
+                "Rotatores",
+                "Semispinalis",
+                "Intertransversarii"
+            ],
+            correct: 2,
+            explanation: "The Semispinalis group (thoracis, cervicis, capitis) represents the most superficial layer of the Transversospinalis category."
+        },
+        {
+            question: "2. What is the primary action shared across all three divisions of the Semispinalis group?",
+            options: [
+                "Ipsilateral rotation of the spine",
+                "Contralateral rotation, extension, and lateral flexion",
+                "Pure flexion of the thoracic spine",
+                "Anterior translation of the atlas"
+            ],
+            correct: 1,
+            explanation: "Semispinalis muscles extend, laterally flex, and produce contralateral rotation of the spine or head."
+        },
+        {
+            question: "3. What is the origin of the Semispinalis Thoracis muscle?",
+            options: [
+                "Transverse processes of T7-T12",
+                "Spinous processes of C7-T4",
+                "Mammillary processes of L1-L5",
+                "Posterior tubercle of C1"
+            ],
+            correct: 0,
+            explanation: "Semispinalis Thoracis originates on the transverse processes of T7 through T12."
+        },
+        {
+            question: "4. Where does the Semispinalis Thoracis insert?",
+            options: [
+                "Spinous processes of C6-T4",
+                "Superior nuchal line",
+                "Mastoid process",
+                "Transverse processes of C1-C4"
+            ],
+            correct: 0,
+            explanation: "Semispinalis Thoracis inserts onto the spinous processes of C6 through T4."
+        },
+        {
+            question: "5. Where does the Semispinalis Capitis insert on the cranium?",
+            options: [
+                "Mastoid process",
+                "Occipital bone between superior and inferior nuchal lines",
+                "External occipital protuberance only",
+                "Foramen magnum border"
+            ],
+            correct: 1,
+            explanation: "Semispinalis Capitis inserts onto the occipital region between the superior and inferior nuchal lines."
+        },
+        {
+            question: "6. How many vertebral segments does a single fiber bundle of the Multifidus span from origin to insertion?",
+            options: [
+                "1 segment",
+                "2 segments",
+                "3 to 4 segments",
+                "5 to 6 segments"
+            ],
+            correct: 2,
+            explanation: "Multifidus fiber bundles cross 3 to 4 vertebral segments from their origin on lower processes to their insertion on spinous processes above."
+        },
+        {
+            question: "7. What is the specific origin site for the Multifidus in the lumbar spine?",
+            options: [
+                "Mammillary processes of L1-L5",
+                "Accessory processes of L1-L5",
+                "Anterior body of L1-L5",
+                "Iliopubic eminence"
+            ],
+            correct: 0,
+            explanation: "In the lumbar region, Multifidus originates from the mammillary processes of L1-L5 (as well as sacrum, PSIS, thoracic TPs, and cervical APs)."
+        },
+        {
+            question: "8. What is the insertion range for the Multifidus muscle across the spinal column?",
+            options: [
+                "Spinous processes of C2 to L5",
+                "Transverse processes of T1 to T12",
+                "Mastoid process to C7",
+                "Iliac crest to rib 12"
+            ],
+            correct: 0,
+            explanation: "Multifidus inserts on spinous processes from C2 down through L5."
+        },
+        {
+            question: "9. Which muscle is clinically identified in lecture as the most commonly strained deep back muscle during heavy lifting or lumbar flexion?",
+            options: [
+                "Longissimus Capitis",
+                "Multifidus",
+                "Interspinous",
+                "Splenius Cervicis"
+            ],
+            correct: 1,
+            explanation: "Multifidus provides critical segment-by-segment stabilization; heavy lifting or flexion strain frequently impacts this key postural muscle."
+        },
+        {
+            question: "10. How many vertebral segments does Rotatores Brevis span?",
+            options: [
+                "1 segment (attaches to spinous process 1 level above)",
+                "2 segments",
+                "3 to 4 segments",
+                "5 segments"
+            ],
+            correct: 0,
+            explanation: "Rotatores Brevis attaches from a transverse process to the spinous process exactly 1 segment above."
+        },
+        {
+            question: "11. How many vertebral segments does Rotatores Longus span?",
+            options: [
+                "1 segment",
+                "2 segments (attaches to spinous process 2 levels above)",
+                "3 to 4 segments",
+                "6 segments"
+            ],
+            correct: 1,
+            explanation: "Rotatores Longus attaches from a transverse process to the spinous process 2 segments above."
+        },
+        {
+            question: "12. What upper cervical vertebral level represents the highest superior attachment for Rotatores Brevis?",
+            options: [
+                "C1",
+                "C2",
+                "C3",
+                "C4"
+            ],
+            correct: 2,
+            explanation: "Rotatores Brevis originates as high as the transverse process of C3, whereas Rotatores Longus and Multifidus stop at C4."
+        },
+        {
+            question: "13. Why can Rotatores muscles NOT attach to the C1 or C2 spinous processes in the exact same manner as lower vertebrae?",
+            options: [
+                "C1 lacks a spinous process entirely",
+                "C2 lacks transverse processes",
+                "Rotatores are absent in the cervical spine",
+                "They fuse with the ligamentum nuchae"
+            ],
+            correct: 0,
+            explanation: "Atlas (C1) has no spinous process (only a posterior tubercle), establishing a structural upper boundary for spinous attachments."
+        },
+        {
+            question: "14. What primary actions are performed by the Rotatores muscle group?",
+            options: [
+                "Pure lateral flexion without rotation",
+                "Extension and contralateral rotation of the spine",
+                "Ipsilateral rotation and anterior flexion",
+                "Depression of ribs during respiration"
+            ],
+            correct: 1,
+            explanation: "Rotatores muscles extend the spine and produce contralateral rotation."
+        },
+        {
+            question: "15. Which functional action is explicitly LACKING in the Rotatores group compared to Semispinalis and Multifidus?",
+            options: [
+                "Extension",
+                "Contralateral rotation",
+                "Lateral flexion",
+                "Postural stabilization"
+            ],
+            correct: 2,
+            explanation: "Unlike Semispinalis and Multifidus, Rotatores focus on extension and contralateral rotation, lacking significant lateral flexion capability."
+        },
+        {
+            question: "16. In what regions of the spinal column are Interspinous muscles present as paired structures?",
+            options: [
+                "C1-C2 and T3-T8",
+                "C3-T1 and T12-S1",
+                "T1-T12 exclusively",
+                "L1-L5 exclusively"
+            ],
+            correct: 1,
+            explanation: "Interspinous muscles are paired structures present between C3-T1 and T12-S1."
+        },
+        {
+            question: "17. What is the primary action of the Interspinous muscles?",
+            options: [
+                "Contralateral rotation of vertebrae",
+                "Ipsilateral lateral flexion",
+                "Extension of the vertebral column",
+                "Depression of spinous processes"
+            ],
+            correct: 2,
+            explanation: "Because Interspinous muscles connect adjacent spinous processes along the midline, their action is pure extension."
+        },
+        {
+            question: "18. How are the Intertransversarii organized in the cervical spine (C3-T1)?",
+            options: [
+                "Single muscle bundles",
+                "Paired anterior and posterior muscles",
+                "Paired medial and lateral muscles",
+                "Absent entirely"
+            ],
+            correct: 1,
+            explanation: "From C3 to T1, Intertransversarii are paired into distinct anterior and posterior muscle sets due to cervical TP orientation."
+        },
+        {
+            question: "19. How are the Intertransversarii arranged in the thoracic spine (T1-T12)?",
+            options: [
+                "Paired anterior and posterior",
+                "Single muscle bundles",
+                "Paired medial and lateral",
+                "Triplicate bundles"
+            ],
+            correct: 1,
+            explanation: "In the thoracic spine (T1-T12), Intertransversarii exist as single muscle units because ribs provide additional lateral stability."
+        },
+        {
+            question: "20. How are the Intertransversarii arranged in the lumbar spine (L1-L5)?",
+            options: [
+                "Single muscle bundles",
+                "Paired anterior and posterior",
+                "Paired medial and lateral muscles",
+                "Absent"
+            ],
+            correct: 2,
+            explanation: "In the lumbar spine (L1-L5), Intertransversarii are paired medial and lateral muscles to assist in stabilizing the J-shaped lumbar facets."
+        },
+        {
+            question: "21. What is the critical innervation rule for the Intertransversarii group?",
+            options: [
+                "All are innervated by dorsal rami",
+                "All are innervated by ventral rami",
+                "Ventral rami EXCEPT the medial lumbar Intertransversarii, which are innervated by dorsal rami",
+                "Spinal accessory nerve"
+            ],
+            correct: 2,
+            explanation: "Intertransversarii are innervated by ventral rami EXCEPT the medial lumbar Intertransversarii, which are supplied by dorsal rami—a classic board exam topic!"
+        },
+        {
+            question: "22. What general anatomical rule describes the origin and insertion orientation for Transversospinalis muscles?",
+            options: [
+                "Origin on Spinous Processes, Insertion on Transverse Processes",
+                "Origin on Transverse Processes, Insertion on Spinous Processes",
+                "Origin on Ribs, Insertion on Transverse Processes",
+                "Origin on Vertebral Bodies, Insertion on Sacrum"
+            ],
+            correct: 1,
+            explanation: "Transversospinalis muscles originate on Transverse Processes (TPs) and course medially/superiorly to insert on Spinous Processes (SPs)."
+        },
+        {
+            question: "23. What direction of spinal rotation is produced when a right-sided Transversospinalis muscle contracts?",
+            options: [
+                "Right rotation (Ipsilateral)",
+                "Left rotation (Contralateral)",
+                "No rotational effect",
+                "Bilateral flexion"
+            ],
+            correct: 1,
+            explanation: "Because Transversospinalis fibers run from lateral TPs up to medial SPs, contracting the right side pulls the spinous process to the right, rotating the anterior vertebral body to the LEFT (contralateral rotation)."
+        },
+        {
+            question: "24. Why is the Multifidus muscle often left out of simplified deep anatomical diagrams showing Rotatores and Interspinales?",
+            options: [
+                "It is an inconstant muscle",
+                "Its broad, thick fiber coverage would completely obscure the deeper Rotatores and intersegmental muscles",
+                "It belongs to Layer 1",
+                "It is only present in quadruped animals"
+            ],
+            correct: 1,
+            explanation: "Dr. Phillip noted in lecture that Multifidus is so thick and extensive that if drawn fully, it hides the underlying Rotatores and intersegmental muscles."
+        },
+        {
+            question: "25. What type of muscle fibers predominant in deep intersegmental postural muscles like Intertransversarii and Interspinales?",
+            options: [
+                "Fast-twitch glycolytic fibers (Type IIb)",
+                "Highly oxidative, slow-twitch stabilization fibers (Type I)",
+                "Smooth muscle fibers",
+                "Involuntary cardiac-like fibers"
+            ],
+            correct: 1,
+            explanation: "These tiny deep muscles act primarily as highly oxidative postural fine-tuners and proprioceptive sensory transducers rather than gross power movers."
+        },
+        {
+            question: "26. Which nerve branches innervate all members of the Transversospinalis group (Semispinalis, Multifidus, Rotatores)?",
+            options: [
+                "Ventral rami of spinal nerves",
+                "Dorsal rami of spinal nerves",
+                "Intercostal nerves T1-T12",
+                "Ansa cervicalis"
+            ],
+            correct: 1,
+            explanation: "All intrinsic deep back muscles belonging to the Transversospinalis group are innervated by the dorsal rami of spinal nerves."
+        },
+        {
+            question: "27. Comparing segment spans, match the correct order from SHORTEST to LONGEST span: Rotatores Brevis, Multifidus, Rotatores Longus.",
+            options: [
+                "Multifidus < Rotatores Longus < Rotatores Brevis",
+                "Rotatores Brevis (1) < Rotatores Longus (2) < Multifidus (3-4)",
+                "Rotatores Longus < Rotatores Brevis < Multifidus",
+                "Multifidus < Rotatores Brevis < Rotatores Longus"
+            ],
+            correct: 1,
+            explanation: "Rotatores Brevis spans 1 segment, Rotatores Longus spans 2 segments, and Multifidus spans 3-4 segments."
+        },
+        {
+            question: "28. What is the origin of Semispinalis Cervicis?",
+            options: [
+                "Transverse processes T1-T6 and articular processes C4-C7",
+                "Spinous processes C7-T4",
+                "Iliac crest and sacral ala",
+                "Transverse processes C1-C4"
+            ],
+            correct: 0,
+            explanation: "Semispinalis Cervicis originates on TPs T1-T6 and APs C4-C7."
+        },
+        {
+            question: "29. Where does Semispinalis Cervicis insert?",
+            options: [
+                "Spinous processes C2-C5",
+                "Superior nuchal line",
+                "Mastoid process",
+                "Ribs 1-4"
+            ],
+            correct: 0,
+            explanation: "Semispinalis Cervicis inserts onto the spinous processes of C2 through C5."
+        },
+        {
+            question: "30. Which division of the Semispinalis group reaches closest to the axis (C2) spinous process?",
+            options: [
+                "Semispinalis Thoracis",
+                "Semispinalis Cervicis",
+                "Semispinalis Capitis",
+                "Semispinalis Lumborum"
+            ],
+            correct: 1,
+            explanation: "Semispinalis Cervicis inserts as superiorly as the spinous process of C2."
+        },
+        {
+            question: "31. What are the origin attachments for Semispinalis Capitis?",
+            options: [
+                "Transverse processes T1-T6 and articular processes C4-C7",
+                "Spinous processes T11-L2",
+                "Mammillary processes L1-L5",
+                "Inferior nuchal line"
+            ],
+            correct: 0,
+            explanation: "Semispinalis Capitis shares origin sites with Semispinalis Cervicis: TPs T1-T6 and APs C4-C7."
+        },
+        {
+            question: "32. What is the function of the paired medial and lateral lumbar Intertransversarii regarding lumbar joint architecture?",
+            options: [
+                "They assist in flexing the pubic symphysis",
+                "They stabilize the unstable, J-shaped lumbar facet joints",
+                "They elevate the lower 4 ribs during expiration",
+                "They rotate the sacrum anteriorly"
+            ],
+            correct: 1,
+            explanation: "In the lumbar spine, paired medial and lateral Intertransversarii help stabilize the vertical, J-shaped sagittal facet joints."
+        },
+        {
+            question: "33. If a patient experiences contralateral rotation and extension of thoracic vertebrae, which deep group is primarily contracting?",
+            options: [
+                "Interspinous",
+                "Transversospinalis (Semispinalis / Multifidus / Rotatores)",
+                "Intertransversarii",
+                "Serratus Posterior Inferior"
+            ],
+            correct: 1,
+            explanation: "Extension combined with contralateral rotation is the hallmark functional combination of the Transversospinalis group."
+        },
+        {
+            question: "34. What anatomical boundary prevents Interspinous muscles from existing at the C1-C2 level in standard form?",
+            options: [
+                "The presence of the suboccipital triangle and lack of a traditional C1 spinous process",
+                "The ligamentum flavum completely replaces muscle",
+                "The vertebral artery blocks insertion",
+                "Dorsal rami do not reach C1"
+            ],
+            correct: 0,
+            explanation: "C1 lacks a spinous process (having only a posterior tubercle), so Interspinous muscles begin between C2 and C3."
+        },
+        {
+            question: "35. Which muscle group is located directly deep to the Erector Spinae column?",
+            options: [
+                "Layer 1 (Trapezius / Latissimus)",
+                "Transversospinalis group",
+                "Layer 2 (Rhomboids)",
+                "Psoas Major"
+            ],
+            correct: 1,
+            explanation: "The Transversospinalis group lies directly deep to the Erector Spinae ('I Love Spaghetti') group."
+        },
+        {
+            question: "36. What structural feature characterizes the mammalian lumbar mammillary processes as origin sites for Multifidus?",
+            options: [
+                "They are smooth bony surfaces on the anterior body",
+                "They are small tubercles on the posterior aspect of superior articular processes in lumbar vertebrae",
+                "They attach directly to the inguinal ligament",
+                "They form part of the transverse foramina"
+            ],
+            correct: 1,
+            explanation: "Mammillary processes are small bony projections on the posterior border of the superior articular processes of lumbar vertebrae."
+        },
+        {
+            question: "37. What nerve supplies the suboccipital muscles and arises from the C1 dorsal ramus?",
+            options: [
+                "Greater occipital nerve",
+                "Suboccipital nerve",
+                "Third occipital nerve",
+                "Dorsal scapular nerve"
+            ],
+            correct: 1,
+            explanation: "The Suboccipital nerve is the dorsal ramus of C1 and innervates the suboccipital muscle group."
+        },
+        {
+            question: "38. Why do Rotatores muscles have superior leverage for rotation compared to Interspinous muscles?",
+            options: [
+                "They attach laterally to transverse processes before angling medially to spinous processes",
+                "They are much larger in bulk",
+                "They are innervated by cranial nerves",
+                "They attach to the clavicle"
+            ],
+            correct: 0,
+            explanation: "Rotatores attach to transverse processes, creating an oblique lever arm relative to the central rotational axis of the vertebral column."
+        },
+        {
+            question: "39. Which muscle in Week 3 notes attaches from the sacrum/PSIS all the way up to C2 spinous process via repeating segmental slips?",
+            options: [
+                "Semispinalis Thoracis",
+                "Multifidus",
+                "Intertransversarii",
+                "Rectus Capitis Posterior Minor"
+            ],
+            correct: 1,
+            explanation: "Multifidus originates from sacrum/PSIS/mammillary/TPs/APs and inserts on SPs from L5 all the way up to C2."
+        },
+        {
+            question: "40. What is the primary mechanical outcome of bilateral contraction of the Transversospinalis group?",
+            options: [
+                "Pure lateral flexion to the right",
+                "Pure spinal extension",
+                "Contralateral rotation to both sides simultaneously",
+                "Spinal flexion"
+            ],
+            correct: 1,
+            explanation: "When right and left Transversospinalis muscles contract simultaneously (bilaterally), their rotational vectors cancel out, producing pure spinal extension."
+        },
+        {
+            question: "41. What distinguishes Intertransversarii from Interspinous muscles in terms of primary movement?",
+            options: [
+                "Intertransversarii produce lateral flexion; Interspinous produce extension",
+                "Intertransversarii produce extension; Interspinous produce rotation",
+                "Intertransversarii produce flexion; Interspinous produce depression",
+                "They have identical actions"
+            ],
+            correct: 0,
+            explanation: "Intertransversarii connect TPs (lateral) to produce lateral flexion; Interspinous connect SPs (midline) to produce extension."
+        },
+        {
+            question: "42. What is the segmental span of Semispinalis bundles from origin to insertion?",
+            options: [
+                "1 segment",
+                "2 segments",
+                "4 to 6 segments",
+                "8 to 10 segments"
+            ],
+            correct: 2,
+            explanation: "Semispinalis is the longest member of the Transversospinalis group, spanning 4 to 6 vertebral segments between origin and insertion."
         }
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
+    ];
+
+    let questions = [];
+    let userAnswers = [];
+    let answeredCount = 0;
+    let correctCount = 0;
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
+    }
 
-        // Initialize Quiz Function
-        function initQuiz() {
-            userAnswers = {};
-            score = 0;
-            updateHeader();
+    function renderQuiz() {
+        // Deep copy questions and shuffle with Fisher-Yates
+        questions = JSON.parse(JSON.stringify(originalQuestions));
+        shuffleArray(questions);
 
-            shuffleArray(quizData);
-            quizData.forEach(q => shuffleArray(q.options));
-            
-            const container = document.getElementById("quiz-container");
-            container.innerHTML = "";
-            document.getElementById("summary-card").style.display = "none";
+        userAnswers = new Array(questions.length).fill(null);
+        answeredCount = 0;
+        correctCount = 0;
 
-            quizData.forEach((qData, index) => {
-                const card = document.createElement("div");
-                card.className = "quiz-card";
-                card.id = `question-card-${index}`;
+        const quizContainer = document.getElementById('quiz-body');
+        quizContainer.innerHTML = '';
 
-                const qNum = document.createElement("div");
-                qNum.className = "question-number";
-                qNum.innerText = `Question ${index + 1} of ${quizData.length}`;
+        questions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${qIndex}`;
 
-                const qText = document.createElement("div");
-                qText.className = "question-text";
-                qText.innerText = qData.q;
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = `${qIndex + 1}. ${q.question.replace(/^\d+\.\s*/, '')}`;
+            card.appendChild(qText);
 
-                const optionsGrid = document.createElement("div");
-                optionsGrid.className = "options-grid";
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
 
-                qData.options.forEach((optText, optIndex) => {
-                    const btn = document.createElement("button");
-                    btn.className = "option-btn";
-                    btn.id = `btn-${index}-${optIndex}`;
-                    btn.innerText = `${String.fromCharCode(65 + optIndex)}) ${optText}`;
-                    btn.onclick = () => handleAnswer(index, optIndex);
-                    optionsGrid.appendChild(btn);
+            q.options.forEach((opt, optIndex) => {
+                const optItem = document.createElement('li');
+                optItem.className = 'option-item';
+                optItem.id = `opt-${qIndex}-${optIndex}`;
+                
+                const label = document.createElement('strong');
+                label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
+                
+                const text = document.createTextNode(` ${opt}`);
+                
+                optItem.appendChild(label);
+                optItem.appendChild(text);
+
+                optItem.addEventListener('click', function() {
+                    selectAnswer(qIndex, optIndex);
                 });
 
-                const expBox = document.createElement("div");
-                expBox.className = "explanation-box";
-                expBox.id = `exp-${index}`;
-                expBox.innerHTML = `<div class="explanation-title">Explanation & Context:</div>${qData.exp}`;
-
-                card.appendChild(qNum);
-                card.appendChild(qText);
-                card.appendChild(optionsGrid);
-                card.appendChild(expBox);
-
-                container.appendChild(card);
-            });
-        }
-
-        // Handle User Selection
-        function handleAnswer(questionIndex, selectedOptionIndex) {
-            if (userAnswers[questionIndex] !== undefined) return; // Prevent double clicking
-
-            userAnswers[questionIndex] = selectedOptionIndex;
-            const qData = quizData[questionIndex];
-            const isCorrect = selectedOptionIndex === qData.correct;
-
-            if (isCorrect) score++;
-
-            // Lock all option buttons for this question
-            qData.options.forEach((_, optIndex) => {
-                const btn = document.getElementById(`btn-${questionIndex}-${optIndex}`);
-                btn.disabled = true;
-                if (optIndex === qData.correct) {
-                    btn.classList.add("correct");
-                } else if (optIndex === selectedOptionIndex && !isCorrect) {
-                    btn.classList.add("incorrect");
-                }
+                optionsList.appendChild(optItem);
             });
 
-            // Reveal Explanation
-            document.getElementById(`exp-${questionIndex}`).style.display = "block";
+            card.appendChild(optionsList);
 
-            // Update Progress Header
-            updateHeader();
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-box';
+            feedback.id = `feedback-${qIndex}`;
+            card.appendChild(feedback);
 
-            // Check if Quiz Complete
-            if (Object.keys(userAnswers).length === quizData.length) {
-                showSummary();
+            quizContainer.appendChild(card);
+        });
+    }
+
+    function selectAnswer(qIndex, optIndex) {
+        if (userAnswers[qIndex] !== null) return;
+
+        const q = questions[qIndex];
+        userAnswers[qIndex] = optIndex;
+        answeredCount++;
+
+        const isCorrect = (optIndex === q.correct);
+        if (isCorrect) correctCount++;
+
+        for (let i = 0; i < q.options.length; i++) {
+            const optEl = document.getElementById(`opt-${qIndex}-${i}`);
+            optEl.classList.add('disabled');
+
+            if (i === q.correct) {
+                optEl.classList.add('correct');
+            } else if (i === optIndex && !isCorrect) {
+                optEl.classList.add('incorrect');
             }
         }
 
-        // Update Header Status
-        function updateHeader() {
-            const answeredCount = Object.keys(userAnswers).length;
-            const total = quizData.length;
-            const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
-
-            document.getElementById("score-display").innerText = `Score: ${score} / ${answeredCount} (${percentage}%)`;
-            
-            const progressPercent = (answeredCount / total) * 100;
-            document.getElementById("progress-bar").style.width = `${progressPercent}%`;
+        const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+        feedbackEl.classList.add('show');
+        if (isCorrect) {
+            feedbackEl.classList.add('correct');
+            feedbackEl.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+        } else {
+            feedbackEl.classList.add('incorrect');
+            feedbackEl.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
         }
 
-        // Display Final Summary
-        function showSummary() {
-            const total = quizData.length;
-            const percentage = Math.round((score / total) * 100);
+        updateHeaderScore();
 
-            document.getElementById("final-score-text").innerText = `${percentage}% (${score}/${total})`;
-
-            let feedback = "";
-            if (percentage >= 90) {
-                feedback = "Outstanding Mastery! You have exceptional recall of Transversospinalis attachments, segment spans, and innervation nuances.";
-            } else if (percentage >= 75) {
-                feedback = "Great Performance! Review the missed explanations and Anki deck to solidify the finer board exceptions.";
-            } else if (percentage >= 60) {
-                feedback = "Solid Foundation. Focus on segment spanning rules (Rotatores vs. Multifidus vs. Semispinalis) and Intertransversarii innervation.";
-            } else {
-                feedback = "Keep Practicing! Review the Week 3 notes and audio transcript, then run through the Anki deck before retaking.";
-            }
-
-            document.getElementById("final-feedback-text").innerText = feedback;
-            document.getElementById("summary-card").style.display = "block";
-
-            // Scroll to summary card
-            document.getElementById("summary-card").scrollIntoView({ behavior: 'smooth' });
+        if (answeredCount === questions.length) {
+            showFinalSummary();
         }
+    }
 
-        // Run on load
-        window.onload = initQuiz;
-    </script>
+    function updateHeaderScore() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        document.getElementById('score-tracker').innerText = `Score: ${correctCount} / ${questions.length} (${percent}%)`;
+    }
+
+    function showFinalSummary() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        const summaryBox = document.getElementById('final-summary');
+        summaryBox.style.display = 'block';
+        document.getElementById('final-score-text').innerText = `Final Score: ${correctCount} out of ${questions.length} (${percent}%)`;
+        summaryBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        document.getElementById('final-summary').style.display = 'none';
+        updateHeaderScore();
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+        renderQuiz();
+        document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+    };
+</script>
 </body>
 </html>
