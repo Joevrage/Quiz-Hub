@@ -11,8 +11,8 @@
             --text-primary: #ffffff;
             --text-secondary: #a0a0a0;
             --primary-accent: #ff9900;
-            --correct-color: #10b981;
-            --correct-bg: #064e3b;
+            --correct-color: #22c55e;
+            --correct-bg: #14532d;
             --incorrect-color: #ef4444;
             --incorrect-bg: #7f1d1d;
             --border-color: #333333;
@@ -273,7 +273,7 @@
     </div>
 
     <script>
-        const questions = [
+        const quizData = [
             {
                 question: "Which category of bacteria contains all organisms of medical importance?",
                 options: ["Archaea", "Prions", "Eukaryotes", "Eubacteria"],
@@ -546,13 +546,26 @@
             }
         ];
 
-        let currentAnswers = new Array(questions.length).fill(null);
+        let activeQuestions = [];
+        let currentAnswers = [];
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
 
         function renderQuiz() {
+            // Deep copy and shuffle questions via Fisher-Yates
+            activeQuestions = shuffleArray(JSON.parse(JSON.stringify(quizData)));
+            currentAnswers = new Array(activeQuestions.length).fill(null);
+
             const container = document.getElementById('quizContainer');
             container.innerHTML = '';
 
-            questions.forEach((q, index) => {
+            activeQuestions.forEach((q, index) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
                 card.id = `q-card-${index}`;
@@ -563,13 +576,13 @@
                         <button class="option-btn" 
                                 id="btn-${index}-${optIdx}" 
                                 onclick="selectOption(${index}, ${optIdx})">
-                            ${String.fromCharCode(65 + optIdx)}. ${opt}
+                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
                         </button>
                     `;
                 });
 
                 card.innerHTML = `
-                    <div class="question-header">Question ${index + 1} of ${questions.length}</div>
+                    <div class="question-header">Question ${index + 1} of ${activeQuestions.length}</div>
                     <div class="question-text">${q.question}</div>
                     <div class="options-list">${optionsHTML}</div>
                     <div class="explanation-box" id="exp-${index}"></div>
@@ -577,13 +590,16 @@
 
                 container.appendChild(card);
             });
+
+            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${activeQuestions.length} (0%)`;
+            document.getElementById('progressBar').style.width = '0%';
         }
 
         function selectOption(qIdx, selectedOptIdx) {
             if (currentAnswers[qIdx] !== null) return;
 
             currentAnswers[qIdx] = selectedOptIdx;
-            const q = questions[qIdx];
+            const q = activeQuestions[qIdx];
             const isCorrect = selectedOptIdx === q.correct;
 
             q.options.forEach((_, optIdx) => {
@@ -609,15 +625,15 @@
         function updateScore() {
             const answeredCount = currentAnswers.filter(a => a !== null).length;
             const correctCount = currentAnswers.reduce((acc, ans, idx) => {
-                return ans === questions[idx].correct ? acc + 1 : acc;
+                return ans === activeQuestions[idx].correct ? acc + 1 : acc;
             }, 0);
 
-            const percentage = Math.round((correctCount / questions.length) * 100);
+            const percentage = Math.round((correctCount / activeQuestions.length) * 100);
             
-            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${questions.length} (${percentage}%)`;
-            document.getElementById('progressBar').style.width = `${(answeredCount / questions.length) * 100}%`;
+            document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${activeQuestions.length} (${percentage}%)`;
+            document.getElementById('progressBar').style.width = `${(answeredCount / activeQuestions.length) * 100}%`;
 
-            if (answeredCount === questions.length) {
+            if (answeredCount === activeQuestions.length) {
                 showSummary(correctCount, percentage);
             }
         }
@@ -627,7 +643,7 @@
             const finalScore = document.getElementById('finalScore');
             const feedback = document.getElementById('summaryFeedback');
 
-            finalScore.innerText = `${correctCount} / ${questions.length} (${percentage}%)`;
+            finalScore.innerText = `${correctCount} / ${activeQuestions.length} (${percentage}%)`;
 
             if (percentage >= 90) {
                 feedback.innerText = "Mastery demonstrated! You have thoroughly covered all Quiz 1 concepts.";
@@ -642,10 +658,7 @@
         }
 
         function resetQuiz() {
-            currentAnswers = new Array(questions.length).fill(null);
             document.getElementById('summaryCard').classList.remove('visible');
-            document.getElementById('scoreDisplay').innerText = `Score: 0 / ${questions.length} (0%)`;
-            document.getElementById('progressBar').style.width = '0%';
             renderQuiz();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
