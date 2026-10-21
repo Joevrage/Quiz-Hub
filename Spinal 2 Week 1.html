@@ -6,31 +6,30 @@
     <title>Spinal Anatomy II - Week 1 Comprehensive Assessment</title>
     <style>
         :root {
-            --primary: #003366;
-            --primary-hover: #002244;
-            --bg-light: #f4f6f9;
-            --card-bg: #ffffff;
-            --text-dark: #2c3e50;
-            --border-color: #cdd6e0;
-            --correct-bg: #e8f8f5;
-            --correct-border: #2ecc71;
-            --correct-text: #1e8449;
-            --incorrect-bg: #fadbd8;
-            --incorrect-border: #e74c3c;
-            --incorrect-text: #78281f;
+            --bg-canvas: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-sub: #a3a3a3;
+            --accent-orange: #ff9900;
+            --border-default: #282828;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
         }
 
         * {
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 10px;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 12px;
             display: flex;
             justify-content: center;
         }
@@ -38,10 +37,7 @@
         .quiz-container {
             width: 100%;
             max-width: 850px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            border: 1px solid var(--border-color);
+            background: transparent;
             overflow: hidden;
         }
 
@@ -49,48 +45,53 @@
             position: -webkit-sticky;
             position: sticky;
             top: 0;
-            background-color: var(--primary);
-            color: white;
-            padding: 15px 20px;
+            background-color: var(--bg-canvas);
+            border-bottom: 2px solid var(--border-default);
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            margin-bottom: 16px;
         }
 
         .sticky-header h1 {
-            margin: 0;
-            font-size: 1.15rem;
-            font-weight: 600;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .score-tracker {
             font-size: 0.95rem;
             font-weight: bold;
-            background: rgba(255, 255, 255, 0.2);
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
             padding: 6px 14px;
             border-radius: 20px;
             white-space: nowrap;
         }
 
         .quiz-body {
-            padding: 15px;
+            padding: 0 4px;
         }
 
         .question-card {
-            background: #fff;
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
             border-radius: 8px;
             padding: 18px;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .question-text {
             font-size: 1.05rem;
             font-weight: 600;
-            margin-bottom: 12px;
-            line-height: 1.4;
+            margin-bottom: 14px;
+            line-height: 1.45;
+            color: #ffffff;
         }
 
         .options-list {
@@ -100,34 +101,49 @@
         }
 
         .option-item {
-            background-color: #fff;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
             padding: 12px 14px;
             margin-bottom: 10px;
             cursor: pointer;
-            transition: background-color 0.15s ease, border-color 0.15s ease;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
             font-size: 0.95rem;
             touch-action: manipulation;
             display: flex;
             align-items: flex-start;
+            color: #e5e5e5;
         }
 
         .option-item strong {
-            margin-right: 8px;
+            margin-right: 10px;
+            color: var(--accent-orange);
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-orange);
+            background-color: #2a2a2a;
         }
 
         .option-item.correct {
             border-color: var(--correct-border) !important;
             background-color: var(--correct-bg) !important;
-            color: var(--correct-text) !important;
+            color: #ffffff !important;
             font-weight: 600;
+        }
+
+        .option-item.correct strong {
+            color: #ffffff !important;
         }
 
         .option-item.incorrect {
             border-color: var(--incorrect-border) !important;
             background-color: var(--incorrect-bg) !important;
-            color: var(--incorrect-text) !important;
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect strong {
+            color: #ffffff !important;
         }
 
         .option-item.disabled {
@@ -138,10 +154,10 @@
         .feedback-box {
             padding: 12px 14px;
             border-radius: 6px;
-            margin-top: 12px;
+            margin-top: 14px;
             display: none;
             font-size: 0.92rem;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .feedback-box.show {
@@ -149,37 +165,50 @@
         }
 
         .feedback-box.correct {
-            background-color: var(--correct-bg);
+            background-color: rgba(20, 83, 45, 0.4);
             border: 1px solid var(--correct-border);
-            color: var(--correct-text);
+            color: #4ade80;
         }
 
         .feedback-box.incorrect {
-            background-color: var(--incorrect-bg);
+            background-color: rgba(127, 29, 29, 0.4);
             border: 1px solid var(--incorrect-border);
-            color: var(--incorrect-text);
+            color: #f87171;
         }
 
         .summary-card {
-            background: var(--primary);
+            background: var(--bg-card);
+            border: 2px solid var(--accent-orange);
             color: white;
-            padding: 22px;
+            padding: 24px;
             border-radius: 8px;
             text-align: center;
             margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+            color: var(--accent-orange);
         }
 
         .btn {
-            background-color: #ffffff;
-            color: var(--primary);
+            background-color: var(--accent-orange);
+            color: #000000;
             border: none;
             padding: 12px 24px;
             font-size: 1rem;
             font-weight: bold;
             border-radius: 6px;
             cursor: pointer;
-            margin-top: 12px;
+            margin-top: 14px;
             touch-action: manipulation;
+            transition: opacity 0.2s;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -187,8 +216,8 @@
 
 <div class="quiz-container">
     <div class="sticky-header">
-        <h1>Spinal Week 1 Assessment</h1>
-        <div class="score-tracker" id="score-tracker">Score: 0 / 15 (0%)</div>
+        <h1>Spinal 2 Week 1 Assessment</h1>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 25 (0%)</div>
     </div>
 
     <div class="quiz-body" id="quiz-body"></div>
@@ -196,93 +225,159 @@
     <div class="quiz-body">
         <div class="summary-card" id="final-summary" style="display: none;">
             <h2>Quiz Complete!</h2>
-            <p id="final-score-text" style="font-size: 1.15rem;"></p>
+            <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px;"></p>
             <button class="btn" id="reset-btn">Reset & Retake Quiz</button>
         </div>
     </div>
 </div>
 
 <script>
-    const questions = [
+    const originalQuestions = [
         {
-            question: "1. In an open kinetic chain movement, how is a muscle's 'Origin' traditionally defined?",
+            question: "1. In open kinetic chain movements, how is a muscle's origin functionally defined?",
             options: [
                 "The distal or lateral attachment that moves during contraction",
                 "The proximal or medial attachment that stays stationary during contraction",
-                "The attachment that always crosses two or more joints",
-                "The insertion site that converts motor impulses into kinetic energy"
+                "The lateral anchor that crosses multiple joint axes",
+                "The movable extremity site"
             ],
             correct: 1,
-            explanation: "Origin is defined in open kinetic chains as the proximal/medial attachment that remains fixed/stationary while the insertion moves."
+            explanation: "In open kinetic chains, origin is defined as the proximal/medial stationary attachment, while insertion is the distal/lateral moving site."
         },
         {
-            question: "2. How do origin and insertion functionally behave during closed kinetic chain movements (e.g., push-ups vs. bicep curls)?",
+            question: "2. How do origin and insertion roles behave during closed kinetic chain exercises (e.g., push-ups vs. bicep curls)?",
             options: [
-                "They remain identical regardless of movement style",
-                "Origin and insertion can functionally flip because the distal end becomes fixed while the proximal end moves",
+                "Origin and insertion retain exact roles regardless of mechanics",
+                "Origin and insertion functionally flip because the distal end becomes stationary while the proximal end moves",
                 "The origin undergoes complete sensory denervation",
-                "The insertion converts entirely into an elastic ligamentous anchor"
+                "The insertion converts into an elastic ligamentous anchor"
             ],
             correct: 1,
-            explanation: "Dr. Phillip highlighted that in closed kinetic chain movements (like push-ups), the distal attachment is fixed and the proximal attachment moves toward it, flipping the traditional origin/insertion roles."
+            explanation: "In closed kinetic chain movements (like push-ups), the distal attachment is fixed and the proximal attachment moves toward it, functionally flipping traditional origin/insertion roles."
         },
         {
-            question: "3. What nerve supplies primary motor innervation to the Trapezius muscle?",
+            question: "3. Which muscles belong to Layer 1 of the axial back musculature?",
+            options: [
+                "Levator Scapulae and Rhomboid Minor",
+                "Splenius Capitis and Splenius Cervicis",
+                "Trapezius and Latissimus Dorsi",
+                "Serratus Posterior Superior and Inferior"
+            ],
+            correct: 2,
+            explanation: "Layer 1 consists strictly of the most superficial axial back muscles: Trapezius and Latissimus Dorsi."
+        },
+        {
+            question: "4. What are the complete origin attachment sites for the Trapezius muscle?",
+            options: [
+                "Medial 1/3 superior nuchal line, EOP, nuchal ligament, and SPs C7–T12",
+                "Transverse processes C1–C4 and iliac crest",
+                "Spinous processes T7–L5 and thoracolumbar fascia",
+                "Acromion process and lateral 1/3 of clavicle"
+            ],
+            correct: 0,
+            explanation: "Trapezius originates broadly from the medial 1/3 of the superior nuchal line, External Occipital Protuberance (EOP), ligamentum nuchae, and spinous processes C7–T12."
+        },
+        {
+            question: "5. What are the 3 insertion sites of the Trapezius muscle?",
+            options: [
+                "Mastoid process, EOP, and superior nuchal line",
+                "Spine of the scapula, acromion process, and lateral 1/3 of clavicle",
+                "Intertubercular groove, deltoid tuberosity, and coracoid process",
+                "Medial border of scapula from C7 to T5"
+            ],
+            correct: 1,
+            explanation: "Trapezius inserts laterally onto the spine of the scapula, the acromion process, and the lateral 1/3 of the clavicle."
+        },
+        {
+            question: "6. What nerve supplies primary motor innervation to the Trapezius muscle?",
             options: [
                 "Dorsal Scapular Nerve (C5)",
                 "Thoracodorsal Nerve (C6–C8)",
-                "Spinal Accessory Nerve (Cranial Nerve XI)",
+                "Spinal Accessory Nerve (CN XI)",
                 "Long Thoracic Nerve (C5–C7)"
             ],
             correct: 2,
             explanation: "Trapezius is primarily innervated by Cranial Nerve XI (Spinal Accessory Nerve), with sensory contributions from C3–C4."
         },
         {
-            question: "4. Which fiber division of the Trapezius is responsible for scapular ELEVATION (e.g., shoulder shrugs)?",
+            question: "7. Which trapezius fiber division is responsible for scapular ELEVATION (shoulder shrugs)?",
             options: [
                 "Superior (Upper) fibers",
                 "Middle fibers",
                 "Inferior (Lower) fibers",
-                "Deep subscapular fibers"
+                "Anterior costal fibers"
             ],
             correct: 0,
             explanation: "Superior fibers pull upward on the scapular spine, acromion, and lateral clavicle to elevate the scapula."
         },
         {
-            question: "5. How is SUPERIOR (upward) ROTATION of the scapula defined biomechanically?",
+            question: "8. Which trapezius fiber division is primarily responsible for scapular RETRACTION (pinching shoulder blades)?",
             options: [
-                "Displacement of the superior angle medially toward C2",
-                "Lateral and upward displacement of the inferior angle of the scapula",
-                "Anterior tilt of the coracoid process",
-                "Inferior migration of the glenoid fossa during adduction"
+                "Superior fibers",
+                "Middle fibers",
+                "Inferior fibers",
+                "Clavicular head fibers"
             ],
             correct: 1,
-            explanation: "Superior rotation is specifically defined by the lateral and upward movement of the inferior angle of the scapula."
+            explanation: "Middle trapezius fibers run horizontally across the upper back and function primarily to retract (pinch) the scapulae."
         },
         {
-            question: "6. Which two fiber groups of the Trapezius act as a force couple to produce superior rotation of the scapula?",
+            question: "9. Which trapezius fiber division is responsible for scapular DEPRESSION?",
             options: [
-                "Superior fibers pulling upward and Inferior fibers pulling down on the medial spine",
-                "Middle fibers and Levator Scapulae",
-                "Inferior fibers and Rhomboid Major",
-                "Superior fibers and Latissimus Dorsi"
+                "Superior fibers",
+                "Middle fibers",
+                "Inferior (Lower) fibers",
+                "Levator scapulae fibers"
+            ],
+            correct: 2,
+            explanation: "Inferior trapezius fibers pull downward on the medial end of the scapular spine, depressing the scapula."
+        },
+        {
+            question: "10. Biomechanically, how is SUPERIOR (upward) ROTATION of the scapula defined?",
+            options: [
+                "Lateral and upward movement of the inferior angle of the scapula",
+                "Medial displacement of the superior angle toward C2",
+                "Inferior migration of the glenoid fossa during adduction",
+                "Anterior tilt of the coracoid process"
             ],
             correct: 0,
-            explanation: "Superior trapezius fibers pull up laterally while inferior fibers depress the medial end of the scapular spine, creating rotational torque."
+            explanation: "Superior rotation is specifically defined by the inferior angle of the scapula moving laterally and upward."
         },
         {
-            question: "7. Which of the following is NOT an attachment site for the Latissimus Dorsi?",
+            question: "11. What exercise or sport movement was highlighted in lecture for Latissimus Dorsi?",
             options: [
-                "Spinous processes of T7–L5",
-                "Thoracolumbar fascia and Iliac crest",
-                "Intertubercular (bicipital) groove of the humerus",
-                "Mastoid process of the temporal bone"
+                "Shoulder shrugs",
+                "Swimmer's stroke and pull-ups",
+                "Push-ups",
+                "Bicep curls"
+            ],
+            correct: 1,
+            explanation: "Latissimus Dorsi is the classic 'swimmer's muscle', heavily utilized in swimming, pull-ups, and lat pull-downs."
+        },
+        {
+            question: "12. What are the origin attachment sites for Latissimus Dorsi?",
+            options: [
+                "Transverse processes C1–C4 and EOP",
+                "Spinous processes T7–L5, thoracolumbar fascia, and iliac crest",
+                "Ribs 1–6 and sternum",
+                "Coracoid process and acromion"
+            ],
+            correct: 1,
+            explanation: "Latissimus Dorsi originates from spinous processes T7–L5, thoracolumbar fascia, and the iliac crest."
+        },
+        {
+            question: "13. What is the insertion site of the Latissimus Dorsi muscle?",
+            options: [
+                "Spine of the scapula",
+                "Greater tubercle of the humerus",
+                "Mastoid process",
+                "Intertubercular (bicipital) groove of the humerus (medial lip)"
             ],
             correct: 3,
-            explanation: "Latissimus Dorsi originates from SPs T7–L5, thoracolumbar fascia, and iliac crest, and inserts into the intertubercular groove of the humerus. It does not attach to the mastoid process."
+            explanation: "Latissimus Dorsi wraps around from posterior to insert into the floor/medial lip of the intertubercular (bicipital) groove on the anterior humerus."
         },
         {
-            question: "8. What nerve innervates the Latissimus Dorsi muscle?",
+            question: "14. What nerve innervates Latissimus Dorsi?",
             options: [
                 "Thoracodorsal nerve (C6–C8)",
                 "Dorsal scapular nerve (C5)",
@@ -290,92 +385,152 @@
                 "Axillary nerve (C5–C6)"
             ],
             correct: 0,
-            explanation: "Latissimus Dorsi is innervated by the thoracodorsal nerve (C6–C8), which enters near the axilla and travels through the muscle."
+            explanation: "Latissimus Dorsi is innervated by the Thoracodorsal nerve (C6–C8)."
         },
         {
-            question: "9. What are the 3 primary actions of Latissimus Dorsi on the humerus?",
+            question: "15. What are the 3 primary actions of Latissimus Dorsi on the humerus?",
             options: [
-                "Flexion, Lateral rotation, and Abduction",
-                "Extension, Medial rotation, and Adduction",
-                "Elevation, Superior rotation, and Protraction",
-                "Inversion, Eversion, and Pronation"
+                "Flexion, Lateral rotation, Abduction",
+                "Extension, Medial rotation, Adduction",
+                "Elevation, Retraction, Superior rotation",
+                "Protraction, Elevation, Flexion"
             ],
             correct: 1,
-            explanation: "Latissimus Dorsi extends, medially rotates, and adducts the humerus (the classic swimmer's stroke / pull-up muscle movement)."
+            explanation: "Latissimus Dorsi extends, medially rotates, and adducts the humerus."
         },
         {
-            question: "10. What rule governs the spatial relationship of minor and major muscles in Layer 2 (and across human anatomy)?",
+            question: "16. What rule governs the spatial relationship of minor and major muscles (e.g., Rhomboids) in anatomy?",
             options: [
-                "Majors are always superior to Minors",
-                "Minors are always superior to Majors",
-                "Minors are situated anterior to Majors",
-                "Majors possess dual cranial nerve innervations"
+                "Majors are superior to Minors",
+                "Minors lie deep to Majors",
+                "Minors are superior to Majors",
+                "Majors are anterior to Minors"
+            ],
+            correct: 2,
+            explanation: "Dr. Phillip emphasized: 'Minors above majors' (Rhomboid Minor is superior to Rhomboid Major)."
+        },
+        {
+            question: "17. What 3 muscles comprise Layer 2 of the back musculature?",
+            options: [
+                "Trapezius, Latissimus Dorsi, Splenius Capitis",
+                "Levator Scapulae, Rhomboid Minor, Rhomboid Major",
+                "Serratus Posterior Superior, Inferior, Multifidus",
+                "Iliocostalis, Longissimus, Spinalis"
             ],
             correct: 1,
-            explanation: "Dr. Phillip emphasized the anatomical rule: 'Minors above majors' (e.g., Rhomboid Minor superior to Rhomboid Major)."
+            explanation: "Layer 2 consists of Levator Scapulae, Rhomboid Minor, and Rhomboid Major."
         },
         {
-            question: "11. What single nerve root supplies primary motor innervation to ALL Layer 2 muscles (Levator Scapulae, Rhomboid Minor, Rhomboid Major)?",
+            question: "18. What single nerve root supplies primary motor innervation to ALL Layer 2 muscles?",
             options: [
                 "C3 via Cervical Plexus",
-                "C5 via Dorsal Scapular Nerve",
                 "C7 via Radial Nerve",
-                "C8 via Thoracodorsal Nerve"
+                "CN XI (Spinal Accessory)",
+                "C5 via Dorsal Scapular Nerve"
             ],
-            correct: 1,
+            correct: 3,
             explanation: "All Layer 2 muscles share primary innervation from nerve root C5 via the Dorsal Scapular Nerve."
         },
         {
-            question: "12. What secondary cervical spine movement occurs if the Levator Scapulae contracts while the scapula is held FIXED?",
+            question: "19. What is the origin and insertion of the Levator Scapulae muscle?",
             options: [
-                "Contralateral rotation with hyperflexion",
-                "Ipsilateral lateral flexion with cervical extension",
-                "Pure cervical protraction",
-                "Axial decompression"
-            ],
-            correct: 1,
-            explanation: "When the scapula is stabilized, contracting the posterior-positioned Levator Scapulae pulls the cervical TPs backward and laterally, causing ipsilateral lateral flexion with extension."
-        },
-        {
-            question: "13. What is the insertion site of the Rhomboid Minor muscle?",
-            options: [
-                "Mastoid process",
-                "Medial border of the scapula at the level of the spine of the scapula",
-                "Lateral 1/3 of the clavicle",
-                "Transverse processes of C1–C4"
-            ],
-            correct: 1,
-            explanation: "Rhomboid Minor inserts specifically at the medial border of the scapula at the level of the scapular spine (originating at SP C7–T1)."
-        },
-        {
-            question: "14. Which 3 anatomical structures form the boundaries of the Triangle of Auscultation?",
-            options: [
-                "Trapezius (superior/medial), Latissimus Dorsi (inferior), and Scapula medial border (lateral)",
-                "Levator Scapulae, Rhomboid Minor, and Clavicle",
-                "Sternocleidomastoid, Trapezius, and Omohyoid",
-                "Erector Spinae, Multifidus, and Rib 12"
+                "Origin: TPs C1–C4 | Insertion: Superior portion of medial border of scapula",
+                "Origin: SPs C7–T1 | Insertion: Spine of scapula",
+                "Origin: Ribs 3–5 | Insertion: Coracoid process",
+                "Origin: EOP | Insertion: Clavicle"
             ],
             correct: 0,
-            explanation: "The Triangle of Auscultation is bounded by Trapezius superiorly/medially, Latissimus Dorsi inferiorly, and the medial border of the scapula (or Rhomboid Major) laterally."
+            explanation: "Levator Scapulae originates from TPs C1–C4 and inserts onto the superior portion of the medial border (superior angle) of the scapula."
         },
         {
-            question: "15. Why is the Triangle of Auscultation clinically valuable during physical examination?",
+            question: "20. What secondary cervical action occurs if Levator Scapulae contracts while the scapula is held FIXED?",
             options: [
-                "It contains the primary pulse point for the subclavian artery",
-                "It has thin muscular coverage over ribs 6–7, allowing clear stethoscope listening of lung sounds",
-                "It is the direct injection site for dorsal rami nerve blocks",
-                "It houses the spinal accessory lymph node chain"
+                "Contralateral rotation with flexion",
+                "Ipsilateral lateral flexion with cervical extension",
+                "Pure cervical protraction",
+                "Axial retraction"
             ],
             correct: 1,
-            explanation: "Due to thin muscular overlap over the 6th and 7th intercostal spaces, clinicians use this triangle for stethoscope auscultation of pulmonary breath sounds."
+            explanation: "When the scapula is stabilized, contracting Levator Scapulae causes ipsilateral lateral flexion with extension of the cervical spine."
+        },
+        {
+            question: "21. What is the origin and insertion of Rhomboid Minor?",
+            options: [
+                "Origin: SPs C7–T1 | Insertion: Medial border at level of scapular spine",
+                "Origin: TPs C1–C4 | Insertion: Superior angle of scapula",
+                "Origin: SPs T2–T5 | Insertion: Inferior angle of scapula",
+                "Origin: EOP | Insertion: Acromion process"
+            ],
+            correct: 0,
+            explanation: "Rhomboid Minor originates from SPs C7–T1 and inserts at the medial border of the scapula at the level of the scapular spine."
+        },
+        {
+            question: "22. What is the origin and insertion of Rhomboid Major?",
+            options: [
+                "Origin: SPs C7–T1 | Insertion: Acromion process",
+                "Origin: SPs T2–T5 | Insertion: Medial border below scapular spine to inferior angle",
+                "Origin: TPs C1–C4 | Insertion: Clavicle",
+                "Origin: Iliac crest | Insertion: Humerus"
+            ],
+            correct: 1,
+            explanation: "Rhomboid Major originates from SPs T2–T5 and inserts on the medial border of the scapula below the spine down to the inferior angle."
+        },
+        {
+            question: "23. What are the 2 primary actions shared by Rhomboid Minor and Rhomboid Major?",
+            options: [
+                "Scapular elevation and superior rotation",
+                "Humeral extension and adduction",
+                "Scapular retraction and inferior rotation of glenoid cavity",
+                "Cervical flexion and rotation"
+            ],
+            correct: 2,
+            explanation: "Both rhomboids retract the scapula and rotate the glenoid cavity inferiorly (medial rotation of inferior angle)."
+        },
+        {
+            question: "24. Which 3 boundaries define the Triangle of Auscultation?",
+            options: [
+                "Levator Scapulae, Rhomboid Minor, Clavicle",
+                "Superior/Medial: Trapezius | Inferior: Latissimus Dorsi | Lateral: Medial border of Scapula",
+                "Sternocleidomastoid, Omohyoid, Trapezius",
+                "Erector Spinae, Multifidus, Rib 12"
+            ],
+            correct: 1,
+            explanation: "The Triangle of Auscultation is bounded by Trapezius (superior/medial), Latissimus Dorsi (inferior), and the medial border of the scapula (lateral)."
+        },
+        {
+            question: "25. What ligamentous structure on the Week 1 Lab Hit List serves as a 'scruff-of-the-neck' anchor for Trapezius?",
+            options: [
+                "Thoracolumbar fascia",
+                "Anterior longitudinal ligament",
+                "Ligamentum nuchae",
+                "Interspinous ligament"
+            ],
+            correct: 2,
+            explanation: "Dr. Phillip compared Ligamentum nuchae to the scruff of a kitten's neck—a strong midline anchor for upper back muscles."
         }
     ];
 
-    let userAnswers = new Array(questions.length).fill(null);
+    let questions = [];
+    let userAnswers = [];
     let answeredCount = 0;
     let correctCount = 0;
 
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     function renderQuiz() {
+        // Deep clone and shuffle question order with Fisher-Yates
+        questions = JSON.parse(JSON.stringify(originalQuestions));
+        shuffleArray(questions);
+
+        userAnswers = new Array(questions.length).fill(null);
+        answeredCount = 0;
+        correctCount = 0;
+
         const quizContainer = document.getElementById('quiz-body');
         quizContainer.innerHTML = '';
 
@@ -386,7 +541,7 @@
 
             const qText = document.createElement('div');
             qText.className = 'question-text';
-            qText.textContent = q.question;
+            qText.textContent = `${qIndex + 1}. ${q.question.replace(/^\d+\.\s*/, '')}`;
             card.appendChild(qText);
 
             const optionsList = document.createElement('ul');
@@ -475,19 +630,16 @@
     }
 
     function resetQuiz() {
-        userAnswers = new Array(questions.length).fill(null);
-        answeredCount = 0;
-        correctCount = 0;
         document.getElementById('final-summary').style.display = 'none';
         updateHeaderScore();
         renderQuiz();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    window.onload = function() {
         renderQuiz();
         document.getElementById('reset-btn').addEventListener('click', resetQuiz);
-    });
+    };
 </script>
 </body>
 </html>
