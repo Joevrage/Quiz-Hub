@@ -752,7 +752,7 @@
             }
         ];
 
-        // Helper to shuffle array in place
+        // Helper to shuffle array in place (Fisher-Yates)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -765,7 +765,7 @@
         let currentScore = 0;
         let answeredCount = 0;
 
-        function initializeQuiz() {
+        function renderQuiz() {
             currentScore = 0;
             answeredCount = 0;
             updateScoreDisplay();
@@ -774,14 +774,14 @@
             container.innerHTML = '';
             document.getElementById('results-card').style.display = 'none';
 
-            // Clone and process questions with randomized choices
+            // Clone and process questions with randomized questions order and randomized choices order
             processedQuestions = rawQuestions.map((q, index) => {
                 const optionsObj = q.options.map((optText, optIdx) => ({
                     text: optText,
                     isCorrect: optIdx === q.correctIndex
                 }));
 
-                // Shuffle options to ensure even distribution across A, B, C, D
+                // Shuffle options to evenly distribute correct answers across A, B, C, D
                 shuffleArray(optionsObj);
 
                 return {
@@ -792,6 +792,9 @@
                     answered: false
                 };
             });
+
+            // Shuffle the order of the questions array
+            shuffleArray(processedQuestions);
 
             // Render Questions
             processedQuestions.forEach((q, qIndex) => {
@@ -911,12 +914,12 @@
         function resetQuiz() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
-                initializeQuiz();
+                renderQuiz();
             }, 300);
         }
 
-        // Initialize quiz on load
-        window.addEventListener('DOMContentLoaded', initializeQuiz);
+        // Initialize quiz on load using renderQuiz
+        window.addEventListener('DOMContentLoaded', renderQuiz);
     </script>
 </body>
 </html>
