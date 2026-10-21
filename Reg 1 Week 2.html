@@ -2,469 +2,601 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forearm & Antebrachial Anatomy Quiz Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reg 1 Week 2 Practice Quiz</title>
     <style>
         :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --accent-orange: #ff9900;
-            --text-white: #ffffff;
-            --text-dim: #b0b0b0;
-            --correct-green: #28a745;
-            --incorrect-red: #dc3545;
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
             --border-color: #333333;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-white);
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            padding-top: 70px;
-            padding-bottom: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Sticky Header */
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
         header {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: var(--card-bg);
-            border-bottom: 2px solid var(--accent-orange);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 1rem;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         .header-title {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: var(--accent-orange);
+            color: var(--text-main);
         }
 
-        .score-tracker {
-            font-size: 1.1rem;
-            font-weight: bold;
-            background-color: #2a2a2a;
-            padding: 6px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--accent-orange);
+        #score-header {
+            color: var(--accent);
         }
 
-        /* Main Container */
-        .quiz-container {
+        .container {
             max-width: 800px;
-            margin: 20px auto;
-            padding: 0 15px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
-        /* Question Cards */
         .question-card {
-            background-color: var(--card-bg);
+            background-color: var(--bg-card);
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
             border: 1px solid var(--border-color);
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
         }
 
         .question-number {
-            color: var(--accent-orange);
-            font-size: 0.9rem;
-            font-weight: bold;
+            font-size: 0.85rem;
+            color: var(--accent);
             text-transform: uppercase;
-            margin-bottom: 8px;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
         .question-text {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             font-weight: 600;
-            margin-bottom: 15px;
-            line-height: 1.4;
+            margin-bottom: 1.5rem;
+            color: var(--text-main);
         }
 
-        /* Options */
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
         }
 
         .option-btn {
             background-color: #262626;
-            color: var(--text-white);
-            border: 1px solid var(--border-color);
-            padding: 12px 16px;
+            border: 2px solid var(--border-color);
             border-radius: 6px;
+            padding: 1rem;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
-            transition: background-color 0.2s, border-color 0.2s;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
             width: 100%;
-            box-sizing: border-box;
         }
 
         .option-btn:hover:not(:disabled) {
             background-color: #333333;
-            border-color: var(--accent-orange);
+            border-color: var(--accent);
         }
 
         .option-btn:disabled {
-            cursor: not-allowed;
+            cursor: default;
         }
 
         .option-btn.correct {
-            background-color: var(--correct-green) !important;
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
             color: #ffffff !important;
-            border-color: var(--correct-green) !important;
-            font-weight: bold;
         }
 
         .option-btn.incorrect {
-            background-color: var(--incorrect-red) !important;
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
             color: #ffffff !important;
-            border-color: var(--incorrect-red) !important;
         }
 
-        /* Feedback Box */
-        .explanation-box {
-            margin-top: 15px;
-            padding: 12px 15px;
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1rem;
             border-radius: 6px;
-            background-color: #222222;
-            border-left: 4px solid var(--accent-orange);
-            font-size: 0.9rem;
-            line-height: 1.5;
+            background-color: #262626;
+            border-left: 4px solid var(--accent);
+            font-size: 0.95rem;
             display: none;
+            color: #e5e5e5;
+            animation: fadeIn 0.3s ease-in;
         }
 
-        /* Final Results Summary */
-        .results-card {
-            display: none;
-            background-color: var(--card-bg);
-            border: 2px solid var(--accent-orange);
-            border-radius: 10px;
-            padding: 30px;
+        .explanation strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1.05rem;
+        }
+
+        .explanation .correct-text {
+            color: var(--correct-border);
+        }
+
+        .explanation .incorrect-text {
+            color: var(--incorrect-border);
+        }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
             text-align: center;
-            margin-top: 30px;
+            border: 2px solid var(--accent);
+            margin-top: 2rem;
+            display: none;
         }
 
-        .results-score {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: var(--accent-orange);
-            margin: 15px 0;
+        #summary-card h2 {
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-size: 1.8rem;
         }
 
-        .restart-btn {
-            background-color: var(--accent-orange);
-            color: #000000;
+        .score-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #final-feedback {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: var(--bg-main);
             border: none;
-            padding: 12px 30px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 25px;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            border-radius: 6px;
             cursor: pointer;
-            margin-top: 15px;
-            transition: transform 0.1s, background-color 0.2s;
+            font-weight: 700;
+            transition: background-color 0.2s;
         }
 
-        .restart-btn:hover {
-            background-color: #ffaa22;
-            transform: scale(1.03);
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="header-title">Forearm & Antebrachium Quiz Hub</div>
-        <div class="score-tracker" id="score-display">Score: 0 / 25 (0%)</div>
+        <div class="header-title">Reg 1 Week 2 Practice Quiz</div>
+        <div id="score-header">Score: 0 / 25 (0%)</div>
     </header>
 
-    <div class="quiz-container">
-        <div id="questions-wrapper"></div>
-
-        <div id="results-wrapper" class="results-card">
-            <h2>Quiz Completed!</h2>
-            <div class="results-score" id="final-percentage">0%</div>
-            <p id="final-stats">You scored 0 out of 25.</p>
-            <p id="performance-feedback" style="color: var(--text-dim); margin-bottom: 20px;"></p>
-            <button class="restart-btn" onclick="resetQuiz()">Retake Quiz</button>
+    <div class="container">
+        <div id="quiz-container"></div>
+        <div id="summary-card">
+            <h2>Quiz Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 25 (0%)</div>
+            <p id="final-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
     </div>
 
     <script>
         const quizData = [
             {
-                q: "Which muscle forms the separation between the anterior (flexor) and posterior (extensor) compartments of the forearm?",
-                options: ["Anconeus", "Brachioradialis", "Pronator teres", "Supinator"],
-                correct: 1,
-                exp: "Brachioradialis starts on the posterior supracondylar ridge but winds laterally to become a flexor, serving as the landmark separating anterior and posterior compartments."
+                question: "Which muscle serves as the primary anatomical landmark dividing the anterior (flexor) compartment from the posterior (extensor) compartment of the forearm?",
+                options: [
+                    { text: "Supinator", correct: false },
+                    { text: "Brachioradialis", correct: true },
+                    { text: "Pronator teres", correct: false },
+                    { text: "Anconeus", correct: false }
+                ],
+                explanation: "Brachioradialis originates from the lateral supracondylar ridge and courses along the lateral boundary of the forearm, functioning as the key dividing landmark between the anterior flexor and posterior extensor compartments[cite: 3]."
             },
             {
-                q: "What is the common proximal attachment (origin) for the superficial anterior forearm flexor group?",
-                options: ["Lateral epicondyle of the humerus", "Medial epicondyle of the humerus", "Coronoid process of the ulna", "Radial tuberosity"],
-                correct: 1,
-                exp: "The superficial anterior flexors originate from a common flexor tendon attached to the medial epicondyle of the humerus."
+                question: "What is the common proximal attachment (origin) for the superficial layer of the anterior forearm flexor compartment?",
+                options: [
+                    { text: "Medial epicondyle of the humerus", correct: true },
+                    { text: "Lateral epicondyle of the humerus", correct: false },
+                    { text: "Coronoid process of the ulna", correct: false },
+                    { text: "Radial tuberosity", correct: false }
+                ],
+                explanation: "The superficial anterior forearm flexors (pronator teres, flexor carpi radialis, palmaris longus, and flexor carpi ulnaris) share a common proximal origin via the common flexor tendon at the medial epicondyle of the humerus[cite: 3]."
             },
             {
-                q: "The pronator teres muscle possesses two heads of origin. Where does the secondary deep head attach?",
-                options: ["Coronoid process of the ulna", "Olecranon process", "Distal third of the radius", "Bicipital groove"],
-                correct: 0,
-                exp: "The main head originates from the medial epicondyle while the secondary deep ulnar head arises from the coronoid process of the ulna."
+                question: "The pronator teres muscle arises via two distinct heads. Where does its secondary deep ulnar head attach?",
+                options: [
+                    { text: "Olecranon process", correct: false },
+                    { text: "Coronoid process of the ulna", correct: true },
+                    { text: "Distal third of the radius", correct: false },
+                    { text: "Interosseous border of the radius", correct: false }
+                ],
+                explanation: "Pronator teres originates via two heads: a humeral head from the medial epicondyle and a deeper ulnar head from the coronoid process of the ulna, through which the median nerve passes[cite: 3]."
             },
             {
-                q: "Which anterior forearm muscle is absent in approximately 14% of the population without causing functional deficit?",
-                options: ["Flexor carpi radialis", "Palmaris longus", "Pronator quadratus", "Flexor digitorum superficialis"],
-                correct: 1,
-                exp: "The palmaris longus is absent in about 14% of individuals, typically unilateral on the left side."
+                question: "Which anterior forearm muscle is congenitally absent in approximately 14% of the population without producing any significant functional deficit?",
+                options: [
+                    { text: "Flexor carpi radialis", correct: false },
+                    { text: "Pronator quadratus", correct: false },
+                    { text: "Flexor digitorum superficialis", correct: false },
+                    { text: "Palmaris longus", correct: true }
+                ],
+                explanation: "The palmaris longus is absent in approximately 14% of individuals (most frequently unilaterally on the left side) with no detectable loss of grip or wrist flexion strength[cite: 3]."
             },
             {
-                q: "At which specific joint level does the flexor digitorum superficialis primary flex the phalanges of digits 2–5?",
-                options: ["Distal interphalangeal (DIP) joint", "Proximal interphalangeal (PIP) joint", "Metacarpophalangeal (MCP) joint", "Carpometacarpal (CMC) joint"],
-                correct: 1,
-                exp: "Flexor digitorum superficialis flexes digits 2–5 at the proximal interphalangeal (PIP) joint, whereas flexor digitorum profundus goes to the distal phalanges."
+                question: "At which specific joint level does the flexor digitorum superficialis (FDS) primarily flex digits 2 through 5?",
+                options: [
+                    { text: "Distal interphalangeal (DIP) joints", correct: false },
+                    { text: "Proximal interphalangeal (PIP) joints", correct: true },
+                    { text: "Carpometacarpal (CMC) joints", correct: false },
+                    { text: "Intercarpal joints", correct: false }
+                ],
+                explanation: "Flexor digitorum superficialis tendons split to insert onto the sides of the middle phalanges, primarily flexing the proximal interphalangeal (PIP) joints[cite: 3]. Flexor digitorum profundus traverses this split to flex the DIP joints[cite: 3]."
             },
             {
-                q: "Which muscle is innervated by BOTH the median nerve and the ulnar nerve?",
-                options: ["Flexor digitorum superficialis", "Flexor carpi ulnaris", "Flexor digitorum profundus", "Pronator teres"],
-                correct: 2,
-                exp: "Flexor digitorum profundus is dual-innervated: the lateral portion (digits 2-3) is median nerve, while the medial portion (digits 4-5) is ulnar nerve."
+                question: "Which forearm muscle exhibits dual motor innervation from BOTH the median nerve and the ulnar nerve?",
+                options: [
+                    { text: "Flexor digitorum superficialis", correct: false },
+                    { text: "Pronator teres", correct: false },
+                    { text: "Flexor digitorum profundus", correct: true },
+                    { text: "Flexor carpi ulnaris", correct: false }
+                ],
+                explanation: "Flexor digitorum profundus has a dual innervation pattern: its lateral half (acting on digits 2 and 3) is supplied by the anterior interosseous branch of the median nerve, while its medial half (acting on digits 4 and 5) is supplied by the ulnar nerve[cite: 3]."
             },
             {
-                q: "All posterior forearm muscles are innervated by branches of which main nerve?",
-                options: ["Median nerve", "Ulnar nerve", "Radial nerve", "Musculocutaneous nerve"],
-                correct: 2,
-                exp: "Most structures in the posterior extensor compartment are innervated by the radial nerve or its deep/posterior interosseous branches."
+                question: "All muscles located in the posterior (extensor) compartment of the forearm are innervated by branches originating from which major nerve?",
+                options: [
+                    { text: "Radial nerve", correct: true },
+                    { text: "Median nerve", correct: false },
+                    { text: "Ulnar nerve", correct: false },
+                    { text: "Musculocutaneous nerve", correct: false }
+                ],
+                explanation: "Every muscle within the extensor-supinator posterior compartment receives motor supply from the radial nerve or its continuation, the deep radial / posterior interosseous nerve[cite: 3]."
             },
             {
-                q: "Which deep tendon reflex in the upper extremity specifically tests the C6 neurological level?",
-                options: ["Biceps tendon reflex", "Brachioradialis reflex", "Triceps tendon reflex", "Extensor digitorum reflex"],
-                correct: 1,
-                exp: "The brachioradialis reflex tests the C6 neurological root level."
+                question: "Which upper extremity deep tendon reflex specifically evaluates the integrity of the C6 neurological level?",
+                options: [
+                    { text: "Biceps reflex", correct: false },
+                    { text: "Triceps reflex", correct: false },
+                    { text: "Brachioradialis reflex", correct: true },
+                    { text: "Extensor carpi radialis reflex", correct: false }
+                ],
+                explanation: "Striking the brachioradialis tendon near the radial styloid process elicits the brachioradialis deep tendon reflex, which directly evaluates the C6 spinal nerve root level[cite: 3]."
             },
             {
-                q: "Where does the extensor carpi radialis longus insert distally?",
-                options: ["Base of the 1st metacarpal", "Base of the 2nd metacarpal", "Base of the 3rd metacarpal", "Styloid process of the radius"],
-                correct: 1,
-                exp: "Extensor carpi radialis longus attaches to the base of the 2nd metacarpal, whereas extensor carpi radialis brevis inserts on the base of the 3rd metacarpal."
+                question: "Where does the extensor carpi radialis longus (ECRL) insert distally?",
+                options: [
+                    { text: "Base of the 1st metacarpal", correct: false },
+                    { text: "Base of the 3rd metacarpal", correct: false },
+                    { text: "Base of the 2nd metacarpal", correct: true },
+                    { text: "Radial styloid process", correct: false }
+                ],
+                explanation: "Extensor carpi radialis longus attaches distally to the dorsal aspect of the base of the 2nd metacarpal, whereas extensor carpi radialis brevis inserts onto the base of the 3rd metacarpal[cite: 3]."
             },
             {
-                q: "How many digitorum muscles exist in the extensor compartment of the forearm?",
-                options: ["1", "2", "3", "4"],
-                correct: 0,
-                exp: "There is only 1 extensor digitorum muscle, compared to 2 flexor digitorum muscles (superficialis and profundus)."
+                question: "How many dedicated 'digitorum' muscles are present in the posterior extensor compartment of the forearm?",
+                options: [
+                    { text: "1", correct: true },
+                    { text: "2", correct: false },
+                    { text: "3", correct: false },
+                    { text: "4", correct: false }
+                ],
+                explanation: "There is only 1 digitorum muscle in the extensor compartment (extensor digitorum), in contrast to the flexor compartment which houses 2 (flexor digitorum superficialis and flexor digitorum profundus)[cite: 3]."
             },
             {
-                q: "What is the primary action of the small posterior muscle known as the anconeus?",
-                options: ["Flexion of the wrist", "Supination of the forearm", "Assists triceps in extending the elbow (last 10-15 degrees)", "Abduction of the pinky finger"],
-                correct: 2,
-                exp: "Anconeus assists the triceps in extending the elbow joint, kicking in specifically during the final 10–15 degrees of extension."
+                question: "What is the primary action of the anconeus muscle at the elbow joint?",
+                options: [
+                    { text: "Forearm pronation during rapid movements", correct: false },
+                    { text: "Assisting the triceps in extending the elbow (last 10–15 degrees)", correct: true },
+                    { text: "Forearm supination when the elbow is extended", correct: false },
+                    { text: "Abduction of the 5th digit", correct: false }
+                ],
+                explanation: "Anconeus assists the triceps in completing the terminal 10 to 15 degrees of elbow extension and provides posterolateral joint stabilization[cite: 3]."
             },
             {
-                q: "Which nerve passes directly beneath or through the belly of the supinator muscle?",
-                options: ["Superficial radial nerve", "Deep radial nerve", "Ulnar nerve", "Median nerve"],
-                correct: 1,
-                exp: "The deep radial nerve passes under/through the supinator, making it a common site for clinical nerve entrapment."
+                question: "Which nerve passes directly beneath or pierces the two planes of the supinator muscle, making it vulnerable to compression neuropathy?",
+                options: [
+                    { text: "Deep radial nerve (posterior interosseous nerve)", correct: true },
+                    { text: "Superficial radial nerve", correct: false },
+                    { text: "Ulnar nerve", correct: false },
+                    { text: "Median nerve", correct: false }
+                ],
+                explanation: "The deep branch of the radial nerve passes between the superficial and deep fibers of the supinator muscle (arcade of Fröhse) to emerge as the posterior interosseous nerve[cite: 3]."
             },
             {
-                q: "Which 2 muscles form the lateral boundary/border of the anatomical snuffbox?",
-                options: ["Extensor pollicis longus & Extensor indicis", "Abductor pollicis longus & Extensor pollicis brevis", "Extensor carpi radialis longus & brevis", "Flexor carpi radialis & Abductor pollicis longus"],
-                correct: 1,
-                exp: "The tendons of abductor pollicis longus and extensor pollicis brevis form the lateral border of the anatomical snuffbox."
+                question: "Which two tendons delineate the lateral (radial) boundary of the anatomical snuffbox?",
+                options: [
+                    { text: "Extensor pollicis longus and extensor indicis", correct: false },
+                    { text: "Extensor carpi radialis longus and brevis", correct: false },
+                    { text: "Abductor pollicis longus and extensor pollicis brevis", correct: true },
+                    { text: "Flexor carpi radialis and abductor pollicis longus", correct: false }
+                ],
+                explanation: "The lateral boundary of the anatomical snuffbox is formed by the paired tendons of abductor pollicis longus and extensor pollicis brevis; the medial border is formed by extensor pollicis longus[cite: 3]."
             },
             {
-                q: "Which artery passes inside the anatomical snuffbox where a peripheral pulse can be evaluated?",
-                options: ["Ulnar artery", "Radial artery", "Brachial artery", "Anterior interosseous artery"],
-                correct: 1,
-                exp: "The radial artery courses through the anatomical snuffbox towards the posterior aspect of the hand."
+                question: "Which arterial vessel travels across the floor of the anatomical snuffbox where its pulsation can be clinically palpated?",
+                options: [
+                    { text: "Ulnar artery", correct: false },
+                    { text: "Brachial artery", correct: false },
+                    { text: "Anterior interosseous artery", correct: false },
+                    { text: "Radial artery", correct: true }
+                ],
+                explanation: "The radial artery winds dorsally around the lateral border of the radius across the floor of the anatomical snuffbox (over the scaphoid and trapezium) before entering the palm[cite: 3]."
             },
             {
-                q: "When tracing lateral thumb muscles from proximal to distal along the forearm, what is the expected anatomical order?",
-                options: ["Extensor pollicis longus, then brevis", "Extensor pollicis brevis, then longus", "Abductor pollicis brevis, then longus", "Extensor indicis, then brevis"],
-                correct: 1,
-                exp: "Tracing down the forearm, you encounter extensor pollicis brevis first, followed by extensor pollicis longus (brevis then longus)."
+                question: "When tracing the tendons of the outcropping thumb muscles along the lateral forearm from proximal to distal, what is the anatomical sequence?",
+                options: [
+                    { text: "Extensor pollicis longus, then extensor pollicis brevis", correct: false },
+                    { text: "Extensor pollicis brevis, then extensor pollicis longus", correct: true },
+                    { text: "Abductor pollicis brevis, then abductor pollicis longus", correct: false },
+                    { text: "Extensor indicis, then extensor pollicis brevis", correct: false }
+                ],
+                explanation: "Proceeding down the distal lateral forearm toward the thumb, extensor pollicis brevis is encountered before extensor pollicis longus ('brevis then longus')[cite: 3]."
             },
             {
-                q: "What digit receives a dedicated accessory extensor tendon from the extensor indicis muscle?",
-                options: ["Thumb (Digit 1)", "Index finger (Digit 2)", "Middle finger (Digit 3)", "Little finger (Digit 5)"],
-                correct: 1,
-                exp: "Extensor indicis specifically provides an accessory extensor tendon to digit 2 (index finger)."
+                question: "Which digit receives an independent, dedicated accessory extensor tendon from the extensor indicis muscle?",
+                options: [
+                    { text: "Thumb (Digit 1)", correct: false },
+                    { text: "Middle finger (Digit 3)", correct: false },
+                    { text: "Index finger (Digit 2)", correct: true },
+                    { text: "Little finger (Digit 5)", correct: false }
+                ],
+                explanation: "Extensor indicis resides in the deep posterior compartment and sends its tendon to insert on the dorsal expansion of digit 2 (index finger), allowing independent extension[cite: 3]."
             },
             {
-                q: "Extensor digiti minimi provides independent extension to which structure?",
-                options: ["Thumb", "Index finger", "Pinky finger (Digit 5)", "Wrist joint only"],
-                correct: 2,
-                exp: "Extensor digiti minimi provides dedicated extension to the little finger (digit 5)."
+                question: "What independent action does the extensor digiti minimi muscle confer to the upper extremity?",
+                options: [
+                    { text: "Extension of the little finger (Digit 5)", correct: true },
+                    { text: "Abduction of the thumb", correct: false },
+                    { text: "Radial deviation of the wrist", correct: false },
+                    { text: "Extension of the index finger", correct: false }
+                ],
+                explanation: "Extensor digiti minimi is a slender medial muscle of the superficial posterior compartment that enables isolated, independent extension of the 5th digit (little finger)[cite: 3]."
             },
             {
-                q: "What medical intervention is surgically required when swelling inside forearm fascial compartments threatens tissue viability?",
-                options: ["Tendon transfer", "Fasciotomy (cutting open fascia)", "Arthrodesis", "Nerve transposition"],
-                correct: 1,
-                exp: "Forearm compartment syndrome requires cutting open the constraining fascia to relieve pressure and preserve blood flow."
+                question: "What emergency surgical intervention is indicated when acute intracompartmental pressure within forearm fascial boundaries threatens neuromuscular viability?",
+                options: [
+                    { text: "Tendon transfer", correct: false },
+                    { text: "Arthrodesis", correct: false },
+                    { text: "Fasciotomy (longitudinal incision of the fascia)", correct: true },
+                    { text: "Nerve transposition", correct: false }
+                ],
+                explanation: "Acute forearm compartment syndrome requires an urgent emergent fasciotomy (surgical division of the non-yielding fascial envelopes) to restore vascular perfusion and prevent ischemic contracture[cite: 3]."
             },
             {
-                q: "Extensor carpi ulnaris inserts on which distal structure?",
-                options: ["Base of the 5th metacarpal", "Base of the 3rd metacarpal", "Pisiform bone", "Hook of hamate"],
-                correct: 0,
-                exp: "Extensor carpi ulnaris attaches across to the posterior border of the ulna and inserts onto the base of the 5th metacarpal."
+                question: "Where does the extensor carpi ulnaris (ECU) muscle attach distally?",
+                options: [
+                    { text: "Base of the 5th metacarpal", correct: true },
+                    { text: "Base of the 3rd metacarpal", correct: false },
+                    { text: "Pisiform bone", correct: false },
+                    { text: "Hook of the hamate", correct: false }
+                ],
+                explanation: "Extensor carpi ulnaris originates from the common extensor tendon and posterior ulna, inserting distally onto the tubercle on the medial side of the base of the 5th metacarpal[cite: 3]."
             },
             {
-                q: "Besides the deep radial nerve, which nerve assists in innervating extensor digitorum, extensor digiti minimi, and extensor carpi ulnaris?",
-                options: ["Anterior interosseous nerve", "Posterior interosseous nerve", "Ulnar nerve", "Musculocutaneous nerve"],
-                correct: 1,
-                exp: "These deep extensor compartment muscles receive nerve supply from both the deep radial nerve and the posterior interosseous nerve."
+                question: "Which nerve branch specifically provides motor innervation to the deep extensor group including extensor digitorum, extensor digiti minimi, and extensor carpi ulnaris?",
+                options: [
+                    { text: "Anterior interosseous nerve", correct: false },
+                    { text: "Ulnar nerve", correct: false },
+                    { text: "Posterior interosseous nerve", correct: true },
+                    { text: "Superficial branch of the radial nerve", correct: false }
+                ],
+                explanation: "The posterior interosseous nerve (PIN), the motor continuation of the deep branch of the radial nerve after traversing the supinator, innervates the majority of the posterior compartment muscles[cite: 3]."
             },
             {
-                q: "Isolation of flexor carpi radialis vs. extensor carpi radialis during abduction (radial deviation) is achieved by adding what motion?",
-                options: ["Pronation vs Supination", "Flexion vs Extension", "Internal vs External Rotation", "Elevation vs Depression"],
-                correct: 1,
-                exp: "Combining radial deviation with slight flexion isolates flexor carpi radialis, while slight extension isolates extensor carpi radialis."
+                question: "During wrist abduction (radial deviation), how is flexor carpi radialis clinically isolated from extensor carpi radialis longus and brevis?",
+                options: [
+                    { text: "By adding slight wrist flexion versus slight wrist extension", correct: true },
+                    { text: "By testing full pronation versus full supination", correct: false },
+                    { text: "By testing with digits clenched versus digits open", correct: false },
+                    { text: "By applying resistance across the 5th metacarpal head", correct: false }
+                ],
+                explanation: "Both muscles produce radial deviation (abduction); combining abduction with slight flexion stresses and isolates flexor carpi radialis, whereas adding slight extension isolates the extensor carpi radialis group[cite: 3]."
             },
             {
-                q: "Where does the brachioradialis muscle insert distally?",
-                options: ["Radial tuberosity", "Styloid process of the radius", "Base of 2nd metacarpal", "Coronoid process"],
-                correct: 1,
-                exp: "Brachioradialis attaches distally to the styloid process on the distal third of the radius."
+                question: "Where does the brachioradialis muscle insert distally?",
+                options: [
+                    { text: "Radial tuberosity", correct: false },
+                    { text: "Base of the 2nd metacarpal", correct: false },
+                    { text: "Coronoid process of the ulna", correct: false },
+                    { text: "Styloid process of the radius", correct: true }
+                ],
+                explanation: "Brachioradialis travels down the anterolateral aspect of the forearm and inserts into the lateral surface of the distal radius just proximal to the radial styloid process[cite: 3]."
             },
             {
-                q: "The supinator muscle originates from the lateral epicondyle of the humerus and inserts onto which bone?",
-                options: ["Ulna", "Radius", "2nd Metacarpal", "Scaphoid"],
-                correct: 1,
-                exp: "Supinator originates from the lateral epicondyle and wraps around to insert on the radius to pull the radial head during supination."
+                question: "The supinator muscle originates from the lateral epicondyle and supinator crest of the ulna and inserts onto which bony structure?",
+                options: [
+                    { text: "Shaft and lateral surface of the radius", correct: true },
+                    { text: "Coronoid process of the ulna", correct: false },
+                    { text: "Dorsal base of the 2nd metacarpal", correct: false },
+                    { text: "Scaphoid tubercle", correct: false }
+                ],
+                explanation: "The supinator wraps around the proximal radius, inserting onto its proximal third (lateral, posterior, and anterior aspects) to pull the radial shaft into supination[cite: 3]."
             },
             {
-                q: "Which two main superficial anterior muscles are separated by the palmaris longus tendon at the wrist?",
-                options: ["Flexor carpi radialis and Flexor carpi ulnaris", "Pronator teres and Supinator", "Brachioradialis and Extensor carpi radialis", "Flexor pollicis longus and Flexor digitorum profundus"],
-                correct: 0,
-                exp: "Palmaris longus lies centrally between flexor carpi radialis laterally and flexor carpi ulnaris medially in the superficial anterior layer."
+                question: "Which two superficial flexor tendons lie immediately lateral and medial to the palmaris longus tendon at the wrist crease?",
+                options: [
+                    { text: "Pronator teres and supinator", correct: false },
+                    { text: "Flexor carpi radialis (lateral) and flexor carpi ulnaris (medial)", correct: true },
+                    { text: "Brachioradialis and extensor carpi radialis", correct: false },
+                    { text: "Flexor pollicis longus and flexor digitorum profundus", correct: false }
+                ],
+                explanation: "At the distal wrist, palmaris longus passes superficial to the flexor retinaculum directly between the tendon of flexor carpi radialis laterally and flexor carpi ulnaris medially[cite: 3]."
             },
             {
-                q: "Abductor pollicis longus originates from the posterior surfaces of which structures before inserting on the base of the 1st metacarpal?",
-                options: ["Humerus and Scapula", "Radius, Ulna, and Interosseous membrane", "Clavicle and Coracoid process", "Pisiform and Hamate"],
-                correct: 1,
-                exp: "Abductor pollicis longus arises broadly from the posterior surfaces of both the radius and ulna as well as the interosseous membrane."
+                question: "From which posterior structures does the abductor pollicis longus (APL) muscle take its origin before inserting onto the base of the 1st metacarpal?",
+                options: [
+                    { text: "Lateral supracondylar ridge and lateral epicondyle", correct: false },
+                    { text: "Coracoid process and supraglenoid tubercle", correct: false },
+                    { text: "Posterior surfaces of the radius, ulna, and interosseous membrane", correct: true },
+                    { text: "Pisiform, hook of hamate, and flexor retinaculum", correct: false }
+                ],
+                explanation: "Abductor pollicis longus originates broadly from the posterior surfaces of both the radius and the ulna as well as the intervening interosseous membrane before coursing to the base of the 1st metacarpal[cite: 3]."
             }
         ];
 
         let currentScore = 0;
-        let answeredCount = 0;
+        let answeredQuestions = new Set();
+        const totalQuestions = quizData.length;
+
+        // Fisher-Yates shuffle algorithm
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
 
         function renderQuiz() {
-            const wrapper = document.getElementById('questions-wrapper');
-            wrapper.innerHTML = '';
+            shuffleArray(quizData);
 
-            quizData.forEach((item, qIndex) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            currentScore = 0;
+            answeredQuestions.clear();
+            updateScoreDisplay();
 
-                const qNum = document.createElement('div');
-                qNum.className = 'question-number';
-                qNum.innerText = `Question ${qIndex + 1} of 25`;
-                card.appendChild(qNum);
+            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
 
-                const qText = document.createElement('div');
-                qText.className = 'question-text';
-                qText.innerText = item.q;
-                card.appendChild(qText);
+            quizData.forEach((data, qIndex) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.id = `q-${qIndex}`;
 
-                const optionsGrid = document.createElement('div');
-                optionsGrid.className = 'options-grid';
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.innerText = `Question ${qIndex + 1} of ${totalQuestions}`;
 
-                item.options.forEach((optText, oIndex) => {
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerText = data.question;
+
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+
+                data.options.forEach((opt, oIndex) => {
                     const btn = document.createElement('button');
                     btn.className = 'option-btn';
-                    btn.innerText = optText;
-                    btn.id = `q${qIndex}-opt${oIndex}`;
-                    btn.onclick = () => selectOption(qIndex, oIndex);
-                    optionsGrid.appendChild(btn);
+                    const letter = String.fromCharCode(65 + oIndex);
+                    btn.innerText = `${letter}. ${opt.text}`;
+                    btn.onclick = () => handleAnswer(qIndex, oIndex, btn, opt.correct, data);
+                    optionsContainer.appendChild(btn);
                 });
 
-                card.appendChild(optionsGrid);
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.id = `exp-${qIndex}`;
 
-                const expBox = document.createElement('div');
-                expBox.className = 'explanation-box';
-                expBox.id = `exp-${qIndex}`;
-                card.appendChild(expBox);
-
-                wrapper.appendChild(card);
+                questionCard.appendChild(questionNumber);
+                questionCard.appendChild(questionText);
+                questionCard.appendChild(optionsContainer);
+                questionCard.appendChild(explanationDiv);
+                quizContainer.appendChild(questionCard);
             });
         }
 
-        function selectOption(qIndex, selectedIndex) {
-            const question = quizData[qIndex];
-            const expBox = document.getElementById(`exp-${qIndex}`);
-            
-            // Disable all options for this question
-            question.options.forEach((_, oIndex) => {
-                const btn = document.getElementById(`q${qIndex}-opt${oIndex}`);
+        function handleAnswer(qIndex, oIndex, btnElement, isCorrect, data) {
+            if (answeredQuestions.has(qIndex)) return;
+            answeredQuestions.add(qIndex);
+
+            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            allButtons.forEach((btn, idx) => {
                 btn.disabled = true;
-                if (oIndex === question.correct) {
+                if (data.options[idx].correct) {
                     btn.classList.add('correct');
                 }
             });
 
-            if (selectedIndex === question.correct) {
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (isCorrect) {
                 currentScore++;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
             } else {
-                const selectedBtn = document.getElementById(`q${qIndex}-opt${selectedIndex}`);
-                selectedBtn.classList.add('incorrect');
+                btnElement.classList.add('incorrect');
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
             }
 
-            answeredCount++;
+            expDiv.style.display = 'block';
+            updateScoreDisplay();
 
-            // Show explanation
-            expBox.innerHTML = `<strong>Explanation:</strong> ${question.exp}`;
-            expBox.style.display = 'block';
-
-            // Update Header Score
-            const percentage = Math.round((currentScore / 25) * 100);
-            document.getElementById('score-display').innerText = `Score: ${currentScore} / 25 (${percentage}%)`;
-
-            // Check if finished
-            if (answeredCount === 25) {
-                showFinalResults(percentage);
+            if (answeredQuestions.size === totalQuestions) {
+                showSummary();
             }
         }
 
-        function showFinalResults(percentage) {
-            const resultsCard = document.getElementById('results-wrapper');
-            document.getElementById('final-percentage').innerText = `${percentage}%`;
-            document.getElementById('final-stats').innerText = `You answered ${currentScore} out of 25 questions correctly.`;
+        function updateScoreDisplay() {
+            const percentage = totalQuestions === 0 ? 0 : Math.round((currentScore / totalQuestions) * 100);
+            document.getElementById('score-header').innerText = `Score: ${currentScore} / ${totalQuestions} (${percentage}%)`;
+        }
 
-            let feedback = "";
-            if (percentage >= 90) {
-                feedback = "Mastery demonstrated! Excellent command of forearm anatomy, boundaries, and innervations.";
-            } else if (percentage >= 75) {
-                feedback = "Great work! Review the specific nerve entrapment sites and muscle insertions to polish your score.";
-            } else {
-                feedback = "Solid effort. Re-review the superficial/deep compartment listings and rerun the quiz.";
-            }
+        function showSummary() {
+            setTimeout(() => {
+                document.getElementById('quiz-container').style.display = 'none';
+                const summaryCard = document.getElementById('summary-card');
+                summaryCard.style.display = 'block';
 
-            document.getElementById('performance-feedback').innerText = feedback;
-            resultsCard.style.display = 'block';
-            resultsCard.scrollIntoView({ behavior: 'smooth' });
+                const percentage = Math.round((currentScore / totalQuestions) * 100);
+                document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
+
+                const feedback = percentage >= 90
+                    ? "Mastery Level Achieved! Exceptional knowledge of forearm compartments, neurovascular pathways, and clinical landmarks."
+                    : percentage >= 75
+                    ? "Strong Performance! Review the specific nerve entrapment courses and metacarpal attachment bases to solidify your score."
+                    : "Good Practice Run! Go back over the anterior/posterior forearm groupings and innervation branches before retaking.";
+                document.getElementById('final-feedback').innerText = feedback;
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 800);
         }
 
         function resetQuiz() {
-            currentScore = 0;
-            answeredCount = 0;
-            document.getElementById('score-display').innerText = `Score: 0 / 25 (0%)`;
-            document.getElementById('results-wrapper').style.display = 'none';
             renderQuiz();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Initialize Quiz on load
-        renderQuiz();
+        window.onload = renderQuiz;
     </script>
 </body>
 </html>
