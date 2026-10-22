@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sys Phys: Spinal Nerves, Reflexes & Autonomics Practice Quiz</title>
+    <style>
+        :root {
+            --bg-primary: #0f0f0f;
+            --bg-secondary: #1a1a1a;
+            --card-bg: #242424;
+            --card-border: #383838;
+            --accent: #ff9900;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding-bottom: 60px;
+        }
+
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-secondary);
+            border-bottom: 2px solid var(--accent);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .score-counter {
+            font-size: 1rem;
+            font-weight: 600;
+            background-color: #2b2b2b;
+            padding: 6px 14px;
+            border-radius: 20px;
+            border: 1px solid #444;
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        .quiz-intro {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .quiz-intro h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            color: #ffffff;
+        }
+
+        .quiz-intro p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 22px;
+            margin-bottom: 24px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: border-color 0.2s ease;
+        }
+
+        .question-meta {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 600;
+            line-height: 1.45;
+            margin-bottom: 18px;
+            color: #ffffff;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-button {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background-color: #2e2e2e;
+            border: 1px solid #484848;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-align: left;
+            width: 100%;
+            transition: all 0.15s ease;
+        }
+
+        .option-button:hover:not(:disabled) {
+            background-color: #383838;
+            border-color: var(--accent);
+        }
+
+        .option-button:disabled {
+            cursor: default;
+        }
+
+        .option-prefix {
+            font-weight: 700;
+            color: var(--accent);
+            min-width: 22px;
+        }
+
+        .option-button.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #ffffff !important;
+        }
+
+        .option-button.correct .option-prefix {
+            color: #86efac !important;
+        }
+
+        .option-button.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #ffffff !important;
+        }
+
+        .option-button.incorrect .option-prefix {
+            color: #fca5a5 !important;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 16px;
+            padding: 14px 16px;
+            border-radius: 8px;
+            background-color: #1a1a1a;
+            border-left: 4px solid var(--accent);
+            font-size: 0.9rem;
+            line-height: 1.45;
+            color: var(--text-secondary);
+        }
+
+        .explanation-box strong {
+            color: #ffffff;
+        }
+
+        @media (max-width: 600px) {
+            .header-title {
+                font-size: 0.95rem;
+            }
+            .score-counter {
+                font-size: 0.85rem;
+                padding: 4px 10px;
+            }
+            .question-card {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="sticky-header">
+        <div class="header-title">Sys Phys Quiz: Spine, Autonomics & Reflexes</div>
+        <div class="score-counter" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <main class="container">
+        <section class="quiz-intro">
+            <h1>Comprehensive Chiropractic Board Practice Quiz</h1>
+            <p>Topics: Spinal Nerves, Neural Foramina, Sinuvertebral & Dorsal Rami, Sympathetic Pathway, & Stretch Reflexes</p>
+        </section>
+
+        <section id="quizContainer"></section>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                topic: "Spinal Nerve Topography",
+                question: "Through which anatomical structure do the C1 and C2 spinal nerves exit the spinal axis?",
+                options: [
+                    "Through distinct intervertebral foramina formed by the C1 and C2 pedicles",
+                    "Above and below the proximal portion of the posterior arch of Atlas",
+                    "Through the anterior sacral foramina along the anterior arch",
+                    "Distal to the intertransverse space within the transverse foramina"
+                ],
+                correctIndex: 1,
+                explanation: "Spinal nerves C3 through L5 exit via the true intervertebral foramina (IVF). However, C1 and C2 do not exit through an IVF; C1 leaves above the posterior arch of Atlas (running in the groove for the vertebral artery), and C2 exits below the posterior arch of Atlas."
+            },
+            {
+                topic: "Sacral Spinal Nerves",
+                question: "Which spinal nerve pairs exit specifically through the sacral hiatus rather than through sacral intervertebral foramina?",
+                options: [
+                    "S1 and S2",
+                    "S3 and S4",
+                    "The 5th sacral and 1st coccygeal spinal nerves",
+                    "The 4th sacral and 5th sacral spinal nerves"
+                ],
+                correctIndex: 2,
+                explanation: "Spinal nerves 26 through 29 (S1 to S4) are found within the sacral intervertebral foramina inside the sacral bone. Spinal nerves 30 and 31 (S5 and Co1) exit inferiorly through the sacral hiatus."
+            },
+            {
+                topic: "Suboccipital Anatomy",
+                question: "Which trio of structures is transmitted directly within the groove for the vertebral artery located on the posterior arch of the Atlas?",
+                options: [
+                    "V2 vertebral artery, C2 spinal nerve, and greater occipital nerve",
+                    "V3 segment of the vertebral artery, C1 spinal nerve, and suboccipital venous plexus",
+                    "V4 segment of the vertebral artery, dorsal root ganglion of C1, and spinal accessory nerve",
+                    "Vertebral basilar junction, suboccipital nerve, and lesser occipital nerve"
+                ],
+                correctIndex: 1,
+                explanation: "The groove for the vertebral artery on the posterior arch of Atlas transmits the V3 segment of the vertebral artery, the C1 spinal nerve (suboccipital nerve), and the suboccipital venous plexus. C1 also characteristically lacks a dorsal root ganglion."
+            },
+            {
+                topic: "Neural Foramen Anatomy",
+                question: "Which anatomical structures form the precise anatomical roof and floor of a typical lumbar intervertebral foramen (IVF)?",
+                options: [
+                    "Superior and inferior articular facets",
+                    "Posterior longitudinal ligament and ligamentum flavum",
+                    "Pedicles of the adjacent vertebrae",
+                    "Intervertebral disc and posterior vertebral body"
+                ],
+                correctIndex: 2,
+                explanation: "The roof and floor of the intervertebral foramen (IVF) are formed by the vertebral pedicles. The anterior wall is formed by the vertebral body and the intervertebral disc."
+            },
+            {
+                topic: "Spinal Nerve Composition",
+                question: "Which functional fiber classification is classically restricted to the T1–L2 and S2–S4 levels rather than being present in every single spinal nerve?",
+                options: [
+                    "General Somatic Efferent (GSE)",
+                    "General Somatic Afferent (GSA)",
+                    "General Visceral Efferent (GVE)",
+                    "General Visceral Afferent (GVA)"
+                ],
+                correctIndex: 3,
+                explanation: "Most spinal nerves contain GSE, GSA, and GVE. However, General Visceral Afferents (GVA)—which hitchhike along autonomic pathways to transmit visceral sensations such as stretch and ischemia—are classically restricted to spinal levels T1–L2 (sympathetic) and S2–S4 (parasympathetic)."
+            },
+            {
+                topic: "Spinal Nerve Topography",
+                question: "At what anatomical position is the true spinal nerve trunk located relative to adjacent nervous structures?",
+                options: [
+                    "Medial to the emergence of the anterior and posterior rootlets",
+                    "Distal (lateral) to the dorsal root ganglion and proximal to the bifurcation of the ventral and dorsal rami",
+                    "Within the subarachnoid space proximal to the dural sleeve reflection",
+                    "Distal to the bifurcation of the medial and lateral branches of the posterior primary ramus"
+                ],
+                correctIndex: 1,
+                explanation: "The true mixed spinal nerve is very short. It forms by the convergence of the dorsal and ventral roots immediately distal (lateral) to the dorsal root ganglion and terminates where it divides into the ventral and dorsal rami."
+            },
+            {
+                topic: "Spinal Innervation & Pain",
+                question: "A patient presents with sharp, localized back pain provoked during spinal extension and rotation (positive Kemp's test). Which specific neural branch transmits nociceptive input from the involved zygapophyseal (facet) joints and supplies the multifidus muscle segmentally?",
+                options: [
+                    "Lateral branch of the dorsal ramus",
+                    "Sinuvertebral nerve (recurrent meningeal nerve)",
+                    "Medial branch of the dorsal ramus",
+                    "Intermediate branch of the dorsal ramus"
+                ],
+                correctIndex: 2,
+                explanation: "The medial branch of the dorsal ramus innervates the zygapophyseal (facet / Z) joints (receiving sensation from its own level and the level above) and supplies the multifidus segmentally. It is the target of diagnostic medial branch blocks and radiofrequency ablations."
+            },
+            {
+                topic: "Discogenic Pathology",
+                question: "Annular tears through the outer lamellae of the intervertebral disc cause discogenic pain. Which nerve provides sensory innervation to the outer third of the annulus fibrosus to mediate this pain?",
+                options: [
+                    "Medial branch of the dorsal ramus",
+                    "Sinuvertebral nerve",
+                    "Lateral branch of the dorsal ramus",
+                    "Gray ramus communicans directly"
+                ],
+                correctIndex: 1,
+                explanation: "Discogenic pain resulting from an annular tear is mediated through the sinuvertebral nerve (recurrent meningeal nerve), which supplies the outer annulus fibrosus and the posterior longitudinal ligament."
+            },
+            {
+                topic: "Intervertebral Disc Physiology",
+                question: "Why is the healthy adult nucleus pulposus obligatorily dependent on anaerobic glycolysis for cellular ATP production?",
+                options: [
+                    "Disc cells completely lack mitochondria and citric acid cycle enzymes from early embryogenesis",
+                    "High intradiscal compressive pressures physically eliminate all intracellular glucose transport",
+                    "The disc is completely avascular except at its outermost annular rim, yielding very low tissue oxygen tension",
+                    "Lactic acid concentrations in the center of the disc inhibit all aerobic oxidative phosphorylation"
+                ],
+                correctIndex: 2,
+                explanation: "The intervertebral disc is completely avascular except for a small margin at the outer periphery of the annulus fibrosus and the cartilaginous endplates. Because of the lack of vascularity, disc cells (especially in the central nucleus pulposus) must rely on anaerobic glycolysis to produce ATP."
+            },
+            {
+                topic: "Sympathetic Nervous System",
+                question: "During baroreceptor-mediated or stress-induced sympathetic drive, pre-sympathetic axons descend from the rostral ventrolateral medulla (RVLM) via which tract to synapse in the spinal cord?",
+                options: [
+                    "Rubrospinal tract",
+                    "Bulbospinal tract",
+                    "Tectospinal tract",
+                    "Lateral corticospinal tract"
+                ],
+                correctIndex: 1,
+                explanation: "Action potentials generated in the rostral ventrolateral medulla (RVLM) travel down through the brainstem and spinal cord via the bulbospinal tract (bulbospinal neurons) to synapse in the lateral horn."
+            },
+            {
+                topic: "Sympathetic Nervous System",
+                question: "Where are the cell bodies of the preganglionic sympathetic neurons located, representing the official origin of the sympathetic nervous system?",
+                options: [
+                    "Sympathetic paravertebral chain ganglia",
+                    "Dorsal root ganglia between T1 and L2",
+                    "Intermediolateral cell columns (IML) in the lateral horn",
+                    "Rostral ventrolateral medulla (RVLM)"
+                ],
+                correctIndex: 2,
+                explanation: "The sympathetic nervous system officially begins in the intermediolateral cell columns (IML) of the spinal cord's lateral horn, which house the cell bodies of the preganglionic sympathetic fibers."
+            },
+            {
+                topic: "Autonomic Anatomy",
+                question: "Which statement accurately describes the anatomical distribution and fiber content of the white versus gray rami communicantes?",
+                options: [
+                    "White rami are present at all 31 spinal levels; gray rami exist exclusively from T1 to L2",
+                    "White rami contain unmyelinated postganglionic fibers; gray rami contain myelinated preganglionic fibers",
+                    "White rami carry preganglionic fibers and exist only from T1 to L2; gray rami carry postganglionic fibers and exist at all 31 spinal levels",
+                    "Both white and gray rami exist at every spinal level but attach to opposite primary rami"
+                ],
+                correctIndex: 2,
+                explanation: "White rami communicantes contain myelinated preganglionic sympathetic fibers and are restricted to spinal levels T1 through L2. Gray rami communicantes contain unmyelinated postganglionic sympathetic fibers and are connected to all 31 pairs of spinal nerves."
+            },
+            {
+                topic: "Postganglionic Distribution",
+                question: "After unmyelinated postganglionic sympathetic fibers travel through the gray ramus communicans back into the ventral ramus, what pathway do the fibers destined for the posterior body take?",
+                options: [
+                    "They pass directly across the anterior longitudinal ligament into the adjacent vertebra",
+                    "They travel proximally up the ventral ramus, touch the distal edge of the spinal nerve, and turn into the dorsal ramus",
+                    "They ascend two full vertebral levels within the sympathetic chain before crossing the pedicle",
+                    "They exit the spinal cord through the dorsal sensory rootlets into the posterior primary division"
+                ],
+                correctIndex: 1,
+                explanation: "Approximately 50% of postganglionic fibers in the ventral ramus continue distally to supply anterior targets. The other approximately 50% execute a U-turn, traveling proximally up the ventral ramus, touching the end of the spinal nerve, and descending down the dorsal ramus to supply posterior targets."
+            },
+            {
+                topic: "Sympathetic Targets",
+                question: "Postganglionic sympathetic fibers (GVE) exiting via gray rami supply which triad of peripheral effector structures?",
+                options: [
+                    "Striated skeletal motor units, muscle spindles, and Golgi tendon organs",
+                    "Arteriole smooth muscle (tunica media), sweat glands, and arrector pili muscles",
+                    "Visceral peritoneal nociceptors, pacinian corpuscles, and joint capsule mechanoreceptors",
+                    "Sebaceous glands, lymphatic endothelium, and superficial cutaneous thermoreceptors"
+                ],
+                correctIndex: 1,
+                explanation: "Postganglionic sympathetic fibers terminating in the periphery innervate three classical targets: arteriole tunica media (inducing vasoconstriction to increase blood pressure), eccrine sweat glands (sudomotor function), and arrector pili muscles (piloerection)."
+            },
+            {
+                topic: "Clinical Diagnosis",
+                question: "A clinician evaluates a patient reporting sharp pain radiating down the posterior thigh and calf in a narrow strip. Examination reveals an absent Achilles reflex, gastrocnemius weakness, and hypesthesia. How should these findings be formally categorized?",
+                options: [
+                    "The subjective radiating pain is radiculopathy; the objective reflex and motor deficits represent radicular pain",
+                    "The subjective radiating pain is radicular pain; the objective loss of reflex, motor power, and sensation defines radiculopathy",
+                    "Both the radiating pain and the physical examination deficits are categorized as neuropathic centralization",
+                    "The presence of pain throughout the limb indicates non-organic psychogenic conversion disorder"
+                ],
+                correctIndex: 1,
+                explanation: "Radicular pain is a subjective symptom/complaint describing pain radiating down an extremity in a relatively narrow band. Radiculopathy is an objective clinical diagnosis made when a neurological exam demonstrates hard neurological deficits (e.g., loss of a deep tendon/muscle stretch reflex, weakness, or dermatomal sensory loss)."
+            },
+            {
+                topic: "Reflex Physiology",
+                question: "Tapping the patellar ligament with a reflex hammer elicits a brisk contraction of the quadriceps and simultaneous inhibition of the hamstrings. What is the physiological term for this reciprocal relaxation of the antagonist muscle?",
+                options: [
+                    "Autogenic excitation",
+                    "Reciprocal inhibition",
+                    "Clonic facilitation",
+                    "Crossed extensor reflex"
+                ],
+                correctIndex: 1,
+                explanation: "During a muscle stretch reflex, the stretch of the agonist muscle (e.g., quadriceps) leads to its rapid reflex contraction while the antagonistic muscle group (e.g., hamstrings) simultaneously relaxes via reciprocal inhibition."
+            },
+            {
+                topic: "Reflex Physiology & Examination",
+                question: "Which receptor and neural circuitry mediate the monosynaptic muscle stretch reflex (myotatic reflex) when a tendon is struck?",
+                options: [
+                    "Golgi tendon organs detecting tension, relaying through descending cerebral tracts to alpha motor neurons",
+                    "Pacinian corpuscles detecting vibration, sending signals via the sympathetic chain to gamma efferents",
+                    "Muscle spindles detecting a micro-stretch, transmitting action potentials to the spinal cord to excite the agonist motor nerve without brain involvement",
+                    "Free nerve endings detecting tissue deformation, synapsing in the brainstem reticular formation"
+                ],
+                correctIndex: 2,
+                explanation: "The muscle stretch reflex (stretch or myotatic reflex) is initiated when a rapid micro-stretch is sensed by intrafusal muscle spindles. Afferent sensory fibers convey this signal into the spinal cord, directly stimulating the agonist muscle's motor nerve to contract. The brain is not involved in this spinal reflex loop."
+            },
+            {
+                topic: "Neurological Examination",
+                question: "What are the three mandatory components of a standard neurological level (spinal nerve root) evaluation?",
+                options: [
+                    "Goniometry, palpation, and dermatomal warmth mapping",
+                    "Reflex testing, muscle (myotome) testing, and sensation (dermatome) testing",
+                    "Orthopedic testing, vascular palpation, and cranial nerve screening",
+                    "Posture assessment, joint play motion palpation, and pain score grading"
+                ],
+                correctIndex: 1,
+                explanation: "A standard neurological level assessment evaluates the health and integrity of specific spinal nerves via three core components: reflex testing (muscle stretch reflex), motor testing (myotomes), and sensory testing (dermatomes)."
+            }
+        ];
+
+        // Fisher-Yates Shuffle Algorithm
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        let answeredCount = 0;
+        let correctCount = 0;
+
+        function updateScore() {
+            const scoreDisplay = document.getElementById("scoreDisplay");
+            const percentage = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+            scoreDisplay.textContent = `Score: ${correctCount} / ${answeredCount} (${percentage}%)`;
+        }
+
+        function handleOptionClick(btn, selectedIndex, correctIndex, explanationId, cardIndex) {
+            const card = document.getElementById(`card-${cardIndex}`);
+            const buttons = card.querySelectorAll(".option-button");
+            const explanationBox = document.getElementById(explanationId);
+
+            // Disable all options in this card once clicked
+            buttons.forEach(button => {
+                button.disabled = true;
+            });
+
+            answeredCount++;
+
+            if (selectedIndex === correctIndex) {
+                btn.classList.add("correct");
+                correctCount++;
+            } else {
+                btn.classList.add("incorrect");
+                // Highlight the correct answer
+                buttons[correctIndex].classList.add("correct");
+            }
+
+            // Display explanation
+            explanationBox.style.display = "block";
+            updateScore();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById("quizContainer");
+            container.innerHTML = "";
+
+            // Shuffle questions on load
+            const shuffledQuestions = shuffle([...quizData]);
+
+            shuffledQuestions.forEach((item, index) => {
+                const card = document.createElement("article");
+                card.className = "question-card";
+                card.id = `card-${index}`;
+
+                const meta = document.createElement("div");
+                meta.className = "question-meta";
+                meta.textContent = `Question ${index + 1} • ${item.topic}`;
+
+                const questionText = document.createElement("div");
+                questionText.className = "question-text";
+                questionText.textContent = item.question;
+
+                const optionsList = document.createElement("div");
+                optionsList.className = "options-list";
+
+                const explanationId = `explanation-${index}`;
+                const prefixes = ["A", "B", "C", "D"];
+
+                item.options.forEach((optText, optIdx) => {
+                    const btn = document.createElement("button");
+                    btn.type = "button";
+                    btn.className = "option-button";
+
+                    const prefixSpan = document.createElement("span");
+                    prefixSpan.className = "option-prefix";
+                    prefixSpan.textContent = `${prefixes[optIdx]}.`;
+
+                    const labelSpan = document.createElement("span");
+                    labelSpan.textContent = optText;
+
+                    btn.appendChild(prefixSpan);
+                    btn.appendChild(labelSpan);
+
+                    btn.onclick = () => handleOptionClick(btn, optIdx, item.correctIndex, explanationId, index);
+                    optionsList.appendChild(btn);
+                });
+
+                const explanationBox = document.createElement("div");
+                explanationBox.className = "explanation-box";
+                explanationBox.id = explanationId;
+                explanationBox.innerHTML = `<strong>Rationale:</strong> ${item.explanation}`;
+
+                card.appendChild(meta);
+                card.appendChild(questionText);
+                card.appendChild(optionsList);
+                card.appendChild(explanationBox);
+
+                container.appendChild(card);
+            });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
