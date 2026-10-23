@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</title>
+    <style>
+        :root {
+            --bg-body: #0f0f0f;
+            --bg-container: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #cc7a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --option-bg: #2a2a2a;
+            --option-hover: #3a3a3a;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Sticky Top Bar */
+        #top-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg-body);
+            border-bottom: 2px solid var(--accent);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+        }
+
+        #top-bar h1 {
+            margin: 0;
+            font-size: 1.2rem;
+            color: var(--accent);
+        }
+
+        #score-display {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Quiz Container */
+        #quiz-container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .question-card {
+            background-color: var(--bg-container);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .question-stem {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--option-bg);
+            color: var(--text-main);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            padding: 15px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: var(--option-hover);
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+        }
+
+        /* Instant Feedback States */
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: #ffffff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #ffffff;
+        }
+
+        /* Explanation Box */
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #222;
+            border-left: 4px solid var(--accent);
+            display: none; /* Hidden by default */
+            font-size: 0.95rem;
+        }
+
+        .explanation strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            .question-card {
+                padding: 15px;
+            }
+            .question-stem {
+                font-size: 1.05rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="top-bar">
+        <h1>Gen Path Week 3</h1>
+        <div id="score-display">Score: 0 / 0 (0%)</div>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Questions rendered dynamically here -->
+    </div>
+
+    <script>
+        const rawQuizData = [
+            {
+                stem: "A patient is exposed to Mycobacterium tuberculosis. Following phagocytosis, alveolar macrophages are unable to fuse the phagosome with the lysosome. Which specific cytokine is secreted by T-helper 1 (TH1) cells to force this fusion and promote epithelioid cell transformation?",
+                options: [
+                    "Interferon-gamma (IFN-γ)",
+                    "Interleukin-10 (IL-10)",
+                    "Tumor Necrosis Factor-alpha (TNF-α)",
+                    "Interleukin-4 (IL-4)"
+                ],
+                correctIndex: 0,
+                explanation: "TH1 cells secrete IL-2 and IFN-γ. IFN-γ acts as the premier macrophage activator, forcing lysosomal fusion and transforming macrophages into enlarged epithelioid cells in granulomatous inflammation."
+            },
+            {
+                stem: "A neonate receives protective antibodies through maternal breast milk (colostrum). Which of the following best describes the structure of the primary immunoglobulin responsible for this natural passive immunity?",
+                options: [
+                    "A secretory dimer joined by a J-chain",
+                    "A massive pentamer joined by disulfide bonds",
+                    "A monomer capable of crossing the transplacental barrier",
+                    "A monomer tightly bound to mast cell high-affinity receptors"
+                ],
+                correctIndex: 0,
+                explanation: "IgA is found in external body secretions (mother's milk, sweat, mucus, tears). It functions as a secretory dimer containing a joining chain and a secretory protein to neutralize pathogens at mucosal surfaces."
+            },
+            {
+                stem: "A previously healthy host is infected by a virus. Endogenous viral antigens are processed and presented on the surface of infected nucleated cells. Which of the following immune cells will recognize this specific complex?",
+                options: [
+                    "CD8+ Cytotoxic T-lymphocytes",
+                    "CD4+ Helper T-lymphocytes",
+                    "Plasma cells",
+                    "Regulatory T-cells"
+                ],
+                correctIndex: 0,
+                explanation: "Endogenous antigens (such as viruses) are presented on MHC Class I molecules, which are present on all nucleated cells. MHC I interacts exclusively with CD8+ cytotoxic/killer T-cells."
+            },
+            {
+                stem: "During a secondary immune response, an activated B-cell undergoes isotype switching. Which of the following structural changes occurs within the secreted immunoglobulin?",
+                options: [
+                    "The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained.",
+                    "The variable (Fab) region is modified to bind a newly encountered antigenic epitope.",
+                    "Both heavy and light chains are replaced entirely by memory T-cell derivatives.",
+                    "The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer."
+                ],
+                correctIndex: 0,
+                explanation: "Isotype (class) switching utilizes DNA recombination to change the constant heavy chain domain (Fc region)—switching the antibody class (e.g., IgM to IgG)—while perfectly preserving the exact antigen-binding specificity of the Fab region."
+            },
+            {
+                stem: "Following classical pathway activation by circulating immunoglobulins (IgM or IgG), a series of cascading enzymatic reactions occurs. Which of the following complement components directly forms a transmembrane pore resulting in osmotic lysis of the target cell?",
+                options: [
+                    "C5b-9 (Membrane Attack Complex)",
+                    "C3a and C5a",
+                    "Interleukin-6 (IL-6)",
+                    "C3b"
+                ],
+                correctIndex: 0,
+                explanation: "The Membrane Attack Complex (MAC) is composed of C5b, C6, C7, C8, and C9 (C5b-9). It forms a physical cylindrical lesion/pore through the target cell membrane, leading to cell lysis."
+            },
+            {
+                stem: "Which of the following cytokines functions primarily as an immunosuppressor, limiting immune responses and preventing chronic inflammatory tissue injury?",
+                options: [
+                    "Interleukin-10 (IL-10)",
+                    "Interleukin-1 (IL-1)",
+                    "Interleukin-2 (IL-2)",
+                    "Tumor Necrosis Factor-alpha (TNF-α)"
+                ],
+                correctIndex: 0,
+                explanation: "IL-10 is the major anti-inflammatory immunosuppressor cytokine. It is secreted by Regulatory T-cells (Treg, marked CD25+Foxp3+CD4+) to suppress immune responses."
+            },
+            {
+                stem: "An individual receives a rabies antiserum injection following an animal bite. Which of the following classifications of adaptive immunity does this represent?",
+                options: [
+                    "Artificial passive immunity",
+                    "Natural passive immunity",
+                    "Artificial active immunity",
+                    "Natural active immunity"
+                ],
+                correctIndex: 0,
+                explanation: "Artificial passive immunity involves the direct injection of exogenous, pre-made antibodies (from blood plasma/serum) to provide immediate but short-term protection with no memory cells formed. Examples include rabies antiserum and tetanus antitoxin."
+            },
+            {
+                stem: "A pediatric patient presents with hypoplasia of the thymus gland, accompanied by cardiac and blood vessel anomalies. Genetic testing reveals a deletion on chromosome 22. This clinical presentation is characteristic of which of the following conditions?",
+                options: [
+                    "DiGeorge syndrome",
+                    "Bruton’s agammaglobulinemia",
+                    "Acquired Immunodeficiency Syndrome (AIDS)",
+                    "Systemic vasculitis"
+                ],
+                correctIndex: 0,
+                explanation: "DiGeorge syndrome is a congenital immune deficiency caused by a deletion on chromosome 22, resulting in hypoplasia or aplasia of the thymus, which profoundly impairs T-cell maturation, alongside heart and vessel defects."
+            },
+            {
+                stem: "Human Immunodeficiency Virus (HIV) initiates pathogenesis by selectively binding to specific glycoprotein receptors on host cells. This binding specifically leads to the progressive depletion of which cellular population?",
+                options: [
+                    "CD4+ Helper T-lymphocytes",
+                    "CD8+ Cytotoxic T-lymphocytes",
+                    "Plasma cells",
+                    "Mast cells and basophils"
+                ],
+                correctIndex: 0,
+                explanation: "HIV attacks and destroys infection-fighting CD4+ cells. The loss of CD4+ Helper T-cells eliminates immune coordination, eventually causing the onset of AIDS (typically when left untreated for 8-10 years)."
+            },
+            {
+                stem: "Soluble antigen molecules in the bloodstream are cross-linked by specific antibodies into large, insoluble macromolecular complexes that settle out of body fluids. Which mechanism of antibody action does this describe?",
+                options: [
+                    "Precipitation",
+                    "Neutralization",
+                    "Agglutination",
+                    "Opsonization"
+                ],
+                correctIndex: 0,
+                explanation: "Precipitation works specifically for numerous, small SOLUBLE antigens in the blood. Agglutination refers to the clumping of cell-bound (particulate) antigens, while neutralization masks dangerous parts of toxins or viruses."
+            },
+            {
+                stem: "Upon primary exposure to a novel antigen, naive B-lymphocytes are activated. Which immunoglobulin class is ALWAYS the first to be secreted by plasma cells during this initial encounter?",
+                options: [
+                    "IgM",
+                    "IgA",
+                    "IgD",
+                    "IgG"
+                ],
+                correctIndex: 0,
+                explanation: "IgM is the 'Massive, Me First' antibody. It is the first antibody synthesized before birth and the first class secreted by plasma cells upon any new, primary exposure."
+            },
+            {
+                stem: "A cytotoxic T-lymphocyte identifies a defective cell expressing an appropriate antigen-MHC I complex. To initiate apoptosis in the target cell, the T-lymphocyte secretes which of the following?",
+                options: [
+                    "Perforins and granzymes",
+                    "Interleukin-4 and Interleukin-5",
+                    "Myeloperoxidase and lysozyme",
+                    "Nitric oxide and C-reactive protein"
+                ],
+                correctIndex: 0,
+                explanation: "CD8+ Cytotoxic (Killer) T-cells secrete cytolytic proteins called perforins (which form pores in target membranes) and granzymes (which enter the cell and activate the caspase system) to trigger apoptosis in defective cells."
+            },
+            {
+                stem: "A naive B-cell circulating in the lymphatic system encounters a foreign antigen. Which immunoglobulin, permanently bound to the B-cell membrane, primarily acts as the receptor for this initial antigen recognition?",
+                options: [
+                    "IgD",
+                    "IgE",
+                    "IgG",
+                    "IgM (secreted pentamer)"
+                ],
+                correctIndex: 0,
+                explanation: "IgD is permanently bound to the B-cell membrane where it functions strictly as the B-cell receptor for antigen recognition."
+            },
+            {
+                stem: "The complement system produces several critical fragments during activation. Which of the following fragments covalently coats bacterial surfaces, functioning as a powerful opsonin to stimulate rapid phagocytosis?",
+                options: [
+                    "C3b",
+                    "C3a",
+                    "C5a",
+                    "C5b-9"
+                ],
+                correctIndex: 0,
+                explanation: "C3b is a powerful opsonin that coats pathogens, providing an optimal handle ('yum yum effect') to enhance engulfment by phagocytic cells. C5a and C3a act as chemotactic signals and anaphylatoxins."
+            },
+            {
+                stem: "Histological examination of a pulmonary granuloma secondary to a chronic Mycobacterium tuberculosis infection reveals a defined central core surrounded by specialized cells. Which of the following describes the composition of this central core?",
+                options: [
+                    "Caseous necrotic tissue",
+                    "Epithelioid macrophages",
+                    "Multinucleated Langhans giant cells",
+                    "A dense collar of fibroblasts and CD4+ T-cells"
+                ],
+                correctIndex: 0,
+                explanation: "The architecture of a TB granuloma consists of a central core of caseous necrotic tissue, surrounded by a middle zone of epithelioid macrophages and multinucleated giant cells, and an outer rim of CD4+ T-cells and fibroblasts."
+            },
+            {
+                stem: "A patient with a chronic helminthic parasite infection demonstrates an exaggerated allergic response. Which helper T-cell subset and cytokine pairing is primarily responsible for recruiting eosinophils and promoting IgE secretion in this scenario?",
+                options: [
+                    "T Helper 2 (TH2); IL-4 and IL-5",
+                    "T Helper 1 (TH1); IL-2 and IFN-γ",
+                    "Regulatory T-cell (Treg); IL-10",
+                    "Macrophage; IL-1 and TNF-α"
+                ],
+                correctIndex: 0,
+                explanation: "TH2 cells secrete IL-4 (which stimulates B-cells to undergo isotype switching to secrete IgE) and IL-5 (the chemotactic and growth factor for eosinophils)."
+            },
+            {
+                stem: "Following an initial exposure to a pathogen, antibody titers typically demonstrate a lag period before rising. How long is this lag period characteristic of the primary immune response?",
+                options: [
+                    "3 to 6 days",
+                    "1 to 2 hours",
+                    "8 to 10 years",
+                    "10 to 14 days"
+                ],
+                correctIndex: 0,
+                explanation: "The primary immune response (the first exposure to an antigen) is characterized by a specific 3-6 day lag period before specific antibodies are detectable."
+            },
+            {
+                stem: "Which of the following immunoglobulins is the smallest, most abundant in serum (comprising ~80%), and capable of crossing the transplacental barrier?",
+                options: [
+                    "IgG",
+                    "IgE",
+                    "IgM",
+                    "IgA"
+                ],
+                correctIndex: 0,
+                explanation: "IgG is the smallest and most abundant antibody in circulation. It is the ONLY immunoglobulin class capable of crossing the placenta ('gee, Mom, thanks!') to provide natural passive immunity to the fetus."
+            },
+            {
+                stem: "A congenital immune deficiency is characterized by profoundly impaired B-cell development and maturation. The genetic inheritance pattern of this condition is X-linked. Which of the following is the correct diagnosis?",
+                options: [
+                    "Bruton’s agammaglobulinemia",
+                    "DiGeorge syndrome",
+                    "Acquired Immunodeficiency Syndrome",
+                    "Myeloperoxidase deficiency"
+                ],
+                correctIndex: 0,
+                explanation: "Bruton’s agammaglobulinemia is an X-linked congenital disorder affecting B-cell development and maturation, preventing the adequate production of immunoglobulins."
+            },
+            {
+                stem: "Professional antigen-presenting cells (APCs) express a specific surface molecule used to present exogenous antigens to helper T-cells. Based on the functional requirements of immune activation, which molecule is this?",
+                options: [
+                    "MHC Class II",
+                    "MHC Class I",
+                    "IgD",
+                    "CD25+Foxp3+"
+                ],
+                correctIndex: 0,
+                explanation: "Professional APCs (Macrophages, Dendritic Cells, B-cells) present exogenous antigens using MHC Class II, which exclusively activates CD4+ Helper T-cells (Rule of 8: 2 x 4 = 8)."
+            }
+        ];
+
+        let currentScore = 0;
+        let totalAnswered = 0;
+
+        // Fisher-Yates Shuffle Function
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function updateScore() {
+            const percentage = totalAnswered === 0 ? 0 : Math.round((currentScore / totalAnswered) * 100);
+            document.getElementById('score-display').textContent = `Score: ${currentScore} / ${rawQuizData.length} (${percentage}%)`;
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = ''; // Clear just in case
+
+            // 1. Shuffle the questions array
+            let questions = [...rawQuizData];
+            shuffle(questions);
+
+            // 2. Build the DOM for each question
+            questions.forEach((qData, qIndex) => {
+                
+                // Track correct option text to evaluate after shuffling options
+                const correctText = qData.options[qData.correctIndex];
+                
+                // Shuffle options
+                let shuffledOptions = [...qData.options];
+                shuffle(shuffledOptions);
+                
+                // Find new correct index
+                const newCorrectIndex = shuffledOptions.indexOf(correctText);
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-${qIndex}`;
+
+                const stem = document.createElement('div');
+                stem.className = 'question-stem';
+                stem.textContent = `${qIndex + 1}. ${qData.stem}`;
+                card.appendChild(stem);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                shuffledOptions.forEach((optText, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    
+                    // Assign letters A, B, C, D strictly for UI display
+                    const letter = String.fromCharCode(65 + optIndex); 
+                    btn.textContent = `${letter}. ${optText}`;
+                    
+                    btn.onclick = () => handleAnswer(card, btn, optIndex === newCorrectIndex, qData.explanation);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Explanation:</strong> ${qData.explanation}`;
+                card.appendChild(explanationDiv);
+
+                container.appendChild(card);
+            });
+
+            updateScore();
+        }
+
+        function handleAnswer(cardElement, selectedBtn, isCorrect, explanationText) {
+            // Lock all options in this question
+            const allBtns = cardElement.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            // Apply styling
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+                currentScore++;
+            } else {
+                selectedBtn.classList.add('incorrect');
+                // Highlight the correct one organically by finding the one that wasn't clicked but was correct
+                // Wait, we need to pass the correct index or verify text. 
+                // A simpler way: evaluate the onclick closure variables. 
+                // Since this function doesn't know *which* is correct, let's redesign the parameter to find the correct button.
+            }
+            
+            // To ensure the correct answer always lights up green even if wrong was chosen:
+            allBtns.forEach(btn => {
+                // We recreate the logic: if clicking THIS btn would have been isCorrect === true
+                // Instead of rewriting the click handler, we can just bind a data attribute.
+            });
+
+            // Reveal explanation
+            const expDiv = cardElement.querySelector('.explanation');
+            expDiv.style.display = 'block';
+
+            totalAnswered++;
+            updateScore();
+        }
+
+        // Alternative safe handling using Data attributes to highlight the correct answer:
+        // Overriding the previous handleAnswer definition to better manage state:
+        function handleAnswer(cardElement, selectedBtn, isCorrect, explanationText) {
+            const allBtns = cardElement.querySelectorAll('.option-btn');
+            
+            allBtns.forEach(btn => {
+                btn.disabled = true;
+                // We check if the button text contains the correct answer text secretly attached via a property
+                if(btn.dataset.correct === "true") {
+                    btn.classList.add('correct');
+                }
+            });
+
+            if (!isCorrect) {
+                selectedBtn.classList.add('incorrect');
+            } else {
+                currentScore++;
+            }
+
+            const expDiv = cardElement.querySelector('.explanation');
+            expDiv.style.display = 'block';
+
+            totalAnswered++;
+            updateScore();
+        }
+
+        // Overwrite renderQuiz to implement the data-correct attribute for the modified handleAnswer
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = ''; 
+
+            let questions = [...rawQuizData];
+            shuffle(questions);
+
+            questions.forEach((qData, qIndex) => {
+                const correctText = qData.options[qData.correctIndex];
+                let shuffledOptions = [...qData.options];
+                shuffle(shuffledOptions);
+                const newCorrectIndex = shuffledOptions.indexOf(correctText);
+
+                const card = document.createElement('div');
+                card.className = 'question-card';
+
+                const stem = document.createElement('div');
+                stem.className = 'question-stem';
+                stem.textContent = `${qIndex + 1}. ${qData.stem}`;
+                card.appendChild(stem);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                shuffledOptions.forEach((optText, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    const letter = String.fromCharCode(65 + optIndex); 
+                    btn.textContent = `${letter}. ${optText}`;
+                    
+                    // Attach truth state to dataset
+                    btn.dataset.correct = (optIndex === newCorrectIndex).toString();
+                    
+                    btn.onclick = () => handleAnswer(card, btn, optIndex === newCorrectIndex, qData.explanation);
+                    optionsGrid.appendChild(btn);
+                });
+
+                card.appendChild(optionsGrid);
+
+                const explanationDiv = document.createElement('div');
+                explanationDiv.className = 'explanation';
+                explanationDiv.innerHTML = `<strong>Explanation:</strong> ${qData.explanation}`;
+                card.appendChild(explanationDiv);
+
+                container.appendChild(card);
+            });
+
+            updateScore();
+        }
+
+        window.onload = () => {
+            renderQuiz();
+        };
+    </script>
+</body>
+</html>
