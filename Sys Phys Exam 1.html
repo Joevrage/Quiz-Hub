@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sys Phys - Practice Exam (All Combined)</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f0f;
+            --card-dark: #1a1a1a;
+            --text-light: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent-orange: #ff9900;
+            --correct-green: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-red: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #2a2a2a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            padding-bottom: 60px;
+        }
+
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: rgba(26, 26, 26, 0.95);
+            border-bottom: 2px solid var(--accent-orange);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .sticky-header h1 {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .score-box {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-orange);
+            background: #262626;
+            padding: 6px 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .question-card {
+            background-color: var(--card-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .q-number {
+            color: var(--accent-orange);
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .q-text {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .options-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            background-color: #242424;
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 14px 18px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #303030;
+            border-color: var(--accent-orange);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-green) !important;
+            border-color: var(--correct-border) !important;
+            color: #ffffff !important;
+            font-weight: 500;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-red) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #ffffff !important;
+        }
+
+        .explanation-box {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            background-color: #1f1f1f;
+            border-left: 4px solid var(--accent-orange);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #d1d5db;
+        }
+
+        .results-card {
+            display: none;
+            background-color: var(--card-dark);
+            border: 2px solid var(--accent-orange);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .results-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--text-light);
+        }
+
+        .retake-btn {
+            background-color: var(--accent-orange);
+            color: #000;
+            border: none;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background 0.2s ease;
+        }
+
+        .retake-btn:hover {
+            background-color: #e68a00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sticky-header">
+        <h1>Sys Phys: Practice Exam (All Combined)</h1>
+        <div class="score-box" id="score-display">Score: 0 / 0 (0%)</div>
+    </div>
+
+    <div class="container" id="quiz-container">
+        <!-- Rendered by JS -->
+    </div>
+
+    <div class="container">
+        <div class="results-card" id="results-card">
+            <h2>Exam Complete!</h2>
+            <p id="final-stats" style="font-size: 1.2rem; margin-bottom: 15px;"></p>
+            <p id="feedback-message" style="color: var(--text-muted);"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Exam (Reshuffle)</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // --- CELL BASICS ---
+            {
+                q: "Which cellular component encompasses everything between the plasma membrane and the nucleus, including both the organelles and the fluid medium?",
+                options: ["Cytoplasm", "Cytosol", "Ectoplasm", "Nucleoplasm"],
+                answer: 0,
+                exp: "Cytoplasm refers to all the cellular contents between the plasma membrane and the nucleus, containing the cytosol plus all suspended organelles. Cytosol is specifically the fluid portion alone."
+            },
+            {
+                q: "What is the primary cellular function of the nucleolus?",
+                options: ["Lipid synthesis", "Synthesis and assembly of ribosomal subunits", "Degradation of hydrogen peroxide", "Packaging proteins into secretory vesicles"],
+                answer: 1,
+                exp: "The nucleolus is a dense region inside the nucleus responsible for synthesizing ribosomal RNA (rRNA) and assembling ribosome subunits."
+            },
+            {
+                q: "Which organelle is characterized as the cellular sorting center, packaging proteins into vesicles for secretion or delivery to lysosomes?",
+                options: ["Peroxisome", "Rough Endoplasmic Reticulum", "Golgi Apparatus", "Smooth Endoplasmic Reticulum"],
+                answer: 2,
+                exp: "The Golgi apparatus accepts newly synthesized proteins from the rough ER, chemically modifies them, and sorts/packages them for export, lysosomal use, or membrane incorporation."
+            },
+            {
+                q: "Which organelle contains catalase and is specifically responsible for beta-oxidation of very long-chain fatty acids and detoxification of reactive oxygen species?",
+                options: ["Proteasome", "Lysosome", "Centrosome", "Peroxisome"],
+                answer: 3,
+                exp: "Peroxisomes contain oxidases and catalase to generate and degrade hydrogen peroxide (H2O2) while breaking down very long-chain fatty acids."
+            },
+            {
+                q: "Which of the following functions is performed exclusively by the smooth endoplasmic reticulum?",
+                options: ["Synthesis of steroid hormones and calcium sequestration", "Translation of membrane-bound proteins", "Ubiquitination of misfolded cytosolic proteins", "Glycosylation of nascent lysosomal enzymes"],
+                answer: 0,
+                exp: "The smooth ER specializes in lipid and steroid hormone synthesis, carbohydrate metabolism, drug detoxification, and calcium storage (sarcoplasmic reticulum)."
+            },
+
+            // --- OSMOREGULATION & FLUID COMPARTMENTS ---
+            {
+                q: "According to standard physiological principles, body water distribution for a healthy 70-kg adult follows which distribution rule for Total Body Water (TBW), Intracellular Fluid (ICF), Interstitial Fluid (ISF), and Plasma (IVF)?",
+                options: ["50% TBW : 30% ICF : 15% ISF : 5% IVF", "60% TBW : 40% ICF : 15% ISF : 5% IVF", "70% TBW : 50% ICF : 15% ISF : 5% IVF", "60% TBW : 45% ICF : 10% ISF : 5% IVF"],
+                answer: 1,
+                exp: "The 60-40-15-5 rule: TBW is 60% of total body weight, ICF is 40%, ECF is 20% (split into ~15% interstitial fluid and ~5% plasma/intravascular fluid)."
+            },
+            {
+                q: "Which major plasma protein is predominantly responsible for maintaining capillary oncotic (colloid osmotic) pressure to oppose fluid filtration into the interstitium?",
+                options: ["Fibrinogen", "Gamma globulin", "Albumin", "Alpha-1 antitrypsin"],
+                answer: 2,
+                exp: "Albumin accounts for roughly 75–80% of total plasma oncotic pressure because of its high concentration and molecular weight, counterbalancing capillary hydrostatic pressure."
+            },
+            {
+                q: "What phenomenon describes the unequal distribution of diffusible ions across the capillary wall caused by the presence of non-diffusible, negatively charged plasma proteins?",
+                options: ["Frank-Starling law", "Bernoulli principle", "Fick diffusion dynamic", "Gibbs-Donnan equilibrium"],
+                answer: 3,
+                exp: "The Gibbs-Donnan equilibrium states that impermeable anionic proteins inside plasma hold back more diffusible cations (Na+) and repel diffusible anions (Cl-), altering ionic gradients."
+            },
+            {
+                q: "Central osmoreceptors that detect minute increases in plasma osmolarity to trigger ADH release are primarily situated in which circumventricular organs?",
+                options: ["Subfornical Organ (SFO) and Organum Vasculosum of the Lamina Terminalis (OVLT)", "Median eminence and posterior pituitary", "Area postrema and choroid plexus", "Pineal gland and subcommissural organ"],
+                answer: 0,
+                exp: "The OVLT and SFO lack a typical blood-brain barrier, allowing specialized osmoreceptive neurons to directly sense systemic plasma hypertonicity and signal the hypothalamus."
+            },
+            {
+                q: "Where is Antidiuretic Hormone (ADH) synthesized and from where is it released into systemic circulation?",
+                options: ["Synthesized in the anterior pituitary; released from the hypothalamus", "Synthesized in the supraoptic/paraventricular nuclei; released from the posterior pituitary", "Synthesized in the adrenal cortex; released from the renal tubules", "Synthesized in the median preoptic nucleus; released from the anterior pituitary"],
+                answer: 1,
+                exp: "ADH (vasopressin) is synthesized primarily in the supraoptic and paraventricular nuclei of the hypothalamus and transported via axons to the posterior pituitary (neurohypophysis) for release."
+            },
+            {
+                q: "A cellular volume reduction exceeding what threshold is critical for triggering acute hyperosmolar neurological symptoms?",
+                options: ["2%", "5%", "10%", "20%"],
+                answer: 2,
+                exp: "A rapid 10% or greater decrease in cellular brain volume pulls brain tissue away from the cranium, stretching cerebral vessels and causing acute encephalopathy or hemorrhage."
+            },
+
+            // --- BIOCHEMISTRY & CELLULAR RESPIRATION ---
+            {
+                q: "Which isozyme of hexokinase is predominantly found in hepatic parenchymal cells and pancreatic beta cells, exhibiting a high Km for glucose?",
+                options: ["Hexokinase 1", "Hexokinase 4 (Glucokinase)", "Hexokinase 2", "Hexokinase 3"],
+                answer: 1,
+                exp: "Hexokinase 4 (Glucokinase) is localized to the liver and pancreas. It has a high Km (low affinity) and is not inhibited by glucose-6-phosphate, functioning as a glucose sensor."
+            },
+            {
+                q: "What is the committed, rate-limiting, and most heavily regulated enzyme in the glycolytic pathway?",
+                options: ["Hexokinase", "Pyruvate Kinase", "Phosphofructokinase-1 (PFK-1)", "Phosphoglycerate Kinase"],
+                answer: 2,
+                exp: "PFK-1 catalyzes the irreversible phosphorylation of fructose-6-phosphate to fructose-1,6-bisphosphate and represents the primary committed regulatory checkpoint of glycolysis."
+            },
+            {
+                q: "How does high cytosolic ATP regulate the enzyme Phosphofructokinase-1 (PFK-1)?",
+                options: ["Competitively binds the active catalytic site to increase velocity", "Binds to a distinct allosteric site to inhibit enzymatic activity", "Induces irreversible covalent proteolytic cleavage", "Promotes phosphorylation by Protein Kinase A to activate the enzyme"],
+                answer: 1,
+                exp: "PFK-1 has two ATP binding sites: one at the catalytic substrate site and another at a low-affinity allosteric regulatory site where high ATP binds to allosterically inhibit the enzyme."
+            },
+            {
+                q: "Via which specific transport mechanism does cytosolic pyruvate cross the inner mitochondrial membrane to reach the matrix?",
+                options: ["Voltage-Dependent Anion Channel (VDAC)", "Malate-Aspartate Shuttle", "Carnitine Palmitoyltransferase", "Mitochondrial Pyruvate Carrier (MPC)"],
+                answer: 3,
+                exp: "Pyruvate passes freely through the outer membrane via porins, but requires the Mitochondrial Pyruvate Carrier (MPC) to traverse the impermeable inner mitochondrial membrane."
+            },
+            {
+                q: "Why do mature erythrocytes rely entirely on anaerobic glycolysis and lactate dehydrogenase to maintain their energy requirements?",
+                options: ["They lack mitochondria and cannot regenerate NAD+ via the electron transport chain", "Their intracellular glucose levels are too low to activate glucokinase", "Pyruvate kinase is genetically absent in red blood cells", "They lack the GLUT-1 transporter needed for oxidative metabolism"],
+                answer: 0,
+                exp: "RBCs contain no mitochondria. Without an electron transport chain to re-oxidize NADH back to NAD+, they must reduce pyruvate to lactate via Lactate Dehydrogenase to keep glycolysis running."
+            },
+            {
+                q: "Which allosteric effector acts as a specific positive allosteric activator of mitochondrial Isocitrate Dehydrogenase?",
+                options: ["ADP", "AMP", "NADH", "ATP"],
+                answer: 0,
+                exp: "Isocitrate dehydrogenase is the rate-limiting enzyme of the Krebs cycle. It is allosterically inhibited by ATP and NADH, and directly stimulated by ADP (not AMP)."
+            },
+            {
+                q: "During an acute fast, hepatic glycogenolysis provides systemic blood glucose maintenance for approximately how long before gluconeogenesis becomes the dominant source?",
+                options: ["4 to 6 hours", "12 to 24 hours", "48 to 72 hours", "5 to 7 days"],
+                answer: 1,
+                exp: "Hepatic glycogen stores are depleted within roughly 18–24 hours of fasting, after which de novo glucose synthesis via gluconeogenesis becomes the essential supplier."
+            },
+
+            // --- CIRCULATORY & AIRWAY HISTOLOGY ---
+            {
+                q: "What is the primary functional differentiator between the tracheobronchial tree and the respiratory unit (acinus)?",
+                options: ["The tracheobronchial tree performs gas exchange; the acinus conducts air", "The tracheobronchial tree lacks smooth muscle; the acinus has a thick muscularis", "The tracheobronchial tree only conducts air; the acinus performs gas exchange", "The tracheobronchial tree contains no cartilage; the acinus contains hyaline rings"],
+                answer: 2,
+                exp: "The tracheobronchial tree is purely a conducting zone (nose down to terminal bronchioles). The respiratory unit (respiratory bronchioles, alveolar ducts, sacs) contains alveoli for gas exchange."
+            },
+            {
+                q: "What is the most distal (smallest) anatomical member of the conducting tracheobronchial tree before gas-exchanging alveoli appear?",
+                options: ["Segmental bronchus", "Respiratory bronchiole", "Alveolar duct", "Terminal bronchiole"],
+                answer: 3,
+                exp: "Terminal bronchioles are the final segments of the conducting zone. Respiratory bronchioles mark the beginning of the respiratory zone as they exhibit scattered alveoli in their walls."
+            },
+            {
+                q: "Which heart valve separates the left atrium from the left ventricle?",
+                options: ["Tricuspid valve", "Mitral (bicuspid) valve", "Aortic semilunar valve", "Pulmonic semilunar valve"],
+                answer: 1,
+                exp: "The mitral valve (bicuspid / left AV valve) controls flow between the left atrium and left ventricle. The tricuspid valve separates the right atrium from the right ventricle."
+            },
+            {
+                q: "In which anatomical subdivision of the mediastinum is the pericardial sac and heart located?",
+                options: ["Superior mediastinum", "Anterior mediastinum", "Middle mediastinum", "Posterior mediastinum"],
+                answer: 2,
+                exp: "The heart and pericardial cavity are contained within the middle mediastinum (a division of the inferior mediastinum)."
+            },
+            {
+                q: "What are the three structural layers of the microvascular basement membrane from internal to external?",
+                options: ["Lamina lucida, lamina densa, reticular lamina", "Lamina densa, lamina lucida, tunica adventitia", "Endothelial lamina, internal elastic lamina, basal lamina", "Lamina basalis, lamina fenestrata, lamina fibrosum"],
+                answer: 0,
+                exp: "The basement membrane consists of the basal lamina (split into lamina lucida and lamina densa) and the underlying reticular lamina."
+            },
+            {
+                q: "Which microvascular structures comprise the classical 'diabetic triopathy' of long-term microvascular end-organ damage?",
+                options: ["Cardiomyopathy, hepatopathy, gastroparesis", "Macrovascular stroke, peripheral gangrene, aortic aneurysm", "Retinopathy, nephropathy, neuropathy", "Dermatopathy, splenomegaly, pancreatitis"],
+                answer: 2,
+                exp: "The classic microvascular triopathy of poorly controlled diabetes mellitus involves diabetic retinopathy (eyes), nephropathy (kidneys), and neuropathy (nerves)."
+            },
+            {
+                q: "Which functional vessel class possesses the greatest total systemic cross-sectional area and the slowest velocity of blood flow?",
+                options: ["Arterioles", "Capillaries", "Muscular arteries", "Large venae cavae"],
+                answer: 1,
+                exp: "Capillaries collectively possess the largest total cross-sectional area in the body, causing flow velocity to drop to its lowest level, optimizing nutrient and gas exchange."
+            }
+        ];
+
+        let currentQuestions = [];
+        let score = 0;
+        let answeredCount = 0;
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex != 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            score = 0;
+            answeredCount = 0;
+            document.getElementById('results-card').style.display = 'none';
+            updateScoreDisplay();
+
+            // Clone and shuffle questions
+            currentQuestions = shuffle(JSON.parse(JSON.stringify(quizData)));
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `q-card-${index}`;
+
+                card.innerHTML = `
+                    <div class="q-number">Question ${index + 1} of ${currentQuestions.length}</div>
+                    <div class="q-text">${item.q}</div>
+                    <div class="options-grid" id="opt-grid-${index}">
+                        ${item.options.map((opt, optIdx) => `
+                            <button class="option-btn" onclick="handleAnswer(${index}, ${optIdx})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="explanation-box" id="exp-${index}">
+                        <strong>Key Concept:</strong> ${item.exp}
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleAnswer(qIndex, selectedIdx) {
+            const card = document.getElementById(`q-card-${qIndex}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            const expBox = document.getElementById(`exp-${qIndex}`);
+            const correctIdx = currentQuestions[qIndex].answer;
+
+            // Lock all buttons
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (selectedIdx === correctIdx) {
+                buttons[selectedIdx].classList.add('correct');
+                score++;
+            } else {
+                buttons[selectedIdx].classList.add('incorrect');
+                buttons[correctIdx].classList.add('correct');
+            }
+
+            expBox.style.display = 'block';
+            answeredCount++;
+            updateScoreDisplay();
+
+            if (answeredCount === currentQuestions.length) {
+                showResults();
+            }
+        }
+
+        function updateScoreDisplay() {
+            const percentage = answeredCount === 0 ? 0 : Math.round((score / answeredCount) * 100);
+            document.getElementById('score-display').textContent = `Score: ${score} / ${answeredCount} (${percentage}%)`;
+        }
+
+        function showResults() {
+            const resultsCard = document.getElementById('results-card');
+            const finalStats = document.getElementById('final-stats');
+            const feedbackMsg = document.getElementById('feedback-message');
+            const total = currentQuestions.length;
+            const pct = Math.round((score / total) * 100);
+
+            finalStats.textContent = `You scored ${score} out of ${total} (${pct}%)`;
+
+            if (pct >= 90) {
+                feedbackMsg.textContent = "Exceptional mastery of all core slide concepts and physiological pathways!";
+            } else if (pct >= 75) {
+                feedbackMsg.textContent = "Strong foundation! Review the flagged rationales for the missed questions.";
+            } else {
+                feedbackMsg.textContent = "Review the slides and transcripts for these topics and re-test.";
+            }
+
+            resultsCard.style.display = 'block';
+            resultsCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
