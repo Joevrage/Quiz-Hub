@@ -149,6 +149,25 @@
         .explanation .correct-text { color: var(--correct-border); }
         .explanation .incorrect-text { color: var(--incorrect-border); }
 
+        .rationale-list {
+            margin-top: 0.8rem;
+            border-top: 1px solid #404040;
+            padding-top: 0.6rem;
+            font-size: 0.9rem;
+            color: #d4d4d4;
+        }
+
+        .rationale-item {
+            margin-bottom: 0.45rem;
+            line-height: 1.45;
+        }
+
+        .rationale-item span {
+            font-weight: 700;
+            color: var(--accent);
+            margin-right: 4px;
+        }
+
         #summary-card {
             background-color: var(--bg-card);
             border-radius: 8px;
@@ -208,17 +227,17 @@
 
     <header>
         <div class="header-title">Sys Phys: Circulatory & Airway</div>
-        <div id="score-header">Score: 0 / 40 (0%)</div>
+        <div id="score-header">Score: 0 / 0 (0%)</div>
     </header>
 
     <div class="container">
         <div id="quiz-container">
-            <!-- Questions injected via JS -->
+            <!-- Injected via JavaScript -->
         </div>
 
         <div id="summary-card">
             <h2>Quiz Complete!</h2>
-            <div class="score-display" id="final-score-display">0 / 40</div>
+            <div class="score-display" id="final-score-display">0 / 0</div>
             <p id="final-feedback"></p>
             <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
@@ -227,410 +246,410 @@
     <script>
         const quizData = [
             {
-                question: "What is the primary anatomical and functional distinction between the lower airway's tracheobronchial tree and the respiratory unit (acinus)?",
+                question: "What is the primary anatomical and functional distinction between the lower airway tracheobronchial tree and the respiratory unit (acinus)?",
                 options: [
-                    { text: "The respiratory unit contains alveoli and exchanges gases, whereas the tracheobronchial tree solely conducts air.", correct: true },
-                    { text: "The tracheobronchial tree contains alveoli, whereas the respiratory unit lacks them entirely.", correct: false },
-                    { text: "The respiratory unit represents the proximal third of the lower airway.", correct: false },
-                    { text: "The tracheobronchial tree is structurally located inside the acinus.", correct: false }
+                    { text: "The respiratory unit contains alveoli and exchanges gases, whereas the tracheobronchial tree solely conducts air.", correct: true, why: "The tracheobronchial tree functions strictly as anatomical dead space conducting bulk airflow, whereas the respiratory unit possesses alveoli across which external gas exchange occurs." },
+                    { text: "The tracheobronchial tree contains alveoli, whereas the respiratory unit lacks them entirely.", correct: false, why: "Incorrect because the conducting tracheobronchial tree is defined by the complete absence of alveoli." },
+                    { text: "The respiratory unit represents the proximal third of the lower airway.", correct: false, why: "Incorrect because the respiratory unit represents the most distal functional zone of the pulmonary system." },
+                    { text: "The tracheobronchial tree is structurally located inside the acinus.", correct: false, why: "Incorrect because the conducting tree terminates prior to entering the pulmonary acini." }
                 ],
-                explanation: "The lower airway consists of two distinct functional parts: the tracheobronchial tree (which purely conducts air without alveoli) and the respiratory unit/acinus (which contains alveoli and performs gas exchange)."
+                explanation: "The lower airway consists of two distinct functional zones: the conducting tracheobronchial tree without alveoli, and the respiratory unit (acinus) containing alveoli for gas exchange."
             },
             {
                 question: "Which structure represents the smallest and most distal division of the tracheobronchial tree before transitioning into the respiratory unit?",
                 options: [
-                    { text: "Respiratory bronchiole", correct: false },
-                    { text: "Terminal bronchiole", correct: true },
-                    { text: "Alveolar duct", correct: false },
-                    { text: "Segmental bronchus", correct: false }
+                    { text: "Respiratory bronchiole", correct: false, why: "Incorrect because respiratory bronchioles have budding alveoli and mark the anatomical start of the respiratory unit." },
+                    { text: "Terminal bronchiole", correct: true, why: "Terminal bronchioles are the final, non-alveolated conducting passages of the tracheobronchial tree." },
+                    { text: "Alveolar duct", correct: false, why: "Incorrect because alveolar ducts are specialized conduits within the respiratory unit lined completely with alveoli." },
+                    { text: "Segmental bronchus", correct: false, why: "Incorrect because segmental (tertiary) bronchi are large conducting airways higher up in the bronchial tree." }
                 ],
-                explanation: "The terminal bronchiole is the final and smallest branch of the conducting tracheobronchial tree. Respiratory bronchioles mark the start of the respiratory unit because they have budding alveoli."
+                explanation: "The terminal bronchiole is the final and smallest branch of the conducting tracheobronchial tree before alveoli appear."
             },
             {
                 question: "What three specific structures comprise the respiratory unit (acinus) where gas exchange occurs?",
                 options: [
-                    { text: "Trachea, primary bronchi, and lobar bronchi", correct: false },
-                    { text: "Terminal bronchioles, segmental bronchi, and alveolar sacs", correct: false },
-                    { text: "Respiratory bronchioles, alveolar ducts, and alveolar sacs", correct: true },
-                    { text: "Arterioles, continuous capillaries, and postcapillary venules", correct: false }
+                    { text: "Trachea, primary bronchi, and lobar bronchi", correct: false, why: "Incorrect because these are large conducting cartilaginous airways." },
+                    { text: "Terminal bronchioles, segmental bronchi, and alveolar sacs", correct: false, why: "Incorrect because terminal and segmental bronchi are part of the conducting tree." },
+                    { text: "Respiratory bronchioles, alveolar ducts, and alveolar sacs", correct: true, why: "These three distal subdivisions all possess alveoli and form the pulmonary functional acinus." },
+                    { text: "Arterioles, continuous capillaries, and postcapillary venules", correct: false, why: "Incorrect because this describes the systemic vascular microcirculation, not pulmonary airway anatomy." }
                 ],
-                explanation: "The respiratory unit (acinus) consists exclusively of respiratory bronchioles, alveolar ducts, and alveolar sacs."
+                explanation: "The respiratory unit (pulmonary acinus) consists exclusively of respiratory bronchioles, alveolar ducts, and alveolar sacs."
             },
             {
                 question: "Is the respiratory unit (acinus) anatomically considered part of the tracheobronchial tree?",
                 options: [
-                    { text: "Yes, it represents the final three generations of the tracheobronchial tree.", correct: false },
-                    { text: "Yes, but only the respiratory bronchioles are formally included.", correct: false },
-                    { text: "Only the alveolar sacs are structurally excluded.", correct: false },
-                    { text: "No, the respiratory unit is distinctly separate and is NOT part of the tracheobronchial tree.", correct: true }
+                    { text: "Yes, it represents the final three generations of the tracheobronchial tree.", correct: false, why: "Incorrect because by anatomical definition the tracheobronchial tree ends at terminal bronchioles." },
+                    { text: "Yes, but only the respiratory bronchioles are formally included.", correct: false, why: "Incorrect because no part of the alveolated acinus is included in the conducting tree." },
+                    { text: "Only the alveolar sacs are structurally excluded.", correct: false, why: "Incorrect because alveolar ducts and respiratory bronchioles are also excluded from the tracheobronchial tree." },
+                    { text: "No, the respiratory unit is distinctly separate and is NOT part of the tracheobronchial tree.", correct: true, why: "The tracheobronchial tree is purely conducting, whereas the respiratory unit is the distinct gas-exchange apparatus." }
                 ],
-                explanation: "The respiratory unit (acinus), where gas exchange occurs, is anatomically and functionally distinct and is NOT part of the tracheobronchial tree."
+                explanation: "The respiratory unit (acinus) is anatomically and functionally distinct and is not considered part of the conducting tracheobronchial tree."
             },
             {
                 question: "What anatomical term is synonymous with the respiratory unit where pulmonary gas exchange occurs?",
                 options: [
-                    { text: "Acinus", correct: true },
-                    { text: "Tracheobronchial tree", correct: false },
-                    { text: "Conducting zone", correct: false },
-                    { text: "Interstitium", correct: false }
+                    { text: "Acinus", correct: true, why: "The pulmonary acinus is the standard anatomical synonym for the respiratory unit arising from a single terminal bronchiole." },
+                    { text: "Tracheobronchial tree", correct: false, why: "Incorrect because this denotes the non-respiratory conducting conduits." },
+                    { text: "Conducting zone", correct: false, why: "Incorrect because the conducting zone is the opposite of the respiratory exchange zone." },
+                    { text: "Interstitium", correct: false, why: "Incorrect because the interstitium is the connective tissue stroma between parenchymal elements." }
                 ],
-                explanation: "The respiratory unit is also referred to as the pulmonary acinus."
+                explanation: "The respiratory unit is synonymous with the pulmonary acinus."
             },
             {
                 question: "What are the three fundamental components that construct the circulatory system?",
                 options: [
-                    { text: "The lungs, kidneys, and liver", correct: false },
-                    { text: "The heart, blood, and blood vessels", correct: true },
-                    { text: "The central nervous system, peripheral nerves, and ganglia", correct: false },
-                    { text: "The lymphatic ducts, lymph nodes, and spleen", correct: false }
+                    { text: "The lungs, kidneys, and liver", correct: false, why: "Incorrect because these are visceral metabolic and gas exchange organs serviced by circulation." },
+                    { text: "The heart, blood, and blood vessels", correct: true, why: "The cardiovascular system structurally requires a muscular pump (heart), transport fluid (blood), and distribution conduits (vessels)." },
+                    { text: "The central nervous system, peripheral nerves, and ganglia", correct: false, why: "Incorrect because this describes the nervous system." },
+                    { text: "The lymphatic ducts, lymph nodes, and spleen", correct: false, why: "Incorrect because this represents the lymphoid system alone." }
                 ],
-                explanation: "The circulatory system is composed of the heart, the blood, and the network of blood vessels."
+                explanation: "The circulatory system is structurally composed of the heart, the circulating blood, and the network of blood vessels."
             },
             {
                 question: "The circulatory system is functionally divided into which two overarching systems?",
                 options: [
-                    { text: "The arterial system and the venous system", correct: false },
-                    { text: "The pulmonary loop and the systemic loop", correct: false },
-                    { text: "The cardiovascular system and the lymphatic system", correct: true },
-                    { text: "The macrocirculation and the microcirculation", correct: false }
+                    { text: "The arterial system and the venous system", correct: false, why: "Incorrect because arterial and venous networks are subdivisions of the cardiovascular system." },
+                    { text: "The pulmonary loop and the systemic loop", correct: false, why: "Incorrect because these are the two circuits of the cardiovascular system." },
+                    { text: "The cardiovascular system and the lymphatic system", correct: true, why: "The broad circulatory system includes both the closed blood-pumping cardiovascular system and the open fluid-recovering lymphatic system." },
+                    { text: "The macrocirculation and the microcirculation", correct: false, why: "Incorrect because these terms describe caliber-based vessel classifications." }
                 ],
-                explanation: "The circulatory system is divided into two primary systems: the cardiovascular system and the lymphatic system."
+                explanation: "The circulatory system encompasses two major functional systems: the cardiovascular system and the lymphatic system."
             },
             {
                 question: "What specific cellular waste products are continuously removed from tissues by the circulatory system to maintain homeostasis?",
                 options: [
-                    { text: "Oxygen, glucose, amino acids, and minerals", correct: false },
-                    { text: "Sodium, potassium, calcium, and bicarbonate", correct: false },
-                    { text: "Albumin, globulin, fibrinogen, and prothrombin", correct: false },
-                    { text: "Carbon dioxide, hydrogen ions, nitrogenous waste, and bilirubin", correct: true }
+                    { text: "Oxygen, glucose, amino acids, and minerals", correct: false, why: "Incorrect because these are metabolic nutrients delivered to tissues, not waste products." },
+                    { text: "Sodium, potassium, calcium, and bicarbonate", correct: false, why: "Incorrect because these are tightly regulated physiological electrolytes." },
+                    { text: "Albumin, globulin, fibrinogen, and prothrombin", correct: false, why: "Incorrect because these are functional plasma proteins synthesized by the liver." },
+                    { text: "Carbon dioxide, hydrogen ions, nitrogenous waste, and bilirubin", correct: true, why: "These are toxic byproducts of respiration, cellular work, protein catabolism, and heme breakdown cleared via circulation." }
                 ],
-                explanation: "The circulatory system clears metabolic waste products, specifically carbon dioxide, hydrogen ions, nitrogenous wastes (ammonia, creatinine, uric acid), and bilirubin."
+                explanation: "The circulatory system clears metabolic waste products including CO2, excess protons, nitrogenous wastes (urea, uric acid, creatinine), and bilirubin."
             },
             {
                 question: "During rapid muscle contraction, creatine phosphate is utilized to rapidly regenerate ATP. What poisonous waste product is generated during this process that the circulatory system must clear?",
                 options: [
-                    { text: "Creatinine", correct: true },
-                    { text: "Bilirubin", correct: false },
-                    { text: "Adenosine", correct: false },
-                    { text: "Glycogen", correct: false }
+                    { text: "Creatinine", correct: true, why: "Non-enzymatic spontaneous breakdown of creatine and phosphocreatine produces creatinine, a waste product cleared by glomerular filtration." },
+                    { text: "Bilirubin", correct: false, why: "Incorrect because bilirubin is a degradation product of erythrocyte heme catabolism." },
+                    { text: "Adenosine", correct: false, why: "Incorrect because adenosine is a local vasodilator signaling metabolite, not a toxic end-stage waste." },
+                    { text: "Glycogen", correct: false, why: "Incorrect because glycogen is a branched carbohydrate storage molecule." }
                 ],
-                explanation: "When fast-contracting muscles burn through creatine phosphate to quickly replenish ATP, creatinine is produced as a toxic metabolic waste product that must be cleared by the kidneys via the blood."
+                explanation: "Muscular phosphocreatine breakdown produces creatinine, a nitrogenous waste that enters circulation for renal elimination."
             },
             {
                 question: "How does the circulatory system directly assist in immunosurveillance?",
                 options: [
-                    { text: "Red blood cells bind and neutralize bacterial toxins in capillary beds.", correct: false },
-                    { text: "White blood cells, such as monocytes, patrol the vascular and lymphatic highways to detect foreign invaders.", correct: true },
-                    { text: "Albumin undergoes endocytosis to digest extracellular pathogens.", correct: false },
-                    { text: "Platelets directly synthesize antibodies in the bone marrow.", correct: false }
+                    { text: "Red blood cells bind and neutralize bacterial toxins in capillary beds.", correct: false, why: "Incorrect because erythrocytes transport respiratory gases and do not neutralize bacterial toxins." },
+                    { text: "White blood cells, such as monocytes, patrol the vascular and lymphatic highways to detect foreign invaders.", correct: true, why: "Leukocytes circulate continuously throughout vascular and lymphatic networks to migrate into tissues and destroy pathogens." },
+                    { text: "Albumin undergoes endocytosis to digest extracellular pathogens.", correct: false, why: "Incorrect because albumin regulates plasma oncotic pressure and binds small hydrophobic ligands." },
+                    { text: "Platelets directly synthesize antibodies in the bone marrow.", correct: false, why: "Incorrect because plasma cells (activated B lymphocytes) synthesize antibodies, whereas platelets mediate primary hemostasis." }
                 ],
-                explanation: "White blood cells, including monocytes, travel through the circulatory and lymphatic pathways to conduct ongoing immunosurveillance against foreign pathogens."
+                explanation: "Circulating leukocytes patrol vascular and lymphatic channels to detect foreign pathogens and initiate immune defense."
             },
             {
                 question: "Which three vascular structures specifically comprise the microcirculation where tissue servicing and exchange occur?",
                 options: [
-                    { text: "Small arteries, medium arteries, and large elastic arteries", correct: false },
-                    { text: "Large veins, venules, and lymphatic ducts", correct: false },
-                    { text: "Arterioles, capillaries, and venules", correct: true },
-                    { text: "The ascending aorta, pulmonary trunk, and vena cava", correct: false }
+                    { text: "Small arteries, medium arteries, and large elastic arteries", correct: false, why: "Incorrect because these are macrovascular conducting and distributing arteries." },
+                    { text: "Large veins, venules, and lymphatic ducts", correct: false, why: "Incorrect because large veins and lymphatic ducts belong to collecting systems." },
+                    { text: "Arterioles, capillaries, and venules", correct: true, why: "The microcirculation is structurally defined as precapillary resistance arterioles, exchange capillaries, and postcapillary collection venules." },
+                    { text: "The ascending aorta, pulmonary trunk, and vena cava", correct: false, why: "Incorrect because these are the largest great vessels of the body." }
                 ],
-                explanation: "The microcirculation is structurally defined as the network of arterioles, capillaries, and postcapillary venules."
+                explanation: "The microcirculation is composed of arterioles, capillaries, and postcapillary venules."
             },
             {
                 question: "What functional role do the large conduit vessels (such as the aorta, carotid arteries, and vena cava) serve relative to the microcirculation?",
                 options: [
-                    { text: "They act as the primary sites of gas, nutrient, and waste exchange.", correct: false },
-                    { text: "They are the principal regulators of systemic peripheral resistance.", correct: false },
-                    { text: "They filter cellular waste through diaphragmatic fenestrations.", correct: false },
-                    { text: "They serve as transport pipes carrying blood to and from the microcirculation.", correct: true }
+                    { text: "They act as the primary sites of gas, nutrient, and waste exchange.", correct: false, why: "Incorrect because their thick walls prevent transvascular diffusion." },
+                    { text: "They are the principal regulators of systemic peripheral resistance.", correct: false, why: "Incorrect because muscular arterioles provide the majority of systemic vascular resistance." },
+                    { text: "They filter cellular waste through diaphragmatic fenestrations.", correct: false, why: "Incorrect because fenestrations exist only in specialized capillary beds." },
+                    { text: "They serve as transport pipes carrying blood to and from the microcirculation.", correct: true, why: "Large conduit vessels provide low-resistance bulk flow conduits carrying blood between the heart and peripheral microvascular beds." }
                 ],
-                explanation: "Large arteries and veins do not perform exchange; they function simply as pipes transporting blood to and from the microcirculation."
+                explanation: "Large arteries and veins serve solely as bulk transport pipes delivering blood to and from the microcirculatory exchange beds."
             },
             {
                 question: "Which cardiovascular circuit routes blood strictly from the right heart to the lungs for gas exchange before returning it to the left heart?",
                 options: [
-                    { text: "The pulmonary loop", correct: true },
-                    { text: "The systemic loop", correct: false },
-                    { text: "The portal venous system", correct: false },
-                    { text: "The lymphatic system", correct: false }
+                    { text: "The pulmonary loop", correct: true, why: "The pulmonary loop pumps deoxygenated blood from the right ventricle to alveolar capillaries and returns oxygenated blood to the left atrium." },
+                    { text: "The systemic loop", correct: false, why: "Incorrect because the systemic loop delivers blood from the left ventricle to peripheral organs." },
+                    { text: "The portal venous system", correct: false, why: "Incorrect because portal veins connect splanchnic capillary beds to hepatic sinusoids." },
+                    { text: "The lymphatic system", correct: false, why: "Incorrect because lymphatics collect interstitial fluid and return it to venous circulation." }
                 ],
-                explanation: "The pulmonary loop (circuit) routes deoxygenated blood from the right heart to the pulmonary capillaries for gas exchange, then returns oxygenated blood to the left atrium."
+                explanation: "The pulmonary loop carries blood from the right ventricle through pulmonary gas-exchange beds to the left atrium."
             },
             {
                 question: "What is the primary hemodynamic role of the systemic cardiovascular loop?",
                 options: [
-                    { text: "To directly oxygenate deoxygenated blood within the alveolar sacs.", correct: false },
-                    { text: "To pump oxygenated blood from the left heart to every tissue in the body, excluding the respiratory gas-exchange surfaces.", correct: true },
-                    { text: "To filter nitrogenous waste exclusively within the renal glomerulus.", correct: false },
-                    { text: "To generate negative pressure within the pleural cavities.", correct: false }
+                    { text: "To directly oxygenate deoxygenated blood within the alveolar sacs.", correct: false, why: "Incorrect because alveolar oxygenation is the function of the pulmonary loop." },
+                    { text: "To pump oxygenated blood from the left heart to every tissue in the body, excluding the respiratory gas-exchange surfaces.", correct: true, why: "The systemic loop supplies oxygen and nutrients to all bodily tissues except the alveolar respiratory gas-exchange surfaces." },
+                    { text: "To filter nitrogenous waste exclusively within the renal glomerulus.", correct: false, why: "Incorrect because renal filtration is only one component of systemic servicing." },
+                    { text: "To generate negative pressure within the pleural cavities.", correct: false, why: "Incorrect because pleural negative pressure is generated by chest wall and diaphragmatic mechanics." }
                 ],
-                explanation: "The systemic loop pumps oxygenated blood from the left heart to all organs and peripheral tissues throughout the body, excluding the respiratory exchange surfaces of the lungs."
+                explanation: "The systemic loop distributes oxygenated blood from the left heart to all bodily tissues except the pulmonary gas-exchange surfaces."
             },
             {
                 question: "Why does the left ventricle have significantly greater myocardial mass than the right ventricle?",
                 options: [
-                    { text: "It pumps a significantly greater stroke volume than the right ventricle.", correct: false },
-                    { text: "It receives blood under lower oxygen tension than the right heart.", correct: false },
-                    { text: "It must generate high pressure to overcome the extensive peripheral resistance of the entire systemic circuit.", correct: true },
-                    { text: "It relies on anaerobic respiration, requiring larger muscle fibers.", correct: false }
+                    { text: "It pumps a significantly greater stroke volume than the right ventricle.", correct: false, why: "Incorrect because right and left ventricular stroke volumes must remain identical at steady state to prevent pulmonary edema." },
+                    { text: "It receives blood under lower oxygen tension than the right heart.", correct: false, why: "Incorrect because the left ventricle receives highly oxygenated pulmonary venous blood." },
+                    { text: "It must generate high pressure to overcome the extensive peripheral resistance of the entire systemic circuit.", correct: true, why: "Systemic vascular resistance is roughly six times higher than pulmonary vascular resistance, requiring greater left ventricular wall thickness." },
+                    { text: "It relies on anaerobic respiration, requiring larger muscle fibers.", correct: false, why: "Incorrect because myocardium is strictly aerobic and packed with mitochondria." }
                 ],
-                explanation: "The left ventricle must generate enough hydrostatic pressure to overcome the high resistance of the extensive systemic vasculature, whereas the right ventricle only pumps into the low-resistance pulmonary circuit."
+                explanation: "The left ventricle requires thicker muscular walls to generate high systolic pressures against the high resistance of the systemic circuit."
             },
             {
                 question: "In addition to ventricular contraction, what mechanisms act as critical pumps to facilitate venous return against gravity?",
                 options: [
-                    { text: "Pulsations of capillary smooth muscle and aortic recoil", correct: false },
-                    { text: "Peristalsis of tunica adventitia and active transport by fibroblasts", correct: false },
-                    { text: "Hepatic portal suction and passive diffusion", correct: false },
-                    { text: "The calf muscle pump and the negative intrathoracic pressure created during inspiration", correct: true }
+                    { text: "Pulsations of capillary smooth muscle and aortic recoil", correct: false, why: "Incorrect because capillaries lack smooth muscle entirely." },
+                    { text: "Peristalsis of tunica adventitia and active transport by fibroblasts", correct: false, why: "Incorrect because the adventitia does not exhibit muscular peristalsis." },
+                    { text: "Hepatic portal suction and passive diffusion", correct: false, why: "Incorrect because portal circulation introduces resistance rather than forward suction." },
+                    { text: "The calf muscle pump and the negative intrathoracic pressure created during inspiration", correct: true, why: "Rhythmic skeletal muscle contraction compresses deep veins through one-way valves, while inspiratory negative intrathoracic pressure draws venous blood toward the right atrium." }
                 ],
-                explanation: "Venous return from the lower body relies on the calf muscle pump (soleus squeezing veins with one-way valves) and the negative intrathoracic pressure generated during inspiration."
+                explanation: "Venous return against gravity is driven by rhythmic skeletal muscle pumping in the legs and the respiratory thoracoabdominal pump during inspiration."
             },
             {
                 question: "Within the thoracic cavity, in which specific anatomical division does the heart reside?",
                 options: [
-                    { text: "The middle mediastinum (a division of the inferior mediastinum)", correct: true },
-                    { text: "The superior mediastinum", correct: false },
-                    { text: "The anterior mediastinum", correct: false },
-                    { text: "The posterior mediastinum", correct: false }
+                    { text: "The middle mediastinum (a division of the inferior mediastinum)", correct: true, why: "The inferior mediastinum is divided into anterior, middle, and posterior compartments; the pericardium and heart occupy the middle mediastinum." },
+                    { text: "The superior mediastinum", correct: false, why: "Incorrect because the superior mediastinum sits above the sternal angle and contains great vessels, trachea, and esophagus." },
+                    { text: "The anterior mediastinum", correct: false, why: "Incorrect because the anterior mediastinum lies between the sternum and pericardium, containing fat and remnants of the thymus." },
+                    { text: "The posterior mediastinum", correct: false, why: "Incorrect because the posterior mediastinum lies posterior to the pericardium, housing the esophagus and descending aorta." }
                 ],
-                explanation: "The heart sits within the pericardial sac located squarely in the middle mediastinum, which is the central subdivision of the inferior mediastinum."
+                explanation: "The heart and pericardial sac reside within the middle mediastinum of the inferior thoracic cavity."
             },
             {
                 question: "Which major vascular structures reside in the superior mediastinum, superior to the heart?",
                 options: [
-                    { text: "The coronary sinus and the inferior vena cava", correct: false },
-                    { text: "The aortic arch and the brachiocephalic trunk", correct: true },
-                    { text: "The descending thoracic aorta and the hemiazygos vein", correct: false },
-                    { text: "The mitral valve and the pulmonary trunk bifurcation", correct: false }
+                    { text: "The coronary sinus and the inferior vena cava", correct: false, why: "Incorrect because these structures lie in the middle mediastinum within the pericardium." },
+                    { text: "The aortic arch and the brachiocephalic trunk", correct: true, why: "The aortic arch, brachiocephalic artery, left common carotid, and left subclavian artery are located in the superior mediastinum above the sternal angle plane." },
+                    { text: "The descending thoracic aorta and the hemiazygos vein", correct: false, why: "Incorrect because these run through the posterior mediastinum." },
+                    { text: "The mitral valve and the pulmonary trunk bifurcation", correct: false, why: "Incorrect because cardiac valves reside inside the middle mediastinum." }
                 ],
-                explanation: "The aortic arch and the brachiocephalic trunk reside within the superior mediastinum."
+                explanation: "The aortic arch and its major branches (including the brachiocephalic trunk) are located in the superior mediastinum."
             },
             {
                 question: "Which specific valve regulates blood flow from the left atrium into the left ventricle?",
                 options: [
-                    { text: "The tricuspid valve", correct: false },
-                    { text: "The aortic semilunar valve", correct: false },
-                    { text: "The mitral valve (bicuspid / left AV valve)", correct: true },
-                    { text: "The pulmonary semilunar valve", correct: false }
+                    { text: "The tricuspid valve", correct: false, why: "Incorrect because the tricuspid valve separates the right atrium and right ventricle." },
+                    { text: "The aortic semilunar valve", correct: false, why: "Incorrect because the aortic valve guards the left ventricular outflow tract into the aorta." },
+                    { text: "The mitral valve (bicuspid / left AV valve)", correct: true, why: "The mitral valve has two cusps and prevents backflow from the left ventricle into the left atrium during ventricular systole." },
+                    { text: "The pulmonary semilunar valve", correct: false, why: "Incorrect because the pulmonary valve guards the right ventricular outflow tract." }
                 ],
-                explanation: "The mitral valve, also called the bicuspid or left atrioventricular (AV) valve, regulates blood flow from the left atrium to the left ventricle."
+                explanation: "The mitral (bicuspid or left AV) valve regulates flow between the left atrium and left ventricle."
             },
             {
                 question: "Which specific valve anatomically separates the right atrium from the right ventricle?",
                 options: [
-                    { text: "The mitral valve", correct: false },
-                    { text: "The aortic semilunar valve", correct: false },
-                    { text: "The pulmonary semilunar valve", correct: false },
-                    { text: "The tricuspid valve (Right AV valve)", correct: true }
+                    { text: "The mitral valve", correct: false, why: "Incorrect because the mitral valve is situated on the left side of the heart." },
+                    { text: "The aortic semilunar valve", correct: false, why: "Incorrect because the aortic valve guards systemic arterial ejection from the left ventricle." },
+                    { text: "The pulmonary semilunar valve", correct: false, why: "Incorrect because the pulmonary valve sits between the right ventricle and pulmonary trunk." },
+                    { text: "The tricuspid valve (Right AV valve)", correct: true, why: "The right atrioventricular valve has three cusps and controls unidirectional flow from right atrium to right ventricle." }
                 ],
                 explanation: "The tricuspid valve (right AV valve) separates the right atrium from the right ventricle."
             },
             {
                 question: "Which two major arterial trunks branch directly off the aortic arch in standard human anatomy?",
                 options: [
-                    { text: "Left common carotid artery and left subclavian artery", correct: true },
-                    { text: "Right common carotid artery and right subclavian artery", correct: false },
-                    { text: "Right coronary artery and left anterior descending artery", correct: false },
-                    { text: "Celiac trunk and superior mesenteric artery", correct: false }
+                    { text: "Left common carotid artery and left subclavian artery", correct: true, why: "In standard anatomy, the aortic arch branches into the brachiocephalic trunk, followed directly by the left common carotid and left subclavian arteries." },
+                    { text: "Right common carotid artery and right subclavian artery", correct: false, why: "Incorrect because these arise as secondary divisions from the brachiocephalic trunk, not directly off the arch." },
+                    { text: "Right coronary artery and left anterior descending artery", correct: false, why: "Incorrect because coronary arteries branch from the aortic sinuses of the ascending aorta." },
+                    { text: "Celiac trunk and superior mesenteric artery", correct: false, why: "Incorrect because these branch from the abdominal aorta below the diaphragm." }
                 ],
-                explanation: "The aortic arch directly gives rise to the brachiocephalic trunk, the left common carotid artery, and the left subclavian artery."
+                explanation: "The aortic arch directly gives rise to the brachiocephalic trunk, left common carotid artery, and left subclavian artery."
             },
             {
                 question: "The innermost tunic of blood vessels, which directly contacts circulating blood, is the tunica intima. What specific cell type lines this layer?",
                 options: [
-                    { text: "Stratified squamous epithelium", correct: false },
-                    { text: "Simple squamous endothelial cells", correct: true },
-                    { text: "Transitional epithelium", correct: false },
-                    { text: "Vascular smooth muscle cells", correct: false }
+                    { text: "Stratified squamous epithelium", correct: false, why: "Incorrect because stratified squamous epithelium forms barrier surfaces like the epidermis and esophagus." },
+                    { text: "Simple squamous endothelial cells", correct: true, why: "Vascular endothelium is a continuous single layer of simple squamous cells providing a smooth, antithrombogenic lining." },
+                    { text: "Transitional epithelium", correct: false, why: "Incorrect because transitional epithelium (urothelium) lines the urinary tract." },
+                    { text: "Vascular smooth muscle cells", correct: false, why: "Incorrect because smooth muscle cells reside in the tunica media." }
                 ],
-                explanation: "The tunica intima is lined by a monolayer of simple squamous endothelial cells that form a smooth, antithrombogenic surface."
+                explanation: "The tunica intima is lined by a monolayer of simple squamous endothelial cells."
             },
             {
                 question: "What is the primary tissue component of the vascular tunica media that allows arterioles to regulate systemic blood pressure and afterload?",
                 options: [
-                    { text: "Fibroblasts and reticular fibers", correct: false },
-                    { text: "Pericytes and loose connective tissue", correct: false },
-                    { text: "Vascular smooth muscle cells and elastic fibers", correct: true },
-                    { text: "Continuous endothelial sheets", correct: false }
+                    { text: "Fibroblasts and reticular fibers", correct: false, why: "Incorrect because fibroblasts and reticular fibers form connective tissue in the adventitia." },
+                    { text: "Pericytes and loose connective tissue", correct: false, why: "Incorrect because pericytes associate with capillaries and postcapillary venules." },
+                    { text: "Vascular smooth muscle cells and elastic fibers", correct: true, why: "Circumferential vascular smooth muscle in the tunica media contracts or relaxes to alter luminal radius, controlling peripheral resistance." },
+                    { text: "Continuous endothelial sheets", correct: false, why: "Incorrect because endothelial sheets are restricted to the tunica intima." }
                 ],
-                explanation: "The tunica media consists primarily of vascular smooth muscle cells and elastic fibers, enabling vasoconstriction and vasodilation to control peripheral resistance and blood pressure."
+                explanation: "The tunica media consists primarily of vascular smooth muscle cells and elastic fibers that regulate vascular caliber and blood pressure."
             },
             {
                 question: "Histologically, what prominent structural feature is present in arterial walls to accommodate high pulsatile pressures, but is notably absent in veins?",
                 options: [
-                    { text: "Tunica intima", correct: false },
-                    { text: "Basal lamina", correct: false },
-                    { text: "Vasa vasorum", correct: false },
-                    { text: "Internal elastic lamina", correct: true }
+                    { text: "Tunica intima", correct: false, why: "Incorrect because both arteries and veins possess an endothelial tunica intima." },
+                    { text: "Basal lamina", correct: false, why: "Incorrect because endothelial cells in both vessel types rest upon a basal lamina." },
+                    { text: "Vasa vasorum", correct: false, why: "Incorrect because large veins also contain vasa vasorum in their outer walls." },
+                    { text: "Internal elastic lamina", correct: true, why: "A prominent, scalloped internal elastic lamina separates the intima and media in arteries; it is rudimentary or completely absent in veins." }
                 ],
-                explanation: "Arteries possess a well-developed internal elastic lamina between the tunica intima and media, which veins lack."
+                explanation: "Arteries possess a well-defined internal elastic lamina between intima and media to withstand systolic pressure peaks, which is absent in veins."
             },
             {
                 question: "What is the histological cellular makeup of a standard capillary wall?",
                 options: [
-                    { text: "One to four simple squamous endothelial cells wrapped to form a lumen, surrounded by a basement membrane and scattered pericytes", correct: true },
-                    { text: "A continuous layer of cuboidal cells embedded in dense regular collagen", correct: false },
-                    { text: "A layer of vascular smooth muscle lined internally by fibroblasts", correct: false },
-                    { text: "A stratified squamous epithelial tube lacking a basement membrane", correct: false }
+                    { text: "One to four simple squamous endothelial cells wrapped to form a lumen, surrounded by a basement membrane and scattered pericytes", correct: true, why: "Capillaries lack tunica media and adventitia; their walls consist solely of 1 to 4 curved endothelial cells on a basement membrane with pericytes." },
+                    { text: "A continuous layer of cuboidal cells embedded in dense regular collagen", correct: false, why: "Incorrect because capillary endothelium is squamous, not cuboidal, and dense collagen would block diffusion." },
+                    { text: "A layer of vascular smooth muscle lined internally by fibroblasts", correct: false, why: "Incorrect because true capillaries contain zero smooth muscle cells." },
+                    { text: "A stratified squamous epithelial tube lacking a basement membrane", correct: false, why: "Incorrect because capillaries are unistratified and require a continuous or discontinuous basement membrane." }
                 ],
-                explanation: "A standard capillary wall consists solely of one to four endothelial cells joined to form a lumen, encased by a basement membrane and pericytes. It lacks a tunica media."
+                explanation: "A capillary wall consists of 1 to 4 simple squamous endothelial cells curled around a central lumen, encased by a basement membrane and pericytes."
             },
             {
                 question: "Which capillary type features continuous tight junctions, lacks pores, is relatively non-leaky, and forms the blood-brain barrier?",
                 options: [
-                    { text: "Fenestrated capillaries", correct: false },
-                    { text: "Continuous capillaries", correct: true },
-                    { text: "Sinusoidal capillaries", correct: false },
-                    { text: "Discontinuous capillaries", correct: false }
+                    { text: "Fenestrated capillaries", correct: false, why: "Incorrect because fenestrated capillaries possess transcellular filtration pores." },
+                    { text: "Continuous capillaries", correct: true, why: "Continuous capillaries feature uninterrupted endothelial cells sealed by occluding tight junctions and continuous basal lamina, maintaining high resistance in the CNS." },
+                    { text: "Sinusoidal capillaries", correct: false, why: "Incorrect because sinusoids have large openings and are highly permeable." },
+                    { text: "Discontinuous capillaries", correct: false, why: "Incorrect because discontinuous capillaries are leaky sinusoids found in liver and spleen." }
                 ],
-                explanation: "Continuous capillaries possess uninterrupted endothelial linings with tight junctions, making them non-leaky. They are found in the central nervous system, muscle, and skin."
+                explanation: "Continuous capillaries possess uninterrupted endothelial linings and tight junctions, forming non-leaky barriers such as the blood-brain barrier."
             },
             {
                 question: "Which capillary type contains filtration pores with diaphragmatic lids and is characteristic of the renal glomerulus and endocrine glands?",
                 options: [
-                    { text: "Continuous capillaries", correct: false },
-                    { text: "Sinusoidal capillaries", correct: false },
-                    { text: "Fenestrated capillaries", correct: true },
-                    { text: "Discontinuous capillaries", correct: false }
+                    { text: "Continuous capillaries", correct: false, why: "Incorrect because continuous capillaries lack transcellular fenestrations." },
+                    { text: "Sinusoidal capillaries", correct: false, why: "Incorrect because sinusoids have open intercellular gaps rather than diaphragmatic filtration pores." },
+                    { text: "Fenestrated capillaries", correct: true, why: "Fenestrated capillaries feature 60 to 80 nm pores spanning endothelial cells to facilitate rapid water and solute transport in renal glomeruli, choroid plexus, and endocrine glands." },
+                    { text: "Discontinuous capillaries", correct: false, why: "Incorrect because discontinuous capillaries lack diaphragm-covered pores." }
                 ],
-                explanation: "Fenestrated capillaries feature endothelial pores (fenestrations) that permit rapid exchange of water and small solutes, as seen in the kidneys and endocrine organs."
+                explanation: "Fenestrated capillaries feature specialized pores (fenestrae) for rapid solute filtration in kidneys and endocrine organs."
             },
             {
                 question: "Which capillary type is the leakiest, contains large intercellular clefts, possesses the fewest pericytes, and is located in the liver, spleen, and bone marrow?",
                 options: [
-                    { text: "Continuous capillaries", correct: false },
-                    { text: "Fenestrated capillaries", correct: false },
-                    { text: "Postcapillary venules", correct: false },
-                    { text: "Sinusoidal (discontinuous) capillaries", correct: true }
+                    { text: "Continuous capillaries", correct: false, why: "Incorrect because continuous capillaries are the least permeable capillary class." },
+                    { text: "Fenestrated capillaries", correct: false, why: "Incorrect because fenestrated capillaries restrict whole cells and plasma proteins." },
+                    { text: "Postcapillary venules", correct: false, why: "Incorrect because venules are collecting conduits, not wide sinusoidal capillary beds." },
+                    { text: "Sinusoidal (discontinuous) capillaries", correct: true, why: "Sinusoidal capillaries possess large intercellular gaps, discontinuous basal lamina, and few pericytes, permitting entire cells and large proteins to cross." }
                 ],
-                explanation: "Sinusoidal (discontinuous) capillaries have large gaps between endothelial cells, discontinuous basement membranes, and minimal pericytes, allowing the passage of large proteins and blood cells."
+                explanation: "Sinusoidal (discontinuous) capillaries are the leakiest vessels, featuring wide gaps and disrupted basement membranes in liver, spleen, and bone marrow."
             },
             {
                 question: "What are the three histological layers that compose the vascular basement membrane?",
                 options: [
-                    { text: "Lamina lucida, lamina densa, and reticular lamina", correct: true },
-                    { text: "Tunica intima, tunica media, and tunica adventitia", correct: false },
-                    { text: "Lamina lucida, internal elastic lamina, and external elastic lamina", correct: false },
-                    { text: "Basal lamina, subendothelial layer, and perivascular space", correct: false }
+                    { text: "Lamina lucida, lamina densa, and reticular lamina", correct: true, why: "The complete basement membrane consists of the electron-lucent lamina lucida, the collagen type IV-rich lamina densa, and the deeper fibrillar reticular lamina." },
+                    { text: "Tunica intima, tunica media, and tunica adventitia", correct: false, why: "Incorrect because these are the three macroscopic tunics of blood vessel walls." },
+                    { text: "Lamina lucida, internal elastic lamina, and external elastic lamina", correct: false, why: "Incorrect because elastic laminae are arterial wall layers, not basement membrane strata." },
+                    { text: "Basal lamina, subendothelial layer, and perivascular space", correct: false, why: "Incorrect because these represent tissue compartments rather than the three sublayers of the basement membrane." }
                 ],
-                explanation: "The basement membrane consists of three distinct ultrastructural zones: the lamina lucida, the lamina densa, and the reticular lamina."
+                explanation: "The vascular basement membrane consists ultrastructurally of the lamina lucida, lamina densa, and reticular lamina."
             },
             {
                 question: "Which two layers of the basement membrane specifically combine to form the basal lamina?",
                 options: [
-                    { text: "Lamina densa and reticular lamina", correct: false },
-                    { text: "Lamina lucida and lamina densa", correct: true },
-                    { text: "Lamina lucida and reticular lamina", correct: false },
-                    { text: "Internal elastic lamina and lamina densa", correct: false }
+                    { text: "Lamina densa and reticular lamina", correct: false, why: "Incorrect because the reticular lamina is secreted by underlying connective tissue fibroblasts, not epithelial/endothelial cells." },
+                    { text: "Lamina lucida and lamina densa", correct: true, why: "The basal lamina specifically designates the two layers synthesized directly by epithelial or endothelial cells: the lamina lucida and lamina densa." },
+                    { text: "Lamina lucida and reticular lamina", correct: false, why: "Incorrect because this pair omits the central lamina densa." },
+                    { text: "Internal elastic lamina and lamina densa", correct: false, why: "Incorrect because the internal elastic lamina is an extracellular elastic arterial sheet." }
                 ],
-                explanation: "The basal lamina specifically consists of the lamina lucida and the lamina densa."
+                explanation: "The basal lamina specifically consists of the lamina lucida and lamina densa."
             },
             {
                 question: "What three clinical microvascular complications define the classic diabetic triopathy?",
                 options: [
-                    { text: "Cardiomyopathy, stroke, and peripheral claudication", correct: false },
-                    { text: "Dermatopathy, myopathy, and hepatopathy", correct: false },
-                    { text: "Retinopathy, neuropathy, and nephropathy", correct: true },
-                    { text: "Atherosclerosis, hypertension, and gangrene", correct: false }
+                    { text: "Cardiomyopathy, stroke, and peripheral claudication", correct: false, why: "Incorrect because these are macrovascular complications of accelerated atherosclerosis." },
+                    { text: "Dermatopathy, myopathy, and hepatopathy", correct: false, why: "Incorrect because this is not the defined microvascular clinical triad." },
+                    { text: "Retinopathy, neuropathy, and nephropathy", correct: true, why: "Diabetic microangiopathy causes hyaline arteriolosclerosis and capillary basement membrane thickening, manifesting as retinopathy, neuropathy, and nephropathy." },
+                    { text: "Atherosclerosis, hypertension, and gangrene", correct: false, why: "Incorrect because atherosclerosis and gangrene represent macrovascular pathology." }
                 ],
-                explanation: "The classic microvascular triopathy of diabetes mellitus consists of retinopathy (retinal vessels), neuropathy (vasa nervorum), and nephropathy (glomerular capillaries)."
+                explanation: "The classic microvascular triopathy of diabetes mellitus comprises retinopathy, neuropathy, and nephropathy."
             },
             {
                 question: "When local tissue metabolism increases and waste products like CO2, H+, and adenosine accumulate in the interstitium, what direct effect do they have on adjacent precapillary arterioles?",
                 options: [
-                    { text: "They induce intense vasoconstriction to limit local blood flow.", correct: false },
-                    { text: "They trigger pericytes to occlude the capillary lumen.", correct: false },
-                    { text: "They stimulate systemic ADH release.", correct: false },
-                    { text: "They stimulate vascular smooth muscle relaxation, causing vasodilation and increased perfusion.", correct: true }
+                    { text: "They induce intense vasoconstriction to limit local blood flow.", correct: false, why: "Incorrect because restricting blood flow would worsen local ischemia and waste accumulation." },
+                    { text: "They trigger pericytes to occlude the capillary lumen.", correct: false, why: "Incorrect because pericytes do not occlude lumens in response to metabolic demand." },
+                    { text: "They stimulate systemic ADH release.", correct: false, why: "Incorrect because ADH is secreted by the neurohypophysis in response to hyperosmolality and hypovolemia." },
+                    { text: "They stimulate vascular smooth muscle relaxation, causing vasodilation and increased perfusion.", correct: true, why: "Local accumulation of CO2, protons, adenosine, and lactate causes metabolic autoregulation, relaxing arteriolar smooth muscle to increase perfusion." }
                 ],
-                explanation: "Accumulation of local metabolic waste products (CO2, H+, lactate, adenosine) induces metabolic autoregulation: vascular smooth muscle relaxes, dilating arterioles to increase blood flow and wash away wastes."
+                explanation: "Accumulation of metabolic waste products relaxes arteriolar smooth muscle, inducing local vasodilation and functional hyperemia."
             },
             {
                 question: "What physiological mechanism describes the elastic recoil of the ascending aorta during ventricular diastole that maintains continuous downstream perfusion and forces the semilunar valves shut?",
                 options: [
-                    { text: "The Windkessel effect", correct: true },
-                    { text: "The Frank-Starling mechanism", correct: false },
-                    { text: "The Gibbs-Donnan equilibrium", correct: false },
-                    { text: "Fick's law of diffusion", correct: false }
+                    { text: "The Windkessel effect", correct: true, why: "The Windkessel model describes how compliant elastic arteries store systolic energy and recoil during diastole to drive forward perfusion and close the aortic valve." },
+                    { text: "The Frank-Starling mechanism", correct: false, why: "Incorrect because Frank-Starling relates ventricular end-diastolic sarcomere stretch to systolic contractile force." },
+                    { text: "The Gibbs-Donnan equilibrium", correct: false, why: "Incorrect because Gibbs-Donnan describes electrochemical ion distribution across a semipermeable membrane with impermeant polyanions." },
+                    { text: "Fick law of diffusion", correct: false, why: "Incorrect because Fick law describes passive solute diffusion proportional to concentration gradient and area." }
                 ],
-                explanation: "The Windkessel effect refers to the elastic compliance of large conducting arteries (like the ascending aorta). During systole, the aorta stretches to accommodate stroke volume; during diastole, its elastic recoil pushes blood forward into systemic circulation while snapping the aortic semilunar valve cusps shut."
+                explanation: "The Windkessel effect describes the diastolic elastic recoil of large arteries that maintains forward perfusion and snaps the aortic valve shut."
             },
             {
                 question: "Large blood vessels have thick muscular walls that cannot receive adequate oxygen and nutrients solely through luminal diffusion. What specialized microvascular network located in the tunica adventitia provides this metabolic supply?",
                 options: [
-                    { text: "Nervi vasorum", correct: false },
-                    { text: "Vasa vasorum", correct: true },
-                    { text: "Metarterioles", correct: false },
-                    { text: "Postcapillary venules", correct: false }
+                    { text: "Nervi vasorum", correct: false, why: "Incorrect because nervi vasorum are the autonomic nerve fibers innervating vascular smooth muscle." },
+                    { text: "Vasa vasorum", correct: true, why: "The vasa vasorum ('vessels of the vessels') are minute arterioles, capillaries, and venules distributed through the adventitia to supply thick vessel walls." },
+                    { text: "Metarterioles", correct: false, why: "Incorrect because metarterioles are microcirculatory thoroughfare channels connecting arterioles to venules." },
+                    { text: "Postcapillary venules", correct: false, why: "Incorrect because these are microvascular collecting vessels that receive capillary blood." }
                 ],
-                explanation: "The vasa vasorum ('vessels of the vessels') is a microvascular network running through the outer tunica adventitia and media of large arteries and veins to supply blood to the vessel wall itself. The accompanying autonomic nerve fibers are termed the nervi vasorum."
+                explanation: "The vasa vasorum is the specialized capillary network supplying the outer tunica media and adventitia of large vessels."
             },
             {
                 question: "When sympathetic adrenergic nerves stimulate precapillary arterioles to constrict, norepinephrine binds to alpha-1 receptors on vascular smooth muscle to activate which specific intracellular signaling cascade?",
                 options: [
-                    { text: "Adenylyl cyclase -> cAMP -> Protein Kinase A -> Calcium efflux", correct: false },
-                    { text: "Tyrosine kinase -> IRS -> PI3K -> Protein Kinase B", correct: false },
-                    { text: "G-protein coupled receptor -> Phospholipase C (PLC) -> IP3 and DAG -> Sarcoplasmic reticulum calcium release", correct: true },
-                    { text: "Voltage-gated sodium channel influx -> Calmodulin activation -> Myosin light-chain phosphatase", correct: false }
+                    { text: "Adenylyl cyclase -> cAMP -> Protein Kinase A -> Calcium efflux", correct: false, why: "Incorrect because this pathway is activated by beta-2 adrenergic receptors, which causes vasodilation, not constriction." },
+                    { text: "Tyrosine kinase -> IRS -> PI3K -> Protein Kinase B", correct: false, why: "Incorrect because this is the metabolic insulin signaling cascade." },
+                    { text: "G-protein coupled receptor -> Phospholipase C (PLC) -> IP3 and DAG -> Sarcoplasmic reticulum calcium release", correct: true, why: "Alpha-1 receptors couple to Gq, activating PLC to hydrolyze PIP2 into IP3 and DAG; IP3 triggers calcium release from the sarcoplasmic reticulum to stimulate myosin light-chain kinase and cause vasoconstriction." },
+                    { text: "Voltage-gated sodium channel influx -> Calmodulin activation -> Myosin light-chain phosphatase", correct: false, why: "Incorrect because myosin light-chain phosphatase causes muscle relaxation, not contraction." }
                 ],
-                explanation: "Norepinephrine binds to Gq-coupled alpha-1 adrenergic receptors, activating Phospholipase C (PLC) to cleave PIP2 into inositol trisphosphate (IP3) and diacylglycerol (DAG). IP3 triggers calcium release from the sarcoplasmic reticulum, inducing smooth muscle contraction and vasoconstriction."
+                explanation: "Alpha-1 adrenergic stimulation couples through Gq and Phospholipase C to generate IP3 and DAG, releasing intracellular calcium and causing vasoconstriction."
             },
             {
                 question: "What physiological mechanism is responsible for the normal splitting of the second heart sound (S2) during quiet inspiration?",
                 options: [
-                    { text: "Increased thoracic pressure causes premature aortic valve closure.", correct: false },
-                    { text: "Delayed closure of the tricuspid valve due to left ventricular hypertrophy.", correct: false },
-                    { text: "Early closure of the mitral valve due to decreased systemic vascular resistance.", correct: false },
-                    { text: "Negative intrathoracic pressure increases venous return to the right heart, delaying pulmonic valve closure.", correct: true }
+                    { text: "Increased thoracic pressure causes premature aortic valve closure.", correct: false, why: "Incorrect because inspiration decreases intrathoracic pressure rather than increasing it." },
+                    { text: "Delayed closure of the tricuspid valve due to left ventricular hypertrophy.", correct: false, why: "Incorrect because S2 represents semilunar valve closure (A2 and P2), whereas AV valves produce S1." },
+                    { text: "Early closure of the mitral valve due to decreased systemic vascular resistance.", correct: false, why: "Incorrect because mitral closure contributes to S1, not S2." },
+                    { text: "Negative intrathoracic pressure increases venous return to the right heart, delaying pulmonic valve closure.", correct: true, why: "Negative intrathoracic pressure enhances right heart venous return, prolonging right ventricular ejection time and delaying the pulmonic closure sound (P2) relative to aortic closure (A2)." }
                 ],
-                explanation: "During inspiration, the descent of the diaphragm creates negative intrathoracic pressure, increasing venous return to the right atrium and ventricle. The resulting increased right ventricular volume prolongs right ventricular ejection, delaying the closure of the pulmonic valve (P2) relative to the aortic valve (A2), producing physiological S2 splitting."
+                explanation: "Inspiratory negative thoracic pressure increases right ventricular venous return, delaying pulmonic valve closure (P2) and producing physiological S2 splitting."
             },
             {
                 question: "During periods of severe environmental heat stress, which autonomic fibers release acetylcholine (ACh) to induce cutaneous arteriolar vasodilation and stimulate eccrine sweat glands?",
                 options: [
-                    { text: "Sympathetic cholinergic fibers", correct: true },
-                    { text: "Parasympathetic muscarinic fibers", correct: false },
-                    { text: "Somatic motor efferents", correct: false },
-                    { text: "Sympathetic adrenergic fibers", correct: false }
+                    { text: "Sympathetic cholinergic fibers", correct: true, why: "Thermoregulatory cutaneous eccrine sweat glands and associated vasodilator pathways are innervated by sympathetic postganglionic cholinergic fibers releasing ACh." },
+                    { text: "Parasympathetic muscarinic fibers", correct: false, why: "Incorrect because limbs and skin generally lack parasympathetic innervation." },
+                    { text: "Somatic motor efferents", correct: false, why: "Incorrect because somatic motor efferents innervate skeletal muscle fibers, not cutaneous vasculature." },
+                    { text: "Sympathetic adrenergic fibers", correct: false, why: "Incorrect because sympathetic adrenergic fibers release norepinephrine, which induces vasoconstriction via alpha-1 receptors." }
                 ],
-                explanation: "Unlike standard sympathetic innervation which is adrenergic (norepinephrine), sympathetic fibers supplying skin arterioles and eccrine sweat glands for thermoregulation are sympathetic cholinergic fibers that release acetylcholine (ACh) to trigger vasodilation and sweating."
+                explanation: "Cutaneous thermoregulatory vasodilation and eccrine sweating are mediated by sympathetic postganglionic cholinergic fibers releasing acetylcholine."
             },
             {
                 question: "How does the oxygenation profile of blood within a systemic capillary bed differ from that of systemic arteries and systemic veins?",
                 options: [
-                    { text: "Systemic capillaries are uniformly deoxygenated throughout their entire length.", correct: false },
-                    { text: "Systemic capillaries are a hybrid: the proximal (arteriolar) capillary is oxygenated, whereas the distal (venular) capillary is deoxygenated.", correct: true },
-                    { text: "Systemic capillaries contain fully oxygenated blood from end to end because diffusion occurs only in postcapillary venules.", correct: false },
-                    { text: "Systemic capillaries exhibit higher oxygen saturation at the distal venular end than at the proximal arteriolar end.", correct: false }
+                    { text: "Systemic capillaries are uniformly deoxygenated throughout their entire length.", correct: false, why: "Incorrect because blood entering the capillary from the arteriole has full arterial oxygen saturation." },
+                    { text: "Systemic capillaries are a hybrid: the proximal (arteriolar) capillary is oxygenated, whereas the distal (venular) capillary is deoxygenated.", correct: true, why: "As blood traverses the capillary bed, oxygen progressively diffuses into tissues, transitioning blood from oxygenated at the arteriolar inlet to deoxygenated at the venular outlet." },
+                    { text: "Systemic capillaries contain fully oxygenated blood from end to end because diffusion occurs only in postcapillary venules.", correct: false, why: "Incorrect because capillary walls are the primary site of oxygen unloading." },
+                    { text: "Systemic capillaries exhibit higher oxygen saturation at the distal venular end than at the proximal arteriolar end.", correct: false, why: "Incorrect because oxygen saturation drops as blood moves down the capillary." }
                 ],
-                explanation: "While systemic arteries transport oxygenated blood and systemic veins transport deoxygenated blood, capillaries represent a transitional zone: blood entering the proximal capillary is oxygenated, but as oxygen diffuses into surrounding tissues, the blood transitioning through the distal capillary becomes deoxygenated."
+                explanation: "Systemic capillaries represent a functional transition: blood is oxygenated at the arteriolar inlet and becomes deoxygenated by the venular outlet."
             },
             {
                 question: "Which vascular segment contains approximately 60% to 70% of total circulating blood volume at rest, functioning as the primary capacitance reservoir of the circulatory system?",
                 options: [
-                    { text: "Elastic conducting arteries", correct: false },
-                    { text: "Precapillary resistance arterioles", correct: false },
-                    { text: "Systemic veins and venules", correct: true },
-                    { text: "Pulmonary capillary beds", correct: false }
+                    { text: "Elastic conducting arteries", correct: false, why: "Incorrect because systemic arteries hold only about 13% to 15% of total blood volume under high pressure." },
+                    { text: "Precapillary resistance arterioles", correct: false, why: "Incorrect because arterioles hold roughly 2% of volume and act as resistance vessels." },
+                    { text: "Systemic veins and venules", correct: true, why: "Veins have high compliance and thin, distensible walls, allowing them to store roughly 60% to 70% of total blood volume at low pressures." },
+                    { text: "Pulmonary capillary beds", correct: false, why: "Incorrect because pulmonary capillaries hold less than 5% of circulating volume at any given time." }
                 ],
-                explanation: "Due to their high compliance and low intravascular pressure, systemic veins and venules hold approximately 60–70% of the body's total blood volume at any given time, serving as the body's primary capacitance/reservoir vessels."
+                explanation: "Systemic veins and venules serve as the body primary capacitance reservoir, containing 60% to 70% of total blood volume at rest."
             },
             {
                 question: "Precapillary arterioles possess a relatively thin tunica adventitia, allowing interstitial metabolites to diffuse directly into the vascular wall. Which group of low-energy signals and metabolic byproducts promotes local arteriolar vasodilation to increase capillary blood flow?",
                 options: [
-                    { text: "High ATP, glucose, oxygen, and alkaline pH", correct: false },
-                    { text: "Epinephrine, thromboxane A2, and endothelin-1", correct: false },
-                    { text: "Albumin, fibrinogen, and prothrombin", correct: false },
-                    { text: "AMP, adenosine, lactate, H+ ions, and CO2", correct: true }
+                    { text: "High ATP, glucose, oxygen, and alkaline pH", correct: false, why: "Incorrect because high ATP and oxygen signal adequate perfusion and induce vasoconstriction." },
+                    { text: "Epinephrine, thromboxane A2, and endothelin-1", correct: false, why: "Incorrect because thromboxane A2 and endothelin-1 are potent vasoconstrictors." },
+                    { text: "Albumin, fibrinogen, and prothrombin", correct: false, why: "Incorrect because circulating plasma proteins do not act as local metabolic vasodilators." },
+                    { text: "AMP, adenosine, lactate, H+ ions, and CO2", correct: true, why: "These metabolites signal cellular energy depletion and oxygen debt, diffusing to arteriolar smooth muscle to trigger local vasodilation and restore blood flow." }
                 ],
-                explanation: "When local tissues are metabolically active and energy-poor, metabolites like AMP, adenosine, lactate, H+, CO2, and K+ accumulate and easily penetrate the thin adventitia of arterioles. These signals relax vascular smooth muscle, causing local vasodilation to flush away wastes and restore oxygen/nutrient delivery (metabolic autoregulation)."
+                explanation: "Local accumulation of AMP, adenosine, lactate, protons, and carbon dioxide relaxes vascular smooth muscle, causing metabolic autoregulatory vasodilation."
             }
         ];
 
         let currentScore = 0;
         let answeredQuestions = new Set();
-        const totalQuestions = quizData.length;
+        let totalQuestions = quizData.length;
 
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -640,6 +659,7 @@
         }
 
         function renderQuiz() {
+            totalQuestions = quizData.length;
             shuffleArray(quizData);
             quizData.forEach(q => shuffleArray(q.options));
 
@@ -704,12 +724,20 @@
             });
 
             const expDiv = document.getElementById(`exp-${qIndex}`);
+            
+            let rationaleHTML = '<div class="rationale-list">';
+            data.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationaleHTML += `<div class="rationale-item"><span>${letter})</span> ${opt.why}</div>`;
+            });
+            rationaleHTML += '</div>';
+
             if (isCorrect) {
                 currentScore++;
-                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
+                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}${rationaleHTML}`;
             } else {
                 btnElement.classList.add('incorrect');
-                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
+                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}${rationaleHTML}`;
             }
             
             expDiv.style.display = 'block';
@@ -734,7 +762,7 @@
                 let percentage = Math.round((currentScore / totalQuestions) * 100);
                 document.getElementById('final-score-display').innerText = `${currentScore} / ${totalQuestions} (${percentage}%)`;
                 
-                let feedback = percentage >= 85 ? "Excellent work! Mastery of circulatory hemodynamics, vascular innervation, and airway architecture demonstrated." : "Review vascular histology, the Windkessel effect, airway acinus divisions, and mediastinal boundaries.";
+                let feedback = percentage >= 85 ? "Excellent work! Mastery of circulatory hemodynamics, vascular innervation, histology, and airway architecture demonstrated." : "Review vascular histology, the Windkessel effect, airway acinus divisions, and mediastinal boundaries.";
                 document.getElementById('final-feedback').innerText = feedback;
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }, 800); 
