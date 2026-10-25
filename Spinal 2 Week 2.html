@@ -2,866 +2,638 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Week 2 General Pathology & Immunology Quiz Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spinal Anatomy II - Week 2 Master Quiz</title>
     <style>
         :root {
-            --bg-color: #0f0f0f;
-            --card-bg: #1a1a1a;
+            --bg-canvas: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-sub: #a3a3a3;
             --accent-orange: #ff9900;
-            --text-white: #ffffff;
-            --text-dim: #b0b0b0;
-            --correct-green-bg: #14532d;
-            --correct-green-border: #22c55e;
-            --incorrect-red-bg: #7f1d1d;
-            --incorrect-red-border: #ef4444;
-            --border-color: #333333;
+            --border-default: #282828;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-white);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            padding-top: 70px;
-            padding-bottom: 40px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 850px;
+            background: transparent;
+            overflow: hidden;
         }
 
         .sticky-header {
-            position: fixed;
+            position: -webkit-sticky;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: #141414;
-            border-bottom: 2px solid var(--accent-orange);
+            background-color: var(--bg-canvas);
+            border-bottom: 2px solid var(--border-default);
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0 20px;
             z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 16px;
         }
 
-        .header-title {
-            font-weight: bold;
+        .sticky-header h1 {
             font-size: 1.1rem;
+            font-weight: 800;
             color: var(--accent-orange);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .score-tracker {
-            font-size: 1.1rem;
-            font-weight: 600;
-            background: #252525;
+            font-size: 0.95rem;
+            font-weight: bold;
+            background-color: var(--bg-card);
+            border: 1px solid var(--accent-orange);
+            color: var(--accent-orange);
             padding: 6px 14px;
             border-radius: 20px;
-            border: 1px solid var(--accent-orange);
+            white-space: nowrap;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+        .quiz-body {
+            padding: 0 4px;
         }
 
-        .quiz-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .question-number {
-            color: var(--accent-orange);
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
         }
 
         .question-text {
-            font-size: 1.15rem;
-            line-height: 1.5;
-            margin-bottom: 18px;
-            font-weight: 500;
+            font-size: 1.05rem;
+            font-weight: 600;
+            margin-bottom: 14px;
+            line-height: 1.45;
+            color: #ffffff;
         }
 
-        .options-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            background-color: #252525;
-            color: var(--text-white);
-            border: 1px solid var(--border-color);
-            padding: 12px 16px;
-            border-radius: 6px;
-            text-align: left;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .option-btn:hover:not([disabled]) {
-            background-color: #333333;
-            border-color: var(--accent-orange);
-        }
-
-        .option-btn.correct {
-            background-color: var(--correct-green-bg) !important;
-            border-color: var(--correct-green-border) !important;
-            color: #fff !important;
-        }
-
-        .option-btn.incorrect {
-            background-color: var(--incorrect-red-bg) !important;
-            border-color: var(--incorrect-red-border) !important;
-            color: #fff !important;
-        }
-
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.85;
-        }
-
-        .explanation {
-            margin-top: 16px;
-            padding: 16px;
-            background-color: #222222;
-            border-left: 4px solid var(--accent-orange);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: var(--text-dim);
-            display: none;
-        }
-
-        .explanation strong {
-            color: var(--text-white);
-        }
-
-        .status-banner {
-            font-size: 1.1rem;
-            font-weight: bold;
-            margin-bottom: 12px;
-            padding: 6px 10px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .status-banner.correct {
-            background-color: var(--correct-green-bg);
-            color: var(--correct-green-border);
-            border: 1px solid var(--correct-green-border);
-        }
-
-        .status-banner.incorrect {
-            background-color: var(--incorrect-red-bg);
-            color: var(--incorrect-red-border);
-            border: 1px solid var(--incorrect-red-border);
-        }
-
-        .explanation-paragraph {
-            margin-bottom: 12px;
-            color: var(--text-white);
-        }
-
-        .rationale-list {
-            margin: 0;
-            padding-left: 0;
+        .options-list {
             list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .rationale-list li {
-            margin-bottom: 6px;
+        .option-item {
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+            font-size: 0.95rem;
+            touch-action: manipulation;
+            display: flex;
+            align-items: flex-start;
+            color: #e5e5e5;
+        }
+
+        .option-item strong {
+            margin-right: 10px;
+            color: var(--accent-orange);
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent-orange);
+            background-color: #2a2a2a;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-item.correct strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .feedback-box {
+            padding: 12px 14px;
+            border-radius: 6px;
+            margin-top: 14px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.45;
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box.correct {
+            background-color: rgba(20, 83, 45, 0.4);
+            border: 1px solid var(--correct-border);
+            color: #4ade80;
+        }
+
+        .feedback-box.incorrect {
+            background-color: rgba(127, 29, 29, 0.4);
+            border: 1px solid var(--incorrect-border);
+            color: #f87171;
         }
 
         .summary-card {
-            background-color: var(--card-bg);
+            background: var(--bg-card);
             border: 2px solid var(--accent-orange);
-            border-radius: 12px;
-            padding: 30px;
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
             text-align: center;
-            display: none;
-            margin-top: 30px;
+            margin-top: 20px;
+            margin-bottom: 30px;
         }
 
-        .summary-title {
-            font-size: 1.8rem;
+        .summary-card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 8px;
             color: var(--accent-orange);
-            margin-bottom: 10px;
         }
 
-        .summary-score {
-            font-size: 2.5rem;
-            font-weight: bold;
-            margin: 15px 0;
-        }
-
-        .retake-btn {
+        .btn {
             background-color: var(--accent-orange);
-            color: #000;
+            color: #000000;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
+            padding: 12px 24px;
+            font-size: 1rem;
             font-weight: bold;
-            border-radius: 25px;
+            border-radius: 6px;
             cursor: pointer;
+            margin-top: 14px;
+            touch-action: manipulation;
             transition: opacity 0.2s;
-            margin-top: 15px;
         }
 
-        .retake-btn:hover {
+        .btn:hover {
             opacity: 0.9;
         }
     </style>
 </head>
 <body>
 
+<div class="quiz-container">
     <div class="sticky-header">
-        <div class="header-title">ChiroMed Quiz Hub: Week 2</div>
-        <div class="score-tracker" id="score-display">Score: 0 / 40 (0%)</div>
+        <h1>Spinal 2 Week 2 Master Quiz</h1>
+        <div class="score-tracker" id="score-tracker">Score: 0 / 25 (0%)</div>
     </div>
 
-    <div class="container" id="quiz-container">
-        <!-- Rendered by JavaScript -->
-    </div>
+    <div class="quiz-body" id="quiz-body"></div>
 
-    <div class="container">
-        <div class="summary-card" id="summary-card">
-            <div class="summary-title">Quiz Completed!</div>
-            <div class="summary-score" id="final-score">0%</div>
-            <p id="summary-feedback" style="color: var(--text-dim);"></p>
-            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
+    <div class="quiz-body">
+        <div class="summary-card" id="final-summary" style="display: none;">
+            <h2>Quiz Complete!</h2>
+            <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px;"></p>
+            <button class="btn" id="reset-btn">Reset & Retake Quiz</button>
         </div>
     </div>
+</div>
 
-    <script>
-        const originalQuizData = [
-            {
-                question: "Which of the following is NOT a category of the body's layers of defensive strategies?",
-                options: ["thrombocytes", "cutaneous membrane", "cerumen", "chemical secretions"],
-                correct: 0,
-                explanationText: "The human body deploys tiered innate defensive strategies comprising physical barriers, chemical secretions, and specialized cellular components.",
-                rationales: [
-                    "A) thrombocytes: Correct. Thrombocytes (platelets) are cellular fragments involved in blood coagulation rather than being a primary tier of body defense.",
-                    "B) cutaneous membrane: Incorrect. The cutaneous membrane serves as a primary physical barrier.",
-                    "C) cerumen: Incorrect. Cerumen is an antimicrobial chemical and physical secretion within the auditory canal.",
-                    "D) chemical secretions: Incorrect. Chemical secretions comprise a major tier of innate body defenses."
-                ]
-            },
-            {
-                question: "Which of the following is an agranular leukocyte?",
-                options: ["mast cell", "monocyte", "neutrophil", "eosinophil"],
-                correct: 1,
-                explanationText: "Peripheral leukocytes are structurally classified into granulocytes and agranular mononuclear cells based on cytoplasmic staining characteristics.",
-                rationales: [
-                    "A) mast cell: Incorrect. Mast cells are granular leukocytes resident in connective tissues.",
-                    "B) monocyte: Correct. Monocytes and lymphocytes are classified as agranular mononuclear leukocytes.",
-                    "C) neutrophil: Incorrect. Neutrophils contain visible cytoplasmic granules.",
-                    "D) eosinophil: Incorrect. Eosinophils contain prominent staining granules."
-                ]
-            },
-            {
-                question: "Which of the following refers to the WBC approaching the endothelial wall?",
-                options: ["diapedesis", "pavementing", "margination", "docking to adhesion molecules"],
-                correct: 2,
-                explanationText: "Extravasation begins with hemodynamic changes that displace leukocytes from axial blood flow toward the vascular endothelium.",
-                rationales: [
-                    "A) diapedesis: Incorrect. Diapedesis is the physical transmigration of leukocytes across the endothelial basement membrane.",
-                    "B) pavementing: Incorrect. Pavementing refers to stable firm adhesion lining the endothelial surface.",
-                    "C) margination: Correct. Margination is the initial stage where WBCs leave the central blood stream and approach the endothelial wall.",
-                    "D) docking to adhesion molecules: Incorrect. Docking describes stable integrin-mediated firm adhesion."
-                ]
-            },
-            {
-                question: "Removal of the clotting factors from the plasma results in:",
-                options: ["sebum", "cerumen", "plasma", "serum"],
-                correct: 3,
-                explanationText: "Blood component fractions are distinguished by the presence or absence of cellular elements and active hemostatic coagulation factors.",
-                rationales: [
-                    "A) sebum: Incorrect. Sebum is an oily cutaneous secretion.",
-                    "B) cerumen: Incorrect. Cerumen is earwax produced in the ear canal.",
-                    "C) plasma: Incorrect. Plasma retains all circulating clotting factors.",
-                    "D) serum: Correct. Serum is defined as plasma minus the active clotting factors."
-                ]
-            },
-            {
-                question: "Cells which protect the body by changing their shape and engulfing germs are called:",
-                options: ["phagocytes", "granulocytes", "natural killers", "lymphocytes"],
-                correct: 0,
-                explanationText: "Specialized scavenger cells utilize cytoskeletal rearrangement to engulf and destroy microbial pathogens and cellular debris.",
-                rationales: [
-                    "A) phagocytes: Correct. Phagocytes protect the host via phagocytosis by altering cell shape to engulf microbes.",
-                    "B) granulocytes: Incorrect. Granulocytes are defined by cytoplasmic granule content rather than primary phagocytic motility.",
-                    "C) natural killers: Incorrect. Natural killer cells destroy targets via lytic granule release rather than phagocytosis.",
-                    "D) lymphocytes: Incorrect. Lymphocytes mediate adaptive immunity."
-                ]
-            },
-            {
-                question: "When the total WBC count has increased in the blood and is composed of abnormal WBCs this would be called:",
-                options: ["hematopoiesis", "leukemia", "leukocytosis", "polycythemia"],
-                correct: 1,
-                explanationText: "Pathological proliferations of neoplastic white blood cells differ fundamentally from reactive functional increases in normal leukocyte counts.",
-                rationales: [
-                    "A) hematopoiesis: Incorrect. Hematopoiesis is normal blood cell formation.",
-                    "B) leukemia: Correct. Leukemia is a neoplastic disease defined by elevated numbers of abnormal, malignant white blood cells.",
-                    "C) leukocytosis: Incorrect. Leukocytosis is an elevation in normal functional white blood cells.",
-                    "D) polycythemia: Incorrect. Polycythemia is an excess of circulating red blood cells."
-                ]
-            },
-            {
-                question: "Which of the following contain the chemicals for vasodilation and increased capillary permeability for the inflammatory response?",
-                options: ["neutrophils and thrombocytes", "eosinophils and monocytes", "basophils and mast cells", "mast cells and neutrophils"],
-                correct: 2,
-                explanationText: "Acute vascular inflammatory responses are primarily driven by preformed vasoactive mediators stored in specialized granulated cells.",
-                rationales: [
-                    "A) neutrophils and thrombocytes: Incorrect. Neutrophils phagocytose and thrombocytes mediate hemostasis.",
-                    "B) eosinophils and monocytes: Incorrect. Eosinophils combat parasites and monocytes differentiate into macrophages.",
-                    "C) basophils and mast cells: Correct. Circulating basophils and tissue-resident mast cells store preformed histamine that drives vasodilation and vascular permeability.",
-                    "D) mast cells and neutrophils: Incorrect. Neutrophils do not store primary vasoactive histamine granules."
-                ]
-            },
-            {
-                question: "Pus formation illustrates the paradox of _____ fighting _____ but also releasing toxic _____",
-                options: ["eosinophils; parasites; histamine", "lymphocytes; bacteria; unpaired electrons", "basophils; viruses; ROS", "neutrophils; bacteria; ROS"],
-                correct: 3,
-                explanationText: "Acute host defense against bacteria involves oxidative burst mechanisms that successfully destroy pathogens while causing collateral tissue necrosis.",
-                rationales: [
-                    "A) eosinophils; parasites; histamine: Incorrect. Eosinophils target parasites using major basic protein.",
-                    "B) lymphocytes; bacteria; unpaired electrons: Incorrect. Lymphocytes drive adaptive immunity.",
-                    "C) basophils; viruses; ROS: Incorrect. Basophils participate in allergic reactions.",
-                    "D) neutrophils; bacteria; ROS: Correct. Neutrophils fight bacteria using myeloperoxidase to generate reactive oxygen species (ROS), which kill pathogens while destroying the neutrophil to form pus."
-                ]
-            },
-            {
-                question: "Which of the following is NOT performing hematopoiesis in adults?",
-                options: ["scaphoid", "vertebral bodies", "sternum", "skull"],
-                correct: 0,
-                explanationText: "Active adult red bone marrow is restricted to axial skeletal flat bones and proximal long bone epiphyses, whereas carpal bones contain inactive fatty marrow.",
-                rationales: [
-                    "A) scaphoid: Correct. Carpal bones like the scaphoid contain yellow fatty marrow and do not perform active adult hematopoiesis.",
-                    "B) vertebral bodies: Incorrect. Vertebral bodies contain active red marrow.",
-                    "C) sternum: Incorrect. The sternum is a flat bone containing active hematopoietic marrow.",
-                    "D) skull: Incorrect. Skull bones contain active hematopoietic red marrow."
-                ]
-            },
-            {
-                question: "Leukocytes use the blood to _____ and localize at sites of infection by using _____",
-                options: ["produce more soldiers; epigenetic markers", "circulate; chemotactic guidance", "practice immunity; electromagnetic stimuli", "gain access to O2; plasma protein rafts"],
-                correct: 1,
-                explanationText: "The cardiovascular system serves as a systemic transport conduit, enabling leukocytes to reach peripheral target tissues via chemical gradient navigation.",
-                rationales: [
-                    "A) produce more soldiers; epigenetic markers: Incorrect. Leukocytes do not multiply in peripheral blood.",
-                    "B) circulate; chemotactic guidance: Correct. Leukocytes use blood to circulate and chemical gradients (chemokines) for chemotactic guidance to infection sites.",
-                    "C) practice immunity; electromagnetic stimuli: Incorrect. Immune education occurs in primary lymphoid organs.",
-                    "D) gain access to O2; plasma protein rafts: Incorrect. Oxygen transport is the primary function of erythrocytes."
-                ]
-            },
-            {
-                question: "Which chemical signal causes vasodilation and capillary permeability and is famously up-regulated in allergic reactions?",
-                options: ["norepinephrine", "major basic protein", "histamine", "myeloperoxidase"],
-                correct: 2,
-                explanationText: "Immediate hypersensitivity reactions are mediated by rapid vascular changes triggered by mast cell amine release.",
-                rationales: [
-                    "A) norepinephrine: Incorrect. Norepinephrine causes vasoconstriction.",
-                    "B) major basic protein: Incorrect. Major basic protein targets helminths.",
-                    "C) histamine: Correct. Histamine triggers acute vasodilation and vascular permeability in allergic responses.",
-                    "D) myeloperoxidase: Incorrect. Myeloperoxidase is an oxidative enzyme within neutrophils."
-                ]
-            },
-            {
-                question: "What is the least abundant white blood cell?",
-                options: ["monocyte", "mast cell", "neutrophil", "basophil"],
-                correct: 3,
-                explanationText: "Peripheral blood leukocyte differentials exhibit distinct population hierarchies, with basophils representing the smallest fraction.",
-                rationales: [
-                    "A) monocyte: Incorrect. Monocytes comprise approximately 2-8% of circulating WBCs.",
-                    "B) mast cell: Incorrect. Mast cells reside in tissues rather than circulating in peripheral blood differentials.",
-                    "C) neutrophil: Incorrect. Neutrophils are the most abundant leukocyte (~60%).",
-                    "D) basophil: Correct. Basophils are the least abundant circulating leukocyte (0-0.5%)."
-                ]
-            },
-            {
-                question: "What is the largest leukocyte?",
-                options: ["monocyte", "basophil", "erythrocyte", "eosinophil"],
-                correct: 0,
-                explanationText: "Leukocyte morphologic categorization includes volumetric sizing, identifying mononuclear macrophages as the largest circulating white cells.",
-                rationales: [
-                    "A) monocyte: Correct. Monocytes are the physically largest agranular leukocytes in peripheral blood.",
-                    "B) basophil: Incorrect. Basophils are smaller granulocytes.",
-                    "C) erythrocyte: Incorrect. Erythrocytes are anucleate red blood cells, not leukocytes.",
-                    "D) eosinophil: Incorrect. Eosinophils are intermediate-sized granulocytes."
-                ]
-            },
-            {
-                question: "Which of the following is least related to red bone marrow activity?",
-                options: ["ribs and sternum", "fibrin", "hematopoiesis", "leukemia"],
-                correct: 1,
-                explanationText: "Hematopoietic bone marrow structures and pathologies contrast functionally with downstream soluble hemostatic cascade proteins.",
-                rationales: [
-                    "A) ribs and sternum: Incorrect. These flat bones house active hematopoietic marrow.",
-                    "B) fibrin: Correct. Fibrin is an insoluble plasma clotting protein cleaved from fibrinogen, making it least directly related to bone marrow cell formation.",
-                    "C) hematopoiesis: Incorrect. This is the core physiological function of red bone marrow.",
-                    "D) leukemia: Incorrect. Leukemia is a primary bone marrow malignancy."
-                ]
-            },
-            {
-                question: "What enzyme in neutrophils produces reactive oxygen species (ROS) to degrade ingested pathogens?",
-                options: ["Lysozyme", "Protease", "Myeloperoxidase", "Histaminase"],
-                correct: 2,
-                explanationText: "Intracellular pathogen destruction relies on specialized primary granule enzymes that catalyze lethal oxidative reactions.",
-                rationales: [
-                    "A) Lysozyme: Incorrect. Lysozyme hydrolyzes bacterial peptidoglycan walls.",
-                    "B) Protease: Incorrect. Proteases degrade peptide bonds.",
-                    "C) Myeloperoxidase: Correct. Myeloperoxidase (MPO) in neutrophils generates reactive oxygen species (ROS) for pathogen destruction.",
-                    "D) Histaminase: Incorrect. Histaminase degrades histamine."
-                ]
-            },
-            {
-                question: "An elevation in circulating monocytes (monocytosis) is clinically indicative of which process?",
-                options: ["Acute viral flare", "Parasitic invasion", "Type I hypersensitivity", "Chronic infection"],
-                correct: 3,
-                explanationText: "Differential white blood cell count elevations provide diagnostic clues regarding the chronicity and etiology of underlying pathology.",
-                rationales: [
-                    "A) Acute viral flare: Incorrect. Viral infections typically provoke reactive lymphocytosis.",
-                    "B) Parasitic invasion: Incorrect. Parasites induce peripheral eosinophilia.",
-                    "C) Type I hypersensitivity: Incorrect. Allergies elevate basophils and eosinophils.",
-                    "D) Chronic infection: Correct. Monocytes are slower-arriving, long-lived phagocytes; elevated counts indicate chronic infection or inflammation."
-                ]
-            },
-            {
-                question: "Major Basic Protein (MBP) is released by which leukocyte to combat helminthic infections?",
-                options: ["Eosinophil", "Basophil", "Neutrophil", "Macrophage"],
-                correct: 0,
-                explanationText: "Specialized granulocytes deploy cytotoxic cationic proteins to neutralize large multicellular parasites that resist phagocytosis.",
-                rationales: [
-                    "A) Eosinophil: Correct. Eosinophils release Major Basic Protein (MBP) to destroy helminthic parasites.",
-                    "B) Basophil: Incorrect. Basophils release histamine for allergic responses.",
-                    "C) Neutrophil: Incorrect. Neutrophils target acute bacterial infections.",
-                    "D) Macrophage: Incorrect. Macrophages utilize phagocytosis and cytokine secretion."
-                ]
-            },
-            {
-                question: "Degranulation of mast cells and basophils is triggered by the cross-linking of which surface immunoglobulin?",
-                options: ["IgA", "IgE", "IgG", "IgM"],
-                correct: 1,
-                explanationText: "Immediate hypersensitivity activation requires multivalent antigen bridging of cytophilic antibodies bound to high-affinity Fc receptors.",
-                rationales: [
-                    "A) IgA: Incorrect. IgA mediates mucosal immunity.",
-                    "B) IgE: Correct. Antigen cross-linking of IgE bound to Fc receptors on mast cells and basophils triggers immediate degranulation.",
-                    "C) IgG: Incorrect. IgG participates in opsonization and classical complement activation.",
-                    "D) IgM: Incorrect. IgM is the primary pentameric agglutinating antibody."
-                ]
-            },
-            {
-                question: "What is the specific tissue counterpart name for macrophages located in the liver?",
-                options: ["Dust cells", "Langerhans cells", "Kupffer cells", "Microglia"],
-                correct: 2,
-                explanationText: "Monocytes migrate into peripheral tissues and differentiate into specialized resident macrophage populations bearing organ-specific nomenclature.",
-                rationales: [
-                    "A) Dust cells: Incorrect. Dust cells are pulmonary alveolar macrophages.",
-                    "B) Langerhans cells: Incorrect. Langerhans cells reside in the epidermal skin layer.",
-                    "C) Kupffer cells: Correct. Resident tissue macrophages located within hepatic sinusoids are termed Kupffer cells.",
-                    "D) Microglia: Incorrect. Microglia are resident macrophages of the central nervous system."
-                ]
-            },
-            {
-                question: "Pro-inflammatory M1 macrophages secrete Interleukin-1 (IL-1), which acts functionally as a(n):",
-                options: ["Anti-inflammatory signal", "Growth factor", "Clotting factor", "Endogenous pyrogen"],
-                correct: 3,
-                explanationText: "Classical macrophage activation releases key cytokines that coordinate systemic acute-phase inflammatory responses, including core body temperature elevation.",
-                rationales: [
-                    "A) Anti-inflammatory signal: Incorrect. M1 cytokines perpetuate inflammation.",
-                    "B) Growth factor: Incorrect. Growth factors are predominantly secreted by reparative M2 macrophages.",
-                    "C) Clotting factor: Incorrect. Clotting factors are hepatic plasma proteins.",
-                    "D) Endogenous pyrogen: Correct. Interleukin-1 secreted by M1 macrophages acts as an endogenous pyrogen to reset the hypothalamic thermostat and induce fever."
-                ]
-            },
-            {
-                question: "What vasoactive mediator is produced by M1 macrophages that causes vasodilation and perpetuates inflammation?",
-                options: ["Nitric Oxide (NO)", "Histamine", "Major Basic Protein", "Myeloperoxidase"],
-                correct: 0,
-                explanationText: "Activated inflammatory macrophages synthesize free radical gases that act locally to relax vascular smooth muscle and sustain immune cell recruitment.",
-                rationales: [
-                    "A) Nitric Oxide (NO): Correct. M1 macrophages produce Nitric Oxide (NO), a potent vasodilator that sustains local inflammatory responses.",
-                    "B) Histamine: Incorrect. Histamine is preformed in mast cells and basophils.",
-                    "C) Major Basic Protein: Incorrect. Major basic protein is produced by eosinophils.",
-                    "D) Myeloperoxidase: Incorrect. Myeloperoxidase is stored in neutrophil granules."
-                ]
-            },
-            {
-                question: "M2 macrophages promote tissue repair and resolution of inflammation primarily through the secretion of:",
-                options: ["Tumor Necrosis Factor alpha", "Growth factors", "Interleukin-6", "Nitric oxide"],
-                correct: 1,
-                explanationText: "Alternative macrophage activation shifts tissue environments from destructive inflammation toward matrix reconstruction and healing.",
-                rationales: [
-                    "A) Tumor Necrosis Factor alpha: Incorrect. TNF-alpha is a pro-inflammatory M1 cytokine.",
-                    "B) Growth factors: Correct. M2 macrophages secrete growth factors and anti-inflammatory cytokines to direct tissue repair and extracellular matrix remodeling.",
-                    "C) Interleukin-6: Incorrect. IL-6 promotes acute-phase inflammatory responses.",
-                    "D) Nitric oxide: Incorrect. Nitric oxide is synthesized by pro-inflammatory M1 macrophages."
-                ]
-            },
-            {
-                question: "MHC Class I molecules are expressed on which of the following cell types?",
-                options: ["Only Macrophages", "Only Antigen Presenting Cells", "All nucleated cells", "Only B-lymphocytes"],
-                correct: 2,
-                explanationText: "Immune surveillance of intracellular self-integrity requires antigen presentation machinery distributed across virtually all nucleated host cells.",
-                rationales: [
-                    "A) Only Macrophages: Incorrect. Macrophages express both MHC Class I and Class II.",
-                    "B) Only Antigen Presenting Cells: Incorrect. Professional APCs express MHC II, but MHC I is universal.",
-                    "C) All nucleated cells: Correct. MHC Class I molecules are expressed on virtually all nucleated cells in the body to present endogenous peptide antigens.",
-                    "D) Only B-lymphocytes: Incorrect. B-lymphocytes represent professional APCs expressing MHC II."
-                ]
-            },
-            {
-                question: "Which cell surface co-receptor pairs with MHC Class II during antigen presentation?",
-                options: ["CD8+", "CD14", "CD19", "CD4+"],
-                correct: 3,
-                explanationText: "Specific T-lymphocyte co-receptors recognize conserved invariant regions on major histocompatibility complexes during cognate immune interactions.",
-                rationales: [
-                    "A) CD8+: Incorrect. CD8 pairs with MHC Class I.",
-                    "B) CD14: Incorrect. CD14 is a monocyte/macrophage lipopolysaccharide receptor.",
-                    "C) CD19: Incorrect. CD19 is a characteristic B-lymphocyte surface marker.",
-                    "D) CD4+: Correct. CD4+ helper T-cells pair with MHC Class II molecules (Rule of 8: 2 x 4 = 8)."
-                ]
-            },
-            {
-                question: "Which T-cell subset recognizes antigen fragments presented on MHC Class I molecules?",
-                options: ["CD8+ Cytotoxic T-cell", "CD4+ Helper T-cell", "Regulatory T-cell", "Naive B-cell"],
-                correct: 0,
-                explanationText: "Adaptive cellular immunity segregates effector functions based on lymphocyte co-receptor restriction to specific MHC antigen classes.",
-                rationales: [
-                    "A) CD8+ Cytotoxic T-cell: Correct. CD8+ cytotoxic T-cells recognize endogenous antigens presented on MHC Class I molecules (Rule of 8: 1 x 8 = 8).",
-                    "B) CD4+ Helper T-cell: Incorrect. CD4+ cells recognize antigens on MHC Class II.",
-                    "C) Regulatory T-cell: Incorrect. Regulatory T-cells modulate immune tolerance.",
-                    "D) Naive B-cell: Incorrect. B-cells are humoral lymphocytes rather than T-cells."
-                ]
-            },
-            {
-                question: "Antigens originating from outside the cell (exogenous) are processed and displayed via which pathway and MHC class?",
-                options: ["Endogenous pathway / MHC I", "Exogenous pathway / MHC II", "Cross-presentation / MHC I", "Intrinsic pathway / MHC II"],
-                correct: 1,
-                explanationText: "Extracellular pathogens captured via endocytosis are degraded within acidic vesicles and loaded onto specialized surface molecules for helper T-cell recognition.",
-                rationales: [
-                    "A) Endogenous pathway / MHC I: Incorrect. Endogenous antigens utilize MHC Class I.",
-                    "B) Exogenous pathway / MHC II: Correct. Exogenous extracellular antigens are internalized, processed in phagolysosomes, and displayed via the exogenous pathway on MHC Class II molecules.",
-                    "C) Cross-presentation / MHC I: Incorrect. Cross-presentation diverts exogenous antigens to MHC I.",
-                    "D) Intrinsic pathway / MHC II: Incorrect. This terminology does not apply to antigen processing."
-                ]
-            },
-            {
-                question: "What is cross-presentation?",
-                options: ["Presentation of MHC I to CD4 T-cells", "Secretory release of immunoglobulins", "Processing of exogenous antigens onto MHC Class I for CD8 T-cell activation", "Degranulation of mast cells"],
-                correct: 2,
-                explanationText: "Specialized dendritic cells possess unique intracellular trafficking pathways that route extracellular antigens onto class I molecules to initiate cytotoxic immunity.",
-                rationales: [
-                    "A) Presentation of MHC I to CD4 T-cells: Incorrect. MHC I presents to CD8 cells.",
-                    "B) Secretory release of immunoglobulins: Incorrect. This describes plasma cell antibody secretion.",
-                    "C) Processing of exogenous antigens onto MHC Class I for CD8 T-cell activation: Correct. Cross-presentation allows professional APCs to load exogenous extracellular antigens onto MHC Class I molecules to stimulate CD8+ T-cells.",
-                    "D) Degranulation of mast cells: Incorrect. Mast cell degranulation releases histamine."
-                ]
-            },
-            {
-                question: "Human Leukocyte Antigen (HLA) B27 positivity is strongly associated with which clinical condition?",
-                options: ["Rheumatoid Arthritis", "Systemic Lupus", "Multiple Sclerosis", "Ankylosing Spondylitis"],
-                correct: 3,
-                explanationText: "Specific genetic polymorphisms in major histocompatibility complex alleles confer robust relative risk for distinct autoimmune seronegative arthropathies.",
-                rationales: [
-                    "A) Rheumatoid Arthritis: Incorrect. Rheumatoid arthritis is associated with HLA-DR4.",
-                    "B) Systemic Lupus: Incorrect. Lupus is linked to complement and class II genetic loci.",
-                    "C) Multiple Sclerosis: Incorrect. Multiple sclerosis is associated with HLA-DR2.",
-                    "D) Ankylosing Spondylitis: Correct. HLA-B27 is a specialized MHC Class I genetic variant strongly associated with ankylosing spondylitis."
-                ]
-            },
-            {
-                question: "HLA-DR4 marker presence is clinically associated with an increased susceptibility to:",
-                options: ["Rheumatoid Arthritis", "Ankylosing Spondylitis", "Gouty Arthritis", "Osteoarthritis"],
-                correct: 0,
-                explanationText: "Autoimmune disease genetic susceptibilities are frequently mapped to specific class II human leukocyte antigen alleles.",
-                rationales: [
-                    "A) Rheumatoid Arthritis: Correct. HLA-DR4 is an MHC Class II genetic allele associated with increased susceptibility to rheumatoid arthritis.",
-                    "B) Ankylosing Spondylitis: Incorrect. Ankylosing spondylitis is linked to HLA-B27.",
-                    "C) Gouty Arthritis: Incorrect. Gout is caused by metabolic uric acid crystal deposition.",
-                    "D) Osteoarthritis: Incorrect. Osteoarthritis is a degenerative mechanical joint disease."
-                ]
-            },
-            {
-                question: "Which of the following is NOT one of the three professional Antigen-Presenting Cells (APCs)?",
-                options: ["Dendritic cell", "Neutrophil", "Macrophage", "B-cell"],
-                correct: 1,
-                explanationText: "Professional antigen-presenting cells express constitutive MHC Class II molecules to activate naive helper T-lymphocytes, excluding professional phagocytic neutrophils.",
-                rationales: [
-                    "A) Dendritic cell: Incorrect. Dendritic cells are professional APCs.",
-                    "B) Neutrophil: Correct. Neutrophils act as acute innate phagocytes rather than professional APCs expressing MHC Class II.",
-                    "C) Macrophage: Incorrect. Macrophages function as professional APCs.",
-                    "D) B-cell: Incorrect. B-cells are professional APCs that internalize specific antigens."
-                ]
-            },
-            {
-                question: "How do B-lymphocytes internalize antigens prior to presenting them on MHC II?",
-                options: ["Phagocytosis", "Pinocytosis", "Endocytosis via Immunoglobulin receptors", "Diapedesis"],
-                correct: 2,
-                explanationText: "Humoral antigen capture relies on specific surface receptor engagement followed by targeted receptor-mediated endocytosis.",
-                rationales: [
-                    "A) Phagocytosis: Incorrect. Phagocytosis is utilized by macrophages and neutrophils for particulate engulfment.",
-                    "B) Pinocytosis: Incorrect. Pinocytosis is nonspecific fluid-phase uptake.",
-                    "C) Endocytosis via Immunoglobulin receptors: Correct. B-lymphocytes bind soluble antigens via surface immunoglobulin B-cell receptors (BCRs) and internalize them via receptor-mediated endocytosis.",
-                    "D) Diapedesis: Incorrect. Diapedesis is leukocyte transendothelial migration."
-                ]
-            },
-            {
-                question: "What term describes the exact molecular region of an antigen recognized by immune cell receptors?",
-                options: ["PAMP", "DAMP", "Haptoglobin", "Epitope (Antigenic determinant)"],
-                correct: 3,
-                explanationText: "Adaptive immune receptors bind specific structural chemical determinants displayed on the surface of complex macromolecules.",
-                rationales: [
-                    "A) PAMP: Incorrect. PAMPs are conserved microbial pathogen-associated molecular patterns.",
-                    "B) DAMP: Incorrect. DAMPs are damage-associated endogenous molecules.",
-                    "C) Haptoglobin: Incorrect. Haptoglobin is a plasma protein that binds free hemoglobin.",
-                    "D) Epitope (Antigenic determinant): Correct. An epitope or antigenic determinant is the precise 3D surface fragment of an antigen recognized by antibodies or lymphocyte receptors."
-                ]
-            },
-            {
-                question: "Toll-Like Receptors (TLRs) on innate immune cells recognize which conserved microbial structures?",
-                options: ["Pathogen-Associated Molecular Patterns (PAMPs)", "Human Leukocyte Antigens (HLAs)", "Major Histocompatibility Complexes", "Immunoglobulins"],
-                correct: 0,
-                explanationText: "Innate pattern recognition receptors provide rapid sentinel detection by binding invariant molecular motifs shared across broad classes of microbes.",
-                rationales: [
-                    "A) Pathogen-Associated Molecular Patterns (PAMPs): Correct. Toll-Like Receptors (TLRs) are innate pattern recognition receptors that bind conserved microbial structures known as PAMPs.",
-                    "B) Human Leukocyte Antigens (HLAs): Incorrect. HLAs are host major histocompatibility proteins.",
-                    "C) Major Histocompatibility Complexes: Incorrect. MHC molecules present peptides to T-cells.",
-                    "D) Immunoglobulins: Incorrect. Immunoglobulins are adaptive humoral antibodies."
-                ]
-            },
-            {
-                question: "What are DAMPs (Damage-Associated Molecular Patterns)?",
-                options: ["Viral DNA fragments", "Molecular patterns displayed by injured or dying host cells", "Extracellular bacterial toxins", "Fungal cell wall components"],
-                correct: 1,
-                explanationText: "Sterile inflammatory responses are initiated when endogenous intracellular molecules released from damaged cells act as danger signals.",
-                rationales: [
-                    "A) Viral DNA fragments: Incorrect. Viral fragments represent exogenous pathogen nucleic acids.",
-                    "B) Molecular patterns displayed by injured or dying host cells: Correct. DAMPs are endogenous chemical signals released or displayed by injured, necrotic, or dying host cells to recruit scavenger phagocytes.",
-                    "C) Extracellular bacterial toxins: Incorrect. Toxins are exogenous microbial virulence factors.",
-                    "D) Fungal cell wall components: Incorrect. Fungal walls consist of exogenous PAMP structures."
-                ]
-            },
-            {
-                question: "In the intrinsic coagulation cascade, which contact factor initiates the conversion cascade down to fibrin?",
-                options: ["Factor VII", "Factor X", "Factor XII (Hageman Factor)", "Prothrombin"],
-                correct: 2,
-                explanationText: "Hemostatic pathway activation via surface contact triggers sequential enzymatic cleavages culminating in insoluble fibrin clot formation.",
-                rationales: [
-                    "A) Factor VII: Incorrect. Factor VII initiates the extrinsic tissue factor pathway.",
-                    "B) Factor X: Incorrect. Factor X operates downstream within the common pathway.",
-                    "C) Factor XII (Hageman Factor): Correct. Factor XII is activated upon contacting damaged negative subendothelial collagen, initiating the intrinsic coagulation cascade.",
-                    "D) Prothrombin: Incorrect. Prothrombin is cleaved into thrombin within the common pathway."
-                ]
-            },
-            {
-                question: "Which cytokine is released by mast cells to recruit eosinophils to sites of allergic inflammation?",
-                options: ["Interleukin-1", "Interleukin-6", "TNF-alpha", "Interleukin-5"],
-                correct: 3,
-                explanationText: "Specialized allergic immune cascades rely on targeted leukocyte chemotactic cytokines to recruit secondary effector granulocytes.",
-                rationales: [
-                    "A) Interleukin-1: Incorrect. IL-1 functions as an endogenous pyrogen.",
-                    "B) Interleukin-6: Incorrect. IL-6 stimulates acute-phase hepatic protein synthesis.",
-                    "C) TNF-alpha: Incorrect. TNF-alpha mediates systemic inflammation and cachexia.",
-                    "D) Interleukin-5: Correct. Interleukin-5 (IL-5) is released during allergic responses to selectively attract, activate, and prolong the survival of eosinophils."
-                ]
-            },
-            {
-                question: "Natural Killer (NK) cells are lymphocytes that participate in innate responses because they do NOT require:",
-                options: ["MHC Class I recognition", "Cytokine stimulation", "Phagocytic vacuoles", "Perforins"],
-                correct: 0,
-                explanationText: "Innate lymphoid surveillance operates independently of classical adaptive antigen receptor gene rearrangement or prior sensitization.",
-                rationales: [
-                    "A) MHC Class I recognition: Correct. NK cells do not require specific antigen presentation on MHC Class I to initiate lysis; instead, they target cells exhibiting absent self-MHC Class I molecules.",
-                    "B) Cytokine stimulation: Incorrect. Cytokines modulate NK cell activation and proliferation.",
-                    "C) Phagocytic vacuoles: Incorrect. NK cells utilize extracellular lytic granule release rather than phagocytosis.",
-                    "D) Perforins: Incorrect. Perforins form pores in target cell membranes to mediate lysis."
-                ]
-            },
-            {
-                question: "What is the tissue counterpart name for macrophages present in the Central Nervous System (CNS)?",
-                options: ["Kupffer cells", "Microglia", "Alveolar macrophages", "Langerhans cells"],
-                correct: 1,
-                explanationText: "Specialized immune sentinel networks populate the central nervous system under distinct anatomical nomenclature.",
-                rationales: [
-                    "A) Kupffer cells: Incorrect. Kupffer cells reside within hepatic sinusoids.",
-                    "B) Microglia: Correct. Microglia are resident mononuclear phagocytes of the central nervous system.",
-                    "C) Alveolar macrophages: Incorrect. Alveolar macrophages patrol pulmonary air spaces.",
-                    "D) Langerhans cells: Incorrect. Langerhans cells inhabit the epidermal skin layer."
-                ]
-            },
-            {
-                question: "Langerhans cells represent the tissue macrophage resident in which organ?",
-                options: ["Lungs", "Peripheral Nerves", "Skin", "Spleen"],
-                correct: 2,
-                explanationText: "Cutaneous immune defense relies on specialized resident dendritic macrophage networks located within integumentary epithelial layers.",
-                rationales: [
-                    "A) Lungs: Incorrect. Pulmonary tissue macrophages are termed alveolar dust cells.",
-                    "B) Peripheral Nerves: Incorrect. Peripheral nerves contain specialized Schwann cell support structures.",
-                    "C) Skin: Correct. Langerhans cells are resident dendritic cells and macrophages located within the epidermal layer of the skin.",
-                    "D) Spleen: Incorrect. Spleen architecture features littoral and red pulp macrophages."
-                ]
-            },
-            {
-                question: "Which cytokine secreted by inflammatory macrophages is known as the 'death factor' or cachectin?",
-                options: ["IL-1", "IL-6", "IFN-gamma", "TNF-alpha"],
-                correct: 3,
-                explanationText: "Potent systemic inflammatory cytokines induce metabolic wasting and apoptotic cellular necrosis during chronic disease states.",
-                rationales: [
-                    "A) IL-1: Incorrect. IL-1 acts primarily as an endogenous pyrogen.",
-                    "B) IL-6: Incorrect. IL-6 stimulates acute-phase reactant production.",
-                    "C) IFN-gamma: Incorrect. Interferon-gamma activates macrophage antimicrobial functions.",
-                    "D) TNF-alpha: Correct. Tumor Necrosis Factor-alpha (TNF-a) is termed the 'death factor' and cachectin due to its role in cell necrosis and systemic metabolic cachexia."
-                ]
-            }
-        ];
-
-        let activeQuizData = [];
-        let currentScore = 0;
-        let answeredCount = 0;
-
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-            return array;
+<script>
+    const originalQuestions = [
+        {
+            question: "1. When a muscle connects laterally, it has a stronger influence on extension.",
+            options: [
+                "True",
+                "False"
+            ],
+            correct: 1,
+            explanation: "False. Medial muscle attachments provide leverage for extension, whereas more lateral attachments increase leverage for lateral flexion."
+        },
+        {
+            question: "2. Which of the following is not a real muscle?",
+            options: [
+                "Longissimus Lumborum",
+                "Longissimus Thoracis",
+                "Iliocostalis Thoracis",
+                "Iliocostalis Lumborum"
+            ],
+            correct: 0,
+            explanation: "Longissimus Lumborum does not exist. The Longissimus column consists of Thoracis, Cervicis, and Capitis divisions."
+        },
+        {
+            question: "3. All muscles covered in Week 2 are fed by the dorsal rami of the spinal nerves.",
+            options: [
+                "True",
+                "False"
+            ],
+            correct: 1,
+            explanation: "False. Serratus Posterior Superior and Inferior are innervated by the VENTRAL rami of thoracic spinal nerves (intercostal nerves), whereas intrinsic back muscles are fed by dorsal rami."
+        },
+        {
+            question: "4. The serratus posterior superior and inferior both help with respiration.",
+            options: [
+                "True",
+                "False"
+            ],
+            correct: 0,
+            explanation: "True. Serratus Posterior Superior elevates upper ribs during forced inspiration, while Serratus Posterior Inferior stabilizes lower ribs during forced expiration."
+        },
+        {
+            question: "5. How many muscles are in the third layer, proper (not the ILS)?",
+            options: [
+                "6",
+                "4",
+                "5",
+                "3"
+            ],
+            correct: 1,
+            explanation: "There are 4 muscles in Layer 3 proper: Splenius Capitis, Splenius Cervicis, Serratus Posterior Superior, and Serratus Posterior Inferior."
+        },
+        {
+            question: "6. What visual orientation analogy was used in lecture for the Splenius capitis and Splenius cervicis muscles?",
+            options: [
+                "They extend out and up like Batman wings",
+                "They run parallel like train tracks",
+                "They wrap horizontally like a kidney belt",
+                "They form an inverted chevron pointing toward C2"
+            ],
+            correct: 0,
+            explanation: "Dr. Phillip described Splenius capitis and cervicis as going 'out and up like Batman wings' in the upper cervical back."
+        },
+        {
+            question: "7. What are the origin attachment sites for the Splenius Capitis muscle?",
+            options: [
+                "Ligamentum nuchae and spinous processes of C7 to T4",
+                "Spinous processes of T3 to T6",
+                "Transverse processes of C1 to C4",
+                "Iliac crest and medial sacral crest"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis originates from the lower nuchal ligament and spinous processes of C7 through T4."
+        },
+        {
+            question: "8. What are the insertion attachment sites for Splenius Capitis?",
+            options: [
+                "Mastoid process of temporal bone and superior nuchal line",
+                "Transverse processes of C1 to C4",
+                "Spinous processes of C2 to C5",
+                "Ribs 3 through 6"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis reaches the skull, inserting onto the mastoid process and superior nuchal line."
+        },
+        {
+            question: "9. How do the insertion sites differentiate Splenius Capitis from Splenius Cervicis?",
+            options: [
+                "Splenius Capitis attaches to the skull (mastoid/nuchal line); Splenius Cervicis attaches to cervical TPs (C1-C4)",
+                "Splenius Capitis attaches to ribs; Splenius Cervicis attaches to the scapula",
+                "Splenius Capitis inserts on SPs; Splenius Cervicis inserts on the clavicle",
+                "There is no structural difference; they share identical insertion sites"
+            ],
+            correct: 0,
+            explanation: "Splenius Capitis reaches the skull ('capitis'), while Splenius Cervicis stops at cervical transverse processes C1–C4 ('cervicis')."
+        },
+        {
+            question: "10. What functional role do the Serratus Posterior muscles perform relative to the deep Erector Spinae group?",
+            options: [
+                "They act as protective belts keeping the Erector Spinae muscles from popping outward",
+                "They act as primary flexors of the lumbar spine",
+                "They rotate the glenoid cavity superiorly",
+                "They attach directly to the hyoid bone to aid swallowing"
+            ],
+            correct: 0,
+            explanation: "Lecture notes compare Serratus Posterior Superior and Inferior to 'belts' holding down the Erector Spinae ('I love spaghetti') group."
+        },
+        {
+            question: "11. What mnemonic represents the lateral-to-medial column arrangement of the Erector Spinae group?",
+            options: [
+                "I Love Spaghetti (Iliocostalis, Longissimus, Spinalis)",
+                "Some Lovers Try Positions (Scaphoid, Lunate, Triquetrum, Pisiform)",
+                "Every Student Studies Hard (Erector, Semispinalis, Spinalis, Multifidus)",
+                "Cervical Thoracic Lumbar (Capitis, Transverse, Longissimus)"
+            ],
+            correct: 0,
+            explanation: "The standard lateral-to-medial mnemonic taught in lecture is 'I Love Spaghetti' (Iliocostalis = lateral, Longissimus = intermediate, Spinalis = medial)."
+        },
+        {
+            question: "12. What nerve rami supply motor innervation to all three columns of the Erector Spinae muscle group?",
+            options: [
+                "Dorsal rami of spinal nerves",
+                "Ventral rami of intercostal nerves",
+                "Sympathetic trunk ganglion branches",
+                "Phrenic nerve roots (C3-C5)"
+            ],
+            correct: 0,
+            explanation: "All Erector Spinae columns (Iliocostalis, Longissimus, Spinalis) are innervated by the dorsal rami of spinal nerves."
+        },
+        {
+            question: "13. Why are Erector Spinae muscles far more effective at spinal EXTENSION than LATERAL FLEXION?",
+            options: [
+                "Their fiber orientation lies far more posterior to the axis of motion than lateral",
+                "They are innervated by ventral rami instead of dorsal rami",
+                "They lack attachments to ribs and transverse processes",
+                "They only contract during closed kinetic chain movements"
+            ],
+            correct: 0,
+            explanation: "Because their mass and leverage vectors sit posterior to the spinal axis of rotation, extension is biomechanically much stronger than lateral flexion."
+        },
+        {
+            question: "14. What are the 3 regional divisions of the Iliocostalis column?",
+            options: [
+                "Iliocostalis Lumborum, Thoracis, and Cervicis",
+                "Iliocostalis Capitis, Thoracis, and Lumborum",
+                "Iliocostalis Sacralis, Lumbalis, and Cervicis",
+                "Iliocostalis Superior, Middle, and Inferior"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis contains Lumborum, Thoracis, and Cervicis (it lacks a Capitis division)."
+        },
+        {
+            question: "15. Which regional division is completely ABSENT in the Iliocostalis column?",
+            options: [
+                "Iliocostalis Capitis",
+                "Iliocostalis Cervicis",
+                "Iliocostalis Thoracis",
+                "Iliocostalis Lumborum"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis does not extend to the skull; it lacks an 'Iliocostalis Capitis'."
+        },
+        {
+            question: "16. What is the insertion site of Iliocostalis Lumborum?",
+            options: [
+                "Inferior borders of the lower 6 ribs",
+                "Transverse processes of C1-C4",
+                "Mastoid process of temporal bone",
+                "Spinous processes of T1-T6"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis Lumborum originates from the iliac/sacral crests and L-spine SPs, inserting onto the lower 6 ribs."
+        },
+        {
+            question: "17. What is the origin and insertion of Iliocostalis Thoracis?",
+            options: [
+                "Origin: Lower 6 ribs | Insertion: Upper 6 ribs",
+                "Origin: Iliac crest | Insertion: Lower 6 ribs",
+                "Origin: Ribs 3-6 | Insertion: TPs C4-C6",
+                "Origin: SPs T11-L2 | Insertion: SPs T4-T8"
+            ],
+            correct: 0,
+            explanation: "Iliocostalis Thoracis runs rib-to-rib: originating on the lower 6 ribs and inserting on the upper 6 ribs."
+        },
+        {
+            question: "18. What are the 3 regional divisions of the Longissimus column?",
+            options: [
+                "Longissimus Thoracis, Cervicis, and Capitis",
+                "Longissimus Lumborum, Thoracis, and Cervicis",
+                "Longissimus Sacralis, Thoracis, and Capitis",
+                "Longissimus Superior, Media, and Inferior"
+            ],
+            correct: 0,
+            explanation: "Longissimus contains Thoracis, Cervicis, and Capitis (it lacks a Lumborum division)."
+        },
+        {
+            question: "19. What is the insertion site of Longissimus Capitis?",
+            options: [
+                "Mastoid process of the temporal bone",
+                "Transverse processes of C2-C6",
+                "Lower 6 ribs",
+                "Spinous processes of C2-C4"
+            ],
+            correct: 0,
+            explanation: "Longissimus Capitis extends up to insert onto the mastoid process of the temporal bone."
+        },
+        {
+            question: "20. What fan-like structural characteristic distinguishes Longissimus Capitis from other erector muscles?",
+            options: [
+                "Its fibers radiate outward in a fan-like orientation toward the mastoid process rather than running straight vertically",
+                "It attaches exclusively to costal cartilages",
+                "It is innervated by cranial nerve XI",
+                "It lacks muscle spindles"
+            ],
+            correct: 0,
+            explanation: "Longissimus Capitis has a broader, fan-like fiber distribution giving it enhanced lateral stabilization mechanics for the head."
+        },
+        {
+            question: "21. What are the 2 main regional divisions of the Spinalis column?",
+            options: [
+                "Spinalis Thoracis and Spinalis Cervicis",
+                "Spinalis Capitis and Spinalis Lumborum",
+                "Spinalis Sacralis and Spinalis Thoracis",
+                "Spinalis Dorsalis and Spinalis Lumbalis"
+            ],
+            correct: 0,
+            explanation: "The Spinalis column is divided into Spinalis Thoracis and Spinalis Cervicis."
+        },
+        {
+            question: "22. Which division of the Spinalis column is frequently ABSENT in cadaveric dissections?",
+            options: [
+                "Spinalis Cervicis",
+                "Spinalis Thoracis",
+                "Iliocostalis Thoracis",
+                "Longissimus Capitis"
+            ],
+            correct: 0,
+            explanation: "Dr. Phillip highlighted that Spinalis Cervicis is frequently absent in human cadavers."
+        },
+        {
+            question: "23. What upper extremity muscle was compared in lecture to Spinalis Cervicis regarding anatomical variability?",
+            options: [
+                "Palmaris brevis (or Palmaris longus)",
+                "Biceps brachii short head",
+                "Anconeus",
+                "Brachioradialis"
+            ],
+            correct: 0,
+            explanation: "Lecture notes compare the inconsistent presence of Spinalis Cervicis in the back to Palmaris brevis in the hand."
+        },
+        {
+            question: "24. Why does the Spinalis group act almost exclusively as postural extensors rather than lateral flexors?",
+            options: [
+                "They attach directly adjacent to the spinous processes along the midline, lacking a lateral lever arm",
+                "They are innervated by anterior thoracic nerves",
+                "They contain no type I slow-twitch muscle fibers",
+                "Their origins cross the sagittal plane diagonally"
+            ],
+            correct: 0,
+            explanation: "Because Spinalis muscles hug the midline spinous processes, they lack the lateral distance needed to create leverage for lateral flexion."
+        },
+        {
+            question: "25. Why have National Board examiners shifted from strict 'Origin/Insertion' terminology to 'Attachment Sites'?",
+            options: [
+                "Functional reversal occurs in closed kinetic chain movements where origins move toward insertions",
+                "Muscles no longer possess tendon insertions",
+                "Innervations vary between cadavers",
+                "Board questions are moving away from biomechanics"
+            ],
+            correct: 0,
+            explanation: "In closed kinetic chain mechanics, traditional origins and insertions reverse, making 'attachment sites' a more accurate term."
         }
+    ];
 
-        function renderQuiz() {
-            // Dynamic Fisher-Yates question shuffle on render/load
-            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(originalQuizData)));
+    let questions = [];
+    let userAnswers = [];
+    let answeredCount = 0;
+    let correctCount = 0;
 
-            const container = document.getElementById('quiz-container');
-            container.innerHTML = '';
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
 
-            activeQuizData.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'quiz-card';
-                card.id = `card-${index}`;
+    function renderQuiz() {
+        // Deep copy questions and shuffle with Fisher-Yates
+        questions = JSON.parse(JSON.stringify(originalQuestions));
+        shuffleArray(questions);
 
-                const qNum = document.createElement('div');
-                qNum.className = 'question-number';
-                qNum.innerText = `Question ${index + 1} of ${activeQuizData.length}`;
+        userAnswers = new Array(questions.length).fill(null);
+        answeredCount = 0;
+        correctCount = 0;
 
-                const qText = document.createElement('div');
-                qText.className = 'question-text';
-                qText.innerText = item.question;
+        const quizContainer = document.getElementById('quiz-body');
+        quizContainer.innerHTML = '';
 
-                const optionsGrid = document.createElement('div');
-                optionsGrid.className = 'options-grid';
+        questions.forEach((q, qIndex) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            card.id = `q-card-${qIndex}`;
 
-                item.options.forEach((opt, optIdx) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerText = `${String.fromCharCode(65 + optIdx)}. ${opt}`;
-                    btn.onclick = () => handleAnswer(index, optIdx);
-                    optionsGrid.appendChild(btn);
+            const qText = document.createElement('div');
+            qText.className = 'question-text';
+            qText.textContent = `${qIndex + 1}. ${q.question.replace(/^\d+\.\s*/, '')}`;
+            card.appendChild(qText);
+
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options-list';
+
+            q.options.forEach((opt, optIndex) => {
+                const optItem = document.createElement('li');
+                optItem.className = 'option-item';
+                optItem.id = `opt-${qIndex}-${optIndex}`;
+                
+                const label = document.createElement('strong');
+                label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
+                
+                const text = document.createTextNode(` ${opt}`);
+                
+                optItem.appendChild(label);
+                optItem.appendChild(text);
+
+                optItem.addEventListener('click', function() {
+                    selectAnswer(qIndex, optIndex);
                 });
 
-                const exp = document.createElement('div');
-                exp.className = 'explanation';
-                exp.id = `exp-${index}`;
-                
-                card.appendChild(qNum);
-                card.appendChild(qText);
-                card.appendChild(optionsGrid);
-                card.appendChild(exp);
-
-                container.appendChild(card);
+                optionsList.appendChild(optItem);
             });
 
-            updateHeader();
-        }
+            card.appendChild(optionsList);
 
-        function handleAnswer(qIndex, selectedOpt) {
-            const card = document.getElementById(`card-${qIndex}`);
-            const buttons = card.querySelectorAll('.option-btn');
-            const exp = document.getElementById(`exp-${qIndex}`);
-            const correctOpt = activeQuizData[qIndex].correct;
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-box';
+            feedback.id = `feedback-${qIndex}`;
+            card.appendChild(feedback);
 
-            // Instant lock-in: Disable all options for this question
-            buttons.forEach(btn => btn.disabled = true);
+            quizContainer.appendChild(card);
+        });
+    }
 
-            let isCorrect = (selectedOpt === correctOpt);
-            if (isCorrect) {
-                buttons[selectedOpt].classList.add('correct');
-                currentScore++;
-            } else {
-                buttons[selectedOpt].classList.add('incorrect');
-                buttons[correctOpt].classList.add('correct');
-            }
+    function selectAnswer(qIndex, optIndex) {
+        if (userAnswers[qIndex] !== null) return;
 
-            const statusClass = isCorrect ? 'correct' : 'incorrect';
-            const statusText = isCorrect ? 'Correct!' : 'Incorrect.';
+        const q = questions[qIndex];
+        userAnswers[qIndex] = optIndex;
+        answeredCount++;
 
-            let rationalesHTML = '<ul class="rationale-list">';
-            activeQuizData[qIndex].rationales.forEach(rat => {
-                rationalesHTML += `<li>${rat}</li>`;
-            });
-            rationalesHTML += '</ul>';
+        const isCorrect = (optIndex === q.correct);
+        if (isCorrect) correctCount++;
 
-            exp.innerHTML = `
-                <div class="status-banner ${statusClass}">${statusText}</div>
-                <div class="explanation-paragraph">${activeQuizData[qIndex].explanationText}</div>
-                ${rationalesHTML}
-            `;
+        for (let i = 0; i < q.options.length; i++) {
+            const optEl = document.getElementById(`opt-${qIndex}-${i}`);
+            optEl.classList.add('disabled');
 
-            exp.style.display = 'block';
-            answeredCount++;
-
-            updateHeader();
-
-            if (answeredCount === activeQuizData.length) {
-                showSummary();
+            if (i === q.correct) {
+                optEl.classList.add('correct');
+            } else if (i === optIndex && !isCorrect) {
+                optEl.classList.add('incorrect');
             }
         }
 
-        function updateHeader() {
-            const total = activeQuizData.length;
-            const pct = total === 0 ? 0 : Math.round((currentScore / total) * 100);
-            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${pct}%)`;
+        const feedbackEl = document.getElementById(`feedback-${qIndex}`);
+        feedbackEl.classList.add('show');
+        if (isCorrect) {
+            feedbackEl.classList.add('correct');
+            feedbackEl.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+        } else {
+            feedbackEl.classList.add('incorrect');
+            feedbackEl.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
         }
 
-        function showSummary() {
-            const total = activeQuizData.length;
-            const pct = Math.round((currentScore / total) * 100);
-            const summaryCard = document.getElementById('summary-card');
-            const finalScore = document.getElementById('final-score');
-            const feedback = document.getElementById('summary-feedback');
+        updateHeaderScore();
 
-            finalScore.innerText = `${pct}%`;
-
-            if (pct >= 90) {
-                feedback.innerText = "Mastery demonstrated! Outstanding recall of immunology and cellular defense concepts.";
-            } else if (pct >= 75) {
-                feedback.innerText = "Great job! Review the questions you missed to reinforce high-yield points.";
-            } else {
-                feedback.innerText = "Good effort! Consider reviewing Week 2 lecture notes and retrying the assessment.";
-            }
-
-            summaryCard.style.display = 'block';
-            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        if (answeredCount === questions.length) {
+            showFinalSummary();
         }
+    }
 
-        function resetQuiz() {
-            currentScore = 0;
-            answeredCount = 0;
-            document.getElementById('summary-card').style.display = 'none';
-            renderQuiz();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    function updateHeaderScore() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        document.getElementById('score-tracker').innerText = `Score: ${correctCount} / ${questions.length} (${percent}%)`;
+    }
 
-        window.onload = renderQuiz;
-    </script>
+    function showFinalSummary() {
+        const percent = Math.round((correctCount / questions.length) * 100);
+        const summaryBox = document.getElementById('final-summary');
+        summaryBox.style.display = 'block';
+        document.getElementById('final-score-text').innerText = `Final Score: ${correctCount} out of ${questions.length} (${percent}%)`;
+        summaryBox.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function resetQuiz() {
+        document.getElementById('final-summary').style.display = 'none';
+        updateHeaderScore();
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+        renderQuiz();
+        document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+    };
+</script>
 </body>
 </html>
