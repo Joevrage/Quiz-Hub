@@ -168,10 +168,10 @@
 
         .explanation-box {
             margin-top: 16px;
-            padding: 14px 16px;
+            padding: 16px 18px;
             border-radius: 8px;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.92rem;
+            line-height: 1.6;
             display: none;
         }
 
@@ -181,15 +181,53 @@
         }
 
         .explanation-box.correct {
-            background-color: var(--correct-bg);
+            background-color: #052e16;
             border-left: 4px solid var(--correct-color);
             color: #d1fae5;
         }
 
         .explanation-box.incorrect {
-            background-color: var(--incorrect-bg);
+            background-color: #450a0a;
             border-left: 4px solid var(--incorrect-color);
             color: #fee2e2;
+        }
+
+        .status-banner {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .status-banner.correct {
+            color: var(--correct-color);
+        }
+
+        .status-banner.incorrect {
+            color: var(--incorrect-color);
+        }
+
+        .explanation-summary {
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .rationale-list {
+            list-style: none;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .rationale-item {
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .rationale-item strong {
+            color: var(--primary-accent);
         }
 
         .summary-card {
@@ -254,7 +292,7 @@
     <div class="header-sticky">
         <div class="header-container">
             <div class="header-title">Microbiology: Quiz 2 Practice Hub</div>
-            <div class="score-box" id="scoreDisplay">Score: 0 / 36 (0%)</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 0 (0%)</div>
         </div>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" id="progressBar"></div>
@@ -266,7 +304,7 @@
     <div class="quiz-container">
         <div class="summary-card" id="summaryCard">
             <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
-            <div class="summary-score" id="finalScore">0 / 36</div>
+            <div class="summary-score" id="finalScore">0 / 0</div>
             <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
             <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
@@ -279,101 +317,147 @@
                ========================================================= */
             {
                 question: "Which unusual bacterium is characterized by a complete absence of a peptidoglycan cell wall, pleomorphic morphology, and membrane-stabilizing sterols that resist osmotic lysis?",
-                options: ["Rickettsia", "Chlamydia", "Mycoplasma", "Mycobacteria"],
-                correct: 2,
-                explanation: "Mycoplasma completely lacks a peptidoglycan cell wall and incorporates sterols into its plasma membrane to prevent osmotic lysis."
+                options: [
+                    { text: "Rickettsia", correct: false, reason: "Possesses a bacterial cell wall and outer membrane but exhibits leaky membrane permeability." },
+                    { text: "Chlamydia", correct: false, reason: "Possesses an outer membrane complex and exists as an obligate intracellular pathogen incapable of synthesizing ATP." },
+                    { text: "Mycoplasma", correct: true, reason: "Lacks a peptidoglycan cell wall entirely and incorporates environmental sterols into its plasma membrane to prevent osmotic lysis." },
+                    { text: "Mycobacteria", correct: false, reason: "Possesses an exceptionally thick, lipid-rich cell wall containing mycolic acid." }
+                ],
+                summary: "Mycoplasma is distinct among eubacteria due to the complete absence of a peptidoglycan cell wall and the incorporation of sterols into its plasma membrane to withstand osmotic lysis."
             },
             {
                 question: "Which unusual bacterium is an obligate intracellular parasite that causes vector-borne typhus and Rocky Mountain spotted fever due to possessing leaky cell membranes?",
-                options: ["Chlamydia", "Rickettsia", "Mycoplasma", "Archaea"],
-                correct: 1,
-                explanation: "Rickettsia species are obligate intracellular parasites with leaky cell membranes that prevent them from surviving long outside of host cells; they rely on arthropod vectors like ticks and lice."
+                options: [
+                    { text: "Chlamydia", correct: false, reason: "Transmitted primarily via direct contact or vertical transmission during parturition, not arthropod vectors." },
+                    { text: "Rickettsia", correct: true, reason: "Features structurally leaky plasma membranes that mandate immediate intracellular existence, spreading via tick, flea, or louse vectors." },
+                    { text: "Mycoplasma", correct: false, reason: "Extracellular mucosal colonizer lacking a cell wall rather than an arthropod-vectored intracellular parasite." },
+                    { text: "Archaea", correct: false, reason: "Non-pathogenic environmental extremophiles possessing ether-linked branched hydrocarbon membranes." }
+                ],
+                summary: "Rickettsia organisms possess highly permeable, leaky membranes that prevent free-living extracellular survival, requiring transmission by arthropod vectors to access host endothelial cells."
             },
             {
                 question: "Which unusual bacterium is an obligate intracellular parasite that lacks the metabolic enzymes necessary to synthesize its own ATP and is transmitted primarily by direct contact (sexual or birth)?",
-                options: ["Rickettsia", "Mycobacteria", "Cyanobacteria", "Chlamydia"],
-                correct: 3,
-                explanation: "Chlamydia lacks essential metabolic enzymes to generate its own ATP ('energy parasite') and spreads via direct sexual contact or during birth."
+                options: [
+                    { text: "Rickettsia", correct: false, reason: "Synthesizes minimal ATP and relies primarily on arthropod vectors rather than venereal or perinatal routes." },
+                    { text: "Mycobacteria", correct: false, reason: "Free-living, slow-growing acid-fast bacillus capable of independent oxidative phosphorylation and ATP synthesis." },
+                    { text: "Cyanobacteria", correct: false, reason: "Free-living photosynthetic prokaryote producing abundant ATP and oxygen." },
+                    { text: "Chlamydia", correct: true, reason: "Lacks the metabolic enzymatic machinery to generate ATP ('energy parasite') and is transmitted via direct mucosal or perinatal contact." }
+                ],
+                summary: "Chlamydia is an obligate intracellular bacterium deficient in autonomous nucleotide and ATP generation, depending entirely on host cellular energy stores and spreading via direct physical contact."
             },
             {
                 question: "Which unusual bacterial group is classified as acid-fast because its thick, waxy cell wall is loaded with large amounts of mycolic acid that contribute to pathogenicity?",
-                options: ["Mycobacteria", "Mycoplasma", "Rickettsia", "Chlamydia"],
-                correct: 0,
-                explanation: "Mycobacteria possess thick, waxy cell walls rich in mycolic acid, giving them acid-fast staining characteristics and environmental durability."
+                options: [
+                    { text: "Mycobacteria", correct: true, reason: "Contains abundant long-chain mycolic acids within its peptidoglycan-arabinogalactan envelope, resisting acid alcohol decolorization." },
+                    { text: "Mycoplasma", correct: false, reason: "Completely lacks peptidoglycan and mycolic acid, bounded only by a sterol-containing membrane." },
+                    { text: "Rickettsia", correct: false, reason: "Possesses a standard Gram-negative envelope with leaky characteristics, lacking acid-fast lipids." },
+                    { text: "Chlamydia", correct: false, reason: "Contains a modified Gram-negative envelope lacking significant mycolic acid concentrations." }
+                ],
+                summary: "Mycobacteria are designated acid-fast due to high concentrations of mycolic acids in their cell walls, which confer resistance to chemical disinfectants, desiccation, and standard Gram staining."
             },
             {
                 question: "Which unusual prokaryotic group consists primarily of extremophiles whose cell membranes utilize branched hydrocarbons instead of phospholipids and whose cell walls lack peptidoglycan?",
-                options: ["Mycoplasma", "Archaeans", "Mycobacteria", "Green sulfur bacteria"],
-                correct: 1,
-                explanation: "Archaeans are unique prokaryotes thriving in extreme environments; their cell membranes utilize ether-linked hydrocarbons rather than phospholipids, and their walls lack peptidoglycan."
+                options: [
+                    { text: "Mycoplasma", correct: false, reason: "A true eubacterium with sterol-containing phospholipid bilayers lacking wall structures." },
+                    { text: "Archaeans", correct: true, reason: "Possesses ether-linked branched hydrocarbon monolayers or bilayers and cell walls composed of pseudomurein or protein S-layers." },
+                    { text: "Mycobacteria", correct: false, reason: "A eubacterium with typical ester-linked fatty acids and a peptidoglycan-mycolic acid wall." },
+                    { text: "Green sulfur bacteria", correct: false, reason: "Anoxygenic photosynthetic eubacteria with standard eubacterial ester-linked lipids." }
+                ],
+                summary: "Archaea represent a distinct domain of prokaryotic extremophiles possessing ether-linked isoprenoid hydrocarbon chains and cell walls deficient in peptidoglycan."
             },
             {
                 question: "How do photosynthetic Cyanobacteria differ metabolically from purple and green photosynthetic bacteria?",
                 options: [
-                    "Cyanobacteria carry out anoxygenic photosynthesis, while purple and green bacteria produce oxygen",
-                    "Cyanobacteria carry out oxygenic photosynthesis, whereas purple and green bacteria are anoxygenic",
-                    "Cyanobacteria lack cell walls, while purple and green bacteria possess mycolic acid",
-                    "Cyanobacteria are obligate intracellular parasites that cannot generate ATP"
+                    { text: "Cyanobacteria carry out anoxygenic photosynthesis, while purple and green bacteria produce oxygen", correct: false, reason: "This reverses the photochemical pathways of both microbial groups." },
+                    { text: "Cyanobacteria carry out oxygenic photosynthesis, whereas purple and green bacteria are anoxygenic", correct: true, reason: "Cyanobacteria utilize water as an electron donor to release oxygen, whereas purple and green sulfur bacteria utilize sulfur compounds and do not produce oxygen." },
+                    { text: "Cyanobacteria lack cell walls, while purple and green bacteria possess mycolic acid", correct: false, reason: "Neither group lacks cell walls or produces mycobacterial mycolic acid." },
+                    { text: "Cyanobacteria are obligate intracellular parasites that cannot generate ATP", correct: false, reason: "Cyanobacteria are autotrophic, photo-synthesizing, free-living bacteria that generate their own ATP." }
                 ],
-                correct: 1,
-                explanation: "Cyanobacteria perform oxygenic photosynthesis (generating O2), whereas purple and green sulfur bacteria perform anoxygenic photosynthesis without oxygen generation."
+                summary: "Cyanobacteria perform oxygenic photosynthesis utilizing chlorophyll a and releasing O2, whereas purple and green sulfur bacteria utilize bacteriochlorophyll to carry out anoxygenic photosynthesis."
             },
 
             /* =========================================================
-               PART 2: BACTERIAL SHAPES & CELL ARRANGEMENTS (HIGH-DIFFICULTY)
+               PART 2: BACTERIAL SHAPES & CELL ARRANGEMENTS
                ========================================================= */
             {
                 question: "Under the microscope, you observe rod-shaped bacteria grouped side-by-side in parallel rows, resembling folded dominoes or a picket fence, remaining attached by a small hinge at one end. What arrangement is this?",
-                options: ["Streptobacilli", "Palisades", "Staphylococci", "Sarcina"],
-                correct: 1,
-                explanation: "Palisades is an arrangement formed specifically by bacilli dividing transversely and snapping together side-by-side like folded dominoes or fence pickets. Streptobacilli form end-to-end chains, while staphylococci are clusters of spheres."
+                options: [
+                    { text: "Streptobacilli", correct: false, reason: "Streptobacilli consist of bacilli aligned linearly end-to-end in continuous strands." },
+                    { text: "Palisades", correct: true, reason: "Formed when bacilli divide transversely and snap together laterally to form side-by-side columns attached by a terminal hinge." },
+                    { text: "Staphylococci", correct: false, reason: "Consists of spherical cocci dividing across multiple planes into irregular clusters." },
+                    { text: "Sarcina", correct: false, reason: "Consists of cocci dividing in three regular perpendicular planes into geometric cubical packets." }
+                ],
+                summary: "Palisades arrangements occur when rod-shaped bacilli divide by snapping transverse fission, remaining hinged at the poles to create parallel picket-fence formations."
             },
             {
                 question: "Why do rod-shaped bacteria (bacilli) NEVER form irregular, grape-like 'staph' clusters under normal physiological conditions?",
                 options: [
-                    "Bacilli lack peptidoglycan and therefore cannot adhere after division",
-                    "Bacilli divide along only a single transverse plane of division, preventing multi-planar clustering",
-                    "Bacilli always possess peritrichous flagella that forcibly propel daughter cells apart",
-                    "Bacilli only divide in three perpendicular planes to form regular cubes"
+                    { text: "Bacilli lack peptidoglycan and therefore cannot adhere after division", correct: false, reason: "Bacilli maintain thick or thin peptidoglycan cell walls." },
+                    { text: "Bacilli divide along only a single transverse plane of division, preventing multi-planar clustering", correct: true, reason: "Bacillary morphology restricts division exclusively across a single transverse axis, allowing only pairs, chains, or snapping palisades." },
+                    { text: "Bacilli always possess peritrichous flagella that forcibly propel daughter cells apart", correct: false, reason: "Arrangement is governed by planes of septation, not flagellar motility." },
+                    { text: "Bacilli only divide in three perpendicular planes to form regular cubes", correct: false, reason: "Cubic division is unique to sarcina arrangements of cocci." }
                 ],
-                correct: 1,
-                explanation: "As emphasized in lecture, true 'staph' clusters only occur with spheres (cocci) because cocci can divide across multiple random axes. Bacilli can divide along only one transverse axis, producing chains (streptobacilli), pairs (diplobacilli), or snapping picket fences (palisades)."
+                summary: "Bacilli are geometrically constrained to a single transverse plane of division, precluding the formation of multi-planar clusters characteristic of staphylococci."
             },
             {
                 question: "A specimen shows spherical bacterial cells dividing strictly along two perpendicular axes to form a symmetrical square group of four cells. What is the correct microbiological term?",
-                options: ["Tetrads", "Sarcina", "Streptococci", "Diplococci"],
-                correct: 0,
-                explanation: "Tetrads are groups of four cocci arranged in a square, produced by cellular division along two perpendicular planes. Division along three perpendicular planes forms a cubical packet of 8 or more known as sarcina."
+                options: [
+                    { text: "Tetrads", correct: true, reason: "Tetrads are symmetrical four-cell planar packets resulting from septation along two perpendicular axes." },
+                    { text: "Sarcina", correct: false, reason: "Sarcina involves septation along three perpendicular axes to form cubical packets of eight or more cells." },
+                    { text: "Streptococci", correct: false, reason: "Streptococci result from continuous divisions along a single axis." },
+                    { text: "Diplococci", correct: false, reason: "Diplococci represent persistent pairs formed after a single division cycle." }
+                ],
+                summary: "Tetrads are square, planar arrangements of four cocci generated by sequential divisions along two perpendicular geometric axes."
             },
             {
                 question: "Which bacterial arrangement is characterized by division in three regular perpendicular planes, resulting in a distinct cubical packet of 8, 16, or more cocci?",
-                options: ["Staphylococci", "Tetrads", "Sarcina", "Streptobacilli"],
-                correct: 2,
-                explanation: "Sarcina refers specifically to regular cubical packets formed by division along three perpendicular geometric axes."
+                options: [
+                    { text: "Staphylococci", correct: false, reason: "Staphylococci divide along irregular, non-symmetrical, random planes." },
+                    { text: "Tetrads", correct: false, reason: "Tetrads divide across only two perpendicular planes, yielding four cells." },
+                    { text: "Sarcina", correct: true, reason: "Produced by orderly division across three perpendicular geometric planes, forming cuboidal packets." },
+                    { text: "Streptobacilli", correct: false, reason: "Streptobacilli are elongated linear chains of rod-shaped cells." }
+                ],
+                summary: "Sarcina packets are regular cubical complexes of 8, 16, or more cocci produced by successive divisions along three mutually perpendicular axes."
             },
             {
                 question: "Microscopic analysis reveals bacterial cells that are short, plump ovals intermediate in shape between a sphere and a rod. Which term describes this specific morphology?",
-                options: ["Diplococci", "Coccobacilli", "Vibrio", "Spirilla"],
-                correct: 1,
-                explanation: "Coccobacilli are intermediate oval-shaped cells that resemble both a coccus and a short bacillus. Vibrio are comma-shaped rods."
+                options: [
+                    { text: "Diplococci", correct: false, reason: "Diplococci are distinct spherical pairs." },
+                    { text: "Coccobacilli", correct: true, reason: "Coccobacilli exhibit intermediate morphology, appearing as short, rounded oval rods." },
+                    { text: "Vibrio", correct: false, reason: "Vibrios are curved, comma-shaped rods." },
+                    { text: "Spirilla", correct: false, reason: "Spirilla are rigid helical spiral forms." }
+                ],
+                summary: "Coccobacilli display transitional morphology between spherical cocci and elongated bacilli, appearing as distinct short, plump ovals."
             },
             {
                 question: "You observe helical, spiral-shaped bacterial cells that maintain a rigid cell wall and rotate via external polar flagella, rather than bending via periplasmic axial filaments. What morphology is this?",
-                options: ["Spirochetes", "Spirilla", "Palisades", "Pleomorphic"],
-                correct: 1,
-                explanation: "Spirilla are rigid spiral-shaped bacteria propelled by external flagella. Spirochetes are flexible, undulating spiral bacteria with internal axial filaments (endoflagella) in their periplasmic space."
+                options: [
+                    { text: "Spirochetes", correct: false, reason: "Spirochetes are flexible, undulating spiral cells powered by internal periplasmic axial filaments." },
+                    { text: "Spirilla", correct: true, reason: "Spirilla are rigid spiral cylinders propelled by external, polar flagellar tufts." },
+                    { text: "Palisades", correct: false, reason: "Palisades are parallel snapping formations of straight bacilli." },
+                    { text: "Pleomorphic", correct: false, reason: "Pleomorphic cells display variable, amoeboid-like shapes without fixed spiral helices." }
+                ],
+                summary: "Spirilla are characterized by rigid helical cell walls and external polar flagella, distinguishing them from flexible spirochetes with internal endoflagella."
             },
             {
                 question: "Gram-positive spherical bacteria that divide repeatedly along a single plane to produce elongated, continuous chains of pearls are classified as:",
-                options: ["Staphylococci", "Streptococci", "Streptobacilli", "Diplococci encapsulated"],
-                correct: 1,
-                explanation: "Streptococci are spherical cells that divide along a single axis to yield continuous chain-like formations. Streptobacilli are chains of rods."
+                options: [
+                    { text: "Staphylococci", correct: false, reason: "Staphylococci form irregular multi-axial clusters." },
+                    { text: "Streptococci", correct: true, reason: "Streptococcal division is restricted to a single axis without separation, yielding linear cellular chains." },
+                    { text: "Streptobacilli", correct: false, reason: "Streptobacilli are chains composed of rod-shaped bacilli." },
+                    { text: "Diplococci encapsulated", correct: false, reason: "Diplococci exist as paired cells rather than continuous multi-cellular chains." }
+                ],
+                summary: "Streptococci are cocci that divide along a single persistent plane, remaining linked to produce characteristic chain-like formations."
             },
             {
                 question: "Bacteria that completely lack a rigid cell wall and naturally display variable, irregular shapes without a fixed morphology are designated as:",
-                options: ["Pleomorphic", "Palisades", "Coccobacilli", "Vibrio"],
-                correct: 0,
-                explanation: "Pleomorphic organisms (such as Mycoplasma) lack a cell wall and therefore exhibit variable, constantly shifting cellular shapes."
+                options: [
+                    { text: "Pleomorphic", correct: true, reason: "Denotes organisms lacking structural peptidoglycan walls, enabling continuous variation in individual cell shape." },
+                    { text: "Palisades", correct: false, reason: "A fixed structural arrangement of hinged rod-shaped bacteria." },
+                    { text: "Coccobacilli", correct: false, reason: "A defined, static oval cell morphology." },
+                    { text: "Vibrio", correct: false, reason: "A rigid, comma-shaped cellular morphology." }
+                ],
+                summary: "Pleomorphism describes morphological variability resulting from the absence of a rigid, shape-determining peptidoglycan cell wall."
             },
 
             /* =========================================================
@@ -381,67 +465,93 @@
                ========================================================= */
             {
                 question: "When comparing cellular structures within the glycocalyx category, which structure is considered MORE virulent due to its organized matrix that prevents phagocytosis?",
-                options: ["Slime layer", "Capsule", "Biofilm matrix", "Axial filament"],
-                correct: 1,
-                explanation: "Within the glycocalyx category, a capsule is significantly more virulent than a slime layer because its dense, organized structure blocks phagocytic engulfment by host macrophages."
+                options: [
+                    { text: "Slime layer", correct: false, reason: "A loose, unorganized polysaccharide shield primarily functioning in desiccation defense and weak adherence." },
+                    { text: "Capsule", correct: true, reason: "Composed of a dense, highly organized polymer matrix that directly blocks complement deposition and phagocytic engulfment." },
+                    { text: "Biofilm matrix", correct: false, reason: "A collective community structure rather than an individual cellular glycocalyx layer." },
+                    { text: "Axial filament", correct: false, reason: "An internal periplasmic motor structure mediating motility in spirochetes." }
+                ],
+                summary: "Within the glycocalyx family, capsules represent high-potency virulence factors because their organized, dense structure directly inhibits phagocytosis by host white blood cells."
             },
             {
                 question: "Which bacterial invasive exoenzyme acts as a chemical 'battering ram' by digesting the protective mucosal lining of host membranes?",
-                options: ["Keratinase", "Mucinase", "Collagenase", "Hyaluronidase"],
-                correct: 1,
-                explanation: "Mucinase digests the mucous membrane lining, allowing pathogens to penetrate protective mucosal barriers."
+                options: [
+                    { text: "Keratinase", correct: false, reason: "Digests keratinized structural proteins of the stratum corneum, hair, and nails." },
+                    { text: "Mucinase", correct: true, reason: "Enzymatically digests the mucosal gel coating epithelial linings to facilitate bacterial penetration." },
+                    { text: "Collagenase", correct: false, reason: "Targets the fibrous collagen matrix of subcutaneous and deep connective tissues." },
+                    { text: "Hyaluronidase", correct: false, reason: "Hydrolyzes interstitial hyaluronic acid between tissue cells." }
+                ],
+                summary: "Mucinase degrades protective mucin glycoproteins lining mucosal membranes, exposing the underlying epithelial cells to colonization and invasion."
             },
             {
                 question: "Which bacterial exoenzyme degrades the primary structural protein found in skin, hair, and nails to facilitate tissue invasion?",
-                options: ["Mucinase", "Coagulase", "Keratinase", "Lipase"],
-                correct: 2,
-                explanation: "Keratinase digests keratin, the principal structural protein of host skin, hair, and nails."
+                options: [
+                    { text: "Mucinase", correct: false, reason: "Degrades mucosal barrier secretions, not cornified integumentary proteins." },
+                    { text: "Coagulase", correct: false, reason: "Converts fibrinogen to protective fibrin clots around bacterial clusters." },
+                    { text: "Keratinase", correct: true, reason: "Hydrolyzes insoluble keratin proteins within the stratum corneum, nails, and hair shafts." },
+                    { text: "Lipase", correct: false, reason: "Breaks down host lipid and sebum reserves." }
+                ],
+                summary: "Keratinase is an invasive exoenzyme that digests insoluble keratin, enabling dermatophytic and bacterial pathogens to breach cornified cutaneous barriers."
             },
             {
                 question: "Which invasive exoenzyme breaks down the structural fibrous protein of host connective tissue?",
-                options: ["Collagenase", "Mucinase", "Keratinase", "Amylase"],
-                correct: 0,
-                explanation: "Collagenase dissolves collagen, the major fibrous protein of host connective tissues, facilitating deep tissue spread."
+                options: [
+                    { text: "Collagenase", correct: true, reason: "Degrades connective tissue collagen fibers, facilitating rapid deep-tissue dissemination." },
+                    { text: "Mucinase", correct: false, reason: "Targets mucosal secretions rather than collagenous stroma." },
+                    { text: "Keratinase", correct: false, reason: "Degrades epidermal keratin, not dermal or interstitial collagen." },
+                    { text: "Amylase", correct: false, reason: "Cleaves polysaccharide glycosidic bonds." }
+                ],
+                summary: "Collagenase dissolves fibrous collagen within extracellular matrices, destroying supportive connective tissue architecture and accelerating pathogen invasion."
             },
             {
                 question: "Which bacterial exoenzyme breaks down the intercellular cement holding host animal tissue cells together?",
-                options: ["Hyaluronidase", "Collagenase", "Mucinase", "Coagulase"],
-                correct: 0,
-                explanation: "Hyaluronidase digests hyaluronic acid, the ground substance and cement that binds host cells together, facilitating bacterial tissue penetration."
+                options: [
+                    { text: "Hyaluronidase", correct: true, reason: "Hydrolyzes hyaluronic acid, the glycosaminoglycan ground substance binding host cells together." },
+                    { text: "Collagenase", correct: false, reason: "Cleaves structural collagen fibers rather than ground substance mucopolysaccharides." },
+                    { text: "Mucinase", correct: false, reason: "Digests luminal mucous layers." },
+                    { text: "Coagulase", correct: false, reason: "Induces plasma clotting rather than tissue ground substance degradation." }
+                ],
+                summary: "Hyaluronidase hydrolyzes interstitial hyaluronic acid ('spreading factor'), breaking intercellular junctional integrity to enhance pathogen diffusion through tissues."
             },
             {
                 question: "Which bacterial virulence factor is specifically classified as an avoidance factor because it is toxic to and destroys host white blood cells?",
-                options: ["Mucinase", "Leukocidin (Leukocidase)", "Hyaluronidase", "Collagenase"],
-                correct: 1,
-                explanation: "Leukocidins (leukocidases) are extracellular bacterial avoidance factors that directly damage and kill white blood cells (phagocytes)."
+                options: [
+                    { text: "Mucinase", correct: false, reason: "An invasive factor degrading extracellular secretions, not a leukotoxic enzyme." },
+                    { text: "Leukocidin (Leukocidase)", correct: true, reason: "A pore-forming, membrane-disrupting toxin that directly lyses host leukocytes and macrophages." },
+                    { text: "Hyaluronidase", correct: false, reason: "Spreading factor targeting extracellular matrix components." },
+                    { text: "Collagenase", correct: false, reason: "Connective tissue enzyme with no direct cellular leukocidal toxicity." }
+                ],
+                summary: "Leukocidins (leukocidases) are specific anti-phagocytic virulence factors that form pores in leukocyte membranes, killing immune cells to avoid host defense."
             },
             {
                 question: "What is the major structural endotoxin of the bacterial world, and where is it located?",
                 options: [
-                    "Peptidoglycan of Gram-positive cell walls",
-                    "Lipopolysaccharide (LPS) in the outer membrane of Gram-negative cell walls",
-                    "Teichoic acid in Gram-positive cell walls",
-                    "Mycolic acid in acid-fast bacteria"
+                    { text: "Peptidoglycan of Gram-positive cell walls", correct: false, reason: "Peptidoglycan provides structural rigidity and is not classified as endotoxin." },
+                    { text: "Lipopolysaccharide (LPS) in the outer membrane of Gram-negative cell walls", correct: true, reason: "Lipid A of lipopolysaccharide (LPS), integral to the Gram-negative outer membrane, is the definitive bacterial endotoxin." },
+                    { text: "Teichoic acid in Gram-positive cell walls", correct: false, reason: "Teichoic acids assist in envelope maintenance and antigenicity in Gram-positive walls." },
+                    { text: "Mycolic acid in acid-fast bacteria", correct: false, reason: "Mycolic acid confers waxy chemical resistance, not classical endotoxic shock." }
                 ],
-                correct: 1,
-                explanation: "Lipopolysaccharide (LPS / Lipid A), located in the outer membrane of Gram-negative bacteria, is released upon lysis and acts as the classic bacterial endotoxin triggering severe fever and shock."
+                summary: "Lipopolysaccharide (LPS), specifically the Lipid A moiety embedded in the outer membrane of Gram-negative bacteria, is the primary bacterial endotoxin released upon lysis."
             },
             {
                 question: "Which mode of pathogen transmissibility is considered the most virulent due to rapid dispersion and high inhalation potential?",
-                options: ["Airborne transmission", "Direct contact transmission", "Fecal-oral transmission", "Vector-borne transmission"],
-                correct: 0,
-                explanation: "Airborne transmission allows microscopic droplets and droplet nuclei to travel rapidly through the air, making it the most virulent mode of entry."
+                options: [
+                    { text: "Airborne transmission", correct: true, reason: "Small droplet nuclei and aerosols remain suspended, dispersing over broad distances for immediate respiratory inhalation." },
+                    { text: "Direct contact transmission", correct: false, reason: "Requires close physical proximity, limiting spatial dispersal velocity." },
+                    { text: "Fecal-oral transmission", correct: false, reason: "Requires ingestive vehicle contamination, producing slower regional spread." },
+                    { text: "Vector-borne transmission", correct: false, reason: "Constrained by intermediate arthropod vector distributions and life cycles." }
+                ],
+                summary: "Airborne transmission displays the highest pathogenic transmissibility potential due to rapid aerosolization, persistent environmental suspension, and direct access to respiratory mucosal surfaces."
             },
             {
                 question: "What is the relationship between inoculum size (infectious dose) and a pathogen's virulence?",
                 options: [
-                    "A higher infectious dose indicates higher virulence",
-                    "A lower infectious dose indicates higher virulence",
-                    "Infectious dose is unrelated to virulence",
-                    "Infectious dose applies only to opportunistic fungi"
+                    { text: "A higher infectious dose indicates higher virulence", correct: false, reason: "Requiring larger cell numbers reflects weaker pathogenic capacity." },
+                    { text: "A lower infectious dose indicates higher virulence", correct: true, reason: "Infectious dose is inversely related to virulence; fewer organisms required to trigger infection indicates higher potency." },
+                    { text: "Infectious dose is unrelated to virulence", correct: false, reason: "Infectious dose (ID50) is the standard metric used to quantitatively measure virulence." },
+                    { text: "Infectious dose applies only to opportunistic fungi", correct: false, reason: "Applies across all prokaryotic, viral, fungal, and parasitic pathogen classifications." }
                 ],
-                correct: 1,
-                explanation: "Virulence is inversely proportional to infectious dose: the fewer organisms required to establish disease, the higher the virulence."
+                summary: "Infectious dose is inversely correlated with virulence: pathogens with low minimum infectious doses (e.g., small inocula) possess high relative virulence."
             },
 
             /* =========================================================
@@ -449,101 +559,133 @@
                ========================================================= */
             {
                 question: "Bacteria that lack the genetic and metabolic machinery to synthesize every organic compound required for survival and must obtain pre-formed growth factors are called:",
-                options: ["Fastidious bacteria", "Saprophytes", "Obligate halophiles", "Chemoautotrophs"],
-                correct: 0,
-                explanation: "Fastidious bacteria require special nutritional supplements or growth factors (vitamins, amino acids) because they cannot synthesize them independently."
+                options: [
+                    { text: "Fastidious bacteria", correct: true, reason: "Fastidious organisms require specialized exogenous nutritional supplements and organic growth factors." },
+                    { text: "Saprophytes", correct: false, reason: "Decomposers feeding generally on dead decaying biomass." },
+                    { text: "Obligate halophiles", correct: false, reason: "Organisms requiring hyper-saline osmotic gradients, not necessarily specific organic growth factors." },
+                    { text: "Chemoautotrophs", correct: false, reason: "Inorganic fixers capable of synthesizing all organic molecules from carbon dioxide." }
+                ],
+                summary: "Fastidious bacteria possess complex nutritional requirements and rely on external pre-formed growth factors such as specific amino acids and vitamins."
             },
             {
                 question: "Most human bacterial pathogens derive both their carbon and energy from pre-formed organic compounds. What nutritional category do they belong to?",
-                options: ["Photoautotrophs", "Chemoheterotrophs", "Chemoautotrophs", "Photoheterotrophs"],
-                correct: 1,
-                explanation: "Chemoheterotrophs obtain both carbon and energy from organic compounds; nearly all human bacterial pathogens fall into this category."
+                options: [
+                    { text: "Photoautotrophs", correct: false, reason: "Utilize sunlight for energy and carbon dioxide for carbon." },
+                    { text: "Chemoheterotrophs", correct: true, reason: "Metabolize organic chemical substrates for both cellular energy (ATP) and carbon skeletons." },
+                    { text: "Chemoautotrophs", correct: false, reason: "Derive energy from inorganic chemical oxidation and fix carbon from CO2." },
+                    { text: "Photoheterotrophs", correct: false, reason: "Capture solar light energy while requiring organic carbon sources." }
+                ],
+                summary: "Nearly all human bacterial pathogens are chemoheterotrophs, utilizing host organic molecules as reciprocal sources of metabolic energy and carbon."
             },
             {
                 question: "Organisms that feed specifically on dead and decaying organic matter are classified as:",
-                options: ["Saprophytes (Saprobes)", "Photoautotrophs", "Obligate intracellular parasites", "Lithoautotrophs"],
-                correct: 0,
-                explanation: "Saprophytes (or saprobes) are heterotrophs that decompose and obtain nutrients from dead organic matter."
+                options: [
+                    { text: "Saprophytes (Saprobes)", correct: true, reason: "Heterotrophic decomposers that digest non-living organic substrates." },
+                    { text: "Photoautotrophs", correct: false, reason: "Autotrophic solar fixers independent of decaying organic substrates." },
+                    { text: "Obligate intracellular parasites", correct: false, reason: "Require live, metabolizing host cells for survival." },
+                    { text: "Lithoautotrophs", correct: false, reason: "Inorganic rock-oxidizing autotrophs." }
+                ],
+                summary: "Saprophytes (saprobes) are free-living decomposers specialized in metabolizing dead organic material."
             },
             {
                 question: "Which active transport mechanism chemically alters a nutrient molecule (e.g., phosphorylation) as it is transported across the membrane?",
-                options: ["Simple diffusion", "Facilitated transport", "Osmosis", "Group translocation"],
-                correct: 3,
-                explanation: "Group translocation is a form of active transport where a substance is chemically modified while being moved across the membrane."
+                options: [
+                    { text: "Simple diffusion", correct: false, reason: "Passive, non-carrier, non-concentrating movement down a chemical gradient." },
+                    { text: "Facilitated transport", correct: false, reason: "Passive carrier-mediated transport lacking chemical nutrient modification." },
+                    { text: "Osmosis", correct: false, reason: "Passive movement of solvent water across semipermeable barriers." },
+                    { text: "Group translocation", correct: true, reason: "Active, energy-dependent transport coupling trans-membrane translocation with covalent chemical alteration (e.g., phosphorylation)." }
+                ],
+                summary: "Group translocation is an active prokaryotic transport process that chemically alters substrates during import to prevent back-diffusion across the membrane."
             },
             {
                 question: "Which temperature classification encompasses bacteria that grow optimally between 20°C and 40°C, including normal human body temperature (~37°C)?",
-                options: ["Psychrophiles", "Mesophiles", "Thermophiles", "Hyperthermophiles"],
-                correct: 1,
-                explanation: "Mesophiles have optimal growth between 20°C and 40°C, encompassing human body temperature (37°C) and the vast majority of human pathogens."
+                options: [
+                    { text: "Psychrophiles", correct: false, reason: "Cold-adapted organisms growing optimally at or below 15°C." },
+                    { text: "Mesophiles", correct: true, reason: "Organisms with growth optima between 20°C and 40°C, encompassing human thermal physiology." },
+                    { text: "Thermophiles", correct: false, reason: "Heat-adapted organisms thriving between 45°C and 80°C." },
+                    { text: "Hyperthermophiles", correct: false, reason: "Extreme thermophilic organisms thriving above 80°C." }
+                ],
+                summary: "Mesophiles exhibit optimal growth kinetics between 20°C and 40°C, making them uniquely adapted to colonize and infect human hosts (37°C)."
             },
             {
                 question: "What term describes cold-loving microorganisms that have an optimal growth temperature at or below 15°C and can grow at 0°C?",
-                options: ["Thermophiles", "Acidophiles", "Psychrophiles", "Mesophiles"],
-                correct: 2,
-                explanation: "Psychrophiles are cold-adapted organisms whose optimal growth occurs at 15°C or lower."
+                options: [
+                    { text: "Thermophiles", correct: false, reason: "High-temperature organisms requiring heat for enzyme kinetics." },
+                    { text: "Acidophiles", correct: false, reason: "Low-pH-adapted organisms independent of thermal preferences." },
+                    { text: "Psychrophiles", correct: true, reason: "Obligate cold-adapted microbes with optimal reproduction at 15°C or lower." },
+                    { text: "Mesophiles", correct: false, reason: "Moderate-temperature organisms with 20–40°C optima." }
+                ],
+                summary: "Psychrophiles are obligate cold-loving microbes with optimal metabolic and division rates occurring at or below 15°C."
             },
             {
                 question: "Which group of organisms thrives in hot environments, with optimal growth occurring at temperatures exceeding 45°C to 80°C?",
-                options: ["Thermophiles", "Psychrophiles", "Mesophiles", "Halophiles"],
-                correct: 0,
-                explanation: "Thermophiles are heat-adapted organisms whose optimal growth occurs at elevated temperatures, typically above 45°C."
+                options: [
+                    { text: "Thermophiles", correct: true, reason: "Adapted to elevated thermal ranges, exhibiting enzymatic stability between 45°C and 80°C." },
+                    { text: "Psychrophiles", correct: false, reason: "Denatured and killed rapidly at elevated temperatures." },
+                    { text: "Mesophiles", correct: false, reason: "Experience thermal protein denaturation above 45°C." },
+                    { text: "Halophiles", correct: false, reason: "Defined by sodium chloride osmotic requirements, not temperature." }
+                ],
+                summary: "Thermophiles possess heat-stable enzymes and membrane adaptations allowing optimal physiological growth between 45°C and 80°C."
             },
             {
                 question: "What set of protective enzymes do aerobic organisms utilize to neutralize toxic reactive oxygen species (ROS)?",
                 options: [
-                    "Amylase, lipase, and protease",
-                    "Superoxide dismutase, peroxidase, and catalase",
-                    "DNA polymerase, ligase, and helicase",
-                    "Coagulase, kinase, and hyaluronidase"
+                    { text: "Amylase, lipase, and protease", correct: false, reason: "Digestive enzymes targeting starch, lipids, and proteins." },
+                    { text: "Superoxide dismutase, peroxidase, and catalase", correct: true, reason: "Detoxification triad that neutralizes reactive superoxide radicals (O2-) and hydrogen peroxide (H2O2)." },
+                    { text: "DNA polymerase, ligase, and helicase", correct: false, reason: "Nucleic acid replication and repair enzymes." },
+                    { text: "Coagulase, kinase, and hyaluronidase", correct: false, reason: "Bacterial exoenzymes involved in tissue invasion and clotting." }
                 ],
-                correct: 1,
-                explanation: "Superoxide dismutase (SOD), peroxidase, and catalase neutralize hazardous oxygen radicals (O2- and H2O2) into water and oxygen."
+                summary: "Aerobes survive oxidative environments by expressing superoxide dismutase (SOD), catalase, and peroxidase to detoxify toxic reactive oxygen intermediates."
             },
             {
                 question: "Why are obligate (strict) anaerobes killed or inhibited by exposure to atmospheric oxygen?",
                 options: [
-                    "They lack protective enzymes like superoxide dismutase and catalase to detoxify reactive oxygen byproducts",
-                    "Oxygen destroys their cytoplasmic 70S ribosomes immediately",
-                    "Oxygen causes their peptidoglycan cell walls to dissolve",
-                    "They lack a plasma membrane"
+                    { text: "They lack protective enzymes like superoxide dismutase and catalase to detoxify reactive oxygen byproducts", correct: true, reason: "Lacking SOD, catalase, and peroxidase, strict anaerobes accumulate lethal concentrations of toxic reactive oxygen radicals." },
+                    { text: "Oxygen destroys their cytoplasmic 70S ribosomes immediately", correct: false, reason: "Ribosomes remain structurally intact; death is mediated by broad cellular oxidative damage." },
+                    { text: "Oxygen causes their peptidoglycan cell walls to dissolve", correct: false, reason: "Cell walls are not chemically cleaved by molecular oxygen." },
+                    { text: "They lack a plasma membrane", correct: false, reason: "All bacteria possess functional cytoplasmic membranes." }
                 ],
-                correct: 0,
-                explanation: "Obligate anaerobes lack SOD and catalase/peroxidase; exposure to oxygen leads to lethal accumulation of reactive oxygen species."
+                summary: "Obligate anaerobes lack the detoxifying enzymatic machinery (superoxide dismutase and catalase), resulting in lethal oxidative damage in the presence of oxygen."
             },
             {
                 question: "How do facultative anaerobes behave when environmental oxygen is completely depleted?",
                 options: [
-                    "They immediately lyse and die",
-                    "They form endospores and remain dormant indefinitely",
-                    "They switch from aerobic respiration to fermentation or anaerobic respiration",
-                    "They rely on phototaxis to generate ATP"
+                    { text: "They immediately lyse and die", correct: false, reason: "Characteristics of obligate aerobes, not metabolically flexible facultative organisms." },
+                    { text: "They form endospores and remain dormant indefinitely", correct: false, reason: "Endospores form under starvation, whereas facultative cells continue active anaerobic division." },
+                    { text: "They switch from aerobic respiration to fermentation or anaerobic respiration", correct: true, reason: "Possess metabolic plasticity to conduct aerobic respiration with oxygen and switch to fermentation or anaerobic respiration without it." },
+                    { text: "They rely on phototaxis to generate ATP", correct: false, reason: "Heterotrophic facultative anaerobes do not generate energy from light." }
                 ],
-                correct: 2,
-                explanation: "Facultative anaerobes utilize oxygen when available, but switch to fermentation or anaerobic respiration when oxygen is absent."
+                summary: "Facultative anaerobes metabolize oxygen via aerobic respiration when present, but switch to anaerobic respiration or fermentation pathways when oxygen is absent."
             },
             {
                 question: "Which oxygen category describes bacteria that require oxygen for growth, but only at low concentrations below atmospheric levels (2–10% O2)?",
-                options: ["Obligate aerobes", "Facultative anaerobes", "Microaerophiles", "Aerotolerant anaerobes"],
-                correct: 2,
-                explanation: "Microaerophiles require oxygen at low concentrations (2–10%) and are damaged by atmospheric oxygen levels (21%)."
+                options: [
+                    { text: "Obligate aerobes", correct: false, reason: "Require standard 21% atmospheric oxygen concentrations." },
+                    { text: "Facultative anaerobes", correct: false, reason: "Grow across a broad range from 0% to 21% oxygen." },
+                    { text: "Microaerophiles", correct: true, reason: "Require oxygen at sub-atmospheric tensions (2–10%) and are inhibited by higher oxygen levels." },
+                    { text: "Aerotolerant anaerobes", correct: false, reason: "Do not use oxygen at all, though they tolerate its presence." }
+                ],
+                summary: "Microaerophiles require low oxygen tensions (2–10%) for respiration, lacking sufficient enzyme quantities to tolerate standard 21% atmospheric levels."
             },
             {
                 question: "Microorganisms that require high osmotic pressure and elevated salt (NaCl) concentrations to survive are known as:",
-                options: ["Halophiles", "Barophiles", "Psychrophiles", "Acidophiles"],
-                correct: 0,
-                explanation: "Halophiles are microbes adapted to high osmotic pressure requiring elevated salt concentrations for structural integrity."
+                options: [
+                    { text: "Halophiles", correct: true, reason: "Require high sodium chloride concentrations to maintain cell envelope integrity and osmotic balance." },
+                    { text: "Barophiles", correct: false, reason: "Require high hydrostatic pressures (deep ocean environments)." },
+                    { text: "Psychrophiles", correct: false, reason: "Defined by low temperature adaptations." },
+                    { text: "Acidophiles", correct: false, reason: "Defined by low pH adaptations." }
+                ],
+                summary: "Halophiles require hyper-saline environments (elevated NaCl concentrations) to sustain membrane stability and prevent osmotic collapse."
             },
             {
                 question: "What is the key differentiator between Synergism and Mutualism?",
                 options: [
-                    "Synergism involves obligate parasitism",
-                    "Synergism occurs only in viruses",
-                    "Synergism is an antagonistic interaction",
-                    "Synergism is a non-symbiotic cooperation where organisms benefit together but are not interdependent for survival"
+                    { text: "Synergism involves obligate parasitism", correct: false, reason: "Parasitism involves harm to one partner, whereas synergism is mutually beneficial." },
+                    { text: "Synergism occurs only in viruses", correct: false, reason: "Synergism is an ecological relationship between cellular microbial organisms." },
+                    { text: "Synergism is an antagonistic interaction", correct: false, reason: "Antagonism is inhibitory; synergism is cooperative." },
+                    { text: "Synergism is a non-symbiotic cooperation where organisms benefit together but are not interdependent for survival", correct: true, reason: "Mutualism is an obligate symbiotic relationship required for survival, whereas synergism is a non-obligate cooperation where free-living organisms benefit mutually." }
                 ],
-                correct: 3,
-                explanation: "In mutualism, organisms are interdependent for survival. In synergism, organisms cooperate and share nutrients, but their association is non-obligatory."
+                summary: "Mutualism represents an obligate symbiotic dependence, whereas synergism is a non-symbiotic cooperation where organisms share nutrients for mutual benefit without being dependent for survival."
             }
         ];
 
@@ -559,7 +701,11 @@
         }
 
         function renderQuiz() {
-            activeQuestions = shuffleArray(JSON.parse(JSON.stringify(quizData)));
+            const rawCopy = JSON.parse(JSON.stringify(quizData));
+            rawCopy.forEach(q => {
+                q.options = shuffleArray(q.options);
+            });
+            activeQuestions = shuffleArray(rawCopy);
             currentAnswers = new Array(activeQuestions.length).fill(null);
 
             const container = document.getElementById('quizContainer');
@@ -576,7 +722,7 @@
                         <button class="option-btn" 
                                 id="btn-${index}-${optIdx}" 
                                 onclick="selectOption(${index}, ${optIdx})">
-                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
+                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt.text}
                         </button>
                     `;
                 });
@@ -600,13 +746,14 @@
 
             currentAnswers[qIdx] = selectedOptIdx;
             const q = activeQuestions[qIdx];
-            const isCorrect = selectedOptIdx === q.correct;
+            const chosenOption = q.options[selectedOptIdx];
+            const isCorrect = chosenOption.correct;
 
-            q.options.forEach((_, optIdx) => {
+            q.options.forEach((opt, optIdx) => {
                 const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
                 btn.disabled = true;
 
-                if (optIdx === q.correct) {
+                if (opt.correct) {
                     btn.classList.add('correct-choice');
                 } else if (optIdx === selectedOptIdx) {
                     btn.classList.add('incorrect-choice');
@@ -615,21 +762,41 @@
                 }
             });
 
+            let rationaleHTML = '<ul class="rationale-list">';
+            q.options.forEach((opt, optIdx) => {
+                const letter = String.fromCharCode(65 + optIdx);
+                rationaleHTML += `
+                    <li class="rationale-item">
+                        <strong>${letter}) ${opt.text}:</strong> ${opt.reason}
+                    </li>
+                `;
+            });
+            rationaleHTML += '</ul>';
+
             const expBox = document.getElementById(`exp-${qIdx}`);
-            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
-            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
+            expBox.className = `explanation-box visible ${isCorrect ? 'correct' : 'incorrect'}`;
+            expBox.innerHTML = `
+                <div class="status-banner ${isCorrect ? 'correct' : 'incorrect'}">
+                    ${isCorrect ? 'Correct!' : 'Incorrect.'}
+                </div>
+                <div class="explanation-summary">
+                    ${q.summary}
+                </div>
+                ${rationaleHTML}
+            `;
 
             updateScore();
         }
 
         function updateScore() {
             const answeredCount = currentAnswers.filter(a => a !== null).length;
-            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
-                return ans === activeQuestions[idx].correct ? acc + 1 : acc;
+            const correctCount = currentAnswers.reduce((acc, selectedOptIdx, idx) => {
+                if (selectedOptIdx === null) return acc;
+                return activeQuestions[idx].options[selectedOptIdx].correct ? acc + 1 : acc;
             }, 0);
 
             const percentage = Math.round((correctCount / activeQuestions.length) * 100);
-            
+
             document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${activeQuestions.length} (${percentage}%)`;
             document.getElementById('progressBar').style.width = `${(answeredCount / activeQuestions.length) * 100}%`;
 
@@ -646,11 +813,11 @@
             finalScore.innerText = `${correctCount} / ${activeQuestions.length} (${percentage}%)`;
 
             if (percentage >= 90) {
-                feedback.innerText = "Mastery demonstrated! You have thoroughly covered all Quiz 2 concepts.";
+                feedback.innerText = "Mastery demonstrated across all Quiz 2 cytology, virulence, and environmental physiology concepts.";
             } else if (percentage >= 75) {
-                feedback.innerText = "Solid job! Review unusual bacteria, shapes, and growth factors before testing.";
+                feedback.innerText = "Proficient comprehension. Review flagged questions on unusual bacteria and oxygen enzymes.";
             } else {
-                feedback.innerText = "Good practice run. Review shapes, cluster division planes, and virulence factors, then retake the quiz!";
+                feedback.innerText = "Recommended review of unusual bacterial envelopes, cell arrangements, and environmental factors.";
             }
 
             summaryCard.classList.add('visible');
