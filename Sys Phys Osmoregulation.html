@@ -453,7 +453,7 @@
             {
                 question: "While both conditions can present with severe ECF hyperosmolality, what is the primary biochemical solute difference between diabetes insipidus and uncontrolled diabetes mellitus?",
                 options: [
-                    { text: "Diabetes insipidus is driven by excess sodium (hypernatremia); diabetes mellitus is driven by excess glucose (hyperglycemia)", correct: true, why: "A) Incorrect/Correct. Diabetes insipidus causes hypernatremia via water loss, whereas uncontrolled diabetes mellitus causes hyperosmolality via massive circulating glucose." },
+                    { text: "Diabetes insipidus is driven by excess sodium (hypernatremia); diabetes mellitus is driven by excess glucose (hyperglycemia)", correct: true, why: "A) Correct. Diabetes insipidus causes hypernatremia via water loss, whereas uncontrolled diabetes mellitus causes hyperosmolality via massive circulating glucose." },
                     { text: "Diabetes insipidus is driven by excess albumin; diabetes mellitus is driven by excess urea", correct: false, why: "B) Incorrect. Albumin and urea are not the primary osmotic drivers in these disorders." },
                     { text: "Diabetes insipidus is driven by excess potassium; diabetes mellitus is driven by excess ketones", correct: false, why: "C) Incorrect. Potassium is intracellular; ketones are secondary." },
                     { text: "Diabetes insipidus is driven by excess bilirubin; diabetes mellitus is driven by excess calcium", correct: false, why: "D) Incorrect. Bilirubin and calcium are unrelated to these osmotic states." }
@@ -614,8 +614,8 @@
 
         let currentScore = 0;
         let answeredQuestions = new Set();
-        const totalQuestions = quizData.length;
-        
+        let totalQuestions = quizData.length;
+
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -624,9 +624,10 @@
         }
 
         function renderQuiz() {
+            totalQuestions = quizData.length;
             shuffleArray(quizData);
             quizData.forEach(q => shuffleArray(q.options));
-            
+
             const quizContainer = document.getElementById('quiz-container');
             quizContainer.innerHTML = '';
             currentScore = 0;
@@ -679,7 +680,8 @@
             if (answeredQuestions.has(qIndex)) return;
             answeredQuestions.add(qIndex);
             
-            const allButtons = document.getElementById(`q-${qIndex}`).querySelectorAll('.option-btn');
+            const card = document.getElementById(`q-${qIndex}`);
+            const allButtons = card.querySelectorAll('.option-btn');
             allButtons.forEach((btn, idx) => {
                 btn.disabled = true;
                 if (data.options[idx].correct) {
@@ -700,14 +702,14 @@
                 currentScore++;
                 expDiv.innerHTML = `
                     <div class="explanation-banner correct-banner">Correct!</div>
-                    <div class="takeaway-text"><strong>Core Takeaway:</strong> ${data.explanation}</div>
+                    <div class="takeaway-text"><strong>Core Takeaway:</strong> ${data.takeaway}</div>
                     ${rationaleHTML}
                 `;
             } else {
                 btnElement.classList.add('incorrect');
                 expDiv.innerHTML = `
                     <div class="explanation-banner incorrect-banner">Incorrect.</div>
-                    <div class="takeaway-text"><strong>Core Takeaway:</strong> ${data.explanation}</div>
+                    <div class="takeaway-text"><strong>Core Takeaway:</strong> ${data.takeaway}</div>
                     ${rationaleHTML}
                 `;
             }
