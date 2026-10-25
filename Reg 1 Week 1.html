@@ -131,7 +131,7 @@
 
         .explanation {
             margin-top: 1.25rem;
-            padding: 1rem;
+            padding: 1.25rem;
             border-radius: 6px;
             background-color: #262626;
             border-left: 4px solid var(--accent);
@@ -141,18 +141,48 @@
             animation: fadeIn 0.3s ease-in;
         }
 
-        .explanation strong {
-            display: block;
-            margin-bottom: 0.4rem;
-            font-size: 1.05rem;
+        .status-banner {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            padding: 6px 12px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
-        .explanation .correct-text {
+        .status-banner.correct {
+            background-color: var(--correct-bg);
             color: var(--correct-border);
+            border: 1px solid var(--correct-border);
         }
 
-        .explanation .incorrect-text {
+        .status-banner.incorrect {
+            background-color: var(--incorrect-bg);
             color: var(--incorrect-border);
+            border: 1px solid var(--incorrect-border);
+        }
+
+        .explanation-summary {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .rationale-list {
+            list-style-type: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            border-top: 1px solid #383838;
+            padding-top: 0.75rem;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            color: #cccccc;
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
         }
 
         #summary-card {
@@ -210,14 +240,14 @@
 
     <header>
         <div class="header-title">Reg 1 Week 1 Practice Quiz</div>
-        <div id="score-header">Score: 0 / 30 (0%)</div>
+        <div id="score-header">Score: 0 / 20 (0%)</div>
     </header>
 
     <div class="container">
         <div id="quiz-container"></div>
         <div id="summary-card">
             <h2>Quiz Complete!</h2>
-            <div class="score-display" id="final-score-display">0 / 30 (0%)</div>
+            <div class="score-display" id="final-score-display">0 / 20 (0%)</div>
             <p id="final-feedback"></p>
             <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
@@ -228,302 +258,202 @@
             {
                 question: "Which of the following structures constitutes the primary neurovascular content traversing the triangular space?",
                 options: [
-                    { text: "Axillary nerve", correct: false },
-                    { text: "Posterior humeral circumflex artery", correct: false },
-                    { text: "Circumflex scapular artery", correct: true },
-                    { text: "Radial nerve", correct: false }
+                    { text: "Axillary nerve", correct: false, explanation: "Incorrect. The axillary nerve travels through the quadrangular space." },
+                    { text: "Posterior humeral circumflex artery", correct: false, explanation: "Incorrect. Accompanies the axillary nerve through the quadrangular space." },
+                    { text: "Circumflex scapular artery", correct: true, explanation: "Correct. The circumflex scapular artery passes through the triangular space." },
+                    { text: "Radial nerve", correct: false, explanation: "Incorrect. Travels through the triangular interval." }
                 ],
-                explanation: "The circumflex scapular artery passes through the triangular space to enter the infraspinatus fossa and participate in the scapular anastomotic network."
+                concept: "The circumflex scapular artery passes through the triangular space to enter the infraspinatus fossa and participate in the scapular anastomotic network."
             },
             {
                 question: "Which four anatomical boundaries define the borders of the quadrangular space?",
                 options: [
-                    { text: "Long head of triceps brachii, teres minor, teres major, and humerus", correct: true },
-                    { text: "Lateral head of triceps brachii, subscapularis, supraspinatus, and scapula", correct: false },
-                    { text: "Long head of triceps brachii, infraspinatus, teres major, and clavicle", correct: false },
-                    { text: "Medial head of triceps brachii, deltoid, teres minor, and humerus", correct: false }
+                    { text: "Long head of triceps brachii, teres minor, teres major, and humerus", correct: true, explanation: "Correct. Bounded by teres minor, teres major, long head of triceps, and humeral surgical neck." },
+                    { text: "Lateral head of triceps brachii, subscapularis, supraspinatus, and scapula", correct: false, explanation: "Incorrect boundary combination." },
+                    { text: "Long head of triceps brachii, infraspinatus, teres major, and clavicle", correct: false, explanation: "Incorrect boundary combination." },
+                    { text: "Medial head of triceps brachii, deltoid, teres minor, and humerus", correct: false, explanation: "Incorrect boundary combination." }
                 ],
-                explanation: "The quadrangular space is bounded superiorly by teres minor, inferiorly by teres major, medially by the long head of triceps brachii, and laterally by the surgical neck of the humerus."
+                concept: "The quadrangular space is bounded superiorly by teres minor, inferiorly by teres major, medially by the long head of triceps brachii, and laterally by the surgical neck of the humerus."
             },
             {
                 question: "What specific neurovascular bundle traverses the quadrangular space?",
                 options: [
-                    { text: "Radial nerve and profunda brachii artery", correct: false },
-                    { text: "Suprascapular nerve and suprascapular artery", correct: false },
-                    { text: "Thoracodorsal nerve and subscapular artery", correct: false },
-                    { text: "Axillary nerve and posterior humeral circumflex artery", correct: true }
+                    { text: "Radial nerve and profunda brachii artery", correct: false, explanation: "Incorrect. Traverses the triangular interval." },
+                    { text: "Suprascapular nerve and suprascapular artery", correct: false, explanation: "Incorrect. Passes through the suprascapular notch / over the superior transverse scapular ligament." },
+                    { text: "Thoracodorsal nerve and subscapular artery", correct: false, explanation: "Incorrect. Found along the posterior axillary wall." },
+                    { text: "Axillary nerve and posterior humeral circumflex artery", correct: true, explanation: "Correct. Both structures wind around the surgical neck of the humerus through the quadrangular space." }
                 ],
-                explanation: "The quadrangular space transmits both the axillary nerve and the posterior humeral circumflex artery as they wind around the surgical neck of the humerus."
+                concept: "The quadrangular space transmits both the axillary nerve and the posterior humeral circumflex artery as they wind around the surgical neck of the humerus."
             },
             {
                 question: "Which three structures form the precise anatomical boundaries of the triangular space?",
                 options: [
-                    { text: "Teres major, lateral head of triceps brachii, and humerus", correct: false },
-                    { text: "Teres minor, teres major, and long head of triceps brachii", correct: true },
-                    { text: "Supraspinatus, infraspinatus, and surgical neck of the humerus", correct: false },
-                    { text: "Serratus anterior, subscapularis, and medial border of the scapula", correct: false }
+                    { text: "Teres major, lateral head of triceps brachii, and humerus", correct: false, explanation: "Incorrect borders." },
+                    { text: "Teres minor, teres major, and long head of triceps brachii", correct: true, explanation: "Correct. Superiorly teres minor, inferiorly teres major, laterally long head of triceps." },
+                    { text: "Supraspinatus, infraspinatus, and surgical neck of the humerus", correct: false, explanation: "Incorrect borders." },
+                    { text: "Serratus anterior, subscapularis, and medial border of the scapula", correct: false, explanation: "Incorrect borders." }
                 ],
-                explanation: "The triangular space is bounded superiorly by teres minor, inferiorly by teres major, and laterally by the long head of triceps brachii."
+                concept: "The triangular space is bounded superiorly by teres minor, inferiorly by teres major, and laterally by the long head of triceps brachii."
             },
             {
                 question: "What structural boundary differentiates the four-sided quadrangular space from the adjacent triangular space?",
                 options: [
-                    { text: "The presence of the humerus as the lateral boundary", correct: true },
-                    { text: "The inclusion of the coracobrachialis muscle", correct: false },
-                    { text: "The replacement of teres major with latissimus dorsi", correct: false },
-                    { text: "The presence of the spinal accessory nerve", correct: false }
+                    { text: "The presence of the humerus as the lateral boundary", correct: true, explanation: "Correct. The humerus acts as the lateral border for the quadrangular space, turning a triangular space into a quadrangular one." },
+                    { text: "The inclusion of the coracobrachialis muscle", correct: false, explanation: "Incorrect. Coracobrachialis is anterior." },
+                    { text: "The replacement of teres major with latissimus dorsi", correct: false, explanation: "Incorrect. Teres major bounds both spaces." },
+                    { text: "The presence of the spinal accessory nerve", correct: false, explanation: "Incorrect. Innervates trapezius." }
                 ],
-                explanation: "Both spaces share teres minor, teres major, and the long head of triceps brachii; the quadrangular space extends further laterally to incorporate the shaft/surgical neck of the humerus as its lateral border."
+                concept: "Both spaces share teres minor, teres major, and the long head of triceps brachii; the quadrangular space extends further laterally to incorporate the shaft/surgical neck of the humerus as its lateral border."
             },
             {
                 question: "During lab identification of an isolated neurovascular space, the circumflex scapular artery is highlighted. What space is being queried?",
                 options: [
-                    { text: "Quadrangular space", correct: false },
-                    { text: "Triangular interval", correct: false },
-                    { text: "Triangular space", correct: true },
-                    { text: "Clavipectoral triangle", correct: false }
+                    { text: "Quadrangular space", correct: false, explanation: "Incorrect. Contains axillary nerve and posterior humeral circumflex artery." },
+                    { text: "Triangular interval", correct: false, explanation: "Incorrect. Contains radial nerve and profunda brachii artery." },
+                    { text: "Triangular space", correct: true, explanation: "Correct. Contains the circumflex scapular artery." },
+                    { text: "Clavipectoral triangle", correct: false, explanation: "Incorrect." }
                 ],
-                explanation: "The circumflex scapular artery is the direct vascular content of the triangular space, winding around the lateral border of the scapula."
+                concept: "The circumflex scapular artery is the direct vascular content of the triangular space, winding around the lateral border of the scapula."
             },
             {
                 question: "During dissection of the posterior thoracic region, which muscle sits superficially and must be reflected to expose the underlying rhomboids and levator scapulae?",
                 options: [
-                    { text: "Latissimus dorsi", correct: false },
-                    { text: "Trapezius", correct: true },
-                    { text: "Serratus anterior", correct: false },
-                    { text: "Infraspinatus", correct: false }
+                    { text: "Latissimus dorsi", correct: false, explanation: "Incorrect. Latissimus dorsi is inferior and lateral." },
+                    { text: "Trapezius", correct: true, explanation: "Correct. Trapezius covers the deep posterior muscles and must be reflected." },
+                    { text: "Serratus anterior", correct: false, explanation: "Incorrect. Located on the anterolateral chest wall." },
+                    { text: "Infraspinatus", correct: false, explanation: "Incorrect. Rotator cuff muscle on scapular dorsum." }
                 ],
-                explanation: "Trapezius forms the superficial layer of the posterior axio-appendicular group. It must be reflected to expose the deep layer composed of the rhomboids and levator scapulae."
+                concept: "Trapezius forms the superficial layer of the posterior axio-appendicular group. It must be reflected to expose the deep layer composed of the rhomboids and levator scapulae."
             },
             {
                 question: "When dissecting the anterior chest wall from superficial to deep, which muscle lies directly superficial to pectoralis minor and subclavius?",
                 options: [
-                    { text: "Serratus anterior", correct: false },
-                    { text: "Pectoralis major", correct: true },
-                    { text: "Coracobrachialis", correct: false },
-                    { text: "Subscapularis", correct: false }
+                    { text: "Serratus anterior", correct: false, explanation: "Incorrect. Located on ribs." },
+                    { text: "Pectoralis major", correct: true, explanation: "Correct. Pectoralis major is the superficial anterior chest muscle." },
+                    { text: "Coracobrachialis", correct: false, explanation: "Incorrect. Arm muscle." },
+                    { text: "Subscapularis", correct: false, explanation: "Incorrect. Anterior scapular fossa muscle." }
                 ],
-                explanation: "Pectoralis major forms the superficial anterior axio-appendicular layer and must be detached or reflected to reveal the underlying deep structures, pectoralis minor and subclavius."
+                concept: "Pectoralis major forms the superficial anterior axio-appendicular layer and must be detached or reflected to reveal the underlying deep structures, pectoralis minor and subclavius."
             },
             {
                 question: "Which of the following muscles is categorized as a deep posterior axio-appendicular muscle?",
                 options: [
-                    { text: "Trapezius", correct: false },
-                    { text: "Latissimus dorsi", correct: false },
-                    { text: "Levator scapulae", correct: true },
-                    { text: "Teres major", correct: false }
+                    { text: "Trapezius", correct: false, explanation: "Incorrect. Superficial posterior muscle." },
+                    { text: "Latissimus dorsi", correct: false, explanation: "Incorrect. Superficial posterior muscle." },
+                    { text: "Levator scapulae", correct: true, explanation: "Correct. Levator scapulae and rhomboids form the deep posterior layer." },
+                    { text: "Teres major", correct: false, explanation: "Incorrect. Scapulohumeral muscle." }
                 ],
-                explanation: "The deep posterior axio-appendicular muscles are levator scapulae, rhomboid minor, and rhomboid major. Trapezius and latissimus dorsi are superficial extrinsic muscles."
+                concept: "The deep posterior axio-appendicular muscles are levator scapulae, rhomboid minor, and rhomboid major. Trapezius and latissimus dorsi are superficial extrinsic muscles."
             },
             {
                 question: "What is the complete origin of the trapezius muscle?",
                 options: [
-                    { text: "Medial third of superior nuchal line, EOP, nuchal ligament, and SPs C7-T12", correct: true },
-                    { text: "Entire superior nuchal line, EOP, and SPs C1-T12", correct: false },
-                    { text: "Transverse processes of C1-C4 and spinous processes of C7-T5", correct: false },
-                    { text: "Lateral third of clavicle, acromion, and spine of scapula", correct: false }
+                    { text: "Medial third of superior nuchal line, EOP, nuchal ligament, and SPs C7-T12", correct: true, explanation: "Correct. Matches medial 1/3 nuchal line, EOP, nuchal ligament, and C7-T12 spinous processes." },
+                    { text: "Entire superior nuchal line, EOP, and SPs C1-T12", correct: false, explanation: "Incorrect. Only medial 1/3 of superior nuchal line." },
+                    { text: "Transverse processes of C1-C4 and spinous processes of C7-T5", correct: false, explanation: "Incorrect origin description." },
+                    { text: "Lateral third of clavicle, acromion, and spine of scapula", correct: false, explanation: "Incorrect. These are the insertion sites." }
                 ],
-                explanation: "The trapezius originates from the medial third of the superior nuchal line, external occipital protuberance (EOP), nuchal ligament, and spinous processes of C7 through T12."
+                concept: "The trapezius originates from the medial third of the superior nuchal line, external occipital protuberance (EOP), nuchal ligament, and spinous processes of C7 through T12."
             },
             {
                 question: "Which nerve provides motor innervation to the trapezius muscle?",
                 options: [
-                    { text: "Dorsal scapular nerve (C5)", correct: false },
-                    { text: "Thoracodorsal nerve (C6-C8)", correct: false },
-                    { text: "Axillary nerve (C5-C6)", correct: false },
-                    { text: "Spinal accessory nerve (CN XI)", correct: true }
+                    { text: "Dorsal scapular nerve (C5)", correct: false, explanation: "Incorrect. Innervates levator scapulae and rhomboids." },
+                    { text: "Thoracodorsal nerve (C6-C8)", correct: false, explanation: "Incorrect. Innervates latissimus dorsi." },
+                    { text: "Axillary nerve (C5-C6)", correct: false, explanation: "Incorrect. Innervates deltoid and teres minor." },
+                    { text: "Spinal accessory nerve (CN XI)", correct: true, explanation: "Correct. Spinal accessory nerve provides motor innervation to trapezius." }
                 ],
-                explanation: "Motor supply to the trapezius is provided by the spinal accessory nerve (CN XI), while sensory sensation (proprioception/pain) is carried by C3 and C4."
+                concept: "Motor supply to the trapezius is provided by the spinal accessory nerve (CN XI), while sensory sensation (proprioception/pain) is carried by C3 and C4."
             },
             {
                 question: "Superior rotation of the scapular glenoid cavity is achieved through the combined co-contraction of which trapezius fibers?",
                 options: [
-                    { text: "Middle fibers and levator scapulae", correct: false },
-                    { text: "Descending and ascending fibers", correct: true },
-                    { text: "Middle and ascending fibers", correct: false },
-                    { text: "Descending fibers only", correct: false }
+                    { text: "Middle fibers and levator scapulae", correct: false, explanation: "Incorrect combination." },
+                    { text: "Descending and ascending fibers", correct: true, explanation: "Correct. Descending and ascending trapezius fibers co-contract to superiorly rotate the glenoid cavity." },
+                    { text: "Middle and ascending fibers", correct: false, explanation: "Incorrect combination." },
+                    { text: "Descending fibers only", correct: false, explanation: "Incorrect. Descending fibers alone elevate." }
                 ],
-                explanation: "The descending (superior) fibers pull the lateral scapula upward while the ascending (inferior) fibers pull the medial spine downward, co-contracting to rotate the glenoid cavity upward."
+                concept: "The descending (superior) fibers pull the lateral scapula upward while the ascending (inferior) fibers pull the medial spine downward, co-contracting to rotate the glenoid cavity upward."
             },
             {
                 question: "What is the primary action of the middle fibers of the trapezius muscle?",
                 options: [
-                    { text: "Elevates the scapula", correct: false },
-                    { text: "Depresses the scapula", correct: false },
-                    { text: "Protracts the scapula", correct: false },
-                    { text: "Retracts the scapula", correct: true }
+                    { text: "Elevates the scapula", correct: false, explanation: "Incorrect. Action of descending fibers." },
+                    { text: "Depresses the scapula", correct: false, explanation: "Incorrect. Action of ascending fibers." },
+                    { text: "Protracts the scapula", correct: false, explanation: "Incorrect. Action of serratus anterior/pectoralis minor." },
+                    { text: "Retracts the scapula", correct: true, explanation: "Correct. Middle fibers retract (adduct) the scapula." }
                 ],
-                explanation: "The horizontal middle fibers of the trapezius pull the medial border of the scapula toward the midline, producing retraction (adduction)."
+                concept: "The horizontal middle fibers of the trapezius pull the medial border of the scapula toward the midline, producing retraction (adduction)."
             },
             {
                 question: "Where does the latissimus dorsi muscle insert on the humerus?",
                 options: [
-                    { text: "Greater tubercle", correct: false },
-                    { text: "Floor and medial lip of the intertubercular groove", correct: true },
-                    { text: "Lesser tubercle", correct: false },
-                    { text: "Deltoid tuberosity", correct: false }
+                    { text: "Greater tubercle", correct: false, explanation: "Incorrect. Rotator cuff insertion site." },
+                    { text: "Floor and medial lip of the intertubercular groove", correct: true, explanation: "Correct. Latissimus dorsi inserts into the floor of the bicipital groove." },
+                    { text: "Lesser tubercle", correct: false, explanation: "Incorrect. Subscapularis insertion." },
+                    { text: "Deltoid tuberosity", correct: false, explanation: "Incorrect. Deltoid insertion." }
                 ],
-                explanation: "The latissimus dorsi winds around teres major to insert directly into the floor and adjacent medial lip of the intertubercular (bicipital) groove."
+                concept: "The latissimus dorsi winds around teres major to insert directly into the floor and adjacent medial lip of the intertubercular (bicipital) groove."
             },
             {
                 question: "When the upper limbs are fixed, such as during climbing or performing chin-ups, what is the primary action of the latissimus dorsi?",
                 options: [
-                    { text: "Raises the trunk toward the arms", correct: true },
-                    { text: "Protracts the scapula", correct: false },
-                    { text: "Elevates the clavicle", correct: false },
-                    { text: "Superiorly rotates the glenoid cavity", correct: false }
+                    { text: "Raises the trunk toward the arms", correct: true, explanation: "Correct. With arms fixed, latissimus dorsi acts in reverse to pull the trunk upward." },
+                    { text: "Protracts the scapula", correct: false, explanation: "Incorrect." },
+                    { text: "Elevates the clavicle", correct: false, explanation: "Incorrect." },
+                    { text: "Superiorly rotates the glenoid cavity", correct: false, explanation: "Incorrect." }
                 ],
-                explanation: "When the arms are fixed to an overhead bar or rock face, contraction of the latissimus dorsi pulls the mobile pelvis and trunk upward toward the humerus."
+                concept: "When the arms are fixed to an overhead bar or rock face, contraction of the latissimus dorsi pulls the mobile pelvis and trunk upward toward the humerus."
             },
             {
                 question: "Which nerve innervates the latissimus dorsi muscle?",
                 options: [
-                    { text: "Dorsal scapular nerve (C5)", correct: false },
-                    { text: "Long thoracic nerve (C5-C7)", correct: false },
-                    { text: "Thoracodorsal nerve (C6-C8)", correct: true },
-                    { text: "Lower subscapular nerve (C6-C7)", correct: false }
+                    { text: "Dorsal scapular nerve (C5)", correct: false, explanation: "Incorrect." },
+                    { text: "Long thoracic nerve (C5-C7)", correct: false, explanation: "Incorrect." },
+                    { text: "Thoracodorsal nerve (C6-C8)", correct: true, explanation: "Correct. Innervated exclusively by the thoracodorsal nerve." },
+                    { text: "Lower subscapular nerve (C6-C7)", correct: false, explanation: "Incorrect. Supplies teres major." }
                 ],
-                explanation: "The latissimus dorsi is innervated exclusively by the thoracodorsal nerve (C6, C7, C8), derived from the posterior cord."
-            },
-            {
-                question: "What is the origin of the levator scapulae muscle?",
-                options: [
-                    { text: "Spinous processes of C7-T1", correct: false },
-                    { text: "Costal junction of rib 1", correct: false },
-                    { text: "Spinous processes of T2-T5", correct: false },
-                    { text: "Transverse processes of C1-C4", correct: true }
-                ],
-                explanation: "Levator scapulae originates from the posterior tubercles of the transverse processes of vertebrae C1 through C4 and inserts into the superior medial border of the scapula."
-            },
-            {
-                question: "Regarding vertebral origins, how is rhomboid minor distinguished from rhomboid major?",
-                options: [
-                    { text: "Rhomboid minor originates superiorly at SPs C7-T1, whereas major originates inferiorly at SPs T2-T5", correct: true },
-                    { text: "Rhomboid minor is superficial to rhomboid major", correct: false },
-                    { text: "Rhomboid minor is deep to rhomboid major", correct: false },
-                    { text: "Rhomboid minor originates on TPs C1-C4, whereas major originates on SPs C7-T1", correct: false }
-                ],
-                explanation: "Minor sits superior to major: rhomboid minor originates from spinous processes C7-T1, while rhomboid major originates from spinous processes T2-T5."
-            },
-            {
-                question: "Which nerve innervates levator scapulae, rhomboid minor, and rhomboid major?",
-                options: [
-                    { text: "Long thoracic nerve", correct: false },
-                    { text: "Thoracodorsal nerve", correct: false },
-                    { text: "Dorsal scapular nerve", correct: true },
-                    { text: "Suprascapular nerve", correct: false }
-                ],
-                explanation: "The dorsal scapular nerve (C5 root) courses along the medial border of the scapula, providing motor innervation to levator scapulae, rhomboid minor, and rhomboid major."
-            },
-            {
-                question: "What nerve provides innervation to both the deltoid and the teres minor muscle?",
-                options: [
-                    { text: "Suprascapular nerve", correct: false },
-                    { text: "Axillary nerve", correct: true },
-                    { text: "Lower subscapular nerve", correct: false },
-                    { text: "Radial nerve", correct: false }
-                ],
-                explanation: "The axillary nerve (C5-C6) emerges from the quadrangular space to supply both the teres minor and the deltoid muscle."
-            },
-            {
-                question: "Where do all three portions of the deltoid muscle converge to insert?",
-                options: [
-                    { text: "Greater tubercle of the humerus", correct: false },
-                    { text: "Lesser tubercle of the humerus", correct: false },
-                    { text: "Intertubercular groove", correct: false },
-                    { text: "Deltoid tuberosity of the humerus", correct: true }
-                ],
-                explanation: "The anterior, middle, and posterior fibers of the deltoid converge distally to insert into the deltoid tuberosity on the lateral mid-shaft of the humerus."
-            },
-            {
-                question: "Which portion of the deltoid muscle produces arm flexion and medial rotation?",
-                options: [
-                    { text: "Anterior clavicular part", correct: true },
-                    { text: "Middle acromial part", correct: false },
-                    { text: "Posterior spinal part", correct: false },
-                    { text: "All three portions act identically", correct: false }
-                ],
-                explanation: "The anterior (clavicular) portion flexes and medially rotates the arm; the middle portion is a powerful abductor; the posterior portion extends and laterally rotates."
-            },
-            {
-                question: "Where does the teres major muscle insert, and what nerve innervates it?",
-                options: [
-                    { text: "Greater tubercle | Suprascapular nerve", correct: false },
-                    { text: "Medial lip of the intertubercular groove | Lower subscapular nerve", correct: true },
-                    { text: "Lesser tubercle | Upper subscapular nerve", correct: false },
-                    { text: "Deltoid tuberosity | Axillary nerve", correct: false }
-                ],
-                explanation: "Teres major originates from the inferior angle of the scapula, inserts into the medial lip of the bicipital groove, and is supplied by the lower subscapular nerve (C6-C7)."
+                concept: "The latissimus dorsi is innervated exclusively by the thoracodorsal nerve (C6, C7, C8), derived from the posterior cord."
             },
             {
                 question: "Which rotator cuff tendon is most commonly ruptured or subjected to degenerative impingement?",
                 options: [
-                    { text: "Subscapularis tendon", correct: false },
-                    { text: "Infraspinatus tendon", correct: false },
-                    { text: "Supraspinatus tendon", correct: true },
-                    { text: "Teres minor tendon", correct: false }
+                    { text: "Subscapularis tendon", correct: false, explanation: "Incorrect." },
+                    { text: "Infraspinatus tendon", correct: false, explanation: "Incorrect." },
+                    { text: "Supraspinatus tendon", correct: true, explanation: "Correct. Supraspinatus is the most commonly torn rotator cuff tendon." },
+                    { text: "Teres minor tendon", correct: false, explanation: "Incorrect." }
                 ],
-                explanation: "The supraspinatus tendon is the most commonly torn rotator cuff tendon due to continuous subacromial friction, repeated mechanical compression, and relatively poor blood supply."
+                concept: "The supraspinatus tendon is the most commonly torn rotator cuff tendon due to continuous subacromial friction, repeated mechanical compression, and relatively poor blood supply."
             },
             {
                 question: "What are the exact superior-to-inferior greater tubercle facet insertions for the rotator cuff tendons?",
                 options: [
-                    { text: "Supraspinatus to superior facet, Infraspinatus to middle facet, Teres minor to inferior facet", correct: true },
-                    { text: "Supraspinatus to lesser tubercle, Infraspinatus to greater tubercle, Teres minor to bicipital groove", correct: false },
-                    { text: "Supraspinatus to middle facet, Infraspinatus to superior facet, Teres minor to inferior facet", correct: false },
-                    { text: "Supraspinatus to inferior facet, Infraspinatus to middle facet, Teres minor to superior facet", correct: false }
+                    { text: "Supraspinatus to superior facet, Infraspinatus to middle facet, Teres minor to inferior facet", correct: true, explanation: "Correct. Superior facet = supraspinatus, middle = infraspinatus, inferior = teres minor." },
+                    { text: "Supraspinatus to lesser tubercle, Infraspinatus to greater tubercle, Teres minor to bicipital groove", correct: false, explanation: "Incorrect attachments." },
+                    { text: "Supraspinatus to middle facet, Infraspinatus to superior facet, Teres minor to inferior facet", correct: false, explanation: "Incorrect order." },
+                    { text: "Supraspinatus to inferior facet, Infraspinatus to middle facet, Teres minor to superior facet", correct: false, explanation: "Incorrect order." }
                 ],
-                explanation: "The greater tubercle displays three distinct facets from superior to inferior: superior facet (supraspinatus), middle facet (infraspinatus), and inferior facet (teres minor)."
+                concept: "The greater tubercle displays three distinct facets from superior to inferior: superior facet (supraspinatus), middle facet (infraspinatus), and inferior facet (teres minor)."
             },
             {
                 question: "Which two rotator cuff muscles share the primary functional action of lateral rotation of the humerus?",
                 options: [
-                    { text: "Supraspinatus and subscapularis", correct: false },
-                    { text: "Subscapularis and teres major", correct: false },
-                    { text: "Infraspinatus and teres minor", correct: true },
-                    { text: "Supraspinatus and infraspinatus", correct: false }
+                    { text: "Supraspinatus and subscapularis", correct: false, explanation: "Incorrect." },
+                    { text: "Subscapularis and teres major", correct: false, explanation: "Incorrect." },
+                    { text: "Infraspinatus and teres minor", correct: true, explanation: "Correct. Both infraspinatus and teres minor externally (laterally) rotate the humerus." },
+                    { text: "Supraspinatus and infraspinatus", correct: false, explanation: "Incorrect." }
                 ],
-                explanation: "Infraspinatus and teres minor attach to the posterior facets of the greater tubercle and act as the primary external (lateral) rotators of the arm."
-            },
-            {
-                question: "Where does the subscapularis muscle insert, and what is its primary action?",
-                options: [
-                    { text: "Greater tubercle | Abduction of the humerus", correct: false },
-                    { text: "Lesser tubercle | Medial rotation of the humerus", correct: true },
-                    { text: "Deltoid tuberosity | Extension of the humerus", correct: false },
-                    { text: "Medial lip of bicipital groove | Lateral rotation of the humerus", correct: false }
-                ],
-                explanation: "Subscapularis occupies the anterior subscapular fossa, inserts onto the lesser tubercle of the humerus, and acts as the primary medial (internal) rotator of the shoulder."
-            },
-            {
-                question: "Which nerve branches provide innervation to the subscapularis muscle?",
-                options: [
-                    { text: "Suprascapular nerve only", correct: false },
-                    { text: "Upper and lower subscapular nerves", correct: true },
-                    { text: "Axillary nerve only", correct: false },
-                    { text: "Thoracodorsal nerve only", correct: false }
-                ],
-                explanation: "The subscapularis receives dual innervation from both the upper subscapular nerve and lower subscapular nerve (C5-C7)."
-            },
-            {
-                question: "Which rule accurately differentiates the motor innervation of pectoralis major from pectoralis minor?",
-                options: [
-                    { text: "Pectoralis major receives lateral pectoral nerve only; pectoralis minor receives medial pectoral nerve only", correct: false },
-                    { text: "Pectoralis minor receives both nerves; pectoralis major receives lateral pectoral nerve only", correct: false },
-                    { text: "Pectoralis major receives both lateral and medial pectoral nerves; pectoralis minor receives medial pectoral nerve only", correct: true },
-                    { text: "Both muscles receive both lateral and medial pectoral nerves equally", correct: false }
-                ],
-                explanation: "Pectoralis major is supplied by both the lateral and medial pectoral nerves, whereas pectoralis minor is innervated exclusively by the medial pectoral nerve."
+                concept: "Infraspinatus and teres minor attach to the posterior facets of the greater tubercle and act as the primary external (lateral) rotators of the arm."
             },
             {
                 question: "Damage to the long thoracic nerve paralyzes serratus anterior and results in which clinical finding?",
                 options: [
-                    { text: "Ape hand deformity", correct: false },
-                    { text: "Wrist drop", correct: false },
-                    { text: "Winged scapula", correct: true },
-                    { text: "Popeye deformity", correct: false }
+                    { text: "Ape hand deformity", correct: false, explanation: "Incorrect. Median nerve lesion." },
+                    { text: "Wrist drop", correct: false, explanation: "Incorrect. Radial nerve lesion." },
+                    { text: "Winged scapula", correct: true, explanation: "Correct. Long thoracic nerve injury causes scapular winging." },
+                    { text: "Popeye deformity", correct: false, explanation: "Incorrect. Biceps tendon rupture." }
                 ],
-                explanation: "The long thoracic nerve (C5-C7) innervates serratus anterior. Loss of this muscle prevents the medial border and inferior angle of the scapula from being held flat against the thoracic cage, causing scapular winging."
+                concept: "The long thoracic nerve (C5-C7) innervates serratus anterior. Loss of this muscle prevents the medial border and inferior angle of the scapula from being held flat against the thoracic cage, causing scapular winging."
             }
         ];
 
@@ -531,7 +461,6 @@
         let answeredQuestions = new Set();
         const totalQuestions = quizData.length;
 
-        // Fisher-Yates shuffle algorithm
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -600,14 +529,35 @@
                 }
             });
 
-            const expDiv = document.getElementById(`exp-${qIndex}`);
+            if (!isCorrect) {
+                btnElement.classList.add('incorrect');
+            }
+
             if (isCorrect) {
                 currentScore++;
-                expDiv.innerHTML = `<strong class="correct-text">Correct!</strong> ${data.explanation}`;
-            } else {
-                btnElement.classList.add('incorrect');
-                expDiv.innerHTML = `<strong class="incorrect-text">Incorrect.</strong> ${data.explanation}`;
             }
+
+            const expDiv = document.getElementById(`exp-${qIndex}`);
+            const statusClass = isCorrect ? 'correct' : 'incorrect';
+            const statusText = isCorrect ? 'Correct!' : 'Incorrect.';
+
+            let rationalesHTML = '';
+            data.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <li class="rationale-item">
+                        <strong>${letter}) ${opt.text}</strong>: ${opt.explanation}
+                    </li>
+                `;
+            });
+
+            expDiv.innerHTML = `
+                <div class="status-banner ${statusClass}">${statusText}</div>
+                <div class="explanation-summary"><strong>Concept Explanation:</strong> ${data.concept}</div>
+                <ul class="rationale-list">
+                    ${rationalesHTML}
+                </ul>
+            `;
 
             expDiv.style.display = 'block';
             updateScoreDisplay();
