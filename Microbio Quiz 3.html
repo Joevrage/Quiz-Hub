@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microbio Quiz 3: Metabolism & Genetics</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #fff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #fff;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            background-color: #222222;
+            border-left: 4px solid var(--accent);
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .status-banner {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-banner.correct {
+            color: var(--correct-border);
+        }
+
+        .status-banner.incorrect {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: #e5e5e5;
+        }
+
+        .rationales-list {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5rem;
+        }
+
+        .rationales-list li {
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+            .question-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Microbiology Practice Quiz 3</h1>
+        <div class="subtitle">Lectures 4 & 5: Bacterial Metabolism & Genetics</div>
+    </header>
+
+    <div class="sticky-bar">
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+        <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+    </div>
+
+    <div class="container" id="quizContainer">
+        <!-- Dynamically rendered quiz cards will appear here -->
+    </div>
+
+    <script>
+        const rawQuizData = [
+            {
+                question: "Which metabolic preference dominates among bacteria when multiple carbon and energy sources are available?",
+                options: [
+                    { text: "Glucose is king; bacteria use glucose to the exclusion of others as long as it is available.", correct: true, why: "Correct! The lecture emphasizes that 'Glucose is king!', and bacteria utilize glucose preferentially over other carbon sources." },
+                    { text: "Lactose is always preferred over glucose for rapid ATP synthesis.", correct: false, why: "Incorrect. Disaccharides like lactose require secondary breakdown enzymes and are not preferred over glucose." },
+                    { text: "Amino acids are metabolized before carbohydrates in all bacterial species.", correct: false, why: "Incorrect. Carbohydrates, particularly glucose, are preferred energy substrates." },
+                    { text: "Fructose serves as the universal preferred electron acceptor.", correct: false, why: "Incorrect. Fructose is a monosaccharide, but glucose remains the primary preferred carbon/energy source." }
+                ],
+                explanation: "Glucose is the premier carbon and energy source for bacteria ('Glucose is king!'), utilized preferentially over secondary disaccharides or alternative carbon sources."
+            },
+            {
+                question: "What is the primary glycolytic pathway used by the majority of bacteria, and how many net ATP molecules does it typically yield?",
+                options: [
+                    { text: "Entner-Doudoroff pathway yielding 3 ATP", correct: false, why: "Incorrect. Entner-Doudoroff yields 3 ATP and is less common." },
+                    { text: "Embden-Meyerhof pathway yielding 4 ATP gross (or standard net glycolysis yield)", correct: true, why: "Correct! Embden-Meyerhof is the most common glycolytic pathway, producing pyruvate and ATP." },
+                    { text: "Krebs cycle yielding 38 ATP", correct: false, why: "Incorrect. Krebs cycle is not the primary glycolytic pathway." },
+                    { text: "Pentose phosphate pathway yielding 0 ATP", correct: false, why: "Incorrect. Pentose phosphate pathway generates NADPH and precursors, not primary glycolytic ATP." }
+                ],
+                explanation: "When in doubt, bacteria utilize the Embden-Meyerhof pathway for glycolysis, producing 2 pyruvates and 4 ATP."
+            },
+            {
+                question: "How does the Entner-Doudoroff pathway compare to the standard Embden-Meyerhof pathway in bacteria?",
+                options: [
+                    { text: "It is much more common and produces higher ATP yields.", correct: false, why: "Incorrect. Entner-Doudoroff is a lot less common and yields fewer ATP." },
+                    { text: "It is a less common pathway utilized by only a few types of bacteria and yields slightly less ATP.", correct: true, why: "Correct! The Entner-Doudoroff pathway produces 2 ethanol and 3 ATP, making it less common and slightly lower in ATP yield." },
+                    { text: "It functions exclusively in anaerobic respiration without producing pyruvate.", correct: false, why: "Incorrect. It still processes sugars into metabolic intermediates." },
+                    { text: "It operates only in eukaryotic mitochondria.", correct: false, why: "Incorrect. This is bacterial metabolism." }
+                ],
+                explanation: "The Entner-Doudoroff pathway is less common, utilized by specific bacteria, and yields 3 ATP (producing 2 ethanol)."
+            },
+            {
+                question: "In aerobic respiration, what serves as the final electron acceptor in the electron transport chain?",
+                options: [
+                    { text: "Molecular oxygen (O2)", correct: true, why: "Correct! Aerobic respiration uses O2 as the final electron acceptor." },
+                    { text: "Nitrate (NO3-)", correct: false, why: "Incorrect. Nitrate is used in anaerobic denitrification." },
+                    { text: "Sulfate (SO42-)", correct: false, why: "Incorrect. Sulfate is used in sulfate reduction (rotten egg smell)." },
+                    { text: "Carbon dioxide (CO2)", correct: false, why: "Incorrect. CO2 is a metabolic byproduct of decarboxylation." }
+                ],
+                explanation: "Aerobic respiration relies strictly on molecular oxygen (O2) as the final electron acceptor to generate water and maximize ATP production."
+            },
+            {
+                question: "Which anaerobic metabolic process is commonly associated with agricultural soil fertilization, nitrate processing, and gut flora?",
+                options: [
+                    { text: "Biological methanogenesis", correct: false, why: "Incorrect. Methanogenesis is associated with swamp gas and cow farts." },
+                    { text: "Denitrification", correct: true, why: "Correct! Denitrification involves agricultural nitrate utilization and gut flora processing." },
+                    { text: "Sulfate reduction", correct: false, why: "Incorrect. Sulfate reduction produces the rotten egg smell." },
+                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation produces ethanol and CO2." }
+                ],
+                explanation: "Denitrification is utilized in agriculture (nitrate soil fertilization) and by gut flora."
+            },
+            {
+                question: "What environmental indicator or sensory phenomenon is classically associated with bacterial sulfate reduction?",
+                options: [
+                    { text: "Sweet fruity aroma", correct: false, why: "Incorrect. That is typical of certain fermentation byproducts." },
+                    { text: "Rotten egg smell", correct: true, why: "Correct! Sulfate reduction produces hydrogen sulfide, resulting in a rotten egg smell." },
+                    { text: "Swamp gas bubbling", correct: false, why: "Incorrect. Swamp gas is associated with methanogenesis." },
+                    { text: "Bright green fluorescence", correct: false, why: "Incorrect. That is unrelated to sulfate reduction." }
+                ],
+                explanation: "Sulfate reduction generates hydrogen sulfide gas, which produces the characteristic rotten egg smell."
+            },
+            {
+                question: "What is biological methanogenesis classically referenced with in natural environments and microbial ecology?",
+                options: [
+                    { text: "Cow farts and swamp gas", correct: true, why: "Correct! Methanogenesis is highlighted in lecture as occurring in cow farts and swamp gas from the decay of organic matter." },
+                    { text: "Hot spring sulfur vents", correct: false, why: "Incorrect. That relates to sulfur/thermophilic metabolism." },
+                    { text: "Root nodule nitrogen fixation", correct: false, why: "Incorrect. That is nitrogen metabolism." },
+                    { text: "Lactic acid souring in milk", correct: false, why: "Incorrect. That is homolactic fermentation." }
+                ],
+                explanation: "Biological methanogenesis is driven by archaea/bacteria during the decay of organic matter in swamps and ruminant digestion ('cow farts and swamp gas')."
+            },
+            {
+                question: "What structural elements comprise bacterial genetic material organization?",
+                options: [
+                    { text: "Linear multi-chromosomal pairs enclosed in a true nuclear membrane", correct: false, why: "Incorrect. That describes eukaryotic cells." },
+                    { text: "A main chromosome (circular or linear) and/or extrachromosomal plasmids", correct: true, why: "Correct! Bacteria possess a main chromosome and often plasmids carrying non-essential advantageous traits." },
+                    { text: "Double-membraned nucleoli with histone octamers", correct: false, why: "Incorrect. Bacterial DNA lacks true histones and nuclear membranes." },
+                    { text: "RNA-only genomes enclosed in protein capsids", correct: false, why: "Incorrect. That describes RNA viruses." }
+                ],
+                explanation: "Bacterial genetic material consists of a main chromosome (typically circular or linear dsDNA) and can include plasmids."
+            },
+            {
+                question: "During bacterial DNA replication, how does the strand extension and scoching mechanism operate?",
+                options: [
+                    { text: "DNA polymerase III synthesizes exclusively in the 3' to 5' direction without primers.", correct: false, why: "Incorrect. Synthesis always proceeds in the 5' to 3' direction." },
+                    { text: "New sequences insert into existing templates by unwinding, wiggling in ('scooch in'), and integrating new base sequences.", correct: true, why: "Correct! The transcript describes replication as wiggling in to insert new sequence arrangements." },
+                    { text: "Plasmids undergo meiotic crossover identical to human gametes.", correct: false, why: "Incorrect. Bacteria reproduce asexually and lack meiosis." },
+                    { text: "Ribosomes directly translate DNA into cell walls.", correct: false, why: "Incorrect. Transcription intermediates bridge DNA and protein synthesis." }
+                ],
+                Explanation: "Bacterial replication mechanics involve precise strand unwinding and insertion of newly synthesized complementary sequences."
+            },
+            {
+                question: "Which of the following best describes the structural and regulatory features of bacterial operons (such as the lac operon)?",
+                options: [
+                    { text: "They contain introns and exons requiring extensive spliceosome processing in the nucleus.", correct: false, why: "Incorrect. Bacteria lack introns/exons and a nucleus." },
+                    { text: "They group functionally related genes under the control of a single promoter and operator region for coordinated regulation.", correct: true, why: "Correct! Operons allow polycistronic transcription and coordinated gene control." },
+                    { text: "They require permanent repression by cholesterol molecules.", correct: false, why: "Incorrect. Cholesterol is eukaryotic and unrelated to operon repression." },
+                    { text: "They undergo mitosis during binary fission.", correct: false, why: "Incorrect. Bacteria divide via binary transverse fission." }
+                ],
+                explanation: "Bacterial operons coordinate gene expression by grouping metabolic genes under shared operator and promoter control."
+            }
+        ];
+
+        let quizData = [];
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Deep clone and shuffle questions and their options (Two-Way Fisher-Yates Shuffle)
+            quizData = JSON.parse(JSON.stringify(rawQuizData));
+            shuffle(quizData);
+            quizData.forEach(q => {
+                // Attach original index to track correctness reliably after shuffling options
+                q.options.forEach((opt, idx) => opt.originalIndex = idx);
+                shuffle(q.options);
+            });
+
+            renderQuiz();
+            updateScore();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            quizData.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.dataset.questionIndex = qIndex;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHTML += `<button class="option-btn" onclick="selectAnswer(${qIndex}, ${oIndex}, ${opt.originalIndex})">${String.fromCharCode(65 + oIndex)}) ${opt.text}</button>`;
+                });
+
+                card.innerHTML = `
+                    <div class="question-title">Q${qIndex + 1}. ${q.question}</div>
+                    <div class="options-list" id="options-${qIndex}">
+                        ${optionsHTML}
+                    </div>
+                    <div class="feedback-box" id="feedback-${qIndex}">
+                        <div class="status-banner" id="status-${qIndex}"></div>
+                        <div class="explanation-text" id="expl-${qIndex}"></div>
+                        <ul class="rationales-list" id="rat-${qIndex}"></ul>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAnswer(qIndex, chosenOptionIndex, originalOptionIndex) {
+            const q = quizData[qIndex];
+            if (q.answered) return;
+            q.answered = true;
+            q.userChoice = originalOptionIndex;
+
+            const optionsContainer = document.getElementById(`options-${qIndex}`);
+            const buttons = optionsContainer.getElementsByClassName('option-btn');
+            
+            // Lock all options for this question
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+
+            // Check correctness
+            const isCorrect = (originalOptionIndex === q.correct);
+
+            // Style buttons
+            q.options.forEach((opt, idx) => {
+                if (opt.originalIndex === q.correct) {
+                    buttons[idx].classList.add('correct');
+                } else if (idx === chosenOptionIndex && !isCorrect) {
+                    buttons[idx].classList.add('incorrect');
+                }
+            });
+
+            // Show feedback box
+            const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+            const statusBanner = document.getElementById(`status-${qIndex}`);
+            const explText = document.getElementById(`expl-${qIndex}`);
+            const ratList = document.getElementById(`rat-${qIndex}`);
+
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                statusBanner.textContent = "Correct!";
+                statusBanner.className = "status-banner correct";
+            } else {
+                statusBanner.textContent = "Incorrect.";
+                statusBanner.className = "status-banner incorrect";
+            }
+
+            explText.textContent = q.explanation;
+
+            let ratHTML = '';
+            q.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                ratHTML += `<li><strong>${letter}) ${opt.text}</strong>: ${opt.why}</li>`;
+            });
+            ratList.innerHTML = ratHTML;
+
+            updateScore();
+        }
+
+        function updateScore() {
+            let answeredCount = 0;
+            let correctCount = 0;
+
+            quizData.forEach(q => {
+                if (q.answered) {
+                    answeredCount++;
+                    if (q.userChoice === q.correct) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            const total = quizData.length;
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
