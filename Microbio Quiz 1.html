@@ -168,10 +168,10 @@
 
         .explanation-box {
             margin-top: 16px;
-            padding: 14px 16px;
+            padding: 16px 18px;
             border-radius: 8px;
-            font-size: 0.9rem;
-            line-height: 1.5;
+            font-size: 0.92rem;
+            line-height: 1.6;
             display: none;
         }
 
@@ -181,15 +181,53 @@
         }
 
         .explanation-box.correct {
-            background-color: var(--correct-bg);
+            background-color: #052e16;
             border-left: 4px solid var(--correct-color);
             color: #d1fae5;
         }
 
         .explanation-box.incorrect {
-            background-color: var(--incorrect-bg);
+            background-color: #450a0a;
             border-left: 4px solid var(--incorrect-color);
             color: #fee2e2;
+        }
+
+        .status-banner {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+        }
+
+        .status-banner.correct {
+            color: var(--correct-color);
+        }
+
+        .status-banner.incorrect {
+            color: var(--incorrect-color);
+        }
+
+        .explanation-summary {
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .rationale-list {
+            list-style: none;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .rationale-item {
+            font-size: 0.88rem;
+            line-height: 1.45;
+        }
+
+        .rationale-item strong {
+            color: var(--primary-accent);
         }
 
         .summary-card {
@@ -254,7 +292,7 @@
     <div class="header-sticky">
         <div class="header-container">
             <div class="header-title">Microbiology: Quiz 1 Material Review</div>
-            <div class="score-box" id="scoreDisplay">Score: 0 / 52 (0%)</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 0 (0%)</div>
         </div>
         <div class="progress-bar-container">
             <div class="progress-bar-fill" id="progressBar"></div>
@@ -266,7 +304,7 @@
     <div class="quiz-container">
         <div class="summary-card" id="summaryCard">
             <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
-            <div class="summary-score" id="finalScore">0 / 52</div>
+            <div class="summary-score" id="finalScore">0 / 0</div>
             <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
             <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
@@ -276,315 +314,533 @@
         const quizData = [
             {
                 question: "Which category of bacteria contains all organisms of medical importance?",
-                options: ["Archaea", "Prions", "Eukaryotes", "Eubacteria"],
-                correct: 3,
-                explanation: "Eubacteria comprises all bacteria of medical importance to humans."
+                options: [
+                    { text: "Archaea", correct: false, reason: "Archaea are environmental extremophiles and do not comprise human medical pathogens." },
+                    { text: "Prions", correct: false, reason: "Prions are misfolded, infectious protein particles lacking cellular organization or nucleic acid genomes." },
+                    { text: "Eukaryotes", correct: false, reason: "Eukaryotes possess membrane-bound nuclei and organelles, categorizing fungi and parasites rather than true bacteria." },
+                    { text: "Eubacteria", correct: true, reason: "Eubacteria encompasses all true prokaryotic bacteria of clinical and medical significance." }
+                ],
+                summary: "Eubacteria represents the biological domain containing all medically relevant bacterial human pathogens."
             },
             {
                 question: "What unit of measurement is specifically used when measuring viruses compared to bacteria?",
-                options: ["Viruses = Micrometer (μm); Bacteria = Nanometer (nm)", "Viruses = Nanometer (nm); Bacteria = Micrometer (μm)", "Both are measured exclusively in millimeters", "Viruses = Picometers; Bacteria = Angstroms"],
-                correct: 1,
-                explanation: "Viruses are measured in nanometers (10–250 nm), while bacteria are measured in micrometers (0.2–5 μm)."
+                options: [
+                    { text: "Viruses = Micrometer (μm); Bacteria = Nanometer (nm)", correct: false, reason: "This reverses the units; micrometers represent cells, whereas nanometers represent sub-microscopic viral particles." },
+                    { text: "Viruses = Nanometer (nm); Bacteria = Micrometer (μm)", correct: true, reason: "Viruses measure in nanometers (10–250 nm), whereas typical bacteria are measured in micrometers (0.2–5 μm)." },
+                    { text: "Both are measured exclusively in millimeters", correct: false, reason: "Millimeters are macroscopic metric units suitable for multicellular helminths rather than single bacteria or viruses." },
+                    { text: "Viruses = Picometers; Bacteria = Angstroms", correct: false, reason: "Picometers and Angstroms denote atomic and bond distances rather than whole microbial dimensions." }
+                ],
+                summary: "Sub-microscopic viruses require transmission electron microscopy and are quantified in nanometers (10–250 nm), whereas light-visible bacteria are sized in micrometers (0.2–5 μm)."
             },
             {
                 question: "What is the typical size range of most bacteria compared to a human Red Blood Cell (RBC)?",
-                options: ["Bacteria: 0.2–5 μm; RBC: 7–10 μm", "Bacteria: 10–25 μm; RBC: 2–5 μm", "Bacteria: 100–200 nm; RBC: 1–2 μm", "Bacteria: 7–10 μm; RBC: 0.2–5 μm"],
-                correct: 0,
-                explanation: "Bacteria are 0.2–5 μm, making them smaller than human RBCs (7–10 μm). Because bacteria are smaller than blood cells, systemic infections cannot be physically filtered out of blood."
+                options: [
+                    { text: "Bacteria: 0.2–5 μm; RBC: 7–10 μm", correct: true, reason: "Bacteria measure 0.2–5 μm in size, rendering them smaller than human erythrocytes, which span 7–10 μm." },
+                    { text: "Bacteria: 10–25 μm; RBC: 2–5 μm", correct: false, reason: "This inverts relative sizes; bacteria do not exceed erythrocyte dimensions." },
+                    { text: "Bacteria: 100–200 nm; RBC: 1–2 μm", correct: false, reason: "100–200 nm reflects viral particle sizes, not typical eubacterial cell diameters." },
+                    { text: "Bacteria: 7–10 μm; RBC: 0.2–5 μm", correct: false, reason: "Erythrocytes measure approximately 7–10 μm, whereas bacteria are substantially smaller." }
+                ],
+                summary: "Clinical bacteria typically range between 0.2 and 5 μm, making them physically smaller than human erythrocytes (7–10 μm), preventing filtration clearance from infected systemic circulation."
             },
             {
                 question: "Which historical figure disproved spontaneous generation for maggots on decaying meat?",
-                options: ["Louis Pasteur", "Anton von Leeuwenhoek", "Robert Koch", "Francesco Redi"],
-                correct: 3,
-                explanation: "Francesco Redi (1668) performed the experiment with covered/uncovered meat jars disproving abiogenesis for fly larvae."
+                options: [
+                    { text: "Louis Pasteur", correct: false, reason: "Pasteur resolved the microbial debate on biogenesis using swan-neck flasks, not raw meat jars." },
+                    { text: "Anton von Leeuwenhoek", correct: false, reason: "Leeuwenhoek manufactured simple microscopes to observe live animalcules rather than conducting meat exclusion tests." },
+                    { text: "Robert Koch", correct: false, reason: "Koch established disease causation criteria (Koch's Postulates) rather than evaluating spontaneous macro-generation." },
+                    { text: "Francesco Redi", correct: true, reason: "Redi demonstrated in 1668 that covered meat containers prevented fly oviposition, proving maggots do not spontaneously generate from rotting flesh." }
+                ],
+                summary: "Francesco Redi utilized controlled jar experiments to prove that macro-organisms such as fly larvae arise exclusively from pre-existing eggs rather than spontaneous generation."
             },
             {
                 question: "Which scientist disproved abiogenesis for microorganisms using swan-necked flasks?",
-                options: ["Anton von Leeuwenhoek", "Francesco Redi", "Louis Pasteur", "Robert Hooke"],
-                correct: 2,
-                explanation: "Louis Pasteur disproved spontaneous generation for microbes using swan-necked flask experiments."
+                options: [
+                    { text: "Anton von Leeuwenhoek", correct: false, reason: "Leeuwenhoek pioneered microscopic observation of living microbes, not broth sterilization trials." },
+                    { text: "Francesco Redi", correct: false, reason: "Redi evaluated fly development in meat jars rather than microbial broth infusion experiments." },
+                    { text: "Louis Pasteur", correct: true, reason: "Pasteur utilized open, swan-necked flasks to allow air exposure while trapping airborne particulates, proving microbes do not generate spontaneously in sterilized infusions." },
+                    { text: "Robert Hooke", correct: false, reason: "Hooke documented microscopic cellular cork structures rather than disproving microbial spontaneous generation." }
+                ],
+                summary: "Louis Pasteur settled the abiogenesis debate for microorganisms by proving that sterile broth remains uncolonized when ambient dust and microbial vectors are mechanically excluded by a curved flask neck."
             },
             {
                 question: "What is the fundamental difference between Abiogenesis and Biogenesis?",
-                options: ["Abiogenesis states life comes from pre-existing life; Biogenesis claims life arises from non-living matter", "Abiogenesis applies only to viruses; Biogenesis applies to bacteria", "Abiogenesis claims living things arise from non-living matter/vital forces; Biogenesis states living things arise only from pre-existing living cells of their same kind", "Abiogenesis refers to chemical disinfection; Biogenesis refers to sterilization"],
-                correct: 2,
-                explanation: "Abiogenesis claims living things arise from non-living matter via vital forces; Biogenesis dictates living things come only from pre-existing living cells."
+                options: [
+                    { text: "Abiogenesis states life comes from pre-existing life; Biogenesis claims life arises from non-living matter", correct: false, reason: "This inverts the foundational definitions of both biological concepts." },
+                    { text: "Abiogenesis applies only to viruses; Biogenesis applies to bacteria", correct: false, reason: "Both terms apply broadly to the origin of living biological organisms, not specific taxa." },
+                    { text: "Abiogenesis claims living things arise from non-living matter/vital forces; Biogenesis states living things arise only from pre-existing living cells of their same kind", correct: true, reason: "Abiogenesis proposes that life generates from inanimate matter or vital forces, while biogenesis establishes that life originates solely from pre-existing living organisms." },
+                    { text: "Abiogenesis refers to chemical disinfection; Biogenesis refers to sterilization", correct: false, reason: "These terms describe life origin paradigms rather than physical or chemical disinfection techniques." }
+                ],
+                summary: "Biogenesis dictates that living cells arise exclusively from pre-existing parental cells of their own kind, whereas abiogenesis purports spontaneous generation from non-living matter."
             },
             {
                 question: "Who was the first person to observe live bacteria and protozoa using single-lens microscopes?",
-                options: ["Louis Pasteur", "Francesco Redi", "Anton von Leeuwenhoek", "Robert Koch"],
-                correct: 2,
-                explanation: "Anton von Leeuwenhoek crafted high-power single-lens microscopes to observe living microorganisms."
+                options: [
+                    { text: "Louis Pasteur", correct: false, reason: "Pasteur made groundbreaking discoveries in fermentation and vaccination centuries after initial microscopic visualization." },
+                    { text: "Francesco Redi", correct: false, reason: "Redi conducted macroscopic insect experiments without compound or specialized single-lens microscopes." },
+                    { text: "Anton von Leeuwenhoek", correct: true, reason: "Leeuwenhoek hand-ground high-magnification single-lens microscopes, first observing and recording live motile bacteria and protozoa." },
+                    { text: "Robert Koch", correct: false, reason: "Koch developed diagnostic pure-culture isolation and staining techniques in late 19th-century medical microbiology." }
+                ],
+                summary: "Anton von Leeuwenhoek was the first to visualize and systematically document live motile microorganisms utilizing precision ground single-lens microscopes."
             },
             {
                 question: "Which of the following answer choices includes ONLY prokaryotic organisms?",
-                options: ["Fungi, Protozoa, and Eubacteria", "Eubacteria and Archaea", "Viruses, Eubacteria, and Molds", "Protozoa, Archaea, and Prions"],
-                correct: 1,
-                explanation: "Prokaryotes (cells lacking a nucleus) consist exclusively of Eubacteria and Archaea. Fungi and Protozoa are Eukaryotic, while Viruses and Prions are non-cellular."
+                options: [
+                    { text: "Fungi, Protozoa, and Eubacteria", correct: false, reason: "Fungi and protozoa are eukaryotic cells containing membrane-bound nuclear envelopes." },
+                    { text: "Eubacteria and Archaea", correct: true, reason: "Prokaryotic life is divided into two distinct domains: Eubacteria and Archaea, both lacking membrane-delimited nuclei." },
+                    { text: "Viruses, Eubacteria, and Molds", correct: false, reason: "Viruses are acellular complexes, while molds are multicellular eukaryotic fungi." },
+                    { text: "Protozoa, Archaea, and Prions", correct: false, reason: "Protozoa are eukaryotes and prions are infectious proteins without cellular organization." }
+                ],
+                summary: "The prokaryotic structural category comprises strictly Eubacteria and Archaea, defined by the absence of an enclosed nuclear envelope."
             },
             {
                 question: "What primary structural feature differentiates prokaryotes from eukaryotes?",
-                options: ["Prokaryotes have membrane-bound organelles", "Prokaryotes lack a nucleus", "Eukaryotes lack ribosomes", "Prokaryotes contain linear chromosomes wrapped in histones"],
-                correct: 1,
-                explanation: "Prokaryotes lack a membrane-bound nucleus, whereas eukaryotes possess a true nucleus."
+                options: [
+                    { text: "Prokaryotes have membrane-bound organelles", correct: false, reason: "Prokaryotes lack membrane-enclosed internal organelles such as mitochondria and chloroplasts." },
+                    { text: "Prokaryotes lack a nucleus", correct: true, reason: "Prokaryotes possess a free nucleoid region and specifically lack a membrane-bound nucleus." },
+                    { text: "Eukaryotes lack ribosomes", correct: false, reason: "Eukaryotes contain functional 80S cytoplasmic and 70S organellar ribosomes." },
+                    { text: "Prokaryotes contain linear chromosomes wrapped in histones", correct: false, reason: "Eubacteria typically possess a single circular chromosome lacking traditional eukaryotic histones." }
+                ],
+                summary: "Prokaryotes are defined by the absence of a true membrane-delimited nucleus, with genomic DNA localized directly within the cytoplasm."
             },
             {
                 question: "Which lipid component is present in eukaryotic plasma membranes to maintain structural integrity but is absent in most prokaryotic plasma membranes?",
-                options: ["Phospholipid bilayer", "Integral membrane proteins", "Selective permeability", "Sterols (e.g., cholesterol)"],
-                correct: 3,
-                explanation: "Eukaryotic membranes contain sterols (like cholesterol) for structural stability, which are absent in most prokaryotic membranes."
+                options: [
+                    { text: "Phospholipid bilayer", correct: false, reason: "Both prokaryotic and eukaryotic membranes are structured upon amphipathic phospholipid bilayers." },
+                    { text: "Integral membrane proteins", correct: false, reason: "Integral membrane transport proteins are essential components of both cell types." },
+                    { text: "Selective permeability", correct: false, reason: "Both prokaryotic and eukaryotic plasma membranes function as selectively permeable barriers." },
+                    { text: "Sterols (e.g., cholesterol)", correct: true, reason: "Sterols (such as cholesterol) rigidify eukaryotic plasma membranes and are absent in eubacterial membranes, with the exception of cell-wall-deficient Mycoplasma." }
+                ],
+                summary: "Eukaryotic plasma membranes incorporate sterols like cholesterol to maintain lipid fluidity and stability, a feature absent in nearly all prokaryotic membranes."
             },
             {
                 question: "What is the size composition of prokaryotic cytoplasmic ribosomes compared to eukaryotic cytoplasmic ribosomes?",
-                options: ["Prokaryotes = 80S; Eukaryotes = 70S", "Prokaryotes = 70S; Eukaryotes = 80S", "Prokaryotes = 50S; Eukaryotes = 30S", "Prokaryotes = 60S; Eukaryotes = 40S"],
-                correct: 1,
-                explanation: "Prokaryotes possess 70S ribosomes (50S + 30S subunits), whereas cytoplasmic eukaryotic ribosomes are 80S (60S + 40S subunits)."
+                options: [
+                    { text: "Prokaryotes = 80S; Eukaryotes = 70S", correct: false, reason: "This inverts sedimentation coefficients between the two cellular domains." },
+                    { text: "Prokaryotes = 70S; Eukaryotes = 80S", correct: true, reason: "Prokaryotic ribosomes sediment at 70S (50S + 30S subunits), whereas eukaryotic cytoplasmic ribosomes sediment at 80S (60S + 40S subunits)." },
+                    { text: "Prokaryotes = 50S; Eukaryotes = 30S", correct: false, reason: "50S and 30S are the structural sub-components of the intact 70S prokaryotic ribosome." },
+                    { text: "Prokaryotes = 60S; Eukaryotes = 40S", correct: false, reason: "60S and 40S represent the subunit breakdown of eukaryotic cytoplasmic ribosomes." }
+                ],
+                summary: "Prokaryotes possess 70S ribosomes (composed of 50S and 30S subunits), providing an anatomical target for selective antimicrobial therapies relative to human 80S ribosomes."
             },
             {
                 question: "Which term is defined as the complete destruction or removal of ALL viable microorganisms, including endospores and viruses?",
-                options: ["Disinfection", "Sterilization", "Bacteriostasis", "Sanitization"],
-                correct: 1,
-                explanation: "Sterilization is the absolute elimination of all microbial life, including resistant endospores."
+                options: [
+                    { text: "Disinfection", correct: false, reason: "Disinfection reduces vegetative pathogens on inanimate surfaces but often fails to eliminate bacterial endospores." },
+                    { text: "Sterilization", correct: true, reason: "Sterilization represents the absolute elimination of all microbial life forms, including resistant bacterial endospores and acellular viruses." },
+                    { text: "Bacteriostasis", correct: false, reason: "Bacteriostasis transiently halts microbial replication without achieving permanent lethal destruction or sporicidal clearance." },
+                    { text: "Sanitization", correct: false, reason: "Sanitization mechanically reduces microbial loads to acceptable public health levels without sterilizing." }
+                ],
+                summary: "Sterilization achieves complete destruction of all biological life, specifically validated by the eradication of heat-resistant bacterial endospores."
             },
             {
                 question: "How do bactericidal agents differ from bacteriostatic agents?",
-                options: ["Bactericidal agents kill bacteria; bacteriostatic agents halt/slow growth without killing cells", "Bactericidal agents inhibit viruses; bacteriostatic agents kill spores", "Bactericidal agents work only in cold temperatures; bacteriostatic agents require heat", "Bactericidal agents affect eukaryotes; bacteriostatic agents affect prokaryotes"],
-                correct: 0,
-                explanation: "Bactericidal agents cause bacterial cell death, whereas bacteriostatic agents temporarily halt bacterial growth without directly killing the cells."
+                options: [
+                    { text: "Bactericidal agents kill bacteria; bacteriostatic agents halt/slow growth without killing cells", correct: true, reason: "Bactericidal chemicals induce irreversible cell death, whereas bacteriostatic treatments inhibit growth without directly destroying the bacterial population." },
+                    { text: "Bactericidal agents inhibit viruses; bacteriostatic agents kill spores", correct: false, reason: "These terms describe bacterial control; virucidal and sporicidal are the respective proper terms." },
+                    { text: "Bactericidal agents work only in cold temperatures; bacteriostatic agents require heat", correct: false, reason: "Mechanism of action depends on molecular target rather than rigid thermal prerequisites." },
+                    { text: "Bactericidal agents affect eukaryotes; bacteriostatic agents affect prokaryotes", correct: false, reason: "Both categories target bacterial prokaryotic organisms." }
+                ],
+                summary: "Bactericidal agents induce direct bacterial cellular lysis and death, whereas bacteriostatic methods suppress cellular metabolism and replication, relying on host immunity for clearance."
             },
             {
                 question: "An 'opportunistic pathogen' is best defined as a microbe that:",
-                options: ["Causes severe disease in individuals with healthy, normal immune defenses", "Is completely incapable of causing infection under any condition", "Causes disease when host defenses are compromised or when established outside its normal habitat", "Spreads exclusively via insect vectors"],
-                correct: 2,
-                explanation: "Opportunistic pathogens cause disease when host immune defenses are weakened or when normal flora migrates to an atypical body site."
+                options: [
+                    { text: "Causes severe disease in individuals with healthy, normal immune defenses", correct: false, reason: "This defines a true (primary) pathogen, which possesses intrinsic virulence to breach intact host defenses." },
+                    { text: "Is completely incapable of causing infection under any condition", correct: false, reason: "Non-pathogens do not cause disease, whereas opportunists cause severe clinical pathology when conditions permit." },
+                    { text: "Causes disease when host defenses are compromised or when established outside its normal habitat", correct: true, reason: "Opportunistic pathogens exploit impaired host immunity, anatomical breaches, or translocations into foreign tissue sites." },
+                    { text: "Spreads exclusively via insect vectors", correct: false, reason: "Vector transmission characterizes specific zoonoses, not the general opportunistic definition." }
+                ],
+                summary: "Opportunistic pathogens cause infection when host immune barriers are suppressed or when normal endogenous microflora establishes inside sterile anatomical compartments."
             },
             {
                 question: "How is a 'true pathogen' differentiated from an opportunistic pathogen?",
-                options: ["True pathogens cause disease in healthy individuals with fully intact immune systems", "True pathogens only infect plants", "True pathogens lack virulence factors", "True pathogens cannot survive outside a host cell"],
-                correct: 0,
-                explanation: "True pathogens are capable of causing infection and disease in individuals with normal, healthy immune defenses."
+                options: [
+                    { text: "True pathogens cause disease in healthy individuals with fully intact immune systems", correct: true, reason: "True (primary) pathogens have specialized virulence factors capable of invading and causing pathology in immunocompetent hosts." },
+                    { text: "True pathogens only infect plants", correct: false, reason: "True pathogens encompass human, animal, and agricultural disease agents." },
+                    { text: "True pathogens lack virulence factors", correct: false, reason: "Virulence factors are required for primary pathogens to overcome non-specific and adaptive immune barriers." },
+                    { text: "True pathogens cannot survive outside a host cell", correct: false, reason: "Many primary bacterial pathogens can persist or replicate in extracellular environments." }
+                ],
+                summary: "True pathogens possess virulence mechanisms that enable infection and pathology in healthy, immunocompetent human hosts."
             },
             {
                 question: "What is the relationship between Pathogenicity and Virulence?",
-                options: ["Pathogenicity is the qualitative ability to cause harm, while virulence is the quantitative degree or intensity of pathogenicity", "Pathogenicity is the degree of damage, while virulence is the capability to cause disease", "Pathogenicity applies only to viruses, while virulence applies only to bacteria", "Pathogenicity is quantitative, while virulence is qualitative"],
-                correct: 0,
-                explanation: "Pathogenicity is qualitative (can it cause disease?), whereas virulence is quantitative (how severe is the disease?)."
+                options: [
+                    { text: "Pathogenicity is the qualitative ability to cause harm, while virulence is the quantitative degree or intensity of pathogenicity", correct: true, reason: "Pathogenicity is a qualitative binary property (disease-causing capability), whereas virulence measures the quantitative severity and potency of that capacity." },
+                    { text: "Pathogenicity is the degree of damage, while virulence is the capability to cause disease", correct: false, reason: "This reverses the qualitative versus quantitative definitions of these pathological concepts." },
+                    { text: "Pathogenicity applies only to viruses, while virulence applies only to bacteria", correct: false, reason: "Both parameters are applicable to all biological infectious agents." },
+                    { text: "Pathogenicity is quantitative, while virulence is qualitative", correct: false, reason: "Pathogenicity denotes qualitative potential, while virulence denotes quantitative severity." }
+                ],
+                summary: "Pathogenicity refers to the qualitative capacity of an organism to cause harm, while virulence represents the quantitative degree of pathology or structural damage it can inflict."
             },
             {
                 question: "What is the mathematical relationship between inoculum size (infectious dose) and virulence?",
-                options: ["The higher the required infectious dose, the higher the virulence", "The lower the required infectious dose, the higher the virulence", "Infectious dose and virulence are completely unrelated", "Infectious dose applies only to opportunistic fungi"],
-                correct: 1,
-                explanation: "Virulence is inversely proportional to infectious dose: pathogens requiring a lower number of cells to cause infection are significantly more virulent."
+                options: [
+                    { text: "The higher the required infectious dose, the higher the virulence", correct: false, reason: "Higher required doses reflect lower virulence because more organisms are needed to establish disease." },
+                    { text: "The lower the required infectious dose, the higher the virulence", correct: true, reason: "Virulence is inversely proportional to infectious dose; a lower cell count needed to cause disease reflects higher pathogenic potency." },
+                    { text: "Infectious dose and virulence are completely unrelated", correct: false, reason: "Infectious dose is a critical quantitative metric used to assess pathogen virulence (e.g., ID50)." },
+                    { text: "Infectious dose applies only to opportunistic fungi", correct: false, reason: "Infectious dose applies to bacterial, viral, parasitic, and fungal clinical agents." }
+                ],
+                summary: "The smaller the infectious dose needed to colonize and cause disease within a host, the higher the comparative virulence of that pathogen."
             },
             {
                 question: "Most bacteria that possess flagella exhibit which cell shape?",
-                options: ["Cocci (spherical)", "Rods (bacilli)", "Spirochetes (corkscrew)", "Spirilla (rigid helix)"],
-                correct: 1,
-                explanation: "The vast majority of flagellated bacteria are rod-shaped (bacilli)."
+                options: [
+                    { text: "Cocci (spherical)", correct: false, reason: "The vast majority of spherical cocci are non-motile and lack flagella." },
+                    { text: "Rods (bacilli)", correct: true, reason: "Flagellar appendages are predominantly distributed among rod-shaped bacteria (bacilli) and spiral forms." },
+                    { text: "Spirochetes (corkscrew)", correct: false, reason: "Spirochetes utilize periplasmic axial filaments rather than standard external flagellar projections." },
+                    { text: "Spirilla (rigid helix)", correct: false, reason: "While some spirilla are flagellated, bacilli represent the largest group of flagellated organisms." }
+                ],
+                summary: "Most flagellated bacteria of medical importance are bacilli (rods), whereas true cocci are almost universally non-motile."
             },
             {
                 question: "What three basic components form the physical structure of a bacterial flagellum?",
-                options: ["Capsule, Slime layer, Peptidoglycan", "Pilus, Fimbriae, Flagellin", "Filament, Hook, Basal Body", "Outer membrane, Periplasm, Plasma membrane"],
-                correct: 2,
-                explanation: "A flagellum consists of the filament (flagellin protein), hook (universal joint), and basal body (motor anchor)."
+                options: [
+                    { text: "Capsule, Slime layer, Peptidoglycan", correct: false, reason: "These are structural layers of the glycocalyx and bacterial cell envelope." },
+                    { text: "Pilus, Fimbriae, Flagellin", correct: false, reason: "Pili and fimbriae are non-motile attachment appendages." },
+                    { text: "Filament, Hook, Basal Body", correct: true, reason: "A complete bacterial flagellum comprises the external helical filament, the universal curved hook, and the membrane-anchored basal body motor." },
+                    { text: "Outer membrane, Periplasm, Plasma membrane", correct: false, reason: "These represent anatomical divisions of a Gram-negative cell envelope." }
+                ],
+                summary: "Bacterial flagella consist of the external flagellin filament, a flexible curved hook, and a motor-driven basal body embedded in the cell envelope."
             },
             {
                 question: "Which component of the flagellum directly anchors it into the cell wall and plasma membrane?",
-                options: ["Basal Body", "Filament", "Hook", "Capsule"],
-                correct: 0,
-                explanation: "The basal body is the complex of rings and a rod that embeds and anchors the flagellum into the cell wall and cytoplasmic membrane."
+                options: [
+                    { text: "Basal Body", correct: true, reason: "The basal body consists of central rods and ring complexes that anchor the flagellar apparatus into the cell wall and plasma membrane." },
+                    { text: "Filament", correct: false, reason: "The filament extends outward into the extracellular milieu to provide propulsion." },
+                    { text: "Hook", correct: false, reason: "The hook acts as a universal joint connecting the filament to the basal body." },
+                    { text: "Capsule", correct: false, reason: "The capsule is an extracellular polysaccharide glycocalyx structure." }
+                ],
+                summary: "The basal body serves as the rotary motor and structural anchor, embedding the flagellar assembly into the bacterial envelope."
             },
             {
                 question: "What powers the rotation of bacterial flagella?",
-                options: ["Proton Motive Force (H+) generated by the Electron Transport Chain driving Mot proteins", "Direct ATP hydrolysis via ATPase", "GTP consumption in the cytoplasm", "Passive diffusion of sodium ions"],
-                correct: 0,
-                explanation: "Flagellar rotation is powered by the Proton Motive Force (H+) flowing through Mot proteins across the membrane."
+                options: [
+                    { text: "Proton Motive Force (H+) generated by the Electron Transport Chain driving Mot proteins", correct: true, reason: "Flagellar rotation is powered by the proton motive force (transmembrane H+ gradient) channeled through Mot protein stators." },
+                    { text: "Direct ATP hydrolysis via ATPase", correct: false, reason: "Unlike eukaryotic cilia/flagella which consume ATP directly via dynein, bacterial flagella utilize proton motive force." },
+                    { text: "GTP consumption in the cytoplasm", correct: false, reason: "GTP is utilized in protein translation, not bacterial flagellar propulsion." },
+                    { text: "Passive diffusion of sodium ions", correct: false, reason: "Standard eubacterial motors are driven by hydrogen ion (proton) influx." }
+                ],
+                summary: "Flagellar torque is driven by the electrochemical proton gradient (proton motive force) moving hydrogen ions through stator complexes."
             },
             {
                 question: "Which flagellar arrangement features a cluster of multiple flagella located at only ONE pole of the cell?",
-                options: ["Monotrichous", "Amphitrichous", "Peritrichous", "Lophotrichous"],
-                correct: 3,
-                explanation: "Lophotrichous = tuft/cluster at one pole. Monotrichous = single; Amphitrichous = at both poles; Peritrichous = all over cell."
+                options: [
+                    { text: "Monotrichous", correct: false, reason: "Monotrichous denotes a solitary single flagellum at one bacterial pole." },
+                    { text: "Amphitrichous", correct: false, reason: "Amphitrichous denotes flagellar structures projecting from both opposite poles." },
+                    { text: "Peritrichous", correct: false, reason: "Peritrichous describes flagella distributed over the entire cellular surface." },
+                    { text: "Lophotrichous", correct: true, reason: "Lophotrichous designates a tuft or cluster of multiple flagella emerging from a single polar site." }
+                ],
+                summary: "A lophotrichous flagellar configuration features a tuft or bundle of flagella originating from one cellular pole."
             },
             {
                 question: "If a single flagellum is found at both poles of a bacterial cell, how is the bacterium classified?",
-                options: ["Amphitrichous", "Lophotrichous", "Monotrichous", "Peritrichous"],
-                correct: 0,
-                explanation: "Amphitrichous refers to flagella located at both opposite poles/ends of the cell."
+                options: [
+                    { text: "Amphitrichous", correct: true, reason: "Amphitrichous indicates flagella located at both opposite ends/poles of the cell." },
+                    { text: "Lophotrichous", correct: false, reason: "Lophotrichous denotes a tuft restricted to a single pole." },
+                    { text: "Monotrichous", correct: false, reason: "Monotrichous describes a single flagellum restricted to one pole." },
+                    { text: "Peritrichous", correct: false, reason: "Peritrichous refers to flagella distributed across the entire periphery." }
+                ],
+                summary: "An amphitrichous arrangement is characterized by flagella positioned at both diametrically opposed cellular poles."
             },
             {
                 question: "Which term describes flagella distributed randomly all over the surface of the bacterial cell?",
-                options: ["Peritrichous", "Amphitrichous", "Lophotrichous", "Atrichous"],
-                correct: 0,
-                explanation: "Peritrichous refers to flagella dispersed randomly over the entire surface of the bacterium."
+                options: [
+                    { text: "Peritrichous", correct: true, reason: "Peritrichous describes flagella dispersed over the entire surface of the cell body." },
+                    { text: "Amphitrichous", correct: false, reason: "Amphitrichous denotes flagellar localization strictly at both poles." },
+                    { text: "Lophotrichous", correct: false, reason: "Lophotrichous refers to a localized cluster at one pole." },
+                    { text: "Atrichous", correct: false, reason: "Atrichous designates an absence of flagellar appendages." }
+                ],
+                summary: "Peritrichous flagellation displays flagella distributed nonspecifically across the perimeter of the bacterium."
             },
             {
                 question: "During flagellar movement, what rotation direction produces a smooth 'run' versus a 'tumble'?",
-                options: ["Run = Clockwise; Tumble = Counterclockwise", "Run = Counterclockwise; Tumble = Clockwise", "Run = Side-to-side; Tumble = Stationary", "Run = Linear; Tumble = Circular"],
-                correct: 1,
-                explanation: "Counterclockwise rotation bundles flagella for a forward run; clockwise rotation causes tumbles."
+                options: [
+                    { text: "Run = Clockwise; Tumble = Counterclockwise", correct: false, reason: "This reverses the rotational dynamics of bacterial motility." },
+                    { text: "Run = Counterclockwise; Tumble = Clockwise", correct: true, reason: "Counterclockwise (CCW) rotation bundles the flagella for a smooth, directional run, whereas clockwise (CW) rotation causes the bundle to disperse, inducing a tumble." },
+                    { text: "Run = Side-to-side; Tumble = Stationary", correct: false, reason: "Bacterial motility is based on continuous rotation rather than planar whipping." },
+                    { text: "Run = Linear; Tumble = Circular", correct: false, reason: "Motility is determined by rotational directions (clockwise versus counterclockwise)." }
+                ],
+                summary: "Counterclockwise flagellar rotation aligns filaments into a cohesive bundle for linear runs, whereas clockwise rotation disrupts the bundle to produce reorienting tumbles."
             },
             {
                 question: "How does a bacterium alter its movement behavior when navigating a REPELLENT concentration gradient?",
-                options: ["Tumbles less, moving up the gradient slowly", "Stops moving entirely to conserve ATP", "Tumbles more often, moving down the gradient at INCREASED speeds", "Moves in a perfectly straight line toward the repellent"],
-                correct: 2,
-                explanation: "In a repellent gradient, bacteria tumble more frequently and move rapidly down the gradient to escape the chemical."
+                options: [
+                    { text: "Tumbles less, moving up the gradient slowly", correct: false, reason: "This describes adaptation toward a chemical attractant, not an environmental toxicant." },
+                    { text: "Stops moving entirely to conserve ATP", correct: false, reason: "Bacteria increase motility to vacate dangerous local chemical environments." },
+                    { text: "Tumbles more often, moving down the gradient at INCREASED speeds", correct: true, reason: "Exposure to a repellent increases tumbling frequency and increases migration speed away from the toxic source down the gradient." },
+                    { text: "Moves in a perfectly straight line toward the repellent", correct: false, reason: "Bacteria do not migrate toward harmful chemical repellents." }
+                ],
+                summary: "In a repellent gradient, cells tumble more frequently and achieve faster net velocity moving down the concentration gradient to escape."
             },
             {
                 question: "How does a bacterium adapt its movement behavior when navigating an ATTRACTANT concentration gradient?",
-                options: ["Tumbles less, moving up the gradient at SLOWER speeds", "Tumbles more, moving down the gradient rapidly", "Moves in random directions at max speed", "Rotates clockwise continuously"],
-                correct: 0,
-                explanation: "In an attractant gradient, the bacterium tumbles less, performs longer runs up the gradient, and moves slowly."
+                options: [
+                    { text: "Tumbles less, moving up the gradient at SLOWER speeds", correct: true, reason: "In an attractant gradient, tumbling frequency is suppressed and runs are prolonged, moving slowly up the gradient toward the nutrient." },
+                    { text: "Tumbles more, moving down the gradient rapidly", correct: false, reason: "Increased tumbling occurs in response to repellents or absent gradients." },
+                    { text: "Moves in random directions at max speed", correct: false, reason: "Attractant detection creates biased, directional migration rather than purely random runs." },
+                    { text: "Rotates clockwise continuously", correct: false, reason: "Continuous clockwise rotation would cause indefinite tumbling with zero forward progress." }
+                ],
+                summary: "Attractant gradients suppress clockwise rotation, producing fewer tumbles and longer runs moving up the concentration gradient toward the chemical."
             },
             {
                 question: "In the absence of any chemical gradient (no attractant or repellent), how does a bacterium move?",
-                options: ["In a straight line indefinitely", "In random directions with equal distribution of runs and tumbles", "It remains completely motionless", "It tumbles continuously without running"],
-                correct: 1,
-                explanation: "Without a chemical gradient, bacterial movement is completely random, consisting of equal runs and tumbles."
+                options: [
+                    { text: "In a straight line indefinitely", correct: false, reason: "Without tumbling, bacteria cannot reorient their spatial trajectory." },
+                    { text: "In random directions with equal distribution of runs and tumbles", correct: true, reason: "Without a gradient stimulus, runs and tumbles occur with balanced frequency, producing a random three-dimensional walk." },
+                    { text: "It remains completely motionless", correct: false, reason: "Basal flagellar motors continue rotating even in isotropic environments." },
+                    { text: "It tumbles continuously without running", correct: false, reason: "Basal states alternate between periods of runs and tumbles." }
+                ],
+                summary: "When no chemical gradient exists, bacteria execute unbiased random walks characterized by an equal distribution of runs and reorienting tumbles."
             },
             {
                 question: "Why is the protein flagellin classified as a Pathogen-Associated Molecular Pattern (PAMP or MAMP)?",
-                options: ["Because it is a host cell protein stolen by bacteria", "Because flagellin is a conserved bacterial protein recognized by host macrophages to trigger innate responses like fever and inflammation", "Because it directly degrades host white blood cells", "Because it prevents phagocytosis"],
-                correct: 1,
-                explanation: "Flagellin is absent in human cells. Macrophages recognize flagellin as a PAMP/MAMP to activate innate immunity."
+                options: [
+                    { text: "Because it is a host cell protein stolen by bacteria", correct: false, reason: "Flagellin is encoded directly by bacterial genes, not acquired from host cells." },
+                    { text: "Because flagellin is a conserved bacterial protein recognized by host macrophages to trigger innate responses like fever and inflammation", correct: true, reason: "Flagellin is a conserved foreign structure recognized by host pattern recognition receptors (e.g., TLR5) on macrophages to activate innate immune defenses." },
+                    { text: "Because it directly degrades host white blood cells", correct: false, reason: "Flagellin acts as an immune target rather than a cytotoxic leukocidin." },
+                    { text: "Because it prevents phagocytosis", correct: false, reason: "Antiphagocytic functions are mediated by capsules, whereas flagella provoke immune recognition." }
+                ],
+                summary: "Flagellin is an evolutionary conserved bacterial molecule recognized by host innate receptors (PAMP/MAMP), triggering inflammation, phagocytosis, and fever."
             },
             {
                 question: "Axial filaments (endoflagella) are located between the cell wall and outer membrane to produce undulating motility in which group of bacteria?",
-                options: ["Gram-positive cocci", "Acid-fast bacilli", "Spirochetes", "Mycoplasmas"],
-                correct: 2,
-                explanation: "Axial filaments (endoflagella) are periplasmic flagella found exclusively in spirochetes."
+                options: [
+                    { text: "Gram-positive cocci", correct: false, reason: "Gram-positive cocci lack periplasmic spaces, outer membranes, and axial filaments." },
+                    { text: "Acid-fast bacilli", correct: false, reason: "Mycobacteria possess thick mycolic acid walls and are non-motile." },
+                    { text: "Spirochetes", correct: true, reason: "Axial filaments (endoflagella) are located within the periplasmic space of spirochetes, producing their characteristic corkscrew motility." },
+                    { text: "Mycoplasmas", correct: false, reason: "Mycoplasma organisms lack cell walls and periplasmic spaces entirely." }
+                ],
+                summary: "Endoflagella (axial filaments) reside within the periplasmic space of spirochetes, rotating to generate twisting, undulating locomotion."
             },
             {
                 question: "From which cellular structure do bacterial pili and fimbriae originate?",
-                options: ["Outer membrane", "Peptidoglycan cell wall", "Capsule", "Cytoplasmic (plasma) membrane"],
-                correct: 3,
-                explanation: "Non-motile appendages (pili and fimbriae) originate directly from the cytoplasmic membrane."
+                options: [
+                    { text: "Outer membrane", correct: false, reason: "While they traverse the outer layers, their assembly is rooted within the inner membrane." },
+                    { text: "Peptidoglycan cell wall", correct: false, reason: "Peptidoglycan provides structural rigidity but does not anchor pilus initiation complexes." },
+                    { text: "Capsule", correct: false, reason: "Capsules are external carbohydrate matrices secreted outside the envelope." },
+                    { text: "Cytoplasmic (plasma) membrane", correct: true, reason: "Non-motile appendages like pili and fimbriae originate directly from basal platforms anchored in the cytoplasmic membrane." }
+                ],
+                summary: "Bacterial fimbriae and pili originate from protein platforms embedded within the cytoplasmic (plasma) membrane and extend through the wall."
             },
             {
                 question: "What is the key functional difference between short pili (fimbriae) and long pili (sex pili)?",
-                options: ["Short pili (fimbriae) function in adhesion/attachment; long pili function in conjugation (DNA transfer)", "Short pili function in locomotion; long pili prevent phagocytosis", "Short pili carry antibiotic resistance genes; long pili store glycogen", "Short pili synthesize peptidoglycan; long pili generate proton motive force"],
-                correct: 0,
-                explanation: "Short pili (fimbriae) allow bacteria to adhere to surfaces/cells to resist flushing. Long pili (sex/F pili) mediate bacterial conjugation."
+                options: [
+                    { text: "Short pili (fimbriae) function in adhesion/attachment; long pili function in conjugation (DNA transfer)", correct: true, reason: "Short pili (fimbriae) mediate mechanical adhesion to host tissues, whereas long pili (sex/F pili) facilitate genetic transfer during conjugation." },
+                    { text: "Short pili function in locomotion; long pili prevent phagocytosis", correct: false, reason: "Locomotion is mediated by flagella, and phagocytosis prevention is mediated by capsules." },
+                    { text: "Short pili carry antibiotic resistance genes; long pili store glycogen", correct: false, reason: "Plasmids carry resistance genes, and inclusion bodies store metabolic glycogen." },
+                    { text: "Short pili synthesize peptidoglycan; long pili generate proton motive force", correct: false, reason: "Enzymes in the cytoplasm synthesize peptidoglycan, and the electron transport chain establishes proton motive force." }
+                ],
+                summary: "Short pili (fimbriae) mediate adherence to host mucosal surfaces, while specialized long pili (sex pili) form conjugation bridges to transfer genetic material."
             },
             {
                 question: "How do short pili (fimbriae) enable bacterial adhesion to host cells despite both cells carrying negative surface charges?",
-                options: ["By neutralizing host nuclear membranes", "By overcoming electrostatic repulsion to bind host cells before depolymerizing to allow permanent cell wall attachment", "By secreting exotoxins that dissolve host plasma membranes", "By wrapping around host cells using axial filaments"],
-                correct: 1,
-                explanation: "Short pili overcome electrostatic repulsion, bind host cells, and then depolymerize to pull the bacterial cell wall close for permanent adhesion."
+                options: [
+                    { text: "By neutralizing host nuclear membranes", correct: false, reason: "Bacterial pili do not interact with internal host nuclear membranes." },
+                    { text: "By overcoming electrostatic repulsion to bind host cells before depolymerizing to allow permanent cell wall attachment", correct: true, reason: "Short pili project past the negative charge barrier to bind host receptors, then depolymerize to pull the bacterial cell wall into close contact for permanent attachment." },
+                    { text: "By secreting exotoxins that dissolve host plasma membranes", correct: false, reason: "Pili mediate mechanical adherence rather than enzymatic membrane degradation." },
+                    { text: "By wrapping around host cells using axial filaments", correct: false, reason: "Axial filaments are internal spirochete structures not involved in fimbrial binding." }
+                ],
+                summary: "Short pili overcome mutually negative electrostatic surface repulsions between cells, binding host receptors and depolymerizing to pull the bacterial envelope into permanent contact."
             },
             {
                 question: "What are the two structural layers that make up the bacterial glycocalyx?",
-                options: ["Peptidoglycan layer and Outer membrane", "Capsule and Slime layer", "Lipid A and O-antigen", "Plasma membrane and Cell wall"],
-                correct: 1,
-                explanation: "The glycocalyx consists of two structural categories: Capsule (rigid, organized) and Slime layer (loose, unorganized)."
+                options: [
+                    { text: "Peptidoglycan layer and Outer membrane", correct: false, reason: "These are distinct layers of the bacterial cell envelope." },
+                    { text: "Capsule and Slime layer", correct: true, reason: "The glycocalyx is categorized into two physical forms: a dense, organized capsule or a loose, diffuse slime layer." },
+                    { text: "Lipid A and O-antigen", correct: false, reason: "Lipid A and O-antigen are structural domains of lipopolysaccharide (LPS)." },
+                    { text: "Plasma membrane and Cell wall", correct: false, reason: "The plasma membrane and cell wall underlie the external glycocalyx." }
+                ],
+                summary: "The bacterial glycocalyx is expressed either as a tightly bound, organized capsule or as a loose, unorganized slime layer."
             },
             {
                 question: "What primary advantage does the loose polysaccharide slime layer provide to a bacterial cell?",
-                options: ["Protection from dehydration and nutrient loss, as well as serving in adhesion", "Active swimming movement", "Direct horizontal gene transfer", "Complete resistance to autoclaving"],
-                correct: 0,
-                explanation: "The slime layer is a loose shield protecting against dehydration and nutrient loss."
+                options: [
+                    { text: "Protection from dehydration and nutrient loss, as well as serving in adhesion", correct: true, reason: "The unorganized polysaccharide slime layer retains water and soluble nutrients, preventing dehydration while facilitating surface adherence." },
+                    { text: "Active swimming movement", correct: false, reason: "Motility is mediated by flagella, not glycocalyx secretion." },
+                    { text: "Direct horizontal gene transfer", correct: false, reason: "Gene transfer requires conjugation pili, transformation complexes, or bacteriophage vectors." },
+                    { text: "Complete resistance to autoclaving", correct: false, reason: "Heat resistance is a property of endospores containing calcium dipicolinate." }
+                ],
+                summary: "Slime layers consist of loosely bound exopolysaccharides that shield bacteria from dehydration, prevent nutrient loss, and assist in surface colonization."
             },
             {
                 question: "How does a bacterial capsule function as a virulence factor?",
-                options: ["It destroys host red blood cells via hemolysins", "It limits or prevents phagocytic immune cells from engulfing the bacteria", "It allows bacteria to undergo binary fission twice as fast", "It produces high-energy ATP through photosynthesis"],
-                correct: 1,
-                explanation: "Capsules protect bacteria by preventing phagocytes (macrophages) from engulfing them."
+                options: [
+                    { text: "It destroys host red blood cells via hemolysins", correct: false, reason: "Hemolysis is driven by secreted pore-forming protein exotoxins." },
+                    { text: "It limits or prevents phagocytic immune cells from engulfing the bacteria", correct: true, reason: "The slippery, organized capsular matrix blocks opsonization and impairs engulfment by host macrophages and neutrophils." },
+                    { text: "It allows bacteria to undergo binary fission twice as fast", correct: false, reason: "Replication speed is determined by metabolic and enzymatic rates, not capsules." },
+                    { text: "It produces high-energy ATP through photosynthesis", correct: false, reason: "Capsules are extracellular protective coatings with no energetic metabolic activity." }
+                ],
+                summary: "Capsules are major virulence determinants that enhance pathogenicity by physically preventing phagocytosis by host immune cells."
             },
             {
                 question: "Which statement correctly describes bacterial genomic DNA and plasmids?",
-                options: ["Bacterial genomes are diploid; plasmids are essential for cell survival", "Bacterial chromosomes are strictly linear; plasmids contain all essential survival genes", "Plasmids are located inside the bacterial nucleus", "Bacterial genomes are haploid double-stranded DNA; plasmids exist independently, carry non-essential favorable traits, and are non-functional on their own"],
-                correct: 3,
-                explanation: "Bacterial genomes are haploid dsDNA. Plasmids carry non-essential beneficial genes but require the main chromosome to function."
+                options: [
+                    { text: "Bacterial genomes are diploid; plasmids are essential for cell survival", correct: false, reason: "Bacterial genomes are haploid, and plasmids carry non-essential accessory genes." },
+                    { text: "Bacterial chromosomes are strictly linear; plasmids contain all essential survival genes", correct: false, reason: "Chromosomes are predominantly circular, and essential housekeeping genes reside on the chromosome." },
+                    { text: "Plasmids are located inside the bacterial nucleus", correct: false, reason: "Prokaryotes lack a nucleus; plasmids float freely within the cytoplasm." },
+                    { text: "Bacterial genomes are haploid double-stranded DNA; plasmids exist independently, carry non-essential favorable traits, and are non-functional on their own", correct: true, reason: "Bacterial genomes are haploid dsDNA; plasmids are extrachromosomal circular DNA elements that replicate autonomously and encode adaptive, non-essential traits." }
+                ],
+                summary: "Bacterial chromosomes are haploid circular dsDNA, while plasmids are autonomous extrachromosomal elements conferring non-essential adaptive benefits such as drug resistance."
             },
             {
                 question: "Regarding bacterial genetics, which of the following is NOT true for all bacteria?",
-                options: ["They have circular chromosomes", "The DNA does not associate with histones", "They have NO intron/exon arrangement", "They are diploid"],
-                correct: 3,
-                explanation: "Bacteria are haploid (possessing a single set of unpaired chromosomes), NOT diploid. They have circular dsDNA, lack histones, and lack intron/exon processing."
+                options: [
+                    { text: "They have circular chromosomes", correct: false, reason: "Most bacteria possess circular chromosomes, although rare linear exceptions exist." },
+                    { text: "The DNA does not associate with histones", correct: false, reason: "True bacteria lack histone octamers, organizing DNA via histone-like anchoring proteins." },
+                    { text: "They have NO intron/exon arrangement", correct: false, reason: "Prokaryotic continuous coding sequences generally lack mRNA-spliced intron/exon structures." },
+                    { text: "They are diploid", correct: true, reason: "Bacteria are strictly haploid, possessing a single chromosomal copy rather than paired diploid homologs." }
+                ],
+                summary: "Bacteria are haploid organisms with unpaired genomes; they are not diploid."
             },
             {
                 question: "What is the primary structural macromolecule composing the cell wall of Eubacteria?",
-                options: ["Chitin", "Cellulose", "Peptidoglycan", "Pseudomurein"],
-                correct: 2,
-                explanation: "Eubacterial cell walls consist of peptidoglycan (NAG and NAM cross-linked by short peptides)."
+                options: [
+                    { text: "Chitin", correct: false, reason: "Chitin is a fungal and arthropod structural polysaccharide." },
+                    { text: "Cellulose", correct: false, reason: "Cellulose forms the rigid structural framework of plant cell walls." },
+                    { text: "Peptidoglycan", correct: true, reason: "The eubacterial cell wall is composed of a rigid meshwork of peptidoglycan (murein)." },
+                    { text: "Pseudomurein", correct: false, reason: "Pseudomurein is restricted to cell walls of certain archaeal taxa." }
+                ],
+                summary: "Eubacteria are characterized by cell walls made of peptidoglycan, composed of repeating glycan backbones cross-linked by peptide chains."
             },
             {
                 question: "What is the primary physiological function of the peptidoglycan cell wall in bacteria?",
-                options: ["Prevents osmotic lysis in hypotonic environments", "Facilitates active transport of glucose", "Synthesizes ATP through oxidative phosphorylation", "Generates proton motive force for motility"],
-                correct: 0,
-                explanation: "The rigid cross-linked peptidoglycan cell wall protects bacterial cells from bursting (osmotic lysis) due to internal turgor pressure in hypotonic environments."
+                options: [
+                    { text: "Prevents osmotic lysis in hypotonic environments", correct: true, reason: "The cross-linked peptidoglycan sacculus provides tensile strength, counteracting high internal turgor pressure to prevent osmotic lysis." },
+                    { text: "Facilitates active transport of glucose", correct: false, reason: "Active nutrient transport is performed by transport proteins in the plasma membrane." },
+                    { text: "Synthesizes ATP through oxidative phosphorylation", correct: false, reason: "ATP synthesis is driven by ATP synthase complexes embedded in the cell membrane." },
+                    { text: "Generates proton motive force for motility", correct: false, reason: "Proton motive force is established across the semipermeable cytoplasmic membrane." }
+                ],
+                summary: "The rigid peptidoglycan wall maintains morphological structure and prevents cell bursting (osmotic lysis) in hypoosmotic fluids."
             },
             {
                 question: "What do the acronyms NAG and NAM stand for in the peptidoglycan cell wall of bacteria?",
-                options: ["N-acetylglucosamine and N-acetylmuramic acid", "N-acetylgalactosamine and N-acetylmaltose", "Nitrogenated alpha-glucose and Nitrogenated alpha-mannose", "N-acetylglycine and N-acetylmethionine"],
-                correct: 0,
-                explanation: "NAG stands for N-acetylglucosamine and NAM stands for N-acetylmuramic acid."
+                options: [
+                    { text: "N-acetylglucosamine and N-acetylmuramic acid", correct: true, reason: "NAG represents N-acetylglucosamine and NAM represents N-acetylmuramic acid." },
+                    { text: "N-acetylgalactosamine and N-acetylmaltose", correct: false, reason: "These are alternative biochemical carbohydrates not found in murein backbones." },
+                    { text: "Nitrogenated alpha-glucose and Nitrogenated alpha-mannose", correct: false, reason: "These do not correspond to the chemical monomers of peptidoglycan." },
+                    { text: "N-acetylglycine and N-acetylmethionine", correct: false, reason: "Glycine and methionine are amino acids, not amino-sugar wall derivatives." }
+                ],
+                summary: "The glycan backbone of bacterial peptidoglycan consists of alternating amino sugars: N-acetylglucosamine (NAG) and N-acetylmuramic acid (NAM)."
             },
             {
                 question: "Where in the bacterial cell are NAG and NAM sugar monomers synthesized before being assembled into peptidoglycan?",
-                options: ["Periplasmic space", "Cytosol", "Outer membrane", "Capsule"],
-                correct: 1,
-                explanation: "NAG and NAM monomers are synthesized in the cytosol and then exported across the cytoplasmic membrane to form peptidoglycan."
+                options: [
+                    { text: "Periplasmic space", correct: false, reason: "Polymerization occurs in the periplasm/exterior, but monomer precursors are manufactured internally." },
+                    { text: "Cytosol", correct: true, reason: "NAG and NAM building blocks are enzymatically synthesized in the cytoplasm before bactoprenol translocates them across the cell membrane." },
+                    { text: "Outer membrane", correct: false, reason: "The outer membrane lacks metabolic biosynthetic machinery for precursor synthesis." },
+                    { text: "Capsule", correct: false, reason: "The capsule is an inert external layer with no enzymatic biosynthetic function." }
+                ],
+                summary: "Peptidoglycan nucleotide-sugar precursors (NAG and NAM) are synthesized within the cytosol before being ferried across the plasma membrane."
             },
             {
                 question: "What type of chemical bond links repeating NAG and NAM sugar monomers together in the bacterial cell wall backbone?",
-                options: ["Peptide bonds", "Glycosidic bonds", "Phosphodiester bonds", "Hydrogen bonds"],
-                correct: 1,
-                explanation: "NAG and NAM monomers alternate and are linked together via glycosidic bonds."
+                options: [
+                    { text: "Peptide bonds", correct: false, reason: "Peptide bonds cross-link the tetrapeptide side chains protruding from NAM." },
+                    { text: "Glycosidic bonds", correct: true, reason: "Alternating NAG and NAM sugar monomers are joined linearly by covalent beta-1,4-glycosidic bonds." },
+                    { text: "Phosphodiester bonds", correct: false, reason: "Phosphodiester linkages form the backbone of DNA and RNA nucleic acids." },
+                    { text: "Hydrogen bonds", correct: false, reason: "Hydrogen bonds provide secondary stabilizing interactions rather than primary covalent backbone bonds." }
+                ],
+                summary: "Glycosidic bonds join alternating NAG and NAM residues, forming the continuous glycan chains cleaved by lysozyme."
             },
             {
                 question: "How do Archaeal cell walls differ structurally from Eubacterial cell walls?",
-                options: ["Archaeal cell walls contain thick peptidoglycan", "Archaeal cell walls lack peptidoglycan (composed instead of pseudomurein or protein layers)", "Archaeal cell walls contain outer LPS toxin layers", "Archaeal cell walls are composed entirely of chitin"],
-                correct: 1,
-                explanation: "Archaeans lack peptidoglycan; their cell walls contain pseudomurein, complex carbohydrates, or protein layers."
+                options: [
+                    { text: "Archaeal cell walls contain thick peptidoglycan", correct: false, reason: "Archaea completely lack true peptidoglycan." },
+                    { text: "Archaeal cell walls lack peptidoglycan (composed instead of pseudomurein or protein layers)", correct: true, reason: "Archaea do not synthesize peptidoglycan; their cell walls utilize pseudomurein, complex polysaccharides, or surface-layer (S-layer) proteins." },
+                    { text: "Archaeal cell walls contain outer LPS toxin layers", correct: false, reason: "Lipopolysaccharide (LPS) is a hallmark of Gram-negative eubacteria." },
+                    { text: "Archaeal cell walls are composed entirely of chitin", correct: false, reason: "Chitin is restricted to eukaryotic fungal cell walls." }
+                ],
+                summary: "Archaeal cell walls lack true peptidoglycan, relying instead on pseudomurein, specialized polysaccharides, or paracrystalline protein S-layers."
             },
             {
                 question: "Which of the following cellular structures is found in ALL bacterial cells without exception?",
-                options: ["Capsule", "Cell Wall", "Flagella", "Cell Membrane"],
-                correct: 3,
-                explanation: "All bacteria possess a cell (plasma) membrane. Some lack cell walls (e.g., Mycoplasma), capsules, or flagella."
+                options: [
+                    { text: "Capsule", correct: false, reason: "Many non-pathogenic or rough bacterial strains lack a protective capsule." },
+                    { text: "Cell Wall", correct: false, reason: "Cell-wall-less taxa like Mycoplasma lack a peptidoglycan cell wall." },
+                    { text: "Flagella", correct: false, reason: "Many bacteria, including most cocci, are atrichous and non-motile." },
+                    { text: "Cell Membrane", correct: true, reason: "Every living bacterial cell requires an intact cytoplasmic (plasma) membrane to regulate internal homeostasis and maintain viability." }
+                ],
+                summary: "All bacteria possess a cytoplasmic membrane; structures such as cell walls, capsules, and flagella are variable."
             },
             {
                 question: "Spore formation in bacteria is performed as a mechanism of:",
-                options: ["Reproduction", "Survival and reproduction", "Survival", "Horizontal gene transfer"],
-                correct: 2,
-                explanation: "Endospore formation is strictly an environmental survival mechanism, not a reproductive process (one vegetative cell produces one endospore, which germinates into one vegetative cell)."
+                options: [
+                    { text: "Reproduction", correct: false, reason: "Reproduction requires a net increase in cell number; sporulation results in a 1:1 conservation." },
+                    { text: "Survival and reproduction", correct: false, reason: "Because one cell yields only one spore, it is strictly non-reproductive." },
+                    { text: "Survival", correct: true, reason: "Endospores are specialized cryptobiotic survival structures formed to protect the genome under lethal conditions." },
+                    { text: "Horizontal gene transfer", correct: false, reason: "Endospores do not transfer genetic material between unrelated cells." }
+                ],
+                summary: "Endosporulation is purely a cellular survival adaptation; one vegetative bacterium generates one endospore, resulting in zero population increase."
             },
             {
                 question: "Which of the following is NOT an endospore-forming bacterium?",
-                options: ["Bacillus", "Clostridium", "Sporosarcina", "Streptococcus"],
-                correct: 3,
-                explanation: "Streptococcus does not form endospores. Bacillus, Clostridium, and Sporosarcina are classic endospore formers."
+                options: [
+                    { text: "Bacillus", correct: false, reason: "Bacillus species (e.g., B. anthracis) are typical aerobic endospore-forming rods." },
+                    { text: "Clostridium", correct: false, reason: "Clostridium species (e.g., C. tetani) are typical anaerobic endospore-forming rods." },
+                    { text: "Sporosarcina", correct: false, reason: "Sporosarcina is a recognized genus of endospore-forming cocci." },
+                    { text: "Streptococcus", correct: true, reason: "Streptococcus species are non-spore-forming Gram-positive cocci." }
+                ],
+                summary: "Streptococcus does not form endospores, whereas Bacillus, Clostridium, and Sporosarcina are recognized spore-forming genera."
             },
             {
                 question: "Which specific layer of a bacterial endospore is used to reform the peptidoglycan cell wall during germination?",
-                options: ["Cortex", "Spore coat", "Core", "Exosporium"],
-                correct: 0,
-                explanation: "The cortex contains peptidoglycan and serves as the structural foundation to rebuild the vegetative cell wall upon germination."
+                options: [
+                    { text: "Cortex", correct: true, reason: "The endospore cortex consists of modified peptidoglycan that is remodeled to establish the vegetative cell wall upon germination." },
+                    { text: "Spore coat", correct: false, reason: "The spore coat is a dense keratin-like protein shell conferring chemical and enzymatic resistance." },
+                    { text: "Core", correct: false, reason: "The core contains dehydrated genomic DNA, ribosomes, and dipicolinic acid." },
+                    { text: "Exosporium", correct: false, reason: "The exosporium is an outermost lipid-protein membrane layer present in select species." }
+                ],
+                summary: "The spore cortex contains peptidoglycan, which reconstitutes the vegetative bacterial cell wall during germination."
             },
             {
                 question: "Which endospore-forming bacterial genus is a notable Gram-negative exception?",
-                options: ["Bacillus", "Clostridium", "Staphylococcus", "Coxiella"],
-                correct: 3,
-                explanation: "While endospore formers are almost exclusively Gram-positive, Coxiella (e.g., Coxiella burnetii) is the primary Gram-negative exception."
+                options: [
+                    { text: "Bacillus", correct: false, reason: "Bacillus is a Gram-positive endospore-forming genus." },
+                    { text: "Clostridium", correct: false, reason: "Clostridium is an obligately anaerobic Gram-positive endospore-forming genus." },
+                    { text: "Staphylococcus", correct: false, reason: "Staphylococcus is a non-spore-forming Gram-positive cluster-forming coccus." },
+                    { text: "Coxiella", correct: true, reason: "Coxiella burnetii represents the primary Gram-negative pathogen capable of producing resistant spore-like structures." }
+                ],
+                summary: "While endospores are primarily found in Gram-positive rods, Coxiella represents a clinically significant Gram-negative spore-former."
             },
             {
                 question: "Which anaerobic, endospore-forming species produces a potent neurotoxin responsible for tetanus?",
-                options: ["Clostridium tetani", "Bacillus anthracis", "Coxiella burnetii", "Clostridium botulinum"],
-                correct: 0,
-                explanation: "Clostridium tetani is an endospore-forming anaerobe that secretes tetanospasmin neurotoxin."
+                options: [
+                    { text: "Clostridium tetani", correct: true, reason: "Clostridium tetani produces the potent neurotoxin tetanospasmin, causing spastic paralysis." },
+                    { text: "Bacillus anthracis", correct: false, reason: "Bacillus anthracis produces anthrax toxin complexes, not tetanus neurotoxin." },
+                    { text: "Coxiella burnetii", correct: false, reason: "Coxiella burnetii is the causative agent of Q fever." },
+                    { text: "Clostridium botulinum", correct: false, reason: "Clostridium botulinum secretes botulinum neurotoxin, resulting in flaccid paralysis." }
+                ],
+                summary: "Clostridium tetani is an anaerobic, spore-forming bacillus that elaborates tetanospasmin, resulting in clinical tetanus."
             },
             {
                 question: "What process occurs when an endospore exits dormancy in a favorable environment to reform an active vegetative cell?",
-                options: ["Sporulation", "Binary fission", "Vegetative cycle (Germination)", "Conjugation"],
-                correct: 2,
-                explanation: "When favorable conditions return, the spore undergoes germination to re-enter the vegetative cycle."
+                options: [
+                    { text: "Sporulation", correct: false, reason: "Sporulation is the process of generating a dormant spore from a vegetative cell." },
+                    { text: "Binary fission", correct: false, reason: "Binary fission is the vegetative replication process following complete outgrowth." },
+                    { text: "Vegetative cycle (Germination)", correct: true, reason: "Germination is the process whereby a dormant spore degrades its protective coats to re-emerge as a metabolically active vegetative cell." },
+                    { text: "Conjugation", correct: false, reason: "Conjugation is the horizontal transfer of plasmid DNA through sex pili." }
+                ],
+                summary: "Germination describes the transition of an endospore back into a metabolically active, dividing vegetative bacterial cell."
+            },
+            {
+                question: "What is the process of endospore formation called when a vegetative cell encounters harsh environmental conditions?",
+                options: [
+                    { text: "Sporulation", correct: true, reason: "Sporulation (or sporogenesis) is the multi-step pathway by which a vegetative cell forms an endospore under environmental stress." },
+                    { text: "Germination", correct: false, reason: "Germination is the return from dormant spore to vegetative cell." },
+                    { text: "Binary fission", correct: false, reason: "Binary fission is normal vegetative reproduction in nutrient-rich media." },
+                    { text: "Transformation", correct: false, reason: "Transformation is the uptake of exogenous naked DNA from the surroundings." }
+                ],
+                summary: "Sporulation is the developmental sequence in which a stressed vegetative bacterium encapsulates its genome into a dormant endospore."
             },
             {
                 question: "How does the acquisition mechanism of adult foodborne botulism differ from infant botulism?",
-                options: ["Adults ingest pre-formed exotoxin in food; infants ingest bacterial endospores from honey", "Adults ingest endospores; infants ingest pre-formed endotoxin", "Both adults and infants acquire botulism exclusively via endotoxins", "Adults acquire botulism via inhalation; infants acquire botulism via direct contact"],
-                correct: 0,
-                explanation: "Adult foodborne botulism results from ingesting pre-formed exotoxin in improperly canned food. Infant botulism occurs when infants ingest endospores (e.g., in raw honey), which germinate and produce toxin in their immature gut."
+                options: [
+                    { text: "Adults ingest pre-formed exotoxin in food; infants ingest bacterial endospores from honey", correct: true, reason: "Adults experience intoxication via ingestion of pre-formed botulinum exotoxin in canned goods, whereas infants suffer toxicoinfection from ingesting viable endospores (e.g., in honey) that germinate in the gut." },
+                    { text: "Adults ingest endospores; infants ingest pre-formed endotoxin", correct: false, reason: "Adult intestinal flora generally suppresses ingested endospores, and botulinum toxin is an exotoxin, not an endotoxin." },
+                    { text: "Both adults and infants acquire botulism exclusively via endotoxins", correct: false, reason: "Botulism pathology is driven by a protein neurotoxin (exotoxin), not lipopolysaccharide (endotoxin)." },
+                    { text: "Adults acquire botulism via inhalation; infants acquire botulism via direct contact", correct: false, reason: "Both forms involve oral ingestion routes." }
+                ],
+                summary: "Adult foodborne botulism is an intoxication resulting from ingesting pre-formed neurotoxin, while infant botulism is an infection caused by ingesting endospores that colonize the infant gastrointestinal tract."
             }
         ];
 
@@ -600,7 +856,11 @@
         }
 
         function renderQuiz() {
-            activeQuestions = shuffleArray(JSON.parse(JSON.stringify(quizData)));
+            const rawCopy = JSON.parse(JSON.stringify(quizData));
+            rawCopy.forEach(q => {
+                q.options = shuffleArray(q.options);
+            });
+            activeQuestions = shuffleArray(rawCopy);
             currentAnswers = new Array(activeQuestions.length).fill(null);
 
             const container = document.getElementById('quizContainer');
@@ -617,7 +877,7 @@
                         <button class="option-btn" 
                                 id="btn-${index}-${optIdx}" 
                                 onclick="selectOption(${index}, ${optIdx})">
-                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt}
+                            <span style="font-weight: 700; color: var(--primary-accent); margin-right: 8px;">${String.fromCharCode(65 + optIdx)}.</span> ${opt.text}
                         </button>
                     `;
                 });
@@ -641,13 +901,14 @@
 
             currentAnswers[qIdx] = selectedOptIdx;
             const q = activeQuestions[qIdx];
-            const isCorrect = selectedOptIdx === q.correct;
+            const chosenOption = q.options[selectedOptIdx];
+            const isCorrect = chosenOption.correct;
 
-            q.options.forEach((_, optIdx) => {
+            q.options.forEach((opt, optIdx) => {
                 const btn = document.getElementById(`btn-${qIdx}-${optIdx}`);
                 btn.disabled = true;
 
-                if (optIdx === q.correct) {
+                if (opt.correct) {
                     btn.classList.add('correct-choice');
                 } else if (optIdx === selectedOptIdx) {
                     btn.classList.add('incorrect-choice');
@@ -656,21 +917,41 @@
                 }
             });
 
+            let rationaleHTML = '<ul class="rationale-list">';
+            q.options.forEach((opt, optIdx) => {
+                const letter = String.fromCharCode(65 + optIdx);
+                rationaleHTML += `
+                    <li class="rationale-item">
+                        <strong>${letter}) ${opt.text}:</strong> ${opt.reason}
+                    </li>
+                `;
+            });
+            rationaleHTML += '</ul>';
+
             const expBox = document.getElementById(`exp-${qIdx}`);
-            expBox.classList.add('visible', isCorrect ? 'correct' : 'incorrect');
-            expBox.innerHTML = `<strong>${isCorrect ? '✓ Correct' : '✗ Incorrect'}</strong><br>${q.explanation}`;
+            expBox.className = `explanation-box visible ${isCorrect ? 'correct' : 'incorrect'}`;
+            expBox.innerHTML = `
+                <div class="status-banner ${isCorrect ? 'correct' : 'incorrect'}">
+                    ${isCorrect ? 'Correct!' : 'Incorrect.'}
+                </div>
+                <div class="explanation-summary">
+                    ${q.summary}
+                </div>
+                ${rationaleHTML}
+            `;
 
             updateScore();
         }
 
         function updateScore() {
             const answeredCount = currentAnswers.filter(a => a !== null).length;
-            const correctCount = currentAnswers.reduce((acc, ans, idx) => {
-                return ans === activeQuestions[idx].correct ? acc + 1 : acc;
+            const correctCount = currentAnswers.reduce((acc, selectedOptIdx, idx) => {
+                if (selectedOptIdx === null) return acc;
+                return activeQuestions[idx].options[selectedOptIdx].correct ? acc + 1 : acc;
             }, 0);
 
             const percentage = Math.round((correctCount / activeQuestions.length) * 100);
-            
+
             document.getElementById('scoreDisplay').innerText = `Score: ${correctCount} / ${activeQuestions.length} (${percentage}%)`;
             document.getElementById('progressBar').style.width = `${(answeredCount / activeQuestions.length) * 100}%`;
 
@@ -687,11 +968,11 @@
             finalScore.innerText = `${correctCount} / ${activeQuestions.length} (${percentage}%)`;
 
             if (percentage >= 90) {
-                feedback.innerText = "Mastery demonstrated! You have thoroughly covered all Quiz 1 concepts.";
+                feedback.innerText = "Mastery demonstrated across all fundamental bacteriology and cytology concepts.";
             } else if (percentage >= 75) {
-                feedback.innerText = "Solid understanding! Review missed questions on flagella motors, pili, and endospores.";
+                feedback.innerText = "Proficient comprehension. Review flagged items on flagellar locomotion and envelope dynamics.";
             } else {
-                feedback.innerText = "Good effort! Re-read the Lecture 1 & early Lecture 2 notes up through Endospores and retake the quiz.";
+                feedback.innerText = "Recommended review of historical biogenesis, flagellar arrangements, and endospore physiology.";
             }
 
             summaryCard.classList.add('visible');
