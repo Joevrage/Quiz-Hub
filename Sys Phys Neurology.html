@@ -606,6 +606,28 @@
                 takeaway: "The Jendrassik maneuver is a reinforcement technique that reduces central supraspinal inhibition to facilitate eliciting deep tendon reflexes."
             },
             {
+                topic: "Autonomic Vascular Tone",
+                question: "During autonomic sympathetic activation, norepinephrine is released from terminals in the tunica adventitia and diffuses into the tunica media of arterioles. Which specific adrenergic receptor on vascular smooth muscle does it bind to mediate vasoconstriction?",
+                options: [
+                    { text: "Beta-2 adrenergic receptor", correct: false, why: "A) Incorrect. Beta-2 receptors mediate vasodilation in skeletal muscle arterioles." },
+                    { text: "Alpha-1 adrenergic receptor", correct: true, why: "B) Correct. Norepinephrine binds to alpha-1 receptors, activating a Gq/PLC/IP3 signaling cascade that releases calcium and induces arteriolar smooth muscle contraction." },
+                    { text: "Muscarinic M2 receptor", correct: false, why: "C) Incorrect. M2 receptors are parasympathetic cardiac receptors that slow heart rate." },
+                    { text: "Nicotinic cholinergic receptor", correct: false, why: "D) Incorrect. Nicotinic receptors mediate neuromuscular transmission and autonomic ganglia." }
+                ],
+                takeaway: "Norepinephrine binds to alpha-1 adrenergic receptors on vascular smooth muscle in the tunica media to trigger vasoconstriction."
+            },
+            {
+                topic: "Autonomic Vascular Exceptions",
+                question: "Unlike most systemic arterioles which receive strictly sympathetic vasoconstrictor innervation, which specific regional arterioles receive parasympathetic vasodilator innervation that produces penile erection?",
+                options: [
+                    { text: "Coronary epicardial arteries", correct: false, why: "A) Incorrect. Coronary blood flow is regulated primarily by local metabolic adenosine and sympathetic tone." },
+                    { text: "Arterioles of the external genitalia (penis)", correct: true, why: "B) Correct. Penile arterioles receive parasympathetic innervation that triggers nitric oxide-mediated vasodilation and erection, whereas sympathetic tone mediates ejaculation." },
+                    { text: "Renal glomerular afferent arterioles", correct: false, why: "C) Incorrect. Glomerular arterioles are regulated by sympathetic tone and local myogenic/tubuloglomerular feedback." },
+                    { text: "Cerebral pial arteries", correct: false, why: "D) Incorrect. Cerebral vessels are regulated primarily by local CO2 and metabolic autoregulation." }
+                ],
+                takeaway: "Penile arterioles receive rare parasympathetic innervation that induces vasodilation and erection, while sympathetic activation mediates ejaculation."
+            },
+            {
                 topic: "Board Synonyms (A.K.A.s)",
                 question: "Dr. Gillard emphasizes that board exams frequently swap terminology. Which term is strictly synonymous with 'neurological level'?",
                 options: [
@@ -635,7 +657,7 @@
             while (currentIndex !== 0) {
                 randomIndex = Math.floor(Math.random() * currentIndex);
                 currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[randomIndex]];
             }
             return array;
         }
@@ -713,9 +735,9 @@
                     item.optionsObj = item.options.map((optText, idx) => {
                         let isCorr = idx === item.correctIndex;
                         return {
-                            text: optText,
+                            text: optText.text,
                             correct: isCorr,
-                            why: isCorr ? `Correct option. ${item.explanation}` : `Incorrect. While plausible, this choice is incorrect based on Dr. Gillard's slide notes.`
+                            why: optText.why
                         };
                     });
                 }
@@ -744,7 +766,7 @@
                 const prefixes = ["A", "B", "C", "D"];
 
                 // Shuffle options for each question
-                let indexedOpts = item.options.map((opt, idx) => ({ text: opt, originalIdx: idx }));
+                let indexedOpts = item.options.map((opt, idx) => ({ text: opt.text, originalIdx: idx }));
                 shuffle(indexedOpts);
 
                 // Find new correct index after shuffle
