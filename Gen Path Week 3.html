@@ -6,42 +6,38 @@
     <title>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</title>
     <style>
         :root {
-            --bg-light: #0f0f0f;
-            --card-bg: #1a1a1a;
-            --text-dark: #ffffff;
-            --primary: #1a1a1a;
+            --bg-body: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-dim: #b0b0b0;
             --accent: #ff9900;
-            --border-color: #333333;
+            --accent-hover: #cc7a00;
+            --border-color: #282828;
             --correct-bg: #14532d;
             --correct-border: #22c55e;
-            --correct-text: #ffffff;
             --incorrect-bg: #7f1d1d;
             --incorrect-border: #ef4444;
-            --incorrect-text: #ffffff;
+            --option-bg: #252525;
+            --option-hover: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-light);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            padding-top: 70px;
-            padding-bottom: 40px;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-top: 75px;
+            padding-bottom: 50px;
             display: flex;
             justify-content: center;
         }
 
-        .quiz-container {
-            width: 100%;
-            max-width: 900px;
-            background: var(--bg-light);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-color);
-            position: relative;
-        }
-
+        /* Sticky Top Header */
         .sticky-header {
             position: fixed;
             top: 0;
@@ -50,46 +46,50 @@
             height: 60px;
             background-color: #141414;
             color: var(--accent);
-            padding: 0 30px;
+            padding: 0 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
             border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
         .sticky-header h1 {
-            margin: 0;
-            font-size: 1.25rem;
-            font-weight: 600;
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         .score-tracker {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: bold;
             background: #252525;
-            padding: 6px 14px;
+            padding: 6px 16px;
             border-radius: 20px;
             border: 1px solid var(--accent);
+            color: var(--text-main);
         }
 
-        .quiz-body {
-            padding: 30px;
+        /* Container */
+        .quiz-container {
+            width: 100%;
+            max-width: 850px;
+            padding: 0 20px;
         }
 
         .question-card {
-            background: var(--card-bg);
+            background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 24px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        .question-number {
+        .question-meta {
             color: var(--accent);
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: bold;
             text-transform: uppercase;
             margin-bottom: 8px;
@@ -97,93 +97,121 @@
 
         .question-text {
             font-size: 1.15rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 18px;
-            line-height: 1.5;
+            line-height: 1.45;
         }
 
         .options-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
         .option-item {
-            background-color: #252525;
+            background-color: var(--option-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 12px 16px;
+            padding: 14px 18px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: background 0.2s, border-color 0.2s;
             font-size: 1rem;
-            color: var(--text-dark);
             text-align: left;
+            color: var(--text-main);
         }
 
         .option-item:hover:not(.disabled) {
             border-color: var(--accent);
-            background-color: #333333;
+            background-color: var(--option-hover);
         }
 
         .option-item.correct {
-            border-color: var(--correct-border) !important;
             background-color: var(--correct-bg) !important;
-            color: var(--correct-text) !important;
+            border-color: var(--correct-border) !important;
+            color: #ffffff !important;
             font-weight: 600;
         }
 
         .option-item.incorrect {
-            border-color: var(--incorrect-border) !important;
             background-color: var(--incorrect-bg) !important;
-            color: var(--incorrect-text) !important;
+            border-color: var(--incorrect-border) !important;
+            color: #ffffff !important;
         }
 
         .option-item.disabled {
             cursor: not-allowed;
-            opacity: 0.85;
+            opacity: 0.9;
         }
 
+        /* Feedback Section */
         .feedback-box {
+            margin-top: 18px;
             padding: 16px;
-            background-color: #222222;
-            border-left: 4px solid var(--accent);
-            border-radius: 4px;
-            margin-top: 16px;
+            background-color: #202020;
+            border-radius: 6px;
             display: none;
+            border-left: 4px solid var(--accent);
+        }
+
+        .status-banner {
+            font-size: 1.05rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-banner.correct {
+            color: #22c55e;
+        }
+
+        .status-banner.incorrect {
+            color: #ef4444;
+        }
+
+        .breakdown-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             font-size: 0.95rem;
-            line-height: 1.5;
-            color: #b0b0b0;
+            line-height: 1.45;
         }
 
-        .feedback-box strong {
-            color: var(--text-dark);
-        }
-
-        .summary-card {
-            background: var(--card-bg);
-            color: var(--text-dark);
-            padding: 30px;
-            border-radius: 12px;
-            text-align: center;
-            margin-top: 30px;
-            border: 2px solid var(--accent);
-        }
-
-        .summary-card h2 {
-            margin-top: 0;
-            font-size: 1.8rem;
+        .breakdown-item strong {
             color: var(--accent);
         }
 
-        .btn {
+        /* Completion Summary */
+        .summary-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .summary-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .summary-score {
+            font-size: 2.6rem;
+            font-weight: 800;
+            margin: 15px 0;
+        }
+
+        .retake-btn {
             background-color: var(--accent);
             color: #000000;
             border: none;
             padding: 12px 30px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: bold;
             border-radius: 25px;
             cursor: pointer;
@@ -191,7 +219,7 @@
             margin-top: 15px;
         }
 
-        .btn:hover {
+        .retake-btn:hover {
             opacity: 0.9;
         }
     </style>
@@ -199,422 +227,346 @@
 <body>
 
     <div class="sticky-header">
-        <h1>Gen Path Week 3</h1>
-        <div class="score-tracker" id="score-display">Score: 0 / 36 (0%)</div>
+        <h1>Gen Path Week 3 Assessment</h1>
+        <div class="score-tracker" id="score-display">Score: 0 / 0 (0%)</div>
     </div>
-    
+
     <div class="quiz-container">
-        <div class="quiz-body" id="quiz-body">
-            <!-- Questions injected via JS -->
-        </div>
-        
-        <div class="quiz-body">
-            <div class="summary-card" id="final-summary" style="display: none;">
-                <h2>Quiz Complete!</h2>
-                <p id="final-score-text" style="font-size: 2.5rem; font-weight: bold; margin: 15px 0;"></p>
-                <p id="summary-feedback" style="color: #b0b0b0;"></p>
-                <button class="btn" onclick="resetQuiz()">Retake Quiz</button>
-            </div>
+        <div id="quiz-body"></div>
+
+        <div class="summary-card" id="final-summary">
+            <div class="summary-title">Quiz Completed!</div>
+            <div class="summary-score" id="final-score-text">0%</div>
+            <p id="summary-feedback" style="color: var(--text-dim); margin-bottom: 15px;"></p>
+            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
     </div>
 
     <script>
-        const originalQuizData = [
-            {
-                question: "A patient is exposed to Mycobacterium tuberculosis. Following phagocytosis, alveolar macrophages are unable to fuse the phagosome with the lysosome. Which specific cytokine is secreted by T-helper 1 (TH1) cells to force this fusion and promote epithelioid cell transformation?",
-                options: [
-                    "Interferon-gamma (IFN-γ)",
-                    "Interleukin-10 (IL-10)",
-                    "Tumor Necrosis Factor-alpha (TNF-α)",
-                    "Interleukin-4 (IL-4)"
-                ],
-                correct: 0,
-                explanation: "TH1 cells secrete IL-2 and IFN-γ. IFN-γ acts as the premier macrophage activator, forcing lysosomal fusion and transforming macrophages into enlarged epithelioid cells in granulomatous inflammation."
-            },
-            {
-                question: "A neonate receives protective antibodies through maternal breast milk (colostrum). Which of the following best describes the structure of the primary immunoglobulin responsible for this natural passive immunity?",
-                options: [
-                    "A secretory dimer joined by a J-chain",
-                    "A massive pentamer joined by disulfide bonds",
-                    "A monomer capable of crossing the transplacental barrier",
-                    "A monomer tightly bound to mast cell high-affinity receptors"
-                ],
-                correct: 0,
-                explanation: "IgA is found in external body secretions (mother's milk, sweat, mucus, tears). It functions as a secretory dimer containing a joining chain and a secretory protein to neutralize pathogens at mucosal surfaces."
-            },
-            {
-                question: "A previously healthy host is infected by a virus. Endogenous viral antigens are processed and presented on the surface of infected nucleated cells. Which of the following immune cells will recognize this specific complex?",
-                options: [
-                    "CD8+ Cytotoxic T-lymphocytes",
-                    "CD4+ Helper T-lymphocytes",
-                    "Plasma cells",
-                    "Regulatory T-cells"
-                ],
-                correct: 0,
-                explanation: "Endogenous antigens (such as viruses) are presented on MHC Class I molecules, which are present on all nucleated cells. MHC I interacts exclusively with CD8+ cytotoxic/killer T-cells."
-            },
-            {
-                question: "During a secondary immune response, an activated B-cell undergoes isotype switching. Which of the following structural changes occurs within the secreted immunoglobulin?",
-                options: [
-                    "The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained.",
-                    "The variable (Fab) region is modified to bind a newly encountered antigenic epitope.",
-                    "Both heavy and light chains are replaced entirely by memory T-cell derivatives.",
-                    "The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer."
-                ],
-                correct: 0,
-                explanation: "Isotype (class) switching utilizes DNA recombination to change the constant heavy chain domain (Fc region)—switching the antibody class (e.g., IgM to IgG)—while perfectly preserving the exact antigen-binding specificity of the Fab region."
-            },
-            {
-                question: "Following classical pathway activation by circulating immunoglobulins (IgM or IgG), a series of cascading enzymatic reactions occurs. Which of the following complement components directly forms a transmembrane pore resulting in osmotic lysis of the target cell?",
-                options: [
-                    "C5b-9 (Membrane Attack Complex)",
-                    "C3a and C5a",
-                    "Interleukin-6 (IL-6)",
-                    "C3b"
-                ],
-                correct: 0,
-                explanation: "The Membrane Attack Complex (MAC) is composed of C5b, C6, C7, C8, and C9 (C5b-9). It forms a physical cylindrical lesion/pore through the target cell membrane, leading to cell lysis."
-            },
-            {
-                question: "Which of the following cytokines functions primarily as an immunosuppressor, limiting immune responses and preventing chronic inflammatory tissue injury?",
-                options: [
-                    "Interleukin-10 (IL-10)",
-                    "Interleukin-1 (IL-1)",
-                    "Interleukin-2 (IL-2)",
-                    "Tumor Necrosis Factor-alpha (TNF-α)"
-                ],
-                correct: 0,
-                explanation: "IL-10 is the major anti-inflammatory immunosuppressor cytokine. It is secreted by Regulatory T-cells (Treg, marked CD25+Foxp3+CD4+) to suppress immune responses."
-            },
-            {
-                question: "An individual receives a rabies antiserum injection following an animal bite. Which of the following classifications of adaptive immunity does this represent?",
-                options: [
-                    "Artificial passive immunity",
-                    "Natural passive immunity",
-                    "Artificial active immunity",
-                    "Natural active immunity"
-                ],
-                correct: 0,
-                explanation: "Artificial passive immunity involves the direct injection of exogenous, pre-made antibodies (from blood plasma/serum) to provide immediate but short-term protection with no memory cells formed. Examples include rabies antiserum and tetanus antitoxin."
-            },
-            {
-                question: "A pediatric patient presents with hypoplasia of the thymus gland, accompanied by cardiac and blood vessel anomalies. Genetic testing reveals a deletion on chromosome 22. This clinical presentation is characteristic of which of the following conditions?",
-                options: [
-                    "DiGeorge syndrome",
-                    "Bruton’s agammaglobulinemia",
-                    "Acquired Immunodeficiency Syndrome (AIDS)",
-                    "Systemic vasculitis"
-                ],
-                correct: 0,
-                explanation: "DiGeorge syndrome is a congenital immune deficiency caused by a deletion on chromosome 22, resulting in hypoplasia or aplasia of the thymus, which profoundly impairs T-cell maturation, alongside heart and vessel defects."
-            },
-            {
-                question: "Human Immunodeficiency Virus (HIV) initiates pathogenesis by selectively binding to specific glycoprotein receptors on host cells. This binding specifically leads to the progressive depletion of which cellular population?",
-                options: [
-                    "CD4+ Helper T-lymphocytes",
-                    "CD8+ Cytotoxic T-lymphocytes",
-                    "Plasma cells",
-                    "Mast cells and basophils"
-                ],
-                correct: 0,
-                explanation: "HIV attacks and destroys infection-fighting CD4+ cells. The loss of CD4+ Helper T-cells eliminates immune coordination, eventually causing the onset of AIDS (typically when left untreated for 8-10 years)."
-            },
-            {
-                question: "Soluble antigen molecules in the bloodstream are cross-linked by specific antibodies into large, insoluble macromolecular complexes that settle out of body fluids. Which mechanism of antibody action does this describe?",
-                options: [
-                    "Precipitation",
-                    "Neutralization",
-                    "Agglutination",
-                    "Opsonization"
-                ],
-                correct: 0,
-                explanation: "Precipitation works specifically for numerous, small SOLUBLE antigens in the blood. Agglutination refers to the clumping of cell-bound (particulate) antigens, while neutralization masks dangerous parts of toxins or viruses."
-            },
-            {
-                question: "Upon primary exposure to a novel antigen, naive B-lymphocytes are activated. Which immunoglobulin class is ALWAYS the first to be secreted by plasma cells during this initial encounter?",
-                options: [
-                    "IgM",
-                    "IgA",
-                    "IgD",
-                    "IgG"
-                ],
-                correct: 0,
-                explanation: "IgM is the 'Massive, Me First' antibody. It is the first antibody synthesized before birth and the first class secreted by plasma cells upon any new, primary exposure."
-            },
-            {
-                question: "A cytotoxic T-lymphocyte identifies a defective cell expressing an appropriate antigen-MHC I complex. To initiate apoptosis in the target cell, the T-lymphocyte secretes which of the following?",
-                options: [
-                    "Perforins and granzymes",
-                    "Interleukin-4 and Interleukin-5",
-                    "Myeloperoxidase and lysozyme",
-                    "Nitric oxide and C-reactive protein"
-                ],
-                correct: 0,
-                explanation: "CD8+ Cytotoxic (Killer) T-cells secrete cytolytic proteins called perforins (which form pores in target membranes) and granzymes (which enter the cell and activate the caspase system) to trigger apoptosis in defective cells."
-            },
-            {
-                question: "A naive B-cell circulating in the lymphatic system encounters a foreign antigen. Which immunoglobulin, permanently bound to the B-cell membrane, primarily acts as the receptor for this initial antigen recognition?",
-                options: [
-                    "IgD",
-                    "IgE",
-                    "IgG",
-                    "IgM (secreted pentamer)"
-                ],
-                correct: 0,
-                explanation: "IgD is permanently bound to the B-cell membrane where it functions strictly as the B-cell receptor for antigen recognition."
-            },
-            {
-                question: "The complement system produces several critical fragments during activation. Which of the following fragments covalently coats bacterial surfaces, functioning as a powerful opsonin to stimulate rapid phagocytosis?",
-                options: [
-                    "C3b",
-                    "C3a",
-                    "C5a",
-                    "C5b-9"
-                ],
-                correct: 0,
-                explanation: "C3b is a powerful opsonin that coats pathogens, providing an optimal handle ('yum yum effect') to enhance engulfment by phagocytic cells. C5a and C3a act as chemotactic signals and anaphylatoxins."
-            },
-            {
-                question: "Histological examination of a pulmonary granuloma secondary to a chronic Mycobacterium tuberculosis infection reveals a defined central core surrounded by specialized cells. Which of the following describes the composition of this central core?",
-                options: [
-                    "Caseous necrotic tissue",
-                    "Epithelioid macrophages",
-                    "Multinucleated Langhans giant cells",
-                    "A dense collar of fibroblasts and CD4+ T-cells"
-                ],
-                correct: 0,
-                explanation: "The architecture of a TB granuloma consists of a central core of caseous necrotic tissue, surrounded by a middle zone of epithelioid macrophages and multinucleated giant cells, and an outer rim of CD4+ T-cells and fibroblasts."
-            },
-            {
-                question: "A patient with a chronic helminthic parasite infection demonstrates an exaggerated allergic response. Which helper T-cell subset and cytokine pairing is primarily responsible for recruiting eosinophils and promoting IgE secretion in this scenario?",
-                options: [
-                    "T Helper 2 (TH2); IL-4 and IL-5",
-                    "T Helper 1 (TH1); IL-2 and IFN-γ",
-                    "Regulatory T-cell (Treg); IL-10",
-                    "Macrophage; IL-1 and TNF-α"
-                ],
-                correct: 0,
-                explanation: "TH2 cells secrete IL-4 (which stimulates B-cells to undergo isotype switching to secrete IgE) and IL-5 (the chemotactic and growth factor for eosinophils)."
-            },
-            {
-                question: "Following an initial exposure to a pathogen, antibody titers typically demonstrate a lag period before rising. How long is this lag period characteristic of the primary immune response?",
-                options: [
-                    "3 to 6 days",
-                    "1 to 2 hours",
-                    "8 to 10 years",
-                    "10 to 14 days"
-                ],
-                correct: 0,
-                explanation: "The primary immune response (the first exposure to an antigen) is characterized by a specific 3-6 day lag period before specific antibodies are detectable."
-            },
-            {
-                question: "Which of the following immunoglobulins is the smallest, most abundant in serum (comprising ~80%), and capable of crossing the transplacental barrier?",
-                options: [
-                    "IgG",
-                    "IgE",
-                    "IgM",
-                    "IgA"
-                ],
-                correct: 0,
-                explanation: "IgG is the smallest and most abundant antibody in circulation. It is the ONLY immunoglobulin class capable of crossing the placenta ('gee, Mom, thanks!') to provide natural passive immunity to the fetus."
-            },
-            {
-                question: "A congenital immune deficiency is characterized by profoundly impaired B-cell development and maturation. The genetic inheritance pattern of this condition is X-linked. Which of the following is the correct diagnosis?",
-                options: [
-                    "Bruton’s agammaglobulinemia",
-                    "DiGeorge syndrome",
-                    "Acquired Immunodeficiency Syndrome",
-                    "Myeloperoxidase deficiency"
-                ],
-                correct: 0,
-                explanation: "Bruton’s agammaglobulinemia is an X-linked congenital disorder affecting B-cell development and maturation, preventing the adequate production of immunoglobulins."
-            },
-            {
-                question: "Professional antigen-presenting cells (APCs) express a specific surface molecule used to present exogenous antigens to helper T-cells. Based on the functional requirements of immune activation, which molecule is this?",
-                options: [
-                    "MHC Class II",
-                    "MHC Class I",
-                    "IgD",
-                    "CD25+Foxp3+"
-                ],
-                correct: 0,
-                explanation: "Professional APCs (Macrophages, Dendritic Cells, B-cells) present exogenous antigens using MHC Class II, which exclusively activates CD4+ Helper T-cells (Rule of 8: 2 x 4 = 8)."
-            },
+        const rawQuizData = [
             {
                 question: "On a patient rheumatology report, HLA B27+ is a laboratory finding that __________________.",
                 options: [
-                    "suggests a potential problem with self recognition",
-                    "is based on the MHC 2 class of proteins",
-                    "suggests the person does not have the HLA B27 protein",
-                    "suggests the person has rheumatoid arthritis"
-                ],
-                correct: 0,
-                explanation: "HLA-B27 is an MHC Class I genetic variant. Positivity suggests a potential problem with self-recognition, strongly associating with autoimmune conditions like Ankylosing Spondylitis."
+                    { text: "suggests a potential problem with self recognition", isCorrect: true, rationale: "HLA-B27 is an MHC Class I variant associated with Ankylosing Spondylitis, reflecting a defect in immune self-recognition." },
+                    { text: "is based on the MHC 2 class of proteins", isCorrect: false, rationale: "HLA-B27 belongs to the MHC Class I family, not MHC Class II (such as HLA-DR4)." },
+                    { text: "suggests the person does not have the HLA B27 protein", isCorrect: false, rationale: "A positive (+) test indicates the presence of the HLA-B27 surface protein." },
+                    { text: "suggests the person has rheumatoid arthritis", isCorrect: false, rationale: "Rheumatoid arthritis is classically linked with the MHC Class II allele HLA-DR4, not HLA-B27." }
+                ]
             },
             {
                 question: "Lymphocytes are considered _______________ immunity due to the ______________ of their actions through _____________.",
                 options: [
-                    "adaptive; amplification; cloning",
-                    "innate; expression; gene activation",
-                    "adaptive; moderation; innervation",
-                    "innate; tolerance; phagocytosis"
-                ],
-                correct: 0,
-                explanation: "Lymphocytes represent the adaptive immune system and mount effective responses by amplifying their specific actions through clonal selection and cloning (expansion)."
+                    { text: "adaptive; amplification; cloning", isCorrect: true, rationale: "Lymphocytes drive adaptive immunity and amplify their specific immune responses through antigen-driven clonal expansion (cloning)." },
+                    { text: "innate; expression; gene activation", isCorrect: false, rationale: "Lymphocytes belong to the adaptive branch, not innate defenses." },
+                    { text: "adaptive; moderation; innervation", isCorrect: false, rationale: "Adaptive responses amplify rapidly via cell division, not through neural innervation." },
+                    { text: "innate; tolerance; phagocytosis", isCorrect: false, rationale: "Lymphocytes are non-phagocytic adaptive cells (with phagocytosis carried out by macrophages and neutrophils)." }
+                ]
             },
             {
                 question: "All of the following are correct concerning IL-1 EXCEPT:",
                 options: [
-                    "it is a chemotactic factor for eosinophils",
-                    "it is secreted by antigen presenting cells",
-                    "it is also known as endogenous pyrogen",
-                    "it stimulates inflammation"
-                ],
-                correct: 0,
-                explanation: "IL-1 is an endogenous pyrogen that stimulates systemic inflammation and is secreted by APCs like macrophages. It is NOT the chemotactic factor for eosinophils (that is IL-5)."
+                    { text: "it is a chemotactic factor for eosinophils", isCorrect: true, rationale: "This statement is false and therefore the correct exception: Interleukin-5 (IL-5), not IL-1, is the chemotactic factor and activator for eosinophils." },
+                    { text: "it is secreted by antigen presenting cells", isCorrect: false, rationale: "IL-1 is actively synthesized and secreted by APCs, especially activated macrophages." },
+                    { text: "it is also known as endogenous pyrogen", isCorrect: false, rationale: "IL-1 functions as the body's primary endogenous pyrogen, acting on the hypothalamus to induce fever." },
+                    { text: "it stimulates inflammation", isCorrect: false, rationale: "IL-1 is a major acute pro-inflammatory cytokine." }
+                ]
             },
             {
                 question: "What is the primary action associated with CD8+ cell activation?",
                 options: [
-                    "activation of caspase in target cells",
-                    "secretion of immunoglobulin",
-                    "secretion of IL-2 and memory cell formation",
-                    "release of histamine and other pro-inflammatory cytokines"
-                ],
-                correct: 0,
-                explanation: "CD8+ Cytotoxic T-cells secrete granzymes that enter target cells and activate caspases, initiating programmed cell death (apoptosis)."
+                    { text: "activation of caspase in target cells", isCorrect: true, rationale: "Activated CD8+ cytotoxic T-cells deliver granzymes through perforin pores, cleaving and activating intracellular caspases to execute apoptosis." },
+                    { text: "secretion of immunoglobulin", isCorrect: false, rationale: "Immunoglobulins are synthesized and secreted exclusively by plasma cells (derived from B-cells)." },
+                    { text: "secretion of IL-2 and memory cell formation", isCorrect: false, rationale: "IL-2 secretion is primarily carried out by CD4+ T helper 1 cells to stimulate growth." },
+                    { text: "release of histamine and other pro-inflammatory cytokines", isCorrect: false, rationale: "Histamine is released by granulated mast cells and basophils, not cytotoxic T-lymphocytes." }
+                ]
             },
             {
                 question: "Which of the following does NOT operate as a macrophage cell type?",
                 options: [
-                    "T cell",
-                    "kupffer cell",
-                    "dendritic cell",
-                    "dust cell"
-                ],
-                correct: 0,
-                explanation: "Kupffer cells (liver), dust cells (lungs), and dendritic cells function as macrophages/APCs. T cells are lymphocytes."
+                    { text: "T cell", isCorrect: true, rationale: "T-cells are adaptive lymphocytes that recognize presented antigens; they are not phagocytic macrophages." },
+                    { text: "kupffer cell", isCorrect: false, rationale: "Kupffer cells are specialized resident hepatic macrophages." },
+                    { text: "dendritic cell", isCorrect: false, rationale: "Dendritic cells belong to the mononuclear phagocyte system and function as professional APCs." },
+                    { text: "dust cell", isCorrect: false, rationale: "Dust cells are resident alveolar macrophages in the pulmonary tissue." }
+                ]
             },
             {
                 question: "Which of the following cell type does NOT have MHC I class molecules on its surface?",
                 options: [
-                    "erythrocyte",
-                    "neurons",
-                    "cardiac myocytes",
-                    "endothelial cell"
-                ],
-                correct: 0,
-                explanation: "MHC Class I molecules are expressed on virtually all nucleated cells in the body. Mature erythrocytes (red blood cells) lack a nucleus and do not express MHC I."
+                    { text: "erythrocyte", isCorrect: true, rationale: "MHC Class I is expressed on all nucleated cells; mature red blood cells lack a nucleus and do not express MHC I." },
+                    { text: "neurons", isCorrect: false, rationale: "Neurons are nucleated somatic cells and express MHC Class I." },
+                    { text: "cardiac myocytes", isCorrect: false, rationale: "Cardiac myocytes possess nuclei and express surface MHC Class I." },
+                    { text: "endothelial cell", isCorrect: false, rationale: "Vascular endothelial cells are nucleated and express surface MHC Class I." }
+                ]
             },
             {
                 question: "The effectiveness of cell mediated immunity is principally dependent upon which of the following?",
                 options: [
-                    "thymus",
-                    "spleen",
-                    "liver",
-                    "thyroid"
-                ],
-                correct: 0,
-                explanation: "Cell-mediated immunity relies on T-lymphocytes, which undergo critical maturation and selection within the thymus."
+                    { text: "thymus", isCorrect: true, rationale: "Cell-mediated immunity depends on functional T-lymphocytes, which must undergo positive and negative selection and mature in the thymus." },
+                    { text: "spleen", isCorrect: false, rationale: "The spleen is a secondary lymphoid organ for blood filtration, not the primary site of T-cell development." },
+                    { text: "liver", isCorrect: false, rationale: "The liver produces plasma complement and acute-phase proteins, but does not direct T-cell maturation." },
+                    { text: "thyroid", isCorrect: false, rationale: "The thyroid is an endocrine gland governing metabolic rate, not cellular immune maturation." }
+                ]
             },
             {
                 question: "The _____________ presents processed antigenic material through recognizable MHC 2 proteins.",
                 options: [
-                    "dendritic cell",
-                    "cytolytic T cell",
-                    "mast cell",
-                    "CD4+ helper cell"
-                ],
-                correct: 0,
-                explanation: "Dendritic cells are professional Antigen Presenting Cells (APCs) that present processed exogenous antigens on MHC Class II molecules."
+                    { text: "dendritic cell", isCorrect: true, rationale: "Dendritic cells are professional Antigen-Presenting Cells (APCs) that express MHC Class II to present exogenous antigens to CD4+ T-cells." },
+                    { text: "cytolytic T cell", isCorrect: false, rationale: "Cytolytic (CD8+) T-cells recognize antigens presented on MHC Class I rather than presenting on MHC Class II." },
+                    { text: "mast cell", isCorrect: false, rationale: "Mast cells are innate granulocytes involved in allergic responses and histamine release." },
+                    { text: "CD4+ helper cell", isCorrect: false, rationale: "CD4+ helper T-cells read antigen displayed on MHC Class II via their TCRs; they do not present the antigen." }
+                ]
             },
             {
                 question: "T helper 1 produces _____________ while the T helper 2 secretes ________________.",
                 options: [
-                    "IL-2 & interferon (IFN) ; IL-4 & IL-5",
-                    "interferon (IFN) & IL-4 ; IgE & IL-5",
-                    "IL-2 & caspase ; interferon & catalase",
-                    "IgA & IL-2 ; IL-4 & IL-5"
-                ],
-                correct: 0,
-                explanation: "TH1 cells secrete IL-2 and IFN-gamma to stimulate cell-mediated macrophage responses, while TH2 cells secrete IL-4 and IL-5 to drive humoral and allergic/parasitic responses."
+                    { text: "IL-2 & interferon (IFN) ; IL-4 & IL-5", isCorrect: true, rationale: "TH1 cells secrete IL-2 and IFN-gamma to drive cell-mediated immunity; TH2 cells secrete IL-4 and IL-5 to drive humoral and allergic/eosinophilic responses." },
+                    { text: "interferon (IFN) & IL-4 ; IgE & IL-5", isCorrect: false, rationale: "IL-4 is a TH2 product, and IgE is an antibody secreted by plasma cells, not T-cells." },
+                    { text: "IL-2 & caspase ; interferon & catalase", isCorrect: false, rationale: "Caspases and catalase are intracellular enzymes, not secreted cytokine communicators." },
+                    { text: "IgA & IL-2 ; IL-4 & IL-5", isCorrect: false, rationale: "IgA is an immunoglobulin produced by plasma cells, not T helper 1 cells." }
+                ]
             },
             {
-                question: "___________ stimulates apoptosis, which is ___________.",
+                question: "___________ stimulates apoptosis, which is ___________. [Historical synonym: cachectin]",
                 options: [
-                    "TNF; deconstruction of the cell",
-                    "Prothrombin; genetically programmed cell death",
-                    "Histamine; a wasting condition",
-                    "TNF; replication of a cell"
-                ],
-                correct: 0,
-                explanation: "Tumor Necrosis Factor (TNF) acts as a potent 'death factor' capable of stimulating apoptosis and cellular deconstruction/necrosis."
+                    { text: "TNF; deconstruction of the cell", isCorrect: true, rationale: "Tumor Necrosis Factor (TNF, previously called cachectin) acts as a cytotoxic 'death factor' that induces apoptosis, the controlled deconstruction of the cell." },
+                    { text: "Prothrombin; genetically programmed cell death", isCorrect: false, rationale: "Prothrombin is a clotting zymogen in the coagulation cascade, not an apoptotic cytokine." },
+                    { text: "Histamine; a wasting condition", isCorrect: false, rationale: "Histamine causes vasodilation and vascular permeability, not apoptosis." },
+                    { text: "TNF; replication of a cell", isCorrect: false, rationale: "TNF triggers cell death and destruction, not cellular replication." }
+                ]
             },
             {
                 question: "The _______ cell secretes ______________ to upregulate macrophages and neutrophils, and protect other cells from viral uptake and replication.",
                 options: [
-                    "helper T ; interferon (IFN)",
-                    "macrophage ; IL-2",
-                    "killer T ; IL-1",
-                    "antigen presenting ; TNF"
-                ],
-                correct: 0,
-                explanation: "Helper T-cells (specifically TH1) secrete Interferon-gamma (IFN), which acts as a powerful activator to upregulate macrophages/neutrophils and block viral replication."
+                    { text: "helper T ; interferon (IFN)", isCorrect: true, rationale: "CD4+ T helper 1 cells secrete Interferon-gamma (IFN-γ), which powerfully activates macrophages/neutrophils and induces antiviral defenses." },
+                    { text: "macrophage ; IL-2", isCorrect: false, rationale: "IL-2 is secreted by activated T-lymphocytes, not macrophages." },
+                    { text: "killer T ; IL-1", isCorrect: false, rationale: "IL-1 is synthesized primarily by macrophages and APCs, not CD8+ killer T-cells." },
+                    { text: "antigen presenting ; TNF", isCorrect: false, rationale: "While APCs make TNF, the definitive cytokine for macrophage upregulation and blocking viral replication is interferon from helper T-cells." }
+                ]
             },
             {
                 question: "What is the significance of cell mediated immunity?",
                 options: [
-                    "it does NOT involve secretion of antibodies",
-                    "it relies on toll-like receptors",
-                    "it involves mainly B lymphocytes",
-                    "it involves only innate immunity"
-                ],
-                correct: 0,
-                explanation: "Cell-mediated immunity is driven by T-lymphocytes directly attacking infected/abnormal cells and directing other immune cells; it operates without the secretion of antibodies (which define humoral immunity)."
+                    { text: "it does NOT involve secretion of antibodies", isCorrect: true, rationale: "Cell-mediated immunity functions via direct T-cell receptor engagement and cytotoxic/cytokine actions without releasing soluble antibodies." },
+                    { text: "it relies on toll-like receptors", isCorrect: false, rationale: "TLRs are pattern recognition receptors of the innate immune system." },
+                    { text: "it involves mainly B lymphocytes", isCorrect: false, rationale: "B-lymphocytes mediate humoral (antibody-mediated) immunity." },
+                    { text: "it involves only innate immunity", isCorrect: false, rationale: "Cell-mediated immunity is a major division of antigen-specific adaptive immunity." }
+                ]
             },
             {
-                question: "The regulatory T cell expresses ____________ and secretes ______________.",
+                question: "The regulatory T cell expresses ____________ and secretes ______________. [Transcript / Kahoot emphasis]",
                 options: [
-                    "CD4+ ; IL-10",
-                    "CD4+ ; histamine",
-                    "CD8+ ; granzyme",
-                    "CD8+ ; endogenous pyrogen"
-                ],
-                correct: 0,
-                explanation: "Regulatory T-cells (Tregs) are a subset of CD4+ T-cells that secrete the immunosuppressive cytokine IL-10 to downregulate immune responses."
+                    { text: "CD4+ ; IL-10", isCorrect: true, rationale: "Regulatory T-cells (Tregs) are CD4+ (specifically CD4+ CD25+ Foxp3+) and secrete the potent immunosuppressive cytokine IL-10." },
+                    { text: "CD4+ ; histamine", isCorrect: false, rationale: "T-cells do not produce or release histamine." },
+                    { text: "CD8+ ; granzyme", isCorrect: false, rationale: "Granzymes are secreted by cytotoxic CD8+ killer T-cells to lyse targets, not by Tregs." },
+                    { text: "CD8+ ; endogenous pyrogen", isCorrect: false, rationale: "Endogenous pyrogen (IL-1) is secreted by macrophages." }
+                ]
             },
             {
                 question: "What is the function of the MHC proteins?",
                 options: [
-                    "they are used to present antigens to the adaptive immune system",
-                    "they provide energy for coping with parasites",
-                    "they serve as cytokine signals",
-                    "they are used to present antigens to the innate immune system"
-                ],
-                correct: 0,
-                explanation: "Major Histocompatibility Complex (MHC) proteins serve as the critical display platforms to present processed peptide antigens to the T-cell receptors of the adaptive immune system."
+                    { text: "they are used to present antigens to the adaptive immune system", isCorrect: true, rationale: "Major Histocompatibility Complex molecules display processed peptide fragments on the cell surface for recognition by T-cell receptors." },
+                    { text: "they provide energy for coping with parasites", isCorrect: false, rationale: "MHC proteins are recognition markers, not energy-yielding metabolites." },
+                    { text: "they serve as cytokine signals", isCorrect: false, rationale: "MHC molecules are fixed transmembrane display scaffolds, not soluble cytokine signals." },
+                    { text: "they are used to present antigens to the innate immune system", isCorrect: false, rationale: "MHC presents antigens specifically to adaptive T-lymphocytes (CD4+ and CD8+)." }
+                ]
             },
             {
                 question: "Which of the following promotes mitosis and acts as a growth factor?",
                 options: [
-                    "IL-2",
-                    "histamine",
-                    "TNF",
-                    "IL-1"
-                ],
-                correct: 0,
-                explanation: "Interleukin-2 (IL-2) acts as the primary T-cell growth factor, stimulating clonal expansion and mitosis following initial antigen activation."
+                    { text: "IL-2", isCorrect: true, rationale: "Interleukin-2 (IL-2) is the primary autocrine and paracrine growth factor that stimulates T-cell clonal mitosis and proliferation." },
+                    { text: "histamine", isCorrect: false, rationale: "Histamine increases vascular permeability and smooth muscle tone, not T-cell mitosis." },
+                    { text: "TNF", isCorrect: false, rationale: "TNF acts as a cytotoxic factor promoting necrosis and apoptosis, not a growth factor." },
+                    { text: "IL-1", isCorrect: false, rationale: "IL-1 is an endogenous pyrogen promoting inflammation and fever, not clonal lymphocyte mitosis." }
+                ]
             },
             {
                 question: "What is the source of most of the body's lymphocytes?",
                 options: [
-                    "bone marrow",
-                    "Peyer's patches",
-                    "spleen",
-                    "liver"
-                ],
-                correct: 0,
-                explanation: "The red bone marrow is the primary source of all hematopoietic stem cells, including the precursors for all the body's lymphocytes."
+                    { text: "bone marrow", isCorrect: true, rationale: "All hematopoietic cells, including the precursors of B and T lymphocytes, originate in the red bone marrow." },
+                    { text: "Peyer's patches", isCorrect: false, rationale: "Peyer's patches are gut-associated lymphoid tissues where lymphocytes respond to intestinal antigens." },
+                    { text: "spleen", isCorrect: false, rationale: "The spleen houses mature lymphocytes for blood monitoring, but does not produce them de novo." },
+                    { text: "liver", isCorrect: false, rationale: "The liver produces plasma proteins and bile, not adult lymphocytes." }
+                ]
+            },
+            {
+                question: "Which macrophage phenotype is classically activated, secretes IL-1, TNF-alpha, and Nitric Oxide (NO), and drives chronic tissue inflammation? [Transcript / Kahoot emphasis]",
+                options: [
+                    { text: "M1 Macrophage", isCorrect: true, rationale: "M1 macrophages are pro-inflammatory, release reactive nitrogen species (NO) and destructive cytokines, and maintain chronic inflammatory lesions." },
+                    { text: "M2 Macrophage", isCorrect: false, rationale: "M2 macrophages are alternatively activated and promote tissue repair, anti-inflammatory balance, and fibrosis." },
+                    { text: "Kupffer cell M2", isCorrect: false, rationale: "Kupffer cells can adopt M1 or M2 states; chronic destruction is specifically the M1 phenotype." },
+                    { text: "Langerhans resting cell", isCorrect: false, rationale: "Resting dendritic cells survey antigens and do not drive chronic inflammatory damage." }
+                ]
+            },
+            {
+                question: "Which statement accurately describes Natural Killer (NK) cell physiology? [Kahoot Review emphasis]",
+                options: [
+                    { text: "They are innate lymphocytes that do NOT require MHC presentation to identify and kill targets", isCorrect: true, rationale: "NK cells are innate cytotoxic lymphocytes that recognize stressed cells lacking normal MHC Class I expression without requiring prior antigen presentation." },
+                    { text: "They require MHC Class II antigen presentation by dendritic cells", isCorrect: false, rationale: "MHC Class II interacts with CD4+ T-cells, not innate NK cells." },
+                    { text: "They differentiate into antibody-secreting plasma cells", isCorrect: false, rationale: "Plasma cells derive exclusively from activated B-lymphocytes." },
+                    { text: "They undergo positive and negative selection in the thymic cortex", isCorrect: false, rationale: "Thymic selection occurs for adaptive T-lymphocytes, not NK cells." }
+                ]
+            },
+            {
+                question: "Which T helper pathway is famously upregulated by genetic predisposition in atopic disorders such as asthma and allergic rhinitis? [Kahoot Review emphasis]",
+                options: [
+                    { text: "T Helper 2 (TH2)", isCorrect: true, rationale: "Atopy and allergic predispositions are driven by an inherited upregulation of the TH2 arm, producing excess IL-4, IL-5, and IgE." },
+                    { text: "T Helper 1 (TH1)", isCorrect: false, rationale: "TH1 governs delayed-type hypersensitivity and intracellular defense, not atopic allergic disorders." },
+                    { text: "Regulatory T cell (Treg)", isCorrect: false, rationale: "Tregs suppress allergic responses; deficiency, not upregulation, permits allergic disease." },
+                    { text: "CD8+ Cytotoxic T cell", isCorrect: false, rationale: "CD8+ cells destroy virally infected cells and are not the primary driver of atopic genetics." }
+                ]
+            },
+            {
+                question: "What immunological mechanism defines cross-presentation in dendritic cells? [Transcript emphasis]",
+                options: [
+                    { text: "Processing of exogenous antigens onto MHC Class I to activate CD8+ T-cells", isCorrect: true, rationale: "Cross-presentation is the unique ability of dendritic cells to divert engulfed extracellular (exogenous) antigens into the MHC Class I pathway to activate killer CD8+ T-cells." },
+                    { text: "Transfer of immunoglobulins across mucosal membranes via secretory IgA", isCorrect: false, rationale: "This describes transcytosis of dimeric IgA." },
+                    { text: "Presentation of endogenous viral peptides on MHC Class II molecules", isCorrect: false, rationale: "Endogenous peptides normally load onto MHC Class I." },
+                    { text: "Direct activation of B-cells without helper T-cell intervention", isCorrect: false, rationale: "This describes T-independent B-cell activation." }
+                ]
+            },
+            {
+                question: "A patient's spinal radiograph demonstrates bilateral sacroiliac joint fusion and syndesmophytes creating a 'bamboo spine' appearance. This pathology is associated with which genetic marker? [Transcript clinical correlation]",
+                options: [
+                    { text: "HLA-B27", isCorrect: true, rationale: "HLA-B27 is an MHC Class I variant strongly associated with Ankylosing Spondylitis, producing bilateral SI joint fusion and bamboo spine." },
+                    { text: "HLA-DR4", isCorrect: false, rationale: "HLA-DR4 is an MHC Class II marker linked to Rheumatoid Arthritis." },
+                    { text: "Factor XII deficiency", isCorrect: false, rationale: "Hageman factor deficiency affects the intrinsic clotting pathway, not sacroiliac fusion." },
+                    { text: "CD25 deficiency", isCorrect: false, rationale: "CD25 is part of the IL-2 receptor on Tregs and does not define Ankylosing Spondylitis." }
+                ]
+            },
+            {
+                question: "A patient is exposed to Mycobacterium tuberculosis. Macrophages fail to eliminate the pathogen until CD4+ TH1 cells secrete which specific cytokine to activate lysosomal destruction and promote epithelioid granuloma formation?",
+                options: [
+                    { text: "Interferon-gamma (IFN-γ)", isCorrect: true, rationale: "IFN-γ is the premier macrophage-activating factor, triggering phagolysosomal fusion and transforming macrophages into epithelioid cells in granulomas." },
+                    { text: "Interleukin-10 (IL-10)", isCorrect: false, rationale: "IL-10 is an anti-inflammatory cytokine that inhibits macrophage killing." },
+                    { text: "Interleukin-4 (IL-4)", isCorrect: false, rationale: "IL-4 activates B-cell class switching to IgE and drives TH2 responses." },
+                    { text: "Tumor Necrosis Factor-alpha (TNF-α)", isCorrect: false, rationale: "While TNF helps maintain granuloma architecture, IFN-γ is the essential cytokine forcing lysosomal activation." }
+                ]
+            },
+            {
+                question: "Which immunoglobulin exists as a secretory dimer joined by a J-chain and provides natural passive mucosal immunity in breast milk?",
+                options: [
+                    { text: "IgA", isCorrect: true, rationale: "IgA is a secretory dimer with a J-chain found in colostrum, milk, saliva, and tears to neutralize pathogens on mucosal surfaces." },
+                    { text: "IgM", isCorrect: false, rationale: "IgM is a circulating pentamer that serves as the primary acute responder." },
+                    { text: "IgG", isCorrect: false, rationale: "IgG is a monomer that crosses the placenta, but IgA is the predominant protective dimer in breast milk." },
+                    { text: "IgE", isCorrect: false, rationale: "IgE is a monomer bound to mast cells mediating parasitic defense and allergies." }
+                ]
+            },
+            {
+                question: "Endogenous antigens originating from intracellular viral replication are presented on which molecule to which specific lymphocyte?",
+                options: [
+                    { text: "MHC Class I to CD8+ Cytotoxic T-lymphocytes", isCorrect: true, rationale: "Endogenous antigens are processed via proteasomes, loaded on MHC Class I, and presented to CD8+ killer T-cells (1 x 8 = 8)." },
+                    { text: "MHC Class II to CD4+ Helper T-lymphocytes", isCorrect: false, rationale: "MHC Class II presents exogenous engulfed antigens to CD4+ T-cells (2 x 4 = 8)." },
+                    { text: "MHC Class I to CD4+ Helper T-lymphocytes", isCorrect: false, rationale: "CD4+ cells cannot bind MHC Class I due to co-receptor mismatch." },
+                    { text: "MHC Class II to CD8+ Cytotoxic T-lymphocytes", isCorrect: false, rationale: "CD8+ cells cannot bind MHC Class II due to co-receptor mismatch." }
+                ]
+            },
+            {
+                question: "During isotype switching, which structural alteration occurs in the antibody molecule?",
+                options: [
+                    { text: "The constant heavy chain (Fc) domain changes while the variable (Fab) antigen specificity is preserved", isCorrect: true, rationale: "Class switching modifies only the constant heavy chain gene segment (altering effector function from IgM to IgG, IgA, or IgE) without changing Fab antigen binding." },
+                    { text: "The variable antigen-binding site is mutated to recognize new antigens", isCorrect: false, rationale: "This describes somatic hypermutation/affinity maturation, not isotype switching." },
+                    { text: "The light chain is cleaved while the heavy chain remains unchanged", isCorrect: false, rationale: "Class switching involves heavy chain constant DNA recombination, not light chain cleavage." },
+                    { text: "The J-chain is enzymatically degraded to convert pentamers to monomers", isCorrect: false, rationale: "Isotype switching involves genetic rearrangement in the B-cell nucleus, not simple polymer cleavage." }
+                ]
+            },
+            {
+                question: "Which complement components form the Membrane Attack Complex (MAC) to induce osmotic target cell lysis?",
+                options: [
+                    { text: "C5b-9", isCorrect: true, rationale: "C5b binds C6, C7, C8, and polymerizes multiple C9 molecules to create a hollow pore (C5b-9) in the target cell membrane." },
+                    { text: "C3a and C5a", isCorrect: false, rationale: "C3a and C5a are soluble anaphylatoxins that promote vascular permeability and chemotaxis." },
+                    { text: "C3b", isCorrect: false, rationale: "C3b acts as a primary opsonin coating bacteria for phagocytosis." },
+                    { text: "C1qrs", isCorrect: false, rationale: "C1qrs is the initial recognition complex of the classical complement cascade." }
+                ]
+            },
+            {
+                question: "An injection of tetanus antitoxin or rabies antiserum provides immediate, temporary defense. This is classified as:",
+                options: [
+                    { text: "Artificial passive immunity", isCorrect: true, rationale: "Administering exogenous pre-formed antibodies confers immediate but transient protection without generating host immunological memory." },
+                    { text: "Natural passive immunity", isCorrect: false, rationale: "Natural passive immunity occurs via transplacental IgG or breast milk IgA transfer from mother to child." },
+                    { text: "Artificial active immunity", isCorrect: false, rationale: "Artificial active immunity involves vaccination with antigens to induce host antibody and memory cell formation." },
+                    { text: "Natural active immunity", isCorrect: false, rationale: "Natural active immunity follows direct clinical infection and recovery." }
+                ]
+            },
+            {
+                question: "A child born with a deletion on chromosome 22 exhibits thymic hypoplasia, severe T-cell deficiency, and aortic arch defects. What is the diagnosis?",
+                options: [
+                    { text: "DiGeorge syndrome", isCorrect: true, rationale: "DiGeorge syndrome (22q11.2 deletion) disrupts 3rd and 4th pharyngeal pouch development, resulting in thymic aplasia/hypoplasia and cardiac defects." },
+                    { text: "Bruton’s agammaglobulinemia", isCorrect: false, rationale: "Bruton's is an X-linked B-cell defect impairing antibody production with normal T-cells." },
+                    { text: "Acquired Immunodeficiency Syndrome", isCorrect: false, rationale: "AIDS is an acquired retroviral infection, not a congenital chromosomal deletion." },
+                    { text: "Severe Combined Immunodeficiency (SCID)", isCorrect: false, rationale: "SCID impairs both B and T cell lineages through various mutations (e.g., ADA deficiency), but isolated thymic hypoplasia with cardiac anomalies defines DiGeorge." }
+                ]
+            },
+            {
+                question: "Human Immunodeficiency Virus (HIV) selectively depletes which immune cell population?",
+                options: [
+                    { text: "CD4+ Helper T-lymphocytes", isCorrect: true, rationale: "HIV glycoprotein gp120 binds to CD4 receptors, leading to the destruction of CD4+ helper T-cells and eventual collapse of adaptive immune coordination." },
+                    { text: "CD8+ Cytotoxic T-lymphocytes", isCorrect: false, rationale: "CD8+ cells do not express primary CD4 receptors and are not the primary target of HIV." },
+                    { text: "Neutrophils", isCorrect: false, rationale: "Neutrophils are innate myeloid cells unaffected by direct HIV tropism." },
+                    { text: "Plasma cells", isCorrect: false, rationale: "Plasma cells are antibody-secreting B-lineage cells, not the viral target of HIV." }
+                ]
+            },
+            {
+                question: "When antibodies cross-link small SOLUBLE antigens into large insoluble complexes that fall out of solution, this mechanism is called:",
+                options: [
+                    { text: "Precipitation", isCorrect: true, rationale: "Precipitation specifically involves soluble antigens forming insoluble macromolecular lattices that settle out of fluids." },
+                    { text: "Agglutination", isCorrect: false, rationale: "Agglutination refers to the clumping of large, cellular (particulate) antigens like RBCs or bacteria." },
+                    { text: "Neutralization", isCorrect: false, rationale: "Neutralization occurs when antibodies block specific binding sites on toxins or viral capsids." },
+                    { text: "Opsonization", isCorrect: false, rationale: "Opsonization is the process of coating an antigen to facilitate phagocyte receptor binding." }
+                ]
+            },
+            {
+                question: "Which antibody is always synthesized first by naive B-cells and secreted as a high-avidity pentamer during a primary immune response?",
+                options: [
+                    { text: "IgM", isCorrect: true, rationale: "IgM ('Me first') is the earliest antibody synthesized in fetal life and the first class secreted by plasma cells in primary immune responses." },
+                    { text: "IgG", isCorrect: false, rationale: "IgG is the predominant antibody of secondary (anamnestics) responses." },
+                    { text: "IgA", isCorrect: false, rationale: "IgA is primarily dedicated to mucosal secretions." },
+                    { text: "IgE", isCorrect: false, rationale: "IgE is restricted to minute concentrations mediating antiparasitic and allergic defenses." }
+                ]
+            },
+            {
+                question: "Which immunoglobulin serves primarily as a permanent antigen receptor on naive B-cell membranes and is rarely secreted?",
+                options: [
+                    { text: "IgD", isCorrect: true, rationale: "IgD is co-expressed with monomeric IgM on naive B-cell surfaces where it functions almost exclusively as an antigen receptor." },
+                    { text: "IgE", isCorrect: false, rationale: "IgE is bound to the high-affinity Fc receptors of mast cells and basophils." },
+                    { text: "IgA", isCorrect: false, rationale: "IgA is abundantly secreted onto epithelial and mucosal surfaces." },
+                    { text: "IgG", isCorrect: false, rationale: "IgG is the chief circulating soluble antibody in serum." }
+                ]
+            },
+            {
+                question: "Which complement fragment functions as a potent opsonin by covalently coating bacterial cell walls to enhance phagocytosis?",
+                options: [
+                    { text: "C3b", isCorrect: true, rationale: "C3b binds covalently to microbial surfaces, providing high-affinity handles for phagocyte CR1 complement receptors." },
+                    { text: "C3a", isCorrect: false, rationale: "C3a is an anaphylatoxin that stimulates mast cell histamine release." },
+                    { text: "C5a", isCorrect: false, rationale: "C5a is a potent chemotactic factor for neutrophils and an anaphylatoxin." },
+                    { text: "C5b", isCorrect: false, rationale: "C5b initiates MAC assembly but does not act as an opsonin." }
+                ]
+            },
+            {
+                question: "What is the characteristic histological composition of the central core of a tuberculous granuloma?",
+                options: [
+                    { text: "Caseous necrotic tissue", isCorrect: true, rationale: "TB granulomas (caseating granulomas) feature a central necrotic core of cheesy, structureless debris resulting from incomplete enzymatic dissolution." },
+                    { text: "Intact neutrophils and pus", isCorrect: false, rationale: "Pus with active neutrophils characterizes acute purulent abscesses, not chronic caseating granulomas." },
+                    { text: "Dense bundles of mature collagen fibers", isCorrect: false, rationale: "Collagen bands and fibroblasts encircle the outer rim of the granuloma." },
+                    { text: "Multinucleated Langhans giant cells", isCorrect: false, rationale: "Langhans giant cells reside in the intermediate cellular zone surrounding the necrotic core." }
+                ]
+            },
+            {
+                question: "What is the typical lag period between primary exposure to a novel antigen and the appearance of serum antibodies?",
+                options: [
+                    { text: "3 to 6 days", isCorrect: true, rationale: "The primary immune response exhibits a distinct 3–6 day lag period required for antigen processing, helper T-cell activation, and B-cell clonal expansion." },
+                    { text: "1 to 2 hours", isCorrect: false, rationale: "Immediate reactions are mediated by pre-existing antibodies, not primary adaptive synthesis." },
+                    { text: "10 to 14 days", isCorrect: false, rationale: "Peak antibody titers occur around day 10–14, but the initial lag phase ends at days 3–6." },
+                    { text: "24 to 48 hours", isCorrect: false, rationale: "24–48 hours represents delayed-type hypersensitivity skin reaction timing, not the primary antibody lag." }
+                ]
+            },
+            {
+                question: "Which antibody is the most abundant in circulation (~80%), smallest in molecular size, and uniquely capable of crossing the transplacental barrier?",
+                options: [
+                    { text: "IgG", isCorrect: true, rationale: "IgG is the predominant circulating monomer (~80% of serum immunoglobulins) and the only isotype transported across the placenta via FcRn receptors." },
+                    { text: "IgM", isCorrect: false, rationale: "IgM is a massive 900 kDa pentamer incapable of crossing the intact placenta." },
+                    { text: "IgA", isCorrect: false, rationale: "IgA is primarily mucosal and does not cross the placenta." },
+                    { text: "IgD", isCorrect: false, rationale: "IgD accounts for <1% of serum antibodies and is membrane-bound." }
+                ]
             }
         ];
 
@@ -622,122 +574,150 @@
         let currentScore = 0;
         let answeredCount = 0;
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            return array;
+            return arr;
         }
 
         function renderQuiz() {
-            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(originalQuizData)));
-            
+            // Scramble questions array
+            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(rawQuizData)));
+
             const container = document.getElementById('quiz-body');
             container.innerHTML = '';
 
-            activeQuizData.forEach((item, qIndex) => {
-                const correctText = item.options[item.correct];
-                item.options = shuffleArray([...item.options]);
-                item.correct = item.options.indexOf(correctText);
+            activeQuizData.forEach((qItem, qIdx) => {
+                // Scramble options array for each question
+                qItem.options = shuffleArray([...qItem.options]);
 
                 const card = document.createElement('div');
                 card.className = 'question-card';
-                card.id = `card-${qIndex}`;
+                card.id = `card-${qIdx}`;
 
-                const qNum = document.createElement('div');
-                qNum.className = 'question-number';
-                qNum.innerText = `Question ${qIndex + 1} of ${activeQuizData.length}`;
+                const meta = document.createElement('div');
+                meta.className = 'question-meta';
+                meta.innerText = `Question ${qIdx + 1} of ${activeQuizData.length}`;
 
-                const qText = document.createElement('div');
-                qText.className = 'question-text';
-                qText.innerText = item.question;
+                const stem = document.createElement('div');
+                stem.className = 'question-text';
+                stem.innerText = qItem.question;
 
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options-list';
 
-                item.options.forEach((opt, optIdx) => {
+                qItem.options.forEach((opt, optIdx) => {
                     const li = document.createElement('li');
                     li.className = 'option-item';
-                    li.innerText = `${String.fromCharCode(65 + optIdx)}. ${opt}`;
-                    li.onclick = () => handleAnswer(qIndex, optIdx);
+                    const letter = String.fromCharCode(65 + optIdx);
+                    li.innerText = `${letter}. ${opt.text}`;
+                    li.onclick = () => handleSelection(qIdx, optIdx);
                     optionsList.appendChild(li);
                 });
 
-                const exp = document.createElement('div');
-                exp.className = 'feedback-box';
-                exp.id = `exp-${qIndex}`;
-                exp.innerHTML = `<strong>Explanation:</strong> ${item.explanation}`;
+                // Feedback Container: Status Banner + Option-by-Option Breakdown only
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'feedback-box';
+                feedbackDiv.id = `feedback-${qIdx}`;
 
-                card.appendChild(qNum);
-                card.appendChild(qText);
+                const statusBanner = document.createElement('div');
+                statusBanner.className = 'status-banner';
+                statusBanner.id = `status-${qIdx}`;
+
+                const breakdownList = document.createElement('ul');
+                breakdownList.className = 'breakdown-list';
+
+                qItem.options.forEach((opt, optIdx) => {
+                    const letter = String.fromCharCode(65 + optIdx);
+                    const bItem = document.createElement('li');
+                    bItem.className = 'breakdown-item';
+                    bItem.innerHTML = `<strong>${letter}) ${opt.text}:</strong> ${opt.rationale}`;
+                    breakdownList.appendChild(bItem);
+                });
+
+                feedbackDiv.appendChild(statusBanner);
+                feedbackDiv.appendChild(breakdownList);
+
+                card.appendChild(meta);
+                card.appendChild(stem);
                 card.appendChild(optionsList);
-                card.appendChild(exp);
+                card.appendChild(feedbackDiv);
 
                 container.appendChild(card);
             });
 
-            updateHeader();
+            updateTracker();
         }
 
-        function handleAnswer(qIndex, selectedOpt) {
-            const card = document.getElementById(`card-${qIndex}`);
-            const options = card.querySelectorAll('.option-item');
-            const exp = document.getElementById(`exp-${qIndex}`);
-            const correctOpt = activeQuizData[qIndex].correct;
+        function handleSelection(qIdx, selectedOptIdx) {
+            const card = document.getElementById(`card-${qIdx}`);
+            const optionElements = card.querySelectorAll('.option-item');
+            const feedbackBox = document.getElementById(`feedback-${qIdx}`);
+            const statusBanner = document.getElementById(`status-${qIdx}`);
+            const qData = activeQuizData[qIdx];
+            const isCorrect = qData.options[selectedOptIdx].isCorrect;
 
-            // Instant Lock-in
-            options.forEach(opt => opt.classList.add('disabled'));
-            options.forEach(opt => {
-                const clone = opt.cloneNode(true);
-                opt.parentNode.replaceChild(clone, opt);
+            // Lock all options in this card
+            optionElements.forEach(opt => {
+                opt.classList.add('disabled');
+                opt.onclick = null;
             });
 
-            const newOptions = card.querySelectorAll('.option-item');
-
-            if (selectedOpt === correctOpt) {
-                newOptions[selectedOpt].classList.add('correct');
+            // Color-code selections
+            if (isCorrect) {
+                optionElements[selectedOptIdx].classList.add('correct');
+                statusBanner.className = 'status-banner correct';
+                statusBanner.innerText = 'Correct!';
                 currentScore++;
             } else {
-                newOptions[selectedOpt].classList.add('incorrect');
-                newOptions[correctOpt].classList.add('correct');
-            }
-            
-            exp.style.display = 'block';
+                optionElements[selectedOptIdx].classList.add('incorrect');
+                statusBanner.className = 'status-banner incorrect';
+                statusBanner.innerText = 'Incorrect.';
 
+                // Reveal correct option in green
+                qData.options.forEach((opt, idx) => {
+                    if (opt.isCorrect) {
+                        optionElements[idx].classList.add('correct');
+                    }
+                });
+            }
+
+            feedbackBox.style.display = 'block';
             answeredCount++;
-            updateHeader();
+            updateTracker();
 
             if (answeredCount === activeQuizData.length) {
-                showSummary();
+                displaySummary();
             }
         }
 
-        function updateHeader() {
+        function updateTracker() {
             const total = activeQuizData.length;
-            const pct = total === 0 ? 0 : Math.round((currentScore / total) * 100);
-            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${pct}%)`;
+            const percentage = total === 0 ? 0 : Math.round((currentScore / total) * 100);
+            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${percentage}%)`;
         }
 
-        function showSummary() {
+        function displaySummary() {
             const total = activeQuizData.length;
             const pct = Math.round((currentScore / total) * 100);
-            const summaryCard = document.getElementById('final-summary');
-            const finalScore = document.getElementById('final-score-text');
-            const feedback = document.getElementById('summary-feedback');
+            const summaryBox = document.getElementById('final-summary');
+            const scoreText = document.getElementById('final-score-text');
+            const feedbackText = document.getElementById('summary-feedback');
 
-            finalScore.innerText = `${pct}%`;
+            scoreText.innerText = `${pct}% (${currentScore} / ${total})`;
 
             if (pct >= 90) {
-                feedback.innerText = "Mastery demonstrated! Outstanding recall of cellular and antibody-mediated immunity concepts.";
+                feedbackText.innerText = "Mastery demonstrated! Outstanding recall of cellular and antibody-mediated immunity concepts.";
             } else if (pct >= 75) {
-                feedback.innerText = "Great job! Review the questions you missed to reinforce high-yield points.";
+                feedbackText.innerText = "Solid performance! Review any missed rationale breakdowns to lock in high-yield board concepts.";
             } else {
-                feedback.innerText = "Good effort! Consider reviewing Week 3 lecture notes and retrying the assessment.";
+                feedbackText.innerText = "Review recommended. Re-study the Week 3 notes and retake the assessment to solidify key mechanisms.";
             }
 
-            summaryCard.style.display = 'block';
-            summaryCard.scrollIntoView({ behavior: 'smooth' });
+            summaryBox.style.display = 'block';
+            summaryBox.scrollIntoView({ behavior: 'smooth' });
         }
 
         function resetQuiz() {
