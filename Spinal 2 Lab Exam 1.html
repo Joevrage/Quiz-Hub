@@ -74,21 +74,39 @@
             white-space: nowrap;
         }
 
-        .filter-nav {
+        .control-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nav-row {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 16px;
-            padding: 0 4px;
+            align-items: center;
         }
 
-        .filter-btn {
+        .panel-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            font-weight: bold;
+            margin-right: 4px;
+        }
+
+        .filter-btn, .mode-btn {
             background-color: #242424;
             color: var(--text-sub);
             border: 1px solid var(--border-default);
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 6px;
-            font-size: 0.88rem;
+            font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -98,6 +116,12 @@
             background-color: var(--accent-orange);
             color: #000;
             border-color: var(--accent-orange);
+        }
+
+        .mode-btn.active {
+            background-color: #3b82f6;
+            color: #fff;
+            border-color: #60a5fa;
         }
 
         .quiz-body {
@@ -119,7 +143,7 @@
             padding: 8px;
             border-radius: 6px;
             border: 1px solid var(--border-default);
-            min-height: 200px;
+            min-height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -141,6 +165,7 @@
             color: #ffffff;
         }
 
+        /* Multiple Choice Format */
         .options-list {
             list-style: none;
             padding: 0;
@@ -198,6 +223,55 @@
             pointer-events: none;
         }
 
+        /* Type-In Input Format */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .text-input {
+            flex: 1;
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 1rem;
+            color: #ffffff;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .text-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .text-input:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .submit-answer-btn {
+            background-color: #3b82f6;
+            color: #ffffff;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .submit-answer-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .submit-answer-btn:disabled {
+            background-color: #4b5563;
+            cursor: not-allowed;
+        }
+
         .feedback-box {
             padding: 14px 16px;
             border-radius: 6px;
@@ -237,6 +311,13 @@
 
         .feedback-box.incorrect .status-banner {
             color: #f87171;
+        }
+
+        .spelling-note {
+            font-size: 0.82rem;
+            color: #facc15;
+            margin-bottom: 6px;
+            font-style: italic;
         }
 
         .explanation-text {
@@ -297,16 +378,24 @@
 
 <div class="quiz-container">
     <div class="sticky-header">
-        <h1 id="quiz-title">Spinal 2 Practical Drill</h1>
+        <h1 id="quiz-title">Spinal 2 Practical Hub</h1>
         <div class="score-tracker" id="score-tracker">Score: 0 / 0 (0%)</div>
     </div>
 
-    <!-- Mode Filter Bar -->
-    <div class="filter-nav">
-        <button class="filter-btn active" onclick="setMode('all')">All Images (Comprehensive)</button>
-        <button class="filter-btn" onclick="setMode('week1')">Week 1 (Layer 1 &amp; 2)</button>
-        <button class="filter-btn" onclick="setMode('week2')">Week 2 (Layer 3 &amp; Erectors)</button>
-        <button class="filter-btn" onclick="setMode('week3_4')">Weeks 3 &amp; 4 (Transversospinalis &amp; Suboccipitals)</button>
+    <!-- Mode & Filter Control Panel -->
+    <div class="control-panel">
+        <div class="nav-row">
+            <span class="panel-label">Question Scope:</span>
+            <button class="filter-btn active" onclick="setScope('all')">All Images (Comprehensive)</button>
+            <button class="filter-btn" onclick="setScope('week1')">Week 1 (Layers 1 & 2)</button>
+            <button class="filter-btn" onclick="setScope('week2')">Week 2 (Layer 3 & Erectors)</button>
+            <button class="filter-btn" onclick="setScope('week3_4')">Weeks 3 & 4 (Deep Back & Suboccipitals)</button>
+        </div>
+        <div class="nav-row">
+            <span class="panel-label">Format:</span>
+            <button class="mode-btn active" id="btn-mc" onclick="setQuizType('mc')">Multiple Choice</button>
+            <button class="mode-btn" id="btn-typein" onclick="setQuizType('typein')">Type-In (Lab Exam Mode)</button>
+        </div>
     </div>
 
     <div class="quiz-body" id="quiz-body"></div>
@@ -321,18 +410,19 @@
 </div>
 
 <script>
-    // Complete database matching your exact PNG file names in Images/Spinal 2/
+    // Master data bank with accepted spellings & AKAs
     const masterImageQuestions = [
         // --- WEEK 1 ---
         {
             week: "week1",
             image: "Trapezius.PNG",
+            accepted: ["trapezius", "trapezius muscle", "trap"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Trapezius", "Latissimus Dorsi", "Levator Scapulae", "Rhomboid Major"],
             correct: 0,
             explanation: "Trapezius is the broad, superficial axial muscle covering the upper thoracic and cervical regions, innervated by CN XI.",
             rationales: [
-                "A) Trapezius: Correct. Highlights the broad triangular sheet of the superficial back.",
+                "A) Trapezius: Correct. Broad triangular sheet of the superficial back.",
                 "B) Latissimus Dorsi: Incorrect. Sits inferiorly on the posterior thorax and lumbar region.",
                 "C) Levator Scapulae: Incorrect. Lies deep to trapezius along the lateral neck.",
                 "D) Rhomboid Major: Incorrect. Lies deep to trapezius between spine and scapula."
@@ -341,6 +431,7 @@
         {
             week: "week1",
             image: "Latissimus Dorsi.PNG",
+            accepted: ["latissimus dorsi", "latissimus dorsi muscle", "latissimus", "lats"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Serratus Posterior Inferior", "Latissimus Dorsi", "Trapezius", "Iliocostalis Lumborum"],
             correct: 1,
@@ -355,6 +446,7 @@
         {
             week: "week1",
             image: "Levator Scapula.PNG",
+            accepted: ["levator scapula", "levator scapulae", "levator scapulae muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Splenius Cervicis", "Rhomboid Minor", "Levator Scapulae", "Scalenus Posterior"],
             correct: 2,
@@ -369,6 +461,7 @@
         {
             week: "week1",
             image: "Rhomboid Minor.PNG",
+            accepted: ["rhomboid minor", "rhomboid minor muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Rhomboid Minor", "Rhomboid Major", "Levator Scapulae", "Serratus Posterior Superior"],
             correct: 0,
@@ -383,6 +476,7 @@
         {
             week: "week1",
             image: "Rhomboid Major.PNG",
+            accepted: ["rhomboid major", "rhomboid major muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Latissimus Dorsi", "Rhomboid Minor", "Rhomboid Major", "Trapezius (Lower fibers)"],
             correct: 2,
@@ -399,6 +493,7 @@
         {
             week: "week2",
             image: "Serratus Posterior Superior.PNG",
+            accepted: ["serratus posterior superior", "serratus posterior superior muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Rhomboid Minor", "Serratus Posterior Superior", "Splenius Capitis", "Levator Scapulae"],
             correct: 1,
@@ -413,6 +508,7 @@
         {
             week: "week2",
             image: "Serratus Posterior Inferior.PNG",
+            accepted: ["serratus posterior inferior", "serratus posterior inferior muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Serratus Posterior Inferior", "Latissimus Dorsi", "Quadratus Lumborum", "Iliocostalis Lumborum"],
             correct: 0,
@@ -427,6 +523,7 @@
         {
             week: "week2",
             image: "Splenius Capitis.PNG",
+            accepted: ["splenius capitis", "splenius capitis muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Splenius Cervicis", "Semispinalis Capitis", "Splenius Capitis", "Longissimus Capitis"],
             correct: 2,
@@ -434,13 +531,14 @@
             rationales: [
                 "A) Splenius Cervicis: Incorrect. Stops at cervical TPs (C1-C4) and does not reach the skull.",
                 "B) Semispinalis Capitis: Incorrect. Runs more vertically to insert between nuchal lines.",
-                "C) Splenius Capitis: Correct. Oblique neck muscle inserting onto the mastoid process and superior nuchal line.",
+                "C) Splenius Capitis: Correct. Oblique neck muscle inserting onto the mastoid process.",
                 "D) Longissimus Capitis: Incorrect. Narrower, deep erector slip to the mastoid."
             ]
         },
         {
             week: "week2",
             image: "Splenius Cervicis.PNG",
+            accepted: ["splenius cervicis", "splenius cervicis muscle"],
             question: "Identify the highlighted muscle in the anatomical plate above:",
             options: ["Levator Scapulae", "Splenius Cervicis", "Splenius Capitis", "Longissimus Cervicis"],
             correct: 1,
@@ -455,6 +553,7 @@
         {
             week: "week2",
             image: "Iliocostalis Group.PNG",
+            accepted: ["iliocostalis", "iliocostalis group", "iliocostalis column"],
             question: "Identify the highlighted muscle group (most lateral erector column):",
             options: ["Longissimus Column", "Spinalis Column", "Iliocostalis Column", "Transversospinalis"],
             correct: 2,
@@ -469,6 +568,7 @@
         {
             week: "week2",
             image: "Iliocostalis Lumborum.PNG",
+            accepted: ["iliocostalis lumborum", "iliocostalis lumborum muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Iliocostalis Lumborum", "Iliocostalis Thoracis", "Longissimus Thoracis", "Quadratus Lumborum"],
             correct: 0,
@@ -483,6 +583,7 @@
         {
             week: "week2",
             image: "Iliocostalis Thoracis.PNG",
+            accepted: ["iliocostalis thoracis", "iliocostalis thoracis muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Iliocostalis Lumborum", "Iliocostalis Thoracis", "Iliocostalis Cervicis", "Spinalis Thoracis"],
             correct: 1,
@@ -497,6 +598,7 @@
         {
             week: "week2",
             image: "Iliocostalis Cervicis.PNG",
+            accepted: ["iliocostalis cervicis", "iliocostalis cervicis muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Longissimus Cervicis", "Splenius Cervicis", "Iliocostalis Cervicis", "Levator Scapulae"],
             correct: 2,
@@ -511,6 +613,7 @@
         {
             week: "week2",
             image: "Longissimus Group.PNG",
+            accepted: ["longissimus", "longissimus group", "longissimus column"],
             question: "Identify the highlighted muscle group (intermediate erector column):",
             options: ["Iliocostalis Column", "Longissimus Column", "Spinalis Column", "Multifidus Group"],
             correct: 1,
@@ -525,6 +628,7 @@
         {
             week: "week2",
             image: "Longissimus Thoracis.PNG",
+            accepted: ["longissimus thoracis", "longissimus thoracis muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Longissimus Thoracis", "Spinalis Thoracis", "Iliocostalis Thoracis", "Multifidus Thoracis"],
             correct: 0,
@@ -539,6 +643,7 @@
         {
             week: "week2",
             image: "Longissimus Cervicis.PNG",
+            accepted: ["longissimus cervicis", "longissimus cervicis muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Semispinalis Cervicis", "Longissimus Cervicis", "Iliocostalis Cervicis", "Splenius Cervicis"],
             correct: 1,
@@ -553,6 +658,7 @@
         {
             week: "week2",
             image: "Longissimus Capitis.PNG",
+            accepted: ["longissimus capitis", "longissimus capitis muscle"],
             question: "Identify the highlighted muscle showing a fan-like insertion onto the skull:",
             options: ["Splenius Capitis", "Semispinalis Capitis", "Longissimus Capitis", "Sternocleidomastoid"],
             correct: 2,
@@ -567,6 +673,7 @@
         {
             week: "week2",
             image: "Spinalis Group.PNG",
+            accepted: ["spinalis", "spinalis group", "spinalis column"],
             question: "Identify the highlighted muscle group (most medial erector column):",
             options: ["Spinalis Column", "Multifidus", "Longissimus Column", "Interspinales"],
             correct: 0,
@@ -581,6 +688,7 @@
         {
             week: "week2",
             image: "Spinalis Thoracis.PNG",
+            accepted: ["spinalis thoracis", "spinalis thoracis muscle"],
             question: "Identify the highlighted regional division:",
             options: ["Semispinalis Thoracis", "Spinalis Thoracis", "Longissimus Thoracis", "Rotatores Longus"],
             correct: 1,
@@ -595,6 +703,7 @@
         {
             week: "week2",
             image: "Spinalis Cervicis.PNG",
+            accepted: ["spinalis cervicis", "spinalis cervicis muscle"],
             question: "Identify the highlighted muscle (noted for high cadaveric variability):",
             options: ["Semispinalis Cervicis", "Spinalis Cervicis", "Interspinalis Cervicis", "Splenius Cervicis"],
             correct: 1,
@@ -611,6 +720,7 @@
         {
             week: "week3_4",
             image: "Semispinalis Thoracis.PNG",
+            accepted: ["semispinalis thoracis", "semispinalis thoracis muscle"],
             question: "Identify the highlighted muscle of the superficial transversospinalis layer:",
             options: ["Spinalis Thoracis", "Semispinalis Thoracis", "Multifidus Thoracis", "Rotatores Brevis"],
             correct: 1,
@@ -625,6 +735,7 @@
         {
             week: "week3_4",
             image: "Semispinalis Cervicis.PNG",
+            accepted: ["semispinalis cervicis", "semispinalis cervicis muscle"],
             question: "Identify the highlighted muscle inserting as high as the C2 spinous process:",
             options: ["Semispinalis Cervicis", "Semispinalis Capitis", "Splenius Cervicis", "Longissimus Cervicis"],
             correct: 0,
@@ -639,6 +750,7 @@
         {
             week: "week3_4",
             image: "Semispinalis Capitis.PNG",
+            accepted: ["semispinalis capitis", "semispinalis capitis muscle"],
             question: "Identify the highlighted muscle inserting between the superior and inferior nuchal lines:",
             options: ["Splenius Capitis", "Semispinalis Capitis", "Rectus Capitis Posterior Major", "Trapezius"],
             correct: 1,
@@ -653,6 +765,7 @@
         {
             week: "week3_4",
             image: "Multifidus.PNG",
+            accepted: ["multifidus", "multifidus muscle"],
             question: "Identify the highlighted muscle that spans 3–4 segments from sacrum to C2:",
             options: ["Semispinalis", "Multifidus", "Rotatores Longus", "Erector Spinae"],
             correct: 1,
@@ -667,6 +780,7 @@
         {
             week: "week3_4",
             image: "Rotatores Longus.PNG",
+            accepted: ["rotatores longus", "rotatores longus muscle", "rotator longus"],
             question: "Identify the highlighted deep muscle spanning exactly 2 vertebral segments:",
             options: ["Rotatores Brevis", "Rotatores Longus", "Multifidus", "Levatores Costarum"],
             correct: 1,
@@ -681,6 +795,7 @@
         {
             week: "week3_4",
             image: "Rotatores Brevis.PNG",
+            accepted: ["rotatores brevis", "rotatores brevis muscle", "rotator brevis"],
             question: "Identify the highlighted deep muscle spanning exactly 1 vertebral segment:",
             options: ["Rotatores Brevis", "Rotatores Longus", "Interspinalis", "Intertransversarii"],
             correct: 0,
@@ -695,6 +810,7 @@
         {
             week: "week3_4",
             image: "Interspinous Cervicis.PNG",
+            accepted: ["interspinous cervicis", "interspinales cervicis", "interspinalis cervicis"],
             question: "Identify the highlighted paired muscles connecting adjacent cervical spinous processes:",
             options: ["Interspinales Cervicis", "Intertransversarii Cervicis", "Rotatores Brevis", "Semispinalis Cervicis"],
             correct: 0,
@@ -709,6 +825,7 @@
         {
             week: "week3_4",
             image: "Interspinous Lumborum.PNG",
+            accepted: ["interspinous lumborum", "interspinales lumborum", "interspinalis lumborum"],
             question: "Identify the highlighted paired muscles connecting adjacent lumbar spinous processes:",
             options: ["Interspinales Lumborum", "Intertransversarii Medial", "Multifidus", "Quadratus Lumborum"],
             correct: 0,
@@ -723,6 +840,7 @@
         {
             week: "week3_4",
             image: "Intertransversarii.PNG",
+            accepted: ["intertransversarii", "intertransversarii muscle", "intertransversarii muscles", "intertransversalis"],
             question: "Identify the highlighted muscles connecting adjacent transverse processes:",
             options: ["Levatores Costarum", "Intertransversarii", "Interspinales", "Rotatores"],
             correct: 1,
@@ -737,6 +855,7 @@
         {
             week: "week3_4",
             image: "Rectus Capitis Posterior Major.PNG",
+            accepted: ["rectus capitis posterior major", "rectus capitis posterior major muscle"],
             question: "Identify the highlighted suboccipital muscle originating from the C2 spinous process:",
             options: ["Rectus Capitis Posterior Major", "Rectus Capitis Posterior Minor", "Oblique Capitis Superior", "Oblique Capitis Inferior"],
             correct: 0,
@@ -751,6 +870,7 @@
         {
             week: "week3_4",
             image: "Rectus Capitis Posterior Minor.PNG",
+            accepted: ["rectus capitis posterior minor", "rectus capitis posterior minor muscle"],
             question: "Identify the highlighted suboccipital muscle originating from the C1 posterior tubercle:",
             options: ["Rectus Capitis Posterior Minor", "Rectus Capitis Posterior Major", "Oblique Capitis Superior", "Oblique Capitis Inferior"],
             correct: 0,
@@ -765,6 +885,7 @@
         {
             week: "week3_4",
             image: "Oblique Capitis Superior.PNG",
+            accepted: ["oblique capitis superior", "obliquus capitis superior", "oblique capitis superior muscle"],
             question: "Identify the highlighted suboccipital muscle forming the superolateral border of the triangle:",
             options: ["Oblique Capitis Superior", "Oblique Capitis Inferior", "Rectus Capitis Posterior Major", "Splenius Capitis"],
             correct: 0,
@@ -779,6 +900,7 @@
         {
             week: "week3_4",
             image: "Oblique Capitis Inferior.PNG",
+            accepted: ["oblique capitis inferior", "obliquus capitis inferior", "oblique capitis inferior muscle"],
             question: "Identify the highlighted suboccipital muscle that has NO attachment to the cranium:",
             options: ["Oblique Capitis Superior", "Oblique Capitis Inferior", "Rectus Capitis Posterior Major", "Rectus Capitis Posterior Minor"],
             correct: 1,
@@ -793,6 +915,7 @@
         {
             week: "week3_4",
             image: "Greater Occipital Nerve.PNG",
+            accepted: ["greater occipital nerve", "c2 dorsal ramus", "c2"],
             question: "Identify the highlighted neural structure emerging beneath Oblique Capitis Inferior:",
             options: ["Suboccipital Nerve (C1)", "Greater Occipital Nerve (C2)", "Third Occipital Nerve (C3)", "Spinal Accessory Nerve (CN XI)"],
             correct: 1,
@@ -807,6 +930,7 @@
         {
             week: "week3_4",
             image: "Occipital Artery.PNG",
+            accepted: ["occipital artery", "occipital a."],
             question: "Identify the highlighted vascular structure coursing across the suboccipital region:",
             options: ["Vertebral Artery", "Occipital Artery", "Deep Cervical Artery", "Costocervical Trunk"],
             correct: 1,
@@ -820,11 +944,68 @@
         }
     ];
 
-    let currentMode = 'all';
+    // State Variables
+    let currentScope = 'all';
+    let currentQuizType = 'mc'; // 'mc' or 'typein'
     let activeQuestions = [];
     let userAnswers = [];
     let answeredCount = 0;
     let correctCount = 0;
+
+    // Fuzzy matching / Levenshtein Distance for Spelling Check
+    function levenshteinDistance(a, b) {
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j - 1] + 1, // substitution
+                        matrix[i][j - 1] + 1,     // insertion
+                        matrix[i - 1][j] + 1      // deletion
+                    );
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    function checkAnswerFuzzy(userInput, acceptedList) {
+        const cleanInput = userInput.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+        if (!cleanInput) return { isCorrect: false, closestMatch: "", distance: 99 };
+
+        let lowestDistance = 999;
+        let matchedTarget = acceptedList[0];
+
+        for (const target of acceptedList) {
+            const cleanTarget = target.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+            
+            // Direct exact or substring match
+            if (cleanInput === cleanTarget) {
+                return { isCorrect: true, closestMatch: target, distance: 0 };
+            }
+
+            const dist = levenshteinDistance(cleanInput, cleanTarget);
+            if (dist < lowestDistance) {
+                lowestDistance = dist;
+                matchedTarget = target;
+            }
+        }
+
+        // Allow up to 2 character typos depending on length
+        const allowedTypos = matchedTarget.length > 7 ? 2 : 1;
+        const isCloseEnough = lowestDistance <= allowedTypos;
+
+        return {
+            isCorrect: isCloseEnough,
+            closestMatch: matchedTarget,
+            distance: lowestDistance
+        };
+    }
 
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
@@ -833,36 +1014,41 @@
         }
     }
 
-    function setMode(mode) {
-        currentMode = mode;
-        
-        // Update nav buttons
+    function setScope(scope) {
+        currentScope = scope;
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('active');
-            if (btn.getAttribute('onclick').includes(mode)) {
+            if (btn.getAttribute('onclick').includes(scope)) {
                 btn.classList.add('active');
             }
         });
+        filterAndReset();
+    }
 
-        // Filter and re-render
-        if (mode === 'all') {
+    function setQuizType(type) {
+        currentQuizType = type;
+        document.getElementById('btn-mc').classList.toggle('active', type === 'mc');
+        document.getElementById('btn-typein').classList.toggle('active', type === 'typein');
+        renderQuiz();
+    }
+
+    function filterAndReset() {
+        if (currentScope === 'all') {
             activeQuestions = JSON.parse(JSON.stringify(masterImageQuestions));
             document.getElementById('quiz-title').innerText = "Spinal 2 Comprehensive Practical";
         } else {
-            activeQuestions = JSON.parse(JSON.stringify(masterImageQuestions.filter(q => q.week === mode)));
+            activeQuestions = JSON.parse(JSON.stringify(masterImageQuestions.filter(q => q.week === currentScope)));
             const titles = {
-                'week1': 'Spinal 2 - Week 1 Practical Drill',
-                'week2': 'Spinal 2 - Week 2 Practical Drill',
-                'week3_4': 'Spinal 2 - Weeks 3 & 4 Practical Drill'
+                'week1': 'Spinal 2 - Week 1 Practical',
+                'week2': 'Spinal 2 - Week 2 Practical',
+                'week3_4': 'Spinal 2 - Weeks 3 & 4 Practical'
             };
-            document.getElementById('quiz-title').innerText = titles[mode];
+            document.getElementById('quiz-title').innerText = titles[currentScope];
         }
-
         resetQuiz();
     }
 
     function renderQuiz() {
-        shuffleArray(activeQuestions);
         userAnswers = new Array(activeQuestions.length).fill(null);
         answeredCount = 0;
         correctCount = 0;
@@ -876,58 +1062,106 @@
             card.className = 'question-card';
             card.id = `q-card-${qIndex}`;
 
-            // Image Element - Updated with exact GitHub case-sensitive path
+            // Image Loader
             const imgWrap = document.createElement('div');
             imgWrap.className = 'image-wrapper';
             const img = document.createElement('img');
-            img.src = `Images/Spinal%202/${encodeURIComponent(q.image)}`;
-            img.alt = `Anatomy Diagram - Question ${qIndex + 1}`;
             
-            // Fallback error indicator if a file name was mistyped
+            // GitHub Path Fallbacks
+            const pathsToTry = [
+                `Images/Spinal 2/${q.image}`,
+                `./Images/Spinal 2/${q.image}`,
+                `../Images/Spinal 2/${q.image}`,
+                `images/Spinal 2/${q.image}`,
+                `Spinal 2/${q.image}`
+            ];
+            let currentPathIdx = 0;
+
+            img.src = pathsToTry[currentPathIdx];
+            img.alt = `Anatomy Diagram - Question ${qIndex + 1}`;
+
             img.onerror = function() {
-                this.style.display = 'none';
-                const errText = document.createElement('div');
-                errText.style.color = '#f87171';
-                errText.style.padding = '20px';
-                errText.style.fontSize = '0.9rem';
-                errText.innerHTML = `⚠️ Image not found: <code>Images/Spinal 2/${q.image}</code><br>Check file name spelling & extension.`;
-                imgWrap.appendChild(errText);
+                currentPathIdx++;
+                if (currentPathIdx < pathsToTry.length) {
+                    this.src = pathsToTry[currentPathIdx];
+                } else {
+                    this.style.display = 'none';
+                    const err = document.createElement('div');
+                    err.style.color = '#f87171';
+                    err.style.padding = '15px';
+                    err.innerHTML = `⚠️ Image not found: <code>${q.image}</code> in <code>Images/Spinal 2/</code>`;
+                    imgWrap.appendChild(err);
+                }
             };
 
             imgWrap.appendChild(img);
             card.appendChild(imgWrap);
 
-            // Question Text
+            // Question Prompt
             const qText = document.createElement('div');
             qText.className = 'question-text';
             qText.textContent = `${qIndex + 1}. ${q.question}`;
             card.appendChild(qText);
 
-            // Options List
-            const optionsList = document.createElement('ul');
-            optionsList.className = 'options-list';
+            // Render based on chosen mode
+            if (currentQuizType === 'mc') {
+                const optionsList = document.createElement('ul');
+                optionsList.className = 'options-list';
 
-            q.options.forEach((opt, optIndex) => {
-                const optItem = document.createElement('li');
-                optItem.className = 'option-item';
-                optItem.id = `opt-${qIndex}-${optIndex}`;
-                
-                const label = document.createElement('strong');
-                label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
-                
-                const text = document.createTextNode(` ${opt}`);
-                
-                optItem.appendChild(label);
-                optItem.appendChild(text);
+                q.options.forEach((opt, optIndex) => {
+                    const optItem = document.createElement('li');
+                    optItem.className = 'option-item';
+                    optItem.id = `opt-${qIndex}-${optIndex}`;
+                    
+                    const label = document.createElement('strong');
+                    label.textContent = `${String.fromCharCode(65 + optIndex)}.`;
+                    
+                    const text = document.createTextNode(` ${opt}`);
+                    
+                    optItem.appendChild(label);
+                    optItem.appendChild(text);
 
-                optItem.addEventListener('click', function() {
-                    selectAnswer(qIndex, optIndex);
+                    optItem.addEventListener('click', function() {
+                        selectAnswerMC(qIndex, optIndex);
+                    });
+
+                    optionsList.appendChild(optItem);
                 });
 
-                optionsList.appendChild(optItem);
-            });
+                card.appendChild(optionsList);
+            } else {
+                // Type-in input group
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'input-group';
 
-            card.appendChild(optionsList);
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'text-input';
+                input.id = `input-${qIndex}`;
+                input.placeholder = "Type anatomical structure name...";
+                input.autocomplete = "off";
+                input.autocorrect = "off";
+                input.spellcheck = false;
+
+                const submitBtn = document.createElement('button');
+                submitBtn.className = 'submit-answer-btn';
+                submitBtn.id = `submit-btn-${qIndex}`;
+                submitBtn.textContent = "Check";
+
+                submitBtn.addEventListener('click', function() {
+                    submitTypeInAnswer(qIndex);
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        submitTypeInAnswer(qIndex);
+                    }
+                });
+
+                inputGroup.appendChild(input);
+                inputGroup.appendChild(submitBtn);
+                card.appendChild(inputGroup);
+            }
 
             // Feedback Box
             const feedback = document.createElement('div');
@@ -939,7 +1173,8 @@
         });
     }
 
-    function selectAnswer(qIndex, optIndex) {
+    // Handler for Multiple Choice Mode
+    function selectAnswerMC(qIndex, optIndex) {
         if (userAnswers[qIndex] !== null) return;
 
         const q = activeQuestions[qIndex];
@@ -960,6 +1195,42 @@
             }
         }
 
+        renderFeedbackUI(qIndex, isCorrect, "");
+    }
+
+    // Handler for Type-In Mode with Spell-Checking
+    function submitTypeInAnswer(qIndex) {
+        if (userAnswers[qIndex] !== null) return;
+
+        const inputEl = document.getElementById(`input-${qIndex}`);
+        const submitBtnEl = document.getElementById(`submit-btn-${qIndex}`);
+        const userTyped = inputEl.value;
+
+        if (!userTyped.trim()) return; // Don't allow empty submit
+
+        const q = activeQuestions[qIndex];
+        userAnswers[qIndex] = userTyped;
+        answeredCount++;
+
+        inputEl.disabled = true;
+        submitBtnEl.disabled = true;
+
+        const matchResult = checkAnswerFuzzy(userTyped, q.accepted);
+        const isCorrect = matchResult.isCorrect;
+        if (isCorrect) correctCount++;
+
+        let spellNote = "";
+        if (isCorrect && matchResult.distance > 0) {
+            spellNote = `Spelling adjusted: matched "${matchResult.closestMatch}"`;
+        } else if (!isCorrect) {
+            spellNote = `Correct Term: ${q.options[q.correct]}`;
+        }
+
+        renderFeedbackUI(qIndex, isCorrect, spellNote);
+    }
+
+    function renderFeedbackUI(qIndex, isCorrect, note) {
+        const q = activeQuestions[qIndex];
         const feedbackEl = document.getElementById(`feedback-${qIndex}`);
         feedbackEl.classList.add('show');
         
@@ -969,10 +1240,13 @@
         });
         rationalesHTML += '</ul>';
 
+        const noteHTML = note ? `<div class="spelling-note">ℹ️ ${note}</div>` : '';
+
         if (isCorrect) {
             feedbackEl.classList.add('correct');
             feedbackEl.innerHTML = `
                 <div class="status-banner">Correct!</div>
+                ${noteHTML}
                 <div class="explanation-text">${q.explanation}</div>
                 ${rationalesHTML}
             `;
@@ -980,6 +1254,7 @@
             feedbackEl.classList.add('incorrect');
             feedbackEl.innerHTML = `
                 <div class="status-banner">Incorrect.</div>
+                ${noteHTML}
                 <div class="explanation-text">${q.explanation}</div>
                 ${rationalesHTML}
             `;
@@ -1009,12 +1284,13 @@
 
     function resetQuiz() {
         document.getElementById('final-summary').style.display = 'none';
+        shuffleArray(activeQuestions);
         renderQuiz();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     window.onload = function() {
-        setMode('all');
+        filterAndReset();
         document.getElementById('reset-btn').addEventListener('click', resetQuiz);
     };
 </script>
