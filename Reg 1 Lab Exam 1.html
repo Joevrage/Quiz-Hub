@@ -1,0 +1,1766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reg 1 Upper Extremity Lab Practical Drill</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --border-card: #282828;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --correct-text: #e2fbe8;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --incorrect-text: #fde8e8;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 90px;
+        }
+
+        /* Sticky Header Scoreboard */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 0.9rem 1.2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .header-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        #score-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: #242424;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .control-row {
+            margin-bottom: 1rem;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn-filter, .btn-mode {
+            background-color: #242424;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-filter:hover, .btn-mode:hover {
+            border-color: var(--accent);
+            background-color: #303030;
+        }
+
+        .btn-filter.active, .btn-mode.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+            font-weight: 800;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        /* Image Viewport */
+        .image-wrapper {
+            background-color: #050505;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            max-height: 480px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .img-fallback-alert {
+            color: #f87171;
+            font-size: 0.85rem;
+            padding: 1rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .question-prompt {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+        }
+
+        /* Multiple Choice Mode */
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .option-btn {
+            background-color: #242424;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #303030;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-text) !important;
+            font-weight: 700;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: var(--incorrect-text) !important;
+            font-weight: 700;
+        }
+
+        /* Type-In Mode */
+        .typein-box {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .typein-input {
+            flex: 1;
+            background-color: #0b0b0b;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .typein-input:focus {
+            border-color: var(--accent);
+        }
+
+        .typein-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 0 1.5rem;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .typein-btn:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+        }
+
+        .typein-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .fuzzy-note {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        /* Explanation Component */
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1.2rem;
+            border-radius: 6px;
+            background-color: #222222;
+            border-left: 4px solid var(--accent);
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .status-banner {
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-banner.correct {
+            background-color: var(--correct-bg);
+            color: var(--correct-border);
+            border: 1px solid var(--correct-border);
+        }
+
+        .status-banner.incorrect {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-border);
+            border: 1px solid var(--incorrect-border);
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.55;
+            color: #e5e5e5;
+        }
+
+        .rationale-list {
+            list-style: none;
+            border-top: 1px solid #333333;
+            padding-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            color: #cccccc;
+            line-height: 1.45;
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Card */
+        #summary-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+        }
+
+        .score-display {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #summary-feedback {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Regional Anatomy 1: Lab Practical Drill</div>
+        <div id="score-header">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-row">
+                <span class="control-label">Scope Filter (Curriculum Module)</span>
+                <div class="filter-group" id="scope-filters">
+                    <button class="btn-filter active" onclick="setScope('all')">All Weeks (Comprehensive)</button>
+                    <button class="btn-filter" onclick="setScope('Week 1')">Week 1: Shoulder & Brachium</button>
+                    <button class="btn-filter" onclick="setScope('Week 2')">Week 2: Brachial Plexus & Vasculature</button>
+                    <button class="btn-filter" onclick="setScope('Week 3')">Week 3: Forearm Flexors & Hand</button>
+                    <button class="btn-filter" onclick="setScope('Week 4')">Week 4: Forearm Extensors</button>
+                </div>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Testing Mode</span>
+                <div class="filter-group">
+                    <button class="btn-mode active" id="mode-mcq" onclick="setMode('mcq')">Multiple Choice Mode</button>
+                    <button class="btn-mode" id="mode-typein" onclick="setMode('typein')">Type-In (Practical Lab Exam Mode)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container"></div>
+
+        <!-- Completion Card -->
+        <div id="summary-card">
+            <h2>Practical Drill Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 0 (0%)</div>
+            <p id="summary-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Reset & Retake Drill</button>
+        </div>
+    </div>
+
+    <script>
+        const rawMasterData = [
+            // ==========================================
+            // WEEK 1: SHOULDER, PECTORAL & BRACHIUM
+            // ==========================================
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Supraspinatus.PNG",
+                prompt: "Identify the highlighted intrinsic shoulder muscle and its primary innervation:",
+                canonical: "Supraspinatus",
+                synonyms: ["supraspinatus", "supraspinatus muscle", "m. supraspinatus"],
+                distractors: ["Infraspinatus", "Subscapularis", "Teres minor"],
+                concept: "The supraspinatus muscle occupies the supraspinous fossa of the scapula and inserts onto the superior facet of the greater tubercle. It is innervated by the suprascapular nerve (C5-C6) and initiates abduction of the arm (0-15 degrees).",
+                rationales: {
+                    "Supraspinatus": "Correct. Occupies the supraspinous fossa and inserts onto the superior facet of the greater tubercle.",
+                    "Infraspinatus": "Incorrect. Occupies the infraspinous fossa and inserts onto the middle facet of the greater tubercle.",
+                    "Subscapularis": "Incorrect. Originates from the subscapular fossa and inserts onto the lesser tubercle.",
+                    "Teres minor": "Incorrect. Originates along the lateral border of the scapula and inserts onto the inferior facet of the greater tubercle."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Infraspinatus.PNG",
+                prompt: "Identify the highlighted rotator cuff muscle occupying the posterior scapular fossa below the scapular spine:",
+                canonical: "Infraspinatus",
+                synonyms: ["infraspinatus", "infraspinatus muscle", "m. infraspinatus"],
+                distractors: ["Supraspinatus", "Teres minor", "Teres major"],
+                concept: "Infraspinatus occupies the infraspinous fossa, inserts onto the middle facet of the greater tubercle, and is innervated by the suprascapular nerve (C5-C6). It acts as a primary lateral rotator of the humerus.",
+                rationales: {
+                    "Infraspinatus": "Correct. Fills the infraspinous fossa and serves as a major lateral rotator.",
+                    "Supraspinatus": "Incorrect. Positioned superior to the spine of the scapula.",
+                    "Teres minor": "Incorrect. Positioned along the lateral border of the scapula.",
+                    "Teres major": "Incorrect. Arises from the inferior angle and is not a rotator cuff muscle."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Subscapularis.PNG",
+                prompt: "Identify the highlighted rotator cuff muscle lining the costal surface of the scapula:",
+                canonical: "Subscapularis",
+                synonyms: ["subscapularis", "subscapularis muscle", "m. subscapularis"],
+                distractors: ["Serratus anterior", "Pectoralis minor", "Coracobrachialis"],
+                concept: "Subscapularis fills the subscapular fossa on the anterior scapula, inserting into the lesser tubercle of the humerus. It receives dual innervation from the upper and lower subscapular nerves (C5-C7) and acts as a medial rotator.",
+                rationales: {
+                    "Subscapularis": "Correct. Forms the anterior wall of the rotator cuff and inserts onto the lesser tubercle.",
+                    "Serratus anterior": "Incorrect. Attaches to the costal aspect of the medial border of the scapula.",
+                    "Pectoralis minor": "Incorrect. Originates from ribs 3-5 and inserts onto the coracoid process.",
+                    "Coracobrachialis": "Incorrect. Originates from the coracoid process and inserts on the medial humerus."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Teres Minor.PNG",
+                prompt: "Identify the highlighted rotator cuff muscle forming the superior boundary of the quadrangular space:",
+                canonical: "Teres Minor",
+                synonyms: ["teres minor", "teres minor muscle", "m. teres minor"],
+                distractors: ["Teres major", "Infraspinatus", "Posterior deltoid"],
+                concept: "Teres minor originates from the middle lateral border of the scapula, inserts onto the inferior facet of the greater tubercle, and is innervated by the axillary nerve (C5-C6). It forms the superior margin of the quadrangular space.",
+                rationales: {
+                    "Teres Minor": "Correct. Forms the superior border of the quadrangular space and is innervated by the axillary nerve.",
+                    "Teres major": "Incorrect. Forms the inferior boundary of the quadrangular space and is supplied by the lower subscapular nerve.",
+                    "Infraspinatus": "Incorrect. Occupies the infraspinous fossa and is innervated by the suprascapular nerve.",
+                    "Posterior deltoid": "Incorrect. Originates from the spine of the scapula and inserts on the deltoid tuberosity."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Teres Major.PNG",
+                prompt: "Identify the highlighted muscle originating from the dorsal inferior angle of the scapula:",
+                canonical: "Teres Major",
+                synonyms: ["teres major", "teres major muscle", "m. teres major"],
+                distractors: ["Teres minor", "Latissimus dorsi", "Subscapularis"],
+                concept: "Teres major originates from the dorsal surface of the inferior angle of the scapula, inserting into the medial lip of the intertubercular groove. It is innervated by the lower subscapular nerve (C6-C7) and adducts and medially rotates the arm.",
+                rationales: {
+                    "Teres Major": "Correct. Originates from the inferior angle and inserts into the medial lip of the bicipital groove.",
+                    "Teres minor": "Incorrect. Rotator cuff muscle inserting onto the greater tubercle.",
+                    "Latissimus dorsi": "Incorrect. Broad muscle inserting into the floor of the bicipital groove.",
+                    "Subscapularis": "Incorrect. Originates from the subscapular fossa."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Deltoid.PNG",
+                prompt: "Identify the highlighted shoulder muscle that inserts into the lateral mid-shaft of the humerus:",
+                canonical: "Deltoid",
+                synonyms: ["deltoid", "deltoid muscle", "m. deltoideus"],
+                distractors: ["Pectoralis major", "Coracobrachialis", "Biceps brachii"],
+                concept: "The deltoid originates from the lateral clavicle, acromion, and scapular spine, inserting onto the deltoid tuberosity. It is innervated by the axillary nerve (C5-C6).",
+                rationales: {
+                    "Deltoid": "Correct. Inserts onto the deltoid tuberosity and is innervated by the axillary nerve.",
+                    "Pectoralis major": "Incorrect. Inserts into the lateral lip of the intertubercular groove.",
+                    "Coracobrachialis": "Incorrect. Inserts onto the medial mid-shaft of the humerus.",
+                    "Biceps brachii": "Incorrect. Inserts onto the radial tuberosity and bicipital aponeurosis."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Trapezius.PNG",
+                prompt: "Identify the highlighted superficial posterior axio-appendicular muscle innervated by cranial nerve XI:",
+                canonical: "Trapezius",
+                synonyms: ["trapezius", "trapezius muscle", "m. trapezius"],
+                distractors: ["Latissimus dorsi", "Levator Scapula", "Rhomboid major"],
+                concept: "The trapezius is the superficial extrinsic muscle originating from the superior nuchal line, EOP, nuchal ligament, and C7-T12 spinous processes. Its motor supply is provided by the spinal accessory nerve (CN XI).",
+                rationales: {
+                    "Trapezius": "Correct. Receives motor innervation from CN XI and proprioceptive sensory branches from C3-C4.",
+                    "Latissimus dorsi": "Incorrect. Innervated by the thoracodorsal nerve.",
+                    "Levator Scapula": "Incorrect. Innervated by the dorsal scapular nerve.",
+                    "Rhomboid major": "Incorrect. Innervated by the dorsal scapular nerve."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Latissimus Dorsi.PNG",
+                prompt: "Identify the highlighted broad muscle whose tendon inserts into the floor of the intertubercular groove:",
+                canonical: "Latissimus Dorsi",
+                synonyms: ["latissimus dorsi", "latissimus dorsi muscle", "m. latissimus dorsi"],
+                distractors: ["Teres major", "Pectoralis major", "Serratus anterior"],
+                concept: "The latissimus dorsi covers the lower back and inserts into the floor of the intertubercular sulcus of the humerus. It is innervated by the thoracodorsal nerve (C6-C8).",
+                rationales: {
+                    "Latissimus Dorsi": "Correct. Broad back muscle inserting into the bicipital groove floor.",
+                    "Teres major": "Incorrect. Inserts onto the medial lip of the intertubercular groove.",
+                    "Pectoralis major": "Incorrect. Inserts onto the lateral lip of the intertubercular groove.",
+                    "Serratus anterior": "Incorrect. Inserts along the medial border of the scapula."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Levator Scapula.PNG",
+                prompt: "Identify the highlighted deep posterior muscle originating from C1-C4 transverse processes:",
+                canonical: "Levator Scapula",
+                synonyms: ["levator Scapula", "levator scapula", "m. levator Scapula"],
+                distractors: ["Rhomboid minor", "Rhomboid major", "Splenius capitis"],
+                concept: "Levator Scapula originates from the transverse processes of C1-C4 and inserts into the superior angle and medial border of the scapula. It is innervated by the dorsal scapular nerve (C5).",
+                rationales: {
+                    "Levator Scapula": "Correct. Originates from C1-C4 TPs and elevates the scapula.",
+                    "Rhomboid minor": "Incorrect. Originates from C7-T1 spinous processes.",
+                    "Rhomboid major": "Incorrect. Originates from T2-T5 spinous processes.",
+                    "Splenius capitis": "Incorrect. Intrinsic cervical muscle inserting onto the mastoid process."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Rhomboid Minor.PNG",
+                prompt: "Identify the highlighted muscle originating from the nuchal ligament and C7-T1 spinous processes:",
+                canonical: "Rhomboid Minor",
+                synonyms: ["rhomboid minor", "rhomboid minor muscle", "m. rhomboideus minor"],
+                distractors: ["Rhomboid major", "Levator Scapula", "Serratus posterior superior"],
+                concept: "Rhomboid minor sits superior to rhomboid major ('minor above major'), originating from the nuchal ligament and C7-T1 spinous processes to insert at the root of the scapular spine. It is innervated by the dorsal scapular nerve.",
+                rationales: {
+                    "Rhomboid Minor": "Correct. Small rhomboid muscle originating at C7-T1.",
+                    "Rhomboid major": "Incorrect. Larger muscle originating from T2-T5 spinous processes.",
+                    "Levator Scapula": "Incorrect. Originates from cervical transverse processes.",
+                    "Serratus posterior superior": "Incorrect. Intermediate back muscle inserting onto ribs 2-5."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Rhomboid Major.PNG",
+                prompt: "Identify the highlighted muscle originating from the spinous processes of T2-T5:",
+                canonical: "Rhomboid Major",
+                synonyms: ["rhomboid major", "rhomboid major muscle", "m. rhomboideus major"],
+                distractors: ["Rhomboid minor", "Latissimus dorsi", "Levator Scapula"],
+                concept: "Rhomboid major originates from the spinous processes of T2-T5 and inserts on the medial border of the scapula from the spine to the inferior angle. It retracts the scapula and is innervated by the dorsal scapular nerve (C5).",
+                rationales: {
+                    "Rhomboid Major": "Correct. Spans T2-T5 spinous processes to retract the scapula.",
+                    "Rhomboid minor": "Incorrect. Originates from C7-T1 spinous processes.",
+                    "Latissimus dorsi": "Incorrect. Originates from T7-T12 and thoracolumbar fascia.",
+                    "Levator Scapula": "Incorrect. Originates from C1-C4 transverse processes."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Serratus Anterior.PNG",
+                prompt: "Identify the highlighted muscle holding the scapula against the rib cage, innervated by the long thoracic nerve:",
+                canonical: "Serratus Anterior",
+                synonyms: ["serratus anterior", "serratus anterior muscle", "m. serratus anterior"],
+                distractors: ["Pectoralis minor", "Subclavius", "Subscapularis"],
+                concept: "Serratus anterior originates from ribs 1-8/9 and inserts onto the anterior surface of the medial border of the scapula. Innervated by the long thoracic nerve (C5-C7), its denervation produces a winged scapula.",
+                rationales: {
+                    "Serratus Anterior": "Correct. Protracts the scapula and is innervated by the long thoracic nerve.",
+                    "Pectoralis minor": "Incorrect. Originates from ribs 3-5 and inserts onto the coracoid process.",
+                    "Subclavius": "Incorrect. Originates from rib 1 and stabilizes the clavicle.",
+                    "Subscapularis": "Incorrect. Fills the subscapular fossa."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Pectoralis Major.PNG",
+                prompt: "Identify the highlighted anterior chest muscle with dual innervation from lateral and medial pectoral nerves:",
+                canonical: "Pectoralis Major",
+                synonyms: ["pectoralis major", "pectoralis major muscle", "m. pectoralis major"],
+                distractors: ["Pectoralis minor", "Subclavius", "Anterior deltoid"],
+                concept: "Pectoralis major has clavicular and sternocostal heads, inserting into the lateral lip of the intertubercular groove. It receives motor innervation from both lateral (C5-C7) and medial (C8-T1) pectoral nerves.",
+                rationales: {
+                    "Pectoralis Major": "Correct. Receives dual medial and lateral pectoral nerve supply.",
+                    "Pectoralis minor": "Incorrect. Innervated solely by the medial pectoral nerve.",
+                    "Subclavius": "Incorrect. Innervated by the nerve to subclavius.",
+                    "Anterior deltoid": "Incorrect. Innervated by the axillary nerve."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Pectoralis Minor.PNG",
+                prompt: "Identify the highlighted muscle originating from ribs 3-5 and inserting onto the coracoid process:",
+                canonical: "Pectoralis Minor",
+                synonyms: ["pectoralis minor", "pectoralis minor muscle", "m. pectoralis minor"],
+                distractors: ["Pectoralis major", "Subclavius", "Coracobrachialis"],
+                concept: "Pectoralis minor originates from ribs 3-5 and inserts onto the coracoid process of the scapula. It is innervated solely by the medial pectoral nerve (C8-T1).",
+                rationales: {
+                    "Pectoralis Minor": "Correct. Inserts onto the coracoid process and is supplied by the medial pectoral nerve.",
+                    "Pectoralis major": "Incorrect. Inserts on the lateral lip of the bicipital groove.",
+                    "Subclavius": "Incorrect. Originates from rib 1 and inserts on the clavicle.",
+                    "Coracobrachialis": "Incorrect. Originates from the coracoid process and inserts on the humerus."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Subclavius.PNG",
+                prompt: "Identify the highlighted small muscle anchoring rib 1 to the inferior surface of the clavicle:",
+                canonical: "Subclavius",
+                synonyms: ["subclavius", "subclavius muscle", "m. subclavius"],
+                distractors: ["Pectoralis minor", "Sternocleidomastoid", "Scalenus anterior"],
+                concept: "Subclavius originates at the junction of the 1st rib and its costal cartilage, inserting into the subclavian groove on the inferior clavicle. It is innervated by the nerve to subclavius (C5-C6).",
+                rationales: {
+                    "Subclavius": "Correct. Stabilizes and depresses the clavicle.",
+                    "Pectoralis minor": "Incorrect. Originates from ribs 3-5.",
+                    "Sternocleidomastoid": "Incorrect. Originates from the manubrium and medial clavicle, inserting on the mastoid process.",
+                    "Scalenus anterior": "Incorrect. Inserts onto the scalene tubercle of the 1st rib."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Biceps Brachii Long Head.PNG",
+                prompt: "Identify the highlighted tendon that traverses the intertubercular groove from the supraglenoid tubercle:",
+                canonical: "Biceps Brachii Long Head",
+                synonyms: ["biceps brachii long head", "long head of biceps brachii", "biceps long head"],
+                distractors: ["Biceps Brachii Short Head", "Coracobrachialis", "Brachialis"],
+                concept: "The long head of the biceps brachii originates from the supraglenoid tubercle, arches intra-articularly over the humeral head, and exits through the intertubercular groove.",
+                rationales: {
+                    "Biceps Brachii Long Head": "Correct. Arises from the supraglenoid tubercle and courses through the bicipital sulcus.",
+                    "Biceps Brachii Short Head": "Incorrect. Arises from the coracoid process.",
+                    "Coracobrachialis": "Incorrect. Arises from the coracoid process and inserts on the humerus.",
+                    "Brachialis": "Incorrect. Originates from the distal anterior humerus."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Biceps Brachii Short Head.PNG",
+                prompt: "Identify the highlighted muscle head originating from the apex of the coracoid process:",
+                canonical: "Biceps Brachii Short Head",
+                synonyms: ["biceps brachii short head", "short head of biceps brachii", "biceps short head"],
+                distractors: ["Biceps Brachii Long Head", "Pectoralis minor", "Brachialis"],
+                concept: "The short head of biceps brachii originates from the apex of the coracoid process via a conjoined tendon with coracobrachialis, joining the long head to insert into the radial tuberosity.",
+                rationales: {
+                    "Biceps Brachii Short Head": "Correct. Arises from the coracoid process via a conjoined tendon.",
+                    "Biceps Brachii Long Head": "Incorrect. Arises from the supraglenoid tubercle.",
+                    "Pectoralis minor": "Incorrect. Inserts onto the coracoid process.",
+                    "Brachialis": "Incorrect. Originates from the lower anterior humeral shaft."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Brachialis.PNG",
+                prompt: "Identify the highlighted pure elbow flexor inserting into the coronoid process and ulnar tuberosity:",
+                canonical: "Brachialis",
+                synonyms: ["brachialis", "brachialis muscle", "m. brachialis"],
+                distractors: ["Biceps brachii", "Coracobrachialis", "Brachioradialis"],
+                concept: "Brachialis originates from the distal half of the anterior humerus and inserts into the coronoid process and ulnar tuberosity, flexing the elbow in all positions.",
+                rationales: {
+                    "Brachialis": "Correct. Pure elbow flexor inserting onto the ulna.",
+                    "Biceps brachii": "Incorrect. Inserts onto the radial tuberosity and supinates.",
+                    "Coracobrachialis": "Incorrect. Does not cross the elbow joint.",
+                    "Brachioradialis": "Incorrect. Originates from the lateral supracondylar ridge."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Coracobrachialis.PNG",
+                prompt: "Identify the highlighted muscle pierced directly by the musculocutaneous nerve:",
+                canonical: "Coracobrachialis",
+                synonyms: ["coracobrachialis", "coracobrachialis muscle", "m. coracobrachialis"],
+                distractors: ["Brachialis", "Biceps brachii short head", "Pectoralis minor"],
+                concept: "Coracobrachialis originates from the coracoid process, inserts onto the medial humerus, and is pierced by the musculocutaneous nerve.",
+                rationales: {
+                    "Coracobrachialis": "Correct. Characteristic anatomical landmark pierced by the musculocutaneous nerve.",
+                    "Brachialis": "Incorrect. Lies deep in the distal arm beneath the nerve.",
+                    "Biceps brachii short head": "Incorrect. Runs alongside but is not pierced by the nerve.",
+                    "Pectoralis minor": "Incorrect. Located on the anterior thoracic wall."
+                }
+            },
+            {
+                section: "Week 1",
+                folder: "Week1",
+                filename: "Triceps Brachii Long Head.PNG",
+                prompt: "Identify the highlighted muscle head originating from the infraglenoid tubercle of the scapula:",
+                canonical: "Triceps Brachii Long Head",
+                synonyms: ["triceps brachii long head", "long head of triceps brachii", "triceps long head"],
+                distractors: ["Triceps Brachii Lateral Head", "Triceps Brachii Medial Head", "Anconeus"],
+                concept: "The long head of the triceps brachii originates from the infraglenoid tubercle, separating the triangular and quadrangular spaces and inserting onto the olecranon.",
+                rationales: {
+                    "Triceps Brachii Long Head": "Correct. Originates from the infraglenoid tubercle of the scapula.",
+                    "Triceps Brachii Lateral Head": "Incorrect. Originates from the posterior humerus superior to the radial groove.",
+                    "Triceps Brachii Medial Head": "Incorrect. Originates from the posterior humerus inferior to the radial groove.",
+                    "Anconeus": "Incorrect. Small muscle originating from the lateral epicondyle."
+                }
+            },
+
+            // ==========================================
+            // WEEK 2: BRACHIAL PLEXUS, VESSELS & ELBOW
+            // ==========================================
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Axillary Nerve.PNG",
+                prompt: "Identify the highlighted nerve derived from the posterior cord that traverses the quadrangular space:",
+                canonical: "Axillary Nerve",
+                synonyms: ["axillary nerve", "n. axillaris"],
+                distractors: ["Radial nerve", "Musculocutaneous nerve", "Suprascapular nerve"],
+                concept: "The axillary nerve (C5-C6) arises from the posterior cord, passes through the quadrangular space with the posterior humeral circumflex artery around the surgical neck, and supplies deltoid and teres minor.",
+                rationales: {
+                    "Axillary Nerve": "Correct. Traverses the quadrangular space around the surgical neck of the humerus.",
+                    "Radial nerve": "Incorrect. Enters the radial groove with profunda brachii.",
+                    "Musculocutaneous nerve": "Incorrect. Pierces coracobrachialis in the anterior arm.",
+                    "Suprascapular nerve": "Incorrect. Passes through the suprascapular notch."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Musculocutaneous Nerve.PNG",
+                prompt: "Identify the highlighted nerve of the lateral cord that terminates as the lateral antebrachial cutaneous nerve:",
+                canonical: "Musculocutaneous Nerve",
+                synonyms: ["musculocutaneous nerve", "n. musculocutaneus"],
+                distractors: ["Median nerve", "Radial nerve", "Ulnar nerve"],
+                concept: "The musculocutaneous nerve (C5-C7) arises from the lateral cord, supplies the anterior arm flexors, and continues into the forearm as the lateral antebrachial cutaneous nerve.",
+                rationales: {
+                    "Musculocutaneous Nerve": "Correct. Supplies anterior arm muscles and provides lateral forearm cutaneous sensation.",
+                    "Median nerve": "Incorrect. Courses through the arm without giving muscular branches before the elbow.",
+                    "Radial nerve": "Incorrect. Branch of the posterior cord supplying the extensor compartments.",
+                    "Ulnar nerve": "Incorrect. Branch of the medial cord supplying the medial hand and flexors."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Radial Nerve.PNG",
+                prompt: "Identify the highlighted terminal branch of the posterior cord that traverses the radial groove:",
+                canonical: "Radial Nerve",
+                synonyms: ["radial nerve", "n. radialis"],
+                distractors: ["Axillary nerve", "Median nerve", "Ulnar nerve"],
+                concept: "The radial nerve (C5-T1) is the largest branch of the posterior cord. It travels in the radial (spiral) groove with the profunda brachii artery to supply all posterior compartment muscles of the arm and forearm.",
+                rationales: {
+                    "Radial Nerve": "Correct. Largest posterior cord branch coursing through the radial groove.",
+                    "Axillary nerve": "Incorrect. Winds around the surgical neck through the quadrangular space.",
+                    "Median nerve": "Incorrect. Formed by the union of medial and lateral cords anteriorly.",
+                    "Ulnar nerve": "Incorrect. Courses posterior to the medial epicondyle."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Median Nerve.PNG",
+                prompt: "Identify the highlighted major nerve formed by contributions from both the lateral and medial cords:",
+                canonical: "Median Nerve",
+                synonyms: ["median nerve", "n. medianus"],
+                distractors: ["Musculocutaneous nerve", "Ulnar nerve", "Radial nerve"],
+                concept: "The median nerve is formed anterior to the axillary artery by the union of the lateral root (lateral cord) and medial root (medial cord), carrying fibers from C5 through T1.",
+                rationales: {
+                    "Median Nerve": "Correct. Formed by convergence of lateral and medial roots over the axillary/brachial artery.",
+                    "Musculocutaneous nerve": "Incorrect. Arises solely from the lateral cord.",
+                    "Ulnar nerve": "Incorrect. Arises solely from the medial cord.",
+                    "Radial nerve": "Incorrect. Arises solely from the posterior cord."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Ulnar Nerve.PNG",
+                prompt: "Identify the highlighted terminal nerve of the medial cord that passes posterior to the medial epicondyle:",
+                canonical: "Ulnar Nerve",
+                synonyms: ["ulnar nerve", "n. ulnaris"],
+                distractors: ["Median nerve", "Radial nerve", "Musculocutaneous nerve"],
+                concept: "The ulnar nerve (C8-T1) arises from the medial cord, runs along the medial arm, passes posterior to the medial epicondyle in the cubital tunnel, and innervates FCU, medial FDP, and intrinsic hand muscles.",
+                rationales: {
+                    "Ulnar Nerve": "Correct. Courses behind the medial epicondyle into the medial forearm and hand.",
+                    "Median nerve": "Incorrect. Passes anteriorly across the cubital fossa.",
+                    "Radial nerve": "Incorrect. Passes anterior to the lateral epicondyle.",
+                    "Musculocutaneous nerve": "Incorrect. Terminates in the anterior arm."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Lateral Cord.PNG",
+                prompt: "Identify the highlighted brachial plexus cord formed by the anterior divisions of the superior and middle trunks:",
+                canonical: "Lateral Cord",
+                synonyms: ["lateral cord", "lateral cord of brachial plexus"],
+                distractors: ["Medial Cord", "Posterior Cord", "Superior Trunk"],
+                concept: "The lateral cord is formed by the anterior divisions of the superior and middle trunks (C5-C7). It gives rise to the lateral pectoral nerve, musculocutaneous nerve, and lateral root of the median nerve.",
+                rationales: {
+                    "Lateral Cord": "Correct. Formed by anterior divisions of superior and middle trunks.",
+                    "Medial Cord": "Incorrect. Formed as continuation of anterior division of inferior trunk.",
+                    "Posterior Cord": "Incorrect. Formed by union of all three posterior divisions.",
+                    "Superior Trunk": "Incorrect. Proximal trunk formed by C5-C6 roots."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Posterior Cord.PNG",
+                prompt: "Identify the highlighted brachial plexus cord formed by the union of all three posterior divisions:",
+                canonical: "Posterior Cord",
+                synonyms: ["posterior cord", "posterior cord of brachial plexus"],
+                distractors: ["Lateral Cord", "Medial Cord", "Middle Trunk"],
+                concept: "The posterior cord is formed by all three posterior divisions of the trunks (C5-T1), yielding the upper subscapular, thoracodorsal, lower subscapular, axillary, and radial nerves.",
+                rationales: {
+                    "Posterior Cord": "Correct. Formed by posterior divisions of all trunks.",
+                    "Lateral Cord": "Incorrect. Formed by anterior divisions of superior and middle trunks.",
+                    "Medial Cord": "Incorrect. Formed by anterior division of inferior trunk.",
+                    "Middle Trunk": "Incorrect. Formed by C7 nerve root."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Medial Cord.PNG",
+                prompt: "Identify the highlighted brachial plexus cord formed by the anterior division of the inferior trunk:",
+                canonical: "Medial Cord",
+                synonyms: ["medial cord", "medial cord of brachial plexus"],
+                distractors: ["Lateral Cord", "Posterior Cord", "Inferior Trunk"],
+                concept: "The medial cord is the continuation of the anterior division of the inferior trunk (C8-T1). It gives rise to the medial pectoral nerve, medial cutaneous nerves, ulnar nerve, and medial root of the median nerve.",
+                rationales: {
+                    "Medial Cord": "Correct. Formed by anterior division of inferior trunk.",
+                    "Lateral Cord": "Incorrect. Formed by anterior divisions of superior and middle trunks.",
+                    "Posterior Cord": "Incorrect. Formed by union of all three posterior divisions.",
+                    "Inferior Trunk": "Incorrect. Formed by C8-T1 nerve roots prior to division."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Circumflex Scapular Artery.PNG",
+                prompt: "Identify the highlighted artery traversing the triangular space to participate in the scapular anastomosis:",
+                canonical: "Circumflex Scapular Artery",
+                synonyms: ["circumflex scapular artery", "a. circumflexa Scapula"],
+                distractors: ["Posterior Humeral Circumflex Artery", "Suprascapular Artery", "Thoracodorsal Artery"],
+                concept: "The circumflex scapular artery branches from the subscapular artery and winds around the lateral border of the scapula through the triangular space.",
+                rationales: {
+                    "Circumflex Scapular Artery": "Correct. Traverses the triangular space to join the scapular anastomotic network.",
+                    "Posterior Humeral Circumflex Artery": "Incorrect. Passes through the quadrangular space.",
+                    "Suprascapular Artery": "Incorrect. Passes superiorly over the transverse scapular ligament.",
+                    "Thoracodorsal Artery": "Incorrect. Descends to latissimus dorsi."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Posterior Humeral Circumflex Artery.PNG",
+                prompt: "Identify the highlighted artery accompanying the axillary nerve through the quadrangular space:",
+                canonical: "Posterior Humeral Circumflex Artery",
+                synonyms: ["posterior humeral circumflex artery", "posterior circumflex humeral artery"],
+                distractors: ["Circumflex Scapular Artery", "Deep Profunda Brachii Artery", "Anterior Humeral Circumflex Artery"],
+                concept: "The posterior humeral circumflex artery arises from the third part of the axillary artery and passes through the quadrangular space with the axillary nerve around the surgical neck.",
+                rationales: {
+                    "Posterior Humeral Circumflex Artery": "Correct. Traverses the quadrangular space with the axillary nerve.",
+                    "Circumflex Scapular Artery": "Incorrect. Passes through the triangular space.",
+                    "Deep Profunda Brachii Artery": "Incorrect. Passes into the radial groove with the radial nerve.",
+                    "Anterior Humeral Circumflex Artery": "Incorrect. Smaller vessel winding around the anterior surgical neck."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Deep Profunda Brachii Artery.PNG",
+                prompt: "Identify the highlighted artery branching from the brachial artery that accompanies the radial nerve:",
+                canonical: "Deep Profunda Brachii Artery",
+                synonyms: ["deep profunda brachii artery", "profunda brachii artery", "deep artery of arm"],
+                distractors: ["Posterior Humeral Circumflex Artery", "Brachial Artery", "Circumflex Scapular Artery"],
+                concept: "The profunda brachii artery (deep artery of arm) arises from the proximal brachial artery and travels with the radial nerve along the radial groove on the posterior humerus.",
+                rationales: {
+                    "Deep Profunda Brachii Artery": "Correct. Accompanies the radial nerve in the radial groove.",
+                    "Posterior Humeral Circumflex Artery": "Incorrect. Traverses the quadrangular space.",
+                    "Brachial Artery": "Incorrect. Main arterial trunk of the anterior arm.",
+                    "Circumflex Scapular Artery": "Incorrect. Content of the triangular space."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Brachial Artery.PNG",
+                prompt: "Identify the highlighted main arterial trunk of the arm beginning at the inferior border of teres major:",
+                canonical: "Brachial Artery",
+                synonyms: ["brachial artery", "a. brachialis"],
+                distractors: ["Axillary Artery", "Subclavian Artery", "Radial Artery"],
+                concept: "The brachial artery is the continuation of the axillary artery at the inferior border of the teres major, running through the anterior arm before bifurcating into the radial and ulnar arteries in the cubital fossa.",
+                rationales: {
+                    "Brachial Artery": "Correct. Begins at the lower border of teres major and bifurcates at the cubital fossa.",
+                    "Axillary Artery": "Incorrect. Extends from the 1st rib to the inferior border of teres major.",
+                    "Subclavian Artery": "Incorrect. Extends from the aortic arch/brachiocephalic trunk to the 1st rib.",
+                    "Radial Artery": "Incorrect. Terminal lateral branch in the forearm."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Axillary Artery.PNG",
+                prompt: "Identify the highlighted vessel extending from the outer border of the first rib to the inferior border of teres major:",
+                canonical: "Axillary Artery",
+                synonyms: ["axillary artery", "a. axillaris"],
+                distractors: ["Subclavian Artery", "Brachial Artery", "Deep Profunda Brachii Artery"],
+                concept: "The axillary artery begins at the lateral border of the 1st rib and ends at the inferior border of teres major. It is divided into three parts by the overlying pectoralis minor muscle.",
+                rationales: {
+                    "Axillary Artery": "Correct. Spans from the 1st rib to the lower border of teres major.",
+                    "Subclavian Artery": "Incorrect. Proximal vessel within the root of the neck.",
+                    "Brachial Artery": "Incorrect. Distal continuation in the arm.",
+                    "Deep Profunda Brachii Artery": "Incorrect. Branch of the brachial artery."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Subclavian Artery.PNG",
+                prompt: "Identify the highlighted vessel providing arterial inflow to the upper extremity before crossing the first rib:",
+                canonical: "Subclavian Artery",
+                synonyms: ["subclavian artery", "a. subclavia"],
+                distractors: ["Axillary Artery", "Brachial Artery", "Suprascapular Artery"],
+                concept: "The subclavian artery supplies the upper extremity, head, and neck. It transitions into the axillary artery upon crossing the lateral border of the first rib.",
+                rationales: {
+                    "Subclavian Artery": "Correct. Vessel located proximal to the first rib.",
+                    "Axillary Artery": "Incorrect. Named vessel beyond the first rib.",
+                    "Brachial Artery": "Incorrect. Named vessel beyond teres major.",
+                    "Suprascapular Artery": "Incorrect. Branch of the thyrocervical trunk."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Cephalic Vein.PNG",
+                prompt: "Identify the highlighted superficial vein ascending along the lateral forearm and arm through the deltopectoral groove:",
+                canonical: "Cephalic Vein",
+                synonyms: ["cephalic vein", "v. cephalica"],
+                distractors: ["Basilic Vein", "Median Cubital Vein", "Axillary Vein"],
+                concept: "The cephalic vein ascends on the lateral (radial) side of the forearm and arm, courses through the deltopectoral groove, and pierces the clavipectoral fascia to drain into the axillary vein.",
+                rationales: {
+                    "Cephalic Vein": "Correct. Lateral superficial vein running through the deltopectoral groove.",
+                    "Basilic Vein": "Incorrect. Medial superficial vein that pierces the brachial fascia.",
+                    "Median Cubital Vein": "Incorrect. Oblique shunt vein across the cubital fossa.",
+                    "Axillary Vein": "Incorrect. Deep vein formed by basilic and brachial veins."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Basilic Vein.PNG",
+                prompt: "Identify the highlighted superficial vein ascending along the medial arm before piercing the brachial fascia:",
+                canonical: "Basilic Vein",
+                synonyms: ["basilic vein", "v. basilica"],
+                distractors: ["Cephalic Vein", "Axillary Vein", "Subclavian Vein"],
+                concept: "The basilic vein ascends along the medial (ulnar) side of the forearm, pierces the deep brachial fascia in the mid-arm, and joins the venae comitantes of the brachial artery to form the axillary vein.",
+                rationales: {
+                    "Basilic Vein": "Correct. Medial superficial vein that pierces deep fascia to form the axillary vein.",
+                    "Cephalic Vein": "Incorrect. Lateral superficial vein entering the deltopectoral groove.",
+                    "Axillary Vein": "Incorrect. Deep venous trunk receiving the cephalic and basilic veins.",
+                    "Subclavian Vein": "Incorrect. Continuation of the axillary vein beyond the first rib."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Radial Collateral Ligament.PNG",
+                prompt: "Identify the highlighted elbow ligament stabilizing the lateral joint and blending with the annular ligament:",
+                canonical: "Radial Collateral Ligament",
+                synonyms: ["radial collateral ligament", "rcl", "lateral collateral ligament of elbow"],
+                distractors: ["Ulnar Collateral Ligament", "Annular Ligament", "Quadrate Ligament"],
+                concept: "The radial collateral ligament (RCL) originates from the lateral epicondyle of the humerus and blends distally with the annular ligament of the radius, resisting varus stress.",
+                rationales: {
+                    "Radial Collateral Ligament": "Correct. Lateral elbow ligament resisting varus stress and anchoring to the annular ligament.",
+                    "Ulnar Collateral Ligament": "Incorrect. Medial elbow ligament resisting valgus stress.",
+                    "Annular Ligament": "Incorrect. Encircles the radial head without attaching to the humerus.",
+                    "Quadrate Ligament": "Incorrect. Connects the neck of the radius to the inferior radial notch of the ulna."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Annular Ligament.PNG",
+                prompt: "Identify the highlighted ligament encircling the head of the radius to allow pronation and supination:",
+                canonical: "Annular Ligament",
+                synonyms: ["annular ligament", "ligamentum anulare radii"],
+                distractors: ["Radial Collateral Ligament", "Ulnar Collateral Ligament", "Interosseous Membrane"],
+                concept: "The annular ligament attaches to the anterior and posterior margins of the radial notch of the ulna, encircling the head of the radius to stabilize the proximal radioulnar joint while permitting rotation.",
+                rationales: {
+                    "Annular Ligament": "Correct. Collar-like ligament holding the radial head against the radial notch.",
+                    "Radial Collateral Ligament": "Incorrect. Extends from the lateral epicondyle to the annular ligament.",
+                    "Ulnar Collateral Ligament": "Incorrect. Stabilizes the medial humeroulnar joint.",
+                    "Interosseous Membrane": "Incorrect. Fibrous sheet connecting the radial and ulnar shafts."
+                }
+            },
+            {
+                section: "Week 2",
+                folder: "Week 2",
+                filename: "Ulnar Collateral Ligament.PNG",
+                prompt: "Identify the highlighted triangular ligament on the medial elbow that resists valgus stress:",
+                canonical: "Ulnar Collateral Ligament",
+                synonyms: ["ulnar collateral ligament", "ucl", "medial collateral ligament of elbow"],
+                distractors: ["Radial Collateral Ligament", "Annular Ligament", "Interosseous Membrane"],
+                concept: "The ulnar collateral ligament (UCL) consists of anterior, posterior, and oblique bands running from the medial epicondyle to the coronoid process and olecranon, providing primary resistance to valgus force.",
+                rationales: {
+                    "Ulnar Collateral Ligament": "Correct. Medial ligament complex resisting valgus joint opening.",
+                    "Radial Collateral Ligament": "Incorrect. Lateral ligament complex resisting varus force.",
+                    "Annular Ligament": "Incorrect. Rings the head of the radius.",
+                    "Interosseous Membrane": "Incorrect. Syndesmosis spanning the forearm shafts."
+                }
+            },
+
+            // ==========================================
+            // WEEK 3: FOREARM FLEXORS & PALM
+            // ==========================================
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Pronator Teres.PNG",
+                prompt: "Identify the highlighted superficial flexor muscle inserting onto the mid-shaft of the lateral radius:",
+                canonical: "Pronator Teres",
+                synonyms: ["pronator teres", "pronator teres muscle", "m. pronator teres"],
+                distractors: ["Pronator Quadratus", "Flexor Carpi Radialis", "Brachioradialis"],
+                concept: "Pronator teres forms the medial border of the cubital fossa, arising from the medial epicondyle and coronoid process to insert onto the lateral radius. It is innervated by the median nerve.",
+                rationales: {
+                    "Pronator Teres": "Correct. Oblique muscle running from the medial epicondyle to the lateral radius.",
+                    "Pronator Quadratus": "Incorrect. Deep transverse muscle in the distal forearm.",
+                    "Flexor Carpi Radialis": "Incorrect. Passes to the base of the 2nd metacarpal.",
+                    "Brachioradialis": "Incorrect. Lateral compartment muscle inserting on the radial styloid."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Flexor Carpi Radialis.PNG",
+                prompt: "Identify the highlighted tendon that travels through a groove in the trapezium to insert on the second metacarpal base:",
+                canonical: "Flexor Carpi Radialis",
+                synonyms: ["flexor carpi radialis", "flexor carpi radialis muscle", "fcr"],
+                distractors: ["Flexor Carpi Ulnaris", "Palmaris Longus", "Flexor Pollicis Longus"],
+                concept: "Flexor carpi radialis arises from the medial epicondyle, travels through a groove on the trapezium, and inserts into the base of the 2nd metacarpal. It flexes and radially deviates the wrist.",
+                rationales: {
+                    "Flexor Carpi Radialis": "Correct. Inserts onto the base of the 2nd metacarpal and flexes/abducts the wrist.",
+                    "Flexor Carpi Ulnaris": "Incorrect. Inserts onto the pisiform, hook of hamate, and 5th metacarpal base.",
+                    "Palmaris Longus": "Incorrect. Inserts into the palmar aponeurosis.",
+                    "Flexor Pollicis Longus": "Incorrect. Inserts onto the distal phalanx of the thumb."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Palmaris Longus.PNG",
+                prompt: "Identify the highlighted superficial tendon passing superficial to the flexor retinaculum into the palmar aponeurosis:",
+                canonical: "Palmaris Longus",
+                synonyms: ["palmaris longus", "palmaris longus muscle", "m. palmaris longus"],
+                distractors: ["Flexor Carpi Radialis", "Flexor Carpi Ulnaris", "Flexor Digitorum Superficialis"],
+                concept: "Palmaris longus passes superficial to the flexor retinaculum and anchors into the apex of the central palmar aponeurosis. It is absent in approximately 14% of limbs.",
+                rationales: {
+                    "Palmaris Longus": "Correct. Slender tendon inserting directly into the palmar fascia.",
+                    "Flexor Carpi Radialis": "Incorrect. Enters its own groove in the trapezium.",
+                    "Flexor Carpi Ulnaris": "Incorrect. Lies medial and inserts onto the pisiform.",
+                    "Flexor Digitorum Superficialis": "Incorrect. Passes deep through the carpal tunnel."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Flexor Carpi Ulnaris.PNG",
+                prompt: "Identify the highlighted superficial flexor muscle innervated by the ulnar nerve:",
+                canonical: "Flexor Carpi Ulnaris",
+                synonyms: ["flexor carpi ulnaris", "flexor carpi ulnaris muscle", "fcu"],
+                distractors: ["Flexor Carpi Radialis", "Palmaris Longus", "Flexor Digitorum Superficialis"],
+                concept: "Flexor carpi ulnaris is the only superficial anterior forearm muscle innervated by the ulnar nerve (C8-T1). It inserts onto the pisiform, hook of the hamate, and base of the 5th metacarpal.",
+                rationales: {
+                    "Flexor Carpi Ulnaris": "Correct. Medial forearm flexor innervated by the ulnar nerve.",
+                    "Flexor Carpi Radialis": "Incorrect. Innervated by the median nerve.",
+                    "Palmaris Longus": "Incorrect. Innervated by the median nerve.",
+                    "Flexor Digitorum Superficialis": "Incorrect. Innervated by the median nerve."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Flexor Digitorum Superficialis.PNG",
+                prompt: "Identify the highlighted intermediate-layer muscle whose tendons split to insert onto the middle phalanges:",
+                canonical: "Flexor Digitorum Superficialis",
+                synonyms: ["flexor digitorum superficialis", "fds", "m. flexor digitorum superficialis"],
+                distractors: ["Flexor Digitorum Profundus", "Flexor Pollicis Longus", "Palmaris Longus"],
+                concept: "FDS constitutes the intermediate layer of the anterior forearm. Its four tendons split (Camper's chiasm) at the proximal phalanges to insert into the lateral borders of the middle phalanges.",
+                rationales: {
+                    "Flexor Digitorum Superficialis": "Correct. Intermediate flexor whose tendons split to insert onto middle phalanges.",
+                    "Flexor Digitorum Profundus": "Incorrect. Deep muscle whose tendons pass through the split to reach distal phalanges.",
+                    "Flexor Pollicis Longus": "Incorrect. Acts solely on the thumb.",
+                    "Palmaris Longus": "Incorrect. Inserts into the palmar aponeurosis."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Pronator Quadratus.PNG",
+                prompt: "Identify the highlighted deep quadrangular muscle spanning the distal anterior radius and ulna:",
+                canonical: "Pronator Quadratus",
+                synonyms: ["pronator quadratus", "pronator quadratus muscle", "pq"],
+                distractors: ["Pronator Teres", "Supinator", "Brachioradialis"],
+                concept: "Pronator quadratus is the deepest muscle in the anterior forearm, running transversely from the distal anterior ulna to the distal anterior radius. It is innervated by the anterior interosseous nerve.",
+                rationales: {
+                    "Pronator Quadratus": "Correct. Deep transverse pronator across the distal forearm.",
+                    "Pronator Teres": "Incorrect. Superficial oblique muscle in the proximal forearm.",
+                    "Supinator": "Incorrect. Posterior compartment muscle that supinates.",
+                    "Brachioradialis": "Incorrect. Lateral muscle inserting onto the radial styloid."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Flexor Retinaculum.PNG",
+                prompt: "Identify the highlighted fibrous band bridging the carpal arch to form the carpal tunnel:",
+                canonical: "Flexor Retinaculum",
+                synonyms: ["flexor retinaculum", "transverse carpal ligament"],
+                distractors: ["Palmar Aponeurosis", "Extensor Retinaculum", "Palmar Carpal Ligament"],
+                concept: "The flexor retinaculum (transverse carpal ligament) attaches to the scaphoid tubercle, trapezium, pisiform, and hook of the hamate, converting the carpal arch into the carpal tunnel.",
+                rationales: {
+                    "Flexor Retinaculum": "Correct. Fibrous roof of the carpal tunnel.",
+                    "Palmar Aponeurosis": "Incorrect. Central triangular fascial expansion in the palm.",
+                    "Extensor Retinaculum": "Incorrect. Located on the dorsal aspect of the wrist.",
+                    "Palmar Carpal Ligament": "Incorrect. More proximal and superficial thickening that roofs Guyon's canal."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Lumbricals.PNG",
+                prompt: "Identify the highlighted intrinsic hand muscles that originate directly from the tendons of flexor digitorum profundus:",
+                canonical: "Lumbricals",
+                synonyms: ["lumbricals", "lumbrical muscles", "lumbricales"],
+                distractors: ["Palmar Interossei", "Dorsal Interossei", "Flexor Digiti Minimi"],
+                concept: "The four lumbricals arise from the FDP tendons in the central compartment and insert into the radial lateral bands of the extensor expansions of digits 2-5, flexing the MCP joints while extending the IP joints.",
+                rationales: {
+                    "Lumbricals": "Correct. Originate from FDP tendons and insert into extensor hoods.",
+                    "Palmar Interossei": "Incorrect. Originate from the metacarpal shafts and adduct digits (PAD).",
+                    "Dorsal Interossei": "Incorrect. Bipennate muscles originating from metacarpals that abduct digits (DAB).",
+                    "Flexor Digiti Minimi": "Incorrect. Hypothenar muscle originating from the hook of the hamate."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Palmar Interossei.PNG",
+                prompt: "Identify the highlighted intrinsic hand muscles responsible for finger adduction ('PAD'):",
+                canonical: "Palmar Interossei",
+                synonyms: ["palmar interossei", "palmar interosseous muscles", "pad"],
+                distractors: ["Dorsal Interossei", "Lumbricals", "Adductor Pollicis"],
+                concept: "The palmar interossei (PAD = Palmar ADduct) are unipennate muscles that adduct digits 2, 4, and 5 toward the axial line of digit 3. Digit 3 lacks a palmar interosseous muscle.",
+                rationales: {
+                    "Palmar Interossei": "Correct. Adduct fingers toward digit 3 and are innervated by the deep branch of the ulnar nerve.",
+                    "Dorsal Interossei": "Incorrect. Abduct fingers away from digit 3 (DAB).",
+                    "Lumbricals": "Incorrect. Flex MCP joints and extend IP joints.",
+                    "Adductor Pollicis": "Incorrect. Dedicated adductor for the thumb."
+                }
+            },
+            {
+                section: "Week 3",
+                folder: "Week 3",
+                filename: "Dorsal Interossei.PNG",
+                prompt: "Identify the highlighted bipennate intrinsic hand muscles responsible for finger abduction ('DAB'):",
+                canonical: "Dorsal Interossei",
+                synonyms: ["dorsal interossei", "dorsal interosseous muscles", "dab"],
+                distractors: ["Palmar Interossei", "Lumbricals", "Abductor Digiti Minimi"],
+                concept: "The four dorsal interossei (DAB = Dorsal ABduct) are bipennate muscles that abduct digits 2, 3, and 4 away from the axial line. All are innervated by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Dorsal Interossei": "Correct. Four bipennate muscles executing abduction of the digits.",
+                    "Palmar Interossei": "Incorrect. Unipennate muscles performing adduction.",
+                    "Lumbricals": "Incorrect. Arise from FDP tendons.",
+                    "Abductor Digiti Minimi": "Incorrect. Hypothenar abductor for digit 5."
+                }
+            },
+
+            // ==========================================
+            // WEEK 4: FOREARM EXTENSORS & SNUFFBOX
+            // ==========================================
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Brachioradialis.PNG",
+                prompt: "Identify the highlighted lateral forearm muscle originating from the lateral supracondylar ridge of the humerus:",
+                canonical: "Brachioradialis",
+                synonyms: ["brachioradialis", "brachioradialis muscle", "m. brachioradialis"],
+                distractors: ["Extensor Carpi Radialis Longus", "Pronator Teres", "Flexor Carpi Radialis"],
+                concept: "Brachioradialis originates from the proximal two-thirds of the lateral supracondylar ridge and inserts onto the lateral surface of the distal radius near the styloid process. It flexes the forearm when in the mid-pronated position.",
+                rationales: {
+                    "Brachioradialis": "Correct. Lateral forearm flexor innervated by the radial nerve.",
+                    "Extensor Carpi Radialis Longus": "Incorrect. Originates lower on the supracondylar ridge and extends the wrist.",
+                    "Pronator Teres": "Incorrect. Medial epicondyle flexor/pronator.",
+                    "Flexor Carpi Radialis": "Incorrect. Anterior forearm flexor."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Carpi Radialis Longus.PNG",
+                prompt: "Identify the highlighted muscle originating from the lateral supracondylar ridge and inserting onto the base of the second metacarpal:",
+                canonical: "Extensor Carpi Radialis Longus",
+                synonyms: ["extensor carpi radialis longus", "ecrl"],
+                distractors: ["Extensor Carpi Radialis Brevis", "Brachioradialis", "Extensor Digitorum"],
+                concept: "ECRL originates from the distal third of the lateral supracondylar ridge and inserts onto the dorsal surface of the base of the 2nd metacarpal. It is innervated directly by the radial nerve before it bifurcates.",
+                rationales: {
+                    "Extensor Carpi Radialis Longus": "Correct. Inserts onto the base of the 2nd metacarpal.",
+                    "Extensor Carpi Radialis Brevis": "Incorrect. Originates from the common extensor tendon and inserts on the 3rd metacarpal.",
+                    "Brachioradialis": "Incorrect. Inserts on the radial styloid process.",
+                    "Extensor Digitorum": "Incorrect. Inserts onto the extensor expansions of digits 2-5."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Carpi Radialis Brevis.PNG",
+                prompt: "Identify the highlighted muscle originating from the common extensor tendon and inserting onto the base of the third metacarpal:",
+                canonical: "Extensor Carpi Radialis Brevis",
+                synonyms: ["extensor carpi radialis brevis", "ecrb"],
+                distractors: ["Extensor Carpi Radialis Longus", "Extensor Carpi Ulnaris", "Extensor Digitorum"],
+                concept: "ECRB originates from the lateral epicondyle via the common extensor tendon and inserts onto the base of the 3rd metacarpal. It is innervated by the deep branch of the radial nerve.",
+                rationales: {
+                    "Extensor Carpi Radialis Brevis": "Correct. Inserts onto the base of the 3rd metacarpal.",
+                    "Extensor Carpi Radialis Longus": "Incorrect. Inserts onto the base of the 2nd metacarpal.",
+                    "Extensor Carpi Ulnaris": "Incorrect. Inserts onto the base of the 5th metacarpal.",
+                    "Extensor Digitorum": "Incorrect. Inserts into the digits via extensor hoods."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Digitorum.PNG",
+                prompt: "Identify the highlighted superficial extensor muscle dividing into four tendons for digits 2 through 5:",
+                canonical: "Extensor Digitorum",
+                synonyms: ["extensor digitorum", "extensor digitorum communis", "edc"],
+                distractors: ["Extensor Digiti Minimi", "Extensor Indicis", "Flexor Digitorum Superficialis"],
+                concept: "Extensor digitorum is the broad central muscle of the superficial posterior compartment, originating from the common extensor tendon and expanding into the extensor expansions of digits 2 through 5.",
+                rationales: {
+                    "Extensor Digitorum": "Correct. Primary extensor of the medial four fingers.",
+                    "Extensor Digiti Minimi": "Incorrect. Slender isolated muscle extending only digit 5.",
+                    "Extensor Indicis": "Incorrect. Deep muscle extending only digit 2.",
+                    "Flexor Digitorum Superficialis": "Incorrect. Anterior compartment flexor."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Digiti Minimi.PNG",
+                prompt: "Identify the highlighted slender muscle of the posterior compartment dedicated solely to the fifth digit:",
+                canonical: "Extensor Digiti Minimi",
+                synonyms: ["extensor digiti minimi", "edm"],
+                distractors: ["Extensor Digitorum", "Extensor Indicis", "Abductor Digiti Minimi"],
+                concept: "Extensor digiti minimi arises from the common extensor tendon medial to extensor digitorum and inserts into the extensor expansion of the 5th digit (little finger) to provide independent extension.",
+                rationales: {
+                    "Extensor Digiti Minimi": "Correct. Provides dedicated, independent extension to digit 5.",
+                    "Extensor Digitorum": "Incorrect. Broad extensor supplying all four medial digits.",
+                    "Extensor Indicis": "Incorrect. Deep extensor supplying the 2nd digit.",
+                    "Abductor Digiti Minimi": "Incorrect. Intrinsic hypothenar muscle in the hand."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Carpi Ulnaris.PNG",
+                prompt: "Identify the highlighted muscle inserting onto the medial tubercle on the base of the fifth metacarpal:",
+                canonical: "Extensor Carpi Ulnaris",
+                synonyms: ["extensor carpi ulnaris", "ecu"],
+                distractors: ["Extensor Digiti Minimi", "Flexor Carpi Ulnaris", "Extensor Carpi Radialis Brevis"],
+                concept: "Extensor carpi ulnaris originates from the common extensor tendon and posterior ulna, inserting onto the base of the 5th metacarpal. It extends and adducts (ulnar deviates) the wrist.",
+                rationales: {
+                    "Extensor Carpi Ulnaris": "Correct. Inserts onto the base of the 5th metacarpal.",
+                    "Extensor Digiti Minimi": "Incorrect. Inserts into the extensor expansion of digit 5.",
+                    "Flexor Carpi Ulnaris": "Incorrect. Anterior flexor inserting onto the pisiform and hamate.",
+                    "Extensor Carpi Radialis Brevis": "Incorrect. Inserts onto the base of the 3rd metacarpal."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Supinator.PNG",
+                prompt: "Identify the highlighted muscle wrapping around the proximal radius, pierced by the deep branch of the radial nerve:",
+                canonical: "Supinator",
+                synonyms: ["supinator", "supinator muscle", "m. supinator"],
+                distractors: ["Pronator Teres", "Brachioradialis", "Biceps Brachii"],
+                concept: "The supinator originates from the lateral epicondyle and supinator crest of the ulna, wrapping around the neck and proximal shaft of the radius. The deep branch of the radial nerve passes through it.",
+                rationales: {
+                    "Supinator": "Correct. Surrounds the proximal radius and is pierced by the deep radial nerve.",
+                    "Pronator Teres": "Incorrect. Anterior pronator.",
+                    "Brachioradialis": "Incorrect. Lateral flexor of the forearm.",
+                    "Biceps Brachii": "Incorrect. Arm muscle inserting onto the radial tuberosity."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Abductor Pollicis Longus.PNG",
+                prompt: "Identify the highlighted outcropping muscle originating from the posterior radius/ulna and inserting on the base of the first metacarpal:",
+                canonical: "Abductor Pollicis Longus",
+                synonyms: ["abductor pollicis longus", "apl"],
+                distractors: ["Extensor Pollicis Brevis", "Extensor Pollicis Longus", "Abductor Pollicis Brevis"],
+                concept: "Abductor pollicis longus arises from the posterior radius, ulna, and interosseous membrane, inserting into the base of the 1st metacarpal. It forms the lateral boundary of the anatomical snuffbox alongside EPB.",
+                rationales: {
+                    "Abductor Pollicis Longus": "Correct. Inserts onto the base of the 1st metacarpal.",
+                    "Extensor Pollicis Brevis": "Incorrect. Inserts onto the base of the proximal phalanx of the thumb.",
+                    "Extensor Pollicis Longus": "Incorrect. Inserts onto the base of the distal phalanx of the thumb.",
+                    "Abductor Pollicis Brevis": "Incorrect. Intrinsic thenar muscle in the hand."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Pollicis Brevis.PNG",
+                prompt: "Identify the highlighted outcropping muscle that forms the lateral boundary of the snuffbox and inserts onto the proximal phalanx of the thumb:",
+                canonical: "Extensor Pollicis Brevis",
+                synonyms: ["extensor pollicis brevis", "epb"],
+                distractors: ["Abductor Pollicis Longus", "Extensor Pollicis Longus", "Extensor Indicis"],
+                concept: "Extensor pollicis brevis originates from the posterior surface of the radius and interosseous membrane, inserting onto the base of the proximal phalanx of the thumb. It forms the lateral border of the anatomical snuffbox with APL.",
+                rationales: {
+                    "Extensor Pollicis Brevis": "Correct. Inserts onto the proximal phalanx of the thumb.",
+                    "Abductor Pollicis Longus": "Incorrect. Inserts onto the base of the 1st metacarpal.",
+                    "Extensor Pollicis Longus": "Incorrect. Forms the medial border of the snuffbox and inserts onto the distal phalanx.",
+                    "Extensor Indicis": "Incorrect. Extends the index finger."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Pollicis Longus.PNG",
+                prompt: "Identify the highlighted muscle whose tendon hooks around Lister's tubercle to form the medial border of the anatomical snuffbox:",
+                canonical: "Extensor Pollicis Longus",
+                synonyms: ["extensor pollicis longus", "epl"],
+                distractors: ["Extensor Pollicis Brevis", "Abductor Pollicis Longus", "Extensor Indicis"],
+                concept: "Extensor pollicis longus originates from the middle third of the posterior ulna and interosseous membrane, loops around Lister's tubercle (dorsal radial tubercle), and forms the medial wall of the anatomical snuffbox.",
+                rationales: {
+                    "Extensor Pollicis Longus": "Correct. Forms the medial border of the anatomical snuffbox.",
+                    "Extensor Pollicis Brevis": "Incorrect. Forms the lateral border of the anatomical snuffbox.",
+                    "Abductor Pollicis Longus": "Incorrect. Forms the lateral border with EPB.",
+                    "Extensor Indicis": "Incorrect. Passes to the index finger."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Indicis.PNG",
+                prompt: "Identify the highlighted deep posterior forearm muscle that provides independent extension to the index finger:",
+                canonical: "Extensor Indicis",
+                synonyms: ["extensor indicis", "extensor indicis proprius", "eip"],
+                distractors: ["Extensor Digitorum", "Extensor Pollicis Longus", "Extensor Digiti Minimi"],
+                concept: "Extensor indicis arises from the distal third of the posterior ulna and interosseous membrane, running into the extensor expansion of the index finger (digit 2) to permit isolated extension.",
+                rationales: {
+                    "Extensor Indicis": "Correct. Provides independent extension to digit 2.",
+                    "Extensor Digitorum": "Incorrect. Broad extensor supplying digits 2 through 5.",
+                    "Extensor Pollicis Longus": "Incorrect. Inserts on the distal phalanx of the thumb.",
+                    "Extensor Digiti Minimi": "Incorrect. Extends the 5th digit."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Extensor Retinaculum.PNG",
+                prompt: "Identify the highlighted dorsal fibrous band that secures the extensor tendons into six distinct synovial compartments:",
+                canonical: "Extensor Retinaculum",
+                synonyms: ["extensor retinaculum", "dorsal carpal ligament"],
+                distractors: ["Flexor Retinaculum", "Palmar Carpal Ligament", "Interosseous Membrane"],
+                concept: "The extensor retinaculum is a thickened band of deep antebrachial fascia on the back of the wrist that prevents bowstringing of the extensor tendons and organizes them into six separate fibro-osseous compartments.",
+                rationales: {
+                    "Extensor Retinaculum": "Correct. Dorsal wrist band dividing extensor tendons into 6 compartments.",
+                    "Flexor Retinaculum": "Incorrect. Anterior carpal tunnel roof.",
+                    "Palmar Carpal Ligament": "Incorrect. Anterior ligament roofing Guyon's canal.",
+                    "Interosseous Membrane": "Incorrect. Deep syndesmosis between radius and ulna."
+                }
+            },
+            {
+                section: "Week 4",
+                folder: "Week 4",
+                filename: "Anconeus.PNG",
+                prompt: "Identify the highlighted small triangular muscle on the posterolateral elbow that assists the triceps in terminal extension:",
+                canonical: "Anconeus",
+                synonyms: ["anconeus", "anconeus muscle", "m. anconeus"],
+                distractors: ["Supinator", "Brachioradialis", "Triceps Brachii Medial Head"],
+                concept: "Anconeus originates from the lateral epicondyle and inserts onto the lateral olecranon and superior posterior ulna, stabilizing the elbow joint and assisting in the final 10-15 degrees of extension.",
+                rationales: {
+                    "Anconeus": "Correct. Small posterolateral elbow extensor.",
+                    "Supinator": "Incorrect. Wraps around the radial shaft.",
+                    "Brachioradialis": "Incorrect. Courses down the lateral forearm.",
+                    "Triceps Brachii Medial Head": "Incorrect. Large posterior arm muscle."
+                }
+            }
+        ];
+
+        // Core App State
+        let currentScope = "all";
+        let currentMode = "mcq";
+        let activePool = [];
+        let userResponses = {};
+
+        // Levenshtein distance implementation for smart fuzzy matching
+        function getLevenshteinDistance(a, b) {
+            const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+            for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j - 1] + cost
+                    );
+                }
+            }
+            return matrix[a.length][b.length];
+        }
+
+        // Fisher-Yates shuffle
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Multi-Path Image Fallback Engine
+        function handleImgError(img, folder, filename) {
+            const encFolder = encodeURIComponent(folder);
+            const encFile = encodeURIComponent(filename);
+
+            const paths = [
+                `Images/Reg 1/${folder}/${filename}`,
+                `Images/Reg 1/${encFolder}/${encFile}`,
+                `Images/${folder}/${filename}`,
+                `Images/${encFolder}/${encFile}`,
+                `./Images/Reg 1/${encFolder}/${encFile}`,
+                `../Images/Reg 1/${encFolder}/${encFile}`,
+                `images/Reg 1/${encFolder}/${encFile}`
+            ];
+
+            let attempt = parseInt(img.getAttribute('data-attempt') || '0', 10);
+            if (attempt < paths.length) {
+                img.setAttribute('data-attempt', (attempt + 1).toString());
+                img.src = paths[attempt];
+            } else {
+                img.style.display = 'none';
+                const wrapper = img.parentElement;
+                wrapper.innerHTML = `
+                    <div class="img-fallback-alert">
+                        <strong>Asset Display Notice</strong><br>
+                        Tagged Image: <code>${filename}</code><br>
+                        Location: <code>Images/Reg 1/${folder}/</code>
+                    </div>
+                `;
+            }
+        }
+
+        function setScope(scope) {
+            currentScope = scope;
+            document.querySelectorAll('#scope-filters .btn-filter').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.toLowerCase().includes(scope.toLowerCase()) || (scope === 'all' && btn.innerText.includes('All')));
+            });
+            initPool();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('mode-mcq').classList.toggle('active', mode === 'mcq');
+            document.getElementById('mode-typein').classList.toggle('active', mode === 'typein');
+            renderQuestions();
+        }
+
+        function initPool() {
+            if (currentScope === "all") {
+                activePool = JSON.parse(JSON.stringify(rawMasterData));
+            } else {
+                activePool = rawMasterData.filter(item => item.section === currentScope);
+            }
+            shuffleArray(activePool);
+            userResponses = {};
+            document.getElementById('summary-card').style.display = 'none';
+            renderQuestions();
+            updateScore();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            activePool.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `card-${index}`;
+
+                if (!item.shuffledOptions) {
+                    const opts = [item.canonical, ...item.distractors];
+                    shuffleArray(opts);
+                    item.shuffledOptions = opts;
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'card-meta';
+                meta.innerHTML = `<span>Item ${index + 1} of ${activePool.length}</span><span>${item.section}</span>`;
+                card.appendChild(meta);
+
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'image-wrapper';
+                const img = document.createElement('img');
+                img.alt = item.canonical;
+                img.setAttribute('data-attempt', '0');
+                img.onerror = () => handleImgError(img, item.folder, item.filename);
+                img.src = `Images/Reg 1/${item.folder}/${item.filename}`;
+                imgWrap.appendChild(img);
+                card.appendChild(imgWrap);
+
+                const prompt = document.createElement('div');
+                prompt.className = 'question-prompt';
+                prompt.innerText = item.prompt;
+                card.appendChild(prompt);
+
+                if (currentMode === 'mcq') {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'options-container';
+
+                    item.shuffledOptions.forEach((optText, oIdx) => {
+                        const letter = String.fromCharCode(65 + oIdx);
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        btn.id = `btn-${index}-${oIdx}`;
+                        btn.innerText = `${letter}) ${optText}`;
+                        btn.onclick = () => submitMCQ(index, optText, oIdx);
+                        optContainer.appendChild(btn);
+                    });
+                    card.appendChild(optContainer);
+                } else {
+                    const typeBox = document.createElement('div');
+                    typeBox.className = 'typein-box';
+                    typeBox.innerHTML = `
+                        <input type="text" class="typein-input" id="input-${index}" placeholder="Type anatomical structure..." autocomplete="off" spellcheck="false" onkeydown="handleEnter(event, ${index})">
+                        <button class="typein-btn" id="btn-submit-${index}" onclick="submitTypeIn(${index})">Check</button>
+                    `;
+                    card.appendChild(typeBox);
+                }
+
+                const expDiv = document.createElement('div');
+                expDiv.className = 'explanation';
+                expDiv.id = `exp-${index}`;
+                card.appendChild(expDiv);
+
+                container.appendChild(card);
+            });
+        }
+
+        function handleEnter(e, qIdx) {
+            if (e.key === 'Enter') {
+                submitTypeIn(qIdx);
+            }
+        }
+
+        function submitMCQ(qIdx, selectedText, oIdx) {
+            if (userResponses[qIdx]) return;
+
+            const item = activePool[qIdx];
+            const isCorrect = (selectedText === item.canonical);
+            userResponses[qIdx] = { correct: isCorrect, answer: selectedText };
+
+            const card = document.getElementById(`card-${qIdx}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const selectedBtn = document.getElementById(`btn-${qIdx}-${oIdx}`);
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+            } else {
+                selectedBtn.classList.add('incorrect');
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes(item.canonical)) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            renderExplanation(qIdx, isCorrect, null);
+            updateScore();
+        }
+
+        function submitTypeIn(qIdx) {
+            if (userResponses[qIdx]) return;
+
+            const item = activePool[qIdx];
+            const inputEl = document.getElementById(`input-${qIdx}`);
+            const submitBtn = document.getElementById(`btn-submit-${qIdx}`);
+            const rawVal = inputEl.value.trim().toLowerCase();
+
+            if (!rawVal) return;
+
+            inputEl.disabled = true;
+            submitBtn.disabled = true;
+
+            let isCorrect = false;
+            let matchedSynonym = null;
+            let isTypo = false;
+
+            for (let syn of item.synonyms) {
+                const target = syn.toLowerCase();
+                if (rawVal === target) {
+                    isCorrect = true;
+                    matchedSynonym = syn;
+                    break;
+                }
+                const dist = getLevenshteinDistance(rawVal, target);
+                if (target.length > 7 && dist <= 2) {
+                    isCorrect = true;
+                    matchedSynonym = syn;
+                    isTypo = true;
+                    break;
+                }
+            }
+
+            userResponses[qIdx] = { correct: isCorrect, answer: inputEl.value };
+
+            if (isCorrect) {
+                inputEl.style.borderColor = "var(--correct-border)";
+                inputEl.style.backgroundColor = "var(--correct-bg)";
+            } else {
+                inputEl.style.borderColor = "var(--incorrect-border)";
+                inputEl.style.backgroundColor = "var(--incorrect-bg)";
+            }
+
+            renderExplanation(qIdx, isCorrect, isTypo ? matchedSynonym : null);
+            updateScore();
+        }
+
+        function renderExplanation(qIdx, isCorrect, typoTarget) {
+            const item = activePool[qIdx];
+            const expDiv = document.getElementById(`exp-${qIdx}`);
+            const statusClass = isCorrect ? 'correct' : 'incorrect';
+            const statusText = isCorrect ? 'Correct!' : 'Incorrect.';
+
+            let rationalesHTML = '';
+            item.shuffledOptions.forEach((optText, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                const expl = item.rationales[optText] || (optText === item.canonical ? "Correct anatomical identification." : "Incorrect distractor.");
+                rationalesHTML += `
+                    <li class="rationale-item">
+                        <strong>${letter}) ${optText}</strong>: ${expl}
+                    </li>
+                `;
+            });
+
+            let typoNote = typoTarget ? `<div class="fuzzy-note">Spelling accepted: matched "${typoTarget}"</div>` : '';
+
+            expDiv.innerHTML = `
+                <div class="status-banner ${statusClass}">${statusText}</div>
+                ${typoNote}
+                <div class="explanation-summary"><strong>Concept Explanation:</strong> ${item.concept}</div>
+                <ul class="rationale-list">
+                    ${rationalesHTML}
+                </ul>
+            `;
+            expDiv.style.display = 'block';
+        }
+
+        function updateScore() {
+            const answeredCount = Object.keys(userResponses).length;
+            const correctCount = Object.values(userResponses).filter(r => r.correct).length;
+            const total = activePool.length;
+            const pct = total === 0 ? 0 : Math.round((correctCount / total) * 100);
+
+            document.getElementById('score-header').innerText = `Score: ${correctCount} / ${total} (${pct}%)`;
+
+            if (answeredCount === total && total > 0) {
+                showSummary(correctCount, total, pct);
+            }
+        }
+
+        function showSummary(correct, total, pct) {
+            const summaryCard = document.getElementById('summary-card');
+            const scoreDisplay = document.getElementById('final-score-display');
+            const feedback = document.getElementById('summary-feedback');
+
+            scoreDisplay.innerText = `${correct} / ${total} (${pct}%)`;
+
+            if (pct >= 90) {
+                feedback.innerText = "Mastery Level Demonstrated! Solid diagnostic identification of upper extremity anatomy.";
+            } else if (pct >= 75) {
+                feedback.innerText = "Strong passing performance. Review tagged neurovascular bundles and subtle distal insertions before the lab exam.";
+            } else {
+                feedback.innerText = "Re-test recommended. Focus on origin/insertion landmarks and regional nerve pathways.";
+            }
+
+            summaryCard.style.display = 'block';
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            initPool();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            initPool();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Reg 1 Lab Week 3 Practical Drill</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --border-card: #282828;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --accent-hover: #e68a00;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --correct-text: #e2fbe8;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --incorrect-text: #fde8e8;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding-bottom: 90px;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-card);
+            border-bottom: 2px solid var(--accent);
+            padding: 0.9rem 1.2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+        }
+
+        .header-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+        }
+
+        #score-header {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            background: #242424;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+        }
+
+        .container {
+            max-width: 820px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        .control-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 1.2rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .control-row {
+            margin-bottom: 1rem;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .control-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .btn-filter, .btn-mode {
+            background-color: #242424;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-filter:hover, .btn-mode:hover {
+            border-color: var(--accent);
+            background-color: #303030;
+        }
+
+        .btn-filter.active, .btn-mode.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+            font-weight: 800;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .image-wrapper {
+            background-color: #050505;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            max-height: 480px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            max-height: 480px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .img-fallback-alert {
+            color: #f87171;
+            font-size: 0.85rem;
+            padding: 1rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .question-prompt {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--text-main);
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+        }
+
+        .option-btn {
+            background-color: #242424;
+            border: 1.5px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.85rem 1rem;
+            text-align: left;
+            font-size: 0.95rem;
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #303030;
+            border-color: var(--accent);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-text) !important;
+            font-weight: 700;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: var(--incorrect-text) !important;
+            font-weight: 700;
+        }
+
+        .typein-box {
+            display: flex;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+        }
+
+        .typein-input {
+            flex: 1;
+            background-color: #0b0b0b;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+            color: var(--text-main);
+            font-size: 1rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .typein-input:focus {
+            border-color: var(--accent);
+        }
+
+        .typein-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 0 1.5rem;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .typein-btn:hover:not(:disabled) {
+            background-color: var(--accent-hover);
+        }
+
+        .typein-btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .fuzzy-note {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: #facc15;
+            font-weight: 600;
+        }
+
+        .explanation {
+            margin-top: 1.25rem;
+            padding: 1.2rem;
+            border-radius: 6px;
+            background-color: #222222;
+            border-left: 4px solid var(--accent);
+            display: none;
+            animation: fadeIn 0.25s ease-in-out;
+        }
+
+        .status-banner {
+            font-size: 1rem;
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .status-banner.correct {
+            background-color: var(--correct-bg);
+            color: var(--correct-border);
+            border: 1px solid var(--correct-border);
+        }
+
+        .status-banner.incorrect {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-border);
+            border: 1px solid var(--incorrect-border);
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            line-height: 1.55;
+            color: #e5e5e5;
+        }
+
+        .rationale-list {
+            list-style: none;
+            border-top: 1px solid #333333;
+            padding-top: 0.8rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            color: #cccccc;
+            line-height: 1.45;
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        #summary-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            margin-top: 2rem;
+            display: none;
+        }
+
+        #summary-card h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.8rem;
+        }
+
+        .score-display {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        #summary-feedback {
+            font-size: 1.05rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .reset-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            padding: 0.9rem 2.2rem;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-title">Reg 1: Week 3 Lab Practical Drill</div>
+        <div id="score-header">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <div class="container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <div class="control-row">
+                <span class="control-label">Anatomical Compartment Filter</span>
+                <div class="filter-group" id="scope-filters">
+                    <button class="btn-filter active" onclick="setScope('all')">All Week 3 (Full Drill)</button>
+                    <button class="btn-filter" onclick="setScope('Forearm Flexors')">Forearm Flexors</button>
+                    <button class="btn-filter" onclick="setScope('Thenar & Adductor')">Thenar & Adductor</button>
+                    <button class="btn-filter" onclick="setScope('Hypothenar')">Hypothenar</button>
+                    <button class="btn-filter" onclick="setScope('Lumbricals & Interossei')">Lumbricals & Interossei</button>
+                    <button class="btn-filter" onclick="setScope('Vessels, Nerves & Fascia')">Vessels, Nerves & Fascia</button>
+                </div>
+            </div>
+            <div class="control-row">
+                <span class="control-label">Testing Mode</span>
+                <div class="filter-group">
+                    <button class="btn-mode active" id="mode-mcq" onclick="setMode('mcq')">Multiple Choice Mode</button>
+                    <button class="btn-mode" id="mode-typein" onclick="setMode('typein')">Type-In (Practical Lab Exam Mode)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <div id="quiz-container"></div>
+
+        <!-- Completion Card -->
+        <div id="summary-card">
+            <h2>Week 3 Practical Drill Complete!</h2>
+            <div class="score-display" id="final-score-display">0 / 0 (0%)</div>
+            <p id="summary-feedback"></p>
+            <button class="reset-btn" onclick="resetQuiz()">Reset & Retake Drill</button>
+        </div>
+    </div>
+
+    <script>
+        const rawWeek3Data = [
+            // ==========================================
+            // FOREARM FLEXORS (SUPERFICIAL TO DEEP)
+            // ==========================================
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Brachioradialis.PNG",
+                prompt: "Identify the highlighted muscle acting as the key dividing landmark between anterior and posterior compartments:",
+                canonical: "Brachioradialis",
+                synonyms: ["brachioradialis", "brachioradialis muscle", "m. brachioradialis"],
+                distractors: ["Pronator Teres", "Flexor Carpi Radialis", "Supinator"],
+                concept: "Brachioradialis originates from the proximal two-thirds of the lateral supracondylar ridge of the humerus and inserts into the lateral distal radius near the styloid process. Innervated by the radial nerve, it flexes the forearm when in the mid-pronated position.",
+                rationales: {
+                    "Brachioradialis": "Correct. Positioned laterally, innervated by the radial nerve, and inserts on the radial styloid process.",
+                    "Pronator Teres": "Incorrect. Medial epicondyle flexor/pronator.",
+                    "Flexor Carpi Radialis": "Incorrect. Anterior flexor inserting onto the 2nd metacarpal.",
+                    "Supinator": "Incorrect. Deep extensor compartment muscle that supinates."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Pronator Teres.PNG",
+                prompt: "Identify the highlighted superficial anterior forearm muscle inserting into the lateral radius mid-shaft:",
+                canonical: "Pronator Teres",
+                synonyms: ["pronator teres", "pronator teres muscle", "m. pronator teres"],
+                distractors: ["Pronator Quadratus", "Flexor Carpi Radialis", "Brachioradialis"],
+                concept: "Pronator teres forms the medial border of the cubital fossa, arising from the medial epicondyle and coronoid process to insert onto the lateral radius mid-shaft. It is innervated by the median nerve.",
+                rationales: {
+                    "Pronator Teres": "Correct. Oblique muscle running from the medial epicondyle to the lateral radius.",
+                    "Pronator Quadratus": "Incorrect. Deep transverse muscle in the distal forearm.",
+                    "Flexor Carpi Radialis": "Incorrect. Passes to the base of the 2nd metacarpal.",
+                    "Brachioradialis": "Incorrect. Lateral compartment muscle inserting on the radial styloid."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Flexor Carpi Radialis.PNG",
+                prompt: "Identify the highlighted tendon that travels through a groove in the trapezium to insert on the second metacarpal base:",
+                canonical: "Flexor Carpi Radialis",
+                synonyms: ["flexor carpi radialis", "flexor carpi radialis muscle", "fcr"],
+                distractors: ["Flexor Carpi Ulnaris", "Palmaris Longus", "Flexor Pollicis Longus"],
+                concept: "Flexor carpi radialis arises from the medial epicondyle, travels through a groove on the trapezium, and inserts into the base of the 2nd metacarpal. It flexes and radially deviates the wrist.",
+                rationales: {
+                    "Flexor Carpi Radialis": "Correct. Inserts onto the base of the 2nd metacarpal and flexes/abducts the wrist.",
+                    "Flexor Carpi Ulnaris": "Incorrect. Inserts onto the pisiform, hook of hamate, and 5th metacarpal base.",
+                    "Palmaris Longus": "Incorrect. Inserts into the apex of the palmar aponeurosis.",
+                    "Flexor Pollicis Longus": "Incorrect. Inserts onto the distal phalanx of the thumb."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Palmaris Longus.PNG",
+                prompt: "Identify the highlighted superficial muscle whose slender tendon passes superficial to the flexor retinaculum into the palmar aponeurosis:",
+                canonical: "Palmaris Longus",
+                synonyms: ["palmaris longus", "palmaris longus muscle", "m. palmaris longus"],
+                distractors: ["Flexor Carpi Radialis", "Flexor Carpi Ulnaris", "Flexor Digitorum Superficialis"],
+                concept: "Palmaris longus passes superficial to the flexor retinaculum and anchors into the apex of the central palmar aponeurosis. It is absent in approximately 14% of limbs.",
+                rationales: {
+                    "Palmaris Longus": "Correct. Slender tendon inserting directly into the palmar fascia.",
+                    "Flexor Carpi Radialis": "Incorrect. Enters its own groove in the trapezium.",
+                    "Flexor Carpi Ulnaris": "Incorrect. Lies medial and inserts onto the pisiform.",
+                    "Flexor Digitorum Superficialis": "Incorrect. Passes deep through the carpal tunnel."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Flexor Carpi Ulnaris.PNG",
+                prompt: "Identify the highlighted superficial flexor muscle innervated by the ulnar nerve:",
+                canonical: "Flexor Carpi Ulnaris",
+                synonyms: ["flexor carpi ulnaris", "flexor carpi ulnaris muscle", "fcu"],
+                distractors: ["Flexor Carpi Radialis", "Palmaris Longus", "Flexor Digitorum Superficialis"],
+                concept: "Flexor carpi ulnaris is the only superficial anterior forearm muscle innervated by the ulnar nerve (C8-T1). It inserts onto the pisiform, hook of the hamate, and base of the 5th metacarpal.",
+                rationales: {
+                    "Flexor Carpi Ulnaris": "Correct. Medial forearm flexor innervated by the ulnar nerve.",
+                    "Flexor Carpi Radialis": "Incorrect. Innervated by the median nerve.",
+                    "Palmaris Longus": "Incorrect. Innervated by the median nerve.",
+                    "Flexor Digitorum Superficialis": "Incorrect. Innervated by the median nerve."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Flexor Digitorum Superficialis.PNG",
+                prompt: "Identify the highlighted intermediate-layer flexor whose tendons split to insert onto the middle phalanges:",
+                canonical: "Flexor Digitorum Superficialis",
+                synonyms: ["flexor digitorum superficialis", "fds", "m. flexor digitorum superficialis"],
+                distractors: ["Flexor Digitorum Profundus", "Flexor Pollicis Longus", "Palmaris Longus"],
+                concept: "FDS constitutes the intermediate layer of the anterior forearm. Its four tendons split (Camper's chiasm) at the proximal phalanges to insert into the lateral borders of the middle phalanges.",
+                rationales: {
+                    "Flexor Digitorum Superficialis": "Correct. Intermediate flexor whose tendons split to insert onto middle phalanges.",
+                    "Flexor Digitorum Profundus": "Incorrect. Deep muscle whose tendons pass through the split to reach distal phalanges.",
+                    "Flexor Pollicis Longus": "Incorrect. Acts solely on the thumb.",
+                    "Palmaris Longus": "Incorrect. Inserts into the palmar aponeurosis."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Flexor Pollicis Longus.PNG",
+                prompt: "Identify the highlighted deep anterior flexor muscle inserting onto the base of the distal phalanx of the thumb:",
+                canonical: "Flexor Pollicis Longus",
+                synonyms: ["flexor pollicis longus", "fpl", "m. flexor pollicis longus"],
+                distractors: ["Flexor Pollicis Brevis", "Abductor Pollicis Longus", "Flexor Digitorum Profundus"],
+                concept: "Flexor pollicis longus originates from the anterior surface of the radius and interosseous membrane, traversing the carpal tunnel in its own radial bursa to insert into the base of the distal phalanx of the thumb.",
+                rationales: {
+                    "Flexor Pollicis Longus": "Correct. Sole deep flexor of the thumb distal interphalangeal joint.",
+                    "Flexor Pollicis Brevis": "Incorrect. Intrinsic thenar muscle inserting on the proximal phalanx.",
+                    "Abductor Pollicis Longus": "Incorrect. Posterior extensor compartment muscle inserting on the 1st metacarpal.",
+                    "Flexor Digitorum Profundus": "Incorrect. Inserts onto the distal phalanges of digits 2 through 5."
+                }
+            },
+            {
+                compartment: "Forearm Flexors",
+                folder: "Week 3",
+                filename: "Pronator Quadratus.PNG",
+                prompt: "Identify the highlighted deep quadrangular muscle spanning the distal anterior radius and ulna:",
+                canonical: "Pronator Quadratus",
+                synonyms: ["pronator quadratus", "pronator quadratus muscle", "pq"],
+                distractors: ["Pronator Teres", "Supinator", "Brachioradialis"],
+                concept: "Pronator quadratus is the deepest muscle in the anterior forearm, running transversely from the distal anterior ulna to the distal anterior radius. It is innervated by the anterior interosseous nerve.",
+                rationales: {
+                    "Pronator Quadratus": "Correct. Deep transverse pronator across the distal forearm.",
+                    "Pronator Teres": "Incorrect. Superficial oblique muscle in the proximal forearm.",
+                    "Supinator": "Incorrect. Posterior compartment muscle that supinates.",
+                    "Brachioradialis": "Incorrect. Lateral muscle inserting onto the radial styloid."
+                }
+            },
+
+            // ==========================================
+            // THENAR & ADDUCTOR COMPARTMENTS
+            // ==========================================
+            {
+                compartment: "Thenar & Adductor",
+                folder: "Week 3",
+                filename: "Abductor Pollicis Brevis.PNG",
+                prompt: "Identify the highlighted superficial thenar muscle originating from the scaphoid/trapezium tubercles and flexor retinaculum:",
+                canonical: "Abductor Pollicis Brevis",
+                synonyms: ["abductor pollicis brevis", "apb", "m. abductor pollicis brevis"],
+                distractors: ["Abductor Pollicis Longus", "Flexor Pollicis Brevis", "Opponens Pollicis"],
+                concept: "Abductor pollicis brevis forms the lateral part of the thenar eminence, inserting into the lateral base of the proximal phalanx of the thumb. It is innervated by the recurrent branch of the median nerve (C8-T1).",
+                rationales: {
+                    "Abductor Pollicis Brevis": "Correct. Superficial thenar abductor innervated by the recurrent median nerve.",
+                    "Abductor Pollicis Longus": "Incorrect. Extrinsic forearm muscle inserting onto the 1st metacarpal.",
+                    "Flexor Pollicis Brevis": "Incorrect. Thenar flexor lying medial to APB.",
+                    "Opponens Pollicis": "Incorrect. Deep thenar muscle inserting along the shaft of the 1st metacarpal."
+                }
+            },
+            {
+                compartment: "Thenar & Adductor",
+                folder: "Week 3",
+                filename: "Flexor Pollicis Brevis.PNG",
+                prompt: "Identify the highlighted thenar muscle that flexes the thumb at the metacarpophalangeal joint:",
+                canonical: "Flexor Pollicis Brevis",
+                synonyms: ["flexor pollicis brevis", "fpb", "m. flexor pollicis brevis"],
+                distractors: ["Flexor Pollicis Longus", "Abductor Pollicis Brevis", "Adductor Pollicis"],
+                concept: "Flexor pollicis brevis lies medial to APB. Its superficial head is innervated by the recurrent branch of the median nerve, and its deep head is frequently supplied by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Flexor Pollicis Brevis": "Correct. Intrinsic flexor of the thumb MCP joint.",
+                    "Flexor Pollicis Longus": "Incorrect. Extrinsic deep flexor inserting on the distal phalanx.",
+                    "Abductor Pollicis Brevis": "Incorrect. Sits laterally and abducts the thumb.",
+                    "Adductor Pollicis": "Incorrect. Occupies the separate adductor compartment."
+                }
+            },
+            {
+                compartment: "Thenar & Adductor",
+                folder: "Week 3",
+                filename: "Opponens Pollicis.PNG",
+                prompt: "Identify the highlighted deep thenar muscle inserting along the entire lateral border of the first metacarpal:",
+                canonical: "Opponens Pollicis",
+                synonyms: ["opponens pollicis", "opponens pollicis muscle", "m. opponens pollicis"],
+                distractors: ["Abductor Pollicis Brevis", "Adductor Pollicis", "Flexor Pollicis Brevis"],
+                concept: "Opponens pollicis lies deep to APB, inserting along the lateral margin of the 1st metacarpal to medially rotate the thumb across the palm into opposition. It is innervated by the recurrent branch of the median nerve.",
+                rationales: {
+                    "Opponens Pollicis": "Correct. Deep thenar muscle executing medial rotation and opposition.",
+                    "Abductor Pollicis Brevis": "Incorrect. Superficial muscle inserting on the proximal phalanx.",
+                    "Adductor Pollicis": "Incorrect. Fans across the palm to adduct the thumb.",
+                    "Flexor Pollicis Brevis": "Incorrect. Inserts on the proximal phalanx."
+                }
+            },
+            {
+                compartment: "Thenar & Adductor",
+                folder: "Week 3",
+                filename: "Adductor Pollicis.PNG",
+                prompt: "Identify the highlighted deep palm muscle with transverse and oblique heads, innervated by the deep branch of the ulnar nerve:",
+                canonical: "Adductor Pollicis",
+                synonyms: ["adductor pollicis", "adductor pollicis muscle", "m. adductor pollicis"],
+                distractors: ["Opponens Pollicis", "Flexor Pollicis Brevis", "First Dorsal Interosseous"],
+                concept: "Adductor pollicis occupies the adductor compartment deep in the palm, featuring oblique and transverse heads. It adducts the thumb toward the index finger and is innervated by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Adductor Pollicis": "Correct. Fan-shaped adductor innervated by the deep branch of the ulnar nerve.",
+                    "Opponens Pollicis": "Incorrect. Thenar muscle innervated by the recurrent median nerve.",
+                    "Flexor Pollicis Brevis": "Incorrect. Thenar flexor.",
+                    "First Dorsal Interosseous": "Incorrect. Dorsal muscle abducting the index finger."
+                }
+            },
+
+            // ==========================================
+            // HYPOTHENAR COMPARTMENT
+            // ==========================================
+            {
+                compartment: "Hypothenar",
+                folder: "Week 3",
+                filename: "Abductor Digiti Minimi.PNG",
+                prompt: "Identify the highlighted superficial muscle along the medial border of the hand that abducts the fifth digit:",
+                canonical: "Abductor Digiti Minimi",
+                synonyms: ["abductor digiti minimi", "adm", "m. abductor digiti minimi"],
+                distractors: ["Flexor Digiti Minimi", "Opponens Digiti Minimi", "Palmaris Brevis"],
+                concept: "Abductor digiti minimi originates from the pisiform and tendon of FCU, inserting into the medial base of the proximal phalanx of digit 5. It is innervated by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Abductor Digiti Minimi": "Correct. Medial-most hypothenar muscle that abducts the little finger.",
+                    "Flexor Digiti Minimi": "Incorrect. Lies lateral to ADM and flexes the proximal phalanx.",
+                    "Opponens Digiti Minimi": "Incorrect. Deep muscle inserting onto the 5th metacarpal shaft.",
+                    "Palmaris Brevis": "Incorrect. Subcutaneous muscle corrugating hypothenar skin."
+                }
+            },
+            {
+                compartment: "Hypothenar",
+                folder: "Week 3",
+                filename: "Flexor Digiti Minimi.PNG",
+                prompt: "Identify the highlighted hypothenar muscle originating from the hook of the hamate that flexes the fifth digit at the MCP joint:",
+                canonical: "Flexor Digiti Minimi",
+                synonyms: ["flexor digiti minimi", "flexor digiti minimi brevis", "fdmb"],
+                distractors: ["Abductor Digiti Minimi", "Opponens Digiti Minimi", "Palmaris Brevis"],
+                concept: "Flexor digiti minimi brevis arises from the hook of the hamate and flexor retinaculum, inserting onto the medial base of the proximal phalanx of the 5th digit. It is innervated by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Flexor Digiti Minimi": "Correct. Flexes the 5th MCP joint and is innervated by the deep ulnar nerve.",
+                    "Abductor Digiti Minimi": "Incorrect. Arises from the pisiform and abducts digit 5.",
+                    "Opponens Digiti Minimi": "Incorrect. Inserts along the shaft of the 5th metacarpal.",
+                    "Palmaris Brevis": "Incorrect. Cutaneous muscle."
+                }
+            },
+            {
+                compartment: "Hypothenar",
+                folder: "Week 3",
+                filename: "Opponens Digiti Minimi.PNG",
+                prompt: "Identify the highlighted deep hypothenar muscle inserting into the medial border of the fifth metacarpal:",
+                canonical: "Opponens Digiti Minimi",
+                synonyms: ["opponens digiti minimi", "odm", "m. opponens digiti minimi"],
+                distractors: ["Flexor Digiti Minimi", "Abductor Digiti Minimi", "Adductor Pollicis"],
+                concept: "Opponens digiti minimi lies deep to the abductor and flexor of digit 5, inserting along the medial border of the 5th metacarpal to deepen the hollow of the palm. It is supplied by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Opponens Digiti Minimi": "Correct. Deep hypothenar muscle that rotates the 5th metacarpal forward.",
+                    "Flexor Digiti Minimi": "Incorrect. Inserts on the proximal phalanx.",
+                    "Abductor Digiti Minimi": "Incorrect. Inserts on the proximal phalanx.",
+                    "Adductor Pollicis": "Incorrect. Located on the radial/thenar side of the palm."
+                }
+            },
+            {
+                compartment: "Hypothenar",
+                folder: "Week 3",
+                filename: "Palmaris Brevis.PNG",
+                prompt: "Identify the highlighted small subcutaneous muscle in the hypothenar fat innervated by the superficial branch of the ulnar nerve:",
+                canonical: "Palmaris Brevis",
+                synonyms: ["palmaris brevis", "palmaris brevis muscle", "m. palmaris brevis"],
+                distractors: ["Palmaris Longus", "Abductor Digiti Minimi", "Flexor Digiti Minimi"],
+                concept: "Palmaris brevis is a thin subcutaneous muscle overlying the hypothenar eminence. It corrugates the skin to improve palmar grip and is innervated by the superficial branch of the ulnar nerve.",
+                rationales: {
+                    "Palmaris Brevis": "Correct. Subcutaneous hypothenar muscle innervated by the superficial branch of the ulnar nerve.",
+                    "Palmaris Longus": "Incorrect. Forearm flexor inserting into the central palmar aponeurosis.",
+                    "Abductor Digiti Minimi": "Incorrect. Deep to palmaris brevis and innervated by the deep ulnar branch.",
+                    "Flexor Digiti Minimi": "Incorrect. Intrinsic muscle innervated by the deep ulnar branch."
+                }
+            },
+
+            // ==========================================
+            // LUMBRICALS & INTEROSSEI
+            // ==========================================
+            {
+                compartment: "Lumbricals & Interossei",
+                folder: "Week 3",
+                filename: "Lumbricals.PNG",
+                prompt: "Identify the highlighted intrinsic hand muscles originating from the tendons of flexor digitorum profundus:",
+                canonical: "Lumbricals",
+                synonyms: ["lumbricals", "lumbrical muscles", "lumbricales"],
+                distractors: ["Palmar Interossei", "Dorsal Interossei", "Flexor Digitorum Superficialis"],
+                concept: "The four lumbricals arise from the FDP tendons in the central compartment and insert into the radial lateral bands of the extensor expansions of digits 2-5, flexing the MCP joints while extending the IP joints.",
+                rationales: {
+                    "Lumbricals": "Correct. Originate from FDP tendons and insert into extensor hoods.",
+                    "Palmar Interossei": "Incorrect. Originate from metacarpal shafts and adduct digits (PAD).",
+                    "Dorsal Interossei": "Incorrect. Bipennate muscles originating from metacarpals that abduct digits (DAB).",
+                    "Flexor Digitorum Superficialis": "Incorrect. Extrinsic forearm muscle."
+                }
+            },
+            {
+                compartment: "Lumbricals & Interossei",
+                folder: "Week 3",
+                filename: "Palmar Interossei.PNG",
+                prompt: "Identify the highlighted unipennate muscles responsible for finger adduction ('PAD'):",
+                canonical: "Palmar Interossei",
+                synonyms: ["palmar interossei", "palmar interosseous muscles", "pad"],
+                distractors: ["Dorsal Interossei", "Lumbricals", "Adductor Pollicis"],
+                concept: "The palmar interossei (PAD = Palmar ADduct) are unipennate muscles that adduct digits 2, 4, and 5 toward the axial line of digit 3. Digit 3 lacks a palmar interosseous muscle.",
+                rationales: {
+                    "Palmar Interossei": "Correct. Adduct fingers toward digit 3 and are innervated by the deep branch of the ulnar nerve.",
+                    "Dorsal Interossei": "Incorrect. Abduct fingers away from digit 3 (DAB).",
+                    "Lumbricals": "Incorrect. Flex MCP joints and extend IP joints.",
+                    "Adductor Pollicis": "Incorrect. Dedicated adductor for the thumb."
+                }
+            },
+            {
+                compartment: "Lumbricals & Interossei",
+                folder: "Week 3",
+                filename: "Dorsal Interossei.PNG",
+                prompt: "Identify the highlighted bipennate intrinsic hand muscles responsible for finger abduction ('DAB'):",
+                canonical: "Dorsal Interossei",
+                synonyms: ["dorsal interossei", "dorsal interosseous muscles", "dab"],
+                distractors: ["Palmar Interossei", "Lumbricals", "Abductor Digiti Minimi"],
+                concept: "The four dorsal interossei (DAB = Dorsal ABduct) are bipennate muscles that abduct digits 2, 3, and 4 away from the axial line. All are innervated by the deep branch of the ulnar nerve.",
+                rationales: {
+                    "Dorsal Interossei": "Correct. Four bipennate muscles executing abduction of the digits.",
+                    "Palmar Interossei": "Incorrect. Unipennate muscles performing adduction.",
+                    "Lumbricals": "Incorrect. Arise from FDP tendons.",
+                    "Abductor Digiti Minimi": "Incorrect. Hypothenar abductor for digit 5."
+                }
+            },
+
+            // ==========================================
+            // VESSELS, NERVES & FASCIA
+            // ==========================================
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Flexor Retinaculum.PNG",
+                prompt: "Identify the highlighted fibrous band bridging the carpal arch to form the carpal tunnel:",
+                canonical: "Flexor Retinaculum",
+                synonyms: ["flexor retinaculum", "transverse carpal ligament"],
+                distractors: ["Palmar Aponeurosis", "Extensor Retinaculum", "Palmar Carpal Ligament"],
+                concept: "The flexor retinaculum (transverse carpal ligament) attaches to the scaphoid tubercle, trapezium, pisiform, and hook of the hamate, converting the carpal arch into the carpal tunnel.",
+                rationales: {
+                    "Flexor Retinaculum": "Correct. Fibrous roof of the carpal tunnel.",
+                    "Palmar Aponeurosis": "Incorrect. Central triangular fascial expansion in the palm.",
+                    "Extensor Retinaculum": "Incorrect. Located on the dorsal aspect of the wrist.",
+                    "Palmar Carpal Ligament": "Incorrect. More proximal and superficial thickening that roofs Guyon's canal."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Palmar Aponeurosis.PNG",
+                prompt: "Identify the highlighted dense, triangular deep fascial expansion in the central compartment of the palm:",
+                canonical: "Palmar Aponeurosis",
+                synonyms: ["palmar aponeurosis", "palmar fascia", "aponeurosis palmaris"],
+                distractors: ["Flexor Retinaculum", "Palmar Carpal Ligament", "Superficial Palmar Arch"],
+                concept: "The palmar aponeurosis is the thick triangular deep fascia covering the central palm. Proximally continuous with the palmaris longus tendon and flexor retinaculum, its fibrosis leads to Dupuytren contracture.",
+                rationales: {
+                    "Palmar Aponeurosis": "Correct. Central triangular palmar fascia radiating into digital slips.",
+                    "Flexor Retinaculum": "Incorrect. Transverse ligament beneath which tendons enter the hand.",
+                    "Palmar Carpal Ligament": "Incorrect. Sits proximal to the aponeurosis.",
+                    "Superficial Palmar Arch": "Incorrect. Arterial vessel immediately deep to the palmar aponeurosis."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Digital Synovial Sheaths.PNG",
+                prompt: "Identify the highlighted synovial and fibrous tunnels enclosing the flexor tendons along the digits:",
+                canonical: "Digital Synovial Sheaths",
+                synonyms: ["digital synovial sheaths", "fibrous digital sheaths", "digital flexor sheaths"],
+                distractors: ["Palmar Aponeurosis", "Common Flexor Sheath", "Interosseous Membrane"],
+                concept: "Digital synovial sheaths line the osseofibrous tunnels of digits 1-5, lubricating and protecting the FDS, FDP, and FPL tendons as they traverse the phalanges.",
+                rationales: {
+                    "Digital Synovial Sheaths": "Correct. Tubular lubricating sheaths surrounding digital flexor tendons.",
+                    "Palmar Aponeurosis": "Incorrect. Fascial sheet covering the central palm.",
+                    "Common Flexor Sheath": "Incorrect. Proximal ulnar bursa residing within the carpal tunnel.",
+                    "Interosseous Membrane": "Incorrect. Membrane between radius and ulna."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Superficial Palmar Arch.PNG",
+                prompt: "Identify the highlighted arterial arch formed primarily as the direct continuation of the ulnar artery:",
+                canonical: "Superficial Palmar Arch",
+                synonyms: ["superficial palmar arch", "arcus palmaris superficialis"],
+                distractors: ["Deep Palmar Arch", "Radial Artery", "Common Palmar Digital Artery"],
+                concept: "The superficial palmar arch lies immediately deep to the palmar aponeurosis. It is formed primarily by the ulnar artery and completed laterally by a superficial branch of the radial artery, giving off common palmar digital arteries.",
+                rationales: {
+                    "Superficial Palmar Arch": "Correct. Formed primarily by the ulnar artery lying superficial to long flexor tendons.",
+                    "Deep Palmar Arch": "Incorrect. Formed primarily by the radial artery lying deep against metacarpal bases.",
+                    "Radial Artery": "Incorrect. Gives primary origin to the deep arch.",
+                    "Common Palmar Digital Artery": "Incorrect. Branches arising from the superficial arch."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Ulnar Artery.PNG",
+                prompt: "Identify the highlighted artery passing through Guyon's canal with the ulnar nerve:",
+                canonical: "Ulnar Artery",
+                synonyms: ["ulnar artery", "a. ulnaris"],
+                distractors: ["Radial Artery", "Brachial Artery", "Anterior Interosseous Artery"],
+                concept: "The ulnar artery courses down the medial forearm under FCU, enters the hand through Guyon's canal superficial to the flexor retinaculum, and forms the superficial palmar arch.",
+                rationales: {
+                    "Ulnar Artery": "Correct. Medial forearm artery traversing Guyon's canal.",
+                    "Radial Artery": "Incorrect. Lateral artery entering the anatomical snuffbox.",
+                    "Brachial Artery": "Incorrect. Terminate at the cubital fossa.",
+                    "Anterior Interosseous Artery": "Incorrect. Deep artery along the interosseous membrane."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Radial Artery.PNG",
+                prompt: "Identify the highlighted artery passing between the two heads of the first dorsal interosseous muscle to form the deep palmar arch:",
+                canonical: "Radial Artery",
+                synonyms: ["radial artery", "a. radialis"],
+                distractors: ["Ulnar Artery", "Deep Palmar Arch", "Superficial Palmar Arch"],
+                concept: "The radial artery winds around the lateral wrist through the anatomical snuffbox, pierces between the two heads of the 1st dorsal interosseous muscle, and forms the deep palmar arch in the deep palm.",
+                rationales: {
+                    "Radial Artery": "Correct. Lateral artery entering the deep palm via the 1st interdigital space.",
+                    "Ulnar Artery": "Incorrect. Enters via Guyon's canal medially.",
+                    "Deep Palmar Arch": "Incorrect. The arterial arch itself, rather than the feeding artery.",
+                    "Superficial Palmar Arch": "Incorrect. Fed primarily by the ulnar artery."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Median Nerve Forearm.PNG",
+                prompt: "Identify the highlighted nerve that traverses the carpal tunnel beneath the flexor retinaculum:",
+                canonical: "Median Nerve",
+                synonyms: ["median nerve", "n. medianus"],
+                distractors: ["Ulnar Nerve", "Radial Nerve", "Musculocutaneous Nerve"],
+                concept: "The median nerve travels between FDS and FDP in the forearm, enters the hand through the carpal tunnel, and gives off the recurrent motor branch to the thenar muscles and digital sensory branches to digits 1 through 3.5.",
+                rationales: {
+                    "Median Nerve": "Correct. Content of the carpal tunnel supplying thenar muscles and lateral 3.5 digits.",
+                    "Ulnar Nerve": "Incorrect. Passes superficial through Guyon's canal.",
+                    "Radial Nerve": "Incorrect. Superficial branch is purely sensory on the dorsum.",
+                    "Musculocutaneous Nerve": "Incorrect. Does not cross the wrist."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Ulnar Nerve Forearm.PNG",
+                prompt: "Identify the highlighted nerve coursing behind the medial epicondyle and entering the hand via Guyon's canal:",
+                canonical: "Ulnar Nerve",
+                synonyms: ["ulnar nerve", "n. ulnaris"],
+                distractors: ["Median Nerve", "Radial Nerve", "Anterior Interosseous Nerve"],
+                concept: "The ulnar nerve passes behind the medial epicondyle, travels down the medial forearm under FCU, and enters the hand via Guyon's canal to supply the hypothenar muscles, all interossei, and medial 1.5 digits.",
+                rationales: {
+                    "Ulnar Nerve": "Correct. Traverses Guyon's canal to supply intrinsic hand muscles.",
+                    "Median Nerve": "Incorrect. Traverses the carpal tunnel.",
+                    "Radial Nerve": "Incorrect. Courses laterally and dorsally.",
+                    "Anterior Interosseous Nerve": "Incorrect. Branch of the median nerve in the deep forearm."
+                }
+            },
+            {
+                compartment: "Vessels, Nerves & Fascia",
+                folder: "Week 3",
+                filename: "Interosseous Membrane.PNG",
+                prompt: "Identify the highlighted fibrous syndesmosis connecting the interosseous borders of the radius and ulna:",
+                canonical: "Interosseous Membrane",
+                synonyms: ["interosseous membrane", "antebrachial interosseous membrane", "membrana interossea antebrachii"],
+                distractors: ["Flexor Retinaculum", "Pronator Quadratus", "Extensor Retinaculum"],
+                concept: "The interosseous membrane of the forearm is a strong fibrous sheet connecting the radius and ulna, transferring compressive loads from the radius to the ulna and providing origin for deep flexors and extensors.",
+                rationales: {
+                    "Interosseous Membrane": "Correct. Fibrous sheet spanning the interosseous space between radius and ulna.",
+                    "Flexor Retinaculum": "Incorrect. Transverse ligament across carpal bones.",
+                    "Pronator Quadratus": "Incorrect. Muscle lying superficial to the distal membrane.",
+                    "Extensor Retinaculum": "Incorrect. Dorsal wrist retinaculum."
+                }
+            }
+        ];
+
+        // State
+        let currentScope = "all";
+        let currentMode = "mcq";
+        let activePool = [];
+        let userResponses = {};
+
+        function getLevenshteinDistance(a, b) {
+            const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+            for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+            for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+            for (let i = 1; i <= a.length; i++) {
+                for (let j = 1; j <= b.length; j++) {
+                    const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                    matrix[i][j] = Math.min(
+                        matrix[i - 1][j] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j - 1] + cost
+                    );
+                }
+            }
+            return matrix[a.length][b.length];
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function handleImgError(img, folder, filename) {
+            const encFolder = encodeURIComponent(folder);
+            const encFile = encodeURIComponent(filename);
+
+            const paths = [
+                `Images/Reg 1/${folder}/${filename}`,
+                `Images/Reg 1/${encFolder}/${encFile}`,
+                `Images/${folder}/${filename}`,
+                `Images/${encFolder}/${encFile}`,
+                `./Images/Reg 1/${encFolder}/${encFile}`,
+                `../Images/Reg 1/${encFolder}/${encFile}`,
+                `images/Reg 1/${encFolder}/${encFile}`
+            ];
+
+            let attempt = parseInt(img.getAttribute('data-attempt') || '0', 10);
+            if (attempt < paths.length) {
+                img.setAttribute('data-attempt', (attempt + 1).toString());
+                img.src = paths[attempt];
+            } else {
+                img.style.display = 'none';
+                const wrapper = img.parentElement;
+                wrapper.innerHTML = `
+                    <div class="img-fallback-alert">
+                        <strong>Tagged Structure:</strong> <code>${filename}</code><br>
+                        Location: <code>Images/Reg 1/${folder}/</code>
+                    </div>
+                `;
+            }
+        }
+
+        function setScope(scope) {
+            currentScope = scope;
+            document.querySelectorAll('#scope-filters .btn-filter').forEach(btn => {
+                btn.classList.toggle('active', btn.innerText.includes(scope) || (scope === 'all' && btn.innerText.includes('All')));
+            });
+            initPool();
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.getElementById('mode-mcq').classList.toggle('active', mode === 'mcq');
+            document.getElementById('mode-typein').classList.toggle('active', mode === 'typein');
+            renderQuestions();
+        }
+
+        function initPool() {
+            if (currentScope === "all") {
+                activePool = JSON.parse(JSON.stringify(rawWeek3Data));
+            } else {
+                activePool = rawWeek3Data.filter(item => item.compartment === currentScope);
+            }
+            shuffleArray(activePool);
+            userResponses = {};
+            document.getElementById('summary-card').style.display = 'none';
+            renderQuestions();
+            updateScore();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            activePool.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `card-${index}`;
+
+                if (!item.shuffledOptions) {
+                    const opts = [item.canonical, ...item.distractors];
+                    shuffleArray(opts);
+                    item.shuffledOptions = opts;
+                }
+
+                const meta = document.createElement('div');
+                meta.className = 'card-meta';
+                meta.innerHTML = `<span>Item ${index + 1} of ${activePool.length}</span><span>${item.compartment}</span>`;
+                card.appendChild(meta);
+
+                const imgWrap = document.createElement('div');
+                imgWrap.className = 'image-wrapper';
+                const img = document.createElement('img');
+                img.alt = item.canonical;
+                img.setAttribute('data-attempt', '0');
+                img.onerror = () => handleImgError(img, item.folder, item.filename);
+                img.src = `Images/Reg 1/${item.folder}/${item.filename}`;
+                imgWrap.appendChild(img);
+                card.appendChild(imgWrap);
+
+                const prompt = document.createElement('div');
+                prompt.className = 'question-prompt';
+                prompt.innerText = item.prompt;
+                card.appendChild(prompt);
+
+                if (currentMode === 'mcq') {
+                    const optContainer = document.createElement('div');
+                    optContainer.className = 'options-container';
+
+                    item.shuffledOptions.forEach((optText, oIdx) => {
+                        const letter = String.fromCharCode(65 + oIdx);
+                        const btn = document.createElement('button');
+                        btn.className = 'option-btn';
+                        btn.id = `btn-${index}-${oIdx}`;
+                        btn.innerText = `${letter}) ${optText}`;
+                        btn.onclick = () => submitMCQ(index, optText, oIdx);
+                        optContainer.appendChild(btn);
+                    });
+                    card.appendChild(optContainer);
+                } else {
+                    const typeBox = document.createElement('div');
+                    typeBox.className = 'typein-box';
+                    typeBox.innerHTML = `
+                        <input type="text" class="typein-input" id="input-${index}" placeholder="Type anatomical structure..." autocomplete="off" spellcheck="false" onkeydown="handleEnter(event, ${index})">
+                        <button class="typein-btn" id="btn-submit-${index}" onclick="submitTypeIn(${index})">Check</button>
+                    `;
+                    card.appendChild(typeBox);
+                }
+
+                const expDiv = document.createElement('div');
+                expDiv.className = 'explanation';
+                expDiv.id = `exp-${index}`;
+                card.appendChild(expDiv);
+
+                container.appendChild(card);
+            });
+        }
+
+        function handleEnter(e, qIdx) {
+            if (e.key === 'Enter') {
+                submitTypeIn(qIdx);
+            }
+        }
+
+        function submitMCQ(qIdx, selectedText, oIdx) {
+            if (userResponses[qIdx]) return;
+
+            const item = activePool[qIdx];
+            const isCorrect = (selectedText === item.canonical);
+            userResponses[qIdx] = { correct: isCorrect, answer: selectedText };
+
+            const card = document.getElementById(`card-${qIdx}`);
+            const buttons = card.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            const selectedBtn = document.getElementById(`btn-${qIdx}-${oIdx}`);
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+            } else {
+                selectedBtn.classList.add('incorrect');
+                buttons.forEach(btn => {
+                    if (btn.innerText.includes(item.canonical)) {
+                        btn.classList.add('correct');
+                    }
+                });
+            }
+
+            renderExplanation(qIdx, isCorrect, null);
+            updateScore();
+        }
+
+        function submitTypeIn(qIdx) {
+            if (userResponses[qIdx]) return;
+
+            const item = activePool[qIdx];
+            const inputEl = document.getElementById(`input-${qIdx}`);
+            const submitBtn = document.getElementById(`btn-submit-${qIdx}`);
+            const rawVal = inputEl.value.trim().toLowerCase();
+
+            if (!rawVal) return;
+
+            inputEl.disabled = true;
+            submitBtn.disabled = true;
+
+            let isCorrect = false;
+            let matchedSynonym = null;
+            let isTypo = false;
+
+            for (let syn of item.synonyms) {
+                const target = syn.toLowerCase();
+                if (rawVal === target) {
+                    isCorrect = true;
+                    matchedSynonym = syn;
+                    break;
+                }
+                const dist = getLevenshteinDistance(rawVal, target);
+                if (target.length > 7 && dist <= 2) {
+                    isCorrect = true;
+                    matchedSynonym = syn;
+                    isTypo = true;
+                    break;
+                }
+            }
+
+            userResponses[qIdx] = { correct: isCorrect, answer: inputEl.value };
+
+            if (isCorrect) {
+                inputEl.style.borderColor = "var(--correct-border)";
+                inputEl.style.backgroundColor = "var(--correct-bg)";
+            } else {
+                inputEl.style.borderColor = "var(--incorrect-border)";
+                inputEl.style.backgroundColor = "var(--incorrect-bg)";
+            }
+
+            renderExplanation(qIdx, isCorrect, isTypo ? matchedSynonym : null);
+            updateScore();
+        }
+
+        function renderExplanation(qIdx, isCorrect, typoTarget) {
+            const item = activePool[qIdx];
+            const expDiv = document.getElementById(`exp-${qIdx}`);
+            const statusClass = isCorrect ? 'correct' : 'incorrect';
+            const statusText = isCorrect ? 'Correct!' : 'Incorrect.';
+
+            let rationalesHTML = '';
+            item.shuffledOptions.forEach((optText, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                const expl = item.rationales[optText] || (optText === item.canonical ? "Correct anatomical identification." : "Incorrect distractor.");
+                rationalesHTML += `
+                    <li class="rationale-item">
+                        <strong>${letter}) ${optText}</strong>: ${expl}
+                    </li>
+                `;
+            });
+
+            let typoNote = typoTarget ? `<div class="fuzzy-note">Spelling accepted: matched "${typoTarget}"</div>` : '';
+
+            expDiv.innerHTML = `
+                <div class="status-banner ${statusClass}">${statusText}</div>
+                ${typoNote}
+                <div class="explanation-summary"><strong>Concept Explanation:</strong> ${item.concept}</div>
+                <ul class="rationale-list">
+                    ${rationalesHTML}
+                </ul>
+            `;
+            expDiv.style.display = 'block';
+        }
+
+        function updateScore() {
+            const answeredCount = Object.keys(userResponses).length;
+            const correctCount = Object.values(userResponses).filter(r => r.correct).length;
+            const total = activePool.length;
+            const pct = total === 0 ? 0 : Math.round((correctCount / total) * 100);
+
+            document.getElementById('score-header').innerText = `Score: ${correctCount} / ${total} (${pct}%)`;
+
+            if (answeredCount === total && total > 0) {
+                showSummary(correctCount, total, pct);
+            }
+        }
+
+        function showSummary(correct, total, pct) {
+            const summaryCard = document.getElementById('summary-card');
+            const scoreDisplay = document.getElementById('final-score-display');
+            const feedback = document.getElementById('summary-feedback');
+
+            scoreDisplay.innerText = `${correct} / ${total} (${pct}%)`;
+
+            if (pct >= 90) {
+                feedback.innerText = "Mastery Level Demonstrated! Exceptional identification across the carpal tunnel, thenar, hypothenar, and intrinsic hand compartments.";
+            } else if (pct >= 75) {
+                feedback.innerText = "Strong passing performance. Review the lumbrical origin details and interosseous mechanics before your practical exam.";
+            } else {
+                feedback.innerText = "Re-test recommended. Re-study the OAF arrangements, Guyon's canal boundaries, and palmar arches.";
+            }
+
+            summaryCard.style.display = 'block';
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            initPool();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = () => {
+            initPool();
+        };
+    </script>
+</body>
+</html>
