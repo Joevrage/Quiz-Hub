@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Microbio Quiz 3: Comprehensive Metabolism & Genetics</title>
+    <style>
+        :root {
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-muted: #a3a3a3;
+            --accent: #ff9900;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .sticky-bar {
+            position: sticky;
+            top: 0;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .score-display {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .option-btn {
+            background-color: #262626;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background-color: #333333;
+            border-color: var(--accent);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #fff;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #fff;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
+            background-color: #222222;
+            border-left: 4px solid var(--accent);
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .status-banner {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-banner.correct {
+            color: var(--correct-border);
+        }
+
+        .status-banner.incorrect {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: #e5e5e5;
+        }
+
+        .rationales-list {
+            list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5rem;
+        }
+
+        .rationales-list li {
+            margin-bottom: 0.3rem;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
+            }
+            .question-card {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Microbio Quiz 3</h1>
+        <div class="subtitle">Comprehensive Practice Quiz: Lectures 4 & 5 (Metabolism, Respiration, Fermentation & Genetics)</div>
+    </header>
+
+    <div class="sticky-bar">
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+        <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+    </div>
+
+    <div class="container" id="quizContainer"></div>
+
+    <script>
+        const rawQuizData = [
+            // --- LECTURE 4: METABOLISM & FERMENTATION ---
+            {
+                question: "Which carbon and energy source is universally preferred by bacteria when multiple sources are available ('Glucose is king!')?",
+                options: [
+                    { text: "Lactose", correct: false, why: "Incorrect. Disaccharides require secondary breakdown enzymes and are never preferred over glucose." },
+                    { text: "Glucose", correct: true, why: "Correct! Bacteria utilize glucose preferentially to the exclusion of other sugars as long as it is available." },
+                    { text: "Fructose", correct: false, why: "Incorrect. Fructose is a monosaccharide but is not preferentially selected over glucose." },
+                    { text: "Amino acids", correct: false, why: "Incorrect. Carbohydrates like glucose are prioritized for rapid catabolism." }
+                ],
+                explanation: "Glucose is the premier carbon and energy source for bacteria ('Glucose is king!'), utilized preferentially over secondary disaccharides."
+            },
+            {
+                question: "What is the most common glycolytic pathway utilized by bacteria, yielding 2 pyruvates and 4 ATP (gross)?",
+                options: [
+                    { text: "Embden-Meyerhof pathway", correct: true, why: "Correct! When in doubt, bacteria use the Embden-Meyerhof pathway for glycolysis." },
+                    { text: "Entner-Doudoroff pathway", correct: false, why: "Incorrect. Entner-Doudoroff is less common and yields 3 ATP and 2 ethanol." },
+                    { text: "Pentose phosphate pathway", correct: false, why: "Incorrect. Pentose phosphate pathway generates NADPH and biosynthetic precursors." },
+                    { text: "Tricarboxylic acid cycle", correct: false, why: "Incorrect. The TCA cycle occurs downstream of glycolysis." }
+                ],
+                explanation: "The Embden-Meyerhof pathway is the standard, most common glycolytic pathway across bacterial species."
+            },
+            {
+                question: "How does the alternative Entner-Doudoroff glycolytic pathway compare to Embden-Meyerhof?",
+                options: [
+                    { text: "It is universal in all gram-positive rods.", correct: false, why: "Incorrect. It is a lot less common and utilized by only a few types of bacteria." },
+                    { text: "It is less common, used by only a few bacteria, and yields 2 ethanol and 3 ATP.", correct: true, why: "Correct! Entner-Doudoroff produces 2 ethanol and 3 ATP, making it slightly less energy-efficient." },
+                    { text: "It operates exclusively under obligate aerobic conditions.", correct: false, why: "Incorrect. It is an alternative glycolytic route." },
+                    { text: "It produces zero ATP molecules.", correct: false, why: "Incorrect. It yields 3 net ATP." }
+                ],
+                explanation: "The Entner-Doudoroff pathway is less common, utilized by specific bacteria, and yields 3 ATP along with 2 ethanol."
+            },
+            {
+                question: "In aerobic respiration, what molecule serves as the final (terminal) electron acceptor in the electron transport chain?",
+                options: [
+                    { text: "Nitrate (NO3-)", correct: false, why: "Incorrect. Nitrate is used in anaerobic denitrification." },
+                    { text: "Molecular oxygen (O2)", correct: true, why: "Correct! Aerobic respiration relies strictly on molecular oxygen (O2) as the final electron acceptor." },
+                    { text: "Sulfate (SO42-)", correct: false, why: "Incorrect. Sulfate is used in anaerobic sulfate reduction." },
+                    { text: "Carbon dioxide (CO2)", correct: false, why: "Incorrect. CO2 is a metabolic byproduct." }
+                ],
+                explanation: "Aerobic respiration uses molecular oxygen (O2) as the ultimate electron acceptor to generate water and maximize ATP."
+            },
+            {
+                question: "Which anaerobic respiratory process utilizes nitrate as a final electron acceptor and is important in agriculture soil fertilization and gut flora?",
+                options: [
+                    { text: "Biological methanogenesis", correct: false, why: "Incorrect. Methanogenesis produces methane from CO2/organic decay." },
+                    { text: "Denitrification", correct: true, why: "Correct! Denitrification involves agricultural nitrate soil fertilization and gut flora processing." },
+                    { text: "Sulfate reduction", correct: false, why: "Incorrect. Sulfate reduction produces hydrogen sulfide (rotten egg smell)." },
+                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation is a fermentative pathway, not anaerobic respiration." }
+                ],
+                explanation: "Denitrification is an anaerobic respiratory pathway using nitrogen/nitrate as an electron acceptor, active in agriculture and intestinal flora."
+            },
+            {
+                question: "What environmental odor or indicator is classically associated with bacterial sulfate reduction?",
+                options: [
+                    { text: "Sweet fruity aroma", correct: false, why: "Incorrect. That is typical of certain ester fermentations." },
+                    { text: "Rotten egg smell", correct: true, why: "Correct! Sulfate reduction produces hydrogen sulfide gas (H2S), resulting in a rotten egg smell." },
+                    { text: "Swamp gas bubbling", correct: false, why: "Incorrect. Swamp gas is associated with methanogenesis." },
+                    { text: "Vinegar tang", correct: false, why: "Incorrect. Vinegar is acetic acid fermentation." }
+                ],
+                explanation: "Sulfate reduction generates hydrogen sulfide, producing the characteristic rotten egg smell."
+            },
+            {
+                question: "Biological methanogenesis is classically referenced in natural environments with which of the following?",
+                options: [
+                    { text: "Cow farts and swamp gas", correct: true, why: "Correct! Methanogenesis occurs during organic decay in swamps and ruminant digestive tracts." },
+                    { text: "Hot spring sulfur vents", correct: false, why: "Incorrect. That relates to sulfur-oxidizing thermophiles." },
+                    { text: "Root nodule nitrogen fixation", correct: false, why: "Incorrect. That is nitrogenase activity." },
+                    { text: "Lactic acid milk curdling", correct: false, why: "Incorrect. That is homolactic fermentation." }
+                ],
+                explanation: "Biological methanogenesis produces methane during organic matter decay in swamps and ruminant guts ('cow farts and swamp gas')."
+            },
+            {
+                question: "Most Lactobacillus and Lactococcus species ferment glucose into lactic acid as the sole end product. This is known as:",
+                options: [
+                    { text: "Homolactic fermentation", correct: true, why: "Correct! Homolactic fermentation produces lactic acid as the sole end product." },
+                    { text: "Heterolactic fermentation", correct: false, why: "Incorrect. Heterolactic fermentation produces lactic acid, ethanol, acetic acid, and CO2." },
+                    { text: "Mixed acid fermentation", correct: false, why: "Incorrect. Mixed acid fermentation produces multiple distinct acids." },
+                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation yields ethanol and CO2." }
+                ],
+                explanation: "Homolactic fermentation converts pyruvate directly into lactic acid as the exclusive end product."
+            },
+            {
+                question: "Which fermentation pathway produces a complex mixture of acetic acid, lactic acid, succinic acid, formic acid, and ethanol?",
+                options: [
+                    { text: "Mixed acid fermentation", correct: true, why: "Correct! Mixed acid fermentation is the classic pathway of Enterobacteriaceae yielding this exact product set." },
+                    { text: "Homolactic fermentation", correct: false, why: "Incorrect. Homolactic yields only lactic acid." },
+                    { text: "Butyric acid fermentation", correct: false, why: "Incorrect. Butyric acid fermentation is used primarily by Clostridium." },
+                    { text: "Propionic acid fermentation", correct: false, why: "Incorrect. Propionic acid fermentation yields propionic acid and acetic acid." }
+                ],
+                explanation: "Mixed acid fermentation yields multiple acids plus ethanol, characteristic of enteric bacteria."
+            },
+            {
+                question: "Enzymes that are produced continuously in constant amounts by a bacterial cell, regardless of substrate presence, are termed:",
+                options: [
+                    { text: "Constitutive enzymes", correct: true, why: "Correct! Constitutive enzymes are always present and active." },
+                    { text: "Inducible enzymes", correct: false, why: "Incorrect. Inducible enzymes are synthesized only in response to a substrate." },
+                    { text: "Repressible enzymes", correct: false, why: "Incorrect. Repressible enzymes are turned off by excess product." },
+                    { text: "Allosteric enzymes", correct: false, why: "Incorrect. Allosteric refers to regulatory binding sites." }
+                ],
+                explanation: "Constitutive enzymes are essential house-keeping enzymes synthesized at a constant baseline rate."
+            },
+            {
+                question: "What non-genetic regulatory mechanism involves a pathway end-product binding to the allosteric site of the initial enzyme to immediately shut it down?",
+                options: [
+                    { text: "Feedback inhibition", correct: true, why: "Correct! Feedback inhibition provides immediate, non-genetic control over metabolic flux." },
+                    { text: "Catabolite repression", correct: false, why: "Incorrect. Catabolite repression operates at the genetic transcription level." },
+                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Mutations alter DNA permanently." },
+                    { text: "Operon induction", correct: false, why: "Incorrect. Induction activates transcription." }
+                ],
+                explanation: "Feedback inhibition is an instant, enzyme-level control mechanism where excess end-product allosterically inhibits the first pathway enzyme."
+            },
+
+            // --- LECTURE 5: BACTERIAL GENETICS & REPLICATION ---
+            {
+                question: "Regarding bacterial genetics, which of the following is NOT always true for all bacteria?",
+                options: [
+                    { text: "They have circular chromosomes.", correct: true, why: "Correct! While most bacteria possess circular chromosomes, a few species (e.g., Borrelia) have linear chromosomes." },
+                    { text: "They are haploid.", correct: false, why: "Incorrect. All bacteria are haploid." },
+                    { text: "Their DNA does not associate with histones.", correct: false, why: "Incorrect. Bacterial DNA lacks true histone octamers." },
+                    { text: "They have no intron/exon arrangement.", correct: false, why: "Incorrect. Bacteria completely lack intron/exon splicing." }
+                ],
+                explanation: "While the vast majority of bacteria have circular chromosomes, linear chromosomes exist in certain species, making circularity non-universal."
+            },
+            {
+                question: "Are plasmids required for the basic vegetative survival of a bacterial cell?",
+                options: [
+                    { text: "Yes, plasmids encode essential chromosomal replication machinery.", correct: false, why: "Incorrect. Essential genes reside on the main chromosome." },
+                    { text: "No, plasmids are non-essential extrachromosomal DNA, though they carry advantageous traits.", correct: true, why: "Correct! Plasmids are dispensable for basic life but provide adaptive benefits like antibiotic resistance." },
+                    { text: "Yes, without plasmids ribosomes cannot assemble.", correct: false, why: "Incorrect. Ribosomal RNA genes are chromosomal." },
+                    { text: "No, plasmids are only found in viruses.", correct: false, why: "Incorrect. Plasmids are extrachromosomal bacterial DNA." }
+                ],
+                explanation: "Plasmids are extrachromosomal DNA elements that carry non-essential, advantageous genes (such as R-factors for drug resistance)."
+            },
+            {
+                question: "What unique expression capability do prokaryotes possess because they lack introns and exons and a nuclear membrane?",
+                options: [
+                    { text: "Mitotic chromosome segregation", correct: false, why: "Incorrect. Bacteria divide via binary fission." },
+                    { text: "Simultaneous transcription and translation in the cytoplasm", correct: true, why: "Correct! Without a nuclear envelope or splicing, ribosomes can translate mRNA while it is being transcribed." },
+                    { text: "Alternative splicing of transcripts", correct: false, why: "Incorrect. Splicing requires eukaryotic machinery." },
+                    { text: "Meiotic recombination", correct: false, why: "Incorrect. Bacteria reproduce asexually." }
+                ],
+                explanation: "Because prokaryotes lack a nuclear membrane and introns, transcription and translation occur concurrently in the cytoplasm."
+            },
+            {
+                question: "What term describes the sum of all genetic determinants in an organism?",
+                options: [
+                    { text: "Phenotype", correct: false, why: "Incorrect. Phenotype is observable physical properties." },
+                    { text: "Genotype", correct: true, why: "Correct! Genotype is the complete genetic constitution." },
+                    { text: "Wild type", correct: false, why: "Incorrect. Wild type is the natural strain." },
+                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a nutritional mutant." }
+                ],
+                explanation: "Genotype represents the total genetic makeup, whereas phenotype refers to observable traits."
+            },
+            {
+                question: "Which genetic term refers to the observable physical or biochemical properties of an organism?",
+                options: [
+                    { text: "Genotype", correct: false, why: "Incorrect. Genotype is the underlying DNA sequence." },
+                    { text: "Phenotype", correct: true, why: "Correct! Phenotype is the observable expression of the genotype." },
+                    { text: "Revertant", correct: false, why: "Incorrect. Revertant is a back-mutant." },
+                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a growth-factor mutant." }
+                ],
+                explanation: "Phenotype is the collection of observable traits resulting from genotype-environment interactions."
+            },
+            {
+                question: "What is an auxotroph (nutritional mutant)?",
+                options: [
+                    { text: "A mutant strain unable to grow on minimal media without a specific added growth factor", correct: true, why: "Correct! Auxotrophs have lost biosynthetic capabilities and require pre-formed growth factors." },
+                    { text: "A strain that synthesizes all nutrients independently", correct: false, why: "Incorrect. That describes a prototroph." },
+                    { text: "A bacterium that survives only at extreme high temperatures", correct: false, why: "Incorrect. That is a thermophile." },
+                    { text: "A virus-resistant mutant", correct: false, why: "Incorrect. That is phage-resistant." }
+                ],
+                explanation: "An auxotroph is a mutant microorganism requiring an extra organic growth factor that the wild type can synthesize."
+            },
+            {
+                question: "What is a 'revertant' (back-mutant)?",
+                options: [
+                    { text: "A mutant organism that undergoes a second mutation restoring its original wild-type phenotype", correct: true, why: "Correct! A revertant mutates back to its original wild-type form." },
+                    { text: "A bacterium that loses its plasmid during binary fission", correct: false, why: "Incorrect. That is plasmid curing." },
+                    { text: "A cell reverting from aerobic to anaerobic respiration", correct: false, why: "Incorrect. That is metabolic switching." },
+                    { text: "An endospore reverting to vegetative growth", correct: false, why: "Incorrect. That is germination." }
+                ],
+                explanation: "A revertant (back-mutant) undergoes subsequent mutations that restore its original ancestral phenotype."
+            },
+            {
+                question: "How do the majority of genetic variations arise in bacterial populations?",
+                options: [
+                    { text: "Frequent errors made by DNA polymerase III during replication", correct: false, why: "Incorrect. Replication proofreading is extremely accurate." },
+                    { text: "Genetic recombination pathways and mutagen exposure, rather than replication errors", correct: true, why: "Correct! Replication is stable; variation primarily arises via horizontal gene transfer, recombination, or mutagens." },
+                    { text: "Meiotic crossing over", correct: false, why: "Incorrect. Bacteria do not undergo meiosis." },
+                    { text: "Spontaneous cell wall shedding", correct: false, why: "Incorrect. Cell wall shedding does not alter genes." }
+                ],
+                explanation: "Bacterial replication is highly stable with low error rates. Most genetic diversity arises through horizontal gene transfer, recombination, and environmental mutagens."
+            },
+            {
+                question: "Do bacteria possess enzymatic DNA repair mechanisms to correct mutations?",
+                options: [
+                    { text: "Yes, bacteria maintain active DNA repair systems (e.g., excision repair, photoreactivation)", correct: true, why: "Correct! Bacteria possess robust enzymatic systems to repair DNA damage and replication errors." },
+                    { text: "No, bacteria lack all DNA repair pathways, resulting in immediate cell death upon damage.", correct: false, why: "Incorrect. Bacteria have efficient repair mechanisms." },
+                    { text: "Only plasmids can be repaired; chromosomes cannot.", correct: false, why: "Incorrect. Chromosomes are actively repaired." },
+                    { text: "Repair only occurs during sporulation.", correct: false, why: "Incorrect. Vegetative cells constantly repair DNA." }
+                ],
+                explanation: "Bacteria possess various DNA repair enzymes to correct thymine dimers, mismatches, and strand breaks."
+            },
+
+            // --- MUTATIONS & OPERONS ---
+            {
+                question: "A base substitution swapping a purine for another purine (A <-> G) or a pyrimidine for a pyrimidine (C <-> T) is called a:",
+                options: [
+                    { text: "Transition", correct: true, why: "Correct! Transitions exchange a like-for-like base class." },
+                    { text: "Transversion", correct: false, why: "Incorrect. Transversions swap purines for pyrimidines or vice versa." },
+                    { text: "Frameshift", correct: false, why: "Incorrect. Frameshift involves insertions/deletions." },
+                    { text: "Nonsense", correct: false, why: "Incorrect. Nonsense introduces a stop codon." }
+                ],
+                explanation: "A transition mutation substitutes a purine for a purine or a pyrimidine for a pyrimidine."
+            },
+            {
+                question: "A base substitution that exchanges a purine for a pyrimidine (or vice versa) is classified as a:",
+                options: [
+                    { text: "Transition", correct: false, why: "Incorrect. Transitions are like-for-like base substitutions." },
+                    { text: "Transversion", correct: true, why: "Correct! Transversions exchange purines for pyrimidines or vice versa." },
+                    { text: "Silent mutation", correct: false, why: "Incorrect. Silent mutations do not change amino acids." },
+                    { text: "Regulatory mutation", correct: false, why: "Incorrect. Regulatory mutations occur in non-coding regions." }
+                ],
+                explanation: "A transversion replaces a purine with a pyrimidine or a pyrimidine with a purine."
+            },
+            {
+                question: "Which type of point mutation results in a single amino acid replacement in the resulting protein?",
+                options: [
+                    { text: "Nonsense mutation", correct: false, why: "Incorrect. Nonsense creates a premature stop codon." },
+                    { text: "Missense mutation", correct: true, why: "Correct! A missense mutation alters a codon to code for a different amino acid." },
+                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Frameshifts alter all downstream amino acids." },
+                    { text: "Silent mutation", correct: false, why: "Incorrect. Silent mutations code for the exact same amino acid." }
+                ],
+                explanation: "A missense mutation changes a codon such that an incorrect amino acid is inserted into the polypeptide."
+            },
+            {
+                question: "A mutation that changes a normal amino acid codon into a premature stop codon is known as a:",
+                options: [
+                    { text: "Missense mutation", correct: false, why: "Incorrect. Missense substitutes an amino acid." },
+                    { text: "Nonsense mutation", correct: true, why: "Correct! A nonsense mutation introduces a premature stop codon, truncating protein translation." },
+                    { text: "Regulatory mutation", correct: false, why: "Incorrect. Regulatory mutations occur in non-coding control sites." },
+                    { text: "Transition", correct: false, why: "Incorrect. Transition is the structural chemical substitution type." }
+                ],
+                explanation: "A nonsense mutation converts a sense codon into a termination codon, leading to premature truncation."
+            },
+            {
+                question: "What type of mutation is caused by inserting or deleting nucleotides not in multiples of 3, shifting the translational reading frame?",
+                options: [
+                    { text: "Frameshift mutation", correct: true, why: "Correct! Inserions/deletions shift the triplet reading frame, scrambling all downstream codons." },
+                    { text: "Transition mutation", correct: false, why: "Incorrect. Transitions are point substitutions." },
+                    { text: "Silent mutation", correct: false, why: "Incorrect. Silent mutations preserve reading frames." },
+                    { text: "Transversion mutation", correct: false, why: "Incorrect. Transversions are point substitutions." }
+                ],
+                explanation: "Frameshift mutations shift the reading frame of mRNA translation due to indels not divisible by 3."
+            },
+            {
+                question: "A mutation in a non-coding region (like a promoter or operator) that alters gene expression rate without changing the protein's amino acid sequence is a:",
+                options: [
+                    { text: "Nonsense mutation", correct: false, why: "Incorrect. Nonsense occurs in coding exons." },
+                    { text: "Regulatory mutation", correct: true, why: "Correct! Regulatory mutations occur in control regions and affect transcription rates." },
+                    { text: "Missense mutation", correct: false, why: "Incorrect. Missense changes amino acid sequences." },
+                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Frameshift occurs within coding sequences." }
+                ],
+                explanation: "Regulatory mutations affect non-coding control elements, altering expression levels without modifying polypeptide structure."
+            },
+            {
+                question: "Under what conditions does the bacterial lac operon exhibit STRONG transcription?",
+                options: [
+                    { text: "Lactose is present AND glucose is present.", correct: false, why: "Incorrect. Glucose causes catabolite repression, keeping transcription low." },
+                    { text: "Lactose is present AND glucose is NOT present.", correct: true, why: "Correct! Lactose inactivates the repressor, and absence of glucose maximizes cAMP/CAP activation." },
+                    { text: "Lactose is absent AND glucose is present.", correct: false, why: "Incorrect. The repressor binds the operator, blocking transcription." },
+                    { text: "Both lactose and glucose are absent.", correct: false, why: "Incorrect. Without lactose, the repressor blocks the operator." }
+                ],
+                explanation: "Strong lac operon transcription requires lactose (to remove the repressor) and the absence of glucose (to elevate cAMP and activate CAP)."
+            },
+            {
+                question: "What happens at the lac operon when lactose is present but glucose is ALSO present?",
+                options: [
+                    { text: "Strong transcription occurs immediately.", correct: false, why: "Incorrect. Glucose suppresses high transcription via catabolite repression." },
+                    { text: "No/low-level transcription occurs because glucose is preferred and cAMP remains low.", correct: true, why: "Correct! Catabolite repression keeps cAMP low, preventing CAP activation, resulting in basal transcription." },
+                    { text: "The operon is completely destroyed by nucleases.", correct: false, why: "Incorrect. Operons are regulated, not degraded." },
+                    { text: "The repressor permanently binds the promoter.", correct: false, why: "Incorrect. Lactose removes the repressor." }
+                ],
+                explanation: "Because glucose is preferred ('Glucose is king'), high glucose keeps cAMP low, preventing CAP binding and restricting transcription to low/basal levels."
+            },
+            {
+                question: "How does a repressible operon (like the tryptophan operon) function under normal conditions?",
+                options: [
+                    { text: "It is normally OFF and must be induced by an external sugar.", correct: false, why: "Incorrect. That describes an inducible operon." },
+                    { text: "It is normally ON and active, but is turned OFF when excess metabolic end-product accumulates.", correct: true, why: "Correct! Repressible operons synthesize anabolic enzymes until excess end-product binds and represses transcription." },
+                    { text: "It is permanently inactive in all bacteria.", correct: false, why: "Incorrect. Repressible operons operate in normal bacterial metabolism." },
+                    { text: "It requires viral infection to function.", correct: false, why: "Incorrect. Operons are native bacterial genes." }
+                ],
+                explanation: "Repressible operons are normally ON (transcribing anabolic enzymes) and are turned OFF only when excess end-product accumulates."
+            },
+
+            // --- HORIZONTAL GENE TRANSFER & RECOMBINATION ---
+            {
+                question: "Which mechanism of horizontal gene transfer involves the uptake of naked, soluble environmental DNA from lysed cells?",
+                options: [
+                    { text: "Transduction", correct: false, why: "Incorrect. Transduction requires a bacteriophage vector." },
+                    { text: "Transformation", correct: true, why: "Correct! Transformation is the direct uptake of naked environmental DNA by competent cells." },
+                    { text: "Conjugation", correct: false, why: "Incorrect. Conjugation requires cell-to-cell contact via a sex pilus." },
+                    { text: "Transposition", correct: false, why: "Incorrect. Transposition is intracellular recombination." }
+                ],
+                explanation: "Transformation is the uptake of naked extracellular DNA fragments by competent bacteria."
+            },
+            {
+                question: "Which method of horizontal gene transfer is mediated by a bacteriophage transferring bacterial DNA between cells?",
+                options: [
+                    { text: "Transformation", correct: false, why: "Incorrect. Transformation uses naked DNA." },
+                    { text: "Transduction", correct: true, why: "Correct! Transduction relies on bacteriophage vectors to transfer host DNA." },
+                    { text: "Conjugation", correct: false, why: "Incorrect. Conjugation uses a sex pilus." },
+                    { text: "Transposition", correct: false, why: "Incorrect. Transposons do not use viral vectors." }
+                ],
+                explanation: "Transduction is the viral-mediated transfer of bacterial DNA via bacteriophage vectors."
+            },
+            {
+                question: "Which form of horizontal gene transfer requires direct physical contact via a sex pilus and is primarily performed by Gram-negative bacteria?",
+                options: [
+                    { text: "Transformation", correct: false, why: "Incorrect. Transformation does not use pili." },
+                    { text: "Conjugation", correct: true, why: "Correct! Conjugation involves physical bridge formation via a sex pilus for plasmid transfer." },
+                    { text: "Transduction", correct: false, why: "Incorrect. Transduction uses bacteriophages." },
+                    { text: "Transposition", correct: false, why: "Incorrect. Transposition occurs within a single cell." }
+                ],
+                explanation: "Conjugation is bacterial mating where donor cells use a sex pilus to transfer plasmid DNA to a recipient."
+            },
+            {
+                question: "Which genetic element facilitates intracellular recombination ('jumping genes'), but is NOT an intercellular transfer mechanism on its own?",
+                options: [
+                    { text: "Transduction", correct: false, why: "Incorrect. Transduction transfers DNA between cells via phages." },
+                    { text: "Transformation", correct: false, why: "Incorrect. Transformation transfers DNA between cells." },
+                    { text: "Transposons", correct: true, why: "Correct! Transposons move DNA within a genome or plasmid, but require vectors like plasmids or phages to move between cells." },
+                    { text: "Conjugation", correct: false, why: "Incorrect. Conjugation is an intercellular transfer mechanism." }
+                ],
+                explanation: "Transposons are mobile genetic elements facilitating intracellular recombination, but require conjugative vectors to move between cells."
+            },
+            {
+                question: "When a transposon relocates, how does it integrate into target DNA?",
+                options: [
+                    { text: "It dissolves the cell membrane and exports the chromosome.", correct: false, why: "Incorrect. Transposons act strictly on nucleic acids." },
+                    { text: "Transposase enzymes cleave target DNA and integrate the mobile sequence ('scooch in').", correct: true, why: "Correct! Transposase enzymes cut target sites and insert mobile transposon sequences." },
+                    { text: "It packages into a viral capsid and buds out.", correct: false, why: "Incorrect. Transposons are not viruses." },
+                    { text: "It forces the bacterium into meiosis.", correct: false, why: "Incorrect. Bacteria are asexual." }
+                ],
+                explanation: "Transposons use transposase enzymes to cut target DNA and insert their sequence into new genomic loci."
+            },
+            {
+                question: "Which genetic phenomenon coordinates metabolic enzyme synthesis through induction and repression?",
+                options: [
+                    { text: "Operon-based genetic regulation", correct: true, why: "Correct! Operon systems coordinate inducible and repressible gene transcription." },
+                    { text: "Allosteric feedback inhibition", correct: false, why: "Incorrect. Feedback inhibition is protein-level inhibition." },
+                    { text: "Constitutive expression", correct: false, why: "Incorrect. Constitutive genes are not regulated by induction/repression." },
+                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Frameshift is DNA damage." }
+                ],
+                explanation: "Operon systems provide transcriptional regulation through induction or repression in response to cellular metabolic needs."
+            }
+        ];
+
+        let quizData = [];
+
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            quizData = JSON.parse(JSON.stringify(rawQuizData));
+            shuffle(quizData);
+            quizData.forEach(q => {
+                q.options.forEach((opt, idx) => opt.originalIndex = idx);
+                shuffle(q.options);
+            });
+
+            renderQuiz();
+            updateScore();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            quizData.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.dataset.questionIndex = qIndex;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHTML += `<button class="option-btn" onclick="selectAnswer(${qIndex}, ${oIndex}, ${opt.originalIndex})">${String.fromCharCode(65 + oIndex)}) ${opt.text}</button>`;
+                });
+
+                card.innerHTML = `
+                    <div class="question-title">Q${qIndex + 1}. ${q.question}</div>
+                    <div class="options-list" id="options-${qIndex}">
+                        ${optionsHTML}
+                    </div>
+                    <div class="feedback-box" id="feedback-${qIndex}">
+                        <div class="status-banner" id="status-${qIndex}"></div>
+                        <div class="explanation-text" id="expl-${qIndex}"></div>
+                        <ul class="rationales-list" id="rat-${qIndex}"></ul>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAnswer(qIndex, chosenOptionIndex, originalOptionIndex) {
+            const q = quizData[qIndex];
+            if (q.answered) return;
+            q.answered = true;
+            q.userChoice = originalOptionIndex;
+
+            const optionsContainer = document.getElementById(`options-${qIndex}`);
+            const buttons = optionsContainer.getElementsByClassName('option-btn');
+            
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+
+            const isCorrect = q.options[chosenOptionIndex].correct;
+
+            q.options.forEach((opt, idx) => {
+                if (opt.correct) {
+                    buttons[idx].classList.add('correct');
+                } else if (idx === chosenOptionIndex && !isCorrect) {
+                    buttons[idx].classList.add('incorrect');
+                }
+            });
+
+            const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+            const statusBanner = document.getElementById(`status-${qIndex}`);
+            const explText = document.getElementById(`expl-${qIndex}`);
+            const ratList = document.getElementById(`rat-${qIndex}`);
+
+            feedbackBox.classList.add('show');
+            if (isCorrect) {
+                statusBanner.textContent = "Correct!";
+                statusBanner.className = "status-banner correct";
+            } else {
+                statusBanner.textContent = "Incorrect.";
+                statusBanner.className = "status-banner incorrect";
+            }
+
+            explText.textContent = q.explanation;
+
+            let ratHTML = '';
+            q.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                ratHTML += `<li><strong>${letter}) ${opt.text}</strong>: ${opt.why}</li>`;
+            });
+            ratList.innerHTML = ratHTML;
+
+            updateScore();
+        }
+
+        function updateScore() {
+            let answeredCount = 0;
+            let correctCount = 0;
+
+            quizData.forEach(q => {
+                if (q.answered) {
+                    answeredCount++;
+                    const chosen = q.options.find(opt => opt.originalIndex === q.userChoice);
+                    if (chosen && chosen.correct) {
+                        correctCount++;
+                    }
+                }
+            });
+
+            const total = quizData.length;
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
