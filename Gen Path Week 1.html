@@ -1002,6 +1002,18 @@
         let currentScore = 0;
         let answeredCount = 0;
 
+
+        // Score-tier completion messages (school fail line = below 60%)
+        function getScoreTier(pct) {
+            if (pct === 100) return { title: "PERFECT SCORE", msg: "Absolute Gigachad. You drained that test dry.", color: "#22c55e" };
+            if (pct >= 90)   return { title: "ELITE", msg: "One rep shy of perfect. Run it back and finish the set.", color: "#22c55e" };
+            if (pct >= 80)   return { title: "SOLID HIT", msg: "Big brain energy. Clean up the red ones and you're in Gigachad territory.", color: "#86efac" };
+            if (pct >= 70)   return { title: "SURVIVED", msg: "You won the fight, but you took some hits. Review the misses before the rematch.", color: "#ff9900" };
+            if (pct >= 60)   return { title: "PASSED... BARELY", msg: "Lucky, not legendary. One bad day away from a fail. Back to the notes.", color: "#facc15" };
+            if (pct >= 50)   return { title: "FAILED", msg: "Below 60 is a fail. So close you could taste it. Run it back.", color: "#ef4444" };
+            return { title: "K.O.", msg: "You lasted less than 30 seconds. Time for a rematch.", color: "#ef4444" };
+        }
+
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -1012,6 +1024,18 @@
 
         function renderQuiz() {
             activeQuizData = shuffleArray(JSON.parse(JSON.stringify(originalQuizData)));
+            // Two-way shuffle: also scramble option order, keeping each rationale attached to its option
+            activeQuizData.forEach(item => {
+                const pairs = item.options.map((t, k) => ({
+                    text: t,
+                    isCorrect: k === item.correct,
+                    why: item.rationales[k].replace(/^[A-D]\)\s*.*?:\s*(?=(Correct|Incorrect))/, '')
+                }));
+                shuffleArray(pairs);
+                item.options = pairs.map(p => p.text);
+                item.correct = pairs.findIndex(p => p.isCorrect);
+                item.rationales = pairs.map((p, k) => `<strong>${String.fromCharCode(65 + k)}) ${p.text}:</strong> ${p.why}`);
+            });
 
             const container = document.getElementById('quiz-container');
             container.innerHTML = '';
@@ -1108,13 +1132,11 @@
 
             finalScore.innerText = `${pct}%`;
 
-            if (pct >= 90) {
-                feedback.innerText = "Mastery demonstrated! Outstanding recall of cellular adaptation, pathology, and immunology concepts.";
-            } else if (pct >= 75) {
-                feedback.innerText = "Solid job! Review the questions you missed to reinforce high-yield board points.";
-            } else {
-                feedback.innerText = "Good effort! Consider reviewing lecture notes and retrying the comprehensive assessment.";
-            }
+            const tier = getScoreTier(pct);
+            document.querySelector('#summary-card .summary-title').innerText = tier.title;
+            document.querySelector('#summary-card .summary-title').style.color = tier.color;
+            feedback.innerText = tier.msg;
+            feedback.style.color = '#ffffff';
 
             summaryCard.style.display = 'block';
             summaryCard.scrollIntoView({ behavior: 'smooth' });
