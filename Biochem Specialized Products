@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Specialized Products & Intermediary Metabolism Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #282828;
+            --accent: #ff9900;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+        }
+
+        /* Sticky Fixed Top Bar */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .score-display {
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-card h1 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-stem {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Option Buttons */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.35;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .explanation-banner {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .explanation-banner.correct-banner {
+            color: var(--correct-border);
+        }
+
+        .explanation-banner.incorrect-banner {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-ref {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Scorecard */
+        .scorecard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .scorecard h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <h1 class="header-title">Specialized Products & Intermediary Metabolism</h1>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <main class="container">
+        <!-- Intro Card -->
+        <div class="intro-card">
+            <h1>NBCE Part 1 Board Practice</h1>
+            <p>Strictly source-bound board review covering catabolic/anabolic staging, second messengers, transamination, the urea cycle, specialized amino acid derivatives, and metabolic integration.</p>
+        </div>
+
+        <!-- Dynamic Quiz Container -->
+        <div id="quizContainer"></div>
+
+        <!-- Final Scorecard -->
+        <div class="scorecard" id="scorecard">
+            <h2>Quiz Complete!</h2>
+            <p id="finalScoreText" style="font-size: 1.2rem; font-weight: 600; margin: 15px 0;"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+        </div>
+    </main>
+
+    <script>
+        // Proportional 4-quarter slide deck distribution with basic, high-yield foundational concepts
+        const quizData = [
+            // QUARTER 1: Catabolism vs. Anabolism, Stages of Catabolism, Second Messengers, and HMP Outputs
+            {
+                id: 1,
+                quarter: 1,
+                slideRef: 2,
+                stem: "What general feature distinguishes catabolic pathways from anabolic pathways in intermediary metabolism?",
+                options: [
+                    { text: "Catabolic pathways degrade complex molecules into simple end products and capture chemical energy as ATP.", correct: true, why: "Catabolism breaks down complex fuels into simple waste molecules (CO2, H2O, NH3) while harvesting energy as ATP. [Slide #2]" },
+                    { text: "Catabolic pathways synthesize complex cellular polymers and consume stoichiometric amounts of ATP.", correct: false, why: "Polymer synthesis that requires net ATP consumption defines anabolism rather than catabolism. [Slide #2]" },
+                    { text: "Catabolic pathways occur exclusively in the nucleus and do not produce high-energy phosphates.", correct: false, why: "Catabolism takes place primarily within the cytoplasm and mitochondria to generate ATP. [Slide #2]" },
+                    { text: "Catabolic pathways operate only during prolonged fasting and shut down completely in fed states.", correct: false, why: "Basal catabolism operates continuously in all nutritional states to supply cellular ATP needs. [Slide #2]" }
+                ]
+            },
+            {
+                id: 2,
+                quarter: 1,
+                slideRef: 4,
+                stem: "In the primary stage of catabolism, complex dietary lipids are hydrolyzed into free fatty acids and _______.",
+                options: [
+                    { text: "glycerol", correct: true, why: "Triacylglycerol hydrolysis cleaves ester linkages to release free fatty acids and a three-carbon glycerol backbone. [Slide #4]" },
+                    { text: "acetyl coenzyme A", correct: false, why: "Acetyl-CoA is formed during stage 2 degradation of building blocks, not initial stage 1 polymer hydrolysis. [Slide #4]" },
+                    { text: "ribulose 5-phosphate", correct: false, why: "Ribulose 5-phosphate is a pentose intermediate generated by the hexose monophosphate shunt. [Slide #4]" },
+                    { text: "urea", correct: false, why: "Urea is the end product of hepatic nitrogen disposal, not a cleavage product of triacylglycerols. [Slide #4]" }
+                ]
+            },
+            {
+                id: 3,
+                quarter: 1,
+                slideRef: 6,
+                stem: "The membrane-bound enzyme _______ synthesizes cyclic AMP (cAMP) as a second messenger in response to extracellular hormonal signals.",
+                options: [
+                    { text: "adenylyl cyclase", correct: true, why: "Adenylyl cyclase is the membrane-bound effector enzyme that converts ATP to the second messenger cAMP upon hormone binding. [Slide #6]" },
+                    { text: "peptidyl transferase", correct: false, why: "Peptidyl transferase is a ribosomal ribozyme that catalyzes peptide bond condensation during translation. [Slide #6]" },
+                    { text: "glutamate dehydrogenase", correct: false, why: "Glutamate dehydrogenase catalyzes the oxidative deamination of glutamate to release ammonia in mitochondria. [Slide #6]" },
+                    { text: "creatine kinase", correct: false, why: "Creatine kinase transfers phosphate between creatine and ATP in muscular energy buffering. [Slide #6]" }
+                ]
+            },
+            {
+                id: 4,
+                quarter: 1,
+                slideRef: 8,
+                stem: "What essential intermediate is generated by the hexose monophosphate shunt for DNA and RNA nucleotide biosynthesis?",
+                options: [
+                    { text: "Ribose 5-phosphate", correct: true, why: "The hexose monophosphate (HMP) shunt branches from glucose 6-phosphate to provide ribose 5-phosphate for nucleotide synthesis. [Slide #8]" },
+                    { text: "Oxaloacetate", correct: false, why: "Oxaloacetate is an intermediate of the citric acid cycle and gluconeogenesis, not the primary sugar output of the HMP shunt. [Slide #8]" },
+                    { text: "Carbamoyl phosphate", correct: false, why: "Carbamoyl phosphate is synthesized in mitochondria to initiate the urea cycle. [Slide #8]" },
+                    { text: "Alpha-ketoglutarate", correct: false, why: "Alpha-ketoglutarate is a Krebs cycle intermediate and amino group acceptor in transamination reactions. [Slide #8]" }
+                ]
+            },
+
+            // QUARTER 2: Nitrogen Metabolism, Amino Acid Pool, Aminotransferases, and Glutamate Dehydrogenase
+            {
+                id: 5,
+                quarter: 2,
+                slideRef: 10,
+                stem: "Proteins targeted for degradation within cytosolic proteasomes are marked by covalent attachment of the small protein _______.",
+                options: [
+                    { text: "ubiquitin", correct: true, why: "Targeting of cellular proteins for destruction in the 26S proteasome requires tagging with polyubiquitin chains. [Slide #10]" },
+                    { text: "albumin", correct: false, why: "Albumin is a major circulating blood plasma protein, not an intracellular degradation tag. [Slide #10]" },
+                    { text: "collagen", correct: false, why: "Collagen is an extracellular structural triple-helix fiber found in connective tissues. [Slide #10]" },
+                    { text: "ferritin", correct: false, why: "Ferritin is the primary intracellular storage protein for iron atoms. [Slide #10]" }
+                ]
+            },
+            {
+                id: 6,
+                quarter: 2,
+                slideRef: 12,
+                stem: "During amino acid transamination, the transfer of an alpha-amino group to alpha-ketoglutarate directly produces _______.",
+                options: [
+                    { text: "glutamate", correct: true, why: "Aminotransferases transfer alpha-amino groups from amino acids to alpha-ketoglutarate, collecting nitrogen as glutamate. [Slide #12]" },
+                    { text: "arginine", correct: false, why: "Arginine is an intermediate and urea precursor in the urea cycle, not the direct product of general transamination. [Slide #12]" },
+                    { text: "citrulline", correct: false, why: "Citrulline is synthesized from ornithine and carbamoyl phosphate inside mitochondria. [Slide #12]" },
+                    { text: "tryptophan", correct: false, why: "Tryptophan is an essential aromatic amino acid that cannot be synthesized by transamination of alpha-ketoglutarate. [Slide #12]" }
+                ]
+            },
+            {
+                id: 7,
+                quarter: 2,
+                slideRef: 14,
+                stem: "Significantly elevated serum concentrations of alanine aminotransferase (ALT) and aspartate aminotransferase (AST) indicate damage to which organ?",
+                options: [
+                    { text: "Liver", correct: true, why: "Aminotransferases are concentrated intracellularly in hepatocytes; elevated serum levels serve as sensitive biomarkers of liver injury. [Slide #14]" },
+                    { text: "Spleen", correct: false, why: "Splenic pathology does not cause the characteristic marked rise in circulating serum ALT and AST. [Slide #14]" },
+                    { text: "Adrenal cortex", correct: false, why: "Adrenal dysfunction alters steroid hormone production rather than elevating clinical transaminase panels. [Slide #14]" },
+                    { text: "Thyroid gland", correct: false, why: "Thyroid diseases are evaluated via TSH and thyroxine levels, not transaminase leakage. [Slide #14]" }
+                ]
+            },
+            {
+                id: 8,
+                quarter: 2,
+                slideRef: 16,
+                stem: "Mitochondrial glutamate dehydrogenase oxidatively deaminates glutamate to release free ammonia and regenerate _______.",
+                options: [
+                    { text: "alpha-ketoglutarate", correct: true, why: "Glutamate dehydrogenase removes the amino group of glutamate as free ammonia, regenerating alpha-ketoglutarate for further transamination or the TCA cycle. [Slide #16]" },
+                    { text: "succinate", correct: false, why: "Succinate is an intermediate located downstream in the citric acid cycle. [Slide #16]" },
+                    { text: "acetyl-CoA", correct: false, why: "Acetyl-CoA is a two-carbon thioester derived from pyruvate, fatty acids, or ketogenic amino acids. [Slide #16]" },
+                    { text: "lactate", correct: false, why: "Lactate is produced by anaerobic reduction of pyruvate via lactate dehydrogenase. [Slide #16]" }
+                ]
+            },
+
+            // QUARTER 3: Urea Cycle, Ammonia Transport, and Inherited Defects
+            {
+                id: 9,
+                quarter: 3,
+                slideRef: 18,
+                stem: "In peripheral tissues, toxic free ammonia is converted into the non-toxic circulating amino acid _______ for safe transport to the liver.",
+                options: [
+                    { text: "glutamine", correct: true, why: "Glutamine synthetase fixes ammonia onto glutamate to form neutral glutamine, which travels through the blood to deliver ammonia safely to the liver. [Slide #18]" },
+                    { text: "glycine", correct: false, why: "Glycine is the simplest amino acid and is not the primary carrier of excess peripheral nitrogen. [Slide #18]" },
+                    { text: "cysteine", correct: false, why: "Cysteine carries a sulfhydryl group and is not utilized for mass inter-organ ammonia transport. [Slide #18]" },
+                    { text: "leucine", correct: false, why: "Leucine is a purely ketogenic branched-chain amino acid that cannot serve as an ammonia carrier. [Slide #18]" }
+                ]
+            },
+            {
+                id: 10,
+                quarter: 3,
+                slideRef: 20,
+                stem: "What two chemical precursors directly provide the two individual nitrogen atoms incorporated into each molecule of urea?",
+                options: [
+                    { text: "Free ammonia (NH3) and aspartate", correct: true, why: "One nitrogen of urea enters as free ammonia via carbamoyl phosphate, and the second is donated directly by the amino group of aspartate. [Slide #20]" },
+                    { text: "Uric acid and creatinine", correct: false, why: "Uric acid and creatinine are separate excreted nitrogenous wastes and do not donate nitrogen to urea synthesis. [Slide #20]" },
+                    { text: "Alanine and beta-hydroxybutyrate", correct: false, why: "Alanine delivers nitrogen via transamination, but beta-hydroxybutyrate is a nitrogen-free ketone body. [Slide #20]" },
+                    { text: "Glutamate and methionine", correct: false, why: "Glutamate releases ammonia, but methionine is a sulfur-containing residue that does not directly feed urea nitrogens. [Slide #20]" }
+                ]
+            },
+            {
+                id: 11,
+                quarter: 3,
+                slideRef: 22,
+                stem: "Inherited enzymic deficiencies occurring at any step within the urea cycle lead to clinical _______.",
+                options: [
+                    { text: "hyperammonemia", correct: true, why: "Blockages in the urea cycle prevent nitrogen clearance, causing toxic levels of free ammonia to accumulate in blood and tissues. [Slide #22]" },
+                    { text: "hypocholesterolemia", correct: false, why: "Urea cycle defects impair nitrogen disposal without causing primary drops in systemic cholesterol. [Slide #22]" },
+                    { text: "hyperglycemia", correct: false, why: "Hyperglycemia results from defects in insulin secretion or sensitivity, not from primary urea cycle failure. [Slide #22]" },
+                    { text: "hyperbilirubinemia", correct: false, why: "Elevated bilirubin results from heme catabolism disorders or biliary obstruction rather than urea cycle arrest. [Slide #22]" }
+                ]
+            },
+            {
+                id: 12,
+                quarter: 3,
+                slideRef: 24,
+                stem: "Cleavage of argininosuccinate in the urea cycle produces arginine and releases _______, which directly links into the TCA cycle.",
+                options: [
+                    { text: "fumarate", correct: true, why: "Argininosuccinate lyase cleaves argininosuccinate to yield arginine and fumarate; fumarate enters the TCA cycle for hydration to malate. [Slide #24]" },
+                    { text: "succinyl-CoA", correct: false, why: "Succinyl-CoA is a high-energy TCA cycle intermediate, not a cleavage product of argininosuccinate. [Slide #24]" },
+                    { text: "pyruvate", correct: false, why: "Pyruvate is the end product of aerobic glycolysis, not an intermediate of the urea cycle. [Slide #24]" },
+                    { text: "citrate", correct: false, why: "Citrate is formed by condensing acetyl-CoA with oxaloacetate in the first step of the Krebs cycle. [Slide #24]" }
+                ]
+            },
+
+            // QUARTER 4: Specialized Amino Acid Products, Cholesterol Synthesis, and Ketone Integration
+            {
+                id: 13,
+                quarter: 4,
+                slideRef: 26,
+                stem: "The catecholamine neurotransmitters dopamine, norepinephrine, and epinephrine are synthesized sequentially from which amino acid?",
+                options: [
+                    { text: "Tyrosine", correct: true, why: "Tyrosine is hydroxylated to L-Dopa, then decarboxylated to dopamine, and further oxidized to norepinephrine and epinephrine. [Slide #26]" },
+                    { text: "Tryptophan", correct: false, why: "Tryptophan is the precursor for serotonin and melatonin, not catecholamines. [Slide #26]" },
+                    { text: "Histidine", correct: false, why: "Histidine is decarboxylated to produce the inflammatory mediator histamine. [Slide #26]" },
+                    { text: "Glycine", correct: false, why: "Glycine contributes to porphyrin and creatine synthesis, not the catecholamine sequence. [Slide #26]" }
+                ]
+            },
+            {
+                id: 14,
+                quarter: 4,
+                slideRef: 28,
+                stem: "The neurotransmitter serotonin and the vitamin precursor nicotinamide are synthesized endogenously from the essential amino acid _______.",
+                options: [
+                    { text: "tryptophan", correct: true, why: "Tryptophan serves as the specific dietary precursor for the production of both serotonin and nicotinamide (niacin/NAD). [Slide #28]" },
+                    { text: "phenylalanine", correct: false, why: "Phenylalanine is converted to tyrosine and contributes to catecholamines and thyroid hormones. [Slide #28]" },
+                    { text: "methionine", correct: false, why: "Methionine is converted to S-adenosylmethionine (SAMe) for methyl group transfer reactions. [Slide #28]" },
+                    { text: "threonine", correct: false, why: "Threonine is a polar essential amino acid that does not enter serotonin or nicotinamide pathways. [Slide #28]" }
+                ]
+            },
+            {
+                id: 15,
+                quarter: 4,
+                slideRef: 30,
+                stem: "De novo synthesis of cholesterol takes place in the cytosol and utilizes acetate as its carbon source alongside reducing equivalents from _______.",
+                options: [
+                    { text: "NADPH", correct: true, why: "Cytosolic cholesterol biosynthesis condenses two-carbon acetate units and requires NADPH as the electron donor. [Slide #30]" },
+                    { text: "FAD+", correct: false, why: "FAD+ is an oxidized electron acceptor used in mitochondrial catabolic dehydrogenations, not reductive biosynthesis. [Slide #30]" },
+                    { text: "NADP+", correct: false, why: "NADP+ is the oxidized form; reductive anabolism requires the electron-rich reduced coenzyme NADPH. [Slide #30]" },
+                    { text: "cytochrome c", correct: false, why: "Cytochrome c is a mobile electron carrier in the mitochondrial inner membrane respiratory chain. [Slide #30]" }
+                ]
+            },
+            {
+                id: 16,
+                quarter: 4,
+                slideRef: 32,
+                stem: "During extended starvation, which specialized circulating lipid derivatives cross the blood-brain barrier to fuel cerebral metabolism?",
+                options: [
+                    { text: "Ketone bodies", correct: true, why: "During prolonged fasting, hepatic ketogenesis produces acetoacetate and beta-hydroxybutyrate, which cross the blood-brain barrier to fuel neurons. [Slide #32]" },
+                    { text: "Chylomicrons", correct: false, why: "Chylomicrons transport dietary lipids from the gut and cannot cross the capillary blood-brain barrier. [Slide #32]" },
+                    { text: "Glycogen granules", correct: false, why: "Glycogen is an insoluble intracellular polymer stored in liver and muscle, not a circulating blood substrate. [Slide #32]" },
+                    { text: "Free fatty acids bound to albumin", correct: false, why: "Albumin-bound long-chain free fatty acids do not cross the blood-brain barrier in significant amounts to fuel cerebral cells. [Slide #32]" }
+                ]
+            }
+        ];
+
+        let shuffledQuestions = [];
+        let userAnswers = {};
+
+        // Two-Way Fisher-Yates Shuffling Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Shuffle question order and options within each question
+            shuffledQuestions = shuffleArray([...quizData]).map(q => {
+                let clonedOptions = q.options.map((opt, idx) => ({ ...opt, originalIndex: idx }));
+                return {
+                    ...q,
+                    options: shuffleArray(clonedOptions)
+                };
+            });
+
+            userAnswers = {};
+            document.getElementById('scorecard').style.display = 'none';
+            renderQuiz();
+            updateScoreDisplay();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            shuffledQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <button class="option-btn" id="q${q.id}-opt${optIndex}" onclick="selectOption(${q.id}, ${optIndex})">
+                            <span style="font-weight:700; min-width:24px;">${String.fromCharCode(65 + optIndex)}.</span>
+                            <span>${opt.text}</span>
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-meta">
+                        <span>Question ${qIndex + 1} of ${shuffledQuestions.length}</span>
+                        <span>Deck Quarter ${q.quarter} | Slide Ref #${q.slideRef}</span>
+                    </div>
+                    <div class="question-stem">${q.stem}</div>
+                    <div class="options-list" id="q${q.id}-options">
+                        ${optionsHTML}
+                    </div>
+                    <div class="explanation-box" id="q${q.id}-explanation">
+                        <div class="explanation-banner" id="q${q.id}-banner"></div>
+                        <div class="explanation-ref">Reference: Slide #${q.slideRef}</div>
+                        <div class="explanation-summary" id="q${q.id}-summary"></div>
+                        <div class="rationale-list" id="q${q.id}-rationales"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(questionId, selectedOptIndex) {
+            if (userAnswers[questionId] !== undefined) return;
+
+            userAnswers[questionId] = selectedOptIndex;
+            const qObj = shuffledQuestions.find(q => q.id === questionId);
+            const selectedOpt = qObj.options[selectedOptIndex];
+
+            // Lock options & render visual feedback
+            for (let i = 0; i < qObj.options.length; i++) {
+                const btn = document.getElementById(`q${questionId}-opt${i}`);
+                btn.disabled = true;
+                if (qObj.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === selectedOptIndex && !selectedOpt.correct) {
+                    btn.classList.add('incorrect');
+                }
+            }
+
+            // Reveal explanation card
+            const expBox = document.getElementById(`q${questionId}-explanation`);
+            const banner = document.getElementById(`q${questionId}-banner`);
+            const summary = document.getElementById(`q${questionId}-summary`);
+            const rationalesList = document.getElementById(`q${questionId}-rationales`);
+
+            expBox.style.display = 'block';
+
+            if (selectedOpt.correct) {
+                banner.textContent = "Correct!";
+                banner.className = "explanation-banner correct-banner";
+            } else {
+                banner.textContent = "Incorrect.";
+                banner.className = "explanation-banner incorrect-banner";
+            }
+
+            const correctOptObj = qObj.options.find(o => o.correct);
+            summary.innerHTML = `<strong>Concept Key:</strong> ${selectedOpt.correct ? 'You selected the verified pathway mechanism.' : `The correct answer was "${correctOptObj.text}".`} ${correctOptObj.why}`;
+
+            // Build complete distractor audit breakdown
+            let rationalesHTML = '<strong>Complete Distractor & Choice Audit:</strong>';
+            qObj.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <div class="rationale-item">
+                        - <strong>${letter}) ${opt.text}</strong>: ${opt.why}
+                    </div>
+                `;
+            });
+            rationalesList.innerHTML = rationalesHTML;
+
+            updateScoreDisplay();
+            checkCompletion();
+        }
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            const total = shuffledQuestions.length;
+
+            for (let qId in userAnswers) {
+                const qObj = shuffledQuestions.find(q => q.id == qId);
+                if (qObj.options[userAnswers[qId]].correct) {
+                    correctCount++;
+                }
+            }
+
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        function checkCompletion() {
+            if (Object.keys(userAnswers).length === shuffledQuestions.length) {
+                let correctCount = 0;
+                for (let qId in userAnswers) {
+                    const qObj = shuffledQuestions.find(q => q.id == qId);
+                    if (qObj.options[userAnswers[qId]].correct) correctCount++;
+                }
+                const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+
+                const scorecard = document.getElementById('scorecard');
+                const finalScoreText = document.getElementById('finalScoreText');
+                finalScoreText.textContent = `You scored ${correctCount} out of ${shuffledQuestions.length} (${percentage}%)`;
+                scorecard.style.display = 'block';
+                scorecard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
