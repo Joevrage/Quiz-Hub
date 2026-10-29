@@ -6,30 +6,31 @@
     <title>Quiz Hub - Alpha Chiro Edition</title>
     <style>
         /* =========================================================
-           1. GYM GAINZ THEME (DEFAULT)
-           ========================================================= */
+            1. GYM GAINZ THEME (DEFAULT - HIGHLIGHTED GREEN)
+            ========================================================= */
         :root {
-            --bg-color: #121212;
-            --bg-pattern: #1e1e1e;
-            --header-bg: rgba(20, 20, 20, 0.9);
-            --header-border: #ff9900;
+            --bg-color: #0b2210;
+            --bg-pattern: #13381a;
+            --header-bg: rgba(11, 34, 16, 0.95);
+            --header-border: #22c55e;
             --logo-color: #ffffff;
-            --logo-box-bg: #ff9900;
+            --logo-box-bg: #22c55e;
             --logo-box-text: #000000;
-            --card-bg: #1a1a1a;
-            --card-border: #333333;
-            --card-shadow: rgba(0, 0, 0, 0.5);
+            --card-bg: #112d17;
+            --card-border: #1e4d2b;
+            --card-shadow: rgba(0, 0, 0, 0.6);
             --title-color: #ffffff;
-            --btn-bg-top: #ff9900;
-            --btn-bg-bottom: #e68a00;
+            --btn-bg-top: #22c55e;
+            --btn-bg-bottom: #16a34a;
             --btn-border: #ffffff;
-            --btn-shadow: #b36b00;
+            --btn-shadow: #14532d;
             --btn-text: #ffffff;
+            --highlight-badge: #22c55e;
         }
 
         /* =========================================================
-           2. VIP LOUNGE THEME (TOGGLED)
-           ========================================================= */
+            2. VIP LOUNGE THEME (TOGGLED)
+            ========================================================= */
         body.hub-mode {
             --bg-color: #0b0b0f;
             --bg-pattern: #13131a;
@@ -47,6 +48,7 @@
             --btn-border: #f3f3f3;
             --btn-shadow: #66541a;
             --btn-text: #0b0b0f;
+            --highlight-badge: #d4af37;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,7 +101,7 @@
             bottom: -36px;
             left: 0;
             background: #222;
-            color: #ff9900;
+            color: #22c55e;
             padding: 4px 8px;
             font-size: 11px;
             border-radius: 4px;
@@ -144,8 +146,8 @@
         }
 
         /* =========================================================
-           LAYOUT 1: GYM GAINZ RACK GRID
-           ========================================================= */
+            LAYOUT 1: GYM GAINZ RACK GRID
+            ========================================================= */
         .clash-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -168,6 +170,11 @@
             justify-content: space-between;
         }
 
+        .building-card.practice-exam-highlight {
+            border: 2px solid #22c55e;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
         .building-header {
             display: flex;
             align-items: center;
@@ -177,10 +184,10 @@
 
         .building-icon {
             font-size: 30px;
-            background: rgba(255, 153, 0, 0.1);
+            background: rgba(34, 197, 94, 0.15);
             padding: 10px;
             border-radius: 8px;
-            border: 1px solid var(--accent, #ff9900);
+            border: 1px solid var(--highlight-badge);
         }
 
         .building-title {
@@ -191,7 +198,7 @@
 
         .level-badge {
             font-size: 11px;
-            color: #ff9900;
+            color: var(--highlight-badge);
             margin-top: 2px;
             text-transform: uppercase;
             font-weight: bold;
@@ -215,6 +222,13 @@
             display: block;
         }
 
+        .attack-btn.exam-btn {
+            background: linear-gradient(to bottom, #22c55e, #15803d);
+            border-color: #86efac;
+            box-shadow: 0 3px 0 #14532d;
+            font-size: 14px;
+        }
+
         .attack-btn:hover {
             opacity: 0.9;
         }
@@ -232,14 +246,18 @@
             min-width: 60px;
         }
 
+        .multi-btn-group a.full-width {
+            flex: 1 1 100%;
+        }
+
         .multi-btn-group .attack-btn {
             margin-top: 0;
             width: 100%;
         }
 
         /* =========================================================
-           LAYOUT 2: VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
-           ========================================================= */
+            LAYOUT 2: VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
+            ========================================================= */
         .hub-grid-layout {
             display: none;
         }
@@ -256,10 +274,15 @@
         .hub-card { background-color: #16161f; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a3b; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
         .hub-card:hover { transform: translateY(-3px); border-color: #d4af37; }
         
+        .hub-card.exam-hub-card {
+            border: 2px solid #22c55e;
+        }
+
         .card-thumbnail { background-color: #1e1e2b; height: 120px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #2a2a3b; }
         .thumbnail-icon { font-size: 38px; }
         
         .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #d4af37; }
+        .duration-badge.exam-badge { color: #22c55e; border-color: #22c55e; }
         
         .card-info { padding: 12px; }
         .quiz-card-title { font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
@@ -287,7 +310,7 @@
              1. GYM GAINZ RACK GRID (DEFAULT VIEW)
              ========================================================= -->
         <div class="clash-grid">
-            <!-- Biochem Card (Week 1 -> Thermo, Week 2 -> Protein Synth) -->
+            <!-- Biochem Card -->
             <div class="building-card">
                 <div>
                     <div class="building-header">
@@ -308,21 +331,22 @@
                 </div>
             </div>
 
-            <!-- GenPath Card -->
-            <div class="building-card">
+            <!-- GenPath Card (Includes Midterm 1 Practice Exam) -->
+            <div class="building-card practice-exam-highlight">
                 <div>
                     <div class="building-header">
                         <div class="building-icon">🔬</div>
                         <div>
                             <div class="building-title">GenPath</div>
-                            <div class="level-badge">Rack Level 3</div>
+                            <div class="level-badge">Rack Level 4 (Midterm Mode)</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="full-width"><div class="attack-btn exam-btn">⚡ Midterm 1 Practice Exam</div></a>
                     <a href="Gen%20Path%20Week%201.html"><div class="attack-btn">Week 1</div></a>
                     <a href="Gen%20Path%20Week%202.html"><div class="attack-btn">Week 2</div></a>
-                    <a href="Gen%20Path%20Week%203.html" style="flex: 1 1 100%;"><div class="attack-btn">Week 3</div></a>
+                    <a href="Gen%20Path%20Week%203.html" class="full-width"><div class="attack-btn">Week 3</div></a>
                 </div>
             </div>
 
@@ -340,7 +364,7 @@
                 <div class="multi-btn-group">
                     <a href="Microbio%20Quiz%201.html"><div class="attack-btn">Quiz 1</div></a>
                     <a href="Microbio%20Quiz%202.html"><div class="attack-btn">Quiz 2</div></a>
-                    <a href="Microbio%20Quiz%203.html" style="flex: 1 1 100%;"><div class="attack-btn">Quiz 3</div></a>
+                    <a href="Microbio%20Quiz%203.html" class="full-width"><div class="attack-btn">Quiz 3</div></a>
                 </div>
             </div>
 
@@ -360,7 +384,7 @@
                     <a href="Reg%201%20Week%202.html"><div class="attack-btn">W2</div></a>
                     <a href="Reg%201%20Week%203.html"><div class="attack-btn">W3</div></a>
                     <a href="Forearm_Drill_Daelin.html"><div class="attack-btn">Forearm Drill</div></a>
-                    <a href="Reg%201%20Lab%20Exam%201.html" style="flex: 1 1 100%;"><div class="attack-btn">Lab Exam 1</div></a>
+                    <a href="Reg%201%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn">Lab Exam 1</div></a>
                 </div>
             </div>
 
@@ -379,7 +403,7 @@
                     <a href="Spinal%202%20Week%201.html"><div class="attack-btn">Week 1</div></a>
                     <a href="Spinal%202%20Week%202.html"><div class="attack-btn">Week 2</div></a>
                     <a href="Spinal%202%20Week%203.html"><div class="attack-btn">Week 3</div></a>
-                    <a href="Spinal%202%20Lab%20Exam%201.html" style="flex: 1 1 100%;"><div class="attack-btn">Lab Exam 1</div></a>
+                    <a href="Spinal%202%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn">Lab Exam 1</div></a>
                 </div>
             </div>
 
@@ -399,7 +423,7 @@
                     <a href="Sys%20Phys%20Osmoregulation.html"><div class="attack-btn">Osmoreg</div></a>
                     <a href="Sys%20Phys%20Biochem.html"><div class="attack-btn">Biochem</div></a>
                     <a href="Sys%20Phys%20Circulatory.html"><div class="attack-btn">Circulatory</div></a>
-                    <a href="Sys%20Phys%20Neurology.html" style="flex: 1 1 100%;"><div class="attack-btn">Neurology</div></a>
+                    <a href="Sys%20Phys%20Neurology.html" class="full-width"><div class="attack-btn">Neurology</div></a>
                 </div>
             </div>
 
@@ -561,6 +585,20 @@
             <div class="course-section">
                 <h2 class="course-title">General Pathology</h2>
                 <div class="quiz-grid">
+                    <!-- Highlighted Practice Exam Card -->
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="hub-card exam-hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔥</span>
+                            <span class="duration-badge exam-badge">Midterm 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">⚡ GEN PATH MIDTERM 1 PRACTICE EXAM: Ultimate Comprehensive Breakdown</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
                     <a href="Gen%20Path%20Week%201.html" class="hub-card">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">🔬</span>
