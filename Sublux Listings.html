@@ -80,10 +80,35 @@ function render(){
    b.onclick=()=>{if(b.classList.contains('lk'))return;bs.forEach(x=>x.classList.add('lk'));ans++;
     bs.forEach((x,k)=>{if(opts[k].ok)x.classList.add('ok')});
     if(o.ok)cor++;else b.classList.add('no');
+    
+    // Banner update based on correct/incorrect status
+    const banner = c.querySelector('.status-banner');
+    if(o.ok) {
+        banner.className = 'status-banner correct';
+        banner.textContent = 'Correct!';
+    } else {
+        banner.className = 'status-banner incorrect';
+        banner.textContent = 'You didn’t know that?!';
+    }
+
     ex.style.display='block';sc();if(ans===D.length)fin()}});
-  const ex=document.createElement('div');ex.className='ex';ex.innerHTML='<strong>Why:</strong> ';ex.appendChild(document.createTextNode(d[3]));c.appendChild(ex);
+  const ex=document.createElement('div');ex.className='ex';
+  ex.innerHTML='<div class="status-banner"></div><br><strong>Why:</strong> ';
+  ex.appendChild(document.createTextNode(d[3]));c.appendChild(ex);
   m.appendChild(c)})}
 function sc(){document.getElementById('score').textContent=cor+' / '+ans+' ('+(ans?Math.round(cor/ans*100):0)+'%)'}
-function fin(){const e=document.getElementById('end');e.style.display='block';e.innerHTML='<h2>Final: '+cor+' / '+D.length+'</h2><button onclick="render();scrollTo(0,0)">Retake (reshuffled)</button>'}
+function fin(){
+  const e=document.getElementById('end');e.style.display='block';
+  const pct = D.length ? Math.round(cor/D.length*100) : 0;
+  let msg = '';
+  if(pct >= 90) {
+    msg = 'Absolute Gigachad. You drained that test dry.';
+  } else if(pct >= 70) {
+    msg = "Solid run! You're locked in, get in some more reps.";
+  } else {
+    msg = 'You lasted less than 30 seconds. Time for a rematch.';
+  }
+  e.innerHTML='<h2>Final: '+cor+' / '+D.length+' ('+pct+'%)</h2><p style="margin:10px 0; font-weight:bold;">'+msg+'</p><button onclick="render();scrollTo(0,0)">Retake Quiz</button>';
+}
 render();
 </script></body></html>
