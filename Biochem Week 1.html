@@ -3,636 +3,637 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chiropractic Biochemistry Week 1 Practice Quiz</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        medical: {
-                            50: '#f0f9ff',
-                            100: '#e0f2fe',
-                            500: '#0ea5e9',
-                            600: '#0284c7',
-                            700: '#0369a1',
-                            800: '#075985',
-                            900: '#0c4a6e',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <title>General Foundations & Bioenergetics Quiz Hub</title>
     <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #282828;
+            --accent: #ff9900;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            -webkit-tap-highlight-color: transparent;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
         }
-        .option-btn {
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            touch-action: manipulation;
-        }
-        .option-btn:hover:not(:disabled) {
-            transform: translateY(-1px);
-        }
-        .option-btn:active:not(:disabled) {
-            transform: translateY(0);
-        }
-        .fade-in {
-            animation: fadeIn 0.35s ease-out forwards;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        /* Glassmorphism sticky header */
+
+        /* Sticky Top Bar */
         .sticky-header {
-            background: rgba(15, 23, 42, 0.92);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .score-display {
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-card h1 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Question Card */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-stem {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Options */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .explanation-banner {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .explanation-banner.correct-banner {
+            color: var(--correct-border);
+        }
+
+        .explanation-banner.incorrect-banner {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-ref {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Scorecard Modal / View */
+        .scorecard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .scorecard h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
         }
     </style>
 </head>
-<body class="bg-[#0f0f0f] text-[#ffffff] min-h-screen pb-16">
+<body>
 
-    <header class="sticky top-0 z-50 sticky-header border-b border-[#282828] shadow-xl">
-        <div class="max-w-4xl mx-auto px-4 py-3 sm:px-6">
-            <div class="flex flex-wrap items-center justify-between gap-2">
-                <div class="flex items-center space-x-3">
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-[#ff9900]/10 text-[#ff9900] border border-[#ff9900]/20">
-                        CHEM 121
-                    </span>
-                    <h1 class="text-sm sm:text-base font-bold text-[#ffffff] truncate">
-                        Biochemistry W1 Board Exam Prep
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-4 font-mono text-sm">
-                    <div class="bg-[#1a1a1a] border border-[#282828] rounded-lg px-3 py-1.5 flex items-center space-x-2">
-                        <span class="text-xs text-slate-400 uppercase font-sans">Score:</span>
-                        <span id="score-text" class="font-bold text-[#ff9900]">0 / 25 (0%)</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Progress Bar -->
-            <div class="mt-2.5 w-full bg-[#1a1a1a] rounded-full h-2 overflow-hidden border border-[#282828]">
-                <div id="progress-bar" class="bg-gradient-to-r from-[#ff9900] to-amber-500 h-2 rounded-full transition-all duration-300 w-0"></div>
-            </div>
-        </div>
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <h1 class="header-title">Bioenergetics & Foundations Quiz</h1>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
     </header>
 
-    <main class="max-w-4xl mx-auto px-4 pt-6 sm:px-6 space-y-8">
-        
-        <!-- Quiz Description Banner -->
-        <div class="bg-[#1a1a1a] border border-[#282828] rounded-2xl p-5 sm:p-6 shadow-lg">
-            <h2 class="text-lg font-bold text-[#ff9900] mb-1 flex items-center gap-2">
-                <svg class="w-5 h-5 text-[#ff9900]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Week 1 Board Practice & Active Recall
-            </h2>
-            <p class="text-sm text-slate-300 leading-relaxed">
-                Covers Thermodynamics (ΔG, ΔH, ΔS), Bioenergetics, Kinetics vs. Thermodynamics, Reaction Mechanisms, Brønsted-Lowry Acids/Bases, pKa values, Buffer Systems, Amino Acid Side-Chains, and Resonance. Select an answer for immediate board feedback.
-            </p>
+    <main class="container">
+        <!-- Intro Card -->
+        <div class="intro-card">
+            <h1>NBCE Part 1 Practice Hub</h1>
+            <p>Strictly source-bound board review covering Gibbs Free Energy, Thermodynamics vs. Kinetics, Entropy, and Mitochondrial Bioenergetics.</p>
         </div>
 
-        <!-- Questions Section Container -->
-        <div id="quiz-container" class="space-y-6">
-            <!-- Questions rendered via JS -->
-        </div>
+        <!-- Quiz Container -->
+        <div id="quizContainer"></div>
 
-        <div id="summary-card" class="hidden bg-[#1a1a1a] border-2 border-[#ff9900]/40 rounded-2xl p-6 sm:p-8 shadow-2xl text-center space-y-6 fade-in">
-            <div class="inline-flex p-3 bg-[#ff9900]/10 rounded-full text-[#ff9900] border border-[#ff9900]/20">
-                <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path></svg>
-            </div>
-            
-            <div>
-                <h3 class="text-2xl sm:text-3xl font-extrabold text-[#ffffff]">Quiz Completed!</h3>
-                <p id="summary-badge" class="mt-2 text-base font-semibold text-[#ff9900]"></p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-md mx-auto font-mono">
-                <div class="bg-[#0f0f0f] p-4 rounded-xl border border-[#282828]">
-                    <span class="block text-xs text-slate-400 font-sans uppercase">Total Questions</span>
-                    <span class="text-xl font-bold text-slate-200">25</span>
-                </div>
-                <div class="bg-[#14532d]/40 p-4 rounded-xl border border-[#22c55e]/30">
-                    <span class="block text-xs text-[#22c55e] font-sans uppercase">Correct</span>
-                    <span id="summary-correct" class="text-xl font-bold text-[#22c55e]">0</span>
-                </div>
-                <div class="bg-[#7f1d1d]/40 p-4 rounded-xl border border-[#ef4444]/30">
-                    <span class="block text-xs text-[#ef4444] font-sans uppercase">Score %</span>
-                    <span id="summary-percentage" class="text-xl font-bold text-[#ef4444]">0%</span>
-                </div>
-            </div>
-
-            <p id="summary-feedback" class="text-sm text-slate-300 max-w-xl mx-auto leading-relaxed"></p>
-
-            <button onclick="resetQuiz()" class="inline-flex items-center justify-center px-6 py-3 bg-[#ff9900] hover:bg-amber-600 text-black font-semibold rounded-xl shadow-lg shadow-[#ff9900]/20 transition-all duration-200 active:scale-95">
-                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
-                Retake Quiz
-            </button>
+        <!-- Completion Scorecard -->
+        <div class="scorecard" id="scorecard">
+            <h2>Quiz Complete!</h2>
+            <p id="finalScoreText" style="font-size: 1.2rem; font-weight: 600; margin: 15px 0;"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
         </div>
     </main>
 
     <script>
-        const questionsData = [
+        // Quiz Data Array strictly mapped across 4 slide deck quarters with option-by-option rationales
+        const quizData = [
+            // QUARTER 1 (Slides 1-14 equivalent)
             {
                 id: 1,
-                question: "Which of the following best describes the standard Gibbs Free Energy change (ΔG°') when a biochemical reaction is at dynamic equilibrium?",
+                quarter: 1,
+                slideRef: 4,
+                stem: "What thermodynamic parameter defines maximum reversible work performable by a biological system at constant temperature and pressure?",
                 options: [
-                    "ΔG°' is equal to zero",
-                    "ΔG°' is a maximum positive value",
-                    "ΔG°' is equal to enthalpy (ΔH)",
-                    "ΔG°' is equal to TΔS"
-                ],
-                correctText: "ΔG°' is equal to zero",
-                explanation: "At dynamic equilibrium, the rate of the forward reaction equals the rate of the reverse reaction, resulting in a net Gibbs Free Energy change of zero (ΔG = 0). Under standard biochemical conditions, ΔG°' = -RT ln(Keq)."
+                    { text: "Enthalpy (Delta H)", correct: false, why: "Incorrect because enthalpy measures total heat content change, not maximum useful work capacity. [Slide #4]" },
+                    { text: "Gibbs Free Energy (Delta G)", correct: true, why: "Correct because Gibbs free energy measures the net energy available to perform chemical or mechanical work under constant temperature and pressure. [Slide #4]" },
+                    { text: "Entropy (Delta S)", correct: false, why: "Incorrect because entropy measures structural randomness and disorder, not work capability. [Slide #4]" },
+                    { text: "Activation Energy (Ea)", correct: false, why: "Incorrect because activation energy represents the kinetic barrier reactants must surmount, not system work capacity. [Slide #4]" }
+                ]
             },
             {
                 id: 2,
-                question: "An endergonic process is characterized energetically by which set of thermodynamic criteria?",
+                quarter: 1,
+                slideRef: 7,
+                stem: "An endergonic metabolic process is characterized by which of the following thermodynamic profiles?",
                 options: [
-                    "Negative ΔG, releases free energy, spontaneous",
-                    "Positive ΔG, requires energy input, non-spontaneous",
-                    "ΔG = 0, at chemical equilibrium",
-                    "Negative ΔH, positive ΔS, highly exothermic"
-                ],
-                correctText: "Positive ΔG, requires energy input, non-spontaneous",
-                explanation: "Endergonic reactions have a positive change in free energy (+ΔG), meaning the products reside at a higher free energy level than the reactants. They are non-spontaneous and require net energy input (e.g., ATP synthesis from ADP + Pi)."
+                    { text: "Positive Delta G and spontaneous reaction direction", correct: false, why: "Incorrect because positive Delta G processes are non-spontaneous and require net energy input. [Slide #7]" },
+                    { text: "Negative Delta G and energy release", correct: false, why: "Incorrect because negative Delta G describes exergonic, energy-releasing reactions. [Slide #7]" },
+                    { text: "Positive Delta G and non-spontaneous energy absorption", correct: true, why: "Correct because endergonic reactions require net energy input (+Delta G), leaving products at a higher energy state. [Slide #7]" },
+                    { text: "Delta G equal to zero at static equilibrium", correct: false, why: "Incorrect because Delta G = 0 defines chemical equilibrium, whereas active endergonic synthesis requires a positive Delta G push or coupling. [Slide #7]" }
+                ]
             },
             {
                 id: 3,
-                question: "The electron transport chain (ETC) in the inner mitochondrial membrane pumps protons into the intermembrane space. What form of energy is stored by this gradient to drive ATP synthesis?",
+                quarter: 1,
+                slideRef: 10,
+                stem: "When ATP is synthesized from ADP and inorganic phosphate in a cellular energy storage step, the standard free energy change is approximately _______ kcal/mol.",
                 options: [
-                    "Kinetic rotational momentum only",
-                    "Chemical potential energy (electrochemical proton motive force)",
-                    "Mechanical elastic potential in the lipid bilayer",
-                    "Radiative photon energy"
-                ],
-                correctText: "Chemical potential energy (electrochemical proton motive force)",
-                explanation: "Pumping H+ across the inner mitochondrial membrane creates both a concentration gradient and an electrical charge gradient. This electrochemical proton motive force represents stored chemical potential energy that flows back through ATP synthase (Complex V)."
+                    { text: "-7.8", correct: false, why: "Incorrect because a negative value represents ATP hydrolysis or exergonic breakdown, not synthetic storage. [Slide #10]" },
+                    { text: "+7.8", correct: true, why: "Correct because synthesizing ATP from ADP and Pi is an endergonic phosphorylation step requiring an energy input of +7.8 kcal/mol. [Slide #10]" },
+                    { text: "0.0", correct: false, why: "Incorrect because zero indicates a system at equilibrium with no net synthetic driving force. [Slide #10]" },
+                    { text: "-3.6", correct: false, why: "Incorrect because -3.6 kcal/mol represents the combined stepwise sum for glucose phosphorylation, not standalone ATP formation. [Slide #10]" }
+                ]
             },
             {
                 id: 4,
-                question: "How do living organisms maintain a state of low internal entropy (high structural order) without violating the Second Law of Thermodynamics?",
+                quarter: 1,
+                slideRef: 12,
+                stem: "Which of the following describes the relationship between Gibbs free energy change (Delta G) and the equilibrium constant (Keq)?",
                 options: [
-                    "By destroying heat energy inside the cytosol",
-                    "By expelling metabolic heat energy to the external environment, increasing external entropy",
-                    "By operating exclusively at dynamic thermal equilibrium",
-                    "By converting all metabolic enthalpy into nuclear potential"
-                ],
-                correctText: "By expelling metabolic heat energy to the external environment, increasing external entropy",
-                explanation: "To maintain intracellular low entropy (cellular order/compartmentalization), cells expend energy and dissipate metabolic heat (thermal energy) to their surroundings. This heat release increases the entropy of the universe (surroundings), satisfying thermodynamics."
+                    { text: "Delta G equals the natural logarithm multiplied by absolute temperature.", correct: false, why: "Incorrect because the standard formula incorporates the gas constant R, temperature T, and natural log of Keq (Delta G°' = -RT ln Keq). [Slide #12]" },
+                    { text: "A negative Delta G yields an equilibrium constant greater than 1 (Keq > 1).", correct: true, why: "Correct because an exergonic reaction (-Delta G) results in an exponential dependency where Keq > 1, favoring product formation. [Slide #12]" },
+                    { text: "A positive Delta G results in a negative equilibrium constant.", correct: false, why: "Incorrect because equilibrium constants are exponential ratios and can never be negative or zero. [Slide #12]" },
+                    { text: "Delta G and Keq vary inversely without temperature dependence.", correct: false, why: "Incorrect because absolute temperature (Kelvin) directly scales the energy-to-equilibrium relationship. [Slide #12]" }
+                ]
             },
+
+            // QUARTER 2 (Slides 15-28 equivalent)
             {
                 id: 5,
-                question: "What primary physical route does the human body use to dissipate excess metabolic heat generated during cellular respiration to prevent hyperthermic denaturing?",
+                quarter: 2,
+                slideRef: 18,
+                stem: "How do biological enzymes accelerate metabolic reaction velocities without altering the underlying thermodynamics?",
                 options: [
-                    "Capillary blood flow transport to the skin for evaporative sweating and radiation",
-                    "Intracellular conversion of thermal energy into covalent bonds",
-                    "Hepatic storage of excess thermal calories as glycogen",
-                    "Direct renal excretion of heated hydronium ions"
-                ],
-                correctText: "Capillary blood flow transport to the skin for evaporative sweating and radiation",
-                explanation: "Thermal heat produced as a byproduct of cellular metabolism is absorbed by blood water, carried via capillary circulation to the integumentary system (skin), and released via radiation, convection, and evaporative cooling (sweating)."
+                    { text: "By making Delta G more negative and increasing Keq", correct: false, why: "Incorrect because enzymes cannot alter state functions like Delta G or final equilibrium constants. [Slide #18]" },
+                    { text: "By lowering the activation energy (Ea) barrier for both forward and reverse paths", correct: true, why: "Correct because enzymes provide alternative reaction pathways with reduced activation energy barriers, speeding up rate without changing Delta G. [Slide #18]" },
+                    { text: "By increasing the thermal energy and kinetic collision frequency of substrates", correct: false, why: "Incorrect because cellular enzymes operate at constant physiological body temperature (~310 K) without thermal spiking. [Slide #18]" },
+                    { text: "By permanently consuming the substrate to shift equilibrium forward", correct: false, why: "Incorrect because enzymes are unconsumed catalysts that facilitate reversible equilibrium balance. [Slide #18]" }
+                ]
             },
             {
                 id: 6,
-                question: "Which statement accurately contrasts thermodynamics with chemical reaction kinetics?",
+                quarter: 2,
+                slideRef: 21,
+                stem: "What fundamental property distinguishes chemical kinetics from thermodynamics in living biological systems?",
                 options: [
-                    "Thermodynamics determines reaction rate; kinetics determines spontaneity",
-                    "Thermodynamics determines ΔG and equilibrium; kinetics determines activation energy (Ea) and reaction speed",
-                    "Enzymes alter reaction thermodynamics without affecting kinetics",
-                    "High activation energy guarantees an endergonic thermodynamic outcome"
-                ],
-                correctText: "Thermodynamics determines ΔG and equilibrium; kinetics determines activation energy (Ea) and reaction speed",
-                explanation: "Thermodynamics dictates whether a process is energetically favorable (ΔG) and the final position of equilibrium (Keq). Kinetics deals with the barrier height (Activation Energy, Ea) and the rate or velocity at which equilibrium is reached."
+                    { text: "Kinetics determines relative stability, whereas thermodynamics determines rate speed.", correct: false, why: "Incorrect because this role assignment is completely inverted; thermodynamics governs stability/Delta G, while kinetics governs rate. [Slide #21]" },
+                    { text: "Thermodynamics determines energetic favorability (Delta G), whereas kinetics determines reaction speed and rate.", correct: true, why: "Correct because thermodynamics dictates the energy states and equilibrium position, while kinetics controls how fast equilibrium is reached via activation energy. [Slide #21]" },
+                    { text: "Kinetics alters the equilibrium constant (Keq), whereas thermodynamics cannot.", correct: false, why: "Incorrect because neither enzymes nor kinetics can alter immutable thermodynamic equilibrium constants. [Slide #21]" },
+                    { text: "Thermodynamics operates exclusively in open systems, whereas kinetics requires closed containers.", correct: false, why: "Incorrect because both thermodynamic laws and kinetic rate laws apply universally across chemical systems. [Slide #21]" }
+                ]
             },
             {
                 id: 7,
-                question: "How does a biological enzyme catalyst accelerate the rate of a chemical reaction?",
+                quarter: 2,
+                slideRef: 24,
+                stem: "According to Le Chatelier's Principle, how do coupled reversible steps in metabolic pathways like glycolysis respond when downstream products are rapidly consumed?",
                 options: [
-                    "By making ΔG more negative and increasing Keq",
-                    "By lowering the activation energy (Ea) barrier for both forward and reverse paths",
-                    "By increasing the kinetic temperature of the active site",
-                    "By shifting the equilibrium entirely toward the product side"
-                ],
-                correctText: "By lowering the activation energy (Ea) barrier for both forward and reverse paths",
-                explanation: "Enzymes lower the activation energy (Ea) required to reach the transition state. They increase the rate of both forward and reverse reactions equally without altering ΔG, ΔH, or Keq."
+                    { text: "The equilibrium shifts backward to accumulate initial starting reactants.", correct: false, why: "Incorrect because consuming products drives forward flux, not backward accumulation. [Slide #24]" },
+                    { text: "The equilibrium shifts forward to replace consumed intermediates and maintain steady-state flux.", correct: true, why: "Correct because removing a product relieves stress on the equilibrated reaction, causing the system to shift forward to restore balance. [Slide #24]" },
+                    { text: "The activation energy barrier increases to halt further conversion.", correct: false, why: "Incorrect because activation energy remains constant unless modified by regulatory enzymes. [Slide #24]" },
+                    { text: "The standard free energy change flips from negative to positive.", correct: false, why: "Incorrect because standard free energy change is a constant state property. [Slide #24]" }
+                ]
             },
             {
                 id: 8,
-                question: "According to Le Chatelier's Principle, what occurs in a reversible glycolytic equilibrium step when downstream pathways rapidly consume the product?",
+                quarter: 2,
+                slideRef: 26,
+                stem: "To maintain homeostatic thermal stability at approximately _______ Kelvin, warm-blooded mammals continuously dissipate metabolic heat.",
                 options: [
-                    "The reaction shifts backward toward reactants",
-                    "The equilibrium constant (Keq) increases drastically",
-                    "The reaction shifts forward to produce more product and restore balance",
-                    "The enzyme becomes irreversibly inhibited"
-                ],
-                correctText: "The reaction shifts forward to produce more product and restore balance",
-                explanation: "When a product is continuously removed by a subsequent enzymatic step, Le Chatelier's Principle dictates that the system shifts forward to replace the lost product, driving metabolic flux through the pathway."
+                    { text: "273 K", correct: false, why: "Incorrect because 273 K represents the freezing point of water (0 °C), not human core temperature. [Slide #26]" },
+                    { text: "310 K", correct: true, why: "Correct because human normal physiological core temperature is ~37 °C, which equals 310 Kelvin. [Slide #26]" },
+                    { text: "98.6 K", correct: false, why: "Incorrect because 98.6 is the Fahrenheit scale value, not Kelvin absolute units. [Slide #26]" },
+                    { text: "370 K", correct: false, why: "Incorrect because 370 K is excessively high (~97 °C) and would instantly cause protein denaturation and death. [Slide #26]" }
+                ]
             },
+
+            // QUARTER 3 (Slides 29-42 equivalent)
             {
                 id: 9,
-                question: "According to the Brønsted-Lowry definition, what defines an acid and its conjugate base?",
+                quarter: 3,
+                slideRef: 31,
+                stem: "What physical form of metabolic energy dissipation is utilized by integumentary capillary blood flow and perspiration?",
                 options: [
-                    "Acid = Electron pair acceptor; Base = Electron pair donor",
-                    "Acid = Proton (H+) donor; Conjugate Base = Species remaining after proton donation",
-                    "Acid = Hydroxide donor; Base = Proton donor",
-                    "Acid = Non-polar molecule; Base = Zwitterion"
-                ],
-                correctText: "Acid = Proton (H+) donor; Conjugate Base = Species remaining after proton donation",
-                explanation: "In the Brønsted-Lowry theory, an acid is a proton (H+) donor (HA), and its conjugate base is the species formed when the acid loses its proton (A-)."
+                    { text: "Storage of chemical potential energy as high-energy glycogen polymers", correct: false, why: "Incorrect because glycogen storage is anabolic nutrient fueling, not thermal dissipation. [Slide #31]" },
+                    { text: "Evaporative cooling and thermal radiation to eliminate excess metabolic heat", correct: true, why: "Correct because cellular respiration generates massive thermal byproducts that must be rejected via skin radiation and sweating to prevent hyperthermia. [Slide #31]" },
+                    { text: "Conversion of kinetic momentum into covalent peptide bonds", correct: false, why: "Incorrect because peptide bond formation requires enzymatic ATP input, not thermal dumping. [Slide #31]" },
+                    { text: "Direct renal excretion of concentrated hydronium ions", correct: false, why: "Incorrect because renal H+ management regulates acid-base balance, not primary systemic thermal cooling. [Slide #31]" },
+                    { text: "Direct renal excretion of concentrated hydronium ions", correct: false, why: "Incorrect because renal buffering handles pH, not primary thermal dissipation. [Slide #31]" }
+                ]
             },
             {
                 id: 10,
-                question: "Why can the acid dissociation equilibrium constant (Ka) never be zero or negative?",
+                quarter: 3,
+                slideRef: 34,
+                stem: "How do living biological organisms maintain an internal state of low entropy (high structural order) without violating thermodynamic laws?",
                 options: [
-                    "Ka is defined as the log of pH",
-                    "Ka is a ratio of molar concentrations ([H+][A-]/[HA]), which are strictly non-negative real values",
-                    "Ka is equal to the temperature in Kelvin",
-                    "Strong acids eliminate all water molecules"
-                ],
-                correctText: "Ka is a ratio of molar concentrations ([H+][A-]/[HA]), which are strictly non-negative real values",
-                explanation: "Ka = [H+][A-]/[HA]. Because chemical concentrations must be positive numbers greater than zero, their quotient (Ka) can never be zero or negative."
+                    { text: "By operating in a closed thermodynamic system with zero heat exchange", correct: false, why: "Incorrect because living cells are open systems that continuously exchange matter and energy. [Slide #34]" },
+                    { text: "By expelling metabolic heat and increasing the entropy of their external environment", correct: true, why: "Correct because while cells maintain internal order (low entropy), they continuously dissipate heat outward, increasing universal external entropy to satisfy the Second Law. [Slide #34]" },
+                    { text: "By converting all metabolic waste products directly into atomic mass", correct: false, why: "Incorrect because biological systems do not perform nuclear mass-energy conversion. [Slide #34]" },
+                    { text: "By maintaining static equilibrium where Delta G equals zero permanently", correct: false, why: "Incorrect because static equilibrium in biological tissue equals cell death. [Slide #34]" }
+                ]
             },
             {
                 id: 11,
-                question: "Which basic amino acid contains an imidazole side-chain with a pKa near ~6.0–7.0, making it uniquely sensitive to physiological pH fluctuations?",
+                quarter: 3,
+                slideRef: 38,
+                stem: "What thermodynamic consequence occurs immediately when a cell dies and its plasma membrane ruptures?",
                 options: [
-                    "Lysine",
-                    "Arginine",
-                    "Histidine",
-                    "Asparagine"
-                ],
-                correctText: "Histidine",
-                explanation: "Histidine's imidazole ring has a pKa near physiological pH (~6.0–6.8). Small changes in tissue pH alter its protonation state between neutral and cationic, making it key in biological buffering and active-site proton transfer."
+                    { text: "Compartmentalized intracellular contents disperse randomly, producing a massive increase in entropy.", correct: true, why: "Correct because membrane lysis destroys organelle boundaries, mixing concentrated molecules into a larger volume and sharply driving entropy upward. [Slide #38]" },
+                    { text: "Intracellular components crystallize into a state of absolute zero entropy.", correct: false, why: "Incorrect because cellular dilution increases disorder rather than forming perfect zero-entropy crystals. [Slide #38]" },
+                    { text: "Electrochemical gradients across cellular membranes become permanently amplified.", correct: false, why: "Incorrect because membrane rupture immediately dissipates all ionic and proton gradients to zero. [Slide #38]" },
+                    { text: "Metabolic pathways shift into an idealized static equilibrium state.", correct: false, why: "Incorrect because post-mortem tissues undergo uncoordinated autolysis and decomposition toward maximum disorder. [Slide #38]" }
+                ]
             },
             {
                 id: 12,
-                question: "Comparing weak organic carboxylic acids, Histidine, and Cysteine sulfhydryls, which option correctly ranks them from strongest acid (highest Ka) to weakest acid (lowest Ka)?",
+                quarter: 3,
+                slideRef: 40,
+                stem: "What specific form of stored energy is established by the electron transport chain across the inner mitochondrial membrane?",
                 options: [
-                    "Cysteine thiol > Histidine > Carboxylic acid",
-                    "Carboxylic acid (Ka ~ 10^-4) > Histidine (Ka ~ 10^-6) > Cysteine (Ka ~ 10^-8)",
-                    "Histidine > Carboxylic acid > Cysteine",
-                    "Carboxylic acid > Cysteine > Histidine"
-                ],
-                correctText: "Carboxylic acid (Ka ~ 10^-4) > Histidine (Ka ~ 10^-6) > Cysteine (Ka ~ 10^-8)",
-                explanation: "Carboxylic acids ionize most readily (Ka ~ 10^-4 to 10^-5), followed by protonated Histidine (Ka ~ 10^-6), while Cysteine sulfhydryl thiols are significantly weaker acids (Ka ~ 10^-8 to 10^-9)."
+                    { text: "Elastic mechanical tension within cytosolic microfilaments", correct: false, why: "Incorrect because mitochondrial gradients are electrochemical, not mechanical cytoskeletal tension. [Slide #40]" },
+                    { text: "An electrochemical proton gradient representing stored chemical potential energy", correct: true, why: "Correct because pumping H+ out of the matrix creates a concentration and electrical gradient (proton motive force) that drives ATP synthase. [Slide #40]" },
+                    { text: "Radiative photon emission captured by mitochondrial cytochromes", correct: false, why: "Incorrect because mitochondria utilize redox electron transfer, not photon capture like chloroplasts. [Slide #40]" },
+                    { text: "High-voltage electrical sparks stored in membrane lipid head groups", correct: false, why: "Incorrect because biological membranes store protonic electrochemical potential, not electrical spark discharges. [Slide #40]" }
+                ]
             },
+
+            // QUARTER 4 (Slides 43-55 equivalent)
             {
                 id: 13,
-                question: "What is the primary chemical buffer system responsible for buffering human extracellular blood arterial plasma (pH 7.35–7.45)?",
+                quarter: 4,
+                slideRef: 44,
+                stem: "Why is the mitochondrial synthesis of ATP from proton gradient dissipation not 100% efficient?",
                 options: [
-                    "Dihydrogen phosphate / Monohydrogen phosphate system",
-                    "Bicarbonate / Carbonic Acid system (HCO3- / H2CO3)",
-                    "Acetoacetate / Acetone system",
-                    "Ammonium / Ammonia system"
-                ],
-                correctText: "Bicarbonate / Carbonic Acid system (HCO3- / H2CO3)",
-                explanation: "The Carbonic Acid-Bicarbonate system (CO2 + H2O <-> H2CO3 <-> HCO3- + H+) is the major extracellular buffer in blood, regulated by pulmonary respiration (CO2 excretion) and renal retention (HCO3-)."
+                    { text: "Because a substantial portion of the free energy is dissipated as thermal energy (heat).", correct: true, why: "Correct because biological energy transformations involve frictional and stepping losses, releasing significant metabolic heat. [Slide #44]" },
+                    { text: "Because ATP synthases operate exclusively via endergonic absorption of room light.", correct: false, why: "Incorrect because ATP synthesis is driven by proton flow, not light absorption. [Slide #44]" },
+                    { text: "Because the inner mitochondrial membrane is completely impermeable to protons.", correct: false, why: "Incorrect because controlled proton permeation through ATP synthase is required for function. [Slide #44]" },
+                    { text: "Because standard free energy change (Delta Go') is always zero in mitochondria.", correct: false, why: "Incorrect because Delta Go' for ATP synthesis is a fixed positive value (+7.8 kcal/mol). [Slide #44]" }
+                ]
             },
             {
                 id: 14,
-                question: "What is the dominant chemical buffer system operating in the intracellular cytosol of human tissues?",
+                quarter: 4,
+                slideRef: 47,
+                stem: "What biological purpose is served by subcellular compartmentalization (isolating enzymes in lysosomes, mitochondria, and nuclei)?",
                 options: [
-                    "Phosphate buffer system (H2PO4- / HPO4^2-)",
-                    "Lactate / Lactic acid system",
-                    "Bicarbonate system exclusively",
-                    "Citrate buffer system"
-                ],
-                correctText: "Phosphate buffer system (H2PO4- / HPO4^2-)",
-                explanation: "Intracellular cytosol relies primarily on the phosphate buffer system (H2PO4- <-> HPO4^2- + H+, pKa ~6.86) along with intracellular proteins to maintain cytosolic pH between 7.2 and 7.4."
+                    { text: "It isolates biochemical pathways into restricted spatial domains to maintain low entropy and metabolic regulation.", correct: true, why: "Correct because physical membrane compartmentalization prevents uncoordinated cross-reactions and preserves cellular order. [Slide #47]" },
+                    { text: "It maximizes random diffusion of metabolic enzymes throughout the cytosol.", correct: false, why: "Incorrect because random cytosolic mixing destroys metabolic control and increases entropy. [Slide #47]" },
+                    { text: "It eliminates the thermodynamic requirement for activation energy.", correct: false, why: "Incorrect because activation energy barriers exist universally across all chemical reactions. [Slide #47]" },
+                    { text: "It converts living dynamic equilibrium into static equilibrium.", correct: false, why: "Incorrect because static equilibrium equals death, whereas organelles maintain dynamic steady-state flux. [Slide #47]" }
+                ]
             },
             {
                 id: 15,
-                question: "When two amino acids form a peptide bond via condensation on a ribosome, what physical form of water is initially released?",
+                quarter: 4,
+                slideRef: 50,
+                stem: "How do living cells fundamentally differ from static chemical equilibrium?",
                 options: [
-                    "Liquid water droplets",
-                    "Water vapor (H2O vapor)",
-                    "Ice microcrystals",
-                    "Hydronium ion clusters"
-                ],
-                correctText: "Water vapor (H2O vapor)",
-                explanation: "Peptide bond synthesis by peptidyl transferase involves nucleophilic attack releasing H2O. Standard biochemistry lecture notes emphasize that condensed water is initially produced as water vapor (H2O(v)) before thermal condensation into solvent."
+                    { text: "Cells operate in a dynamic steady-state equilibrium, continuously expending energy to prevent thermodynamic decay.", correct: true, why: "Correct because cells maintain constant nutrient influx and waste removal, whereas static equilibrium represents dead, unreactive systems. [Slide #50]" },
+                    { text: "Cells operate at true static chemical equilibrium where Delta G is permanently zero.", correct: false, why: "Incorrect because reaching static equilibrium means metabolic free energy is zero, denoting cell death. [Slide #50]" },
+                    { text: "Cells contain zero reversible reactions within metabolic pathways.", correct: false, why: "Incorrect because pathways like glycolysis rely heavily on reversible equilibrium steps. [Slide #50]" },
+                    { text: "Cells maintain closed mass balance with zero exchange of matter.", correct: false, why: "Incorrect because cells are open thermodynamic systems. [Slide #50]" }
+                ]
             },
             {
                 id: 16,
-                question: "What structural resonance property allows the acetate ion (CH3COO-) to achieve enhanced chemical stability?",
+                quarter: 4,
+                slideRef: 54,
+                stem: "What structural consequence does excessive thermal energy (fever or hyperthermia) inflict upon delicate biological polymers like collagen ligaments?",
                 options: [
-                    "A localized triple bond on carbon",
-                    "Delocalization of pi (π) electrons equally across both carbon-oxygen bonds (1.5 bond order)",
-                    "Rapid ring flip into a chair conformation",
-                    "Formation of a permanent disulfide bridge"
-                ],
-                correctText: "Delocalization of pi (π) electrons equally across both carbon-oxygen bonds (1.5 bond order)",
-                explanation: "The deprotonated carboxylate group exhibits 50/50 resonance hybrid delocalization. Pi electrons spread equally across both oxygen atoms, creating two equivalent 1.5-order C-O bonds and distributing negative charge."
-            },
-            {
-                id: 17,
-                question: "Which covalent orbital overlap correctly differentiates a Sigma (σ) bond from a Pi (π) bond in a double-bonded oxygen atom?",
-                options: [
-                    "Sigma = Parallel p-orbitals; Pi = Head-on overlap",
-                    "Sigma = Direct head-on overlap along the internuclear axis; Pi = Parallel p-orbital overlap above and below the axis",
-                    "Sigma = Non-covalent dipole interaction; Pi = Ionic attraction",
-                    "Both represent identical circular orbital paths"
-                ],
-                correctText: "Sigma = Direct head-on overlap along the internuclear axis; Pi = Parallel p-orbital overlap above and below the axis",
-                explanation: "Sigma (σ) bonds are strong, direct head-on orbital overlaps along the internuclear bonding axis. Pi (π) bonds form above and below the axis via parallel p-orbital overlap."
-            },
-            {
-                id: 18,
-                question: "Why must integral membrane proteins present an outer surface domain composed predominantly of lipophilic (non-polar) amino acid side chains?",
-                options: [
-                    "To absorb cytosolic water ions",
-                    "To form covalent peptide bonds with glucose",
-                    "To interact favorably with the hydrophobic hydrocarbon tails of the plasma membrane lipid bilayer",
-                    "To attract basicHistidine residues"
-                ],
-                correctText: "To interact favorably with the hydrophobic hydrocarbon tails of the plasma membrane lipid bilayer",
-                explanation: "The interior phase of a lipid bilayer consists of hydrophobic, non-polar fatty acyl hydrocarbon chains. Integral membrane proteins must display non-polar side-chains (e.g., Leucine, Isoleucine, Valine) outward to anchor within this lipid environment."
-            },
-            {
-                id: 19,
-                question: "At physiological pH (~7.4), what net charge state is maintained by the basic side-chains of Lysine and Arginine?",
-                options: [
-                    "Neutral (0)",
-                    "Positively charged (cationic)",
-                    "Negatively charged (anionic)",
-                    "Zwitterionic with no dipole"
-                ],
-                correctText: "Positively charged (cationic)",
-                explanation: "Lysine (pKa ~10.5) and Arginine (pKa ~12.5) have side-chain pKa values well above physiological pH 7.4. Consequently, they remain fully protonated and positively charged (cationic)."
-            },
-            {
-                id: 20,
-                question: "In uncontrolled Diabetes Mellitus or extended starvation, excessive acetoacetate production drops systemic pH toward 6.8. How does this metabolic acidosis affect the [OH-] to [H+] ratio?",
-                options: [
-                    "Increases [OH-] to 100-fold above normal",
-                    "Inverts the ratio as [H+] concentration rises significantly above basic hydroxide levels",
-                    "Eliminates all protons from blood plasma",
-                    "Has no impact on chemical ion concentration"
-                ],
-                correctText: "Inverts the ratio as [H+] concentration rises significantly above basic hydroxide levels",
-                explanation: "Ketoacidosis increases free [H+] in blood plasma. Because Kw = [H+][OH-] = 10^-14, a rise in [H+] drives down [OH-], severely depressing the [OH-]/[H+] ratio and impairing enzymatic structural integrity."
-            },
-            {
-                id: 21,
-                question: "According to the Henderson-Hasselbalch equation, under what condition is the buffering capacity of a weak acid buffer system at its maximum?",
-                options: [
-                    "When pH is 2 units above pKa",
-                    "When pH = pKa, meaning [A-] = [HA]",
-                    "When all weak acid molecules are completely un-ionized",
-                    "When temperature reaches 0 degrees Celsius"
-                ],
-                correctText: "When pH = pKa, meaning [A-] = [HA]",
-                explanation: "Maximal buffering capacity occurs when pH equals pKa. At this point, the conjugate base [A-] and un-dissociated acid [HA] are in equal concentrations ([A-]/[HA] = 1, and log(1) = 0)."
-            },
-            {
-                id: 22,
-                question: "What happens to the spatial entropy of a human cell when its plasma membrane ruptures upon cell necrosis/death?",
-                options: [
-                    "Entropy drops to zero",
-                    "Intracellular order increases",
-                    "Cellular contents mix randomly with extracellular fluid, causing a massive increase in entropy",
-                    "Enthalpy completely converts into glucose"
-                ],
-                correctText: "Cellular contents mix randomly with extracellular fluid, causing a massive increase in entropy",
-                explanation: "Lysis of the plasma membrane destroys subcellular compartmentalization. Organelles and cytosolic contents scatter randomly into the surrounding medium, producing a rapid spike in systemic disorder (entropy)."
-            },
-            {
-                id: 23,
-                question: "Under the enzyme classification system, which class of enzymes catalyzes oxidation-reduction reactions involving electron transfer (e.g., lactate dehydrogenase)?",
-                options: [
-                    "Transferases",
-                    "Hydrolases",
-                    "Oxidoreductases",
-                    "Isomerases"
-                ],
-                correctText: "Oxidoreductases",
-                explanation: "Oxidoreductases catalyze reactions in which electrons or hydrogen atoms are transferred between molecules (oxidation/reduction), frequently utilizing NAD+/NADH or FAD/FADH2 coenzymes."
-            },
-            {
-                id: 24,
-                question: "What is the isoelectric point (pI) of an amino acid?",
-                options: [
-                    "The pH at which the amino acid is completely uncharged and insoluble in water",
-                    "The pH at which the net electrical charge of the amino acid molecule is zero (zwitterion state)",
-                    "The boiling point of the peptide bond",
-                    "The pKa of the side-chain thiol group"
-                ],
-                correctText: "The pH at which the net electrical charge of the amino acid molecule is zero (zwitterion state)",
-                explanation: "The isoelectric point (pI) is the specific pH at which an amino acid exists as a zwitterion with equal positive and negative charges, resulting in a net overall charge of zero."
-            },
-            {
-                id: 25,
-                question: "Which amino acid possesses a non-polar hydrocarbon side chain that introduces structural rigidity and fixed kinks into polypeptide backbones due to its cyclic imino ring?",
-                options: [
-                    "Glycine",
-                    "Alanine",
-                    "Proline",
-                    "Serine"
-                ],
-                correctText: "Proline",
-                explanation: "Proline contains a secondary imino group where its side-chain forms a cyclic ring locked to the alpha-nitrogen. This unique architecture creates rigid kinks in protein backbones and disrupts standard alpha-helices."
+                    { text: "Increased molecular kinetic momentum leads to destructive intermolecular collisions and structural damage.", correct: true, why: "Correct because thermal energy increases translational and rotational momentum, causing violent atomic collisions that stress and damage delicate structural proteins. [Slide #54]" },
+                    { text: "Proteins spontaneously recrystallize into zero-entropy structures.", correct: false, why: "Incorrect because heat causes denaturation and random unwinding, not ordered crystal formation. [Slide #54]" },
+                    { text: "Activation energy barriers for all anabolic synthesis drop to zero.", correct: false, why: "Incorrect because activation energy barriers are intrinsic to reaction pathways. [Slide #54]" },
+                    { text: "Enzymes permanently double their catalytic turnover rates without structural change.", correct: false, why: "Incorrect because thermal extremes denature enzyme tertiary structure and destroy function. [Slide #54]" }
+                ]
             }
         ];
 
-        let state = {
-            answeredCount: 0,
-            correctCount: 0,
-            userAnswers: {}
-        };
-        
-        // Fisher-Yates shuffle algorithm
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
+        let shuffledQuestions = [];
+        let userAnswers = {};
+
+        // Two-way Fisher-Yates Shuffle Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
-            return arr;
+            return array;
         }
 
-        // Shuffle questions and their respective option choices on startup
-        function initializeQuizData() {
-            shuffleArray(questionsData);
-            questionsData.forEach(q => {
-                shuffleArray(q.options);
+        function initQuiz() {
+            // Shuffle questions (Question order randomization)
+            shuffledQuestions = shuffleArray([...quizData]).map(q => {
+                // Shuffle options within each question (Option order randomization)
+                let clonedOptions = q.options.map((opt, idx) => ({ ...opt, originalIndex: idx }));
+                return {
+                    ...q,
+                    options: shuffleArray(clonedOptions)
+                };
             });
-        }
 
-        initializeQuizData();
+            userAnswers = {};
+            document.getElementById('scorecard').style.display = 'none';
+            renderQuiz();
+            updateScoreDisplay();
+        }
 
         function renderQuiz() {
-            const container = document.getElementById('quiz-container');
+            const container = document.getElementById('quizContainer');
             container.innerHTML = '';
 
-            questionsData.forEach((q, idx) => {
-                const qCard = document.createElement('div');
-                qCard.className = 'bg-[#1a1a1a] border border-[#282828] rounded-2xl p-5 sm:p-6 shadow-md fade-in';
-                qCard.id = `question-card-${q.id}`;
+            shuffledQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-card-${q.id}`;
 
                 let optionsHTML = '';
-                q.options.forEach((opt, optIdx) => {
-                    const optionLetters = ['A', 'B', 'C', 'D'];
+                q.options.forEach((opt, optIndex) => {
                     optionsHTML += `
-                        <button 
-                            id="opt-${q.id}-${optIdx}"
-                            onclick="selectAnswer(${q.id}, '${opt.replace(/'/g, "\\'")}', ${optIdx})"
-                            class="option-btn w-full text-left p-3.5 sm:p-4 rounded-xl border border-[#282828] bg-[#0f0f0f]/70 hover:bg-[#282828]/80 hover:border-slate-700 text-slate-200 text-sm font-medium flex items-center justify-between gap-3 group">
-                            <span><strong class="text-[#ff9900] mr-2">${optionLetters[optIdx]})</strong> ${opt}</span>
-                            <span id="icon-${q.id}-${optIdx}" class="shrink-0"></span>
+                        <button class="option-btn" id="q${q.id}-opt${optIndex}" onclick="selectOption(${q.id}, ${optIndex})">
+                            <span style="font-weight:700; min-width:24px;">${String.fromCharCode(65 + optIndex)}.</span>
+                            <span>${opt.text}</span>
                         </button>
                     `;
                 });
 
-                qCard.innerHTML = `
-                    <div class="flex items-start justify-between gap-3 mb-4">
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-[#0f0f0f] text-[#ff9900] border border-[#282828]">
-                            Question ${idx + 1} of 25
-                        </span>
+                card.innerHTML = `
+                    <div class="question-meta">
+                        <span>Question ${qIndex + 1} of ${shuffledQuestions.length}</span>
+                        <span>Quarter ${q.quarter} | Slide Ref #${q.slideRef}</span>
                     </div>
-                    <h3 class="text-base sm:text-lg font-semibold text-[#ffffff] mb-5 leading-relaxed">
-                        ${q.question}
-                    </h3>
-                    <div class="space-y-3">
+                    <div class="question-stem">${q.stem}</div>
+                    <div class="options-list" id="q${q.id}-options">
                         ${optionsHTML}
                     </div>
-                    <div id="explanation-${q.id}" class="hidden mt-5 p-4 sm:p-5 rounded-xl text-sm leading-relaxed border fade-in">
+                    <div class="explanation-box" id="q${q.id}-explanation">
+                        <div class="explanation-banner" id="q${q.id}-banner"></div>
+                        <div class="explanation-ref">Reference: Slide #${q.slideRef}</div>
+                        <div class="explanation-summary" id="q${q.id}-summary"></div>
+                        <div class="rationale-list" id="q${q.id}-rationales"></div>
                     </div>
                 `;
-                container.appendChild(qCard);
+                container.appendChild(card);
             });
         }
 
-        function selectAnswer(questionId, selectedValue, selectedIdx) {
-            if (state.userAnswers[questionId] !== undefined) return; // Prevent re-selection
+        function selectOption(questionId, selectedOptIndex) {
+            if (userAnswers[questionId] !== undefined) return; // Prevent changing answer once locked
 
-            const q = questionsData.find(item => item.id === questionId);
-            state.userAnswers[questionId] = selectedIdx;
-            state.answeredCount++;
+            userAnswers[questionId] = selectedOptIndex;
+            const qObj = shuffledQuestions.find(q => q.id === questionId);
+            const selectedOpt = qObj.options[selectedOptIndex];
 
-            const isCorrect = (selectedValue === q.correctText);
-            if (isCorrect) {
-                state.correctCount++;
-            }
-
-            // Update Sticky Header
-            updateHeader();
-
-            // Disable all buttons for this question
-            q.options.forEach((opt, optIdx) => {
-                const btn = document.getElementById(`opt-${questionId}-${optIdx}`);
+            // Disable all option buttons for this question
+            for (let i = 0; i < qObj.options.length; i++) {
+                const btn = document.getElementById(`q${questionId}-opt${i}`);
                 btn.disabled = true;
-                btn.classList.remove('hover:bg-[#282828]/80', 'hover:border-slate-700');
-                btn.classList.add('cursor-not-allowed', 'opacity-80');
-
-                if (opt === q.correctText) {
-                    btn.classList.remove('bg-[#0f0f0f]/70', 'border-[#282828]');
-                    btn.classList.add('bg-[#14532d]/60', 'border-[#22c55e]', 'text-emerald-200', '!opacity-100');
-                    document.getElementById(`icon-${questionId}-${optIdx}`).innerHTML = `
-                        <svg class="w-5 h-5 text-[#22c55e]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                    `;
-                } else if (optIdx === selectedIdx && !isCorrect) {
-                    btn.classList.remove('bg-[#0f0f0f]/70', 'border-[#282828]');
-                    btn.classList.add('bg-[#7f1d1d]/60', 'border-[#ef4444]', 'text-rose-200', '!opacity-100');
-                    document.getElementById(`icon-${questionId}-${optIdx}`).innerHTML = `
-                        <svg class="w-5 h-5 text-[#ef4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    `;
+                if (qObj.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === selectedOptIndex && !selectedOpt.correct) {
+                    btn.classList.add('incorrect');
                 }
+            }
+
+            // Show explanation box
+            const expBox = document.getElementById(`q${questionId}-explanation`);
+            const banner = document.getElementById(`q${questionId}-banner`);
+            const summary = document.getElementById(`q${questionId}-summary`);
+            const rationalesList = document.getElementById(`q${questionId}-rationales`);
+
+            expBox.style.display = 'block';
+
+            if (selectedOpt.correct) {
+                banner.textContent = "Correct!";
+                banner.className = "explanation-banner correct-banner";
+            } else {
+                banner.textContent = "Incorrect.";
+                banner.className = "explanation-banner incorrect-banner";
+            }
+
+            // Find correct option text for summary
+            const correctOptObj = qObj.options.find(o => o.correct);
+            summary.innerHTML = `<strong>Concept Breakdown:</strong> ${selectedOpt.correct ? 'You selected the correct answer.' : `The correct choice was "${correctOptObj.text}".`} ${qObj.options.find(o => o.correct).why}`;
+
+            // Build option-by-option rationale audit list
+            let rationalesHTML = '<strong>Option Auditing & Rationales:</strong>';
+            qObj.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <div class="rationale-item">
+                        - <strong>${letter}) ${opt.text}</strong>: ${opt.why}
+                    </div>
+                `;
             });
+            rationalesList.innerHTML = rationalesHTML;
 
-            // Display Explanation Box
-            const expBox = document.getElementById(`explanation-${questionId}`);
-            expBox.classList.remove('hidden');
-            if (isCorrect) {
-                expBox.className = "mt-5 p-4 sm:p-5 rounded-xl text-sm leading-relaxed border bg-[#14532d]/30 border-[#22c55e]/30 text-emerald-200 fade-in";
-                expBox.innerHTML = `
-                    <div class="font-bold text-[#22c55e] mb-1 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
-                        Correct!
-                    </div>
-                    <div>${q.explanation}</div>
-                `;
-            } else {
-                expBox.className = "mt-5 p-4 sm:p-5 rounded-xl text-sm leading-relaxed border bg-[#7f1d1d]/30 border-[#ef4444]/30 text-rose-200 fade-in";
-                expBox.innerHTML = `
-                    <div class="font-bold text-[#ef4444] mb-1 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        Incorrect
-                    </div>
-                    <div>${q.explanation}</div>
-                `;
+            updateScoreDisplay();
+            checkCompletion();
+        }
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            let answeredCount = Object.keys(userAnswers).length;
+            const total = shuffledQuestions.length;
+
+            for (let qId in userAnswers) {
+                const qObj = shuffledQuestions.find(q => q.id == qId);
+                if (qObj.options[userAnswers[qId]].correct) {
+                    correctCount++;
+                }
             }
 
-            // Check for Final Quiz Completion
-            if (state.answeredCount === questionsData.length) {
-                showFinalSummary();
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        function checkCompletion() {
+            if (Object.keys(userAnswers).length === shuffledQuestions.length) {
+                let correctCount = 0;
+                for (let qId in userAnswers) {
+                    const qObj = shuffledQuestions.find(q => q.id == qId);
+                    if (qObj.options[userAnswers[qId]].correct) correctCount++;
+                }
+                const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+                
+                const scorecard = document.getElementById('scorecard');
+                const finalScoreText = document.getElementById('finalScoreText');
+                finalScoreText.textContent = `You scored ${correctCount} out of ${shuffledQuestions.length} (${percentage}%)`;
+                scorecard.style.display = 'block';
+                scorecard.scrollIntoView({ behavior: 'smooth' });
             }
         }
 
-        function updateHeader() {
-            const scoreText = document.getElementById('score-text');
-            const progressBar = document.getElementById('progress-bar');
-            const pct = Math.round((state.correctCount / questionsData.length) * 100);
-            
-            scoreText.innerText = `${state.correctCount} / ${questionsData.length} (${pct}%)`;
-            
-            const progressPct = (state.answeredCount / questionsData.length) * 100;
-            progressBar.style.width = `${progressPct}%`;
-        }
-
-        function showFinalSummary() {
-            const summaryCard = document.getElementById('summary-card');
-            const summaryBadge = document.getElementById('summary-badge');
-            const summaryCorrect = document.getElementById('summary-correct');
-            const summaryPercentage = document.getElementById('summary-percentage');
-            const summaryFeedback = document.getElementById('summary-feedback');
-
-            const pct = Math.round((state.correctCount / questionsData.length) * 100);
-
-            summaryCorrect.innerText = `${state.correctCount} / 25`;
-            summaryPercentage.innerText = `${pct}%`;
-
-            if (pct >= 90) {
-                summaryBadge.innerText = "🏆 Board Master - Exceptional Performance";
-                summaryBadge.className = "mt-2 text-base font-semibold text-[#22c55e]";
-                summaryFeedback.innerText = "You demonstrated exemplary mastery of Week 1 Chiropractic Biochemistry concepts including bioenergetics, kinetics, buffers, and amino acid properties!";
-            } else if (pct >= 75) {
-                summaryBadge.innerText = "📈 High Pass - Strong Board Preparation";
-                summaryBadge.className = "mt-2 text-base font-semibold text-[#ff9900]";
-                summaryFeedback.innerText = "Solid foundational performance. Review missed questions regarding specific Ka values or buffer systems to solidify your 90%+ target.";
-            } else {
-                summaryBadge.innerText = "⚠️ Needs Review - High-Yield Concepts Pending";
-                summaryBadge.className = "mt-2 text-base font-semibold text-amber-400";
-                summaryFeedback.innerText = "Re-visit the lecture transcripts and handwritten notes for Thermodynamics, Henderson-Hasselbalch equations, and amino acid side-chain classifications.";
-            }
-
-            summaryCard.classList.remove('hidden');
-            summaryCard.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function resetQuiz() {
-            state = {
-                answeredCount: 0,
-                correctCount: 0,
-                userAnswers: {}
-            };
-            initializeQuizData(); // Reshuffles questions and answers on retake
-            updateHeader();
-            document.getElementById('summary-card').classList.add('hidden');
-            renderQuiz();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Initialize Quiz on load
-        window.onload = function() {
-            renderQuiz();
-        };
+        // Initialize quiz on page load
+        window.onload = initQuiz;
     </script>
 </body>
 </html>
