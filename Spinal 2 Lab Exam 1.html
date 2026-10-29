@@ -1253,7 +1253,7 @@
         } else {
             feedbackEl.classList.add('incorrect');
             feedbackEl.innerHTML = `
-                <div class="status-banner">Incorrect.</div>
+                <div class="status-banner">You didn’t know that?!</div>
                 ${noteHTML}
                 <div class="explanation-text">${q.explanation}</div>
                 ${rationalesHTML}
@@ -1278,7 +1278,17 @@
         const percent = Math.round((correctCount / total) * 100);
         const summaryBox = document.getElementById('final-summary');
         summaryBox.style.display = 'block';
-        document.getElementById('final-score-text').innerText = `Final Score: ${correctCount} out of ${total} (${percent}%)`;
+
+        let tierMessage = "";
+        if (percent >= 90) {
+            tierMessage = "Absolute Gigachad. You drained that test dry.";
+        } else if (percent >= 70) {
+            tierMessage = "Solid run! You're locked in, get in some more reps.";
+        } else {
+            tierMessage = "You lasted less than 30 seconds. Time for a rematch.";
+        }
+
+        document.getElementById('final-score-text').innerHTML = `Final Score: ${correctCount} out of ${total} (${percent}%)<br><br><strong>${tierMessage}</strong>`;
         summaryBox.scrollIntoView({ behavior: 'smooth' });
     }
 
