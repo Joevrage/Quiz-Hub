@@ -326,7 +326,7 @@
                 ]
             },
             {
-                question: "___________ stimulates apoptosis, which is ___________. [Historical synonym: cachectin]",
+                question: "___________ stimulates apoptosis, which is ___________.",
                 options: [
                     { text: "TNF; deconstruction of the cell", isCorrect: true, rationale: "Tumor Necrosis Factor (TNF, previously called cachectin) acts as a cytotoxic 'death factor' that induces apoptosis, the controlled deconstruction of the cell." },
                     { text: "Prothrombin; genetically programmed cell death", isCorrect: false, rationale: "Prothrombin is a clotting zymogen in the coagulation cascade, not an apoptotic cytokine." },
@@ -353,7 +353,7 @@
                 ]
             },
             {
-                question: "The regulatory T cell expresses ____________ and secretes ______________. [Transcript / Kahoot emphasis]",
+                question: "The regulatory T cell expresses ____________ and secretes ______________.",
                 options: [
                     { text: "CD4+ ; IL-10", isCorrect: true, rationale: "Regulatory T-cells (Tregs) are CD4+ (specifically CD4+ CD25+ Foxp3+) and secrete the potent immunosuppressive cytokine IL-10." },
                     { text: "CD4+ ; histamine", isCorrect: false, rationale: "T-cells do not produce or release histamine." },
@@ -389,7 +389,7 @@
                 ]
             },
             {
-                question: "Which macrophage phenotype is classically activated, secretes IL-1, TNF-alpha, and Nitric Oxide (NO), and drives chronic tissue inflammation? [Transcript / Kahoot emphasis]",
+                question: "Which macrophage phenotype is classically activated, secretes IL-1, TNF-alpha, and Nitric Oxide (NO), and drives chronic tissue inflammation?",
                 options: [
                     { text: "M1 Macrophage", isCorrect: true, rationale: "M1 macrophages are pro-inflammatory, release reactive nitrogen species (NO) and destructive cytokines, and maintain chronic inflammatory lesions." },
                     { text: "M2 Macrophage", isCorrect: false, rationale: "M2 macrophages are alternatively activated and promote tissue repair, anti-inflammatory balance, and fibrosis." },
@@ -398,7 +398,7 @@
                 ]
             },
             {
-                question: "Which statement accurately describes Natural Killer (NK) cell physiology? [Kahoot Review emphasis]",
+                question: "Which statement accurately describes Natural Killer (NK) cell physiology?",
                 options: [
                     { text: "They are innate lymphocytes that do NOT require MHC presentation to identify and kill targets", isCorrect: true, rationale: "NK cells are innate cytotoxic lymphocytes that recognize stressed cells lacking normal MHC Class I expression without requiring prior antigen presentation." },
                     { text: "They require MHC Class II antigen presentation by dendritic cells", isCorrect: false, rationale: "MHC Class II interacts with CD4+ T-cells, not innate NK cells." },
@@ -407,7 +407,7 @@
                 ]
             },
             {
-                question: "Which T helper pathway is famously upregulated by genetic predisposition in atopic disorders such as asthma and allergic rhinitis? [Kahoot Review emphasis]",
+                question: "Which T helper pathway is famously upregulated by genetic predisposition in atopic disorders such as asthma and allergic rhinitis?",
                 options: [
                     { text: "T Helper 2 (TH2)", isCorrect: true, rationale: "Atopy and allergic predispositions are driven by an inherited upregulation of the TH2 arm, producing excess IL-4, IL-5, and IgE." },
                     { text: "T Helper 1 (TH1)", isCorrect: false, rationale: "TH1 governs delayed-type hypersensitivity and intracellular defense, not atopic allergic disorders." },
@@ -416,7 +416,7 @@
                 ]
             },
             {
-                question: "What immunological mechanism defines cross-presentation in dendritic cells? [Transcript emphasis]",
+                question: "What immunological mechanism defines cross-presentation in dendritic cells?",
                 options: [
                     { text: "Processing of exogenous antigens onto MHC Class I to activate CD8+ T-cells", isCorrect: true, rationale: "Cross-presentation is the unique ability of dendritic cells to divert engulfed extracellular (exogenous) antigens into the MHC Class I pathway to activate killer CD8+ T-cells." },
                     { text: "Transfer of immunoglobulins across mucosal membranes via secretory IgA", isCorrect: false, rationale: "This describes transcytosis of dimeric IgA." },
@@ -425,7 +425,7 @@
                 ]
             },
             {
-                question: "A patient's spinal radiograph demonstrates bilateral sacroiliac joint fusion and syndesmophytes creating a 'bamboo spine' appearance. This pathology is associated with which genetic marker? [Transcript clinical correlation]",
+                question: "A patient's spinal radiograph demonstrates bilateral sacroiliac joint fusion and syndesmophytes creating a 'bamboo spine' appearance. This pathology is associated with which genetic marker?",
                 options: [
                     { text: "HLA-B27", isCorrect: true, rationale: "HLA-B27 is an MHC Class I variant strongly associated with Ankylosing Spondylitis, producing bilateral SI joint fusion and bamboo spine." },
                     { text: "HLA-DR4", isCorrect: false, rationale: "HLA-DR4 is an MHC Class II marker linked to Rheumatoid Arthritis." },
@@ -574,6 +574,18 @@
         let currentScore = 0;
         let answeredCount = 0;
 
+
+        // Score-tier completion messages (school fail line = below 60%)
+        function getScoreTier(pct) {
+            if (pct === 100) return { title: "PERFECT SCORE", msg: "Absolute Gigachad. You drained that test dry.", color: "#22c55e" };
+            if (pct >= 90)   return { title: "ELITE", msg: "One rep shy of perfect. Run it back and finish the set.", color: "#22c55e" };
+            if (pct >= 80)   return { title: "SOLID HIT", msg: "Big brain energy. Clean up the red ones and you're in Gigachad territory.", color: "#86efac" };
+            if (pct >= 70)   return { title: "SURVIVED", msg: "You won the fight, but you took some hits. Review the misses before the rematch.", color: "#ff9900" };
+            if (pct >= 60)   return { title: "PASSED... BARELY", msg: "Lucky, not legendary. One bad day away from a fail. Back to the notes.", color: "#facc15" };
+            if (pct >= 50)   return { title: "FAILED", msg: "Below 60 is a fail. So close you could taste it. Run it back.", color: "#ef4444" };
+            return { title: "K.O.", msg: "You lasted less than 30 seconds. Time for a rematch.", color: "#ef4444" };
+        }
+
         function shuffleArray(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -708,13 +720,11 @@
 
             scoreText.innerText = `${pct}% (${currentScore} / ${total})`;
 
-            if (pct >= 90) {
-                feedbackText.innerText = "Mastery demonstrated! Outstanding recall of cellular and antibody-mediated immunity concepts.";
-            } else if (pct >= 75) {
-                feedbackText.innerText = "Solid performance! Review any missed rationale breakdowns to lock in high-yield board concepts.";
-            } else {
-                feedbackText.innerText = "Review recommended. Re-study the Week 3 notes and retake the assessment to solidify key mechanisms.";
-            }
+            const tier = getScoreTier(pct);
+            document.querySelector('#final-summary .summary-title').innerText = tier.title;
+            document.querySelector('#final-summary .summary-title').style.color = tier.color;
+            feedbackText.innerText = tier.msg;
+            feedbackText.style.color = '#ffffff';
 
             summaryBox.style.display = 'block';
             summaryBox.scrollIntoView({ behavior: 'smooth' });
