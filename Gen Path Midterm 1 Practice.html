@@ -1,0 +1,5195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gen Path Midterm 1 Practice Exam</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0f0f0f;
+    color: #ffffff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+    padding-top: 84px;
+  }
+  header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: #1a1a1a; border-bottom: 2px solid #ff9900;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 20px; min-height: 64px;
+  }
+  .brand { color: #ff9900; font-weight: 700; font-size: 1.05rem; }
+  .brand small { display: block; color: #888888; font-weight: 500; font-size: 0.78rem; }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .pill {
+    border: 1px solid #282828; border-radius: 999px; padding: 6px 14px;
+    font-size: 0.85rem; color: #888888; background: #0f0f0f; white-space: nowrap;
+  }
+  #score-display { border-color: #ff9900; color: #ffffff; font-weight: 700; font-size: 0.95rem; }
+  .progress-track { position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; background: transparent; }
+  #progress-bar { height: 100%; width: 0; background: #22c55e; transition: width .25s ease; }
+
+  main { max-width: 820px; margin: 0 auto; padding: 16px 16px 60px; }
+  .intro {
+    background: #1a1a1a; border: 1px solid #282828; border-radius: 12px;
+    padding: 18px 22px; margin-bottom: 22px; color: #888888; font-size: 0.92rem;
+  }
+  .intro strong { color: #ffffff; }
+  .intro .row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .link-btn {
+    background: none; border: 1px solid #282828; color: #888888; border-radius: 8px;
+    padding: 6px 12px; font-size: 0.82rem; cursor: pointer;
+  }
+  .link-btn:hover { border-color: #ff9900; color: #ff9900; }
+
+  .card {
+    background: #1a1a1a; border: 1px solid #282828; border-radius: 12px;
+    padding: 22px 24px; margin-bottom: 20px;
+  }
+  .q-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .q-num { color: #ff9900; font-weight: 700; font-size: 0.82rem; letter-spacing: .04em; text-transform: uppercase; }
+  .badge {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 999px; border: 1px solid #282828; color: #888888;
+  }
+  .badge.hot { border-color: #ff9900; color: #ff9900; }
+  .stem { font-size: 1.08rem; margin-bottom: 16px; color: #ffffff; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex; gap: 10px; align-items: flex-start; text-align: left; width: 100%;
+    background: #252525; color: #ffffff; border: 1px solid #282828; border-radius: 8px;
+    padding: 12px 16px; font-size: 0.98rem; cursor: pointer; font-family: inherit;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .option-btn .letter { color: #ff9900; font-weight: 700; min-width: 1.3em; }
+  .option-btn:hover:not(:disabled) { border-color: #ff9900; background: #2b2b2b; }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct { background: #14532d; border-color: #22c55e; }
+  .option-btn.correct .letter { color: #22c55e; }
+  .option-btn.incorrect { background: #7f1d1d; border-color: #ef4444; }
+  .option-btn.incorrect .letter { color: #ef4444; }
+  .option-btn.dim { opacity: .55; }
+
+  .explanation {
+    display: none; margin-top: 16px; background: #222222; border-left: 4px solid #ff9900;
+    border-radius: 6px; padding: 16px 18px; font-size: 0.92rem;
+  }
+  .explanation.show { display: block; }
+  .banner {
+    display: inline-block; font-weight: 800; font-size: 1.05rem; padding: 6px 14px;
+    border-radius: 6px; margin-bottom: 10px; border: 1px solid;
+  }
+  .banner.good { color: #22c55e; background: #14532d; border-color: #22c55e; }
+  .banner.bad { color: #ffffff; background: #7f1d1d; border-color: #ef4444; }
+  .reference { color: #ff9900; font-weight: 600; margin-bottom: 10px; }
+  .breakdown { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .breakdown li { color: #bbbbbb; padding-left: 4px; }
+  .breakdown li strong { color: #ffffff; }
+  .breakdown li .tag-c { color: #22c55e; font-weight: 700; }
+  .breakdown li .tag-x { color: #ef4444; font-weight: 700; }
+
+  #summary-card { display: none; text-align: center; border: 1px solid #ff9900; padding: 34px 24px; }
+  #summary-card.show { display: block; }
+  .summary-title { font-size: 0.85rem; letter-spacing: .12em; text-transform: uppercase; color: #888888; margin-bottom: 6px; }
+  .summary-pct { font-size: 3.2rem; font-weight: 800; color: #ff9900; line-height: 1.1; }
+  .summary-raw { color: #888888; margin-bottom: 14px; }
+  #summary-feedback { font-size: 1.25rem; font-weight: 700; margin: 6px auto 22px; max-width: 560px; }
+  .topic-table { width: 100%; max-width: 520px; margin: 0 auto 24px; border-collapse: collapse; font-size: 0.9rem; }
+  .topic-table th, .topic-table td { padding: 8px 10px; border-bottom: 1px solid #282828; text-align: left; }
+  .topic-table th { color: #888888; font-weight: 600; }
+  .topic-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .retake-btn {
+    background: #ff9900; color: #0f0f0f; border: none; border-radius: 999px;
+    padding: 12px 30px; font-size: 1rem; font-weight: 800; cursor: pointer;
+  }
+  .retake-btn:hover { background: #ffad33; }
+  @media (max-width: 600px) {
+    body { padding-top: 104px; }
+    header { flex-direction: column; align-items: flex-start; padding: 10px 14px; }
+    .card { padding: 18px 16px; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Gen Path Quiz Hub<small>Midterm 1 Practice Exam &middot; Rotating Bank</small></div>
+  <div class="header-right">
+    <span class="pill" id="answered-display">Answered 0 / 0</span>
+    <span class="pill" id="score-display">Score: 0 / 0 (0%)</span>
+  </div>
+  <div class="progress-track"><div id="progress-bar"></div></div>
+</header>
+
+<main>
+  <section class="intro" id="intro"></section>
+  <div id="quiz-container"></div>
+  <section class="card" id="summary-card">
+    <div class="summary-title" id="summary-title">Final Score</div>
+    <div class="summary-pct" id="summary-pct">0%</div>
+    <div class="summary-raw" id="summary-raw"></div>
+    <div id="summary-feedback"></div>
+    <table class="topic-table" id="topic-table"></table>
+    <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
+  </section>
+</main>
+
+<script>
+// ============================================================================
+// CONFIG
+// ============================================================================
+const QUESTIONS_PER_ATTEMPT = 50;
+const STORAGE_KEY = "genpath_mt1_seen_v1";
+const QUARTER_NAMES = {
+  1: "Week 1: Intro to Gen Path",
+  2: "Week 2: Cellular Layer of Defense",
+  3: "Week 3: Cell- & Antibody-Mediated Immunity",
+  4: "Week 4: Hypersensitivities"
+};
+
+// ============================================================================
+// FULL QUESTION BANK (every attempt draws QUESTIONS_PER_ATTEMPT from here)
+// ============================================================================
+const questionBank = [
+  {
+    "id": "Q1-01",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "A clinical sign is best defined as a finding that is:",
+    "options": [
+      {
+        "text": "Experienced only by the patient",
+        "correct": false,
+        "why": "This defines a symptom, which is subjective (e.g., a headache) and cannot be measured. [Lecture 1.1]"
+      },
+      {
+        "text": "Measurable by the clinician",
+        "correct": true,
+        "why": "Correct: a sign can be objectively measured, such as a fever confirmed by taking the temperature. [Lecture 1.1]"
+      },
+      {
+        "text": "The cause of a disease",
+        "correct": false,
+        "why": "The cause of a disease is its etiology, not a sign. [Lecture 1.1]"
+      },
+      {
+        "text": "The mechanism of a disease",
+        "correct": false,
+        "why": "The mechanism by which a disease develops is its pathogenesis, not a sign. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-02",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "A goiter, or enlarged thyroid, is an example of _______.",
+    "options": [
+      {
+        "text": "Hypertrophy",
+        "correct": false,
+        "why": "Hypertrophy is an increase in cell size (e.g., biceps or a hypertensive left ventricle), not cell number. [Lecture 1.1]"
+      },
+      {
+        "text": "Metaplasia",
+        "correct": false,
+        "why": "Metaplasia is a change from one cell type to another (e.g., Barrett's esophagus), not an increase in cell number. [Lecture 1.1]"
+      },
+      {
+        "text": "Aplasia",
+        "correct": false,
+        "why": "Aplasia means a tissue never formed (e.g., being born with one kidney), the opposite of an enlarged gland. [Lecture 1.1]"
+      },
+      {
+        "text": "Hyperplasia",
+        "correct": true,
+        "why": "Correct: a goiter shows an increase in the number of thyroid cells, produced by mitosis. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-03",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Left ventricular thickening caused by chronic hypertension is an example of:",
+    "options": [
+      {
+        "text": "Pathological hypertrophy",
+        "correct": true,
+        "why": "Correct: the heart enlarges from pumping against high resistance, but it becomes fatigued rather than stronger and can progress to heart failure. [Lecture 1.1]"
+      },
+      {
+        "text": "Physiological hypertrophy",
+        "correct": false,
+        "why": "Physiological hypertrophy is wanted and normal, like biceps enlarging from weight training, not a harmful heart response. [Lecture 1.1]"
+      },
+      {
+        "text": "Pathological hyperplasia",
+        "correct": false,
+        "why": "Hyperplasia increases cell number by mitosis (e.g., goiter); left ventricular thickening reflects bigger cells. [Lecture 1.1]"
+      },
+      {
+        "text": "Physiological atrophy",
+        "correct": false,
+        "why": "Atrophy is a decrease in cell size, the opposite of a thickened ventricle. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-04",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": false,
+    "stem": "Loss of muscle size after an arm is kept in a cast for three months is called:",
+    "options": [
+      {
+        "text": "Hypertrophy",
+        "correct": false,
+        "why": "Hypertrophy is the opposite, an increase in cell size. [Lecture 1.1]"
+      },
+      {
+        "text": "Aplasia",
+        "correct": false,
+        "why": "Aplasia means a tissue never formed in the first place, not shrinkage of existing muscle. [Lecture 1.1]"
+      },
+      {
+        "text": "Anaplasia",
+        "correct": false,
+        "why": "Anaplasia is complete disorganization of cells, meaning cancer, not shrinkage from disuse. [Lecture 1.1]"
+      },
+      {
+        "text": "Atrophy",
+        "correct": true,
+        "why": "Correct: atrophy is a decrease in cell size from disuse ('use it or lose it'). [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-05",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Replacement of lower esophageal tissue by a different normal cell type due to chronic GERD is called:",
+    "options": [
+      {
+        "text": "Dysplasia",
+        "correct": false,
+        "why": "Dysplasia is the next step, when cells change size, shape, or function and no longer resemble a normal tissue. [Lecture 1.1]"
+      },
+      {
+        "text": "Anaplasia",
+        "correct": false,
+        "why": "Anaplasia is cancer, with complete disorganization; the tissue in Barrett's esophagus is still recognizable. [Lecture 1.1]"
+      },
+      {
+        "text": "Hyperplasia",
+        "correct": false,
+        "why": "Hyperplasia increases cell number without changing cell type; Barrett's esophagus changes the cell type. [Lecture 1.1]"
+      },
+      {
+        "text": "Metaplasia",
+        "correct": true,
+        "why": "Correct: Barrett's esophagus is metaplasia, where one recognizable normal cell type is replaced by another not usually found there. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-06",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "A change in cell size, shape, or function that is considered precancerous is called _______.",
+    "options": [
+      {
+        "text": "Metaplasia",
+        "correct": false,
+        "why": "Metaplasia swaps one normal cell type for another that is still recognizable; it is not yet precancerous. [Lecture 1.1]"
+      },
+      {
+        "text": "Anaplasia",
+        "correct": false,
+        "why": "Anaplasia is complete disorganization of the cell (cancer) and is past the precancerous stage. [Lecture 2.1]"
+      },
+      {
+        "text": "Dysplasia",
+        "correct": true,
+        "why": "Correct: dysplasia is the precancerous change in size, shape, or function and is the last reversible stage. [Lecture 1.1]"
+      },
+      {
+        "text": "Hyperplasia",
+        "correct": false,
+        "why": "Hyperplasia is just an increase in cell number by mitosis, with no change in shape or function. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-07",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "As chronic smoking drives airway cells from metaplasia toward squamous cell carcinoma, which is the last stage that reverses if smoking stops?",
+    "options": [
+      {
+        "text": "Metaplasia",
+        "correct": false,
+        "why": "Metaplasia is reversible, but it comes before dysplasia, so it is not the last reversible stage. [Lecture 1.1]"
+      },
+      {
+        "text": "Anaplasia",
+        "correct": false,
+        "why": "Anaplasia is the cancer itself (e.g., squamous cell carcinoma) and is irreversible. [Lecture 1.1]"
+      },
+      {
+        "text": "Dysplasia",
+        "correct": true,
+        "why": "Correct: metaplasia and dysplasia both reverse when the stressor is removed; dysplasia is the last reversible step before cancer. [Lecture 1.1]"
+      },
+      {
+        "text": "Aplasia",
+        "correct": false,
+        "why": "Aplasia means a tissue never formed; it is not a stage in the smoking progression. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-08",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Anaplastic cells differ from dysplastic cells in that anaplastic cells:",
+    "options": [
+      {
+        "text": "Still form a recognizable normal tissue type",
+        "correct": false,
+        "why": "This describes metaplasia, where the new cell type is normal but out of place. [Lecture 1.1]"
+      },
+      {
+        "text": "Are undifferentiated and irreversibly changed",
+        "correct": true,
+        "why": "Correct: anaplasia is cancer; the cell resembles nothing from its tissue of origin and cannot revert. [Lecture 1.1]"
+      },
+      {
+        "text": "Change only in size, not in cell type",
+        "correct": false,
+        "why": "Size-only changes are hypertrophy or atrophy, which do not involve differentiation. [Lecture 1.1]"
+      },
+      {
+        "text": "Never formed during embryonic development",
+        "correct": false,
+        "why": "A tissue that never formed is aplasia, not anaplasia. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-09",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": false,
+    "stem": "Being born with only one kidney is an example of:",
+    "options": [
+      {
+        "text": "Aplasia",
+        "correct": true,
+        "why": "Correct: aplasia means the tissue did not form in the first place. [Lecture 1.1]"
+      },
+      {
+        "text": "Anaplasia",
+        "correct": false,
+        "why": "Anaplasia is cancer, with complete disorganization of existing cells. [Lecture 1.1]"
+      },
+      {
+        "text": "Atrophy",
+        "correct": false,
+        "why": "Atrophy is shrinkage of a tissue that already exists, such as muscle in a cast. [Lecture 1.1]"
+      },
+      {
+        "text": "Dysplasia",
+        "correct": false,
+        "why": "Dysplasia is a precancerous change in size, shape, or function of existing cells. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-10",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement about cellular adaptations is TRUE?",
+    "options": [
+      {
+        "text": "They are always irreversible once they have begun",
+        "correct": false,
+        "why": "False: adaptations such as metaplasia and dysplasia reverse when the stressor is removed; anaplasia is the exception. [Lecture 2.1]"
+      },
+      {
+        "text": "They allow cells to withstand stress of any severity",
+        "correct": false,
+        "why": "Cells can only adapt to a certain extent; excessive stress leads to cell injury and death. [Lecture 1.1]"
+      },
+      {
+        "text": "They occur only when no stressor is present",
+        "correct": false,
+        "why": "Adaptations occur because a cell is stressed by some external stimulus. [Lecture 1.1]"
+      },
+      {
+        "text": "They let cells change structure or function to escape injury",
+        "correct": true,
+        "why": "Correct: cells adapt to stress to maintain homeostasis and avoid injury. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-11",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Water entering an injured cell is called _______, and the resulting visible change inside the cell is called _______.",
+    "options": [
+      {
+        "text": "cloudy swelling; hydropic change",
+        "correct": false,
+        "why": "This reverses the two terms: 'hydro' refers to the water entering, and cloudy swelling is the resulting appearance. [Lecture 1.1]"
+      },
+      {
+        "text": "pyknosis; karyorrhexis",
+        "correct": false,
+        "why": "These are nuclear changes (chromatin condensing, then fragmenting) that mark irreversible injury, not water entry. [Lecture 1.1]"
+      },
+      {
+        "text": "karyorrhexis; karyolysis",
+        "correct": false,
+        "why": "These describe chromatin fragmenting and the nucleus fading, which happen during cell death, not reversible swelling. [Lecture 1.1]"
+      },
+      {
+        "text": "hydropic change; cloudy swelling",
+        "correct": true,
+        "why": "Correct: hydropic change is water entering the cell; cloudy swelling is the 'swampy' appearance it causes. Both are reversible. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-12",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Cell injury becomes irreversible at the point when:",
+    "options": [
+      {
+        "text": "The nucleus becomes damaged",
+        "correct": true,
+        "why": "Correct: as long as the nucleus is intact the cell can recover; once the nucleus is affected, the cell always dies. [Lecture 1.1]"
+      },
+      {
+        "text": "Water first begins to enter the cell",
+        "correct": false,
+        "why": "Water entry (hydropic change) is reversible while the nucleus is intact. [Lecture 1.1]"
+      },
+      {
+        "text": "Cloudy swelling becomes visible",
+        "correct": false,
+        "why": "Cloudy swelling is still reversible injury. [Lecture 1.1]"
+      },
+      {
+        "text": "Mitochondria work harder to pump out water",
+        "correct": false,
+        "why": "Mitochondria working in overdrive is the cell trying to keep homeostasis; it does not mark irreversibility. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-13",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": false,
+    "stem": "Chromatin condensation, the first visible sign of nuclear damage, is called _______.",
+    "options": [
+      {
+        "text": "Pyknosis",
+        "correct": true,
+        "why": "Correct: pyknosis is chromatin condensation, the first visible nuclear sign that the cell will die. [Lecture 1.1]"
+      },
+      {
+        "text": "Karyorrhexis",
+        "correct": false,
+        "why": "Karyorrhexis comes after pyknosis, when the chromatin fragments. [Lecture 1.1]"
+      },
+      {
+        "text": "Karyolysis",
+        "correct": false,
+        "why": "Karyolysis is the nucleus fading, the last change, and it is seen only in necrosis. [Lecture 1.1]"
+      },
+      {
+        "text": "Hydropic change",
+        "correct": false,
+        "why": "Hydropic change is water entering the cell, a reversible change that does not involve the nucleus. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-14",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "Karyolysis is seen in necrosis but not apoptosis because necrotic cells:",
+    "options": [
+      {
+        "text": "Condense their chromatin without fragmenting it",
+        "correct": false,
+        "why": "Condensation (pyknosis) and fragmentation (karyorrhexis) happen in both apoptosis and necrosis. [Lecture 1.1]"
+      },
+      {
+        "text": "Are cleared by phagocytes without inflammation",
+        "correct": false,
+        "why": "This describes apoptosis, where neat packages are easily eaten by phagocytes. [Lecture 1.1]"
+      },
+      {
+        "text": "Burst chaotically instead of packaging their contents",
+        "correct": true,
+        "why": "Correct: necrosis is uncontrolled, so the cell essentially explodes and the nucleus fades, leaving inflammation behind. [Lecture 1.1]"
+      },
+      {
+        "text": "Regain normal function once the stressor is gone",
+        "correct": false,
+        "why": "Recovery happens only in reversible injury, before the nucleus is affected; necrosis is cell death. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-15",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement correctly distinguishes congenital disorders from genetic disorders?",
+    "options": [
+      {
+        "text": "Genetic disorders are always present at birth",
+        "correct": false,
+        "why": "Genetic mutations can also arise later in life after exposure to a mutagen, so they are not always present at birth. [Lecture 1.1]"
+      },
+      {
+        "text": "Congenital disorders always result from DNA mutations",
+        "correct": false,
+        "why": "Congenital disorders can be environmental or have unknown causes; they are not always mutations. [Lecture 1.1]"
+      },
+      {
+        "text": "Congenital disorders are present at birth but need not be genetic",
+        "correct": true,
+        "why": "Correct: congenital means present at birth, which can come from genetic, environmental, multifactorial, or unknown causes. [Lecture 1.1]"
+      },
+      {
+        "text": "Chromosomal disorders usually first appear after age 25",
+        "correct": false,
+        "why": "Chromosomal disorders are always present at birth; severe disease by 25 to 30 describes predisposition. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-16",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "X-linked disorders show up more often in males because males:",
+    "options": [
+      {
+        "text": "Inherit two copies of each X-linked allele",
+        "correct": false,
+        "why": "Males have only one X chromosome, so they carry one copy of X-linked alleles. [Lecture 1.1]"
+      },
+      {
+        "text": "Carry an extra X chromosome in every cell",
+        "correct": false,
+        "why": "An extra X (47,XXY) describes Klinefelter's syndrome, not the typical male. [Lecture 1.2]"
+      },
+      {
+        "text": "Lack a second X chromosome to override the mutation",
+        "correct": true,
+        "why": "Correct: with only one X, a mutation on it is expressed; females have a second X, so disease tends to be milder or not expressed. [Lecture 1.1]"
+      },
+      {
+        "text": "Express recessive alleles only on autosomes",
+        "correct": false,
+        "why": "X-linked disorders sit on the X chromosome, not on autosomes. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-17",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Involuntary, dance-like movements called chorea are the hallmark of:",
+    "options": [
+      {
+        "text": "Tay-Sachs disease",
+        "correct": false,
+        "why": "Tay-Sachs is recessive neurodegeneration whose hallmark is a cherry red spot in the macula. [Lecture 1.1]"
+      },
+      {
+        "text": "Duchenne muscular dystrophy",
+        "correct": false,
+        "why": "Duchenne's hallmarks are calf pseudohypertrophy, Gower's sign, and a waddling gait. [Lecture 1.1]"
+      },
+      {
+        "text": "Huntington's disease",
+        "correct": true,
+        "why": "Correct: Huntington's is an autosomal dominant basal ganglia disorder; atrophy of the basal ganglia causes chorea. [Lecture 1.1]"
+      },
+      {
+        "text": "Marfan syndrome",
+        "correct": false,
+        "why": "Marfan's is a connective tissue disorder marked by arachnodactyly and vascular weakness, not a movement disorder. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-18",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which set of findings is characteristic of Marfan syndrome?",
+    "options": [
+      {
+        "text": "Blue sclera, brittle bones, frequent fractures",
+        "correct": false,
+        "why": "These are the hallmarks of osteogenesis imperfecta, a type I collagen defect. [Lecture 1.1]"
+      },
+      {
+        "text": "Calf pseudohypertrophy, Gower's sign, waddling gait",
+        "correct": false,
+        "why": "These are the hallmarks of Duchenne muscular dystrophy, an X-linked disorder. [Lecture 1.1]"
+      },
+      {
+        "text": "Sticky mucus, salty sweat, recurrent infections",
+        "correct": false,
+        "why": "These describe cystic fibrosis, an autosomal recessive chloride channel defect. [Lecture 1.1]"
+      },
+      {
+        "text": "Arachnodactyly, lens subluxation, mitral valve prolapse",
+        "correct": true,
+        "why": "Correct: Marfan's patients are tall and thin with spider-like fingers, lens subluxation, mitral valve prolapse, and vascular weakness. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-19",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "The most common form of Ehlers-Danlos syndrome is characterized by:",
+    "options": [
+      {
+        "text": "Blue sclera and a type I collagen defect",
+        "correct": false,
+        "why": "These describe osteogenesis imperfecta (brittle bone disease). [Lecture 1.1]"
+      },
+      {
+        "text": "A cherry red macular spot and neurodegeneration",
+        "correct": false,
+        "why": "These describe Tay-Sachs disease, an autosomal recessive disorder. [Lecture 1.1]"
+      },
+      {
+        "text": "Tall, thin build with aortic aneurysms",
+        "correct": false,
+        "why": "These are Marfan syndrome features caused by a fibrillin-1 defect. [Lecture 1.1]"
+      },
+      {
+        "text": "Joint hypermobility and stretchy, fragile skin",
+        "correct": true,
+        "why": "Correct: the common type shows hypermobile joints and stretchy skin, so care focuses on strengthening rather than adjusting hypermobile joints. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-20",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which hallmark is associated with osteogenesis imperfecta?",
+    "options": [
+      {
+        "text": "Blue sclera",
+        "correct": true,
+        "why": "Correct: in osteogenesis imperfecta (brittle bone disease) the white of the eye has a bluish tint. [Lecture 1.1]"
+      },
+      {
+        "text": "Cherry red spot in the macula",
+        "correct": false,
+        "why": "A cherry red macular spot is the hallmark of Tay-Sachs disease. [Lecture 1.1]"
+      },
+      {
+        "text": "Subluxation of the lens",
+        "correct": false,
+        "why": "Lens subluxation is a hallmark of Marfan syndrome. [Lecture 1.1]"
+      },
+      {
+        "text": "Pseudohypertrophy of the calves",
+        "correct": false,
+        "why": "Calf pseudohypertrophy is the hallmark of Duchenne muscular dystrophy. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-21",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Tay-Sachs disease is best described as:",
+    "options": [
+      {
+        "text": "Dominant basal ganglia atrophy with chorea",
+        "correct": false,
+        "why": "This describes Huntington's disease, which is autosomal dominant. [Lecture 1.1]"
+      },
+      {
+        "text": "Recessive neurodegeneration with a cherry red macula",
+        "correct": true,
+        "why": "Correct: Tay-Sachs is autosomal recessive and causes neurodegeneration from buildup in the nervous system and retina, with a cherry red macular spot. [Lecture 1.1]"
+      },
+      {
+        "text": "X-linked muscle weakness with Gower's sign",
+        "correct": false,
+        "why": "This describes Duchenne muscular dystrophy. [Lecture 1.1]"
+      },
+      {
+        "text": "Dominant collagen defect with blue sclera",
+        "correct": false,
+        "why": "This describes osteogenesis imperfecta, a type I collagen defect. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-22",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Cystic fibrosis, once called salty baby syndrome, is caused by a defect in:",
+    "options": [
+      {
+        "text": "A chloride channel",
+        "correct": true,
+        "why": "Correct: the chloride channel defect produces sticky mucus in the lungs and GI tract, leading to recurrent infections and malabsorption. [Lecture 1.1]"
+      },
+      {
+        "text": "Type I collagen",
+        "correct": false,
+        "why": "A type I collagen defect causes osteogenesis imperfecta, not cystic fibrosis. [Lecture 1.1]"
+      },
+      {
+        "text": "Clotting factor VIII",
+        "correct": false,
+        "why": "A factor VIII deficiency causes hemophilia A, an X-linked bleeding disorder. [Lecture 1.1]"
+      },
+      {
+        "text": "Fibrillin-1",
+        "correct": false,
+        "why": "A fibrillin-1 defect causes Marfan syndrome and vascular weakness. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-23",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Calf enlargement in Duchenne muscular dystrophy is called pseudohypertrophy because:",
+    "options": [
+      {
+        "text": "Muscle cells multiply by mitosis",
+        "correct": false,
+        "why": "An increase in cell number by mitosis is hyperplasia, which is not what happens in Duchenne's. [Lecture 1.1]"
+      },
+      {
+        "text": "Muscle cells enlarge from heavy use",
+        "correct": false,
+        "why": "True hypertrophy is an increase in muscle cell size; in Duchenne's the muscle cells are not getting bigger. [Lecture 1.1]"
+      },
+      {
+        "text": "Muscle changes into another normal tissue",
+        "correct": false,
+        "why": "A change from one normal cell type to another is metaplasia; fat replacing muscle here is a disease process. [Lecture 1.1]"
+      },
+      {
+        "text": "Fatty tissue replaces the muscle tissue",
+        "correct": true,
+        "why": "Correct: the calves look enlarged, but muscle is replaced by fat, so muscle cells are not actually growing and weakness progresses. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-24",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Hemophilia A, known as classical hemophilia, is a deficiency of factor _______.",
+    "options": [
+      {
+        "text": "IX",
+        "correct": false,
+        "why": "A factor IX deficiency is hemophilia B. [Lecture 1.1]"
+      },
+      {
+        "text": "XI",
+        "correct": false,
+        "why": "A factor XI deficiency is hemophilia C. [Lecture 1.1]"
+      },
+      {
+        "text": "VIII",
+        "correct": true,
+        "why": "Correct: hemophilia A, the most common type, is an X-linked factor VIII deficiency. [Lecture 1.1]"
+      },
+      {
+        "text": "XII",
+        "correct": false,
+        "why": "Factor XII (Hageman factor) starts the intrinsic pathway; its deficiency is not hemophilia A. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-25",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "A factor VIII deficiency causes excessive bleeding mainly because:",
+    "options": [
+      {
+        "text": "Factor XII cannot bind exposed medial collagen",
+        "correct": false,
+        "why": "Factor XII binding to medial collagen is the activating step and does not depend on factor VIII. [Lecture 1.3]"
+      },
+      {
+        "text": "Less factor X is made, so less fibrin forms",
+        "correct": true,
+        "why": "Correct: factor VIII is needed to make factor X, where the common pathway begins; without it, less fibrin, the protein scaffold of the clot, is formed. [Lecture 1.3]"
+      },
+      {
+        "text": "Plasmin breaks fibrin down too quickly",
+        "correct": false,
+        "why": "Plasmin breaks down fibrin after a clot forms; hemophilia A is a problem with making the clot. [Lecture 1.3]"
+      },
+      {
+        "text": "Fibrinogen cannot be made in the plasma",
+        "correct": false,
+        "why": "Hemophilia A is a factor VIII deficiency, not a fibrinogen defect. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-26",
+    "quarter": 1,
+    "slideRef": "1.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Which disorder is correctly paired with its inheritance pattern?",
+    "options": [
+      {
+        "text": "Huntington's disease: autosomal recessive",
+        "correct": false,
+        "why": "Huntington's disease is autosomal dominant. [Lecture 1.1]"
+      },
+      {
+        "text": "Sickle cell disease: autosomal recessive",
+        "correct": true,
+        "why": "Correct: sickle cell disease is one of the autosomal recessive disorders, along with Tay-Sachs and cystic fibrosis. [Lecture 1.1]"
+      },
+      {
+        "text": "Duchenne muscular dystrophy: autosomal dominant",
+        "correct": false,
+        "why": "Duchenne muscular dystrophy is X-linked, which is why it mostly affects boys. [Lecture 1.1]"
+      },
+      {
+        "text": "Ehlers-Danlos syndrome: X-linked",
+        "correct": false,
+        "why": "Ehlers-Danlos syndrome is autosomal dominant, like Marfan's and osteogenesis imperfecta. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-27",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Which karyotype and presentation match Turner's syndrome?",
+    "options": [
+      {
+        "text": "47,XXY; tall male with infertility",
+        "correct": false,
+        "why": "This is Klinefelter's syndrome, the 'opposite' of Turner's, with an extra X in males. [Lecture 1.2]"
+      },
+      {
+        "text": "Trisomy 21; extra copy of chromosome 21",
+        "correct": false,
+        "why": "Trisomy 21 is Down syndrome, an extra chromosome 21. [Lecture 1.2]"
+      },
+      {
+        "text": "45,XO; short female, often with a webbed neck",
+        "correct": true,
+        "why": "Correct: Turner's is a missing X chromosome in females, who are typically short, may have a webbed neck, and have reproductive problems. [Lecture 1.2]"
+      },
+      {
+        "text": "47,XXY; short female with a webbed neck",
+        "correct": false,
+        "why": "47,XXY is the Klinefelter's karyotype seen in tall males; Turner's is 45,XO. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-28",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Unlike a genetic mutation, an epigenetic change:",
+    "options": [
+      {
+        "text": "Permanently changes the nucleotide base pairs",
+        "correct": false,
+        "why": "A permanent change in base pairs is a mutation, which is irreversible. [Lecture 1.1]"
+      },
+      {
+        "text": "Alters how genes are expressed and can be reversed",
+        "correct": true,
+        "why": "Correct: epigenetics influences how DNA is read or expressed and reverts when the environment or stressor changes. [Lecture 1.2]"
+      },
+      {
+        "text": "Always arises during conception",
+        "correct": false,
+        "why": "Changes fixed at conception describe chromosomal disorders; epigenetic changes respond to the environment. [Lecture 1.2]"
+      },
+      {
+        "text": "Requires a virus, chemical, or radiation",
+        "correct": false,
+        "why": "Viruses, chemicals, and radiation are mutagenic agents that cause permanent mutations. [Lecture 1.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-29",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Stressors such as cold, heat, trauma, and infection that change how genes are expressed are called _______.",
+    "options": [
+      {
+        "text": "Mutagenic agents",
+        "correct": false,
+        "why": "Mutagenic agents (viruses, chemicals, radiation) cause permanent mutations, not reversible changes in expression. [Lecture 1.1]"
+      },
+      {
+        "text": "Epigenetic modifiers",
+        "correct": true,
+        "why": "Correct: environmental factors or stressors that alter gene expression are epigenetic modifiers. [Lecture 1.2]"
+      },
+      {
+        "text": "Point mutations",
+        "correct": false,
+        "why": "Point mutations are permanent single-gene changes (dominant, recessive, X-linked). [Lecture 1.1]"
+      },
+      {
+        "text": "Chromosomal errors",
+        "correct": false,
+        "why": "Chromosomal errors are abnormal chromosome number or structure from replication mistakes, present at birth. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-30",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Sweat, sebum, cerumen, mucus, and tears make up the _______ barrier.",
+    "options": [
+      {
+        "text": "Chemical",
+        "correct": true,
+        "why": "Correct: these chemical secretions protect exposed areas that cannot be covered by skin and still work. [Lecture 1.2]"
+      },
+      {
+        "text": "Physical",
+        "correct": false,
+        "why": "The physical barrier is the skin, or cutaneous membrane. [Lecture 1.2]"
+      },
+      {
+        "text": "Cellular",
+        "correct": false,
+        "why": "The cellular barrier is made up of leukocytes (white blood cells). [Lecture 1.2]"
+      },
+      {
+        "text": "Adaptive",
+        "correct": false,
+        "why": "Adaptive describes defenses built over time; these secretions are innate. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-31",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which of the following is an adaptive part of the body's defenses?",
+    "options": [
+      {
+        "text": "Skin",
+        "correct": false,
+        "why": "The skin is the physical barrier, which is innate (present from birth). [Lecture 1.2]"
+      },
+      {
+        "text": "Lymphocytes",
+        "correct": true,
+        "why": "Correct: lymphocytes (T and B cells) are the only adaptive white blood cells; they form memory and amplify the response. [Lecture 1.3]"
+      },
+      {
+        "text": "Tears and mucus",
+        "correct": false,
+        "why": "Tears and mucus are chemical secretions, which are innate. [Lecture 1.2]"
+      },
+      {
+        "text": "Neutrophils",
+        "correct": false,
+        "why": "Neutrophils are innate; they respond in the same general way every time without memory. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-32",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement about the skin as a physical barrier is correct?",
+    "options": [
+      {
+        "text": "The dermis is vascularized, but the epidermis is not",
+        "correct": true,
+        "why": "Correct: a pin through the epidermis does not bleed; blood vessels are found only in the deeper dermis. [Lecture 1.2]"
+      },
+      {
+        "text": "The epidermis holds the vessels used for heat loss",
+        "correct": false,
+        "why": "The vessels used in thermoregulation are dermal vessels; the epidermis has no blood vessels. [Lecture 1.2]"
+      },
+      {
+        "text": "Dermal vessels constrict to release heat when hot",
+        "correct": false,
+        "why": "This is backwards: dermal vessels dilate to release heat and constrict to conserve it. [Lecture 1.2]"
+      },
+      {
+        "text": "Skin regenerates poorly because it rarely divides",
+        "correct": false,
+        "why": "Skin is one of the best regenerating tissues because it undergoes mitosis easily. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-33",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "The formed elements of blood are:",
+    "options": [
+      {
+        "text": "Plasma, serum, and clotting factors",
+        "correct": false,
+        "why": "These are the fluid portion of blood that remains once the formed elements are removed. [Lecture 1.2]"
+      },
+      {
+        "text": "Erythrocytes, plasma, and fibrinogen",
+        "correct": false,
+        "why": "Plasma and fibrinogen are not cells; only erythrocytes here is a formed element. [Lecture 1.2]"
+      },
+      {
+        "text": "Leukocytes, serum, and prothrombin",
+        "correct": false,
+        "why": "Serum and prothrombin are not cells; only leukocytes here is a formed element. [Lecture 1.2]"
+      },
+      {
+        "text": "Erythrocytes, leukocytes, and thrombocytes",
+        "correct": true,
+        "why": "Correct: formed elements are the blood cells: red blood cells, white blood cells, and platelets. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-34",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "If the formed elements and then the clotting factors are removed from whole blood, what remains?",
+    "options": [
+      {
+        "text": "Plasma",
+        "correct": false,
+        "why": "Plasma is what remains after only the formed elements are removed; it still contains clotting factors. [Lecture 1.2]"
+      },
+      {
+        "text": "Buffy coat",
+        "correct": false,
+        "why": "The buffy coat is the white blood cell and platelet layer, which is part of the formed elements. [Lecture 1.2]"
+      },
+      {
+        "text": "Serum",
+        "correct": true,
+        "why": "Correct: removing formed elements leaves plasma; removing clotting factors from plasma leaves serum, which is mainly water. [Lecture 1.2]"
+      },
+      {
+        "text": "Fibrin",
+        "correct": false,
+        "why": "Fibrin is the end product of the coagulation cascade, not what remains when clotting factors are removed. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-35",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Leukocytosis differs from leukemia in that leukocytosis is:",
+    "options": [
+      {
+        "text": "An increase in abnormal white blood cells",
+        "correct": false,
+        "why": "Increased production of abnormal white blood cells is leukemia, a white blood cell cancer. [Lecture 1.2]"
+      },
+      {
+        "text": "A deficiency of white blood cells",
+        "correct": false,
+        "why": "A deficiency of white blood cells is leukopenia, which makes a person prone to infection. [Lecture 1.2]"
+      },
+      {
+        "text": "An increase in normal white blood cells",
+        "correct": true,
+        "why": "Correct: leukocytosis means more normal white blood cells, as when the body is fighting an infection. [Lecture 1.2]"
+      },
+      {
+        "text": "An increase in circulating platelets",
+        "correct": false,
+        "why": "An increase in platelets is thrombocytosis. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-36",
+    "quarter": 1,
+    "slideRef": "1.2",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "Which anemia classification is correctly paired with its example?",
+    "options": [
+      {
+        "text": "Normocytic: acute blood loss",
+        "correct": true,
+        "why": "Correct: with sudden hemorrhage, red cells are lost before the body can change their size, so they stay normal-sized. [Lecture 1.2]"
+      },
+      {
+        "text": "Microcytic: vitamin deficiency",
+        "correct": false,
+        "why": "Vitamin deficiencies affect DNA synthesis and make red cells larger (macrocytic), not smaller. [Lecture 1.2]"
+      },
+      {
+        "text": "Macrocytic: iron deficiency",
+        "correct": false,
+        "why": "Iron deficiency makes red cells smaller; it is the classic microcytic anemia. [Lecture 1.2]"
+      },
+      {
+        "text": "Microcytic: alcoholism",
+        "correct": false,
+        "why": "Alcoholism is an example of macrocytic anemia, not microcytic. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-37",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "The intrinsic coagulation pathway is triggered by:",
+    "options": [
+      {
+        "text": "Injury to tissues outside the blood vessel",
+        "correct": false,
+        "why": "Damage from outside the vessel triggers the extrinsic pathway, activated by factor VII. [Lecture 1.3]"
+      },
+      {
+        "text": "Breakdown of fibrin by plasmin",
+        "correct": false,
+        "why": "Plasmin breaking down fibrin dissolves a clot that has already formed; it does not start coagulation. [Lecture 1.3]"
+      },
+      {
+        "text": "A deficiency of factor VIII",
+        "correct": false,
+        "why": "A factor VIII deficiency (hemophilia A) impairs clotting rather than triggering it. [Lecture 1.3]"
+      },
+      {
+        "text": "Damage arising inside the blood vessel",
+        "correct": true,
+        "why": "Correct: intrinsic damage comes from inside the vessel, such as hypertension or atherosclerotic plaque. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-38",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Exposed medial collagen starts the intrinsic pathway by activating factor _______.",
+    "options": [
+      {
+        "text": "VII",
+        "correct": false,
+        "why": "Factor VII is the activating factor of the extrinsic pathway, triggered by tissue injury. [Lecture 1.3]"
+      },
+      {
+        "text": "XII",
+        "correct": true,
+        "why": "Correct: factor XII, the Hageman (plasma contact) factor, contacts medial collagen and starts the intrinsic cascade. [Lecture 1.3]"
+      },
+      {
+        "text": "VIII",
+        "correct": false,
+        "why": "Factor VIII is needed to make factor X; it is not the factor that contacts collagen. [Lecture 1.3]"
+      },
+      {
+        "text": "X",
+        "correct": false,
+        "why": "Factor X is where the pathways meet in the common pathway, not the starting factor. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-39",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Plasma left standing in a glass tube clots by the intrinsic pathway because the glass surface:",
+    "options": [
+      {
+        "text": "Mimics tissue injury and activates factor VII",
+        "correct": false,
+        "why": "Factor VII and tissue injury belong to the extrinsic pathway, not the glass tube test. [Lecture 1.3]"
+      },
+      {
+        "text": "Is negatively charged like collagen and activates factor XII",
+        "correct": true,
+        "why": "Correct: both glass and medial collagen are negatively charged, so either can activate factor XII. [Lecture 1.3]"
+      },
+      {
+        "text": "Is positively charged and attracts clotting factors",
+        "correct": false,
+        "why": "The glass surface is negative, the same charge as collagen, not positive. [Lecture 1.3]"
+      },
+      {
+        "text": "Converts plasminogen directly into plasmin",
+        "correct": false,
+        "why": "Plasmin breaks clots down; the glass surface starts clotting by activating factor XII. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q1-40",
+    "quarter": 1,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In the common pathway, the role of thrombin is to:",
+    "options": [
+      {
+        "text": "Cleave fibrinogen into fibrin",
+        "correct": true,
+        "why": "Correct: factor X leads to prothrombin becoming thrombin, which cleaves fibrinogen to fibrin, the clot's scaffolding. [Lecture 1.3]"
+      },
+      {
+        "text": "Activate factor XII on medial collagen",
+        "correct": false,
+        "why": "Factor XII is activated by contact with medial collagen at the start of the intrinsic pathway, not by thrombin. [Lecture 1.3]"
+      },
+      {
+        "text": "Break down fibrin to dissolve the clot",
+        "correct": false,
+        "why": "Breaking down fibrin is done by plasmin, which comes from plasminogen. [Lecture 1.3]"
+      },
+      {
+        "text": "Supply the factor VIII needed for factor X",
+        "correct": false,
+        "why": "Factor VIII is a separate clotting factor needed to make factor X; thrombin acts later in the cascade. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-01",
+    "quarter": 2,
+    "slideRef": "1.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which pair of leukocytes makes up the agranular category?",
+    "options": [
+      {
+        "text": "Neutrophils and eosinophils",
+        "correct": false,
+        "why": "Both are granulocytes, so they belong to the granular category. [Lecture 1.2]"
+      },
+      {
+        "text": "Monocytes and lymphocytes",
+        "correct": true,
+        "why": "Monocytes and lymphocytes lack granules; granular cells are the neutrophils, eosinophils, and basophils. [Lecture 1.2]"
+      },
+      {
+        "text": "Basophils and monocytes",
+        "correct": false,
+        "why": "Basophils are granulocytes; only the monocyte in this pair is agranular. [Lecture 1.2]"
+      },
+      {
+        "text": "Eosinophils and lymphocytes",
+        "correct": false,
+        "why": "Eosinophils are granulocytes; only the lymphocyte in this pair is agranular. [Lecture 1.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-02",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "easy",
+    "priority": false,
+    "stem": "Which leukocyte is the most abundant, making up about 60% of circulating white blood cells?",
+    "options": [
+      {
+        "text": "Neutrophil",
+        "correct": true,
+        "why": "Neutrophils are first in 'never let monkeys eat bananas' at about 60%, matching the huge amount of bacteria they must find. [Lecture 1.3]"
+      },
+      {
+        "text": "Lymphocyte",
+        "correct": false,
+        "why": "Lymphocytes are second in the abundance order, not the most abundant. [Lecture 1.3]"
+      },
+      {
+        "text": "Monocyte",
+        "correct": false,
+        "why": "Monocytes are only 4 to 8% of total white blood cells. [Lecture 2.1]"
+      },
+      {
+        "text": "Eosinophil",
+        "correct": false,
+        "why": "Eosinophils are near the end of the abundance order, ahead of only basophils. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-03",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which leukocyte circulates in the smallest numbers yet has a far more numerous tissue counterpart?",
+    "options": [
+      {
+        "text": "Eosinophil",
+        "correct": false,
+        "why": "Eosinophils are more abundant than basophils, and no separate tissue counterpart was described for them. [Lecture 1.3]"
+      },
+      {
+        "text": "Neutrophil",
+        "correct": false,
+        "why": "Neutrophils are the most abundant leukocyte, not the least. [Lecture 1.3]"
+      },
+      {
+        "text": "Monocyte",
+        "correct": false,
+        "why": "Monocytes (4 to 8%) are not the least abundant, and macrophages are the same cell renamed in tissue. [Lecture 2.1]"
+      },
+      {
+        "text": "Basophil",
+        "correct": true,
+        "why": "Basophils are the least abundant WBC; their tissue counterpart, the mast cell, is far more numerous and has the larger effect. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-04",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "easy",
+    "priority": false,
+    "stem": "The abbreviation PMN is an alternate name for which leukocyte?",
+    "options": [
+      {
+        "text": "Eosinophil",
+        "correct": false,
+        "why": "The eosinophil was not given the PMN name; it is the anti-parasitic, allergy-related granulocyte. [Lecture 1.3]"
+      },
+      {
+        "text": "Monocyte",
+        "correct": false,
+        "why": "The monocyte is an agranular cell known as the macrophage in tissue, not PMN. [Lecture 1.3]"
+      },
+      {
+        "text": "Neutrophil",
+        "correct": true,
+        "why": "The neutrophil is also known as the polymorphonuclear neutrophil, or PMN, a name boards may use. [Lecture 1.3]"
+      },
+      {
+        "text": "Mast cell",
+        "correct": false,
+        "why": "Mast cell is the tissue name for the basophil-type cell, not PMN. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-05",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Macrophages residing in the liver are called _______.",
+    "options": [
+      {
+        "text": "dust cells",
+        "correct": false,
+        "why": "Dust (alveolar) cells are the macrophages of the lungs. [Lecture 2.1]"
+      },
+      {
+        "text": "Kupffer cells",
+        "correct": true,
+        "why": "Kupffer cells are the liver macrophages. [Lecture 2.1]"
+      },
+      {
+        "text": "microglia",
+        "correct": false,
+        "why": "Microglia are the macrophages of the CNS. [Lecture 2.1]"
+      },
+      {
+        "text": "Langerhans cells",
+        "correct": false,
+        "why": "Langerhans cells are the macrophages of the skin. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-06",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which leukocyte is the only type that belongs to the adaptive immune system?",
+    "options": [
+      {
+        "text": "Lymphocyte",
+        "correct": true,
+        "why": "Lymphocytes (T and B cells) are the only adaptive WBCs; they form memory and amplify their response. [Lecture 1.3]"
+      },
+      {
+        "text": "Monocyte",
+        "correct": false,
+        "why": "Monocytes are innate cells, even though they help activate the adaptive system. [Lecture 1.3]"
+      },
+      {
+        "text": "Neutrophil",
+        "correct": false,
+        "why": "Neutrophils are innate cells with a general, memoryless response. [Lecture 1.3]"
+      },
+      {
+        "text": "Eosinophil",
+        "correct": false,
+        "why": "Eosinophils are innate cells with a general response to parasites and allergens. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-07",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which set lists the three antigen-presenting cells?",
+    "options": [
+      {
+        "text": "Macrophages, neutrophils, B cells",
+        "correct": false,
+        "why": "Neutrophils are phagocytes but are not one of the three APCs. [Lecture 2.1]"
+      },
+      {
+        "text": "Dendritic cells, mast cells, T cells",
+        "correct": false,
+        "why": "Mast cells degranulate and T cells recognize presented antigen; neither is an APC. [Lecture 2.1]"
+      },
+      {
+        "text": "Neutrophils, eosinophils, macrophages",
+        "correct": false,
+        "why": "Neutrophils and eosinophils are granulocytes, not APCs; only the macrophage qualifies. [Lecture 2.1]"
+      },
+      {
+        "text": "Macrophages, dendritic cells, B cells",
+        "correct": true,
+        "why": "These are the only three APCs and the only cells that make MHC II. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-08",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "In humans, MHC molecules are called HLA, which stands for _______.",
+    "options": [
+      {
+        "text": "human lymphocyte antibody",
+        "correct": false,
+        "why": "HLA is an antigen-presenting surface protein, not an antibody, and it is leukocyte, not lymphocyte. [Lecture 2.2]"
+      },
+      {
+        "text": "histocompatibility linked antigen",
+        "correct": false,
+        "why": "MHC refers to major histocompatibility proteins; HLA is human leukocyte antigen. [Lecture 2.2]"
+      },
+      {
+        "text": "human leukocyte antigen",
+        "correct": true,
+        "why": "HLA stands for human leukocyte antigen, the human equivalent of MHC. [Lecture 2.2]"
+      },
+      {
+        "text": "human leukocyte antibody",
+        "correct": false,
+        "why": "HLA proteins present antigen on the cell surface; they are antigens, not antibodies. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-09",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Why are monocytes better suited to chronic infections than to acute ones?",
+    "options": [
+      {
+        "text": "They lack the receptors needed to bind bacteria",
+        "correct": false,
+        "why": "Macrophages also have toll-like receptors and bind PAMPs like neutrophils do. [Lecture 2.1]"
+      },
+      {
+        "text": "Their large size makes them slower to reach the site",
+        "correct": true,
+        "why": "Monocytes are 'M for massive,' which makes them slower, so they arrive after neutrophils when infection persists. [Lecture 1.3]"
+      },
+      {
+        "text": "They stay in the blood and never enter tissue",
+        "correct": false,
+        "why": "Monocytes do cross into tissue, where they are called macrophages. [Lecture 1.3]"
+      },
+      {
+        "text": "They die after one phagocytic event, forming pus",
+        "correct": false,
+        "why": "Dying after phagocytosis and forming pus describes neutrophils. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-10",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which receptors do neutrophils use to bind bacteria?",
+    "options": [
+      {
+        "text": "Toll-like receptors",
+        "correct": true,
+        "why": "Toll-like receptors are general pattern recognition receptors that bind PAMPs and DAMPs. [Lecture 2.1]"
+      },
+      {
+        "text": "T cell receptors",
+        "correct": false,
+        "why": "Each T cell receptor fits one specific antigen shape; these are adaptive, not neutrophil, receptors. [Lecture 2.2]"
+      },
+      {
+        "text": "IgD receptors",
+        "correct": false,
+        "why": "IgD is the antibody B cells use as their surface antigen receptor. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC II molecules",
+        "correct": false,
+        "why": "MHC II displays processed antigen on APCs; neutrophils are not APCs. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-11",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What distinguishes a DAMP from a PAMP?",
+    "options": [
+      {
+        "text": "DAMPs are recognized only by T cell receptors",
+        "correct": false,
+        "why": "Both PAMPs and DAMPs are recognized by toll-like receptors on innate cells. [Lecture 2.1]"
+      },
+      {
+        "text": "DAMPs require prior exposure to cause a response",
+        "correct": false,
+        "why": "Both are general patterns handled by innate cells, which need no prior exposure. [Lecture 2.3]"
+      },
+      {
+        "text": "DAMPs are displayed exclusively on MHC II",
+        "correct": false,
+        "why": "MHC II displays processed epitopes on APCs; DAMPs are signals released by dying cells. [Lecture 2.1]"
+      },
+      {
+        "text": "DAMPs come from old or dying cells, not pathogens",
+        "correct": true,
+        "why": "DAMPs are damage-associated patterns released by old or dying cells; PAMPs are shared by pathogens. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-12",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which sequence correctly orders a neutrophil's exit from the bloodstream toward bacteria?",
+    "options": [
+      {
+        "text": "Pavementing, margination, diapedesis",
+        "correct": false,
+        "why": "The cell must first approach the endothelium (margination) before it can dock (pavementing). [Lecture 1.3]"
+      },
+      {
+        "text": "Diapedesis, margination, pavementing",
+        "correct": false,
+        "why": "Diapedesis, passing through the vessel wall, is the last step, not the first. [Lecture 1.3]"
+      },
+      {
+        "text": "Margination, pavementing, diapedesis",
+        "correct": true,
+        "why": "The cell approaches the endothelium, docks to it, then forms a foot process and passes through the wall. [Lecture 1.3]"
+      },
+      {
+        "text": "Margination, diapedesis, pavementing",
+        "correct": false,
+        "why": "The cell must dock to the endothelium (pavementing) before it can pass through. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-13",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "During chemotaxis, _______ is the step in which the leukocyte leaves the center of the bloodstream and moves toward the endothelium.",
+    "options": [
+      {
+        "text": "pavementing",
+        "correct": false,
+        "why": "Pavementing is docking and sticking to the endothelium, which follows margination. [Lecture 1.3]"
+      },
+      {
+        "text": "margination",
+        "correct": true,
+        "why": "Margination is the first step: leaving the center stream and approaching the endothelium. [Lecture 1.3]"
+      },
+      {
+        "text": "diapedesis",
+        "correct": false,
+        "why": "Diapedesis is passing through the vessel wall with a foot-like process, the final step. [Lecture 1.3]"
+      },
+      {
+        "text": "phagocytosis",
+        "correct": false,
+        "why": "Phagocytosis is engulfing the microbe after the cell reaches the tissue. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-14",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In _______, the leukocyte forms a foot-like process and passes through the vessel wall into the interstitial space.",
+    "options": [
+      {
+        "text": "diapedesis",
+        "correct": true,
+        "why": "Diapedesis ('pedesis' = foot) is when the cell forms a foot process and kicks through the vessel wall. [Lecture 1.3]"
+      },
+      {
+        "text": "margination",
+        "correct": false,
+        "why": "Margination is only approaching the endothelium from the center stream. [Lecture 1.3]"
+      },
+      {
+        "text": "pavementing",
+        "correct": false,
+        "why": "Pavementing is docking to the endothelium before passing through. [Lecture 1.3]"
+      },
+      {
+        "text": "degranulation",
+        "correct": false,
+        "why": "Degranulation is the mast cell releasing its histamine-containing granules. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-15",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "During phagocytosis, what forms when the phagosome fuses with the lysosome?",
+    "options": [
+      {
+        "text": "Epitope",
+        "correct": false,
+        "why": "An epitope is the small immunodominant peptide displayed on an MHC. [Lecture 2.1]"
+      },
+      {
+        "text": "Granule",
+        "correct": false,
+        "why": "Granules are histamine-containing packets released by mast cells during degranulation. [Lecture 2.1]"
+      },
+      {
+        "text": "Abscess",
+        "correct": false,
+        "why": "An abscess is a confined pocket of pus, not a structure inside the phagocyte. [Lecture 2.1]"
+      },
+      {
+        "text": "Phagolysosome",
+        "correct": true,
+        "why": "Fusing the phagosome with the enzyme-filled lysosome forms the phagolysosome, where the microbe is degraded. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-16",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Pus forms because neutrophil myeloperoxidase generates _______, which kills bacteria but also kills the neutrophil.",
+    "options": [
+      {
+        "text": "histamine",
+        "correct": false,
+        "why": "Histamine comes from basophils and mast cells and causes vasodilation and permeability. [Lecture 2.1]"
+      },
+      {
+        "text": "major basic protein",
+        "correct": false,
+        "why": "Major basic protein is the eosinophil's anti-parasitic substance. [Lecture 2.1]"
+      },
+      {
+        "text": "reactive oxygen species",
+        "correct": true,
+        "why": "Myeloperoxidase releases toxic ROS; the neutrophil often dies too, and dead bacteria plus dead neutrophils form pus. [Lecture 1.3]"
+      },
+      {
+        "text": "nitric oxide",
+        "correct": false,
+        "why": "Nitric oxide is the vasodilator secreted by the M1 macrophage. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-17",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Eosinophils kill helminths using an anti-parasitic substance called _______.",
+    "options": [
+      {
+        "text": "myeloperoxidase",
+        "correct": false,
+        "why": "Myeloperoxidase is the neutrophil enzyme that generates ROS against bacteria. [Lecture 1.3]"
+      },
+      {
+        "text": "major basic protein",
+        "correct": true,
+        "why": "Major basic protein (MBP) is the eosinophil's anti-parasitic substance against helminths (worms). [Lecture 2.1]"
+      },
+      {
+        "text": "histamine",
+        "correct": false,
+        "why": "Histamine is released by mast cells and basophils to create inflammation. [Lecture 2.1]"
+      },
+      {
+        "text": "nitric oxide",
+        "correct": false,
+        "why": "Nitric oxide is secreted by the inflammatory M1 macrophage. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-18",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which pair of effects does histamine produce to create inflammation?",
+    "options": [
+      {
+        "text": "Vasodilation and increased capillary permeability",
+        "correct": true,
+        "why": "Histamine dilates vessels and makes capillaries leakier, so more fluid leaves into the tissue. [Lecture 2.1]"
+      },
+      {
+        "text": "Vasoconstriction and increased capillary permeability",
+        "correct": false,
+        "why": "Histamine dilates vessels; it does not constrict them. [Lecture 2.1]"
+      },
+      {
+        "text": "Vasodilation and decreased capillary permeability",
+        "correct": false,
+        "why": "Histamine increases permeability, letting fluid leak out of capillaries. [Lecture 2.1]"
+      },
+      {
+        "text": "Vasoconstriction and decreased capillary permeability",
+        "correct": false,
+        "why": "This is the opposite of both histamine effects. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-19",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which cell degranulates when an allergen binds the IgE attached to its membrane?",
+    "options": [
+      {
+        "text": "Eosinophil",
+        "correct": false,
+        "why": "Eosinophils influence mast cell degranulation but are not the cell that degranulates via surface IgE. [Lecture 2.1]"
+      },
+      {
+        "text": "Neutrophil",
+        "correct": false,
+        "why": "Neutrophils phagocytose bacteria using toll-like receptors, not IgE. [Lecture 2.1]"
+      },
+      {
+        "text": "Plasma cell",
+        "correct": false,
+        "why": "The plasma cell secretes IgE; it is not the cell that binds it and degranulates. [Lecture 2.1]"
+      },
+      {
+        "text": "Mast cell",
+        "correct": true,
+        "why": "IgE binds the mast cell surface; allergen binding then triggers degranulation and histamine release. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-20",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which pairing of a tissue macrophage with its location is correct?",
+    "options": [
+      {
+        "text": "Dust cells: liver",
+        "correct": false,
+        "why": "Dust (alveolar) cells are found in the lungs; liver macrophages are Kupffer cells. [Lecture 2.1]"
+      },
+      {
+        "text": "Langerhans cells: lungs",
+        "correct": false,
+        "why": "Langerhans cells are skin macrophages; lung macrophages are dust cells. [Lecture 2.1]"
+      },
+      {
+        "text": "Microglia: central nervous system",
+        "correct": true,
+        "why": "Microglia are the macrophages of the CNS. [Lecture 2.1]"
+      },
+      {
+        "text": "Kupffer cells: skin",
+        "correct": false,
+        "why": "Kupffer cells are liver macrophages; skin macrophages are Langerhans cells. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-21",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "The inflammatory M1 macrophage perpetuates inflammation by secreting _______, a potent vasodilator.",
+    "options": [
+      {
+        "text": "growth factors",
+        "correct": false,
+        "why": "Growth factors come from the M2 macrophage and promote repair and healing. [Lecture 2.1]"
+      },
+      {
+        "text": "nitric oxide",
+        "correct": true,
+        "why": "M1 ('no fun') secretes nitric oxide, whose vasodilation adds to existing inflammation. [Lecture 2.1]"
+      },
+      {
+        "text": "histamine",
+        "correct": false,
+        "why": "Histamine is a vasodilator, but it comes from mast cells and basophils, not M1 macrophages. [Lecture 2.1]"
+      },
+      {
+        "text": "major basic protein",
+        "correct": false,
+        "why": "Major basic protein is the eosinophil's anti-parasitic substance. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-22",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "MHC molecules act as self-markers that serve which purpose?",
+    "options": [
+      {
+        "text": "Displaying antigen fragments for T cell recognition",
+        "correct": true,
+        "why": "MHCs carry antigen pieces to the cell surface so T cells can tell self from non-self. [Lecture 2.1]"
+      },
+      {
+        "text": "Binding shared pathogen patterns for phagocytosis",
+        "correct": false,
+        "why": "Binding shared patterns (PAMPs/DAMPs) is the job of toll-like receptors. [Lecture 2.1]"
+      },
+      {
+        "text": "Carrying histamine to sites of inflammation",
+        "correct": false,
+        "why": "Histamine is released from mast cell granules, not carried by MHC. [Lecture 2.1]"
+      },
+      {
+        "text": "Neutralizing free antigen as antibodies do",
+        "correct": false,
+        "why": "Antibodies come from B cells and plasma cells; MHCs are surface presenting proteins. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-23",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Why are erythrocytes unable to express MHC I?",
+    "options": [
+      {
+        "text": "They lack toll-like receptors",
+        "correct": false,
+        "why": "Toll-like receptors are pattern receptors on innate cells and are unrelated to MHC I. [Lecture 2.1]"
+      },
+      {
+        "text": "They cannot perform phagocytosis",
+        "correct": false,
+        "why": "Phagocytosis is needed for the APC/MHC II pathway, not for MHC I. [Lecture 2.1]"
+      },
+      {
+        "text": "They never leave the bloodstream",
+        "correct": false,
+        "why": "Location is not the requirement; having a nucleus is what allows MHC I. [Lecture 2.1]"
+      },
+      {
+        "text": "They lack a nucleus",
+        "correct": true,
+        "why": "MHC I is made by all nucleated cells, so anucleate red blood cells cannot make it. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-24",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Where is MHC II found, and which T cell recognizes it?",
+    "options": [
+      {
+        "text": "On all nucleated cells; CD8 T killer cells",
+        "correct": false,
+        "why": "This describes MHC I, not MHC II. [Lecture 2.1]"
+      },
+      {
+        "text": "On APCs only; CD8 T killer cells",
+        "correct": false,
+        "why": "MHC II is on APCs, but CD8 recognizes MHC I (1 x 8 = 8). [Lecture 2.1]"
+      },
+      {
+        "text": "On APCs only; CD4 T helper cells",
+        "correct": true,
+        "why": "MHC II is limited to the three APCs and pairs with CD4 (2 x 4 = 8). [Lecture 2.1]"
+      },
+      {
+        "text": "On all nucleated cells; CD4 T helper cells",
+        "correct": false,
+        "why": "All nucleated cells make MHC I; MHC II is restricted to APCs. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-25",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "A virus-infected body cell presents viral antigen through which pathway and MHC class?",
+    "options": [
+      {
+        "text": "Exogenous pathway on MHC II",
+        "correct": false,
+        "why": "This is for antigen taken in from outside by an APC. [Lecture 2.2]"
+      },
+      {
+        "text": "Endogenous pathway on MHC I",
+        "correct": true,
+        "why": "The antigen is already inside the cell, so it uses the endogenous pathway and MHC I for CD8. [Lecture 2.2]"
+      },
+      {
+        "text": "Endogenous pathway on MHC II",
+        "correct": false,
+        "why": "MHC II is used by APCs for exogenous antigen, not by infected body cells. [Lecture 2.2]"
+      },
+      {
+        "text": "Exogenous pathway on MHC I",
+        "correct": false,
+        "why": "Exogenous antigen goes on MHC I only in cross-presentation by an APC. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-26",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Antigen from an extracellular bacterium is processed by the _______ pathway and presented to _______ T cells.",
+    "options": [
+      {
+        "text": "exogenous; CD4",
+        "correct": true,
+        "why": "The antigen is outside the cell, so an APC phagocytoses it, uses MHC II, and activates CD4 helpers. [Lecture 2.2]"
+      },
+      {
+        "text": "endogenous; CD8",
+        "correct": false,
+        "why": "The endogenous pathway with CD8 is for antigen already inside a cell, such as a virus. [Lecture 2.2]"
+      },
+      {
+        "text": "exogenous; CD8",
+        "correct": false,
+        "why": "Exogenous is correct, but the standard pathway uses MHC II, which pairs with CD4. [Lecture 2.2]"
+      },
+      {
+        "text": "endogenous; CD4",
+        "correct": false,
+        "why": "Extracellular bacteria are exogenous, and CD4 pairs with MHC II, not the endogenous MHC I. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-27",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "What term describes the small, immunodominant peptide that an MHC carries to the cell surface?",
+    "options": [
+      {
+        "text": "Toll-like receptor",
+        "correct": false,
+        "why": "A toll-like receptor is an innate pattern recognition receptor, not a peptide fragment. [Lecture 2.1]"
+      },
+      {
+        "text": "Phagosome",
+        "correct": false,
+        "why": "The phagosome is the vesicle that traps the engulfed antigen before processing. [Lecture 2.1]"
+      },
+      {
+        "text": "PAMP",
+        "correct": false,
+        "why": "A PAMP is a pattern shared by pathogens and recognized by toll-like receptors. [Lecture 2.1]"
+      },
+      {
+        "text": "Epitope",
+        "correct": true,
+        "why": "The epitope (antigenic determinant) is the processed piece most likely to trigger an immune response. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-28",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "How are MHC I and MHC II designated within the HLA system?",
+    "options": [
+      {
+        "text": "MHC I by D or DR; MHC II by A, B, or C",
+        "correct": false,
+        "why": "This reverses the lettering; D/DR designate MHC II. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC I by A or D; MHC II by B or DR",
+        "correct": false,
+        "why": "D designates MHC II and B designates MHC I, so this mixes the classes. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC I by A, B, or C; MHC II by D or DR",
+        "correct": true,
+        "why": "HLA-A, -B, and -C are MHC I; HLA-D and -DR are MHC II. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC I by DR only; MHC II by A only",
+        "correct": false,
+        "why": "DR is MHC II and A is MHC I, so this reverses them. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-29",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "HLA-DR4 positivity reflects a recognition problem with which MHC class, and which condition?",
+    "options": [
+      {
+        "text": "MHC I; rheumatoid arthritis",
+        "correct": false,
+        "why": "DR lettering is MHC II, not MHC I. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC II; rheumatoid arthritis",
+        "correct": true,
+        "why": "DR designates MHC II, and for this course HLA-DR4 is associated with rheumatoid arthritis. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC II; ankylosing spondylitis",
+        "correct": false,
+        "why": "Ankylosing spondylitis goes with HLA-B27, an MHC I marker. [Lecture 2.2]"
+      },
+      {
+        "text": "MHC I; ankylosing spondylitis",
+        "correct": false,
+        "why": "This describes HLA-B27, not HLA-DR4. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-30",
+    "quarter": 2,
+    "slideRef": "2.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What makes natural killer cells different from other lymphocytes?",
+    "options": [
+      {
+        "text": "They kill target cells without MHC recognition",
+        "correct": true,
+        "why": "NK cells work like T killers but need no MHC, giving them innate functions. [Lecture 2.3]"
+      },
+      {
+        "text": "They secrete antibodies against specific antigens",
+        "correct": false,
+        "why": "Antibody secretion is the role of B cells and plasma cells. [Lecture 2.1]"
+      },
+      {
+        "text": "They require MHC II presentation by an APC",
+        "correct": false,
+        "why": "NK cells need no MHC; MHC II presentation activates CD4 helpers. [Lecture 2.3]"
+      },
+      {
+        "text": "They are granulocytes that derive from monocytes",
+        "correct": false,
+        "why": "NK cells are lymphocytes, not granulocytes, and do not derive from monocytes. [Lecture 2.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-31",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Which of the following is NOT one of the five cardinal signs of inflammation?",
+    "options": [
+      {
+        "text": "Altered function",
+        "correct": false,
+        "why": "Altered function is the A in SHARP (swelling, heat, altered function, redness, pain). [Lecture 2.1]"
+      },
+      {
+        "text": "Redness",
+        "correct": false,
+        "why": "Redness is the R in SHARP and is always present with inflammation. [Lecture 2.1]"
+      },
+      {
+        "text": "Heat",
+        "correct": false,
+        "why": "Heat is the H in SHARP and is always present with inflammation. [Lecture 2.1]"
+      },
+      {
+        "text": "Fever",
+        "correct": true,
+        "why": "Fever can occur with inflammation but is not always present, so it is not cardinal. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-32",
+    "quarter": 2,
+    "slideRef": "2.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Why are APCs described as bridging innate and adaptive immunity?",
+    "options": [
+      {
+        "text": "They are adaptive cells that recruit innate cells",
+        "correct": false,
+        "why": "APCs such as macrophages and dendritic cells are innate, not adaptive. [Lecture 2.3]"
+      },
+      {
+        "text": "They convert innate neutrophils into lymphocytes",
+        "correct": false,
+        "why": "Neutrophils and lymphocytes are separate cell lines; APCs do not convert them. [Lecture 1.3]"
+      },
+      {
+        "text": "They are innate cells that present antigen to T cells",
+        "correct": true,
+        "why": "APCs are innate cells that display antigen to activate the adaptive T cells. [Lecture 2.3]"
+      },
+      {
+        "text": "They bind PAMPs so that T cells are never needed",
+        "correct": false,
+        "why": "APCs present antigen because innate cells cannot handle it alone; T cells are recruited. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-33",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "How can eosinophils either suppress or enhance an allergic reaction?",
+    "options": [
+      {
+        "text": "By releasing or withholding IL-5 from nearby mast cells",
+        "correct": false,
+        "why": "IL-5 is released by mast cells to call eosinophils, not the other way around. [Lecture 2.3]"
+      },
+      {
+        "text": "By stabilizing the mast cell membrane or speeding degranulation",
+        "correct": true,
+        "why": "A stabilized membrane releases no granules (suppression); helping degranulation enhances the reaction. [Lecture 2.1]"
+      },
+      {
+        "text": "By destroying or sparing the plasma cells that make IgE",
+        "correct": false,
+        "why": "Eosinophils act at the mast cell, not by destroying IgE-secreting plasma cells. [Lecture 2.1]"
+      },
+      {
+        "text": "By secreting histamine or major basic protein onto mast cells",
+        "correct": false,
+        "why": "Histamine comes from mast cells; major basic protein is anti-parasitic. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-34",
+    "quarter": 2,
+    "slideRef": "1.3",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "Which statement correctly contrasts basophils/mast cells with monocytes/macrophages?",
+    "options": [
+      {
+        "text": "Basophils and mast cells are separate cells; monocytes become macrophages",
+        "correct": true,
+        "why": "Basophils (blood) and mast cells (tissue) are distinct cells; a monocyte crosses into tissue and is renamed. [Lecture 1.3]"
+      },
+      {
+        "text": "Basophils become mast cells; monocytes and macrophages are separate cells",
+        "correct": false,
+        "why": "This reverses the two relationships. [Lecture 2.1]"
+      },
+      {
+        "text": "Both pairs are one cell renamed after crossing into tissue",
+        "correct": false,
+        "why": "Only monocytes cross and are renamed; basophils and mast cells are distinct cells. [Lecture 2.1]"
+      },
+      {
+        "text": "Both pairs are separate cells that never cross into tissue",
+        "correct": false,
+        "why": "Monocytes do cross into tissue, where they are called macrophages. [Lecture 1.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-35",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "Pre-existing systemic inflammation biases macrophages toward which type and outcome?",
+    "options": [
+      {
+        "text": "M2, which perpetuates inflammation",
+        "correct": false,
+        "why": "M2 is non-inflammatory and is favored when no inflammation is present. [Lecture 2.1]"
+      },
+      {
+        "text": "M1, which promotes repair",
+        "correct": false,
+        "why": "M1 is the inflammatory type; repair is the M2 role. [Lecture 2.1]"
+      },
+      {
+        "text": "M2, which promotes repair",
+        "correct": false,
+        "why": "M2 promotes repair, but it is favored when no inflammation is present. [Lecture 2.1]"
+      },
+      {
+        "text": "M1, which perpetuates inflammation",
+        "correct": true,
+        "why": "When inflammation is already present, cells act as if under attack and M1 keeps the inflammatory cycle going. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-36",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "How does a B cell act as an APC differently from macrophages and dendritic cells?",
+    "options": [
+      {
+        "text": "It phagocytoses antigen but uses only MHC I",
+        "correct": false,
+        "why": "B cells present on MHC II like the other APCs and do not truly phagocytose. [Lecture 2.2]"
+      },
+      {
+        "text": "It uses toll-like receptors to engulf bacteria",
+        "correct": false,
+        "why": "Toll-like receptors are used by neutrophils and macrophages; B cells use IgD. [Lecture 2.2]"
+      },
+      {
+        "text": "It internalizes its antigen-bound IgD receptor",
+        "correct": true,
+        "why": "B cells endocytose their IgD receptor with the antigen, which is not true phagocytosis. [Lecture 2.2]"
+      },
+      {
+        "text": "It presents antigen without processing it",
+        "correct": false,
+        "why": "B cells still break the antigen up and place it on MHC II. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-37",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "During cross-presentation, how does a dendritic cell handle an exogenous antigen?",
+    "options": [
+      {
+        "text": "It loads it on MHC II to directly activate CD8 T killers",
+        "correct": false,
+        "why": "CD8 cannot pair with MHC II; it recognizes MHC I. [Lecture 2.2]"
+      },
+      {
+        "text": "It loads it on MHC I to directly activate CD8 T killers",
+        "correct": true,
+        "why": "The APC skips the helper and uses MHC I so the T killer can act immediately. [Lecture 2.2]"
+      },
+      {
+        "text": "It loads it on MHC I to recruit CD4 T helpers",
+        "correct": false,
+        "why": "CD4 pairs with MHC II, and the point is to bypass the helper. [Lecture 2.2]"
+      },
+      {
+        "text": "It releases it unprocessed for natural killer cells",
+        "correct": false,
+        "why": "NK cells need no MHC presentation; cross-presentation targets CD8 cells. [Lecture 2.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-38",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "The MHC class affected in HLA-B27 positivity is used in which presentation pathway?",
+    "options": [
+      {
+        "text": "Endogenous pathway, recognized by CD8 T cells",
+        "correct": true,
+        "why": "HLA-B27 involves MHC I, which presents internal antigen to CD8 T killers; it is linked to ankylosing spondylitis. [Lecture 2.2]"
+      },
+      {
+        "text": "Exogenous pathway, recognized by CD4 T cells",
+        "correct": false,
+        "why": "This is the MHC II pathway, which relates to HLA-DR4, not B27. [Lecture 2.2]"
+      },
+      {
+        "text": "Endogenous pathway, recognized by CD4 T cells",
+        "correct": false,
+        "why": "Endogenous antigen goes on MHC I, which pairs with CD8, not CD4. [Lecture 2.2]"
+      },
+      {
+        "text": "Exogenous pathway, recognized by CD8 T cells",
+        "correct": false,
+        "why": "B lettering is MHC I, and MHC I is the endogenous pathway outside cross-presentation. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-39",
+    "quarter": 2,
+    "slideRef": "2.2",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "Why is the T cell response slower than innate pattern recognition?",
+    "options": [
+      {
+        "text": "T cells must phagocytose antigen before they can respond",
+        "correct": false,
+        "why": "T cells recognize antigen presented by APCs; they do not phagocytose it. [Lecture 2.2]"
+      },
+      {
+        "text": "T cell receptors bind only DAMPs released by dying cells",
+        "correct": false,
+        "why": "DAMPs are bound by toll-like receptors on innate cells, not by TCRs. [Lecture 2.1]"
+      },
+      {
+        "text": "T cells must become macrophages before attacking",
+        "correct": false,
+        "why": "T cells are lymphocytes; macrophages come from monocytes. [Lecture 1.3]"
+      },
+      {
+        "text": "Each T cell receptor fits one antigen shape, so a match must be found",
+        "correct": true,
+        "why": "Unlike broad toll-like receptors, each TCR binds one shape, so the matching T cell must be located. [Lecture 2.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q2-40",
+    "quarter": 2,
+    "slideRef": "2.1",
+    "difficulty": "hard",
+    "priority": false,
+    "stem": "A defect in a pattern recognition receptor such as a toll-like receptor would most likely cause which outcome?",
+    "options": [
+      {
+        "text": "Inability to stop inflammation, causing chronic disease",
+        "correct": false,
+        "why": "Being unable to shut inflammation off is the opposite problem and leads to chronic inflammatory disorders. [Lecture 2.1]"
+      },
+      {
+        "text": "Loss of MHC I expression on nucleated cells",
+        "correct": false,
+        "why": "MHC I depends on having a nucleus, not on pattern recognition receptors. [Lecture 2.1]"
+      },
+      {
+        "text": "Failure to start inflammation, raising infection risk",
+        "correct": true,
+        "why": "A defective PRR cannot turn inflammation on, making the person more susceptible to infections. [Lecture 2.1]"
+      },
+      {
+        "text": "Excess mast cell degranulation in allergy",
+        "correct": false,
+        "why": "Degranulation is triggered by allergen binding IgE on mast cells, not by PRRs. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-01",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which T-cell subset secretes IL-4 and IL-5?",
+    "options": [
+      {
+        "text": "T helper 1",
+        "correct": false,
+        "why": "Th1 secretes IL-2 and interferon, not IL-4 and IL-5; it does everything except allergies. [Lecture 4.2]"
+      },
+      {
+        "text": "T helper 2",
+        "correct": true,
+        "why": "Th2 cells secrete IL-4 (B-cell switching to IgE) and IL-5 (eosinophil chemotaxis), driving the allergy story. [Lecture 4.1]"
+      },
+      {
+        "text": "T regulatory",
+        "correct": false,
+        "why": "Treg secretes IL-10, the immunosuppressant, not IL-4 and IL-5. [Lecture 4.2]"
+      },
+      {
+        "text": "T killer (CD8+)",
+        "correct": false,
+        "why": "CD8+ killer T cells secrete perforin and granzyme, not interleukins 4 and 5. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-02",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which cytokine is the main secretion of the regulatory T cell?",
+    "options": [
+      {
+        "text": "IL-2",
+        "correct": false,
+        "why": "IL-2 is the growth factor secreted by T helper 1, not Treg. [Lecture 4.2]"
+      },
+      {
+        "text": "IL-5",
+        "correct": false,
+        "why": "IL-5 is secreted by T helper 2 as the chemotactic factor for eosinophils. [Lecture 4.2]"
+      },
+      {
+        "text": "IL-1",
+        "correct": false,
+        "why": "IL-1 (endogenous pyrogen) comes from macrophages, not regulatory T cells. [Lecture 2.1]"
+      },
+      {
+        "text": "IL-10",
+        "correct": true,
+        "why": "Treg secretes IL-10, the immunosuppressant that tells the immune system to turn off once the job is done. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-03",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "HIV selectively binds and depletes which cell population?",
+    "options": [
+      {
+        "text": "CD4+ helper T cells",
+        "correct": true,
+        "why": "HIV binds the CD4 receptor and destroys helper T cells, collapsing cell-mediated immunity. [Lecture 3.2]"
+      },
+      {
+        "text": "CD8+ cytotoxic T cells",
+        "correct": false,
+        "why": "HIV does not target CD8+ killer cells; its receptor is the CD4 glycoprotein. [Lecture 3.3]"
+      },
+      {
+        "text": "Naive B cells",
+        "correct": false,
+        "why": "B cells are not the HIV target; their antibody class switching is impaired only secondarily through CD4 loss. [Lecture 3.2]"
+      },
+      {
+        "text": "Plasma cells",
+        "correct": false,
+        "why": "Plasma cells secrete antibodies; HIV depletes CD4+ helper T cells instead. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-04",
+    "quarter": 3,
+    "slideRef": "2.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "IL-1 is also known as the _______ because it causes fever.",
+    "options": [
+      {
+        "text": "death factor",
+        "correct": false,
+        "why": "'Death factor' describes TNF, which induces apoptosis, not IL-1. [Lecture 2.1]"
+      },
+      {
+        "text": "immunosuppressant",
+        "correct": false,
+        "why": "IL-10 is the immunosuppressant cytokine from Treg; IL-1 is pro-inflammatory. [Lecture 4.2]"
+      },
+      {
+        "text": "endogenous pyrogen",
+        "correct": true,
+        "why": "IL-1 from macrophages acts as the endogenous pyrogen ('pyro' = fire), raising body temperature to cause fever. [Lecture 2.1]"
+      },
+      {
+        "text": "growth factor",
+        "correct": false,
+        "why": "IL-2 is the growth factor from T helper 1; IL-1 is the fever cytokine. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-05",
+    "quarter": 3,
+    "slideRef": "2.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which cytokine is the chemotactic factor specific to eosinophils?",
+    "options": [
+      {
+        "text": "IL-1",
+        "correct": false,
+        "why": "IL-1 is the endogenous pyrogen from macrophages; it is not the eosinophil chemotactic factor. [Lecture 4.1]"
+      },
+      {
+        "text": "IL-5",
+        "correct": true,
+        "why": "IL-5, secreted by Th2, is the chemotactic factor that calls eosinophils to the area. [Lecture 4.1]"
+      },
+      {
+        "text": "IL-4",
+        "correct": false,
+        "why": "IL-4 is also from Th2 but tells the B cell to isotype switch to IgE rather than recruiting eosinophils. [Lecture 4.1]"
+      },
+      {
+        "text": "IL-6",
+        "correct": false,
+        "why": "IL-6 is a general pro-inflammatory cytokine from macrophages, not eosinophil-specific. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-06",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Antibodies are secreted directly by _______.",
+    "options": [
+      {
+        "text": "naive B cells",
+        "correct": false,
+        "why": "Naive B cells carry surface receptors (IgD) but must differentiate into plasma cells to secrete antibodies. [Lecture 4.2]"
+      },
+      {
+        "text": "helper T cells",
+        "correct": false,
+        "why": "Helper T cells secrete cytokines that guide B cells; they do not secrete antibodies. [Lecture 3.3]"
+      },
+      {
+        "text": "dendritic cells",
+        "correct": false,
+        "why": "Dendritic cells are APCs that present antigen; they do not secrete antibodies. [Lecture 3.3]"
+      },
+      {
+        "text": "plasma cells",
+        "correct": true,
+        "why": "Activated B cells differentiate into plasma cells, the cells that actually secrete antibodies. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-07",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which immunoglobulin class is found in tears, saliva, sweat, mucus, and breast milk?",
+    "options": [
+      {
+        "text": "IgA",
+        "correct": true,
+        "why": "IgA is found in all body secretions, including breast milk, protecting mucosal surfaces. [Lecture 4.1]"
+      },
+      {
+        "text": "IgD",
+        "correct": false,
+        "why": "IgD is membrane-bound on the B-cell surface as the receptor, not secreted into body fluids. [Lecture 4.1]"
+      },
+      {
+        "text": "IgE",
+        "correct": false,
+        "why": "IgE binds mast cells and basophils for allergies and parasites, not body secretions. [Lecture 4.1]"
+      },
+      {
+        "text": "IgM",
+        "correct": false,
+        "why": "IgM is the massive pentamer that circulates in blood and is secreted first; it is not the secretory antibody. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-08",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Which immunoglobulin class functions as the membrane-bound B-cell receptor?",
+    "options": [
+      {
+        "text": "IgG",
+        "correct": false,
+        "why": "IgG is the small, most abundant circulating antibody that crosses the placenta; it is not the B-cell receptor. [Lecture 4.1]"
+      },
+      {
+        "text": "IgA",
+        "correct": false,
+        "why": "IgA is the antibody of body secretions such as saliva and breast milk. [Lecture 4.1]"
+      },
+      {
+        "text": "IgD",
+        "correct": true,
+        "why": "IgD is placed on the surface of the B cell and is what binds antigens as the B-cell receptor. [Lecture 4.1]"
+      },
+      {
+        "text": "IgE",
+        "correct": false,
+        "why": "IgE binds by its Fc portion to mast cells and basophils, not as the B-cell receptor. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-09",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which pair of secretions is characteristic of T helper 1 cells?",
+    "options": [
+      {
+        "text": "IL-4 and IL-5",
+        "correct": false,
+        "why": "IL-4 and IL-5 are secreted by T helper 2 in the allergy story. [Lecture 4.1]"
+      },
+      {
+        "text": "Perforin and granzyme",
+        "correct": false,
+        "why": "Perforin and granzyme are secreted by CD8+ killer T cells to trigger apoptosis. [Lecture 4.2]"
+      },
+      {
+        "text": "IL-1 and IL-6",
+        "correct": false,
+        "why": "IL-1 and IL-6 are pro-inflammatory cytokines secreted by M1 macrophages. [Lecture 2.1]"
+      },
+      {
+        "text": "IL-2 and interferon",
+        "correct": true,
+        "why": "Th1 secretes IL-2 (growth factor) and interferon (macrophage activation, granuloma, antiviral). [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-10",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Perforin released by CD8+ T cells acts by _______.",
+    "options": [
+      {
+        "text": "cleaving caspases inside the target cell",
+        "correct": false,
+        "why": "Cleaving and activating caspases is the job of granzyme, which enters through perforin pores. [Lecture 3.2]"
+      },
+      {
+        "text": "forming pores in the target cell membrane",
+        "correct": true,
+        "why": "Perforins polymerize into transmembrane pores in the target cell membrane, letting granzymes enter. [Lecture 3.2]"
+      },
+      {
+        "text": "forcing phagosome and lysosome fusion",
+        "correct": false,
+        "why": "Phagosome-lysosome fusion in the granuloma is driven by interferon from Th1. [Lecture 4.2]"
+      },
+      {
+        "text": "coating antigen for phagocyte uptake",
+        "correct": false,
+        "why": "Coating antigen for phagocytosis is opsonization by antibody or C3b, not perforin. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-11",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "How does granzyme from a CD8+ T cell kill its target?",
+    "options": [
+      {
+        "text": "It activates caspases to induce apoptosis",
+        "correct": true,
+        "why": "Granzymes are proteases that enter through perforin pores and activate caspases, triggering apoptosis. [Lecture 3.2]"
+      },
+      {
+        "text": "It forms a membrane attack complex",
+        "correct": false,
+        "why": "The membrane attack complex (C5b-9) is a complement product, not a T-cell secretion. [Lecture 3.3]"
+      },
+      {
+        "text": "It recruits eosinophils to the target",
+        "correct": false,
+        "why": "Recruiting eosinophils is the role of IL-5 from T helper 2. [Lecture 4.1]"
+      },
+      {
+        "text": "It neutralizes toxins on the target",
+        "correct": false,
+        "why": "Neutralization is an antibody mechanism that masks toxins and viruses. [Lecture 3.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-12",
+    "quarter": 3,
+    "slideRef": "3.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What is the main effect of IL-10 on the immune response?",
+    "options": [
+      {
+        "text": "It induces fever via the hypothalamus",
+        "correct": false,
+        "why": "Fever is induced by IL-1, the endogenous pyrogen from macrophages. [Lecture 2.1]"
+      },
+      {
+        "text": "It drives B-cell switching to IgE",
+        "correct": false,
+        "why": "Switching to IgE is driven by IL-4 from T helper 2. [Lecture 4.1]"
+      },
+      {
+        "text": "It suppresses and turns off the response",
+        "correct": true,
+        "why": "IL-10 from Treg is the immunosuppressant that tells the immune system to turn off once the job is done. [Lecture 4.2]"
+      },
+      {
+        "text": "It promotes T-cell growth and mitosis",
+        "correct": false,
+        "why": "T-cell growth is promoted by IL-2 from T helper 1. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-13",
+    "quarter": 3,
+    "slideRef": "3.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which T-cell subset is famously upregulated by genetics in atopic individuals?",
+    "options": [
+      {
+        "text": "T helper 1",
+        "correct": false,
+        "why": "Th1 does everything except allergies; it is not the subset upregulated in atopy. [Lecture 3.3]"
+      },
+      {
+        "text": "T regulatory",
+        "correct": false,
+        "why": "Treg secretes IL-10 to suppress responses; it is not the genetically upregulated allergy subset. [Lecture 3.3]"
+      },
+      {
+        "text": "T killer",
+        "correct": false,
+        "why": "CD8+ killer T cells kill infected cells via perforin and granzyme; they do not drive atopy. [Lecture 3.3]"
+      },
+      {
+        "text": "T helper 2",
+        "correct": true,
+        "why": "An inherited upregulation of the Th2 pathway drives excess IL-4, IL-5, and IgE in atopy. [Lecture 3.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-14",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In granuloma formation, how does interferon from Th1 let macrophages digest TB?",
+    "options": [
+      {
+        "text": "By fusing the phagosome with the lysosome",
+        "correct": true,
+        "why": "IFN forces the phagosome and lysosome to fuse, allowing the macrophage to digest the tuberculosis. [Lecture 4.2]"
+      },
+      {
+        "text": "By inserting perforin pores into the bacterium",
+        "correct": false,
+        "why": "Perforin pores are made by CD8+ killer T cells in target cell membranes, not by IFN. [Lecture 3.2]"
+      },
+      {
+        "text": "By switching B cells to secrete IgE",
+        "correct": false,
+        "why": "Switching to IgE is driven by IL-4 from Th2, not IFN in the granuloma. [Lecture 4.1]"
+      },
+      {
+        "text": "By raising the hypothalamic set point",
+        "correct": false,
+        "why": "Raising body temperature is the effect of IL-1, the endogenous pyrogen. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-15",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What is a macrophage called once it has successfully digested TB within a granuloma?",
+    "options": [
+      {
+        "text": "Plasma cell",
+        "correct": false,
+        "why": "A plasma cell is a differentiated B cell that secretes antibodies. [Lecture 4.2]"
+      },
+      {
+        "text": "Epithelioid cell",
+        "correct": true,
+        "why": "An IFN-activated macrophage that has digested the tuberculosis becomes an epithelioid cell. [Lecture 4.2]"
+      },
+      {
+        "text": "Giant cell",
+        "correct": false,
+        "why": "Multinucleated giant cells form later when several epithelioid cells fuse; the single digesting macrophage is the epithelioid cell. [Lecture 3.2]"
+      },
+      {
+        "text": "Memory cell",
+        "correct": false,
+        "why": "Memory cells are long-lived lymphocytes formed after activation, not transformed macrophages. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-16",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What is the primary action of IL-4 on B cells?",
+    "options": [
+      {
+        "text": "It activates caspases in target cells",
+        "correct": false,
+        "why": "Caspase activation in target cells is driven by granzyme from CD8+ cells. [Lecture 3.2]"
+      },
+      {
+        "text": "It recruits eosinophils to the site",
+        "correct": false,
+        "why": "Eosinophil recruitment is the role of IL-5, the other Th2 cytokine. [Lecture 4.1]"
+      },
+      {
+        "text": "It drives isotype switching to IgE",
+        "correct": true,
+        "why": "IL-4 from Th2 tells the B cell to isotype switch so its plasma cells secrete IgE. [Lecture 4.1]"
+      },
+      {
+        "text": "It stimulates hepatic CRP production",
+        "correct": false,
+        "why": "Stimulating CRP production in the liver is a pro-inflammatory effect of IL-6. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-17",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement about IL-6 is correct?",
+    "options": [
+      {
+        "text": "It is the anti-inflammatory Treg cytokine",
+        "correct": false,
+        "why": "The anti-inflammatory Treg cytokine is IL-10, not IL-6. [Lecture 4.2]"
+      },
+      {
+        "text": "It is the Th2 eosinophil chemotactic factor",
+        "correct": false,
+        "why": "The Th2 eosinophil chemotactic factor is IL-5. [Lecture 4.1]"
+      },
+      {
+        "text": "It is the Th1 T-cell growth factor",
+        "correct": false,
+        "why": "The Th1 T-cell growth factor is IL-2. [Lecture 4.2]"
+      },
+      {
+        "text": "It is a pro-inflammatory macrophage cytokine",
+        "correct": true,
+        "why": "IL-6 is secreted by macrophages and is pro-inflammatory, stimulating acute-phase reactants like CRP. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-18",
+    "quarter": 3,
+    "slideRef": "2.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "TNF was formerly called cachexin because it causes _______.",
+    "options": [
+      {
+        "text": "cessation of appetite",
+        "correct": true,
+        "why": "Cachexin/cachexia means cessation of appetite, which TNF causes during illness. [Lecture 2.1]"
+      },
+      {
+        "text": "eosinophil chemotaxis",
+        "correct": false,
+        "why": "Eosinophil chemotaxis is the action of IL-5, not TNF. [Lecture 2.1]"
+      },
+      {
+        "text": "immune suppression",
+        "correct": false,
+        "why": "Immune suppression is the role of IL-10 from Treg. [Lecture 4.2]"
+      },
+      {
+        "text": "isotype switching",
+        "correct": false,
+        "why": "Isotype switching is directed by helper T-cell cytokines such as IL-4, not cachexin. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-19",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "IL-2, secreted by T helper 1, acts mainly as a _______.",
+    "options": [
+      {
+        "text": "pyrogen that raises body temperature",
+        "correct": false,
+        "why": "Raising body temperature is the action of IL-1, the endogenous pyrogen. [Lecture 2.1]"
+      },
+      {
+        "text": "growth factor that promotes mitosis",
+        "correct": true,
+        "why": "IL-2 is the growth factor that stimulates proliferation of T cells, B cells, and NK cells. [Lecture 3.2]"
+      },
+      {
+        "text": "chemotactic factor for eosinophils",
+        "correct": false,
+        "why": "The eosinophil chemotactic factor is IL-5 from Th2. [Lecture 4.1]"
+      },
+      {
+        "text": "signal for cessation of appetite",
+        "correct": false,
+        "why": "Cessation of appetite (cachexia) is caused by TNF. [Lecture 2.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-20",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Besides promoting granulomas, what else does interferon from T helper 1 do?",
+    "options": [
+      {
+        "text": "Forms pores and activates caspases in targets",
+        "correct": false,
+        "why": "Pores and caspase activation come from CD8+ perforin and granzyme, not IFN. [Lecture 3.2]"
+      },
+      {
+        "text": "Clumps cell-bound antigens for phagocytes",
+        "correct": false,
+        "why": "Clumping cell-bound antigens is agglutination, an antibody (IgM) mechanism. [Lecture 4.2]"
+      },
+      {
+        "text": "Blocks viral replication and calls in macrophages",
+        "correct": true,
+        "why": "IFN blocks viral replication and calls macrophages, neutrophils, and other cells to the area. [Lecture 4.2]"
+      },
+      {
+        "text": "Suppresses the response once the job is done",
+        "correct": false,
+        "why": "Turning off the response is the immunosuppressant role of IL-10 from Treg. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-21",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What distinguishes T-dependent from T-independent B-cell activation?",
+    "options": [
+      {
+        "text": "The B cell binds free antigen directly on its receptor",
+        "correct": false,
+        "why": "Direct binding of antigen to the B-cell receptor describes T-independent activation. [Lecture 3.2]"
+      },
+      {
+        "text": "The B cell presents antigen on MHC I to a CD8+ cell",
+        "correct": false,
+        "why": "B cells present on MHC II to CD4+ helpers; MHC I/CD8 is the killer T-cell pathway. [Lecture 3.2]"
+      },
+      {
+        "text": "The B cell is activated by IL-10 from regulatory T cells",
+        "correct": false,
+        "why": "IL-10 suppresses the immune response; it does not activate B cells. [Lecture 4.2]"
+      },
+      {
+        "text": "The B cell presents antigen on MHC II to a CD4+ helper",
+        "correct": true,
+        "why": "In T-dependent activation the B cell presents processed antigen on MHC II to a CD4+ helper and receives cytokines. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-22",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "On an antibody, the _______ region binds antigen while the _______ region determines its class.",
+    "options": [
+      {
+        "text": "Fab ; Fc",
+        "correct": true,
+        "why": "The Fab (variable) region is where antigen binds; the Fc (constant stem) determines the antibody class. [Lecture 4.2]"
+      },
+      {
+        "text": "Fc ; Fab",
+        "correct": false,
+        "why": "Reversed: Fc is the constant stem that sets the class; Fab is the antigen-binding site. [Lecture 4.2]"
+      },
+      {
+        "text": "heavy chain ; light chain",
+        "correct": false,
+        "why": "Both chains contribute to Fab; class is set by the heavy-chain constant (Fc) region, not the light chain. [Lecture 3.2]"
+      },
+      {
+        "text": "J-chain ; Fab",
+        "correct": false,
+        "why": "The J-chain joins IgM/IgA units; antigen binds Fab and class is set by Fc. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-23",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Why is IgM remembered as \"massive\" and \"me first\"?",
+    "options": [
+      {
+        "text": "It is a dimer and the first to cross the placenta",
+        "correct": false,
+        "why": "IgA is the secretory dimer, and IgG, not IgM, crosses the placenta. [Lecture 3.2]"
+      },
+      {
+        "text": "It is a pentamer and the first class secreted",
+        "correct": true,
+        "why": "IgM circulates as a pentamer and is always the first antibody secreted upon new exposure. [Lecture 4.1]"
+      },
+      {
+        "text": "It is the largest and most abundant in serum",
+        "correct": false,
+        "why": "IgG, not IgM, is the most abundant antibody in serum. [Lecture 4.1]"
+      },
+      {
+        "text": "It is a monomer and first to bind mast cells",
+        "correct": false,
+        "why": "IgE is the monomer that binds mast cells; IgM is the pentamer. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-24",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which set of features belongs to IgG?",
+    "options": [
+      {
+        "text": "Pentamer, first secreted, best agglutinin",
+        "correct": false,
+        "why": "Pentamer, first secreted, and best agglutinin describe IgM. [Lecture 4.1]"
+      },
+      {
+        "text": "Dimer in secretions, found in breast milk",
+        "correct": false,
+        "why": "Secretory dimer found in breast milk and tears describes IgA. [Lecture 3.2]"
+      },
+      {
+        "text": "Small, most abundant, crosses the placenta",
+        "correct": true,
+        "why": "IgG is small enough to cross the placenta, is the most abundant, and has the highest affinity. [Lecture 4.1]"
+      },
+      {
+        "text": "Binds mast cells, mediates allergies and parasites",
+        "correct": false,
+        "why": "Mast-cell binding for allergies and parasites describes IgE. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-25",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Neutralization by antibodies is mainly used against which targets?",
+    "options": [
+      {
+        "text": "Soluble antigens dissolved in body fluid",
+        "correct": false,
+        "why": "Cross-linking soluble antigens out of solution is precipitation. [Lecture 4.2]"
+      },
+      {
+        "text": "Mismatched red blood cells in the blood",
+        "correct": false,
+        "why": "Clumping cell-bound antigens like mismatched RBCs is agglutination. [Lecture 4.1]"
+      },
+      {
+        "text": "The antibody's own faulty Fc sugars",
+        "correct": false,
+        "why": "Antibodies against a faulty IgG describe the rheumatoid factor autoantibody. [Lecture 4.1]"
+      },
+      {
+        "text": "Non-living threats such as toxins and viruses",
+        "correct": true,
+        "why": "Neutralization masks the dangerous parts of bacterial exotoxins and viruses, things that are not alive. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-26",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Agglutination, the clumping of cell-bound antigens, is best performed by _______.",
+    "options": [
+      {
+        "text": "IgM",
+        "correct": true,
+        "why": "IgM, the massive pentamer, clumps cell-bound antigens together in agglutination. [Lecture 4.2]"
+      },
+      {
+        "text": "IgD",
+        "correct": false,
+        "why": "IgD is the membrane-bound B-cell receptor and does not circulate to clump antigens. [Lecture 4.2]"
+      },
+      {
+        "text": "IgA",
+        "correct": false,
+        "why": "IgA protects body secretions; it is not the main agglutinin. [Lecture 4.2]"
+      },
+      {
+        "text": "IgE",
+        "correct": false,
+        "why": "IgE binds mast cells and basophils for allergies and parasites, not agglutination. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-27",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Precipitation targets which kind of antigen, and which antibody does it best?",
+    "options": [
+      {
+        "text": "Cell-bound antigen; IgM",
+        "correct": false,
+        "why": "Cell-bound antigens clumped by IgM describes agglutination. [Lecture 4.2]"
+      },
+      {
+        "text": "Soluble antigen; IgG",
+        "correct": true,
+        "why": "Precipitation cross-links soluble (dissolved) antigens out of solution and is best done by IgG. [Lecture 4.2]"
+      },
+      {
+        "text": "Toxins and viruses; IgA",
+        "correct": false,
+        "why": "Masking toxins and viruses is neutralization, not precipitation. [Lecture 4.2]"
+      },
+      {
+        "text": "Mast-cell antigen; IgE",
+        "correct": false,
+        "why": "IgE on mast cells mediates allergy, not precipitation of soluble antigen. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-28",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What does opsonization accomplish?",
+    "options": [
+      {
+        "text": "It punches pores that lyse the target cell",
+        "correct": false,
+        "why": "Pore formation and lysis come from the membrane attack complex (C5b-9). [Lecture 4.2]"
+      },
+      {
+        "text": "It recruits eosinophils to an allergen",
+        "correct": false,
+        "why": "Eosinophil recruitment is caused by IL-5, not opsonization. [Lecture 4.1]"
+      },
+      {
+        "text": "It makes antigens more appealing to phagocytes",
+        "correct": true,
+        "why": "Opsonization ('yum yum') coats antigens so they look more appealing to phagocytes, enhancing phagocytosis. [Lecture 4.2]"
+      },
+      {
+        "text": "It switches the antibody to another class",
+        "correct": false,
+        "why": "Changing antibody class is isotype switching. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-29",
+    "quarter": 3,
+    "slideRef": "3.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "The primary immune response has a lag of about _______ before antibody levels rise.",
+    "options": [
+      {
+        "text": "1 to 2 hours",
+        "correct": false,
+        "why": "The primary response lag is measured in days (3 to 6), not hours. [Lecture 3.3]"
+      },
+      {
+        "text": "8 to 10 years",
+        "correct": false,
+        "why": "8 to 10 years is the typical time for untreated HIV to progress to AIDS. [Lecture 3.2]"
+      },
+      {
+        "text": "24 to 48 hours",
+        "correct": false,
+        "why": "The primary lag is 3 to 6 days; a shorter lag is a feature of the secondary (anamnestic) response. [Lecture 3.3]"
+      },
+      {
+        "text": "3 to 6 days",
+        "correct": true,
+        "why": "The primary response shows a 3 to 6-day lag period before antibody titers rise, mediated first by IgM. [Lecture 3.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-30",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which is an example of natural passive immunity?",
+    "options": [
+      {
+        "text": "Mother's IgG crossing the placenta to the fetus",
+        "correct": true,
+        "why": "Natural passive: mom's IgG crosses the placenta (and IgA in breast milk) to protect the baby. [Lecture 4.1]"
+      },
+      {
+        "text": "Catching a cold and forming memory cells",
+        "correct": false,
+        "why": "Catching a cold activates your own immune system: natural active immunity. [Lecture 4.1]"
+      },
+      {
+        "text": "Receiving a polio vaccine",
+        "correct": false,
+        "why": "A vaccine exposes the body to antigen to build memory: artificial active immunity. [Lecture 4.1]"
+      },
+      {
+        "text": "Receiving a post-exposure tetanus antibody shot",
+        "correct": false,
+        "why": "Injected antibodies are man-made passive protection: artificial passive immunity. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-31",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which pairing of immunity type and example is correct?",
+    "options": [
+      {
+        "text": "Natural active: breast-milk IgA",
+        "correct": false,
+        "why": "Breast-milk IgA is received from the mother, making it natural passive. [Lecture 4.1]"
+      },
+      {
+        "text": "Artificial active: flu vaccine",
+        "correct": true,
+        "why": "A vaccine is man-made (artificial) and exposes the body to antigen to build memory (active). [Lecture 4.1]"
+      },
+      {
+        "text": "Artificial passive: polio vaccine",
+        "correct": false,
+        "why": "A polio vaccine introduces antigen and builds memory, making it artificial active. [Lecture 4.1]"
+      },
+      {
+        "text": "Natural passive: catching a cold",
+        "correct": false,
+        "why": "Catching a cold activates your own immune system, making it natural active. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-32",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Rheumatoid factor (RF) develops when the body targets which structure?",
+    "options": [
+      {
+        "text": "The rhesus antigen on red blood cell membranes",
+        "correct": false,
+        "why": "The rhesus (Rh) factor is an RBC antigen, which is different from RF. [Lecture 4.1]"
+      },
+      {
+        "text": "The CD4 receptor on helper T-cell surfaces",
+        "correct": false,
+        "why": "The CD4 receptor is the target of HIV, not of rheumatoid factor. [Lecture 3.2]"
+      },
+      {
+        "text": "A faulty IgG with an extra sugar on its Fc portion",
+        "correct": true,
+        "why": "RF arises when IgG carries an extra sugar on its Fc portion, so normal antibodies treat it as an antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "The IgD receptor on naive B-cell surfaces",
+        "correct": false,
+        "why": "IgD is the normal B-cell receptor; RF targets a faulty IgG. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-33",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why is a person with advanced HIV/AIDS unable to form granulomas?",
+    "options": [
+      {
+        "text": "Loss of CD8+ cells removes the perforin that walls off TB",
+        "correct": false,
+        "why": "HIV targets CD4+ helpers, and perforin is a killing mechanism, not the granuloma driver. [Lecture 4.2]"
+      },
+      {
+        "text": "Loss of B cells removes the IgM that clumps the bacteria",
+        "correct": false,
+        "why": "Granulomas are cell-mediated and do not depend on B cells or IgM agglutination. [Lecture 3.3]"
+      },
+      {
+        "text": "Loss of Treg cells removes the IL-10 that builds the granuloma",
+        "correct": false,
+        "why": "IL-10 from Treg suppresses immunity; it does not build granulomas. [Lecture 4.2]"
+      },
+      {
+        "text": "Loss of CD4+ Th1 cells removes the IFN that activates macrophages",
+        "correct": true,
+        "why": "Granuloma is a Th1 reaction; HIV depletes CD4+ cells, so no IFN is secreted to activate macrophages. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-34",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Interferon and IL-4 differ in the isotype switching they direct in B cells in what way?",
+    "options": [
+      {
+        "text": "IFN directs IgE only; IL-4 directs any class but IgE",
+        "correct": false,
+        "why": "Reversed: Th1 does everything except allergies, so IFN avoids IgE while IL-4 drives IgE. [Lecture 4.2]"
+      },
+      {
+        "text": "IFN directs any class except IgE; IL-4 directs IgE",
+        "correct": true,
+        "why": "IFN (Th1) tells B cells to switch to any typical class except IgE; IL-4 (Th2) directs switching to IgE. [Lecture 4.2]"
+      },
+      {
+        "text": "IFN directs IgD only; IL-4 directs IgA only",
+        "correct": false,
+        "why": "IgD is the default membrane receptor, and IL-4 directs IgE, not IgA. [Lecture 4.1]"
+      },
+      {
+        "text": "IFN blocks all switching; IL-4 keeps cells on IgM",
+        "correct": false,
+        "why": "IFN does promote switching (except to IgE), and IL-4 moves cells off IgM to IgE. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-35",
+    "quarter": 3,
+    "slideRef": "3.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "During isotype switching, which antibody feature changes and which is preserved?",
+    "options": [
+      {
+        "text": "The Fab region changes; the Fc class is preserved",
+        "correct": false,
+        "why": "Reversed: Fab specificity stays the same; it is the Fc that changes to a new class. [Lecture 3.2]"
+      },
+      {
+        "text": "Both Fab and Fc change to a new antigen and class",
+        "correct": false,
+        "why": "The antigen specificity of Fab does not change; only the Fc/class changes. [Lecture 3.2]"
+      },
+      {
+        "text": "The Fc region changes; the Fab specificity is preserved",
+        "correct": true,
+        "why": "Isotype switching changes the constant Fc domain while preserving the exact antigen-binding specificity of Fab. [Lecture 3.2]"
+      },
+      {
+        "text": "Neither changes; only the antibody quantity increases",
+        "correct": false,
+        "why": "Switching changes the class (Fc); a rise in quantity alone is the secondary response. [Lecture 3.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-36",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why are IgM and IgG the antibodies that activate complement?",
+    "options": [
+      {
+        "text": "Only IgM and IgG carry Fab regions that bind complement",
+        "correct": false,
+        "why": "All antibody classes have Fab regions; complement binding relates to circulation and Fc, not Fab alone. [Lecture 3.2]"
+      },
+      {
+        "text": "Complement proteins are in secretions, where IgM and IgG are found",
+        "correct": false,
+        "why": "IgA, not IgM or IgG, is the antibody of body secretions; complement is in the blood. [Lecture 4.1]"
+      },
+      {
+        "text": "Only IgM and IgG bind the surface of mast cells",
+        "correct": false,
+        "why": "IgE, not IgM or IgG, binds mast cells by its Fc portion. [Lecture 4.1]"
+      },
+      {
+        "text": "Complement proteins are in blood, where only IgM and IgG circulate",
+        "correct": true,
+        "why": "Complement enzymes are found in the blood, and IgM and IgG are the only two antibodies that circulate there. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-37",
+    "quarter": 3,
+    "slideRef": "3.3",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Which complement product is matched with its correct outcome?",
+    "options": [
+      {
+        "text": "C5b-9: lysis by membrane attack complex",
+        "correct": true,
+        "why": "C5b through C9 assemble the membrane attack complex, forming pores that cause cell lysis. [Lecture 3.3]"
+      },
+      {
+        "text": "C3b: chemotaxis of inflammatory cells",
+        "correct": false,
+        "why": "C3b is the opsonin that enhances phagocytosis; chemotaxis is from C3a and C5a. [Lecture 3.3]"
+      },
+      {
+        "text": "C5a: coating antigen as an opsonin",
+        "correct": false,
+        "why": "C5a is a chemotactic and inflammatory factor; C3b is the opsonin. [Lecture 3.3]"
+      },
+      {
+        "text": "C3a: forming pores in target membranes",
+        "correct": false,
+        "why": "C3a enhances inflammation via histamine release; pores come from the C5b-9 MAC. [Lecture 3.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-38",
+    "quarter": 3,
+    "slideRef": "4.2",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why would a second exposure after artificial passive immunity NOT produce a faster secondary response?",
+    "options": [
+      {
+        "text": "Received antibodies are all IgM pentamers",
+        "correct": false,
+        "why": "The class of the received antibodies is not the issue; no memory cells form because the immune system was never activated. [Lecture 4.2]"
+      },
+      {
+        "text": "Received antibodies form no memory cells",
+        "correct": true,
+        "why": "Passive immunity gives antibodies as a gift; no antigen activates the immune system, so no memory cells form. [Lecture 4.2]"
+      },
+      {
+        "text": "Received antibodies destroy native B cells",
+        "correct": false,
+        "why": "Passive antibodies do not destroy B cells; they simply circulate and protect temporarily. [Lecture 4.1]"
+      },
+      {
+        "text": "Received antibodies block isotype switching",
+        "correct": false,
+        "why": "Passive antibodies are not described as blocking switching; no response was mounted, so no memory formed. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-39",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why does IgG, rather than IgM, dominate the secondary immune response?",
+    "options": [
+      {
+        "text": "IgM cannot be produced after the first exposure",
+        "correct": false,
+        "why": "IgM is always the first secreted on new exposure; the shift to IgG reflects switching, not an IgM ban. [Lecture 4.1]"
+      },
+      {
+        "text": "IgG is the only class that memory cells secrete",
+        "correct": false,
+        "why": "Memory cells do not secrete antibodies; plasma cells secrete antibodies. [Lecture 4.2]"
+      },
+      {
+        "text": "Isotype switching from IgM yields higher-affinity IgG",
+        "correct": true,
+        "why": "IgM is secreted first, then isotype switching produces IgG, which is smaller, more specialized, and higher affinity. [Lecture 4.1]"
+      },
+      {
+        "text": "IgG is the pentamer with the most binding sites",
+        "correct": false,
+        "why": "IgM, not IgG, is the pentamer; IgG is the small monomer. [Lecture 3.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q3-40",
+    "quarter": 3,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Which statement correctly pairs a T helper secretion with the cell that actually secretes IgE?",
+    "options": [
+      {
+        "text": "Th2 secretes IL-4; plasma cells secrete IgE",
+        "correct": true,
+        "why": "T helper 2 secretes IL-4 (and IL-5), and any antibody, including IgE, comes from a B cell that has differentiated into a plasma cell. [Lecture 4.1]"
+      },
+      {
+        "text": "Th1 secretes IL-4; Th2 cells secrete IgE",
+        "correct": false,
+        "why": "Both halves are wrong: IL-4 comes from T helper 2, not T helper 1, and T cells never secrete antibodies; IgE comes from plasma cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Th2 secretes IFN; memory B cells secrete IgE",
+        "correct": false,
+        "why": "Interferon is a T helper 1 product, and antibodies are secreted by B cells only after they differentiate into plasma cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Th1 secretes IL-5; mast cells secrete IgE",
+        "correct": false,
+        "why": "IL-5 comes from T helper 2, and mast cells bind IgE by its Fc portion rather than producing it; IgE comes from plasma cells. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-01",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "What distinguishes an allergen from other antigens?",
+    "options": [
+      {
+        "text": "It is a partial antigen that cannot act on its own",
+        "correct": false,
+        "why": "This describes a hapten, a partial antigen, not an allergen. [Lecture 4.1]"
+      },
+      {
+        "text": "It is a harmless antigen that the body perceives as harmful",
+        "correct": true,
+        "why": "Correct: an allergen is a harmless antigen that causes no issue in most people but is perceived as harmful in some. [Lecture 4.1]"
+      },
+      {
+        "text": "It activates many T cell receptors at once",
+        "correct": false,
+        "why": "This describes a superantigen, which activates multiple TCRs and can cause a cytokine storm. [Lecture 4.1]"
+      },
+      {
+        "text": "It is the smallest peptide placed on the cell surface",
+        "correct": false,
+        "why": "This describes an epitope (antigenic determinant), not an allergen. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-02",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "In Type I hypersensitivity, the term _______ means the reaction is atypical and would not occur in most people.",
+    "options": [
+      {
+        "text": "anaphylactic",
+        "correct": false,
+        "why": "Anaphylactic means multiple body systems are involved, not that the reaction is atypical. [Lecture 4.1]"
+      },
+      {
+        "text": "immediate",
+        "correct": false,
+        "why": "Immediate describes the timing of Type I (reacting right away), not its atypical nature. [Lecture 4.1]"
+      },
+      {
+        "text": "delayed",
+        "correct": false,
+        "why": "Delayed describes Type IV, the T cell reaction that takes days to form. [Lecture 4.3]"
+      },
+      {
+        "text": "atopic",
+        "correct": true,
+        "why": "Correct: atopic/atopy means an atypical reaction that most people would not have. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-03",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "What makes an allergic reaction anaphylactic rather than localized?",
+    "options": [
+      {
+        "text": "Involvement of multiple body systems at once",
+        "correct": true,
+        "why": "Correct: anaphylaxis means the reaction is systemic, involving multiple systems rather than one spot. [Lecture 4.1]"
+      },
+      {
+        "text": "Formation of immune complexes in the blood",
+        "correct": false,
+        "why": "Immune complex formation and precipitation define Type III, not anaphylaxis. [Lecture 4.1]"
+      },
+      {
+        "text": "A reaction that develops over 24 to 48 hours",
+        "correct": false,
+        "why": "A reaction forming over 24 to 48 hours is the delayed Type IV pattern, not anaphylaxis. [Lecture 4.3]"
+      },
+      {
+        "text": "Binding of IgM to red blood cells",
+        "correct": false,
+        "why": "IgM agglutination of red blood cells is the incompatible blood type reaction (Type II cytotoxic). [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-04",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Anaphylactic shock develops mainly because systemic histamine release causes which change?",
+    "options": [
+      {
+        "text": "Widespread vasoconstriction that raises blood pressure",
+        "correct": false,
+        "why": "Opposite effect: histamine vasodilates; vessel constriction is what the EpiPen (adrenaline) helps produce. [Lecture 4.1]"
+      },
+      {
+        "text": "Complement-mediated lysis of red blood cells",
+        "correct": false,
+        "why": "Complement-mediated hemolysis occurs with incompatible blood types (Type II), not anaphylaxis. [Lecture 4.1]"
+      },
+      {
+        "text": "Antibody blockade of acetylcholine receptors",
+        "correct": false,
+        "why": "Acetylcholine receptor blockade is myasthenia gravis (Type II noncytotoxic). [Lecture 4.1]"
+      },
+      {
+        "text": "Widespread vasodilation that drops blood pressure",
+        "correct": true,
+        "why": "Correct: histamine released in many areas vasodilates systemically, blood pressure drops, and the body goes into shock. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-05",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In the Type I allergy sequence, IL-4 secreted by T helper 2 cells has which effect?",
+    "options": [
+      {
+        "text": "It recruits eosinophils to the area",
+        "correct": false,
+        "why": "Recruiting eosinophils is the role of IL-5 (chemotactic factor for eosinophils), not IL-4. [Lecture 4.1]"
+      },
+      {
+        "text": "It directly causes mast cell degranulation",
+        "correct": false,
+        "why": "Degranulation is triggered when the allergen binds IgE already on the mast cell, not by IL-4. [Lecture 4.1]"
+      },
+      {
+        "text": "It suppresses the allergic response",
+        "correct": false,
+        "why": "Immunosuppression is the role of IL-10 from Tregs, not IL-4. [Lecture 4.2]"
+      },
+      {
+        "text": "It drives B cell isotype switching to IgE",
+        "correct": true,
+        "why": "Correct: IL-4 co-stimulates the B cell to isotype switch so its plasma cells secrete IgE. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-06",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Eosinophils called in by IL-5 influence a Type I reaction in which way?",
+    "options": [
+      {
+        "text": "They switch B cells to secreting IgE",
+        "correct": false,
+        "why": "Isotype switching to IgE is driven by IL-4 acting on the B cell. [Lecture 4.1]"
+      },
+      {
+        "text": "They present the allergen on MHC II",
+        "correct": false,
+        "why": "Antigen presentation on MHC II is done by APCs such as dendritic cells, not eosinophils. [Lecture 4.1]"
+      },
+      {
+        "text": "They either stabilize or enhance mast cell degranulation",
+        "correct": true,
+        "why": "Correct: eosinophils either stabilize the mast cell membrane or enhance degranulation; why they choose one is unknown. [Lecture 4.1]"
+      },
+      {
+        "text": "They form immune complexes with the allergen",
+        "correct": false,
+        "why": "Immune complex formation with soluble antigen is the Type III mechanism. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-07",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which part of the IgE molecule attaches to the mast cell membrane during Type I hypersensitivity?",
+    "options": [
+      {
+        "text": "The Fab (antigen-binding) portion",
+        "correct": false,
+        "why": "The Fab binds the allergen; it must stay free, so it is not the part anchored to the membrane. [Lecture 4.2]"
+      },
+      {
+        "text": "The MHC II binding groove",
+        "correct": false,
+        "why": "Antibodies have no MHC II groove; MHC II is a protein that APCs use to present antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "The Fc (stem) portion",
+        "correct": true,
+        "why": "Correct: IgE binds the mast cell membrane by its Fc (stem) portion, leaving the Fab free to bind allergen. [Lecture 4.1]"
+      },
+      {
+        "text": "The attached complement C3b",
+        "correct": false,
+        "why": "C3b is a complement opsonin that coats complexes; it is not part of the IgE molecule. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-08",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Which sequence correctly orders the Type I hypersensitivity story?",
+    "options": [
+      {
+        "text": "APC on MHC I, CD8 T cell, IL-5, B cell makes IgG, IgG on mast cell, histamine",
+        "correct": false,
+        "why": "APCs normally use MHC II, which is recognized by CD4 (Th2), and the allergy antibody is IgE, not IgG. [Lecture 4.1]"
+      },
+      {
+        "text": "APC on MHC II, CD4 Th2, IL-4, B cell makes IgE, IgE on mast cell, histamine",
+        "correct": true,
+        "why": "Correct: APC presents allergen on MHC II to CD4 Th2, IL-4 switches the B cell to IgE, IgE mounts mast cells, re-exposure releases histamine. [Lecture 4.1]"
+      },
+      {
+        "text": "Mast cell releases histamine, Th2 secretes IL-4, B cell makes IgE, APC on MHC II",
+        "correct": false,
+        "why": "Out of order: the mast cell and histamine release are the very last step, not the first. [Lecture 4.1]"
+      },
+      {
+        "text": "APC on MHC II, CD4 Th1, IFN, B cell makes IgE, IgE on neutrophil, histamine",
+        "correct": false,
+        "why": "Th1 does everything except allergies, and IgE binds mast cells/basophils, not neutrophils. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-09",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Why does the first exposure to an allergen usually NOT produce a full allergic reaction?",
+    "options": [
+      {
+        "text": "IgE is only being mounted on mast cells during sensitization",
+        "correct": true,
+        "why": "Correct: in the sensitization stage IgE binds mast cells and stops there; the subsequent exposure triggers degranulation. [Lecture 4.1]"
+      },
+      {
+        "text": "IgM cannot cross the placenta during first exposure",
+        "correct": false,
+        "why": "Placental crossing is irrelevant here; it explains why IgG, not IgM, causes erythroblastosis fetalis. [Lecture 4.1]"
+      },
+      {
+        "text": "T cells need 24 to 48 hours to recruit macrophages",
+        "correct": false,
+        "why": "This delay describes the Type IV cell-mediated reaction, not Type I sensitization. [Lecture 4.3]"
+      },
+      {
+        "text": "Allergen-antibody complexes must first precipitate",
+        "correct": false,
+        "why": "Precipitation of soluble antigen-antibody complexes is the Type III mechanism. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-10",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "The third E in \"EEE for allergy\" is _______, also known as atopic dermatitis.",
+    "options": [
+      {
+        "text": "erythema migrans",
+        "correct": false,
+        "why": "Erythema migrans is the bull's-eye rash of Lyme disease, a Type III example. [Lecture 4.1]"
+      },
+      {
+        "text": "exophthalmos",
+        "correct": false,
+        "why": "Exophthalmos is the hallmark bulging eyes of Graves' disease (Type II noncytotoxic). [Lecture 4.1]"
+      },
+      {
+        "text": "eosinophil",
+        "correct": false,
+        "why": "The eosinophil is the first E (called by IL-5), not the third. [Lecture 4.3]"
+      },
+      {
+        "text": "eczema",
+        "correct": true,
+        "why": "Correct: eczema (atopic dermatitis) is the third E, after eosinophils and IgE. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-11",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which condition is NOT an example of Type I hypersensitivity?",
+    "options": [
+      {
+        "text": "Allergic rhinitis",
+        "correct": false,
+        "why": "Allergic rhinitis (hay fever) is Type I, from mast cell degranulation in the nose. [Lecture 4.1]"
+      },
+      {
+        "text": "Bronchial asthma",
+        "correct": false,
+        "why": "Allergic bronchial asthma is a Type I example, with narrowed airways and inflammation. [Lecture 4.2]"
+      },
+      {
+        "text": "Atopic dermatitis",
+        "correct": false,
+        "why": "Atopic dermatitis (eczema) is the Type I form of dermatitis. [Lecture 4.1]"
+      },
+      {
+        "text": "Contact dermatitis",
+        "correct": true,
+        "why": "Correct: contact dermatitis (poison ivy/oak) is Type IV, delayed and cell mediated. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-12",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What feature most clearly separates Type II from Type III hypersensitivity?",
+    "options": [
+      {
+        "text": "Type II antigen is on a cell surface; Type III antigen is soluble",
+        "correct": true,
+        "why": "Correct: Type II antibodies target antigen on a whole cell, while Type III binds a loose, dissolved antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "Type II involves T cells only; Type III involves antibodies",
+        "correct": false,
+        "why": "Type II uses antibodies; the T-cell-only hypersensitivity is Type IV. [Lecture 4.1]"
+      },
+      {
+        "text": "Type II is immediate; Type III is delayed",
+        "correct": false,
+        "why": "Immediate describes Type I and delayed describes Type IV, not this distinction. [Lecture 4.1]"
+      },
+      {
+        "text": "Type II uses IgE; Type III uses IgA",
+        "correct": false,
+        "why": "IgE belongs to Type I; Type III in the blood uses IgG and IgM. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-13",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "How does a noncytotoxic Type II reaction differ from a cytotoxic one?",
+    "options": [
+      {
+        "text": "It alters cell function without killing the cell",
+        "correct": true,
+        "why": "Correct: noncytotoxic Type II alters how the cell works but does not cause lysis. [Lecture 4.1]"
+      },
+      {
+        "text": "It lyses the target cell through complement action",
+        "correct": false,
+        "why": "Cell lysis is what defines the cytotoxic category, not the noncytotoxic one. [Lecture 4.1]"
+      },
+      {
+        "text": "It targets a soluble antigen in the blood",
+        "correct": false,
+        "why": "A soluble antigen is a Type III feature; all Type II antigens are on a cell surface. [Lecture 4.1]"
+      },
+      {
+        "text": "It depends only on T cells, not antibodies",
+        "correct": false,
+        "why": "T-cell-only mechanisms are Type IV; noncytotoxic Type II is antibody driven. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-14",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "The universal blood recipient is type _______.",
+    "options": [
+      {
+        "text": "O negative",
+        "correct": false,
+        "why": "O negative is the donor side: O can give to everyone and negatives can give to everyone. [Lecture 4.1]"
+      },
+      {
+        "text": "O positive",
+        "correct": false,
+        "why": "Type O can only receive from O, so it cannot be the universal recipient. [Lecture 4.1]"
+      },
+      {
+        "text": "AB positive",
+        "correct": true,
+        "why": "Correct: AB positive can receive from anyone; AB has both antigens and positives can receive Rh-positive blood. [Lecture 4.1]"
+      },
+      {
+        "text": "A negative",
+        "correct": false,
+        "why": "Type A can only receive from A or O, so it is not universal. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-15",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which antibody and action mainly cause the reaction to an incompatible blood transfusion?",
+    "options": [
+      {
+        "text": "IgG, through precipitation",
+        "correct": false,
+        "why": "Precipitation of soluble antigen by IgG is the Type III mechanism; red cells are whole cells. [Lecture 4.3]"
+      },
+      {
+        "text": "IgE, through mast cell degranulation",
+        "correct": false,
+        "why": "IgE and mast cell degranulation are the Type I allergy mechanism. [Lecture 4.1]"
+      },
+      {
+        "text": "IgM, through agglutination",
+        "correct": true,
+        "why": "Correct: IgM clumps the foreign red blood cells (agglutination), followed by complement-mediated hemolysis. [Lecture 4.1]"
+      },
+      {
+        "text": "IgA, through neutralization",
+        "correct": false,
+        "why": "IgA is found in secretions and is not the clumping antibody in transfusion reactions. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-16",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "When type A blood is given to a type B recipient, which description of the reaction is accurate?",
+    "options": [
+      {
+        "text": "Type II noncytotoxic, autoimmune: anti-B IgG blocks receptors on the recipient's own cells",
+        "correct": false,
+        "why": "The recipient attacks foreign donor cells, so it is not autoimmune, and the cells are lysed rather than blocked. [Lecture 4.1]"
+      },
+      {
+        "text": "Type III, not autoimmune: soluble A antigen precipitates with IgG in vessel walls",
+        "correct": false,
+        "why": "The A antigen sits on the red cell surface, so it is Type II, not a soluble Type III antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "Type II cytotoxic, not autoimmune: anti-A IgM clumps donor cells and complement lyses them",
+        "correct": true,
+        "why": "Correct: recipient anti-A IgM agglutinates the foreign cells, complement causes hemolysis, and no self cells are attacked. [Lecture 4.1]"
+      },
+      {
+        "text": "Type I, not autoimmune: anti-A IgE triggers mast cells to release histamine",
+        "correct": false,
+        "why": "Transfusion reactions use IgM agglutination and complement, not IgE and mast cells. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-17",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Erythroblastosis fetalis arises from which maternal-fetal combination?",
+    "options": [
+      {
+        "text": "Rh-positive mother carrying an Rh-negative fetus",
+        "correct": false,
+        "why": "Reversed: the problem is a negative mother sensitized to a positive baby's Rh antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "Type AB mother carrying a type O fetus",
+        "correct": false,
+        "why": "The condition described is driven by the rhesus factor, not ABO type. [Lecture 4.1]"
+      },
+      {
+        "text": "Rh-negative mother carrying an Rh-positive fetus",
+        "correct": true,
+        "why": "Correct: the Rh-positive fetus carries a red cell protein the Rh-negative mother does not recognize. [Lecture 4.1]"
+      },
+      {
+        "text": "Rh-negative mother carrying an Rh-negative fetus",
+        "correct": false,
+        "why": "If both are negative, the fetus has no Rh antigen for the mother to react against. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-18",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In erythroblastosis fetalis, why is maternal IgG rather than IgM the antibody that harms the fetus?",
+    "options": [
+      {
+        "text": "Only IgG can bind the Fc receptor on mast cells",
+        "correct": false,
+        "why": "Binding mast cells is IgE's role in Type I, not a reason IgG harms the fetus. [Lecture 4.1]"
+      },
+      {
+        "text": "IgM is made only after the second pregnancy",
+        "correct": false,
+        "why": "IgM is always the first antibody made; it forms during sensitization but cannot cross the placenta. [Lecture 4.1]"
+      },
+      {
+        "text": "IgM is restricted to secretions such as breast milk",
+        "correct": false,
+        "why": "Secretions and breast milk carry IgA; IgM circulates in the blood. [Lecture 4.1]"
+      },
+      {
+        "text": "Only IgG is small enough to cross the placenta",
+        "correct": true,
+        "why": "Correct: memory IgM and IgG both form, but only IgG crosses the placenta to destroy fetal red cells. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-19",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "The RhoGAM shot used to prevent erythroblastosis fetalis is an example of which type of acquired immunity?",
+    "options": [
+      {
+        "text": "Artificial active, because the mother is given the Rh antigen",
+        "correct": false,
+        "why": "Active immunity requires exposing the body to antigen; RhoGAM supplies antibodies instead. [Lecture 4.1]"
+      },
+      {
+        "text": "Natural passive, because maternal IgG crosses the placenta",
+        "correct": false,
+        "why": "Transplacental IgG is natural passive, but RhoGAM is a man-made injection. [Lecture 4.1]"
+      },
+      {
+        "text": "Natural active, because the mother is exposed at childbirth",
+        "correct": false,
+        "why": "Exposure at birth is what sensitizes the mother; it is the problem, not the prevention. [Lecture 4.1]"
+      },
+      {
+        "text": "Artificial passive, because the mother is given anti-Rh antibodies",
+        "correct": true,
+        "why": "Correct: RhoGAM injects ready-made antibodies against the rhesus antigen, so it is artificial passive. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-20",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Why is red blood cell breakdown in erythroblastosis fetalis toxic to the fetus beyond causing anemia?",
+    "options": [
+      {
+        "text": "Bilirubin can cross the immature fetal blood-brain barrier",
+        "correct": true,
+        "why": "Correct: hemoglobin is converted to bilirubin, which causes jaundice and can cross the immature blood-brain barrier. [Lecture 4.1]"
+      },
+      {
+        "text": "Released histamine sends the fetus into anaphylactic shock",
+        "correct": false,
+        "why": "Histamine release from mast cells is Type I, not the consequence of fetal hemolysis. [Lecture 4.1]"
+      },
+      {
+        "text": "Immune complexes precipitate in the fetal kidneys",
+        "correct": false,
+        "why": "Precipitation of immune complexes is a Type III process, not the mechanism here. [Lecture 4.1]"
+      },
+      {
+        "text": "Granulomas form around the lysed fetal red blood cells",
+        "correct": false,
+        "why": "Granulomas are a Type IV cell-mediated response, not a result of hemolysis. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-21",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "Goodpasture's disease targets the basement membranes of which structures?",
+    "options": [
+      {
+        "text": "Thyroid and neuromuscular junction",
+        "correct": false,
+        "why": "Thyroid is targeted in Graves' disease and the neuromuscular junction in myasthenia gravis. [Lecture 4.1]"
+      },
+      {
+        "text": "Glomerulus and pulmonary membranes",
+        "correct": true,
+        "why": "Correct: the G and P stand for glomerulus (kidneys) and pulmonary (lungs) basement membranes. [Lecture 4.1]"
+      },
+      {
+        "text": "Renal arteries and synovium",
+        "correct": false,
+        "why": "Renal arteries are affected in hep B polyarteritis nodosa and synovium in rheumatoid arthritis (Type III). [Lecture 4.1]"
+      },
+      {
+        "text": "Small intestine and skin",
+        "correct": false,
+        "why": "Small intestinal villi are injured in celiac disease, and skin in contact dermatitis. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-22",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which cytotoxic Type II condition is also an autoimmune disease?",
+    "options": [
+      {
+        "text": "Goodpasture's disease",
+        "correct": true,
+        "why": "Correct: Goodpasture's attacks the body's own basement membranes, so it is autoimmune. [Lecture 4.1]"
+      },
+      {
+        "text": "Incompatible blood transfusion",
+        "correct": false,
+        "why": "Not autoimmune: the recipient attacks foreign donor red blood cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Erythroblastosis fetalis",
+        "correct": false,
+        "why": "Not autoimmune: maternal antibodies attack the fetus's red cells, not the mother's own cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Allergic rhinitis",
+        "correct": false,
+        "why": "Allergic rhinitis is Type I, and allergies are not autoimmune. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-23",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "How do antibodies produce hyperthyroidism in Graves' disease?",
+    "options": [
+      {
+        "text": "They lyse thyroid cells through complement",
+        "correct": false,
+        "why": "Graves' is noncytotoxic; it alters thyroid function rather than killing the cells. [Lecture 4.1]"
+      },
+      {
+        "text": "They block TSH from binding its receptor",
+        "correct": false,
+        "why": "Blocking a receptor is competitive inhibition (as in myasthenia gravis), which would reduce activity. [Lecture 4.1]"
+      },
+      {
+        "text": "They form complexes with soluble thyroid hormone",
+        "correct": false,
+        "why": "Complexes with soluble antigen describe Type III, not Graves' disease. [Lecture 4.1]"
+      },
+      {
+        "text": "They mimic TSH and overstimulate the TSH receptor",
+        "correct": true,
+        "why": "Correct: the antibody acts like thyroid stimulating hormone, overactivating the thyroid; it is the only excitatory example. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-24",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "The hallmark sign of Graves' disease is _______, or bulging of the eyes.",
+    "options": [
+      {
+        "text": "ptosis",
+        "correct": false,
+        "why": "Ptosis (droopy eyelid) is the hallmark of myasthenia gravis. [Lecture 4.3]"
+      },
+      {
+        "text": "malar rash",
+        "correct": false,
+        "why": "The malar (butterfly) rash is the hallmark of systemic lupus erythematosus. [Lecture 4.1]"
+      },
+      {
+        "text": "exophthalmos",
+        "correct": true,
+        "why": "Correct: exophthalmos (bulging eyes) is the hallmark of Graves' disease. [Lecture 4.1]"
+      },
+      {
+        "text": "erythema migrans",
+        "correct": false,
+        "why": "Erythema migrans (bull's-eye rash) is the hallmark of Lyme disease. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-25",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "In myasthenia gravis, antibodies cause muscle weakness by which mechanism?",
+    "options": [
+      {
+        "text": "Attacking presynaptic calcium channels to stop acetylcholine release",
+        "correct": false,
+        "why": "Presynaptic calcium channel attack is Lambert-Eaton, not myasthenia gravis. [Lecture 4.1]"
+      },
+      {
+        "text": "Competing with acetylcholine for its receptors on the muscle",
+        "correct": true,
+        "why": "Correct: antibodies bind the acetylcholine receptor and compete with acetylcholine (competitive inhibition), without killing cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Lysing muscle cells through the membrane attack complex",
+        "correct": false,
+        "why": "Myasthenia gravis is noncytotoxic Type II; muscle cells are not lysed. [Lecture 4.2]"
+      },
+      {
+        "text": "Mimicking acetylcholine to overstimulate the muscle",
+        "correct": false,
+        "why": "Mimicking a signal to overstimulate is the Graves' (excitatory) pattern, the opposite effect. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-26",
+    "quarter": 4,
+    "slideRef": "4.3",
+    "difficulty": "easy",
+    "priority": true,
+    "stem": "The hallmark sign of myasthenia gravis is _______, a droopy eyelid.",
+    "options": [
+      {
+        "text": "exophthalmos",
+        "correct": false,
+        "why": "Exophthalmos (bulging eyes) is the hallmark of Graves' disease. [Lecture 4.1]"
+      },
+      {
+        "text": "ptosis",
+        "correct": true,
+        "why": "Correct: ptosis (droopy eyelid) is the hallmark sign of myasthenia gravis. [Lecture 4.3]"
+      },
+      {
+        "text": "jaundice",
+        "correct": false,
+        "why": "Jaundice is a sign of bilirubin buildup in erythroblastosis fetalis. [Lecture 4.1]"
+      },
+      {
+        "text": "hives",
+        "correct": false,
+        "why": "Hives are raised, itchy skin bumps seen in Type I allergic reactions. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-27",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "How does the defect in Lambert-Eaton differ from that in myasthenia gravis?",
+    "options": [
+      {
+        "text": "Lambert-Eaton is excitatory, with overstimulated muscle",
+        "correct": false,
+        "why": "Both conditions are inhibitory and cause weakness; Graves' is the only excitatory example. [Lecture 4.1]"
+      },
+      {
+        "text": "Lambert-Eaton is cytotoxic, with lysis of muscle cells",
+        "correct": false,
+        "why": "Both are noncytotoxic Type II; neither kills the cells. [Lecture 4.1]"
+      },
+      {
+        "text": "Lambert-Eaton is presynaptic, with less acetylcholine released",
+        "correct": true,
+        "why": "Correct: Lambert-Eaton antibodies attack presynaptic calcium channels so less acetylcholine is released; MG is postsynaptic. [Lecture 4.1]"
+      },
+      {
+        "text": "Lambert-Eaton is postsynaptic, with receptors blocked",
+        "correct": false,
+        "why": "Postsynaptic receptor blockade describes myasthenia gravis, not Lambert-Eaton. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-28",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "What sequence of events defines Type III hypersensitivity?",
+    "options": [
+      {
+        "text": "Antibody binds a cell-surface antigen, activates complement, and lyses the cell",
+        "correct": false,
+        "why": "Antibody against a cell-surface antigen with lysis is Type II cytotoxic. [Lecture 4.1]"
+      },
+      {
+        "text": "Soluble antigen-antibody complex precipitates, activates complement, and causes vasculitis",
+        "correct": true,
+        "why": "Correct: the immune complex precipitates onto the endothelium, complement activates, and the injured vessel becomes inflamed. [Lecture 4.1]"
+      },
+      {
+        "text": "Allergen binds IgE on mast cells, triggering degranulation and histamine release",
+        "correct": false,
+        "why": "Allergen binding to mast cell IgE is the Type I mechanism. [Lecture 4.1]"
+      },
+      {
+        "text": "Th1 cells recruit macrophages, forming a granuloma over several days",
+        "correct": false,
+        "why": "T cells recruiting macrophages without antibodies is the Type IV mechanism. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-29",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "When a Type III reaction occurs in the blood, which antibodies can drive it, and which is best at the key action?",
+    "options": [
+      {
+        "text": "IgG and IgM; IgM is best at precipitation",
+        "correct": false,
+        "why": "Both circulate in blood, but IgM is the best at agglutination (clumping), not precipitation. [Lecture 4.1]"
+      },
+      {
+        "text": "IgG and IgM; IgG is best at precipitation",
+        "correct": true,
+        "why": "Correct: only IgG and IgM circulate in blood, and IgG is the best at precipitating soluble antigen. [Lecture 4.3]"
+      },
+      {
+        "text": "IgE and IgG; IgE is best at precipitation",
+        "correct": false,
+        "why": "IgE binds mast cells in Type I; it does not circulate to precipitate soluble antigen. [Lecture 4.1]"
+      },
+      {
+        "text": "IgA and IgM; IgA is best at precipitation",
+        "correct": false,
+        "why": "IgA is found in secretions, not circulating in blood to form Type III complexes. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-30",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement reflects the proposed pathophysiology of systemic lupus erythematosus?",
+    "options": [
+      {
+        "text": "Faulty apoptosis leaves fragments that are precipitated, causing Type III vasculitis",
+        "correct": true,
+        "why": "Correct: defective apoptosis leaves fragments treated as antigen; they are precipitated, leading to vasculitis (Type III). [Lecture 4.1]"
+      },
+      {
+        "text": "Antibodies mimic a hormone and overstimulate a gland, causing Type II disease",
+        "correct": false,
+        "why": "Mimicking a hormone (TSH) to overstimulate the thyroid is Graves' disease. [Lecture 4.1]"
+      },
+      {
+        "text": "T cells form granulomas in the intestinal wall, causing Type IV inflammation",
+        "correct": false,
+        "why": "Granulomas in the intestinal wall describe Crohn's disease, a Type IV example. [Lecture 4.3]"
+      },
+      {
+        "text": "IgE-coated mast cells release histamine in the skin, causing Type I disease",
+        "correct": false,
+        "why": "Mast cell histamine release is Type I allergy, such as hives or eczema. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-31",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "The malar (butterfly) rash of lupus is visible evidence of _______ in the face.",
+    "options": [
+      {
+        "text": "mast cell degranulation and histamine release",
+        "correct": false,
+        "why": "Mast cell degranulation underlies Type I skin reactions such as hives, not the malar rash. [Lecture 4.1]"
+      },
+      {
+        "text": "vasculitis from immune complex precipitation",
+        "correct": true,
+        "why": "Correct: the rash is the vasculitis caused by immune complex precipitation in facial blood vessels. [Lecture 4.1]"
+      },
+      {
+        "text": "T cell reaction to contact with an irritant",
+        "correct": false,
+        "why": "A T cell reaction to skin contact is contact dermatitis (Type IV). [Lecture 4.3]"
+      },
+      {
+        "text": "bilirubin deposited after red cell breakdown",
+        "correct": false,
+        "why": "Bilirubin causes jaundice in erythroblastosis fetalis, not the lupus rash. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-32",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Hepatitis B hypersensitivity is associated with polyarteritis nodosa, which most often affects which vessels?",
+    "options": [
+      {
+        "text": "Renal arteries",
+        "correct": true,
+        "why": "Correct: hep B immune complexes cause polyarteritis nodosa, typically in the renal arteries of the kidneys. [Lecture 4.1]"
+      },
+      {
+        "text": "Pulmonary basement membranes",
+        "correct": false,
+        "why": "Pulmonary basement membranes are targeted in Goodpasture's disease (Type II). [Lecture 4.1]"
+      },
+      {
+        "text": "Facial capillaries",
+        "correct": false,
+        "why": "Vasculitis of facial vessels produces the malar rash of lupus. [Lecture 4.1]"
+      },
+      {
+        "text": "Synovial lining of the joints",
+        "correct": false,
+        "why": "Precipitation in synovial fluid inflaming the joint is seen in rheumatoid arthritis and lupus arthritis. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-33",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement about Lyme disease as a hypersensitivity is accurate?",
+    "options": [
+      {
+        "text": "Its hallmark is ptosis, and blocked acetylcholine receptors drive weakness",
+        "correct": false,
+        "why": "Ptosis and acetylcholine receptor blockade describe myasthenia gravis (Type II). [Lecture 4.3]"
+      },
+      {
+        "text": "Its hallmark is a malar rash, and failed apoptosis drives its symptoms",
+        "correct": false,
+        "why": "The malar rash and failed apoptosis describe lupus. [Lecture 4.1]"
+      },
+      {
+        "text": "Its hallmark is a granuloma, and T helper 1 cells drive late symptoms",
+        "correct": false,
+        "why": "Granulomas from Th1 cells are Type IV, not the Lyme hypersensitivity. [Lecture 4.3]"
+      },
+      {
+        "text": "Its hallmark is erythema migrans, and Type III complexes drive late symptoms",
+        "correct": true,
+        "why": "Correct: the bull's-eye rash (erythema migrans) is the hallmark, and hypersensitivity complexes add late-stage symptoms like Lyme arthritis. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-34",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "The Arthus reaction is a _______ Type III reaction, whereas serum sickness is a _______ one.",
+    "options": [
+      {
+        "text": "systemic, against injected serum antibodies; local, at an injection site",
+        "correct": false,
+        "why": "Reversed: Arthus is the local reaction and serum sickness the systemic one. [Lecture 4.1]"
+      },
+      {
+        "text": "local, from IgE on mast cells; systemic, from T helper 1 cells",
+        "correct": false,
+        "why": "Both are Type III immune complex reactions, not IgE (Type I) or T cell (Type IV) reactions. [Lecture 4.1]"
+      },
+      {
+        "text": "local, at an injection site; systemic, against injected serum antibodies",
+        "correct": true,
+        "why": "Correct: Arthus is precipitation and complement activation at the injection site; serum sickness is systemic, against another person's antibodies. [Lecture 4.1]"
+      },
+      {
+        "text": "local, from a tick bite; systemic, from a hepatitis B virus",
+        "correct": false,
+        "why": "Tick-borne Lyme and hep B are separate Type III examples, not these two reactions. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-35",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why is rheumatoid factor in rheumatoid arthritis considered an autoantibody causing a Type III reaction?",
+    "options": [
+      {
+        "text": "Antibodies bind a cell-surface antigen on synovial cells and lyse the joint lining",
+        "correct": false,
+        "why": "Antibodies against a cell-surface antigen with lysis would be Type II cytotoxic. [Lecture 4.1]"
+      },
+      {
+        "text": "IgE binds an allergen within the joint, releasing histamine onto the synovium",
+        "correct": false,
+        "why": "IgE and histamine release are Type I, not the rheumatoid factor mechanism. [Lecture 4.1]"
+      },
+      {
+        "text": "Antibodies bind a faulty IgG with an extra Fc sugar and precipitate it in synovial fluid",
+        "correct": true,
+        "why": "Correct: the faulty IgG is treated as antigen, normal IgM/IgG bind it (antibody against antibody), and the complex precipitates in the joint. [Lecture 4.1]"
+      },
+      {
+        "text": "Th1 cells recognize a joint protein, recruiting macrophages without antibody",
+        "correct": false,
+        "why": "T cell recognition without antibodies is Type IV, and RF involves antibodies. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-36",
+    "quarter": 4,
+    "slideRef": "4.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Type IV hypersensitivity is described as _______ and cell mediated because it involves only T cells.",
+    "options": [
+      {
+        "text": "delayed",
+        "correct": true,
+        "why": "Correct: Type IV is delayed because T cells take time to recruit the players needed for a reaction. [Lecture 4.3]"
+      },
+      {
+        "text": "immediate",
+        "correct": false,
+        "why": "Immediate describes Type I, which reacts right away via pre-mounted IgE. [Lecture 4.3]"
+      },
+      {
+        "text": "complex mediated",
+        "correct": false,
+        "why": "Complex mediated is Type III, which requires antibody-antigen complexes. [Lecture 4.2]"
+      },
+      {
+        "text": "antibody mediated",
+        "correct": false,
+        "why": "Antibody mediated is the name for Type II; Type IV has no B cells or antibodies. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-37",
+    "quarter": 4,
+    "slideRef": "4.3",
+    "difficulty": "medium",
+    "priority": true,
+    "stem": "Which statement correctly describes contact dermatitis?",
+    "options": [
+      {
+        "text": "A Type I reaction also known as eczema that appears immediately",
+        "correct": false,
+        "why": "Eczema is atopic dermatitis, the Type I form, not contact dermatitis. [Lecture 4.3]"
+      },
+      {
+        "text": "A Type III reaction from complexes precipitating in skin vessels",
+        "correct": false,
+        "why": "Precipitation in skin vessels describes lupus's malar rash, not contact dermatitis. [Lecture 4.1]"
+      },
+      {
+        "text": "A Type II reaction from antibodies lysing skin cells",
+        "correct": false,
+        "why": "Contact dermatitis involves T cells only; antibody-driven cell lysis is Type II. [Lecture 4.3]"
+      },
+      {
+        "text": "A Type IV reaction to skin contact that forms over about 24 to 48 hours",
+        "correct": true,
+        "why": "Correct: contact dermatitis (poison ivy/oak) is Type IV, forming over time, often 24 to 48 hours, up to about 72. [Lecture 4.3]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-38",
+    "quarter": 4,
+    "slideRef": "4.3",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Why is granulomatous inflammation in tuberculosis or Crohn's disease classified as Type IV?",
+    "options": [
+      {
+        "text": "It is driven by T helper 2 cells and IgE on mast cells",
+        "correct": false,
+        "why": "Th2 and IgE drive Type I allergy; a granuloma is not an allergy. [Lecture 4.3]"
+      },
+      {
+        "text": "It is driven by T helper 1 cells and macrophages, with no antibodies",
+        "correct": true,
+        "why": "Correct: granulomas are cell mediated, formed by Th1 recruiting macrophages; with no B cells or antibodies, Types I-III are excluded. [Lecture 4.3]"
+      },
+      {
+        "text": "It is driven by IgG complexes precipitating in the tissue",
+        "correct": false,
+        "why": "Precipitating IgG complexes are Type III and require antibodies. [Lecture 4.2]"
+      },
+      {
+        "text": "It is driven by IgM antibodies lysing the infected cells",
+        "correct": false,
+        "why": "Antibody-driven lysis is Type II cytotoxic; granulomas involve no antibodies. [Lecture 4.2]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-39",
+    "quarter": 4,
+    "slideRef": "4.3",
+    "difficulty": "medium",
+    "priority": false,
+    "stem": "Which statement about celiac disease reflects how it fits among the hypersensitivities?",
+    "options": [
+      {
+        "text": "It is a gluten allergy mediated by IgE and is Type I",
+        "correct": false,
+        "why": "A true gluten allergy would be Type I, but celiac is an autoimmune condition, not an allergy. [Lecture 4.3]"
+      },
+      {
+        "text": "It is autoimmune, blunts intestinal villi, and is possibly Type IV",
+        "correct": true,
+        "why": "Correct: celiac is an autoimmune reaction to gluten that blunts villi; it is thought possibly Type IV, though Type III is debated. [Lecture 4.3]"
+      },
+      {
+        "text": "It forms granulomas in the intestinal wall and is Type II",
+        "correct": false,
+        "why": "Granulomas in the intestinal wall describe Crohn's disease, which is Type IV, not Type II. [Lecture 4.3]"
+      },
+      {
+        "text": "It is a local injection-site reaction and is Type III",
+        "correct": false,
+        "why": "A local injection-site Type III reaction is the Arthus reaction. [Lecture 4.1]"
+      }
+    ]
+  },
+  {
+    "id": "Q4-40",
+    "quarter": 4,
+    "slideRef": "4.1",
+    "difficulty": "hard",
+    "priority": true,
+    "stem": "Vessel injury from complement activation after immune complex precipitation would most likely promote which outcome, and in which type?",
+    "options": [
+      {
+        "text": "Clot formation via coagulation, in Type III",
+        "correct": true,
+        "why": "Correct: injuring a vessel can activate the coagulation pathway, and precipitation in a vessel points to Type III. [Lecture 4.1]"
+      },
+      {
+        "text": "Clot formation via coagulation, in Type II",
+        "correct": false,
+        "why": "Type II targets antigen on whole cells; precipitation of complexes in a vessel is Type III. [Lecture 4.1]"
+      },
+      {
+        "text": "Histamine release from mast cells, in Type I",
+        "correct": false,
+        "why": "Mast cell histamine release is the Type I allergy pathway, not complex precipitation. [Lecture 4.1]"
+      },
+      {
+        "text": "Granuloma formation by macrophages, in Type IV",
+        "correct": false,
+        "why": "Granulomas come from cell-mediated Type IV reactions with no antibodies. [Lecture 4.3]"
+      }
+    ]
+  }
+];
+
+// The active attempt. Header totals are computed from quizData.length.
+let quizData = [];
+let score = 0;
+let answered = 0;
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+function fisherYates(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function refLabel(ref) {
+  return /^\d\.\d$/.test(String(ref)) ? "Lecture " + ref : String(ref);
+}
+
+function loadSeen() {
+  try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
+  catch (e) { return new Set(); }
+}
+function saveSeen(set) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); } catch (e) { /* storage unavailable */ }
+}
+
+// Weighted pick without replacement (exam-flagged items count double).
+function weightedPick(pool, k) {
+  const items = pool.slice();
+  const out = [];
+  while (out.length < k && items.length) {
+    const total = items.reduce((s, q) => s + (q.priority ? 2 : 1), 0);
+    let r = Math.random() * total;
+    let idx = 0;
+    for (; idx < items.length; idx++) {
+      r -= items[idx].priority ? 2 : 1;
+      if (r <= 0) break;
+    }
+    out.push(items.splice(Math.min(idx, items.length - 1), 1)[0]);
+  }
+  return out;
+}
+
+// ============================================================================
+// ROTATION: stratified draw by quarter + difficulty, unseen questions first
+// ============================================================================
+function drawAttempt() {
+  const seen = loadSeen();
+  const quarters = [1, 2, 3, 4];
+  const n = Math.min(QUESTIONS_PER_ATTEMPT, questionBank.length);
+  // Split n evenly across quarters; leftover slots go to random quarters.
+  const perQuarter = {};
+  quarters.forEach(q => perQuarter[q] = Math.floor(n / 4));
+  fisherYates(quarters.slice()).slice(0, n % 4).forEach(q => perQuarter[q]++);
+
+  const picked = [];
+  quarters.forEach(qt => {
+    const inQuarter = questionBank.filter(q => q.quarter === qt);
+    let unseen = inQuarter.filter(q => !seen.has(q.id));
+    // Once a topic block is exhausted, start its rotation over.
+    if (unseen.length < perQuarter[qt]) {
+      inQuarter.forEach(q => seen.delete(q.id));
+      const carry = unseen;
+      unseen = inQuarter.filter(q => !carry.includes(q));
+      picked.push(...carry);
+      perQuarter[qt] -= carry.length;
+    }
+    const want = perQuarter[qt];
+    // Keep the 20 / 60 / 20 difficulty mix inside each block.
+    const target = { easy: Math.round(want * 0.2), hard: Math.round(want * 0.2) };
+    target.medium = want - target.easy - target.hard;
+    const chosen = [];
+    ["easy", "medium", "hard"].forEach(d => {
+      chosen.push(...weightedPick(unseen.filter(q => q.difficulty === d), target[d]));
+    });
+    if (chosen.length < want) {
+      chosen.push(...weightedPick(unseen.filter(q => !chosen.includes(q)), want - chosen.length));
+    }
+    picked.push(...chosen);
+  });
+
+  picked.forEach(q => seen.add(q.id));
+  saveSeen(seen);
+  return picked;
+}
+
+// Deep-copy the draw, then Two-Way Fisher-Yates: question order + option order.
+function buildQuizData() {
+  const drawn = JSON.parse(JSON.stringify(drawAttempt()));
+  drawn.forEach(q => fisherYates(q.options));
+  return fisherYates(drawn);
+}
+
+// ============================================================================
+// RENDERING
+// ============================================================================
+function updateHeader() {
+  const total = quizData.length;
+  const pct = total ? Math.round((score / total) * 100) : 0;
+  document.getElementById("score-display").textContent = `Score: ${score} / ${total} (${pct}%)`;
+  document.getElementById("answered-display").textContent = `Answered ${answered} / ${total}`;
+  document.getElementById("progress-bar").style.width = total ? (answered / total * 100) + "%" : "0";
+}
+
+function renderIntro() {
+  const seen = loadSeen();
+  const fresh = questionBank.length - seen.size;
+  const flagged = questionBank.filter(q => q.priority).length;
+  document.getElementById("intro").innerHTML =
+    `<strong>${quizData.length} questions this round</strong>, drawn from a bank of ${questionBank.length} ` +
+    `covering all four Midterm 1 topic blocks. Each retake rotates in questions you haven't seen yet ` +
+    `(${Math.max(fresh, 0)} still unseen after this draw). Questions marked <span class="badge hot">Exam flag</span> ` +
+    `(${flagged} in the bank) cover points she said to know for the exam, and they come up more often.` +
+    `<div class="row"><button class="link-btn" onclick="resetRotation()">Reset rotation history</button></div>`;
+}
+
+function renderQuiz() {
+  score = 0;
+  answered = 0;
+  quizData = buildQuizData();
+  const container = document.getElementById("quiz-container");
+  container.innerHTML = "";
+  document.getElementById("summary-card").classList.remove("show");
+
+  quizData.forEach((q, qi) => {
+    const card = document.createElement("section");
+    card.className = "card";
+    card.id = `card-${qi}`;
+    const diffLabel = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
+    card.innerHTML = `
+      <div class="q-meta">
+        <span class="q-num">Question ${qi + 1} of ${quizData.length}</span>
+        <span class="badge">${escapeHTML(QUARTER_NAMES[q.quarter] || "")}</span>
+        <span class="badge">${diffLabel}</span>
+        ${q.priority ? '<span class="badge hot">Exam flag</span>' : ""}
+      </div>
+      <div class="stem">${escapeHTML(q.stem)}</div>
+      <div class="options">
+        ${q.options.map((o, oi) => `
+          <button class="option-btn" data-q="${qi}" data-o="${oi}">
+            <span class="letter">${String.fromCharCode(97 + oi)}.</span><span>${escapeHTML(o.text)}</span>
+          </button>`).join("")}
+      </div>
+      <div class="explanation" id="exp-${qi}"></div>`;
+    container.appendChild(card);
+  });
+
+  container.querySelectorAll(".option-btn").forEach(btn => {
+    btn.addEventListener("click", () => selectOption(+btn.dataset.q, +btn.dataset.o));
+  });
+
+  renderIntro();
+  updateHeader();
+  window.scrollTo({ top: 0 });
+}
+
+function selectOption(qi, oi) {
+  const q = quizData[qi];
+  if (q._locked) return;
+  q._locked = true;
+
+  const card = document.getElementById(`card-${qi}`);
+  const buttons = card.querySelectorAll(".option-btn");
+  const isCorrect = q.options[oi].correct;
+  buttons.forEach((b, bi) => {
+    b.disabled = true;
+    if (q.options[bi].correct) b.classList.add("correct");
+    else if (bi === oi) b.classList.add("incorrect");
+    else b.classList.add("dim");
+  });
+
+  q._result = isCorrect;
+  if (isCorrect) score++;
+  answered++;
+
+  const exp = document.getElementById(`exp-${qi}`);
+  exp.innerHTML = `
+    <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "You didn\u2019t know that?!"}</div>
+    <div class="reference">Reference: ${escapeHTML(refLabel(q.slideRef))}</div>
+    <ul class="breakdown">
+      ${q.options.map((o, bi) => `
+        <li><strong>${String.fromCharCode(97 + bi)}. ${escapeHTML(o.text)}</strong>
+        &mdash; <span class="${o.correct ? "tag-c" : "tag-x"}">${o.correct ? "Correct." : "Incorrect."}</span>
+        ${escapeHTML(o.why)}</li>`).join("")}
+    </ul>`;
+  exp.classList.add("show");
+
+  updateHeader();
+  if (answered === quizData.length) showSummary();
+}
+
+function getFeedback(pct) {
+  if (pct >= 90) return { msg: "Absolute Gigachad. You drained that test dry.", color: "#22c55e" };
+  if (pct >= 70) return { msg: "You lasted less than 30 seconds. Time for a rematch.", color: "#ff9900" };
+  return { msg: "You really didn\u2019t fucking know that.", color: "#ef4444" };
+}
+
+function showSummary() {
+  const total = quizData.length;
+  const pct = Math.round((score / total) * 100);
+  const fb = getFeedback(pct);
+  document.getElementById("summary-pct").textContent = pct + "%";
+  document.getElementById("summary-raw").textContent = `${score} of ${total} correct`;
+  const feedback = document.getElementById("summary-feedback");
+  feedback.textContent = fb.msg;
+  feedback.style.color = fb.color;
+
+  // Per-topic breakdown so you know which block to review.
+  const rows = [1, 2, 3, 4].map(qt => {
+    const qs = quizData.filter(q => q.quarter === qt);
+    const right = qs.filter(q => q._result).length;
+    const p = qs.length ? Math.round(right / qs.length * 100) : 0;
+    return `<tr><td>${escapeHTML(QUARTER_NAMES[qt])}</td><td class="num">${right} / ${qs.length}</td>` +
+           `<td class="num" style="color:${p >= 70 ? "#22c55e" : "#ef4444"}">${p}%</td></tr>`;
+  }).join("");
+  document.getElementById("topic-table").innerHTML =
+    `<tr><th>Topic block</th><th class="num">Correct</th><th class="num">%</th></tr>${rows}`;
+
+  const card = document.getElementById("summary-card");
+  card.classList.add("show");
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
+function resetQuiz() { renderQuiz(); }
+
+function resetRotation() {
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+  renderQuiz();
+}
+
+window.onload = renderQuiz;
+</script>
+</body>
+</html>
