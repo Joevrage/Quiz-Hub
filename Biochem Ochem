@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organic Chemistry Foundations & Bonding Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #282828;
+            --accent: #ff9900;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+        }
+
+        /* Sticky Fixed Top Bar */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .score-display {
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-card h1 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-stem {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Option Buttons */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.35;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .explanation-banner {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .explanation-banner.correct-banner {
+            color: var(--correct-border);
+        }
+
+        .explanation-banner.incorrect-banner {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-ref {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Scorecard */
+        .scorecard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .scorecard h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <h1 class="header-title">Organic Foundations & Bonding Quiz</h1>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <main class="container">
+        <!-- Intro Card -->
+        <div class="intro-card">
+            <h1>NBCE Part 1 Board Practice</h1>
+            <p>Fundamental board review focusing on the core basics: covalent vs. ionic bonds, electronegativity, hydrogen bonding, sigma/pi orbitals, peptide resonance, and lipid interactions.</p>
+        </div>
+
+        <!-- Dynamic Quiz Container -->
+        <div id="quizContainer"></div>
+
+        <!-- Final Scorecard -->
+        <div class="scorecard" id="scorecard">
+            <h2>Quiz Complete!</h2>
+            <p id="finalScoreText" style="font-size: 1.2rem; font-weight: 600; margin: 15px 0;"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+        </div>
+    </main>
+
+    <script>
+        // Proportional 4-quarter slide deck distribution with basic, high-yield foundational concepts
+        const quizData = [
+            // QUARTER 1: Covalent vs. Ionic, Valence Sharing, and Electronegativity Fundamentals
+            {
+                id: 1,
+                quarter: 1,
+                slideRef: 3,
+                stem: "What fundamental process defines the formation of a covalent bond between nonmetal atoms?",
+                options: [
+                    { text: "Sharing of outer valence-shell electron pairs between atoms", correct: true, why: "Covalent bonds form when nonmetal atoms share pairs of valence electrons to achieve stable electron configurations. [Slide #3]" },
+                    { text: "Complete transfer of valence electrons to produce oppositely charged ions", correct: false, why: "Full electron transfer produces an ionic bond lattice rather than a covalent bond. [Slide #3]" },
+                    { text: "Attractive alignment of fluctuating van der Waals forces without shared electrons", correct: false, why: "Van der Waals interactions are weak intermolecular attractions, not intramolecular covalent bonds. [Slide #3]" },
+                    { text: "Electrostatic solvation of bare protons by surrounding water dipoles", correct: false, why: "Solvation involves secondary dipole interactions around ions, not covalent bonding between atoms. [Slide #3]" }
+                ]
+            },
+            {
+                id: 2,
+                quarter: 1,
+                slideRef: 5,
+                stem: "Which of the following elements has the highest electronegativity in biological molecules?",
+                options: [
+                    { text: "Oxygen", correct: true, why: "Among biological nonmetals, oxygen is second only to fluorine overall and is the strongest electronegative atom commonly forming biomolecules. [Slide #5]" },
+                    { text: "Carbon", correct: false, why: "Carbon has an electronegativity of approximately 2.5, significantly lower than oxygen (3.4). [Slide #5]" },
+                    { text: "Hydrogen", correct: false, why: "Hydrogen has a low electronegativity of approximately 2.1, causing it to lose electron density to oxygen. [Slide #5]" },
+                    { text: "Phosphorus", correct: false, why: "Phosphorus has an electronegativity near 2.1, far weaker than oxygen. [Slide #5]" }
+                ]
+            },
+            {
+                id: 3,
+                quarter: 1,
+                slideRef: 8,
+                stem: "In an aqueous solution, an unequal sharing of electrons within a covalent bond generates a _______ bond dipole.",
+                options: [
+                    { text: "polar", correct: true, why: "When atoms with different electronegativities share electrons unequally, a permanent partial charge separation creates a polar bond dipole. [Slide #8]" },
+                    { text: "nonpolar", correct: false, why: "Nonpolar bonds occur when electrons are shared equally between atoms with similar electronegativity. [Slide #8]" },
+                    { text: "purely ionic", correct: false, why: "Unequal sharing in a molecule remains covalent and does not constitute full ionic transfer. [Slide #8]" },
+                    { text: "hydrophobic", correct: false, why: "Polar bonds interact favorably with water and are hydrophilic rather than hydrophobic. [Slide #8]" }
+                ]
+            },
+            {
+                id: 4,
+                quarter: 1,
+                slideRef: 11,
+                stem: "How does an ionic bond fundamentally differ from a covalent bond in chemical structure?",
+                options: [
+                    { text: "It involves complete electron transfer between a metal and a nonmetal to form an ionic crystal lattice.", correct: true, why: "Ionic bonds form when valence electrons are transferred from a metal to a nonmetal, creating oppositely charged ions held in a lattice. [Slide #11]" },
+                    { text: "It forms only between identical nonmetal atoms with identical electronegativities.", correct: false, why: "Identical nonmetal atoms form nonpolar covalent bonds, not ionic bonds. [Slide #11]" },
+                    { text: "It relies on delocalized pi electrons spreading across planar double bonds.", correct: false, why: "Pi electron delocalization describes covalent resonance systems, not ionic crystals. [Slide #11]" },
+                    { text: "It is approximately one-tenth the strength of an intermolecular hydrogen bond.", correct: false, why: "Ionic bonds are strong primary bonds, far stronger than individual intermolecular hydrogen bonds. [Slide #11]" }
+                ]
+            },
+
+            // QUARTER 2: Sigma and Pi Orbitals, Bond Geometry, and Resonance Foundations
+            {
+                id: 5,
+                quarter: 2,
+                slideRef: 16,
+                stem: "In a carbon-carbon or carbon-oxygen double bond, the first bond is a direct head-on _______ bond and the second is a parallel _______ bond.",
+                options: [
+                    { text: "sigma (σ); pi (π)", correct: true, why: "The first covalent bond lies directly along the internuclear axis (sigma), while the second forms from parallel p-orbital overlap above and below (pi). [Slide #16]" },
+                    { text: "pi (π); sigma (σ)", correct: false, why: "This reverses the orbital geometry; head-on overlap is sigma, and parallel lateral overlap is pi. [Slide #16]" },
+                    { text: "hydrogen; ionic", correct: false, why: "Double bonds consist of two covalent bonds, not non-covalent hydrogen or ionic attractions. [Slide #16]" },
+                    { text: "single; coordinate", correct: false, why: "The orbital classification for double bonds is specifically designated as sigma and pi. [Slide #16]" }
+                ]
+            },
+            {
+                id: 6,
+                quarter: 2,
+                slideRef: 19,
+                stem: "Why are sigma (σ) covalent bonds generally stronger than pi (π) bonds?",
+                options: [
+                    { text: "Electron density is concentrated directly along the internuclear axis between the positive nuclei.", correct: true, why: "Sigma bonds provide direct head-on orbital overlap between nuclei, providing greater electrostatic stabilization than lateral pi overlap. [Slide #19]" },
+                    { text: "Sigma bonds contain four electrons while pi bonds contain only one electron.", correct: false, why: "Both standard sigma and pi single bonding interactions contain a shared pair of two electrons. [Slide #19]" },
+                    { text: "Sigma bonds are held together strictly by intermolecular hydrogen bonding.", correct: false, why: "Sigma bonds are primary intramolecular covalent bonds, not secondary hydrogen bonds. [Slide #19]" },
+                    { text: "Pi bonds only exist in inorganic metal alloys and not in organic molecules.", correct: false, why: "Pi bonds are ubiquitous in organic biomolecules containing double bonds, carbonyls, and aromatic rings. [Slide #19]" }
+                ]
+            },
+            {
+                id: 7,
+                quarter: 2,
+                slideRef: 22,
+                stem: "What physical event occurs during resonance delocalization in molecules like the acetate ion or benzene ring?",
+                options: [
+                    { text: "Pi electrons spread across multiple adjacent nuclei while the atomic nuclei remain fixed in place.", correct: true, why: "In resonance, the positions of the atomic nuclei remain completely unchanged while valence pi electrons delocalize over the framework. [Slide #22]" },
+                    { text: "The atomic nuclei physically vibrate back and forth across different molecular locations.", correct: false, why: "Nuclei do not move in resonance structures; only electron distribution changes. [Slide #22]" },
+                    { text: "Covalent single bonds break completely to release free hydrogen ions into solution.", correct: false, why: "Resonance involves shifting electron density across intact bonds, not permanent molecular cleavage. [Slide #22]" },
+                    { text: "All covalent bonds convert permanently into non-conductive ionic bonds.", correct: false, why: "Resonance stabilizes covalent systems and does not transform them into ionic lattices. [Slide #22]" }
+                ]
+            },
+            {
+                id: 8,
+                quarter: 2,
+                slideRef: 25,
+                stem: "In the resonance-stabilized acetate ion (CH3COO-), what is the calculated average bond order for each carbon-oxygen bond?",
+                options: [
+                    { text: "1.5", correct: true, why: "Because the double bond resonates equally across the two oxygens (50/50 distribution), each C-O bond possesses an average bond order of 1.5. [Slide #25]" },
+                    { text: "1.0", correct: false, why: "A bond order of 1.0 represents a pure single bond without double-bond character. [Slide #25]" },
+                    { text: "2.0", correct: false, why: "A bond order of 2.0 represents a fixed double bond rather than a shared resonance hybrid. [Slide #25]" },
+                    { text: "3.0", correct: false, why: "A bond order of 3.0 represents a triple bond, as found in atmospheric nitrogen gas. [Slide #25]" }
+                ]
+            },
+
+            // QUARTER 3: Intermolecular Forces (IMFs), Hydrogen Bonds, and Water Structure
+            {
+                id: 9,
+                quarter: 3,
+                slideRef: 30,
+                stem: "What structural condition is required for the formation of an intermolecular hydrogen bond?",
+                options: [
+                    { text: "A hydrogen covalently bound to an electronegative atom (O, N, F) interacting with a lone pair on a second electronegative atom", correct: true, why: "Hydrogen bonds require a hydrogen atom deshielded by a strongly electronegative partner (O, N) attracting a lone pair on a neighboring electronegative atom. [Slide #30]" },
+                    { text: "A nonpolar hydrocarbon chain interacting with another nonpolar aliphatic tail", correct: false, why: "Hydrocarbon chain interactions are hydrophobic van der Waals forces, not hydrogen bonds. [Slide #30]" },
+                    { text: "Two metal cations sharing outer valence electrons across an aqueous solution", correct: false, why: "Metal cations repel one another electrostatically and do not form hydrogen bonds. [Slide #30]" },
+                    { text: "A bare proton forming a covalent triple bond with an adjacent carbon atom", correct: false, why: "Hydrogen can only form a single covalent bond and cannot establish triple linkages. [Slide #30]" }
+                ]
+            },
+            {
+                id: 10,
+                quarter: 3,
+                slideRef: 33,
+                stem: "Compared to a primary covalent bond, an individual hydrogen bond is approximately _______ in relative bonding strength.",
+                options: [
+                    { text: "1/10th as strong", correct: true, why: "Individual hydrogen bonds are non-covalent attractions that are roughly one-tenth the strength of robust covalent bonds. [Slide #33]" },
+                    { text: "10 times stronger", correct: false, why: "Hydrogen bonds are significantly weaker, not stronger, than covalent bonds. [Slide #33]" },
+                    { text: "identical in strength", correct: false, why: "Covalent bonds require far more energy to break than secondary intermolecular hydrogen bonds. [Slide #33]" },
+                    { text: "1/1000th as strong", correct: false, why: "One-thousandth underestimates hydrogen bonding, which is substantial enough to dictate secondary protein structure. [Slide #33]" }
+                ]
+            },
+            {
+                id: 11,
+                quarter: 3,
+                slideRef: 37,
+                stem: "Why does solid ice have a lower physical density than liquid water?",
+                options: [
+                    { text: "Water molecules arrange into an open, highly organized hydrogen-bonded lattice upon freezing.", correct: true, why: "Cooling to solid ice optimizes hydrogen bonding geometry into an open cage-like crystalline lattice that occupies more volume per unit mass. [Slide #37]" },
+                    { text: "Covalent O-H bonds inside water molecules expand by 50% when chilled.", correct: false, why: "Intramolecular covalent bond lengths inside H2O molecules do not expand significantly during phase changes. [Slide #37]" },
+                    { text: "Hydrogen gas is produced and trapped within the freezing matrix.", correct: false, why: "Freezing is a physical phase change that does not chemically produce hydrogen gas. [Slide #37]" },
+                    { text: "Oxygen atoms lose their electronegativity and repel adjacent molecules.", correct: false, why: "Electronegativity is an intrinsic atomic property that is unchanged by freezing. [Slide #37]" }
+                ]
+            },
+            {
+                id: 12,
+                quarter: 3,
+                slideRef: 41,
+                stem: "In nucleic acids, complementary base pairing between adenine and thymine is held together by _______ hydrogen bonds.",
+                options: [
+                    { text: "two", correct: true, why: "Adenine pairs with thymine via two hydrogen bonds ('T for two'), whereas guanine pairs with cytosine via three. [Slide #41]" },
+                    { text: "three", correct: false, why: "Three hydrogen bonds join guanine and cytosine (G-C), not adenine and thymine. [Slide #41]" },
+                    { text: "four", correct: false, why: "DNA base pairs do not form four hydrogen bonds due to spatial geometry constraints. [Slide #41]" },
+                    { text: "zero", correct: false, why: "Without hydrogen bonds between bases, the DNA double helix could not hold its complementary strands together. [Slide #41]" }
+                ]
+            },
+
+            // QUARTER 4: Peptide Bond Resonance, Rotational Freedom, and Hydrophobic Interactions
+            {
+                id: 13,
+                quarter: 4,
+                slideRef: 45,
+                stem: "Why is the carbon-nitrogen (C–N) peptide bond in proteins rigid, planar, and non-rotatable?",
+                options: [
+                    { text: "Resonance delocalization gives the peptide C–N bond partial double-bond character.", correct: true, why: "The nitrogen lone pair delocalizes into the carbonyl group, imparting partial double-bond character that prevents free rotation. [Slide #45]" },
+                    { text: "The peptide bond is an ionic bond formed by complete electron donation.", correct: false, why: "The peptide linkage is a covalent amide bond, not an ionic attraction. [Slide #45]" },
+                    { text: "Adjacent alpha-carbons form covalent disulfide bridges with each other.", correct: false, why: "Disulfide bridges only form between cysteine side-chain sulfhydryl groups, not alpha-carbons. [Slide #45]" },
+                    { text: "Surrounding water molecules freeze into a permanent, immovable crystal shell.", correct: false, why: "Intracellular water forms dynamic, constantly exchanging solvation cages rather than permanent ice. [Slide #45]" }
+                ]
+            },
+            {
+                id: 14,
+                quarter: 4,
+                slideRef: 48,
+                stem: "In a polypeptide chain backbone, conformational rotation that permits 3D folding occurs around the single bonds connected to the _______ carbon.",
+                options: [
+                    { text: "alpha (α)", correct: true, why: "The single sigma bonds on either side of the tetrahedral alpha-carbon (phi and psi angles) are free to rotate, enabling protein folding. [Slide #48]" },
+                    { text: "carbonyl", correct: false, why: "The carbonyl carbon is part of the rigid, planar peptide bond that restricts rotation. [Slide #48]" },
+                    { text: "beta (β)", correct: false, why: "The beta carbon is the first atom of the side-chain branch, not the central backbone pivot. [Slide #48]" },
+                    { text: "terminal methyl", correct: false, why: "Terminal methyl groups reside at side-chain ends and do not determine main-chain backbone folding. [Slide #48]" }
+                ]
+            },
+            {
+                id: 15,
+                quarter: 4,
+                slideRef: 51,
+                stem: "What chemical property explains why fatty acid hydrocarbon tails do not dissolve in water?",
+                options: [
+                    { text: "They lack permanent dipole moments and cannot engage in favorable polar or hydrogen-bonding interactions.", correct: true, why: "Hydrocarbon chains consist of nonpolar C-C and C-H bonds lacking permanent dipoles, preventing stabilizing interactions with polar water. [Slide #51]" },
+                    { text: "They carry strong positive charges that electrostatically repel polar water molecules.", correct: false, why: "Hydrocarbon chains are uncharged and nonpolar, having no net positive charge. [Slide #51]" },
+                    { text: "They form covalent peptide linkages with dissolved mineral salts.", correct: false, why: "Fatty acid hydrocarbon tails do not contain amino groups and do not form peptide linkages. [Slide #51]" },
+                    { text: "Their high electronegativity draws all surrounding water electrons into their orbitals.", correct: false, why: "Carbon and hydrogen have moderate, closely matched electronegativities (2.5 and 2.1) and cannot strip electrons from water. [Slide #51]" }
+                ]
+            },
+            {
+                id: 16,
+                quarter: 4,
+                slideRef: 54,
+                stem: "In the interior core of a plasma membrane lipid bilayer, nonpolar hydrocarbon chains are held together by _______ dipoles.",
+                options: [
+                    { text: "temporary (fluctuating)", correct: true, why: "Nonpolar chains lack permanent dipoles; rapid motion of valence electron waves produces short-lived temporary dipoles (van der Waals forces). [Slide #54]" },
+                    { text: "permanent polar", correct: false, why: "Permanent dipoles occur only in polar bonds (like C-O or O-H), which are absent from the hydrocarbon interior. [Slide #54]" },
+                    { text: "ionic crystal", correct: false, why: "The membrane interior is nonpolar and hydrophobic, completely excluding ionic crystal lattices. [Slide #54]" },
+                    { text: "covalent triple", correct: false, why: "Lipid tails interact through non-covalent intermolecular attractions, not covalent triple bonds. [Slide #54]" }
+                ]
+            }
+        ];
+
+        let shuffledQuestions = [];
+        let userAnswers = {};
+
+        // Two-Way Fisher-Yates Shuffling Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Shuffle question order and options within each question
+            shuffledQuestions = shuffleArray([...quizData]).map(q => {
+                let clonedOptions = q.options.map((opt, idx) => ({ ...opt, originalIndex: idx }));
+                return {
+                    ...q,
+                    options: shuffleArray(clonedOptions)
+                };
+            });
+
+            userAnswers = {};
+            document.getElementById('scorecard').style.display = 'none';
+            renderQuiz();
+            updateScoreDisplay();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            shuffledQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <button class="option-btn" id="q${q.id}-opt${optIndex}" onclick="selectOption(${q.id}, ${optIndex})">
+                            <span style="font-weight:700; min-width:24px;">${String.fromCharCode(65 + optIndex)}.</span>
+                            <span>${opt.text}</span>
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-meta">
+                        <span>Question ${qIndex + 1} of ${shuffledQuestions.length}</span>
+                        <span>Deck Quarter ${q.quarter} | Slide Ref #${q.slideRef}</span>
+                    </div>
+                    <div class="question-stem">${q.stem}</div>
+                    <div class="options-list" id="q${q.id}-options">
+                        ${optionsHTML}
+                    </div>
+                    <div class="explanation-box" id="q${q.id}-explanation">
+                        <div class="explanation-banner" id="q${q.id}-banner"></div>
+                        <div class="explanation-ref">Reference: Slide #${q.slideRef}</div>
+                        <div class="explanation-summary" id="q${q.id}-summary"></div>
+                        <div class="rationale-list" id="q${q.id}-rationales"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(questionId, selectedOptIndex) {
+            if (userAnswers[questionId] !== undefined) return;
+
+            userAnswers[questionId] = selectedOptIndex;
+            const qObj = shuffledQuestions.find(q => q.id === questionId);
+            const selectedOpt = qObj.options[selectedOptIndex];
+
+            // Lock options & render visual feedback
+            for (let i = 0; i < qObj.options.length; i++) {
+                const btn = document.getElementById(`q${questionId}-opt${i}`);
+                btn.disabled = true;
+                if (qObj.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === selectedOptIndex && !selectedOpt.correct) {
+                    btn.classList.add('incorrect');
+                }
+            }
+
+            // Reveal explanation card
+            const expBox = document.getElementById(`q${questionId}-explanation`);
+            const banner = document.getElementById(`q${questionId}-banner`);
+            const summary = document.getElementById(`q${questionId}-summary`);
+            const rationalesList = document.getElementById(`q${questionId}-rationales`);
+
+            expBox.style.display = 'block';
+
+            if (selectedOpt.correct) {
+                banner.textContent = "Correct!";
+                banner.className = "explanation-banner correct-banner";
+            } else {
+                banner.textContent = "Incorrect.";
+                banner.className = "explanation-banner incorrect-banner";
+            }
+
+            const correctOptObj = qObj.options.find(o => o.correct);
+            summary.innerHTML = `<strong>Concept Key:</strong> ${selectedOpt.correct ? 'You selected the verified mechanism.' : `The correct answer was "${correctOptObj.text}".`} ${correctOptObj.why}`;
+
+            // Build distractor audit breakdown
+            let rationalesHTML = '<strong>Complete Distractor & Choice Audit:</strong>';
+            qObj.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <div class="rationale-item">
+                        - <strong>${letter}) ${opt.text}</strong>: ${opt.why}
+                    </div>
+                `;
+            });
+            rationalesList.innerHTML = rationalesHTML;
+
+            updateScoreDisplay();
+            checkCompletion();
+        }
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            const total = shuffledQuestions.length;
+
+            for (let qId in userAnswers) {
+                const qObj = shuffledQuestions.find(q => q.id == qId);
+                if (qObj.options[userAnswers[qId]].correct) {
+                    correctCount++;
+                }
+            }
+
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        function checkCompletion() {
+            if (Object.keys(userAnswers).length === shuffledQuestions.length) {
+                let correctCount = 0;
+                for (let qId in userAnswers) {
+                    const qObj = shuffledQuestions.find(q => q.id == qId);
+                    if (qObj.options[userAnswers[qId]].correct) correctCount++;
+                }
+                const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+
+                const scorecard = document.getElementById('scorecard');
+                const finalScoreText = document.getElementById('finalScoreText');
+                finalScoreText.textContent = `You scored ${correctCount} out of ${shuffledQuestions.length} (${percentage}%)`;
+                scorecard.style.display = 'block';
+                scorecard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
