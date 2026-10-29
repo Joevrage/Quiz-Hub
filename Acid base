@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acid-Base Chemistry, pH, & Buffers Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #282828;
+            --accent: #ff9900;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+        }
+
+        /* Sticky Fixed Top Bar */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .score-display {
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Main Layout */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-card h1 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-stem {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Option Buttons */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.35;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .explanation-banner {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .explanation-banner.correct-banner {
+            color: var(--correct-border);
+        }
+
+        .explanation-banner.incorrect-banner {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-ref {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Scorecard */
+        .scorecard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .scorecard h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <h1 class="header-title">Acid-Base, pH, & Buffers Quiz</h1>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <main class="container">
+        <!-- Intro Card -->
+        <div class="intro-card">
+            <h1>NBCE Part 1 Board Practice</h1>
+            <p>Strictly source-bound board review covering Brønsted-Lowry definitions, Ka/pKa dynamics, buffer equilibria, resonance stabilization, and amino acid side-chain ionization.</p>
+        </div>
+
+        <!-- Dynamic Quiz Container -->
+        <div id="quizContainer"></div>
+
+        <!-- Final Scorecard -->
+        <div class="scorecard" id="scorecard">
+            <h2>Quiz Complete!</h2>
+            <p id="finalScoreText" style="font-size: 1.2rem; font-weight: 600; margin: 15px 0;"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+        </div>
+    </main>
+
+    <script>
+        // Proportional 4-quarter slide deck distribution with complete distractor auditing
+        const quizData = [
+            // QUARTER 1 (Slides 1–14): Foundational Definitions, Ka, Solvation, Autoionization
+            {
+                id: 1,
+                quarter: 1,
+                slideRef: 3,
+                stem: "Under the Brønsted-Lowry acid-base framework, what defines a conjugate base?",
+                options: [
+                    { text: "The chemical species formed after an acid donates a proton (H+)", correct: true, why: "In Brønsted-Lowry theory, an acid (HA) donates a proton to become its corresponding conjugate base (A-). [Slide #3]" },
+                    { text: "A chemical compound that donates a pair of electrons into an empty orbital", correct: false, why: "Donating an electron pair defines a Lewis base, not a Brønsted-Lowry conjugate base. [Slide #3]" },
+                    { text: "An ionic species that dissociates to release free hydroxide ions in pure water", correct: false, why: "Direct hydroxide dissociation defines an Arrhenius base rather than a Brønsted-Lowry conjugate base. [Slide #3]" },
+                    { text: "The un-ionized starting acid prior to any proton transfer reaction", correct: false, why: "The starting protonated form is the conjugate acid, not the conjugate base. [Slide #3]" }
+                ]
+            },
+            {
+                id: 2,
+                quarter: 1,
+                slideRef: 6,
+                stem: "Why can the acid dissociation constant (Ka) of a weak acid never equal zero or a negative value?",
+                options: [
+                    { text: "Equilibrium molar concentrations of chemical species are strictly non-negative real numbers.", correct: true, why: "Ka is the concentration quotient [H+][A-]/[HA]; because physical concentrations are strictly greater than zero, their mathematical ratio cannot be zero or negative. [Slide #6]" },
+                    { text: "Negative equilibrium constants only occur during endergonic reactions with positive Delta G.", correct: false, why: "Equilibrium constants (Keq and Ka) are exponential terms (e^-Delta G/RT) and remain strictly positive regardless of the sign of Delta G. [Slide #6]" },
+                    { text: "The logarithmic transformation of Ka automatically eliminates negative numbers.", correct: false, why: "Logarithms do not define the physical equilibrium quotient itself; pKa can be negative for strong mineral acids, but Ka remains positive. [Slide #6]" },
+                    { text: "Enzymatic catalysts prevent chemical equilibria from reaching negative energy states.", correct: false, why: "Enzymes alter kinetic activation energy barriers without altering equilibrium constants or physical mass laws. [Slide #6]" }
+                ]
+            },
+            {
+                id: 3,
+                quarter: 1,
+                slideRef: 9,
+                stem: "In an aqueous solution, a dissociated proton is stabilized when the _______ dipole ends of surrounding water molecules align toward its positive field.",
+                options: [
+                    { text: "electronegative oxygen", correct: true, why: "Water molecules crowd around the bare proton such that the partial negative dipole of oxygen faces inward toward the positive charge. [Slide #9]" },
+                    { text: "electropositive hydrogen", correct: false, why: "The partially positive hydrogen atoms are electrostatically repelled by the positively charged proton. [Slide #9]" },
+                    { text: "non-polar covalent carbon", correct: false, why: "Water contains only hydrogen and oxygen, with no carbon atoms present in its structure. [Slide #9]" },
+                    { text: "uncharged hydrophobic", correct: false, why: "Water is a polar solvent with permanent dipoles, not an uncharged hydrophobic solvent. [Slide #9]" }
+                ]
+            },
+            {
+                id: 4,
+                quarter: 1,
+                slideRef: 13,
+                stem: "When pure water is heated from 298 Kelvin to 373 Kelvin, why does its neutral pH value shift from 7.0 to approximately 6.5?",
+                options: [
+                    { text: "Thermal momentum promotes greater autoionization of water, elevating Kw to 10^-13.", correct: true, why: "Increased thermal energy facilitates the dissociation of water into H+ and OH-, raising Kw to 10^-13 where [H+] = 10^-6.5 (pH 6.5) at neutrality. [Slide #13]" },
+                    { text: "Boiling eliminates all hydroxide ions through evaporative vapor loss.", correct: false, why: "Hydroxide ions remain in equimolar concentration with protons in pure liquid water regardless of temperature. [Slide #13]" },
+                    { text: "Elevated temperature permanently destroys the covalent bonds between hydrogen and oxygen.", correct: false, why: "Thermal autoionization is a reversible dynamic equilibrium, not permanent covalent destruction. [Slide #13]" },
+                    { text: "Heat drives dissolved carbon dioxide into solution to form carbonic acid.", correct: false, why: "Gaseous solubility decreases as temperature rises, and the scenario specifies pure solvent without CO2. [Slide #13]" }
+                ]
+            },
+
+            // QUARTER 2 (Slides 15–28): Resonance, Orbital Bonding, pKa/pKb, Relative Strengths
+            {
+                id: 5,
+                quarter: 2,
+                slideRef: 17,
+                stem: "What structural phenomenon provides enhanced thermodynamic stability to the acetate conjugate base (CH3COO-)?",
+                options: [
+                    { text: "Equal delocalization of pi (π) electrons across both carbon-oxygen bonds", correct: true, why: "Resonance hybrid delocalization distributes the negative charge across both oxygens (1.5 bond order), stabilizing the conjugate base. [Slide #17]" },
+                    { text: "Formation of an intramolecular disulfide cross-link across the methyl group", correct: false, why: "Acetate contains no sulfur atoms, precluding any disulfide bridge formation. [Slide #17]" },
+                    { text: "Inductive electron withdrawal through an attached aliphatic nitrogen atom", correct: false, why: "Acetate lacks a nitrogen atom in its basic carboxylic acid structure. [Slide #17]" },
+                    { text: "Complete steric shielding produced by three adjacent aromatic rings", correct: false, why: "Acetate has a single aliphatic methyl group (-CH3) and contains no aromatic rings. [Slide #17]" }
+                ]
+            },
+            {
+                id: 6,
+                quarter: 2,
+                slideRef: 20,
+                stem: "In a carbon-oxygen double bond of a carboxylic acid, the covalent linkage consists of a direct head-on _______ bond and a parallel p-orbital _______ bond.",
+                options: [
+                    { text: "sigma (σ); pi (π)", correct: true, why: "A double bond comprises one direct head-on sigma (σ) orbital overlap along the internuclear axis and one parallel pi (π) orbital overlap. [Slide #20]" },
+                    { text: "pi (π); sigma (σ)", correct: false, why: "This reverses the definitions; the direct head-on axial overlap is sigma, while the parallel overlap is pi. [Slide #20]" },
+                    { text: "coordinate; hydrogen", correct: false, why: "Carbonyl double bonds are true covalent orbital overlaps, not coordinate or secondary hydrogen bonds. [Slide #20]" },
+                    { text: "ionic; electrostatic", correct: false, why: "Carbon-oxygen double bonds are shared covalent pairs, not ionic crystal attractions. [Slide #20]" }
+                ]
+            },
+            {
+                id: 7,
+                quarter: 2,
+                slideRef: 23,
+                stem: "At 298 Kelvin in an aqueous system, what mathematical expression relates the pKa of an acid to the pKb of its conjugate base?",
+                options: [
+                    { text: "pKa + pKb = 14", correct: true, why: "Because Ka × Kb = Kw (10^-14 at 298 K), taking the negative logarithm yields pKa + pKb = 14. [Slide #23]" },
+                    { text: "pKa × pKb = 14", correct: false, why: "The logarithmic values are added together; their underlying dissociation constants (Ka × Kb) are multiplied. [Slide #23]" },
+                    { text: "pKa - pKb = 7", correct: false, why: "Logarithmic p-scales do not subtract to yield neutral pH. [Slide #23]" },
+                    { text: "pKa / pKb = 1.0", correct: false, why: "The ratio of pKa to pKb is variable depending on the specific functional group and does not equal 1.0. [Slide #23]" }
+                ]
+            },
+            {
+                id: 8,
+                quarter: 2,
+                slideRef: 27,
+                stem: "Which of the following correctly ranks a weak carboxylic acid, protonated histidine, and a cysteine sulfhydryl group from strongest acid (highest Ka) to weakest acid (lowest Ka)?",
+                options: [
+                    { text: "Carboxylic acid (Ka ~ 10^-5) > Histidine (Ka ~ 10^-6) > Cysteine (Ka ~ 10^-8)", correct: true, why: "Resonance-stabilized carboxylic acids ionize most readily (Ka ~ 10^-5), followed by histidine's imidazolium (Ka ~ 10^-6), whereas cysteine thiols ionize least readily (Ka ~ 10^-8). [Slide #27]" },
+                    { text: "Cysteine (Ka ~ 10^-8) > Histidine (Ka ~ 10^-6) > Carboxylic acid (Ka ~ 10^-5)", correct: false, why: "This completely inverts the ranking; cysteine thiol is the weakest acid of the three. [Slide #27]" },
+                    { text: "Histidine (Ka ~ 10^-6) > Carboxylic acid (Ka ~ 10^-5) > Cysteine (Ka ~ 10^-8)", correct: false, why: "Carboxylic acids have higher Ka values (lower pKa) than the imidazolium ring of histidine. [Slide #27]" },
+                    { text: "Carboxylic acid (Ka ~ 10^-5) > Cysteine (Ka ~ 10^-8) > Histidine (Ka ~ 10^-6)", correct: false, why: "Histidine has a pKa near 6.0 (Ka ~ 10^-6), which is stronger than cysteine's pKa of ~8.3 (Ka ~ 10^-8). [Slide #27]" }
+                ]
+            },
+
+            // QUARTER 3 (Slides 29–42): Blood & Cytosolic Buffers, Henderson-Hasselbalch, Le Chatelier
+            {
+                id: 9,
+                quarter: 3,
+                slideRef: 31,
+                stem: "What is the primary chemical buffer system responsible for maintaining physiological pH in human arterial blood plasma?",
+                options: [
+                    { text: "Carbonic acid / Bicarbonate system (H2CO3 / HCO3-)", correct: true, why: "The extracellular blood plasma pH (7.35–7.45) is primarily buffered by the carbonic acid-bicarbonate system, regulated by the lungs and kidneys. [Slide #31]" },
+                    { text: "Dihydrogen phosphate / Monohydrogen phosphate system (H2PO4- / HPO4^2-)", correct: false, why: "The phosphate system acts primarily as an intracellular cytosolic buffer, not the primary blood buffer. [Slide #31]" },
+                    { text: "Acetoacetate / Beta-hydroxybutyrate system", correct: false, why: "These are acidic ketone bodies that induce metabolic acidosis rather than functioning as physiological buffers. [Slide #31]" },
+                    { text: "Ammonium / Ammonia system (NH4+ / NH3)", correct: false, why: "Ammonium buffering operates in renal tubular fluid for acid excretion, not in circulating blood plasma. [Slide #31]" }
+                ]
+            },
+            {
+                id: 10,
+                quarter: 3,
+                slideRef: 35,
+                stem: "What primary chemical buffer pair maintains stable physiological pH within the intracellular cytosol of human tissues?",
+                options: [
+                    { text: "Dihydrogen phosphate and monohydrogen phosphate (H2PO4- / HPO4^2-)", correct: true, why: "Cytosol relies predominantly on the dihydrogen/monohydrogen phosphate equilibrium (pKa ~6.86–7.2) alongside intracellular proteins. [Slide #35]" },
+                    { text: "Carbonic acid and bicarbonate (H2CO3 / HCO3-)", correct: false, why: "While generated in mitochondria, carbonic acid is not the primary buffer utilized to maintain cytosolic pH. [Slide #35]" },
+                    { text: "Lactic acid and sodium lactate (CH3CHOHCOOH / CH3CHOHCOO-)", correct: false, why: "Lactic acid is a metabolic byproduct of anaerobic glycolysis that stresses cytosolic pH rather than serving as the homeostatic buffer. [Slide #35]" },
+                    { text: "Citric acid and isocitrate (C6H8O7 / C6H7O7-)", correct: false, why: "Citrate and isocitrate are Krebs cycle metabolic intermediates, not intracellular cytosolic buffer systems. [Slide #35]" }
+                ]
+            },
+            {
+                id: 11,
+                quarter: 3,
+                slideRef: 38,
+                stem: "Under what specific condition does a weak acid buffer pair achieve its maximal buffering capacity against pH perturbations?",
+                options: [
+                    { text: "When the environmental pH equals the pKa, creating an equimolar ratio of conjugate base to acid ([A-] = [HA])", correct: true, why: "At pH = pKa, log([A-]/[HA]) = 0, meaning exactly 50% is protonated and 50% deprotonated, giving maximum resistance to both acid and base stresses. [Slide #38]" },
+                    { text: "When the environmental pH is at least two units above the weak acid pKa", correct: false, why: "Two pH units above pKa leaves 99% of the buffer deprotonated, exhausting its capacity to absorb added base. [Slide #38]" },
+                    { text: "When all conjugate base molecules are completely protonated into uncharged species", correct: false, why: "A completely protonated system lacks conjugate base molecules to neutralize added incoming protons. [Slide #38]" },
+                    { text: "When the dissociation constant (Ka) matches the autoionization constant of water (Kw)", correct: false, why: "Maximal buffering is determined by the equivalence of pH to pKa, not by equating Ka to Kw. [Slide #38]" }
+                ]
+            },
+            {
+                id: 12,
+                quarter: 3,
+                slideRef: 42,
+                stem: "According to Le Chatelier's principle, how does the systemic blood buffer system respond when hypoventilation causes an acute retention of carbon dioxide?",
+                options: [
+                    { text: "Equilibrium shifts toward carbonic acid (H2CO3) and dissociates into excess H+, lowering blood pH.", correct: true, why: "Accumulated CO2 forces CO2 + H2O <-> H2CO3 <-> H+ + HCO3- to shift to the right, generating excess protons that lower systemic pH. [Slide #42]" },
+                    { text: "Equilibrium shifts to the left, consuming hydronium ions and driving blood pH into alkalosis.", correct: false, why: "Leftward shifts consume protons during hyperventilation (CO2 washout), not during hypoventilatory retention. [Slide #42]" },
+                    { text: "Carbonic anhydrase halts completely, preventing the hydration of dissolved gas.", correct: false, why: "Enzymes obey mass action equilibrium and accelerate bidirectional equilibration rather than shutting down. [Slide #42]" },
+                    { text: "Bicarbonate ions convert directly into elemental nitrogen to neutralize systemic acidity.", correct: false, why: "Bicarbonate contains carbon, hydrogen, and oxygen, and cannot undergo elemental transmutation into nitrogen. [Slide #42]" }
+                ]
+            },
+
+            // QUARTER 4 (Slides 43–56): Side-Chain Ionization, Histidine, Salt Bridges, Calculations
+            {
+                id: 13,
+                quarter: 4,
+                slideRef: 46,
+                stem: "At physiological pH (7.4), what net electrical charge is carried by the side chains of aspartate (pKa 3.9) and glutamate (pKa 4.3)?",
+                options: [
+                    { text: "Negative (-1) charge due to deprotonation of carboxylate side chains", correct: true, why: "Because the physiological pH of 7.4 is far above their pKa values (~3.9 and 4.3), both side chains lose their protons and exist as negatively charged carboxylates. [Slide #46]" },
+                    { text: "Positive (+1) charge due to protonation of aliphatic amino branches", correct: false, why: "Aspartate and glutamate possess acidic carboxylate side chains, not basic amino side chains. [Slide #46]" },
+                    { text: "Neutral (0) charge because ambient pH matches their isoelectric half-equivalence points", correct: false, why: "At pH 7.4, these acidic groups are over 3 pH units above their pKa values, meaning they are >99.9% deprotonated and fully charged. [Slide #46]" },
+                    { text: "Alternating polarity governed exclusively by mitochondrial redox reactions", correct: false, why: "Protonation status is determined strictly by ambient pH relative to pKa, not by redox state. [Slide #46]" }
+                ]
+            },
+            {
+                id: 14,
+                quarter: 4,
+                slideRef: 49,
+                stem: "Which basic amino acid side chain has a pKa of approximately 6.0, allowing it to dynamically switch protonation states in response to minor physiological pH shifts?",
+                options: [
+                    { text: "Histidine", correct: true, why: "Histidine contains an imidazole ring with a pKa ~6.0, putting it within ~1.4 pH units of physiological pH (7.4) and making it sensitive to small pH changes. [Slide #49]" },
+                    { text: "Arginine", correct: false, why: "Arginine has a strongly basic guanidinium side chain with a pKa ~12.5, keeping it positively charged across all physiological pH states. [Slide #49]" },
+                    { text: "Lysine", correct: false, why: "Lysine has an amino side chain with a pKa ~10.5, remaining protonated and positively charged at pH 7.4. [Slide #49]" },
+                    { text: "Alanine", correct: false, why: "Alanine possesses a non-polar, uncharged methyl side chain (-CH3) that cannot ionize or exchange protons. [Slide #49]" }
+                ]
+            },
+            {
+                id: 15,
+                quarter: 4,
+                slideRef: 53,
+                stem: "Comparing basic side chains, arginine has a pKa of 12.5 whereas lysine has a pKa of 10.5. How do their acid dissociation constants (Ka) compare?",
+                options: [
+                    { text: "Arginine's Ka is 100 times smaller than lysine's, indicating arginine is the more strongly basic residue.", correct: true, why: "A difference of 2.0 pKa units equals a 10^2 (100-fold) difference in Ka; a smaller Ka corresponds to a weaker acid and stronger conjugate base. [Slide #53]" },
+                    { text: "Arginine's Ka is 2 times larger than lysine's Ka value.", correct: false, why: "pKa is a logarithmic scale; a difference of 2 units represents a 100-fold difference, not a 2-fold difference. [Slide #53]" },
+                    { text: "Arginine's Ka is 1,000 times larger than lysine's, making it a stronger acid.", correct: false, why: "A higher pKa denotes a weaker acid with a smaller Ka, and 2 units corresponds to 100-fold, not 1,000-fold. [Slide #53]" },
+                    { text: "Both side chains possess identical Ka values because they both carry a +1 charge at pH 7.4.", correct: false, why: "While both are protonated at pH 7.4, their intrinsic proton affinities differ by two orders of magnitude. [Slide #53]" }
+                ]
+            },
+            {
+                id: 16,
+                quarter: 4,
+                slideRef: 56,
+                stem: "In a folded protein, an electrostatic salt bridge is formed between a deprotonated _______ side chain and a protonated _______ side chain.",
+                options: [
+                    { text: "aspartate; lysine", correct: true, why: "Salt bridges form via electrostatic attraction between negatively charged acidic residues (deprotonated aspartate or glutamate) and positively charged basic residues (protonated lysine, arginine, or histidine). [Slide #56]" },
+                    { text: "alanine; leucine", correct: false, why: "Alanine and leucine have non-polar, hydrophobic side chains that engage in van der Waals forces, not ionic salt bridges. [Slide #56]" },
+                    { text: "cysteine; methionine", correct: false, why: "Cysteine forms covalent disulfide bonds and methionine is a hydrophobic thioether; neither forms electrostatic salt bridges. [Slide #56]" },
+                    { text: "glycine; valine", correct: false, why: "Glycine and valine lack ionizable side-chain charges required to establish ionic salt bridges. [Slide #56]" }
+                ]
+            }
+        ];
+
+        let shuffledQuestions = [];
+        let userAnswers = {};
+
+        // Two-Way Fisher-Yates Shuffling Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Shuffle question order, and within each question, shuffle option order
+            shuffledQuestions = shuffleArray([...quizData]).map(q => {
+                let clonedOptions = q.options.map((opt, idx) => ({ ...opt, originalIndex: idx }));
+                return {
+                    ...q,
+                    options: shuffleArray(clonedOptions)
+                };
+            });
+
+            userAnswers = {};
+            document.getElementById('scorecard').style.display = 'none';
+            renderQuiz();
+            updateScoreDisplay();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            shuffledQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <button class="option-btn" id="q${q.id}-opt${optIndex}" onclick="selectOption(${q.id}, ${optIndex})">
+                            <span style="font-weight:700; min-width:24px;">${String.fromCharCode(65 + optIndex)}.</span>
+                            <span>${opt.text}</span>
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-meta">
+                        <span>Question ${qIndex + 1} of ${shuffledQuestions.length}</span>
+                        <span>Deck Quarter ${q.quarter} | Slide Ref #${q.slideRef}</span>
+                    </div>
+                    <div class="question-stem">${q.stem}</div>
+                    <div class="options-list" id="q${q.id}-options">
+                        ${optionsHTML}
+                    </div>
+                    <div class="explanation-box" id="q${q.id}-explanation">
+                        <div class="explanation-banner" id="q${q.id}-banner"></div>
+                        <div class="explanation-ref">Reference: Slide #${q.slideRef}</div>
+                        <div class="explanation-summary" id="q${q.id}-summary"></div>
+                        <div class="rationale-list" id="q${q.id}-rationales"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(questionId, selectedOptIndex) {
+            if (userAnswers[questionId] !== undefined) return; // Prevent changing after lock
+
+            userAnswers[questionId] = selectedOptIndex;
+            const qObj = shuffledQuestions.find(q => q.id === questionId);
+            const selectedOpt = qObj.options[selectedOptIndex];
+
+            // Lock options & provide visual feedback
+            for (let i = 0; i < qObj.options.length; i++) {
+                const btn = document.getElementById(`q${questionId}-opt${i}`);
+                btn.disabled = true;
+                if (qObj.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === selectedOptIndex && !selectedOpt.correct) {
+                    btn.classList.add('incorrect');
+                }
+            }
+
+            // Populate and display explanation card
+            const expBox = document.getElementById(`q${questionId}-explanation`);
+            const banner = document.getElementById(`q${questionId}-banner`);
+            const summary = document.getElementById(`q${questionId}-summary`);
+            const rationalesList = document.getElementById(`q${questionId}-rationales`);
+
+            expBox.style.display = 'block';
+
+            if (selectedOpt.correct) {
+                banner.textContent = "Correct!";
+                banner.className = "explanation-banner correct-banner";
+            } else {
+                banner.textContent = "Incorrect.";
+                banner.className = "explanation-banner incorrect-banner";
+            }
+
+            const correctOptObj = qObj.options.find(o => o.correct);
+            summary.innerHTML = `<strong>Concept Key:</strong> ${selectedOpt.correct ? 'You selected the verified mechanism.' : `The correct answer was "${correctOptObj.text}".`} ${correctOptObj.why}`;
+
+            // Build complete option-by-option distractor audit
+            let rationalesHTML = '<strong>Complete Distractor & Choice Audit:</strong>';
+            qObj.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <div class="rationale-item">
+                        - <strong>${letter}) ${opt.text}</strong>: ${opt.why}
+                    </div>
+                `;
+            });
+            rationalesList.innerHTML = rationalesHTML;
+
+            updateScoreDisplay();
+            checkCompletion();
+        }
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            const total = shuffledQuestions.length;
+
+            for (let qId in userAnswers) {
+                const qObj = shuffledQuestions.find(q => q.id == qId);
+                if (qObj.options[userAnswers[qId]].correct) {
+                    correctCount++;
+                }
+            }
+
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        function checkCompletion() {
+            if (Object.keys(userAnswers).length === shuffledQuestions.length) {
+                let correctCount = 0;
+                for (let qId in userAnswers) {
+                    const qObj = shuffledQuestions.find(q => q.id == qId);
+                    if (qObj.options[userAnswers[qId]].correct) correctCount++;
+                }
+                const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+
+                const scorecard = document.getElementById('scorecard');
+                const finalScoreText = document.getElementById('finalScoreText');
+                finalScoreText.textContent = `You scored ${correctCount} out of ${shuffledQuestions.length} (${percentage}%)`;
+                scorecard.style.display = 'block';
+                scorecard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
