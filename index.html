@@ -76,6 +76,7 @@
             border-radius: 10px; 
             border: 2px solid var(--header-border);
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .logo-container {
@@ -88,6 +89,31 @@
             align-items: center;
             gap: 6px;
             letter-spacing: -1px;
+            position: relative;
+        }
+
+        /* Tooltip for Logo Toggle */
+        .logo-container::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -36px;
+            left: 0;
+            background: #222;
+            color: #ff9900;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
+            font-weight: bold;
+        }
+
+        .logo-container:hover::after {
+            opacity: 1;
         }
 
         .logo-box {
@@ -185,6 +211,8 @@
             margin-top: 10px;
             cursor: pointer;
             transition: opacity 0.2s;
+            text-decoration: none;
+            display: block;
         }
 
         .attack-btn:hover {
@@ -210,7 +238,7 @@
         }
 
         /* =========================================================
-           LAYOUT 2: VIP LOUNGE GRID (ACTIVE IN HUB MODE)
+           LAYOUT 2: VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
            ========================================================= */
         .hub-grid-layout {
             display: none;
@@ -223,12 +251,12 @@
         .course-section { margin-bottom: 30px; }
         .course-title { color: #d4af37; font-size: 16px; border-bottom: 1px solid #2a2a3b; padding-bottom: 6px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
         
         .hub-card { background-color: #16161f; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a3b; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
         .hub-card:hover { transform: translateY(-3px); border-color: #d4af37; }
         
-        .card-thumbnail { background-color: #1e1e2b; height: 125px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #2a2a3b; }
+        .card-thumbnail { background-color: #1e1e2b; height: 120px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #2a2a3b; }
         .thumbnail-icon { font-size: 38px; }
         
         .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #d4af37; }
@@ -243,7 +271,7 @@
 
     <!-- Top Navigation Bar -->
     <div class="header-bar">
-        <div class="logo-container" id="logoToggle">
+        <div class="logo-container" id="logoToggle" data-tooltip="Safe for Work? Absolutely Not.">
             <span>Chiro</span>
             <span class="logo-box">Gainz</span>
         </div>
@@ -256,7 +284,7 @@
     <div class="main-container">
 
         <!-- =========================================================
-             1. GYM GAINZ GRID (ACTIVE BY DEFAULT)
+             1. GYM GAINZ RACK GRID (DEFAULT VIEW)
              ========================================================= -->
         <div class="clash-grid">
             <!-- Biochem Card -->
@@ -271,12 +299,8 @@
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Biochem%20Week%201.html">
-                        <div class="attack-btn">Week 1</div>
-                    </a>
-                    <a href="Biochem%20Week%202.html">
-                        <div class="attack-btn">Week 2</div>
-                    </a>
+                    <a href="Biochem%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Biochem%20Week%202.html"><div class="attack-btn">Week 2</div></a>
                 </div>
             </div>
 
@@ -292,12 +316,8 @@
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Gen%20Path%20Week%201.html">
-                        <div class="attack-btn">Week 1</div>
-                    </a>
-                    <a href="Gen%20Path%20Week%202.html">
-                        <div class="attack-btn">Week 2</div>
-                    </a>
+                    <a href="Gen%20Path%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Gen%20Path%20Week%202.html"><div class="attack-btn">Week 2</div></a>
                 </div>
             </div>
 
@@ -313,15 +333,9 @@
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Microbio%20Quiz%201.html">
-                        <div class="attack-btn">Quiz 1</div>
-                    </a>
-                    <a href="Microbio%20Quiz%202.html">
-                        <div class="attack-btn">Quiz 2</div>
-                    </a>
-                    <a href="Microbio%20Quiz%203.html" style="flex: 1 1 100%;">
-                        <div class="attack-btn">Quiz 3</div>
-                    </a>
+                    <a href="Microbio%20Quiz%201.html"><div class="attack-btn">Quiz 1</div></a>
+                    <a href="Microbio%20Quiz%202.html"><div class="attack-btn">Quiz 2</div></a>
+                    <a href="Microbio%20Quiz%203.html" style="flex: 1 1 100%;"><div class="attack-btn">Quiz 3</div></a>
                 </div>
             </div>
 
@@ -401,48 +415,41 @@
         </div>
 
         <!-- =========================================================
-             2. VIP LOUNGE LAYOUT (ACTIVE WHEN LOGO IS CLICKED)
+             2. VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
              ========================================================= -->
         <div class="hub-grid-layout">
             
             <div class="course-section">
-                <h2 class="course-title">Microbio</h2>
+                <h2 class="course-title">Microbiology</h2>
                 <div class="quiz-grid">
-                    <a href="Microbio%20Quiz%201.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🧫</span>
-                            <span class="duration-badge">Quiz 1</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 1 Material</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="Microbio%20Quiz%202.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🧫</span>
-                            <span class="duration-badge">Quiz 2</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 2 Material</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
                     <a href="Microbio%20Quiz%203.html" class="hub-card">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">🧫</span>
                             <span class="duration-badge">Quiz 3</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 3 (Lec 4 & 5)</div>
+                            <div class="quiz-card-title">Hot Bacterial Genetics & Wild Metabolism Pathways That Will F*** Your GPA (POV)</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
+                                <span>By Step-Tutor Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Biochemistry</h2>
+                <div class="quiz-grid">
+                    <a href="Biochem%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧪</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Creampie Krebs Cycle: Watch Acetyl-CoA Get Absolutely Wrecked by Oxaloacetate</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Tutor Joe</span>
                                 <span class="rating">100% rating</span>
                             </div>
                         </div>
@@ -450,7 +457,82 @@
                 </div>
             </div>
 
-            <!-- Add other sections as needed -->
+            <div class="course-section">
+                <h2 class="course-title">Anatomy & Regional Ortho</h2>
+                <div class="quiz-grid">
+                    <a href="Reg%201%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Brachial Plexus Gets Completely Tangled By Step-Bro (Gone Wrong)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Daelin</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Spinal & Regional Adjusting</h2>
+                <div class="quiz-grid">
+                    <a href="Spinal%202%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">Spinal 2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hot, Steamy Vertebral Adjustments in Your Area</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Tutor Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Systemic Physiology</h2>
+                <div class="quiz-grid">
+                    <a href="Sys%20Phys%20Cell%20Basics.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Physio</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hardcore Ion Gradients & Membrane Depolarization (Viewer Discretion Advised)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Tutor Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="course-section">
+                <h2 class="course-title">Subluxation Analysis</h2>
+                <div class="quiz-grid">
+                    <a href="Sublux%20Terms.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Analysis</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Step-Bro, I'm Stuck... In a Bilateral Sacral Fixation</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Tutor Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
         </div>
 
     </div>
@@ -458,14 +540,14 @@
     <script>
         const logo = document.getElementById('logoToggle');
         
-        if (localStorage.getItem('quizHubTheme') === 'lounge') {
+        if (localStorage.getItem('quizHubTheme') === 'vip') {
             document.body.classList.add('hub-mode');
         }
 
         logo.addEventListener('click', () => {
             document.body.classList.toggle('hub-mode');
             if (document.body.classList.contains('hub-mode')) {
-                localStorage.setItem('quizHubTheme', 'lounge');
+                localStorage.setItem('quizHubTheme', 'vip');
             } else {
                 localStorage.setItem('quizHubTheme', 'gainz');
             }
