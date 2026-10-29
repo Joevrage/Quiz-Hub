@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amino Acids & Proteins Quiz Hub</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --border-color: #282828;
+            --accent: #ff9900;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 80px;
+        }
+
+        /* Sticky Fixed Top Bar */
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        .score-display {
+            font-size: 1rem;
+            font-weight: 600;
+            background: var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .intro-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .intro-card h1 {
+            margin-top: 0;
+            color: var(--accent);
+            font-size: 1.8rem;
+        }
+
+        .intro-card p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .question-stem {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        /* Option Buttons */
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-btn {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.35;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--accent);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .explanation-banner {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .explanation-banner.correct-banner {
+            color: var(--correct-border);
+        }
+
+        .explanation-banner.incorrect-banner {
+            color: var(--incorrect-border);
+        }
+
+        .explanation-ref {
+            font-size: 0.85rem;
+            color: var(--accent);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .explanation-summary {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 14px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rationale-item {
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: var(--text-muted);
+        }
+
+        .rationale-item strong {
+            color: var(--text-main);
+        }
+
+        /* Summary Scorecard */
+        .scorecard {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            display: none;
+            margin-top: 30px;
+        }
+
+        .scorecard h2 {
+            color: var(--accent);
+            margin-top: 0;
+        }
+
+        .retake-btn {
+            background-color: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <h1 class="header-title">Amino Acids & Proteins Quiz</h1>
+        <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    </header>
+
+    <main class="container">
+        <!-- Intro Card -->
+        <div class="intro-card">
+            <h1>NBCE Part 1 Board Practice</h1>
+            <p>Fundamental board review focusing on amino acid classification, essential amino acids, zwitterion properties, peptide bond formation, structural levels, and specialized products.</p>
+        </div>
+
+        <!-- Dynamic Quiz Container -->
+        <div id="quizContainer"></div>
+
+        <!-- Final Scorecard -->
+        <div class="scorecard" id="scorecard">
+            <h2>Quiz Complete!</h2>
+            <p id="finalScoreText" style="font-size: 1.2rem; font-weight: 600; margin: 15px 0;"></p>
+            <button class="retake-btn" onclick="initQuiz()">Retake Quiz</button>
+        </div>
+    </main>
+
+    <script>
+        // Proportional 4-quarter slide deck distribution with basic, high-yield foundational concepts
+        const quizData = [
+            // QUARTER 1: General Backbone Structure, Alpha Carbon, Ionization at pH 7.4, Proline Ring
+            {
+                id: 1,
+                quarter: 1,
+                slideRef: 2,
+                stem: "Which standard amino acid possesses a secondary amino (imino) group incorporated into a five-membered ring structure?",
+                options: [
+                    { text: "Proline", correct: true, why: "Proline contains a secondary amino group where its side chain loops back to attach to the alpha-nitrogen. [Slide #2]" },
+                    { text: "Glycine", correct: false, why: "Glycine has a standard primary amino group and a single hydrogen atom as its side chain. [Slide #2]" },
+                    { text: "Alanine", correct: false, why: "Alanine possesses a primary amino group and an aliphatic methyl side chain (-CH3). [Slide #2]" },
+                    { text: "Leucine", correct: false, why: "Leucine has a primary amino group with a branched hydrocarbon side chain. [Slide #2]" }
+                ]
+            },
+            {
+                id: 2,
+                quarter: 1,
+                slideRef: 4,
+                stem: "At physiological pH (approximately 7.4), free amino acids exist as zwitterions with a _______ carboxyl group and a _______ amino group.",
+                options: [
+                    { text: "dissociated (-COO-); protonated (-NH3+)", correct: true, why: "Because pH 7.4 is above the alpha-carboxyl pKa (~2.3) and below the alpha-amino pKa (~9.6), the carboxyl is deprotonated (-COO-) and the amino is protonated (-NH3+). [Slide #4]" },
+                    { text: "fully protonated (-COOH); uncharged (-NH2)", correct: false, why: "A neutral -COOH and uncharged -NH2 combination only occurs at non-physiological acidic and basic extremes. [Slide #4]" },
+                    { text: "positively charged (-COOH2+); negatively charged (-NH2-)", correct: false, why: "Carboxyl groups do not gain protons to become -COOH2+ at physiological pH. [Slide #4]" },
+                    { text: "dissociated (-COO-); uncharged (-NH2)", correct: false, why: "At pH 7.4, the alpha-amino group has not reached its pKa (~9.6) and remains positively protonated as -NH3+. [Slide #4]" }
+                ]
+            },
+            {
+                id: 3,
+                quarter: 1,
+                slideRef: 6,
+                stem: "Which carbon atom serves as the central chiral attachment point for the carboxyl group, amino group, and distinctive R-group in standard amino acids?",
+                options: [
+                    { text: "Alpha (α) carbon", correct: true, why: "All amino acids (except glycine) have a central chiral alpha-carbon bound to four distinct groups: -H, -COOH, -NH2, and -R. [Slide #6]" },
+                    { text: "Beta (β) carbon", correct: false, why: "The beta-carbon is the first carbon of the side-chain branch, not the central backbone junction. [Slide #6]" },
+                    { text: "Carbonyl carbon", correct: false, why: "The carbonyl carbon is part of the carboxylic acid group and forms planar sp2 bonds, not the central chiral center. [Slide #6]" },
+                    { text: "Gamma (γ) carbon", correct: false, why: "The gamma-carbon is located further along extended aliphatic side chains like glutamate. [Slide #6]" }
+                ]
+            },
+            {
+                id: 4,
+                quarter: 1,
+                slideRef: 7,
+                stem: "According to the classic nutritional mnemonic 'PVT TIM HALL', which of the following is categorized as an essential amino acid?",
+                options: [
+                    { text: "Valine", correct: true, why: "Valine is one of the essential branched-chain amino acids included in the 'PVT' portion of the mnemonic. [Slide #7]" },
+                    { text: "Alanine", correct: false, why: "Alanine is a non-essential amino acid synthesized directly from pyruvate by transamination. [Slide #7]" },
+                    { text: "Serine", correct: false, why: "Serine is a non-essential amino acid synthesized from glycolytic 3-phosphoglycerate. [Slide #7]" },
+                    { text: "Glycine", correct: false, why: "Glycine is non-essential and synthesized endogenously from serine. [Slide #7]" }
+                ]
+            },
+
+            // QUARTER 2: Side-Chain Classification (Nonpolar, Polar Uncharged, Acidic, Basic)
+            {
+                id: 5,
+                quarter: 2,
+                slideRef: 9,
+                stem: "Which amino acid possesses the simplest side chain, consisting of only a single hydrogen atom and lacking optical chirality?",
+                options: [
+                    { text: "Glycine", correct: true, why: "Glycine's R-group is a single hydrogen atom; because its alpha-carbon is bonded to two identical hydrogens, it lacks a chiral center. [Slide #9]" },
+                    { text: "Alanine", correct: false, why: "Alanine possesses a methyl group (-CH3) on its alpha-carbon and is optically active. [Slide #9]" },
+                    { text: "Valine", correct: false, why: "Valine has an isopropyl branched-chain R-group. [Slide #9]" },
+                    { text: "Serine", correct: false, why: "Serine has a polar hydroxymethyl (-CH2OH) side chain. [Slide #9]" }
+                ]
+            },
+            {
+                id: 6,
+                quarter: 2,
+                slideRef: 11,
+                stem: "Aspartate and glutamate are classified as _______ amino acids because their side chains contain carboxyl groups that carry negative charges at physiological pH.",
+                options: [
+                    { text: "acidic", correct: true, why: "Aspartate and glutamate have carboxylic acid side chains with low pKa values (~3.9 and 4.3), classifying them as acidic amino acids. [Slide #11]" },
+                    { text: "basic", correct: false, why: "Basic amino acids (lysine, arginine, histidine) carry net positive charges at or near physiological pH. [Slide #11]" },
+                    { text: "nonpolar aliphatic", correct: false, why: "Carboxylate side chains are fully ionized and hydrophilic, not nonpolar aliphatic chains. [Slide #11]" },
+                    { text: "aromatic uncharged", correct: false, why: "Aspartate and glutamate lack benzene rings and are negatively charged at pH 7.4. [Slide #11]" }
+                ]
+            },
+            {
+                id: 7,
+                quarter: 2,
+                slideRef: 13,
+                stem: "Which pair of amino acids contains sulfur atoms within their side-chain structures?",
+                options: [
+                    { text: "Cysteine and methionine", correct: true, why: "Cysteine contains a thiol/sulfhydryl group (-SH) and methionine contains a nonpolar thioether linkage (-S-CH3). [Slide #13]" },
+                    { text: "Serine and threonine", correct: false, why: "Serine and threonine contain hydroxyl groups (-OH), not sulfur atoms. [Slide #13]" },
+                    { text: "Leucine and isoleucine", correct: false, why: "Leucine and isoleucine are pure hydrocarbon branched-chain amino acids lacking sulfur. [Slide #13]" },
+                    { text: "Asparagine and glutamine", correct: false, why: "Asparagine and glutamine contain amide groups (-CONH2), not sulfur atoms. [Slide #13]" }
+                ]
+            },
+            {
+                id: 8,
+                quarter: 2,
+                slideRef: 15,
+                stem: "Which group of amino acids have side chains that carry positive electrical charges (R-NH3+) at physiological pH?",
+                options: [
+                    { text: "Histidine, lysine, and arginine", correct: true, why: "Histidine, lysine, and arginine are the three basic amino acids whose nitrogenous side chains carry positive charges. [Slide #15]" },
+                    { text: "Aspartate, glutamate, and glycine", correct: false, why: "Aspartate and glutamate are negatively charged, and glycine is uncharged. [Slide #15]" },
+                    { text: "Phenylalanine, tyrosine, and tryptophan", correct: false, why: "These are aromatic amino acids and do not carry basic positive charges on their rings. [Slide #15]" },
+                    { text: "Alanine, valine, and leucine", correct: false, why: "These are nonpolar aliphatic amino acids with uncharged hydrocarbon side chains. [Slide #15]" }
+                ]
+            },
+
+            // QUARTER 3: Acid-Base Properties, Histidine Buffering, and Peptide Bond Formation
+            {
+                id: 9,
+                quarter: 3,
+                slideRef: 18,
+                stem: "Why is the side chain of histidine uniquely important for buffering physiological fluids near pH 7.4?",
+                options: [
+                    { text: "Its imidazole ring has a pKa near 6.0, allowing it to transition between protonated and unprotonated states.", correct: true, why: "Histidine's side-chain imidazole ring has a pKa of approximately 6.0, enabling it to act as an effective proton donor/acceptor near pH 7.4. [Slide #18]" },
+                    { text: "It forms permanent covalent triple bonds with blood bicarbonate ions.", correct: false, why: "Histidine buffers via reversible protonation, not permanent triple bonds with bicarbonate. [Slide #18]" },
+                    { text: "Its alpha-carboxyl group remains completely un-ionized at all cellular pH levels.", correct: false, why: "Alpha-carboxyl groups dissociate readily at low pH (~2.3) and are incorporated into peptide bonds in proteins. [Slide #18]" },
+                    { text: "It is the only amino acid that completely lacks an alpha-amino nitrogen atom.", correct: false, why: "Histidine possesses a standard alpha-amino nitrogen in its backbone. [Slide #18]" }
+                ]
+            },
+            {
+                id: 10,
+                quarter: 3,
+                slideRef: 20,
+                stem: "The characteristic covalent linkage joining adjacent amino acids in a polypeptide chain is an amide bond termed a _______ bond.",
+                options: [
+                    { text: "peptide", correct: true, why: "Amino acids are linked together into polypeptide chains by covalent amide linkages called peptide bonds. [Slide #20]" },
+                    { text: "phosphodiester", correct: false, why: "Phosphodiester bonds link adjacent nucleotides in DNA and RNA backbones. [Slide #20]" },
+                    { text: "glycosidic", correct: false, why: "Glycosidic bonds join monosaccharide sugars into polysaccharides. [Slide #20]" },
+                    { text: "disulfide", correct: false, why: "Disulfide bonds are covalent cross-links between cysteine thiols, not the primary backbone amide chain. [Slide #20]" }
+                ]
+            },
+            {
+                id: 11,
+                quarter: 3,
+                slideRef: 21,
+                stem: "What byproduct molecule is released during the condensation reaction that forms a peptide bond between two amino acids?",
+                options: [
+                    { text: "Water (H2O)", correct: true, why: "Peptide bond formation is a condensation (dehydration) reaction where the carboxyl and amino groups eliminate a molecule of H2O. [Slide #21]" },
+                    { text: "Carbon dioxide (CO2)", correct: false, why: "CO2 release occurs during decarboxylation reactions, not condensation peptide synthesis. [Slide #21]" },
+                    { text: "Ammonia (NH3)", correct: false, why: "Ammonia is released during deamination reactions, not peptide bond formation. [Slide #21]" },
+                    { text: "Hydrogen gas (H2)", correct: false, why: "Condensation produces water (two hydrogens and one oxygen), not free molecular hydrogen gas. [Slide #21]" }
+                ]
+            },
+            {
+                id: 12,
+                quarter: 3,
+                slideRef: 23,
+                stem: "Which ribosomal enzyme catalyzes the formation of peptide bonds during protein translation?",
+                options: [
+                    { text: "Peptidyl transferase", correct: true, why: "Peptidyl transferase, an RNA-based ribozyme in the large ribosomal subunit, catalyzes peptide bond condensation. [Slide #23]" },
+                    { text: "Aminoacyl-tRNA synthetase", correct: false, why: "Aminoacyl-tRNA synthetase charges tRNAs with their corresponding amino acids prior to translation. [Slide #23]" },
+                    { text: "Creatine kinase", correct: false, why: "Creatine kinase phosphorylates creatine to form creatine phosphate, not peptide bonds. [Slide #23]" },
+                    { text: "Phenylalanine hydroxylase", correct: false, why: "Phenylalanine hydroxylase converts phenylalanine into tyrosine, not peptide bonds. [Slide #23]" }
+                ]
+            },
+
+            // QUARTER 4: Structural Levels, Protein Analysis, and Specialized Metabolic Products
+            {
+                id: 13,
+                quarter: 4,
+                slideRef: 25,
+                stem: "What level of protein structural organization is defined strictly by the linear sequence of amino acids joined by peptide bonds?",
+                options: [
+                    { text: "Primary structure", correct: true, why: "Primary structure refers exclusively to the linear sequence of amino acid residues linked by covalent peptide bonds. [Slide #25]" },
+                    { text: "Secondary structure", correct: false, why: "Secondary structure refers to localized hydrogen-bonded foldings such as alpha-helices and beta-sheets. [Slide #25]" },
+                    { text: "Tertiary structure", correct: false, why: "Tertiary structure describes the overall 3D folding of a single polypeptide chain. [Slide #25]" },
+                    { text: "Quaternary structure", correct: false, why: "Quaternary structure refers to the spatial arrangement and non-covalent assembly of multiple polypeptide subunits. [Slide #25]" }
+                ]
+            },
+            {
+                id: 14,
+                quarter: 4,
+                slideRef: 27,
+                stem: "Which neurotransmitter is synthesized directly from the essential aromatic amino acid tryptophan?",
+                options: [
+                    { text: "Serotonin", correct: true, why: "Tryptophan serves as the specific dietary precursor for the synthesis of the neurotransmitter serotonin. [Slide #27]" },
+                    { text: "Histamine", correct: false, why: "Histamine is synthesized from the decarboxylation of histidine, not tryptophan. [Slide #27]" },
+                    { text: "Epinephrine", correct: false, why: "Epinephrine is synthesized from tyrosine via the catecholamine pathway, not tryptophan. [Slide #27]" },
+                    { text: "Melanin", correct: false, why: "Melanin is a pigment synthesized from tyrosine by tyrosinase, not tryptophan. [Slide #27]" }
+                ]
+            },
+            {
+                id: 15,
+                quarter: 4,
+                slideRef: 28,
+                stem: "The catecholamines dopamine, norepinephrine, and epinephrine are synthesized sequentially from which amino acid precursor?",
+                options: [
+                    { text: "Tyrosine", correct: true, why: "The catecholamine biosynthetic pathway proceeds sequentially: Tyrosine -> L-Dopa -> Dopamine -> Norepinephrine -> Epinephrine. [Slide #28]" },
+                    { text: "Tryptophan", correct: false, why: "Tryptophan is the precursor for serotonin and melatonin, not catecholamines. [Slide #28]" },
+                    { text: "Histidine", correct: false, why: "Histidine is decarboxylated to form histamine, not catecholamines. [Slide #28]" },
+                    { text: "Lysine", correct: false, why: "Lysine is a basic essential amino acid that does not enter catecholamine synthesis. [Slide #28]" }
+                ]
+            },
+            {
+                id: 16,
+                quarter: 4,
+                slideRef: 30,
+                stem: "In automated amino acid chromatography, what colorimetric reagent reacts with liberated amino acids to produce a purple dye for spectrophotometric quantitation?",
+                options: [
+                    { text: "Ninhydrin", correct: true, why: "Ninhydrin reagent reacts with primary amino groups to produce a characteristic deep purple compound (Ruhemann's purple) used for quantitation. [Slide #30]" },
+                    { text: "Edman reagent (phenylisothiocyanate)", correct: false, why: "Edman reagent is used to cleave and sequence N-terminal residues sequentially, not to produce a purple dye for colorimetric assays. [Slide #30]" },
+                    { text: "Hydrochloric acid (HCl)", correct: false, why: "Strong acid (6N HCl at 110°C) is used for initial polypeptide hydrolysis, not colorimetric detection. [Slide #30]" },
+                    { text: "Sodium bicarbonate", correct: false, why: "Sodium bicarbonate is a chemical buffer, not a colorimetric detection reagent. [Slide #30]" }
+                ]
+            }
+        ];
+
+        let shuffledQuestions = [];
+        let userAnswers = {};
+
+        // Two-Way Fisher-Yates Shuffling Algorithm
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            // Shuffle question order and options within each question
+            shuffledQuestions = shuffleArray([...quizData]).map(q => {
+                let clonedOptions = q.options.map((opt, idx) => ({ ...opt, originalIndex: idx }));
+                return {
+                    ...q,
+                    options: shuffleArray(clonedOptions)
+                };
+            });
+
+            userAnswers = {};
+            document.getElementById('scorecard').style.display = 'none';
+            renderQuiz();
+            updateScoreDisplay();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+
+            shuffledQuestions.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `question-card-${q.id}`;
+
+                let optionsHTML = '';
+                q.options.forEach((opt, optIndex) => {
+                    optionsHTML += `
+                        <button class="option-btn" id="q${q.id}-opt${optIndex}" onclick="selectOption(${q.id}, ${optIndex})">
+                            <span style="font-weight:700; min-width:24px;">${String.fromCharCode(65 + optIndex)}.</span>
+                            <span>${opt.text}</span>
+                        </button>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="question-meta">
+                        <span>Question ${qIndex + 1} of ${shuffledQuestions.length}</span>
+                        <span>Deck Quarter ${q.quarter} | Slide Ref #${q.slideRef}</span>
+                    </div>
+                    <div class="question-stem">${q.stem}</div>
+                    <div class="options-list" id="q${q.id}-options">
+                        ${optionsHTML}
+                    </div>
+                    <div class="explanation-box" id="q${q.id}-explanation">
+                        <div class="explanation-banner" id="q${q.id}-banner"></div>
+                        <div class="explanation-ref">Reference: Slide #${q.slideRef}</div>
+                        <div class="explanation-summary" id="q${q.id}-summary"></div>
+                        <div class="rationale-list" id="q${q.id}-rationales"></div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectOption(questionId, selectedOptIndex) {
+            if (userAnswers[questionId] !== undefined) return;
+
+            userAnswers[questionId] = selectedOptIndex;
+            const qObj = shuffledQuestions.find(q => q.id === questionId);
+            const selectedOpt = qObj.options[selectedOptIndex];
+
+            // Lock options & render visual feedback
+            for (let i = 0; i < qObj.options.length; i++) {
+                const btn = document.getElementById(`q${questionId}-opt${i}`);
+                btn.disabled = true;
+                if (qObj.options[i].correct) {
+                    btn.classList.add('correct');
+                } else if (i === selectedOptIndex && !selectedOpt.correct) {
+                    btn.classList.add('incorrect');
+                }
+            }
+
+            // Reveal explanation card
+            const expBox = document.getElementById(`q${questionId}-explanation`);
+            const banner = document.getElementById(`q${questionId}-banner`);
+            const summary = document.getElementById(`q${questionId}-summary`);
+            const rationalesList = document.getElementById(`q${questionId}-rationales`);
+
+            expBox.style.display = 'block';
+
+            if (selectedOpt.correct) {
+                banner.textContent = "Correct!";
+                banner.className = "explanation-banner correct-banner";
+            } else {
+                banner.textContent = "Incorrect.";
+                banner.className = "explanation-banner incorrect-banner";
+            }
+
+            const correctOptObj = qObj.options.find(o => o.correct);
+            summary.innerHTML = `<strong>Concept Key:</strong> ${selectedOpt.correct ? 'You selected the verified mechanism.' : `The correct answer was "${correctOptObj.text}".`} ${correctOptObj.why}`;
+
+            // Build complete distractor audit breakdown
+            let rationalesHTML = '<strong>Complete Distractor & Choice Audit:</strong>';
+            qObj.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                rationalesHTML += `
+                    <div class="rationale-item">
+                        - <strong>${letter}) ${opt.text}</strong>: ${opt.why}
+                    </div>
+                `;
+            });
+            rationalesList.innerHTML = rationalesHTML;
+
+            updateScoreDisplay();
+            checkCompletion();
+        }
+
+        function updateScoreDisplay() {
+            let correctCount = 0;
+            const total = shuffledQuestions.length;
+
+            for (let qId in userAnswers) {
+                const qObj = shuffledQuestions.find(q => q.id == qId);
+                if (qObj.options[userAnswers[qId]].correct) {
+                    correctCount++;
+                }
+            }
+
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+        }
+
+        function checkCompletion() {
+            if (Object.keys(userAnswers).length === shuffledQuestions.length) {
+                let correctCount = 0;
+                for (let qId in userAnswers) {
+                    const qObj = shuffledQuestions.find(q => q.id == qId);
+                    if (qObj.options[userAnswers[qId]].correct) correctCount++;
+                }
+                const percentage = Math.round((correctCount / shuffledQuestions.length) * 100);
+
+                const scorecard = document.getElementById('scorecard');
+                const finalScoreText = document.getElementById('finalScoreText');
+                finalScoreText.textContent = `You scored ${correctCount} out of ${shuffledQuestions.length} (${percentage}%)`;
+                scorecard.style.display = 'block';
+                scorecard.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
