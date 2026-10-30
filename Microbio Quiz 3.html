@@ -3,522 +3,755 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microbio Quiz 3: Bacterial Metabolism &amp; Genetics</title>
+    <title>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</title>
     <style>
         :root {
             --bg-body: #0f0f0f;
-            --bg-card: #1a1a1a;
+            --bg-container: #1a1a1a;
             --text-main: #ffffff;
-            --text-dim: #888888;
+            --text-muted: #a3a3a3;
             --accent: #ff9900;
             --accent-hover: #cc7a00;
-            --border-color: #282828;
             --correct-bg: #14532d;
             --correct-border: #22c55e;
+            --correct-text: #ffffff;
             --incorrect-bg: #7f1d1d;
             --incorrect-border: #ef4444;
-            --option-bg: #222222;
-            --option-hover: #2c2c2c;
+            --incorrect-text: #ffffff;
+            --option-bg: #2a2a2a;
+            --option-hover: #3a3a3a;
+            --border-color: #333333;
         }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-body);
             color: var(--text-main);
-            padding-top: 80px;
-            padding-bottom: 50px;
-            line-height: 1.5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px;
+            padding-bottom: 40px;
+            line-height: 1.6;
         }
 
-        .sticky-header {
+        /* Sticky Top Bar */
+        #top-bar {
             position: fixed;
-            top: 0; left: 0; right: 0;
-            min-height: 60px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
             background-color: #141414;
-            padding: 10px 25px;
+            border-bottom: 2px solid var(--accent);
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
             z-index: 1000;
-            border-bottom: 2px solid var(--accent);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        .sticky-header h1 {
-            font-size: 1.15rem;
-            font-weight: 700;
+        #top-bar h1 {
+            margin: 0;
+            font-size: 1.1rem;
             color: var(--accent);
-            letter-spacing: 0.3px;
-        }
-
-        .header-right { display: flex; align-items: center; gap: 12px; }
-
-        .hub-link {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        .hub-link:hover { color: var(--accent); }
-
-        .score-tracker {
-            font-size: 1rem;
             font-weight: bold;
-            background: #222222;
-            padding: 6px 16px;
+        }
+
+        #score-display {
+            font-size: 1.1rem;
+            font-weight: 600;
+            background: #252525;
+            padding: 6px 14px;
             border-radius: 20px;
             border: 1px solid var(--accent);
-            color: var(--text-main);
-            white-space: nowrap;
         }
 
-        .quiz-container {
-            width: 100%;
-            max-width: 850px;
+        /* Quiz Container */
+        #quiz-container {
+            max-width: 800px;
             margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .intro {
-            color: var(--text-dim);
-            font-size: 0.95rem;
-            margin-bottom: 20px;
+            padding: 20px;
         }
 
         .question-card {
-            background-color: var(--bg-card);
+            background-color: var(--bg-container);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .question-meta {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .badge {
-            background: rgba(255, 153, 0, 0.12);
+        .question-number {
             color: var(--accent);
-            border: 1px solid rgba(255, 153, 0, 0.45);
-            border-radius: 12px;
-            padding: 2px 10px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
+            margin-bottom: 8px;
         }
 
-        .question-text {
-            font-size: 1.12rem;
-            font-weight: 600;
+        .question-stem {
+            font-size: 1.15rem;
+            line-height: 1.5;
             margin-bottom: 18px;
-            line-height: 1.45;
+            font-weight: 500;
         }
 
-        .options-list { display: flex; flex-direction: column; gap: 10px; }
-
-        .option-btn {
-            background-color: var(--option-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 13px 18px;
-            cursor: pointer;
-            transition: background 0.2s, border-color 0.2s;
-            font-size: 1rem;
-            text-align: left;
-            color: var(--text-main);
-            font-family: inherit;
+        .options-grid {
             display: flex;
+            flex-direction: column;
             gap: 10px;
         }
 
-        .option-letter { color: var(--accent); font-weight: 700; }
+        .option-btn {
+            background-color: #252525;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
         .option-btn:hover:not(:disabled) {
+            background-color: #333333;
             border-color: var(--accent);
-            background-color: var(--option-hover);
         }
 
-        .option-btn:disabled { cursor: not-allowed; }
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.85;
+        }
 
+        /* Instant Feedback States */
         .option-btn.correct {
-            background-color: var(--correct-bg);
-            border-color: var(--correct-border);
+            background-color: var(--correct-bg) !important;
+            border-color: var(--correct-border) !important;
+            color: var(--correct-text) !important;
             font-weight: 600;
         }
-        .option-btn.correct .option-letter, .option-btn.incorrect .option-letter { color: #ffffff; }
 
         .option-btn.incorrect {
-            background-color: var(--incorrect-bg);
-            border-color: var(--incorrect-border);
+            background-color: var(--incorrect-bg) !important;
+            border-color: var(--incorrect-border) !important;
+            color: var(--incorrect-text) !important;
         }
 
-        .feedback-box {
-            margin-top: 18px;
+        /* Explanation Box */
+        .explanation {
+            margin-top: 16px;
             padding: 16px;
-            background-color: #141414;
-            border-radius: 6px;
+            background-color: #222222;
             border-left: 4px solid var(--accent);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            display: none;
         }
 
         .status-banner {
-            font-size: 1.05rem;
-            font-weight: 800;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 12px;
+            padding: 6px 10px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .status-banner.correct {
+            background-color: var(--correct-bg);
+            color: var(--correct-border);
+            border: 1px solid var(--correct-border);
+        }
+
+        .status-banner.incorrect {
+            background-color: var(--incorrect-bg);
+            color: var(--incorrect-border);
+            border: 1px solid var(--incorrect-border);
+        }
+
+        .explanation-paragraph {
+            margin-bottom: 12px;
+            color: var(--text-main);
+        }
+
+        .rationale-list {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .rationale-list li {
             margin-bottom: 6px;
         }
-        .status-banner.correct { color: var(--correct-border); }
-        .status-banner.incorrect { color: var(--incorrect-border); }
 
-        .reference {
-            color: var(--text-dim);
-            font-size: 0.88rem;
-            margin-bottom: 12px;
-        }
-
-        .breakdown-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 0.93rem;
-        }
-
-        .breakdown-item { color: #d4d4d4; }
-        .breakdown-item .tag { font-weight: 700; }
-        .breakdown-item .tag.right { color: var(--correct-border); }
-        .breakdown-item .tag.wrong { color: var(--incorrect-border); }
-        .breakdown-item .opt-name { color: #ffffff; font-weight: 600; }
-
+        /* Summary Card */
         .summary-card {
-            background-color: var(--bg-card);
+            background-color: var(--bg-container);
             border: 2px solid var(--accent);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 30px;
             text-align: center;
+            display: none;
             margin-top: 30px;
         }
-        .summary-title { font-size: 1.7rem; color: var(--accent); margin-bottom: 10px; }
-        .summary-score { font-size: 2.4rem; font-weight: 800; margin-bottom: 8px; }
-        .summary-msg { color: var(--text-dim); margin-bottom: 22px; }
+
+        .summary-title {
+            font-size: 1.8rem;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .summary-score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 15px 0;
+        }
 
         .retake-btn {
             background-color: var(--accent);
             color: #000000;
             border: none;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 6px;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 25px;
             cursor: pointer;
-            font-family: inherit;
+            transition: opacity 0.2s;
+            margin-top: 15px;
         }
-        .retake-btn:hover { background-color: var(--accent-hover); }
 
-        .hidden { display: none; }
+        .retake-btn:hover {
+            opacity: 0.9;
+        }
 
         @media (max-width: 600px) {
-            .sticky-header { padding: 10px 14px; }
-            .sticky-header h1 { font-size: 0.95rem; }
-            .hub-link { display: none; }
-            .score-tracker { font-size: 0.85rem; padding: 5px 10px; }
-            .question-card { padding: 16px; }
+            .question-card {
+                padding: 15px;
+            }
+            .question-stem {
+                font-size: 1.05rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header class="sticky-header">
-        <h1>Microbio Quiz 3: Metabolism &amp; Genetics</h1>
-        <div class="header-right">
-            <a class="hub-link" href="index.html">Quiz Hub</a>
-            <div class="score-tracker" id="scoreTracker">Score: 0 / 0 (0%)</div>
-        </div>
-    </header>
+    <div id="top-bar">
+        <h1>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</h1>
+        <div id="score-display">Score: 0 / 20 (0%)</div>
+    </div>
 
-    <main class="quiz-container">
-        <p class="intro">Lecture 4 (Bacterial Metabolism) and Lecture 5 (Bacterial Genetics). Questions and answer choices are shuffled on every load and retake.</p>
-        <div id="quiz"></div>
-        <div class="summary-card hidden" id="summary">
-            <div class="summary-title">Quiz Complete</div>
-            <div class="summary-score" id="summaryScore"></div>
-            <div class="summary-msg" id="summaryMsg"></div>
-            <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+    <div id="quiz-container">
+        <!-- Questions rendered dynamically here -->
+    </div>
+
+    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
+        <div class="summary-card" id="summary-card">
+            <div class="summary-title">Quiz Completed!</div>
+            <div class="summary-score" id="final-score">0%</div>
+            <p id="summary-feedback" style="color: var(--text-muted);"></p>
+            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
-    </main>
+    </div>
 
     <script>
         // Setup wrong answer sound effect
         const wrongSound = new Audio('Wrong-answer.m4a');
 
-        const quizData = [
+        const rawQuizData = [
             {
-                id: 1, quarter: 1, lecture: 4, slideRef: 3, difficulty: "Easy",
-                stem: "Bacteria use which sugar to the exclusion of all others as long as it is available?",
+                stem: "A patient is exposed to Mycobacterium tuberculosis. Following phagocytosis, alveolar macrophages are unable to fuse the phagosome with the lysosome. Which specific cytokine is secreted by T-helper 1 (TH1) cells to force this fusion and promote epithelioid cell transformation?",
                 options: [
-                    { text: "Glucose", correct: true, why: "All bacteria use glucose and will use it to the exclusion of other sugars while it is available (\"Glucose is king\"). [Lec 4, Slide #3]" },
-                    { text: "Lactose", correct: false, why: "Lactose is a disaccharide; some bacteria can break down secondary disaccharides and others cannot, so it is not the universally preferred sugar. [Lec 4, Slide #3]" },
-                    { text: "Fructose", correct: false, why: "Fructose is not the sugar bacteria use preferentially; glucose holds that role. [Lec 4, Slide #3]" },
-                    { text: "Sucrose", correct: false, why: "Sucrose is a disaccharide; disaccharide use varies by species, unlike glucose, which all bacteria use first. [Lec 4, Slide #3]" }
+                    "Interferon-gamma (IFN-γ)",
+                    "Interleukin-10 (IL-10)",
+                    "Tumor Necrosis Factor-alpha (TNF-α)",
+                    "Interleukin-4 (IL-4)"
+                ],
+                correctIndex: 0,
+                explanationText: "TH1 cells secrete cytokines that serve as primary macrophage activators to overcome intracellular survival mechanisms and coordinate granulomatous inflammation.",
+                rationales: [
+                    "A) Interferon-gamma (IFN-γ): Correct. IFN-γ acts as the premier macrophage activator, forcing lysosomal fusion and transforming macrophages into enlarged epithelioid cells in granulomatous inflammation.",
+                    "B) Interleukin-10 (IL-10): Incorrect. IL-10 is an anti-inflammatory cytokine that suppresses macrophage activation rather than promoting granuloma formation.",
+                    "C) Tumor Necrosis Factor-alpha (TNF-α): Incorrect. TNF-α mediates systemic inflammation and cachexia but is not the specific primary signal driving lysosomal fusion.",
+                    "D) Interleukin-4 (IL-4): Incorrect. IL-4 is a TH2-associated cytokine driving humoral and allergic responses rather than cell-mediated macrophage activation."
                 ]
             },
             {
-                id: 2, quarter: 1, lecture: 4, slideRef: 5, difficulty: "Medium",
-                stem: "Which is the most common bacterial glycolytic pathway, producing 2 pyruvate and 4 ATP?",
+                stem: "A neonate receives protective antibodies through maternal breast milk (colostrum). Which of the following best describes the structure of the primary immunoglobulin responsible for this natural passive immunity?",
                 options: [
-                    { text: "Embden-Meyerhof pathway", correct: true, why: "Embden-Meyerhof is the most common glycolytic pathway, resembles human glycolysis, and produces 2 pyruvate and 4 ATP. [Lec 4, Slide #5]" },
-                    { text: "Entner-Doudoroff pathway", correct: false, why: "Entner-Doudoroff is the least common pathway (very few bacteria) and produces 2 ethanol and 3 ATP, not 2 pyruvate and 4 ATP. [Lec 4, Slide #5]" },
-                    { text: "Phosphoketolase pathway", correct: false, why: "Phosphoketolase is another name for the heterolactic fermentation pathway, not a primary glycolytic pathway. [Lec 4, Slide #10]" },
-                    { text: "Butanediol pathway", correct: false, why: "Butanediol is a fermentation pathway that forms mixed acids, gases, and 2,3-butanediol; it is not a glycolytic pathway. [Lec 4, Slide #13]" }
+                    "A secretory dimer joined by a J-chain",
+                    "A massive pentamer joined by disulfide bonds",
+                    "A monomer capable of crossing the transplacental barrier",
+                    "A monomer tightly bound to mast cell high-affinity receptors"
+                ],
+                correctIndex: 0,
+                explanation: "Mucosal and exocrine immune protection relies on specialized polymeric immunoglobulin structures adapted to withstand enzymatic degradation.",
+                rationales: [
+                    "A) A secretory dimer joined by a J-chain: Correct. IgA functions as a secretory dimer containing a joining chain and a secretory protein to neutralize pathogens in breast milk and mucosal secretions.",
+                    "B) A massive pentamer joined by disulfide bonds: Incorrect. This structural description applies to secreted IgM.",
+                    "C) A monomer capable of crossing the transplacental barrier: Incorrect. Monomeric structure capable of placental transfer describes IgG.",
+                    "D) A monomer tightly bound to mast cell high-affinity receptors: Incorrect. This characterizes IgE binding dynamics."
                 ]
             },
             {
-                id: 3, quarter: 1, lecture: 4, slideRef: 5, difficulty: "Medium",
-                stem: "Which products are generated by the Entner-Doudoroff pathway?",
+                stem: "A previously healthy host is infected by a virus. Endogenous viral antigens are processed and presented on the surface of infected nucleated cells. Which of the following immune cells will recognize this specific complex?",
                 options: [
-                    { text: "2 ethanol and 3 ATP", correct: true, why: "Entner-Doudoroff, the least common alternative to Embden-Meyerhof, produces 2 ethanol and 3 ATP. [Lec 4, Slide #5]" },
-                    { text: "2 pyruvate and 4 ATP", correct: false, why: "2 pyruvate and 4 ATP are the products of the Embden-Meyerhof pathway, not Entner-Doudoroff. [Lec 4, Slide #5]" },
-                    { text: "2 lactate and 2 ATP", correct: false, why: "Lactic acid as an end product belongs to lactic fermentations, not to the Entner-Doudoroff glycolytic pathway. [Lec 4, Slide #5]" },
-                    { text: "2 acetate and 4 ATP", correct: false, why: "Acetate is not a listed Entner-Doudoroff product, and 4 ATP is the Embden-Meyerhof yield. [Lec 4, Slide #5]" }
+                    "CD8+ Cytotoxic T-lymphocytes",
+                    "CD4+ Helper T-lymphocytes",
+                    "Plasma cells",
+                    "Regulatory T-cells"
+                ],
+                correctIndex: 0,
+                explanation: "Cellular immune recognition is strictly restricted by major histocompatibility complex class matching between antigen-presenting targets and T-cell co-receptors.",
+                rationales: [
+                    "A) CD8+ Cytotoxic T-lymphocytes: Correct. Endogenous viral antigens presented on MHC Class I molecules on nucleated cells are recognized exclusively by CD8+ cytotoxic T-cells.",
+                    "B) CD4+ Helper T-lymphocytes: Incorrect. CD4+ T-cells recognize exogenous antigens presented on MHC Class II molecules.",
+                    "C) Plasma cells: Incorrect. Plasma cells secrete free antibodies and do not engage MHC-T-cell receptor complexes.",
+                    "D) Regulatory T-cells: Incorrect. Regulatory T-cells suppress immune responses rather than directly lysing virus-infected host cells."
                 ]
             },
             {
-                id: 4, quarter: 1, lecture: 4, slideRef: 4, difficulty: "Easy",
-                stem: "Aerobic respiration uses which molecule as its final electron acceptor?",
+                stem: "During a secondary immune response, an activated B-cell undergoes isotype switching. Which of the following structural changes occurs within the secreted immunoglobulin?",
                 options: [
-                    { text: "O₂", correct: true, why: "Aerobic respiration (glycolysis + TCA + ETC) uses O₂ as the final electron acceptor. [Lec 4, Slide #4]" },
-                    { text: "NO₃⁻", correct: false, why: "Nitrate is one of the inorganic ions used as a final electron acceptor in anaerobic respiration, not aerobic respiration. [Lec 4, Slide #4]" },
-                    { text: "SO₄²⁻", correct: false, why: "Sulfate is an inorganic final electron acceptor used in anaerobic respiration, not aerobic respiration. [Lec 4, Slide #4]" },
-                    { text: "CO₃²⁻", correct: false, why: "Carbonate is an inorganic ion acceptor of anaerobic respiration; aerobic respiration uses O₂. [Lec 4, Slide #4]" }
+                    "The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained.",
+                    "The variable (Fab) region is modified to bind a newly encountered antigenic epitope.",
+                    "Both heavy and light chains are replaced entirely by memory T-cell derivatives.",
+                    "The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer."
+                ],
+                correctIndex: 0,
+                explanation: "Antibody diversification mechanisms alter effector function domains while preserving precise antigen recognition binding sites.",
+                rationales: [
+                    "A) The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained: Correct. Isotype switching alters the constant heavy chain domain (Fc region) to change antibody class while preserving Fab antigen specificity.",
+                    "B) The variable (Fab) region is modified to bind a newly encountered antigenic epitope: Incorrect. Fab specificity is established during clonal selection and somatic hypermutation, not isotype switching.",
+                    "C) Both heavy and light chains are replaced entirely by memory T-cell derivatives: Incorrect. T-cells do not produce immunoglobulin chains.",
+                    "D) The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer: Incorrect. J-chain assembly is specific to polymeric IgA and pentameric IgM."
                 ]
             },
             {
-                id: 5, quarter: 1, lecture: 4, slideRef: 4, difficulty: "Medium",
-                stem: "Anaerobic respiration differs from fermentation because anaerobic respiration:",
+                stem: "Following classical pathway activation by circulating immunoglobulins (IgM or IgG), a series of cascading enzymatic reactions occurs. Which of the following complement components directly forms a transmembrane pore resulting in osmotic lysis of the target cell?",
                 options: [
-                    { text: "Uses the TCA cycle and ETC with an inorganic ion acceptor", correct: true, why: "Anaerobic respiration is glycolysis + TCA + ETC using inorganic ions (NO₃⁻, SO₄²⁻, CO₃²⁻) as final electron acceptors; fermentation is glycolysis + fermentation only. [Lec 4, Slide #4]" },
-                    { text: "Uses only glycolysis followed by a fermentation step", correct: false, why: "Glycolysis + fermentation describes fermentation itself, not anaerobic respiration. [Lec 4, Slide #4]" },
-                    { text: "Uses molecular oxygen as the final electron acceptor", correct: false, why: "O₂ as final electron acceptor defines aerobic respiration, not anaerobic respiration. [Lec 4, Slide #4]" },
-                    { text: "Bypasses glycolysis and feeds directly into the ETC", correct: false, why: "Respiration requires glycolysis feed-in before the TCA cycle and ETC; it does not bypass glycolysis. [Lec 4, Slide #17]" }
+                    "C5b-9 (Membrane Attack Complex)",
+                    "C3a and C5a",
+                    "Interleukin-6 (IL-6)",
+                    "C3b"
+                ],
+                correctIndex: 0,
+                explanation: "Complement cascade activation culminates in the assembly of a multi-protein lytic complex that disrupts cellular osmotic equilibrium.",
+                rationales: [
+                    "A) C5b-9 (Membrane Attack Complex): Correct. The Membrane Attack Complex (MAC) is composed of C5b-9, forming a physical transmembrane pore that leads to target cell osmotic lysis.",
+                    "B) C3a and C5a: Incorrect. C3a and C5a are soluble anaphylatoxins that promote inflammation and leukocyte recruitment.",
+                    "C) Interleukin-6 (IL-6): Incorrect. IL-6 is an acute-phase cytokine rather than a complement cascade protein.",
+                    "D) C3b: Incorrect. C3b functions as an opsonin to promote phagocytosis."
                 ]
             },
             {
-                id: 6, quarter: 1, lecture: 4, slideRef: 6, difficulty: "Medium",
-                stem: "Which statement best describes bacterial fermentation?",
+                stem: "Which of the following cytokines functions primarily as an immunosuppressor, limiting immune responses and preventing chronic inflammatory tissue injury?",
                 options: [
-                    { text: "Partial oxidation of an organic compound fed by glycolysis", correct: true, why: "Fermentation is the partial oxidation of an organic compound and is always fed by glycolysis; it handles overload ATP needs. [Lec 4, Slide #6]" },
-                    { text: "Complete oxidation of glucose through the TCA and ETC", correct: false, why: "Glycolysis + TCA + ETC describes respiration, not fermentation, which is only a partial oxidation. [Lec 4, Slide #4]" },
-                    { text: "A process that never occurs alongside aerobic respiration", correct: false, why: "Fermentation typically falls under anaerobic metabolism but can occur continuously alongside aerobic or anaerobic respiration. [Lec 4, Slide #6]" },
-                    { text: "Reduction of sulfate to hydrogen sulfide gas", correct: false, why: "Reducing sulfate to hydrogen sulfide is sulfate reduction, a form of anaerobic respiration, not fermentation. [Lec 4, Slide #21]" }
+                    "Interleukin-10 (IL-10)",
+                    "Interleukin-1 (IL-1)",
+                    "Interleukin-2 (IL-2)",
+                    "Tumor Necrosis Factor-alpha (TNF-α)"
+                ],
+                correctIndex: 0,
+                explanation: "Immune system homeostasis requires specialized regulatory feedback signals to downregulate effector pathways and prevent immunopathology.",
+                rationales: [
+                    "A) Interleukin-10 (IL-10): Correct. IL-10 is the major anti-inflammatory immunosuppressor cytokine secreted by regulatory T-cells to limit immune responses.",
+                    "B) Interleukin-1 (IL-1): Incorrect. IL-1 is a pro-inflammatory endogenous pyrogen.",
+                    "C) Interleukin-2 (IL-2): Incorrect. IL-2 acts as a T-cell growth and proliferation factor.",
+                    "D) Tumor Necrosis Factor-alpha (TNF-α): Incorrect. TNF-α is a potent pro-inflammatory cytokine driving systemic inflammation and necrosis."
                 ]
             },
             {
-                id: 7, quarter: 1, lecture: 4, slideRef: 8, difficulty: "Easy",
-                stem: "Which bacterium is the most important and well-known performer of alcoholic fermentation?",
+                stem: "An individual receives a rabies antiserum injection following an animal bite. Which of the following classifications of adaptive immunity does this represent?",
                 options: [
-                    { text: "Zymomonas mobilis", correct: true, why: "Alcoholic fermentation (pyruvic acid to ethanol and CO₂) is mainly done by yeast; Zymomonas mobilis is the most important bacterium. [Lec 4, Slide #8]" },
-                    { text: "Klebsiella", correct: false, why: "Klebsiella uses butanediol fermentation, not alcoholic fermentation. [Lec 4, Slide #13]" },
-                    { text: "Lactococcus", correct: false, why: "Lactococcus performs homolactic fermentation, with lactic acid as the sole end product. [Lec 4, Slide #9]" },
-                    { text: "Clostridium", correct: false, why: "Clostridium is primarily associated with butyric acid and butanol-acetone fermentation. [Lec 4, Slide #14]" }
+                    "Artificial passive immunity",
+                    "Natural passive immunity",
+                    "Artificial active immunity",
+                    "Natural active immunity"
+                ],
+                correctIndex: 0,
+                explanation: "Acquired immunity classifications depend on whether protection is conferred by active host response or administration of exogenous pre-formed immune factors.",
+                rationales: [
+                    "A) Artificial passive immunity: Correct. Rabies antiserum involves administering pre-made exogenous antibodies, providing immediate passive protection without host memory cell formation.",
+                    "B) Natural passive immunity: Incorrect. This refers to maternal antibody transfer via placenta or breast milk.",
+                    "C) Artificial active immunity: Incorrect. This describes vaccination stimulating host immune response.",
+                    "D) Natural active immunity: Incorrect. This results from natural infection and recovery."
                 ]
             },
             {
-                id: 8, quarter: 1, lecture: 4, slideRef: 9, difficulty: "Easy",
-                stem: "Lactobacillus, Lactococcus, and most streptococci produce lactic acid as the sole end product through which pathway?",
+                stem: "A pediatric patient presents with hypoplasia of the thymus gland, accompanied by cardiac and blood vessel anomalies. Genetic testing reveals a deletion on chromosome 22. This clinical presentation is characteristic of which of the following conditions?",
                 options: [
-                    { text: "Homolactic fermentation", correct: true, why: "In homolactic fermentation lactic acid is the sole end product; typical bacteria are Lactobacillus, Lactococcus, and most streptococci. [Lec 4, Slide #9]" },
-                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation produces lactic acid plus ethanol and/or acetic acid and CO₂, so lactic acid is not the sole product. [Lec 4, Slide #10]" },
-                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation produces lactic, acetic, and formic acids, succinate, and ethanol, not lactic acid alone. [Lec 4, Slide #11]" },
-                    { text: "Alcoholic fermentation", correct: false, why: "Alcoholic fermentation converts pyruvic acid to ethanol and CO₂, not lactic acid. [Lec 4, Slide #8]" }
+                    "DiGeorge syndrome",
+                    "Bruton’s agammaglobulinemia",
+                    "Acquired Immunodeficiency Syndrome (AIDS)",
+                    "Systemic vasculitis"
+                ],
+                correctIndex: 0,
+                explanation: "Congenital embryological malformations of the pharyngeal pouches result in combined thymic and cardiovascular developmental deficits.",
+                rationales: [
+                    "A) DiGeorge syndrome: Correct. Caused by a chromosome 22 deletion, DiGeorge syndrome features thymic hypoplasia leading to profound T-cell deficiency alongside heart anomalies.",
+                    "B) Bruton’s agammaglobulinemia: Incorrect. Bruton's is an X-linked B-cell maturation defect sparing initial thymic structures.",
+                    "C) Acquired Immunodeficiency Syndrome (AIDS): Incorrect. AIDS is caused by retroviral destruction of CD4+ cells postnatally.",
+                    "D) Systemic vasculitis: Incorrect. Vasculitis represents inflammatory vessel destruction rather than a congenital chromosome 22 deletion syndrome."
                 ]
             },
             {
-                id: 9, quarter: 1, lecture: 4, slideRef: 10, difficulty: "Medium",
-                stem: "The heterolactic (phosphoketolase) pathway produces which set of end products?",
+                stem: "Human Immunodeficiency Virus (HIV) initiates pathogenesis by selectively binding to specific glycoprotein receptors on host cells. This binding specifically leads to the progressive depletion of which cellular population?",
                 options: [
-                    { text: "Lactic acid, ethanol and/or acetic acid, and CO₂", correct: true, why: "The heterolactic (phosphoketolase) pathway, used by Lactobacillus species, produces lactic acid, ethanol and/or acetic acid, and CO₂. [Lec 4, Slide #10]" },
-                    { text: "Lactic acid as the sole end product", correct: false, why: "Lactic acid as the sole end product defines homolactic fermentation. [Lec 4, Slide #9]" },
-                    { text: "Butyric acid, acetic acid, CO₂, and H₂", correct: false, why: "These are butyric acid fermentation products, used primarily by Clostridium. [Lec 4, Slide #14]" },
-                    { text: "Acetic acid, CO₂, and propionic acid", correct: false, why: "These are the products of propionic acid fermentation of lactate. [Lec 4, Slide #16]" }
+                    "CD4+ Helper T-lymphocytes",
+                    "CD8+ Cytotoxic T-lymphocytes",
+                    "Plasma cells",
+                    "Mast cells and basophils"
+                ],
+                correctIndex: 0,
+                explanation: "Viral tropism for specific surface markers results in the systematic destruction of master immune regulatory cell networks.",
+                rationales: [
+                    "A) CD4+ Helper T-lymphocytes: Correct. HIV selectively targets and destroys CD4+ helper T-cells, culminating in cellular immune failure and AIDS.",
+                    "B) CD8+ Cytotoxic T-lymphocytes: Incorrect. CD8+ cells are not the primary target population depleted during initial viral pathogenesis.",
+                    "C) Plasma cells: Incorrect. Plasma cells are antibody factories rather than the primary viral target.",
+                    "D) Mast cells and basophils: Incorrect. Mast cells and basophils mediate allergic responses and are not depleted by HIV."
                 ]
             },
             {
-                id: 10, quarter: 1, lecture: 4, slideRef: 11, difficulty: "Medium",
-                stem: "Lactic acid, acetic acid, formic acid, succinate, and ethanol are end products of which fermentation pathway?",
+                stem: "Soluble antigen molecules in the bloodstream are cross-linked by specific antibodies into large, insoluble macromolecular complexes that settle out of body fluids. Which mechanism of antibody action does this describe?",
                 options: [
-                    { text: "Mixed acid fermentation", correct: true, why: "Mixed acid fermentation, the main pathway of Enterobacteriaceae, yields lactic, acetic, and formic acids, succinate, and ethanol. [Lec 4, Slide #11]" },
-                    { text: "Butyric acid fermentation", correct: false, why: "Butyric acid fermentation forms butyric acid, acetic acid, CO₂, and H₂, not succinate or formic acid. [Lec 4, Slide #14]" },
-                    { text: "Propionic acid fermentation", correct: false, why: "Propionic acid fermentation converts lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" },
-                    { text: "Homolactic fermentation", correct: false, why: "Homolactic fermentation yields lactic acid as the sole end product. [Lec 4, Slide #9]" }
+                    "Precipitation",
+                    "Neutralization",
+                    "Agglutination",
+                    "Opsonization"
+                ],
+                correctIndex: 0,
+                explanation: "Antibody-antigen physical interactions vary depending on whether target antigens are soluble molecules or particulate cell-bound structures.",
+                rationales: [
+                    "A) Precipitation: Correct. Precipitation involves antibodies cross-linking small soluble antigens into insoluble complexes that settle out of solution.",
+                    "B) Neutralization: Incorrect. Neutralization blocks active toxin or viral binding sites without necessarily forming large complexes.",
+                    "C) Agglutination: Incorrect. Agglutination refers to the clumping of particulate, cell-bound antigens.",
+                    "D) Opsonization: Incorrect. Opsonization coats targets to enhance phagocytic recognition."
                 ]
             },
             {
-                id: 11, quarter: 1, lecture: 4, slideRef: 11, difficulty: "Medium",
-                stem: "Enteric bacteria performing mixed acid fermentation also produce CO₂ and H₂ gas when they possess which enzyme?",
+                stem: "Upon primary exposure to a novel antigen, naive B-lymphocytes are activated. Which immunoglobulin class is ALWAYS the first to be secreted by plasma cells during this initial encounter?",
                 options: [
-                    { text: "Formate dehydrogenase", correct: true, why: "Mixed acid fermenters can produce CO₂ and H₂ gas if they have formate dehydrogenase, which cleaves byproducts into gases. [Lec 4, Slide #11]" },
-                    { text: "Phosphoketolase", correct: false, why: "Phosphoketolase names the heterolactic pathway used by Lactobacillus species, not the gas-forming enzyme of enterics. [Lec 4, Slide #10]" },
-                    { text: "DNA ligase", correct: false, why: "DNA ligase is a replisome enzyme involved in DNA replication, not in fermentation gas production. [Lec 5, Slide #5]" },
-                    { text: "Topoisomerase", correct: false, why: "Topoisomerase is a replisome enzyme acting on DNA, not a fermentation enzyme. [Lec 5, Slide #5]" }
+                    "IgM",
+                    "IgA",
+                    "IgD",
+                    "IgG"
+                ],
+                correctIndex: 0,
+                explanation: "Humoral immune kinetics dictate a stereotyped immunoglobulin class transition following initial antigen challenge.",
+                rationales: [
+                    "A) IgM: Correct. IgM is the initial pentameric antibody class synthesized and secreted during primary immune responses.",
+                    "B) IgA: Incorrect. IgA is the predominant mucosal secretory antibody class.",
+                    "C) IgD: Incorrect. IgD functions primarily as a membrane-bound B-cell receptor rather than a secreted primary effector.",
+                    "D) IgG: Incorrect. IgG predominates during secondary immune responses and following isotype switching."
                 ]
             },
             {
-                id: 12, quarter: 1, lecture: 4, slideRef: 8, difficulty: "Hard",
-                stem: "Which fermentation pathway produces ethanol but does NOT produce lactic acid?",
+                stem: "A cytotoxic T-lymphocyte identifies a defective cell expressing an appropriate antigen-MHC I complex. To initiate apoptosis in the target cell, the T-lymphocyte secretes which of the following?",
                 options: [
-                    { text: "Alcoholic fermentation", correct: true, why: "Alcoholic fermentation converts pyruvic acid to ethanol and CO₂ only; no lactic acid is formed. [Lec 4, Slide #8]" },
-                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation can produce ethanol, but it also produces lactic acid. [Lec 4, Slide #10]" },
-                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation produces ethanol, but lactic acid is also one of its end products. [Lec 4, Slide #11]" },
-                    { text: "Homolactic fermentation", correct: false, why: "Homolactic fermentation produces lactic acid as its sole end product and no ethanol. [Lec 4, Slide #9]" }
+                    "Perforins and granzymes",
+                    "Interleukin-4 and Interleukin-5",
+                    "Myeloperoxidase and lysozyme",
+                    "Nitric oxide and C-reactive protein"
+                ],
+                correctIndex: 0,
+                explanation: "Cell-mediated cytotoxicity relies on direct delivery of pore-forming proteins and serine proteases to trigger target cell programmed death.",
+                rationales: [
+                    "A) Perforins and granzymes: Correct. CD8+ cytotoxic T-cells secrete perforins to create membrane pores and granzymes to activate intracellular caspases inducing apoptosis.",
+                    "B) Interleukin-4 and Interleukin-5: Incorrect. These are TH2 cytokines mediating allergic and anti-parasitic responses.",
+                    "C) Myeloperoxidase and lysozyme: Incorrect. These are innate antimicrobial enzymes found in neutrophils and granules.",
+                    "D) Nitric oxide and C-reactive protein: Incorrect. These represent inflammatory mediators and acute-phase reactants."
                 ]
             },
             {
-                id: 13, quarter: 2, lecture: 4, slideRef: 13, difficulty: "Medium",
-                stem: "Butanediol fermentation differs from mixed acid fermentation because it:",
+                stem: "A naive B-cell circulating in the lymphatic system encounters a foreign antigen. Which immunoglobulin, permanently bound to the B-cell membrane, primarily acts as the receptor for this initial antigen recognition?",
                 options: [
-                    { text: "Decreases acid formation by forming acetonin", correct: true, why: "Butanediol fermentation forms mixed acids, gases, and 2,3-butanediol, but it decreases acid formation by causing the formation of acetonin. [Lec 4, Slide #13]" },
-                    { text: "Produces lactic acid as its sole end product", correct: false, why: "Lactic acid as the sole end product is homolactic fermentation. [Lec 4, Slide #9]" },
-                    { text: "Occurs only within the Clostridium genus", correct: false, why: "Butanediol fermentation is used by Klebsiella and Enterobacter; Clostridium uses butyric acid fermentation. [Lec 4, Slide #13]" },
-                    { text: "Produces no mixed acids or gases at all", correct: false, why: "Butanediol fermentation still forms mixed acids and gases, plus 2,3-butanediol. [Lec 4, Slide #13]" }
+                    "IgD",
+                    "IgE",
+                    "IgG",
+                    "IgM (secreted pentamer)"
+                ],
+                correctIndex: 0,
+                explanation: "Membrane-bound immunoglobulin isotypes serve essential sentinel receptor functions on the surface of uncommitted lymphocytes.",
+                rationales: [
+                    "A) IgD: Correct. IgD is permanently anchored to the naive B-cell membrane where it functions strictly as the receptor for antigen recognition.",
+                    "B) IgE: Incorrect. IgE binds high-affinity receptors on mast cells and basophils.",
+                    "C) IgG: Incorrect. IgG is the major circulating monomeric antibody class.",
+                    "D) IgM (secreted pentamer): Incorrect. While membrane IgM acts as a receptor, secreted pentameric IgM is released into fluid phases rather than remaining membrane-anchored."
                 ]
             },
             {
-                id: 14, quarter: 2, lecture: 4, slideRef: 14, difficulty: "Hard",
-                stem: "Which organism and fermentation pathway pairing is correct?",
+                stem: "The complement system produces several critical fragments during activation. Which of the following fragments covalently coats bacterial surfaces, functioning as a powerful opsonin to stimulate rapid phagocytosis?",
                 options: [
-                    { text: "Clostridium and butyric acid fermentation", correct: true, why: "Butyric acid fermentation is used primarily by the Clostridium genus, forming butyric acid, acetic acid, CO₂, and H₂. [Lec 4, Slide #14]" },
-                    { text: "Klebsiella and homolactic fermentation", correct: false, why: "Klebsiella uses butanediol fermentation; homolactic fermenters are Lactobacillus, Lactococcus, and most streptococci. [Lec 4, Slide #13]" },
-                    { text: "Zymomonas and propionic acid fermentation", correct: false, why: "Zymomonas mobilis performs alcoholic fermentation; propionic acid fermentation is used by propionic acid bacteria. [Lec 4, Slide #8]" },
-                    { text: "Lactococcus and butanediol fermentation", correct: false, why: "Lactococcus is homolactic; butanediol fermentation is used by Klebsiella and Enterobacter. [Lec 4, Slide #9]" }
+                    "C3b",
+                    "C3a",
+                    "C5a",
+                    "C5b-9"
+                ],
+                correctIndex: 0,
+                explanation: "Enzymatic cleavage of complement proteins generates distinct peptide fragments specialized for vascular permeability, chemotaxis, and phagocytic tagging.",
+                rationales: [
+                    "A) C3b: Correct. C3b covalently coats microbial surfaces to act as a potent opsonin, facilitating phagocytic engulfment.",
+                    "B) C3a: Incorrect. C3a functions as a soluble inflammatory anaphylatoxin.",
+                    "C) C5a: Incorrect. C5a acts as a powerful chemotactic factor and anaphylatoxin.",
+                    "D) C5b-9: Incorrect. C5b-9 forms the membrane attack complex responsible for cellular lysis."
                 ]
             },
             {
-                id: 15, quarter: 2, lecture: 4, slideRef: 15, difficulty: "Easy",
-                stem: "Butanol and acetone are fermentation products of which organisms?",
+                stem: "Histological examination of a pulmonary granuloma secondary to a chronic Mycobacterium tuberculosis infection reveals a defined central core surrounded by specialized cells. Which of the following describes the composition of this central core?",
                 options: [
-                    { text: "Certain species of clostridia", correct: true, why: "In butanol-acetone fermentation, certain species of clostridia produce butanol and acetone. [Lec 4, Slide #15]" },
-                    { text: "Klebsiella and Enterobacter", correct: false, why: "Klebsiella and Enterobacter use butanediol fermentation. [Lec 4, Slide #13]" },
-                    { text: "Lactobacillus and Lactococcus", correct: false, why: "Lactobacillus and Lactococcus are lactic acid fermenters. [Lec 4, Slide #9]" },
-                    { text: "Propionic acid bacteria", correct: false, why: "Propionic acid bacteria ferment lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" }
+                    "Caseous necrotic tissue",
+                    "Epithelioid macrophages",
+                    "Multinucleated Langhans giant cells",
+                    "A dense collar of fibroblasts and CD4+ T-cells"
+                ],
+                correctIndex: 0,
+                explanation: "Granulomatous inflammation exhibits a characteristic zonation pattern designed to wall off persistent intracellular pathogens.",
+                rationales: [
+                    "A) Caseous necrotic tissue: Correct. Tuberculous granulomas feature a distinctive central core of cheese-like caseous necrosis.",
+                    "B) Epithelioid macrophages: Incorrect. Epithelioid macrophages form the middle cellular wall surrounding the core.",
+                    "C) Multinucleated Langhans giant cells: Incorrect. Langhans giant cells populate the inner cellular ring surrounding necrotic debris.",
+                    "D) A dense collar of fibroblasts and CD4+ T-cells: Incorrect. Fibroblasts and lymphocytes form the outer encapsulating structural rim."
                 ]
             },
             {
-                id: 16, quarter: 2, lecture: 4, slideRef: 16, difficulty: "Medium",
-                stem: "Propionic acid bacteria ferment which substrate to acetic acid, CO₂, and propionic acid?",
+                stem: "A patient with a chronic helminthic parasite infection demonstrates an exaggerated allergic response. Which helper T-cell subset and cytokine pairing is primarily responsible for recruiting eosinophils and promoting IgE secretion in this scenario?",
                 options: [
-                    { text: "Lactate", correct: true, why: "Propionic acid bacteria ferment lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" },
-                    { text: "Succinate", correct: false, why: "Succinate is an end product of mixed acid fermentation, not the substrate of propionic acid fermentation. [Lec 4, Slide #11]" },
-                    { text: "Ethanol", correct: false, why: "Ethanol is an end product of alcoholic, heterolactic, and mixed acid fermentation, not the propionic substrate. [Lec 4, Slide #8]" },
-                    { text: "Butanediol", correct: false, why: "2,3-butanediol is a product of butanediol fermentation, not the propionic substrate. [Lec 4, Slide #13]" }
+                    "T Helper 2 (TH2); IL-4 and IL-5",
+                    "T Helper 1 (TH1); IL-2 and IFN-γ",
+                    "Regulatory T-cell (Treg); IL-10",
+                    "Macrophage; IL-1 and TNF-α"
+                ],
+                correctIndex: 0,
+                explanation: "Specialized CD4+ T-cell subsets coordinate distinct immune defense programs tailored to extracellular parasites versus intracellular microbes.",
+                rationales: [
+                    "A) T Helper 2 (TH2); IL-4 and IL-5: Correct. TH2 cells secrete IL-4 to drive B-cell IgE isotype switching and IL-5 to recruit and activate eosinophils against helminths.",
+                    "B) T Helper 1 (TH1); IL-2 and IFN-γ: Incorrect. TH1 responses defend against intracellular bacteria and viruses.",
+                    "C) Regulatory T-cell (Treg); IL-10: Incorrect. Regulatory cells suppress inflammation.",
+                    "D) Macrophage; IL-1 and TNF-α: Incorrect. Macrophages mediate acute innate inflammatory responses."
                 ]
             },
             {
-                id: 17, quarter: 2, lecture: 4, slideRef: 19, difficulty: "Medium",
-                stem: "Which anaerobic process produces and stores methane and is the final step in the decay of organic matter?",
+                stem: "Following an initial exposure to a pathogen, antibody titers typically demonstrate a lag period before rising. How long is this lag period characteristic of the primary immune response?",
                 options: [
-                    { text: "Biological methanogenesis", correct: true, why: "In biological methanogenesis, methanogens produce and store CH₄ under anaerobic conditions; it is also the final step in the decay of organic matter. [Lec 4, Slide #19]" },
-                    { text: "Denitrification", correct: false, why: "Denitrification removes nitrate from soil; it does not produce methane. [Lec 4, Slide #20]" },
-                    { text: "Sulfate reduction", correct: false, why: "Sulfate reduction produces hydrogen sulfide gas (rotten egg smell), not methane. [Lec 4, Slide #21]" },
-                    { text: "Butanediol fermentation", correct: false, why: "Butanediol fermentation forms mixed acids, gases, and 2,3-butanediol; it is fermentation, not methane-producing respiration. [Lec 4, Slide #13]" }
+                    "3 to 6 days",
+                    "1 to 2 hours",
+                    "8 to 10 years",
+                    "10 to 14 days"
+                ],
+                correctIndex: 0,
+                explanation: "Primary adaptive immune activation requires clonal selection, proliferation, and differentiation before measurable circulating antibodies appear.",
+                rationales: [
+                    "A) 3 to 6 days: Correct. The primary immune response exhibits a characteristic 3 to 6 day lag period before specific antibodies become detectable in serum.",
+                    "B) 1 to 2 hours: Incorrect. This timeframe is far too rapid for adaptive clonal expansion.",
+                    "C) 8 to 10 years: Incorrect. This represents an irrelevant multi-year chronological scale.",
+                    "D) 10 to 14 days: Incorrect. While peak secondary responses or specific isotype shifts can mature around this window, initial primary detection occurs much sooner (3-6 days)."
                 ]
             },
             {
-                id: 18, quarter: 2, lecture: 4, slideRef: 19, difficulty: "Medium",
-                stem: "Biological methanogenesis requires an outside electron acceptor in the form of:",
+                stem: "Which of the following immunoglobulins is the smallest, most abundant in serum (comprising ~80%), and capable of crossing the transplacental barrier?",
                 options: [
-                    { text: "CO₂", correct: true, why: "Methanogenesis is energy-generating metabolism that requires an outside electron acceptor in the form of CO₂. [Lec 4, Slide #19]" },
-                    { text: "NO₃⁻", correct: false, why: "Nitrate is the electron acceptor used in denitrification. [Lec 4, Slide #20]" },
-                    { text: "SO₄²⁻", correct: false, why: "Sulfate is the electron acceptor reduced in sulfate reduction. [Lec 4, Slide #21]" },
-                    { text: "O₂", correct: false, why: "O₂ is the final electron acceptor of aerobic respiration; methanogenesis occurs under anaerobic conditions. [Lec 4, Slide #4]" }
+                    "IgG",
+                    "IgE",
+                    "IgM",
+                    "IgA"
+                ],
+                correctIndex: 0,
+                explanation: "Systemic humoral immunity depends on a versatile monomeric antibody class capable of widespread tissue distribution and fetal passive immunization.",
+                rationales: [
+                    "A) IgG: Correct. IgG is the smallest monomeric immunoglobulin, constitutes ~80% of serum antibodies, and uniquely crosses the placenta to confer natural passive immunity.",
+                    "B) IgE: Incorrect. IgE mediates allergic hypersensitivity and parasite defense.",
+                    "C) IgM: Incorrect. IgM is a large pentamer restricted primarily to intravascular spaces.",
+                    "D) IgA: Incorrect. IgA functions mainly as a secretory mucosal dimer."
                 ]
             },
             {
-                id: 19, quarter: 2, lecture: 4, slideRef: 20, difficulty: "Medium",
-                stem: "Which form of anaerobic respiration uses nitrate as the final electron acceptor?",
+                stem: "A congenital immune deficiency is characterized by profoundly impaired B-cell development and maturation. The genetic inheritance pattern of this condition is X-linked. Which of the following is the correct diagnosis?",
                 options: [
-                    { text: "Denitrification", correct: true, why: "Denitrification uses nitrate (NO₃) as the electron acceptor; it matters in agriculture and lets gut flora like E. coli respire in the anaerobic intestine. [Lec 4, Slide #20]" },
-                    { text: "Sulfate reduction", correct: false, why: "Sulfate reduction uses sulfate and produces hydrogen sulfide gas. [Lec 4, Slide #21]" },
-                    { text: "Methanogenesis", correct: false, why: "Methanogenesis uses CO₂ as the outside electron acceptor and produces methane. [Lec 4, Slide #19]" },
-                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation is fermentation, not respiration with an inorganic electron acceptor. [Lec 4, Slide #11]" }
+                    "Bruton’s agammaglobulinemia",
+                    "DiGeorge syndrome",
+                    "Acquired Immunodeficiency Syndrome",
+                    "Myeloperoxidase deficiency"
+                ],
+                correctIndex: 0,
+                explanation: "Genetic defects affecting early B-lymphocyte tyrosine kinase signaling prevent normal humoral immune development in male infants.",
+                rationales: [
+                    "A) Bruton’s agammaglobulinemia: Correct. Bruton's agammaglobulinemia is an X-linked congenital disorder causing a failure of B-cell maturation and profound immunoglobulin deficiency.",
+                    "B) DiGeorge syndrome: Incorrect. DiGeorge syndrome is a thymic T-cell deficiency due to chromosome 22 deletion.",
+                    "C) Acquired Immunodeficiency Syndrome: Incorrect. AIDS is an acquired viral infection.",
+                    "D) Myeloperoxidase deficiency: Incorrect. Myeloperoxidase deficiency affects neutrophil oxidative burst function."
                 ]
             },
             {
-                id: 20, quarter: 2, lecture: 4, slideRef: 21, difficulty: "Medium",
-                stem: "Which anaerobic process is NOT an alternative to the use of O₂ because it occurs only under anaerobic conditions?",
+                stem: "Professional antigen-presenting cells (APCs) express a specific surface molecule used to present exogenous antigens to helper T-cells. Based on the functional requirements of immune activation, which molecule is this?",
                 options: [
-                    { text: "Sulfate reduction", correct: true, why: "Sulfate reduction by some obligate anaerobes is an obligatory process occurring only under anaerobic conditions; it is not an alternative to O₂ and gives a rotten egg smell. [Lec 4, Slide #21]" },
-                    { text: "Denitrification", correct: false, why: "Denitrification is usually an alternative to O₂; Pseudomonas uses O₂ when available and disregards nitrate. [Lec 4, Slide #20]" },
-                    { text: "Aerobic respiration", correct: false, why: "Aerobic respiration uses O₂ itself as the final electron acceptor. [Lec 4, Slide #4]" },
-                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation is a fermentation pathway, not an electron-acceptor process compared against O₂. [Lec 4, Slide #10]" }
+                    "MHC Class II",
+                    "MHC Class I",
+                    "IgD",
+                    "CD25+Foxp3+"
+                ],
+                correctIndex: 0,
+                explanation: "Extracellular antigens captured by professional APCs are routed through specialized vesicles for presentation to CD4+ helper lymphocytes.",
+                rationales: [
+                    "A) MHC Class II: Correct. Professional APCs present exogenous antigens on MHC Class II molecules to activate CD4+ helper T-cells.",
+                    "B) MHC Class I: Incorrect. MHC Class I presents endogenous antigens to CD8+ cytotoxic T-cells.",
+                    "C) IgD: Incorrect. IgD acts as a B-cell surface antigen receptor.",
+                    "D) CD25+Foxp3+: Incorrect. These markers designate regulatory T-cell phenotypes rather than antigen presentation molecules."
                 ]
-            },
-            {
-                id: 21, quarter: 2, lecture: 4, slideRef: 20, difficulty: "Hard",
-                stem: "When both O₂ and nitrate are available in soil, Pseudomonas will:",
-                options: [
-                    { text: "Use O₂ as the acceptor and disregard nitrate", correct: true, why: "Denitrification is usually an alternative to O₂; soil bacteria such as Pseudomonas use O₂ if available and disregard NO₃. [Lec 4, Slide #20]" },
-                    { text: "Use nitrate as the acceptor and disregard O₂", correct: false, why: "This inverts the preference; nitrate is used as the alternative only when O₂ is not available. [Lec 4, Slide #20]" },
-                    { text: "Reduce sulfate to hydrogen sulfide gas", correct: false, why: "Sulfate reduction is performed by some obligate anaerobes and only under anaerobic conditions. [Lec 4, Slide #21]" },
-                    { text: "Produce and store methane gas", correct: false, why: "Methane production is methanogenesis by methanogens under anaerobic conditions, not Pseudomonas respiration. [Lec 4, Slide #19]" }
-                ]
-            },
-            {
-                id: 22, quarter: 2, lecture: 5, slideRef: 2, difficulty: "Medium",
-                stem: "Which statement about bacterial plasmids is accurate?",
-                options: [
-                    { text: "They are not essential but often carry favorable traits", correct: true, why: "Plasmids exist independently in the cytoplasm and are not essential for survival, but they often carry genes that confer favorable traits. [Lec 5, Slide #2]" },
-                    { text: "They contain all genetic material needed to survive", correct: false, why: "The chromosome, not the plasmid, contains all the genetic material a cell needs to survive. [Lec 5, Slide #2]" },
-                    { text: "They are permanently integrated into the chromosome", correct: false, why: "Plasmids exist independently within the cytoplasm, separate from the chromosome. [Lec 5, Slide #2]" },
-                    { text: "They are required for binary fission to occur", correct: false, why: "Plasmids are not essential for survival; each daughter cell receives a completed chromosome during binary fission. [Lec 5, Slide #7]" }
-                ]
-            },
-            {
-                id: 23, quarter: 2, lecture: 5, slideRef: 3, difficulty: "Medium",
-                stem: "Which feature of bacterial genetics is NOT true of all bacteria?",
-                options: [
-                    { text: "A circular chromosome", correct: true, why: "Most bacterial chromosomes are circular, but a few linear forms exist, so circularity is not universal. [Lec 5, Slide #3]" },
-                    { text: "A haploid genome", correct: false, why: "All bacteria are haploid, so this is true of every bacterium. [Lec 5, Slide #3]" },
-                    { text: "DNA without histones", correct: false, why: "Bacterial DNA is associated with polyamines, not histones, in all bacteria. [Lec 5, Slide #3]" },
-                    { text: "No intron/exon arrangement", correct: false, why: "Bacteria have no introns and exons; all DNA is usable. [Lec 5, Slide #3]" }
-                ]
-            },
-            {
-                id: 24, quarter: 2, lecture: 5, slideRef: 3, difficulty: "Easy",
-                stem: "Bacterial DNA is associated with which molecules?",
-                options: [
-                    { text: "Polyamines", correct: true, why: "Bacterial DNA is associated with polyamines, not histones. [Lec 5, Slide #3]" },
-                    { text: "Histones", correct: false, why: "Histones are specifically excluded; bacterial DNA associates with polyamines instead. [Lec 5, Slide #3]" },
-                    { text: "Exons", correct: false, why: "Bacteria have no introns or exons; all of their DNA is usable. [Lec 5, Slide #3]" },
-                    { text: "Plasmids", correct: false, why: "Plasmids are separate DNA molecules that exist independently in the cytoplasm, not molecules that package chromosomal DNA. [Lec 5, Slide #2]" }
-                ]
-            },
-            {
-                id: 25, quarter: 3, lecture: 5, slideRef: 8, difficulty: "Hard",
-                stem: "Which statement correctly describes rolling circle replication?",
-                options: [
-                    { text: "Occurs in plasmids and synthesizes DNA in a single direction", correct: true, why: "Rolling circle replication occurs in some bacterial viruses and plasmids and synthesizes DNA in a single direction, rolling out like a paper towel roll. [Lec 5, Slide #8]" },
-                    { text: "Occurs in chromosomes and synthesizes DNA in two directions", correct: false, why: "Two-directional replication with two forks is the normal method used for the circular chromosome, not rolling circle. [Lec 5, Slide #5]" },
-                    { text: "Occurs in plasmids and synthesizes DNA in two directions", correct: false, why: "The organism type is correct, but rolling circle synthesis proceeds in a single direction, not two. [Lec 5, Slide #8]" },
-                    { text: "Occurs in chromosomes and synthesizes DNA in a single direction", correct: false, why: "The direction is correct, but rolling circle occurs in plasmids and bacterial viruses; chromosomes use normal two-fork replication. [Lec 5, Slide #5]" }
-                ]
-            },
-            {
-                id: 26, quarter: 3, lecture: 5, slideRef: 10, difficulty: "Medium",
-                stem: "Which non-genetic control mechanism involves an end product inactivating the first enzyme of a pathway at an allosteric site?",
-                options: [
-                    { text: "Feedback inhibition", correct: true, why: "Feedback inhibition is non-genetic control: the end product binds the first enzyme's allosteric site and inactivates it, providing immediate coarse control. [Lec 5, Slide #10]" },
-                    { text: "Operon based repression", correct: false, why: "Operon based repression is genetic regulation built into the DNA sequence, not a non-genetic allosteric mechanism. [Lec 5, Slide #11]" },
-                    { text: "Constitutive expression", correct: false, why: "Constitutive enzymes are always present (such as glycolytic enzymes) and are not switched off by end product binding. [Lec 5, Slide #10]" },
-                    { text: "CAP activation", correct: false, why: "CAP is a glucose sensor that works with operon-based induction at the genetic level. [Lec 5, Slide #11]" }
-                ]
-            },
-            {
-                id: 27, quarter: 3, lecture: 5, slideRef: 11, difficulty: "Medium",
-                stem: "Which form of genetic regulation involves induction genes or end product repression?",
-                options
+            }
+        ];
+
+        let activeQuizData = [];
+        let currentScore = 0;
+        let answeredCount = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function renderQuiz() {
+            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(rawQuizData)));
+
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            activeQuizData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.id = `card-${index}`;
+
+                const qNum = document.createElement('div');
+                qNum.className = 'question-number';
+                qNum.innerText = `Question ${index + 1} of ${activeQuizData.length}`;
+
+                const qText = document.createElement('div');
+                qText.className = 'question-stem';
+                qText.innerText = item.stem;
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'options-grid';
+
+                let optionsWithIndices = item.options.map((opt, idx) => ({ text: opt, isCorrect: idx === item.correctIndex }));
+                shuffleArray(optionsWithIndices);
+
+                optionsWithIndices.forEach((optObj, optIdx) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn';
+                    btn.innerText = `${String.fromCharCode(65 + optIdx)}. ${optObj.text}`;
+                    btn.onclick = () => handleAnswer(index, optObj.isCorrect, btn, optionsGrid);
+                    optionsGrid.appendChild(btn);
+                });
+
+                const exp = document.createElement('div');
+                exp.className = 'explanation';
+                exp.id = `exp-${index}`;
+
+                let rationalesHTML = '<ul class="rationale-list">';
+                item.rationales.forEach(rat => {
+                    rationalesHTML += `<li>• ${rat}</li>`;
+                });
+                rationalesHTML += '</ul>';
+
+                exp.innerHTML = `
+                    <div class="explanation-paragraph"><strong>Explanation:</strong> ${item.explanationText}</div>
+                    ${rationalesHTML}
+                `;
+
+                card.appendChild(qNum);
+                card.appendChild(qText);
+                card.appendChild(optionsGrid);
+                card.appendChild(exp);
+
+                container.appendChild(card);
+            });
+
+            updateHeader();
+        }
+
+        function handleAnswer(qIndex, isCorrect, selectedBtn, optionsContainer) {
+            const card = document.getElementById(`card-${qIndex}`);
+            const buttons = optionsContainer.querySelectorAll('.option-btn');
+            const exp = document.getElementById(`exp-${qIndex}`);
+
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (isCorrect) {
+                selectedBtn.classList.add('correct');
+                currentScore++;
+            } else {
+                selectedBtn.classList.add('incorrect');
+                // Highlight the correct one
+                buttons.forEach(btn => {
+                    // Check button text against the actual correct text
+                    const originalItem = activeQuizData[qIndex];
+                    const correctText = originalItem.options[originalItem.correctIndex];
+                    if (btn.innerText.includes(correctText)) {
+                        btn.classList.add('correct');
+                    }
+                });
+
+                // Play wrong answer sound effect
+                wrongSound.currentTime = 0;
+                wrongSound.play().catch(error => {
+                    console.log("Audio playback prevented or failed:", error);
+                });
+            }
+
+            exp.style.display = 'block';
+            answeredCount++;
+
+            updateHeader();
+
+            if (answeredCount === activeQuizData.length) {
+                showSummary();
+            }
+        }
+
+        function updateHeader() {
+            const total = activeQuizData.length;
+            const pct = total === 0 ? 0 : Math.round((currentScore / total) * 100);
+            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${pct}%)`;
+        }
+
+        function showSummary() {
+            const total = activeQuizData.length;
+            const pct = Math.round((currentScore / total) * 100);
+            const summaryCard = document.getElementById('summary-card');
+            const finalScore = document.getElementById('final-score');
+            const feedback = document.getElementById('summary-feedback');
+
+            finalScore.innerText = `${pct}%`;
+
+            if (pct >= 90) {
+                feedback.innerText = "Absolute Gigachad. You drained that test dry.";
+            } else if (pct >= 75) {
+                feedback.innerText = "You lasted less than 30 seconds. Time for a rematch.";
+            } else {
+                feedback.innerText = "You really didn’t fucking know that.";
+            }
+
+            summaryCard.style.display = 'block';
+            summaryCard.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function resetQuiz() {
+            currentScore = 0;
+            answeredCount = 0;
+            document.getElementById('summary-card').style.display = 'none';
+            renderQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = renderQuiz;
+    </script>
+</body>
+</html>
