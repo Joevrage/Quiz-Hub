@@ -218,6 +218,7 @@
             border-radius: 6px;
             cursor: pointer;
             font-family: inherit;
+            margin: 4px;
         }
         .retake-btn:hover { background-color: var(--accent-hover); }
 
@@ -253,6 +254,7 @@
             <div class="summary-score" id="summaryScore"></div>
             <div class="summary-msg" id="summaryMsg"></div>
             <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+            <button class="retake-btn" id="reviewBtn" style="display:none">Review Missed</button>
         </div>
     </main>
 
@@ -740,6 +742,8 @@
             }
         ];
 
+        let currentSet = quizData;  // questions in the current round
+        let round = 1;
         let order = [];
         let answers = {};
 
@@ -752,15 +756,16 @@
         }
 
         function shuffleQuiz() {
-            fisherYates(quizData);
-            quizData.forEach(q => fisherYates(q.options));
+            fisherYates(currentSet);
+            currentSet.forEach(q => fisherYates(q.options));
         }
 
         function updateScore() {
-            const total = quizData.length;
+            const total = currentSet.length;
             const correct = Object.values(answers).filter(Boolean).length;
             const pct = total ? Math.round((correct / total) * 100) : 0;
-            document.getElementById('scoreTracker').textContent = `Score: ${correct} / ${total} (${pct}%)`;
+            const label = round === 1 ? 'Score' : `Review ${round - 1}`;
+            document.getElementById('scoreTracker').textContent = `${label}: ${correct} / ${total} (${pct}%)`;
             return { total, correct, pct, answered: Object.keys(answers).length };
         }
 
@@ -812,31 +817,40 @@
 
         function showSummary(s) {
             const summary = document.getElementById('summary');
+            const reviewBtn = document.getElementById('reviewBtn');
+            const missed = currentSet.filter(q => !answers[q.id]);
             document.getElementById('summaryScore').textContent = `${s.correct} / ${s.total} (${s.pct}%)`;
-            let msg = '';
-            if (s.pct >= 90) {
-                msg = 'Absolute Gigachad. You drained that test dry.';
-            } else if (s.pct >= 70) {
-                msg = "Solid run! You're locked in, get in some more reps.";
+            if (round === 1) {
+                document.querySelector('.summary-title').textContent = 'Quiz Complete';
+                let msg;
+                if (s.pct >= 90) msg = 'Absolute Gigachad. You drained that test dry.';
+                else if (s.pct >= 70) msg = "Solid run! You're locked in, get in some more reps.";
+                else msg = 'You lasted less than 30 seconds. Time for a rematch.';
+                document.getElementById('summaryMsg').textContent = msg;
             } else {
-                msg = 'You lasted less than 30 seconds. Time for a rematch.';
+                document.querySelector('.summary-title').textContent = `Review Round ${round - 1} Complete`;
+                document.getElementById('summaryMsg').textContent = missed.length
+                    ? `${missed.length} still missed. Go again.`
+                    : 'Everything cleared. All correct.';
             }
-            document.getElementById('summaryMsg').textContent = msg;
+            reviewBtn.style.display = missed.length ? 'inline-block' : 'none';
+            reviewBtn.textContent = `Review Missed (${missed.length})`;
             summary.classList.remove('hidden');
             summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        function renderQuiz() {
+        function renderQuiz(set) {
+            currentSet = set || quizData;
             answers = {};
             shuffleQuiz();
             const container = document.getElementById('quiz');
             container.innerHTML = '';
             document.getElementById('summary').classList.add('hidden');
 
-            quizData.forEach((q, qIdx) => {
+            currentSet.forEach((q, qIdx) => {
                 const card = el('div', 'question-card');
                 const meta = el('div', 'question-meta');
-                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${quizData.length}`));
+                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${currentSet.length}`));
                 meta.appendChild(el('span', 'badge', q.difficulty));
                 card.appendChild(meta);
                 card.appendChild(el('div', 'question-text', q.stem));
@@ -858,8 +872,12 @@
             window.scrollTo({ top: 0 });
         }
 
-        document.getElementById('retakeBtn').addEventListener('click', renderQuiz);
-        window.onload = renderQuiz;
+        document.getElementById('retakeBtn').addEventListener('click', () => { round = 1; renderQuiz(quizData); });
+        document.getElementById('reviewBtn').addEventListener('click', () => {
+            round++;
+            renderQuiz(currentSet.filter(q => !answers[q.id]));
+        });
+        window.onload = () => renderQuiz(quizData);
     </script>
 </body>
 </html>
