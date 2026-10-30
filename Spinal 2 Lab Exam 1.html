@@ -376,6 +376,8 @@
 </head>
 <body>
 
+<audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+
 <div class="quiz-container">
     <div class="sticky-header">
         <h1 id="quiz-title">Spinal 2 Practical Hub</h1>
@@ -1182,7 +1184,12 @@
         answeredCount++;
 
         const isCorrect = (optIndex === q.correct);
-        if (isCorrect) correctCount++;
+        if (isCorrect) {
+            correctCount++;
+        } else {
+            const wrongAudio = document.getElementById('wrongAudio');
+            if (wrongAudio) wrongAudio.play();
+        }
 
         for (let i = 0; i < q.options.length; i++) {
             const optEl = document.getElementById(`opt-${qIndex}-${i}`);
@@ -1217,7 +1224,12 @@
 
         const matchResult = checkAnswerFuzzy(userTyped, q.accepted);
         const isCorrect = matchResult.isCorrect;
-        if (isCorrect) correctCount++;
+        if (isCorrect) {
+            correctCount++;
+        } else {
+            const wrongAudio = document.getElementById('wrongAudio');
+            if (wrongAudio) wrongAudio.play();
+        }
 
         let spellNote = "";
         if (isCorrect && matchResult.distance > 0) {
@@ -1283,9 +1295,9 @@
         if (percent >= 90) {
             tierMessage = "Absolute Gigachad. You drained that test dry.";
         } else if (percent >= 70) {
-            tierMessage = "Solid run! You're locked in, get in some more reps.";
-        } else {
             tierMessage = "You lasted less than 30 seconds. Time for a rematch.";
+        } else {
+            tierMessage = "You really didn’t fucking know that.";
         }
 
         document.getElementById('final-score-text').innerHTML = `Final Score: ${correctCount} out of ${total} (${percent}%)<br><br><strong>${tierMessage}</strong>`;
