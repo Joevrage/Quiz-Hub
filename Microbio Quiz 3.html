@@ -3,117 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</title>
+    <title>Microbio Quiz 3: Comprehensive Metabolism & Genetics</title>
     <style>
         :root {
-            --bg-body: #0f0f0f;
-            --bg-container: #1a1a1a;
+            --bg-main: #0f0f0f;
+            --bg-card: #1a1a1a;
             --text-main: #ffffff;
             --text-muted: #a3a3a3;
             --accent: #ff9900;
-            --accent-hover: #cc7a00;
             --correct-bg: #14532d;
             --correct-border: #22c55e;
-            --correct-text: #ffffff;
             --incorrect-bg: #7f1d1d;
             --incorrect-border: #ef4444;
-            --incorrect-text: #ffffff;
-            --option-bg: #2a2a2a;
-            --option-hover: #3a3a3a;
             --border-color: #333333;
         }
 
-        body {
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            padding-top: 70px;
-            padding-bottom: 40px;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Sticky Top Bar */
-        #top-bar {
-            position: fixed;
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 60px;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .header-sticky {
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background-color: #141414;
+            background-color: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(5px);
             border-bottom: 2px solid var(--accent);
-            padding: 0 20px;
+            padding: 12px 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        .header-container {
+            max-width: 800px;
+            margin: 0 auto;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        #top-bar h1 {
-            margin: 0;
+        .header-title {
             font-size: 1.1rem;
+            font-weight: 700;
             color: var(--accent);
-            font-weight: bold;
         }
 
-        #score-display {
-            font-size: 1.1rem;
+        .score-box {
+            font-size: 1rem;
             font-weight: 600;
-            background: #252525;
+            background-color: #262626;
+            color: #ffffff;
             padding: 6px 14px;
             border-radius: 20px;
-            border: 1px solid var(--accent);
+            border: 1px solid var(--border-color);
         }
 
-        /* Quiz Container */
-        #quiz-container {
+        .progress-bar-container {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .container {
             max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 2rem auto;
+            padding: 0 1rem;
         }
 
         .question-card {
-            background-color: var(--bg-container);
+            background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        .question-number {
-            color: var(--accent);
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+        .question-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
         }
 
-        .question-stem {
-            font-size: 1.15rem;
-            line-height: 1.5;
-            margin-bottom: 18px;
-            font-weight: 500;
-        }
-
-        .options-grid {
+        .options-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 0.75rem;
+            list-style: none;
         }
 
         .option-btn {
-            background-color: #252525;
+            background-color: #262626;
             color: var(--text-main);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px 16px;
-            font-size: 1rem;
+            border: 1.5px solid var(--border-color);
+            padding: 14px 16px;
             text-align: left;
+            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            width: 100%;
         }
 
         .option-btn:hover:not(:disabled) {
@@ -121,637 +150,510 @@
             border-color: var(--accent);
         }
 
-        .option-btn:disabled {
-            cursor: not-allowed;
-            opacity: 0.85;
-        }
-
-        /* Instant Feedback States */
         .option-btn.correct {
-            background-color: var(--correct-bg) !important;
-            border-color: var(--correct-border) !important;
-            color: var(--correct-text) !important;
-            font-weight: 600;
+            background-color: var(--correct-bg);
+            border-color: var(--correct-border);
+            color: #fff;
         }
 
         .option-btn.incorrect {
-            background-color: var(--incorrect-bg) !important;
-            border-color: var(--incorrect-border) !important;
-            color: var(--incorrect-text) !important;
+            background-color: var(--incorrect-bg);
+            border-color: var(--incorrect-border);
+            color: #fff;
         }
 
-        /* Explanation Box */
-        .explanation {
-            margin-top: 16px;
-            padding: 16px;
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 6px;
+            display: none;
             background-color: #222222;
             border-left: 4px solid var(--accent);
-            border-radius: 4px;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            color: var(--text-muted);
-            display: none;
+        }
+
+        .feedback-box.show {
+            display: block;
         }
 
         .status-banner {
-            font-size: 1.1rem;
             font-weight: bold;
-            margin-bottom: 12px;
-            padding: 6px 10px;
-            border-radius: 4px;
-            display: inline-block;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .status-banner.correct {
-            background-color: var(--correct-bg);
             color: var(--correct-border);
-            border: 1px solid var(--correct-border);
         }
 
         .status-banner.incorrect {
-            background-color: var(--incorrect-bg);
             color: var(--incorrect-border);
-            border: 1px solid var(--incorrect-border);
         }
 
-        .explanation-paragraph {
-            margin-bottom: 12px;
-            color: var(--text-main);
+        .explanation-text {
+            font-size: 0.9rem;
+            margin-bottom: 0.75rem;
+            color: #e5e5e5;
         }
 
-        .rationale-list {
-            margin: 0;
-            padding-left: 0;
+        .rationales-list {
             list-style: none;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.5rem;
         }
 
-        .rationale-list li {
-            margin-bottom: 6px;
+        .rationales-list li {
+            margin-bottom: 0.4rem;
         }
 
-        /* Summary Card */
         .summary-card {
-            background-color: var(--bg-container);
-            border: 2px solid var(--accent);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
-            padding: 30px;
+            padding: 32px;
             text-align: center;
             display: none;
-            margin-top: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 2rem;
+        }
+
+        .summary-card.visible {
+            display: block;
         }
 
         .summary-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: var(--accent);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .summary-score {
             font-size: 2.5rem;
-            font-weight: bold;
-            margin: 15px 0;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 16px;
         }
 
-        .retake-btn {
+        .summary-text {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        .reset-btn {
             background-color: var(--accent);
             color: #000000;
             border: none;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            border-radius: 25px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 8px;
             cursor: pointer;
-            transition: opacity 0.2s;
-            margin-top: 15px;
+            transition: background-color 0.2s ease;
         }
 
-        .retake-btn:hover {
-            opacity: 0.9;
+        .reset-btn:hover {
+            background-color: #e68a00;
         }
 
         @media (max-width: 600px) {
-            .question-card {
-                padding: 15px;
+            .container {
+                margin: 1rem auto;
+                padding: 0 0.5rem;
             }
-            .question-stem {
-                font-size: 1.05rem;
+            .question-card {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
 
-    <div id="top-bar">
-        <h1>Gen Path Week 3: Cell-Mediated & Antibody-Mediated Immunity</h1>
-        <div id="score-display">Score: 0 / 20 (0%)</div>
+    <header>
+        <h1>Microbio Quiz 3</h1>
+        <div class="subtitle">Comprehensive Practice Quiz: Lectures 4 & 5 (Metabolism, Respiration, Fermentation & Genetics)</div>
+    </header>
+
+    <div class="header-sticky">
+        <div class="header-container">
+            <div class="header-title">Microbiology: Quiz 3 Hub</div>
+            <div class="score-box" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
     </div>
 
-    <div id="quiz-container">
-        <!-- Questions rendered dynamically here -->
-    </div>
+    <div class="container" id="quizContainer"></div>
 
-    <div class="container" style="max-width: 800px; margin: 0 auto; padding: 20px;">
-        <div class="summary-card" id="summary-card">
-            <div class="summary-title">Quiz Completed!</div>
-            <div class="summary-score" id="final-score">0%</div>
-            <p id="summary-feedback" style="color: var(--text-muted);"></p>
-            <button class="retake-btn" onclick="resetQuiz()">Retake Quiz</button>
+    <div class="container">
+        <div class="summary-card" id="summaryCard">
+            <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
+            <div class="summary-score" id="finalScore">0 / 0</div>
+            <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
+            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
         </div>
     </div>
 
     <script>
-        // Setup wrong answer sound effect
-        const wrongSound = new Audio('Wrong-answer.m4a');
+        const wrongAudio = new Audio('Wrong-answer.m4a');
 
         const rawQuizData = [
+            // --- LECTURE 4: METABOLISM & FERMENTATION ---
             {
-                stem: "A patient is exposed to Mycobacterium tuberculosis. Following phagocytosis, alveolar macrophages are unable to fuse the phagosome with the lysosome. Which specific cytokine is secreted by T-helper 1 (TH1) cells to force this fusion and promote epithelioid cell transformation?",
+                question: "Which carbon and energy source is universally preferred by bacteria when multiple sources are available ('Glucose is king!')?",
                 options: [
-                    "Interferon-gamma (IFN-γ)",
-                    "Interleukin-10 (IL-10)",
-                    "Tumor Necrosis Factor-alpha (TNF-α)",
-                    "Interleukin-4 (IL-4)"
+                    { text: "Lactose", correct: false, why: "Incorrect. Disaccharides require secondary breakdown enzymes and are never preferred over glucose." },
+                    { text: "Glucose", correct: true, why: "Correct! Bacteria utilize glucose preferentially to the exclusion of other sugars as long as it is available." },
+                    { text: "Fructose", correct: false, why: "Incorrect. Fructose is a monosaccharide but is not preferentially selected over glucose." },
+                    { text: "Amino acids", correct: false, why: "Incorrect. Carbohydrates like glucose are prioritized for rapid catabolism." }
                 ],
-                correctIndex: 0,
-                explanationText: "TH1 cells secrete cytokines that serve as primary macrophage activators to overcome intracellular survival mechanisms and coordinate granulomatous inflammation.",
-                rationales: [
-                    "A) Interferon-gamma (IFN-γ): Correct. IFN-γ acts as the premier macrophage activator, forcing lysosomal fusion and transforming macrophages into enlarged epithelioid cells in granulomatous inflammation.",
-                    "B) Interleukin-10 (IL-10): Incorrect. IL-10 is an anti-inflammatory cytokine that suppresses macrophage activation rather than promoting granuloma formation.",
-                    "C) Tumor Necrosis Factor-alpha (TNF-α): Incorrect. TNF-α mediates systemic inflammation and cachexia but is not the specific primary signal driving lysosomal fusion.",
-                    "D) Interleukin-4 (IL-4): Incorrect. IL-4 is a TH2-associated cytokine driving humoral and allergic responses rather than cell-mediated macrophage activation."
-                ]
+                explanation: "Glucose is the premier carbon and energy source for bacteria ('Glucose is king!'), utilized preferentially over secondary disaccharides."
             },
             {
-                stem: "A neonate receives protective antibodies through maternal breast milk (colostrum). Which of the following best describes the structure of the primary immunoglobulin responsible for this natural passive immunity?",
+                question: "What is the most common glycolytic pathway utilized by bacteria, yielding 2 pyruvates and 4 ATP (gross)?",
                 options: [
-                    "A secretory dimer joined by a J-chain",
-                    "A massive pentamer joined by disulfide bonds",
-                    "A monomer capable of crossing the transplacental barrier",
-                    "A monomer tightly bound to mast cell high-affinity receptors"
+                    { text: "Embden-Meyerhof pathway", correct: true, why: "Correct! When in doubt, bacteria use the Embden-Meyerhof pathway for glycolysis." },
+                    { text: "Entner-Doudoroff pathway", correct: false, why: "Incorrect. Entner-Doudoroff is less common and yields 3 ATP and 2 ethanol." },
+                    { text: "Pentose phosphate pathway", correct: false, why: "Incorrect. Pentose phosphate pathway generates NADPH and biosynthetic precursors." },
+                    { text: "Tricarboxylic acid cycle", correct: false, why: "Incorrect. The TCA cycle occurs downstream of glycolysis." }
                 ],
-                correctIndex: 0,
-                explanation: "Mucosal and exocrine immune protection relies on specialized polymeric immunoglobulin structures adapted to withstand enzymatic degradation.",
-                rationales: [
-                    "A) A secretory dimer joined by a J-chain: Correct. IgA functions as a secretory dimer containing a joining chain and a secretory protein to neutralize pathogens in breast milk and mucosal secretions.",
-                    "B) A massive pentamer joined by disulfide bonds: Incorrect. This structural description applies to secreted IgM.",
-                    "C) A monomer capable of crossing the transplacental barrier: Incorrect. Monomeric structure capable of placental transfer describes IgG.",
-                    "D) A monomer tightly bound to mast cell high-affinity receptors: Incorrect. This characterizes IgE binding dynamics."
-                ]
+                explanation: "The Embden-Meyerhof pathway is the standard, most common glycolytic pathway across bacterial species."
             },
             {
-                stem: "A previously healthy host is infected by a virus. Endogenous viral antigens are processed and presented on the surface of infected nucleated cells. Which of the following immune cells will recognize this specific complex?",
+                question: "How does the alternative Entner-Doudoroff glycolytic pathway compare to Embden-Meyerhof?",
                 options: [
-                    "CD8+ Cytotoxic T-lymphocytes",
-                    "CD4+ Helper T-lymphocytes",
-                    "Plasma cells",
-                    "Regulatory T-cells"
+                    { text: "It is universal in all gram-positive rods.", correct: false, why: "Incorrect. It is a lot less common and utilized by only a few types of bacteria." },
+                    { text: "It is less common, used by only a few bacteria, and yields 2 ethanol and 3 ATP.", correct: true, why: "Correct! Entner-Doudoroff produces 2 ethanol and 3 ATP, making it slightly less energy-efficient." },
+                    { text: "It operates exclusively under obligate aerobic conditions.", correct: false, why: "Incorrect. It is an alternative glycolytic route." },
+                    { text: "It produces zero ATP molecules.", correct: false, why: "Incorrect. It yields 3 net ATP." }
                 ],
-                correctIndex: 0,
-                explanation: "Cellular immune recognition is strictly restricted by major histocompatibility complex class matching between antigen-presenting targets and T-cell co-receptors.",
-                rationales: [
-                    "A) CD8+ Cytotoxic T-lymphocytes: Correct. Endogenous viral antigens presented on MHC Class I molecules on nucleated cells are recognized exclusively by CD8+ cytotoxic T-cells.",
-                    "B) CD4+ Helper T-lymphocytes: Incorrect. CD4+ T-cells recognize exogenous antigens presented on MHC Class II molecules.",
-                    "C) Plasma cells: Incorrect. Plasma cells secrete free antibodies and do not engage MHC-T-cell receptor complexes.",
-                    "D) Regulatory T-cells: Incorrect. Regulatory T-cells suppress immune responses rather than directly lysing virus-infected host cells."
-                ]
+                explanation: "The Entner-Doudoroff pathway is less common, utilized by specific bacteria, and yields 3 ATP along with 2 ethanol."
             },
             {
-                stem: "During a secondary immune response, an activated B-cell undergoes isotype switching. Which of the following structural changes occurs within the secreted immunoglobulin?",
+                question: "In aerobic respiration, what molecule serves as the final (terminal) electron acceptor in the electron transport chain?",
                 options: [
-                    "The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained.",
-                    "The variable (Fab) region is modified to bind a newly encountered antigenic epitope.",
-                    "Both heavy and light chains are replaced entirely by memory T-cell derivatives.",
-                    "The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer."
+                    { text: "Nitrate (NO3-)", correct: false, why: "Incorrect. Nitrate is used in anaerobic denitrification." },
+                    { text: "Molecular oxygen (O2)", correct: true, why: "Correct! Aerobic respiration relies strictly on molecular oxygen (O2) as the final electron acceptor." },
+                    { text: "Sulfate (SO42-)", correct: false, why: "Incorrect. Sulfate is used in anaerobic sulfate reduction." },
+                    { text: "Carbon dioxide (CO2)", correct: false, why: "Incorrect. CO2 is a metabolic byproduct." }
                 ],
-                correctIndex: 0,
-                explanation: "Antibody diversification mechanisms alter effector function domains while preserving precise antigen recognition binding sites.",
-                rationales: [
-                    "A) The constant (Fc) region changes while the antigen-binding specificity of the variable (Fab) region is maintained: Correct. Isotype switching alters the constant heavy chain domain (Fc region) to change antibody class while preserving Fab antigen specificity.",
-                    "B) The variable (Fab) region is modified to bind a newly encountered antigenic epitope: Incorrect. Fab specificity is established during clonal selection and somatic hypermutation, not isotype switching.",
-                    "C) Both heavy and light chains are replaced entirely by memory T-cell derivatives: Incorrect. T-cells do not produce immunoglobulin chains.",
-                    "D) The J-chain is removed to convert a pentamer into a tissue-bound secretory dimer: Incorrect. J-chain assembly is specific to polymeric IgA and pentameric IgM."
-                ]
+                explanation: "Aerobic respiration uses molecular oxygen (O2) as the ultimate electron acceptor to generate water and maximize ATP."
             },
             {
-                stem: "Following classical pathway activation by circulating immunoglobulins (IgM or IgG), a series of cascading enzymatic reactions occurs. Which of the following complement components directly forms a transmembrane pore resulting in osmotic lysis of the target cell?",
+                question: "Which anaerobic respiratory process utilizes nitrate as a final electron acceptor and is important in agriculture soil fertilization and gut flora?",
                 options: [
-                    "C5b-9 (Membrane Attack Complex)",
-                    "C3a and C5a",
-                    "Interleukin-6 (IL-6)",
-                    "C3b"
+                    { text: "Biological methanogenesis", correct: false, why: "Incorrect. Methanogenesis produces methane from CO2/organic decay." },
+                    { text: "Denitrification", correct: true, why: "Correct! Denitrification involves agricultural nitrate soil fertilization and gut flora processing." },
+                    { text: "Sulfate reduction", correct: false, why: "Incorrect. Sulfate reduction produces hydrogen sulfide (rotten egg smell)." },
+                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation is a fermentative pathway, not anaerobic respiration." }
                 ],
-                correctIndex: 0,
-                explanation: "Complement cascade activation culminates in the assembly of a multi-protein lytic complex that disrupts cellular osmotic equilibrium.",
-                rationales: [
-                    "A) C5b-9 (Membrane Attack Complex): Correct. The Membrane Attack Complex (MAC) is composed of C5b-9, forming a physical transmembrane pore that leads to target cell osmotic lysis.",
-                    "B) C3a and C5a: Incorrect. C3a and C5a are soluble anaphylatoxins that promote inflammation and leukocyte recruitment.",
-                    "C) Interleukin-6 (IL-6): Incorrect. IL-6 is an acute-phase cytokine rather than a complement cascade protein.",
-                    "D) C3b: Incorrect. C3b functions as an opsonin to promote phagocytosis."
-                ]
+                explanation: "Denitrification is an anaerobic respiratory pathway using nitrogen/nitrate as an electron acceptor, active in agriculture and intestinal flora."
             },
             {
-                stem: "Which of the following cytokines functions primarily as an immunosuppressor, limiting immune responses and preventing chronic inflammatory tissue injury?",
+                question: "What environmental odor or indicator is classically associated with bacterial sulfate reduction?",
                 options: [
-                    "Interleukin-10 (IL-10)",
-                    "Interleukin-1 (IL-1)",
-                    "Interleukin-2 (IL-2)",
-                    "Tumor Necrosis Factor-alpha (TNF-α)"
+                    { text: "Sweet fruity aroma", correct: false, why: "Incorrect. That is typical of certain ester fermentations." },
+                    { text: "Rotten egg smell", correct: true, why: "Correct! Sulfate reduction produces hydrogen sulfide gas (H2S), resulting in a rotten egg smell." },
+                    { text: "Swamp gas bubbling", correct: false, why: "Incorrect. Swamp gas is associated with methanogenesis." },
+                    { text: "Vinegar tang", correct: false, why: "Incorrect. Vinegar is acetic acid fermentation." }
                 ],
-                correctIndex: 0,
-                explanation: "Immune system homeostasis requires specialized regulatory feedback signals to downregulate effector pathways and prevent immunopathology.",
-                rationales: [
-                    "A) Interleukin-10 (IL-10): Correct. IL-10 is the major anti-inflammatory immunosuppressor cytokine secreted by regulatory T-cells to limit immune responses.",
-                    "B) Interleukin-1 (IL-1): Incorrect. IL-1 is a pro-inflammatory endogenous pyrogen.",
-                    "C) Interleukin-2 (IL-2): Incorrect. IL-2 acts as a T-cell growth and proliferation factor.",
-                    "D) Tumor Necrosis Factor-alpha (TNF-α): Incorrect. TNF-α is a potent pro-inflammatory cytokine driving systemic inflammation and necrosis."
-                ]
+                explanation: "Sulfate reduction generates hydrogen sulfide, producing the characteristic rotten egg smell."
             },
             {
-                stem: "An individual receives a rabies antiserum injection following an animal bite. Which of the following classifications of adaptive immunity does this represent?",
+                question: "Biological methanogenesis is classically referenced in natural environments with which of the following?",
                 options: [
-                    "Artificial passive immunity",
-                    "Natural passive immunity",
-                    "Artificial active immunity",
-                    "Natural active immunity"
+                    { text: "Cow farts and swamp gas", correct: true, why: "Correct! Methanogenesis occurs during organic decay in swamps and ruminant digestive tracts." },
+                    { text: "Hot spring sulfur vents", correct: false, why: "Incorrect. That relates to sulfur-oxidizing thermophiles." },
+                    { text: "Root nodule nitrogen fixation", correct: false, why: "Incorrect. That is nitrogenase activity." },
+                    { text: "Lactic acid milk curdling", correct: false, why: "Incorrect. That is homolactic fermentation." }
                 ],
-                correctIndex: 0,
-                explanation: "Acquired immunity classifications depend on whether protection is conferred by active host response or administration of exogenous pre-formed immune factors.",
-                rationales: [
-                    "A) Artificial passive immunity: Correct. Rabies antiserum involves administering pre-made exogenous antibodies, providing immediate passive protection without host memory cell formation.",
-                    "B) Natural passive immunity: Incorrect. This refers to maternal antibody transfer via placenta or breast milk.",
-                    "C) Artificial active immunity: Incorrect. This describes vaccination stimulating host immune response.",
-                    "D) Natural active immunity: Incorrect. This results from natural infection and recovery."
-                ]
+                explanation: "Biological methanogenesis produces methane during organic matter decay in swamps and ruminant guts ('cow farts and swamp gas')."
             },
             {
-                stem: "A pediatric patient presents with hypoplasia of the thymus gland, accompanied by cardiac and blood vessel anomalies. Genetic testing reveals a deletion on chromosome 22. This clinical presentation is characteristic of which of the following conditions?",
+                question: "Most Lactobacillus and Lactococcus species ferment glucose into lactic acid as the sole end product. This is known as:",
                 options: [
-                    "DiGeorge syndrome",
-                    "Bruton’s agammaglobulinemia",
-                    "Acquired Immunodeficiency Syndrome (AIDS)",
-                    "Systemic vasculitis"
+                    { text: "Homolactic fermentation", correct: true, why: "Correct! Homolactic fermentation produces lactic acid as the sole end product." },
+                    { text: "Heterolactic fermentation", correct: false, why: "Incorrect. Heterolactic fermentation produces lactic acid, ethanol, acetic acid, and CO2." },
+                    { text: "Mixed acid fermentation", correct: false, why: "Incorrect. Mixed acid fermentation produces multiple distinct acids." },
+                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation yields ethanol and CO2." }
                 ],
-                correctIndex: 0,
-                explanation: "Congenital embryological malformations of the pharyngeal pouches result in combined thymic and cardiovascular developmental deficits.",
-                rationales: [
-                    "A) DiGeorge syndrome: Correct. Caused by a chromosome 22 deletion, DiGeorge syndrome features thymic hypoplasia leading to profound T-cell deficiency alongside heart anomalies.",
-                    "B) Bruton’s agammaglobulinemia: Incorrect. Bruton's is an X-linked B-cell maturation defect sparing initial thymic structures.",
-                    "C) Acquired Immunodeficiency Syndrome (AIDS): Incorrect. AIDS is caused by retroviral destruction of CD4+ cells postnatally.",
-                    "D) Systemic vasculitis: Incorrect. Vasculitis represents inflammatory vessel destruction rather than a congenital chromosome 22 deletion syndrome."
-                ]
+                explanation: "Homolactic fermentation converts pyruvate directly into lactic acid as the exclusive end product."
             },
             {
-                stem: "Human Immunodeficiency Virus (HIV) initiates pathogenesis by selectively binding to specific glycoprotein receptors on host cells. This binding specifically leads to the progressive depletion of which cellular population?",
+                question: "Which fermentation pathway produces a complex mixture of acetic acid, lactic acid, succinic acid, formic acid, and ethanol?",
                 options: [
-                    "CD4+ Helper T-lymphocytes",
-                    "CD8+ Cytotoxic T-lymphocytes",
-                    "Plasma cells",
-                    "Mast cells and basophils"
+                    { text: "Mixed acid fermentation", correct: true, why: "Correct! Mixed acid fermentation is the classic pathway yielding this exact product set." },
+                    { text: "Homolactic fermentation", correct: false, why: "Incorrect. Homolactic yields only lactic acid." },
+                    { text: "Butyric acid fermentation", correct: false, why: "Incorrect. Butyric acid fermentation is used primarily by Clostridium." },
+                    { text: "Propionic acid fermentation", correct: false, why: "Incorrect. Propionic acid fermentation yields propionic acid and acetic acid." }
                 ],
-                correctIndex: 0,
-                explanation: "Viral tropism for specific surface markers results in the systematic destruction of master immune regulatory cell networks.",
-                rationales: [
-                    "A) CD4+ Helper T-lymphocytes: Correct. HIV selectively targets and destroys CD4+ helper T-cells, culminating in cellular immune failure and AIDS.",
-                    "B) CD8+ Cytotoxic T-lymphocytes: Incorrect. CD8+ cells are not the primary target population depleted during initial viral pathogenesis.",
-                    "C) Plasma cells: Incorrect. Plasma cells are antibody factories rather than the primary viral target.",
-                    "D) Mast cells and basophils: Incorrect. Mast cells and basophils mediate allergic responses and are not depleted by HIV."
-                ]
+                explanation: "Mixed acid fermentation yields multiple acids plus ethanol."
             },
             {
-                stem: "Soluble antigen molecules in the bloodstream are cross-linked by specific antibodies into large, insoluble macromolecular complexes that settle out of body fluids. Which mechanism of antibody action does this describe?",
+                question: "Enzymes that are produced continuously in constant amounts by a bacterial cell, regardless of substrate presence, are termed:",
                 options: [
-                    "Precipitation",
-                    "Neutralization",
-                    "Agglutination",
-                    "Opsonization"
+                    { text: "Constitutive enzymes", correct: true, why: "Correct! Constitutive enzymes are always present and active." },
+                    { text: "Inducible enzymes", correct: false, why: "Incorrect. Inducible enzymes are synthesized only in response to a substrate." },
+                    { text: "Repressible enzymes", correct: false, why: "Incorrect. Repressible enzymes are turned off by excess product." },
+                    { text: "Allosteric enzymes", correct: false, why: "Incorrect. Allosteric refers to regulatory binding sites." }
                 ],
-                correctIndex: 0,
-                explanation: "Antibody-antigen physical interactions vary depending on whether target antigens are soluble molecules or particulate cell-bound structures.",
-                rationales: [
-                    "A) Precipitation: Correct. Precipitation involves antibodies cross-linking small soluble antigens into insoluble complexes that settle out of solution.",
-                    "B) Neutralization: Incorrect. Neutralization blocks active toxin or viral binding sites without necessarily forming large complexes.",
-                    "C) Agglutination: Incorrect. Agglutination refers to the clumping of particulate, cell-bound antigens.",
-                    "D) Opsonization: Incorrect. Opsonization coats targets to enhance phagocytic recognition."
-                ]
+                explanation: "Constitutive enzymes are essential house-keeping enzymes synthesized at a constant baseline rate."
             },
             {
-                stem: "Upon primary exposure to a novel antigen, naive B-lymphocytes are activated. Which immunoglobulin class is ALWAYS the first to be secreted by plasma cells during this initial encounter?",
+                question: "What non-genetic regulatory mechanism involves a pathway end-product binding to the allosteric site of the initial enzyme to immediately shut it down?",
                 options: [
-                    "IgM",
-                    "IgA",
-                    "IgD",
-                    "IgG"
+                    { text: "Feedback inhibition", correct: true, why: "Correct! Feedback inhibition provides immediate, non-genetic control over metabolic flux." },
+                    { text: "Catabolite repression", correct: false, why: "Incorrect. Catabolite repression operates at the genetic transcription level." },
+                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Mutations alter DNA permanently." },
+                    { text: "Operon induction", correct: false, why: "Incorrect. Induction activates transcription." }
                 ],
-                correctIndex: 0,
-                explanation: "Humoral immune kinetics dictate a stereotyped immunoglobulin class transition following initial antigen challenge.",
-                rationales: [
-                    "A) IgM: Correct. IgM is the initial pentameric antibody class synthesized and secreted during primary immune responses.",
-                    "B) IgA: Incorrect. IgA is the predominant mucosal secretory antibody class.",
-                    "C) IgD: Incorrect. IgD functions primarily as a membrane-bound B-cell receptor rather than a secreted primary effector.",
-                    "D) IgG: Incorrect. IgG predominates during secondary immune responses and following isotype switching."
-                ]
+                explanation: "Feedback inhibition is an instant, enzyme-level control mechanism where excess end-product allosterically inhibits the first pathway enzyme."
+            },
+
+            // --- LECTURE 5: BACTERIAL GENETICS & REPLICATION ---
+            {
+                question: "Regarding bacterial genetics, which of the following is NOT always true for all bacteria?",
+                options: [
+                    { text: "They have circular chromosomes.", correct: true, why: "Correct! While most bacteria possess circular chromosomes, a few species (e.g., Borrelia) have linear chromosomes." },
+                    { text: "They are haploid.", correct: false, why: "Incorrect. All bacteria are haploid." },
+                    { text: "Their DNA does not associate with histones.", correct: false, why: "Incorrect. Bacterial DNA lacks true histone octamers." },
+                    { text: "They have no intron/exon arrangement.", correct: false, why: "Incorrect. Bacteria completely lack intron/exon splicing." }
+                ],
+                explanation: "While the vast majority of bacteria have circular chromosomes, linear chromosomes exist in certain species, making circularity non-universal."
             },
             {
-                stem: "A cytotoxic T-lymphocyte identifies a defective cell expressing an appropriate antigen-MHC I complex. To initiate apoptosis in the target cell, the T-lymphocyte secretes which of the following?",
+                question: "Are plasmids required for the basic vegetative survival of a bacterial cell?",
                 options: [
-                    "Perforins and granzymes",
-                    "Interleukin-4 and Interleukin-5",
-                    "Myeloperoxidase and lysozyme",
-                    "Nitric oxide and C-reactive protein"
+                    { text: "Yes, plasmids encode essential chromosomal replication machinery.", correct: false, why: "Incorrect. Essential genes reside on the main chromosome." },
+                    { text: "No, plasmids are non-essential extrachromosomal DNA, though they carry advantageous traits.", correct: true, why: "Correct! Plasmids are dispensable for basic life but provide adaptive benefits like antibiotic resistance." },
+                    { text: "Yes, without plasmids ribosomes cannot assemble.", correct: false, why: "Incorrect. Ribosomal RNA genes are chromosomal." },
+                    { text: "No, plasmids are only found in viruses.", correct: false, why: "Incorrect. Plasmids are extrachromosomal bacterial DNA." }
                 ],
-                correctIndex: 0,
-                explanation: "Cell-mediated cytotoxicity relies on direct delivery of pore-forming proteins and serine proteases to trigger target cell programmed death.",
-                rationales: [
-                    "A) Perforins and granzymes: Correct. CD8+ cytotoxic T-cells secrete perforins to create membrane pores and granzymes to activate intracellular caspases inducing apoptosis.",
-                    "B) Interleukin-4 and Interleukin-5: Incorrect. These are TH2 cytokines mediating allergic and anti-parasitic responses.",
-                    "C) Myeloperoxidase and lysozyme: Incorrect. These are innate antimicrobial enzymes found in neutrophils and granules.",
-                    "D) Nitric oxide and C-reactive protein: Incorrect. These represent inflammatory mediators and acute-phase reactants."
-                ]
+                explanation: "Plasmids are extrachromosomal DNA elements that carry non-essential, advantageous genes (such as R-factors for drug resistance)."
             },
             {
-                stem: "A naive B-cell circulating in the lymphatic system encounters a foreign antigen. Which immunoglobulin, permanently bound to the B-cell membrane, primarily acts as the receptor for this initial antigen recognition?",
+                question: "What unique expression capability do prokaryotes possess because they lack introns and exons and a nuclear membrane?",
                 options: [
-                    "IgD",
-                    "IgE",
-                    "IgG",
-                    "IgM (secreted pentamer)"
+                    { text: "Mitotic chromosome segregation", correct: false, why: "Incorrect. Bacteria divide via binary fission." },
+                    { text: "Simultaneous transcription and translation in the cytoplasm", correct: true, why: "Correct! Without a nuclear envelope or splicing, ribosomes can translate mRNA while it is being transcribed." },
+                    { text: "Alternative splicing of transcripts", correct: false, why: "Incorrect. Splicing requires eukaryotic machinery." },
+                    { text: "Meiotic recombination", correct: false, why: "Incorrect. Bacteria reproduce asexually." }
                 ],
-                correctIndex: 0,
-                explanation: "Membrane-bound immunoglobulin isotypes serve essential sentinel receptor functions on the surface of uncommitted lymphocytes.",
-                rationales: [
-                    "A) IgD: Correct. IgD is permanently anchored to the naive B-cell membrane where it functions strictly as the receptor for antigen recognition.",
-                    "B) IgE: Incorrect. IgE binds high-affinity receptors on mast cells and basophils.",
-                    "C) IgG: Incorrect. IgG is the major circulating monomeric antibody class.",
-                    "D) IgM (secreted pentamer): Incorrect. While membrane IgM acts as a receptor, secreted pentameric IgM is released into fluid phases rather than remaining membrane-anchored."
-                ]
+                explanation: "Because prokaryotes lack a nuclear membrane and introns, transcription and translation occur concurrently in the cytoplasm."
             },
             {
-                stem: "The complement system produces several critical fragments during activation. Which of the following fragments covalently coats bacterial surfaces, functioning as a powerful opsonin to stimulate rapid phagocytosis?",
+                question: "What term describes the sum of all genetic determinants in an organism?",
                 options: [
-                    "C3b",
-                    "C3a",
-                    "C5a",
-                    "C5b-9"
+                    { text: "Phenotype", correct: false, why: "Incorrect. Phenotype is observable physical properties." },
+                    { text: "Genotype", correct: true, why: "Correct! Genotype is the complete genetic constitution." },
+                    { text: "Wild type", correct: false, why: "Incorrect. Wild type is the natural strain." },
+                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a nutritional mutant." }
                 ],
-                correctIndex: 0,
-                explanation: "Enzymatic cleavage of complement proteins generates distinct peptide fragments specialized for vascular permeability, chemotaxis, and phagocytic tagging.",
-                rationales: [
-                    "A) C3b: Correct. C3b covalently coats microbial surfaces to act as a potent opsonin, facilitating phagocytic engulfment.",
-                    "B) C3a: Incorrect. C3a functions as a soluble inflammatory anaphylatoxin.",
-                    "C) C5a: Incorrect. C5a acts as a powerful chemotactic factor and anaphylatoxin.",
-                    "D) C5b-9: Incorrect. C5b-9 forms the membrane attack complex responsible for cellular lysis."
-                ]
+                explanation: "Genotype represents the total genetic makeup, whereas phenotype refers to observable traits."
             },
             {
-                stem: "Histological examination of a pulmonary granuloma secondary to a chronic Mycobacterium tuberculosis infection reveals a defined central core surrounded by specialized cells. Which of the following describes the composition of this central core?",
+                question: "Which genetic term refers to the observable physical or biochemical properties of an organism?",
                 options: [
-                    "Caseous necrotic tissue",
-                    "Epithelioid macrophages",
-                    "Multinucleated Langhans giant cells",
-                    "A dense collar of fibroblasts and CD4+ T-cells"
+                    { text: "Genotype", correct: false, why: "Incorrect. Genotype is the underlying DNA sequence." },
+                    { text: "Phenotype", correct: true, why: "Correct! Phenotype is the observable expression of the genotype." },
+                    { text: "Revertant", correct: false, why: "Incorrect. Revertant is a back-mutant." },
+                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a growth-factor mutant." }
                 ],
-                correctIndex: 0,
-                explanation: "Granulomatous inflammation exhibits a characteristic zonation pattern designed to wall off persistent intracellular pathogens.",
-                rationales: [
-                    "A) Caseous necrotic tissue: Correct. Tuberculous granulomas feature a distinctive central core of cheese-like caseous necrosis.",
-                    "B) Epithelioid macrophages: Incorrect. Epithelioid macrophages form the middle cellular wall surrounding the core.",
-                    "C) Multinucleated Langhans giant cells: Incorrect. Langhans giant cells populate the inner cellular ring surrounding necrotic debris.",
-                    "D) A dense collar of fibroblasts and CD4+ T-cells: Incorrect. Fibroblasts and lymphocytes form the outer encapsulating structural rim."
-                ]
+                explanation: "Phenotype is the collection of observable traits resulting from genotype-environment interactions."
             },
             {
-                stem: "A patient with a chronic helminthic parasite infection demonstrates an exaggerated allergic response. Which helper T-cell subset and cytokine pairing is primarily responsible for recruiting eosinophils and promoting IgE secretion in this scenario?",
+                question: "What is an auxotroph (nutritional mutant)?",
                 options: [
-                    "T Helper 2 (TH2); IL-4 and IL-5",
-                    "T Helper 1 (TH1); IL-2 and IFN-γ",
-                    "Regulatory T-cell (Treg); IL-10",
-                    "Macrophage; IL-1 and TNF-α"
+                    { text: "A mutant strain unable to grow on minimal media without a specific added growth factor", correct: true, why: "Correct! Auxotrophs have lost biosynthetic capabilities and require pre-formed growth factors." },
+                    { text: "A strain that synthesizes all nutrients independently", correct: false, why: "Incorrect. That describes a prototroph." },
+                    { text: "A bacterium that survives only at extreme high temperatures", correct: false, why: "Incorrect. That is a thermophile." },
+                    { text: "A virus-resistant mutant", correct: false, why: "Incorrect. That is phage-resistant." }
                 ],
-                correctIndex: 0,
-                explanation: "Specialized CD4+ T-cell subsets coordinate distinct immune defense programs tailored to extracellular parasites versus intracellular microbes.",
-                rationales: [
-                    "A) T Helper 2 (TH2); IL-4 and IL-5: Correct. TH2 cells secrete IL-4 to drive B-cell IgE isotype switching and IL-5 to recruit and activate eosinophils against helminths.",
-                    "B) T Helper 1 (TH1); IL-2 and IFN-γ: Incorrect. TH1 responses defend against intracellular bacteria and viruses.",
-                    "C) Regulatory T-cell (Treg); IL-10: Incorrect. Regulatory cells suppress inflammation.",
-                    "D) Macrophage; IL-1 and TNF-α: Incorrect. Macrophages mediate acute innate inflammatory responses."
-                ]
+                explanation: "An auxotroph is a mutant microorganism requiring an extra organic growth factor that the wild type can synthesize."
             },
             {
-                stem: "Following an initial exposure to a pathogen, antibody titers typically demonstrate a lag period before rising. How long is this lag period characteristic of the primary immune response?",
+                question: "What is a 'revertant' (back-mutant)?",
                 options: [
-                    "3 to 6 days",
-                    "1 to 2 hours",
-                    "8 to 10 years",
-                    "10 to 14 days"
+                    { text: "A mutant organism that undergoes a second mutation restoring its original wild-type phenotype", correct: true, why: "Correct! A revertant mutates back to its original wild-type form." },
+                    { text: "A bacterium that loses its plasmid during binary fission", correct: false, why: "Incorrect. That is plasmid curing." },
+                    { text: "A cell reverting from aerobic to anaerobic respiration", correct: false, why: "Incorrect. That is metabolic switching." },
+                    { text: "An endospore reverting to vegetative growth", correct: false, why: "Incorrect. That is germination." }
                 ],
-                correctIndex: 0,
-                explanation: "Primary adaptive immune activation requires clonal selection, proliferation, and differentiation before measurable circulating antibodies appear.",
-                rationales: [
-                    "A) 3 to 6 days: Correct. The primary immune response exhibits a characteristic 3 to 6 day lag period before specific antibodies become detectable in serum.",
-                    "B) 1 to 2 hours: Incorrect. This timeframe is far too rapid for adaptive clonal expansion.",
-                    "C) 8 to 10 years: Incorrect. This represents an irrelevant multi-year chronological scale.",
-                    "D) 10 to 14 days: Incorrect. While peak secondary responses or specific isotype shifts can mature around this window, initial primary detection occurs much sooner (3-6 days)."
-                ]
-            },
-            {
-                stem: "Which of the following immunoglobulins is the smallest, most abundant in serum (comprising ~80%), and capable of crossing the transplacental barrier?",
-                options: [
-                    "IgG",
-                    "IgE",
-                    "IgM",
-                    "IgA"
-                ],
-                correctIndex: 0,
-                explanation: "Systemic humoral immunity depends on a versatile monomeric antibody class capable of widespread tissue distribution and fetal passive immunization.",
-                rationales: [
-                    "A) IgG: Correct. IgG is the smallest monomeric immunoglobulin, constitutes ~80% of serum antibodies, and uniquely crosses the placenta to confer natural passive immunity.",
-                    "B) IgE: Incorrect. IgE mediates allergic hypersensitivity and parasite defense.",
-                    "C) IgM: Incorrect. IgM is a large pentamer restricted primarily to intravascular spaces.",
-                    "D) IgA: Incorrect. IgA functions mainly as a secretory mucosal dimer."
-                ]
-            },
-            {
-                stem: "A congenital immune deficiency is characterized by profoundly impaired B-cell development and maturation. The genetic inheritance pattern of this condition is X-linked. Which of the following is the correct diagnosis?",
-                options: [
-                    "Bruton’s agammaglobulinemia",
-                    "DiGeorge syndrome",
-                    "Acquired Immunodeficiency Syndrome",
-                    "Myeloperoxidase deficiency"
-                ],
-                correctIndex: 0,
-                explanation: "Genetic defects affecting early B-lymphocyte tyrosine kinase signaling prevent normal humoral immune development in male infants.",
-                rationales: [
-                    "A) Bruton’s agammaglobulinemia: Correct. Bruton's agammaglobulinemia is an X-linked congenital disorder causing a failure of B-cell maturation and profound immunoglobulin deficiency.",
-                    "B) DiGeorge syndrome: Incorrect. DiGeorge syndrome is a thymic T-cell deficiency due to chromosome 22 deletion.",
-                    "C) Acquired Immunodeficiency Syndrome: Incorrect. AIDS is an acquired viral infection.",
-                    "D) Myeloperoxidase deficiency: Incorrect. Myeloperoxidase deficiency affects neutrophil oxidative burst function."
-                ]
-            },
-            {
-                stem: "Professional antigen-presenting cells (APCs) express a specific surface molecule used to present exogenous antigens to helper T-cells. Based on the functional requirements of immune activation, which molecule is this?",
-                options: [
-                    "MHC Class II",
-                    "MHC Class I",
-                    "IgD",
-                    "CD25+Foxp3+"
-                ],
-                correctIndex: 0,
-                explanation: "Extracellular antigens captured by professional APCs are routed through specialized vesicles for presentation to CD4+ helper lymphocytes.",
-                rationales: [
-                    "A) MHC Class II: Correct. Professional APCs present exogenous antigens on MHC Class II molecules to activate CD4+ helper T-cells.",
-                    "B) MHC Class I: Incorrect. MHC Class I presents endogenous antigens to CD8+ cytotoxic T-cells.",
-                    "C) IgD: Incorrect. IgD acts as a B-cell surface antigen receptor.",
-                    "D) CD25+Foxp3+: Incorrect. These markers designate regulatory T-cell phenotypes rather than antigen presentation molecules."
-                ]
+                explanation: "A revertant (back-mutant) undergoes subsequent mutations that restore its original ancestral phenotype."
             }
         ];
 
-        let activeQuizData = [];
-        let currentScore = 0;
-        let answeredCount = 0;
+        let quizData = [];
 
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        function shuffle(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
             }
             return array;
         }
 
-        function renderQuiz() {
-            activeQuizData = shuffleArray(JSON.parse(JSON.stringify(rawQuizData)));
-
-            const container = document.getElementById('quiz-container');
-            container.innerHTML = '';
-
-            activeQuizData.forEach((item, index) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.id = `card-${index}`;
-
-                const qNum = document.createElement('div');
-                qNum.className = 'question-number';
-                qNum.innerText = `Question ${index + 1} of ${activeQuizData.length}`;
-
-                const qText = document.createElement('div');
-                qText.className = 'question-stem';
-                qText.innerText = item.stem;
-
-                const optionsGrid = document.createElement('div');
-                optionsGrid.className = 'options-grid';
-
-                let optionsWithIndices = item.options.map((opt, idx) => ({ text: opt, isCorrect: idx === item.correctIndex }));
-                shuffleArray(optionsWithIndices);
-
-                optionsWithIndices.forEach((optObj, optIdx) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn';
-                    btn.innerText = `${String.fromCharCode(65 + optIdx)}. ${optObj.text}`;
-                    btn.onclick = () => handleAnswer(index, optObj.isCorrect, btn, optionsGrid);
-                    optionsGrid.appendChild(btn);
-                });
-
-                const exp = document.createElement('div');
-                exp.className = 'explanation';
-                exp.id = `exp-${index}`;
-
-                let rationalesHTML = '<ul class="rationale-list">';
-                item.rationales.forEach(rat => {
-                    rationalesHTML += `<li>• ${rat}</li>`;
-                });
-                rationalesHTML += '</ul>';
-
-                exp.innerHTML = `
-                    <div class="explanation-paragraph"><strong>Explanation:</strong> ${item.explanationText}</div>
-                    ${rationalesHTML}
-                `;
-
-                card.appendChild(qNum);
-                card.appendChild(qText);
-                card.appendChild(optionsGrid);
-                card.appendChild(exp);
-
-                container.appendChild(card);
+        function initQuiz() {
+            quizData = JSON.parse(JSON.stringify(rawQuizData));
+            shuffle(quizData);
+            quizData.forEach(q => {
+                q.options.forEach((opt, idx) => opt.originalIndex = idx);
+                shuffle(q.options);
             });
 
-            updateHeader();
+            document.getElementById('summaryCard').classList.remove('visible');
+            document.getElementById('quizContainer').style.display = 'block';
+
+            renderQuiz();
+            updateScore();
         }
 
-        function handleAnswer(qIndex, isCorrect, selectedBtn, optionsContainer) {
-            const card = document.getElementById(`card-${qIndex}`);
-            const buttons = optionsContainer.querySelectorAll('.option-btn');
-            const exp = document.getElementById(`exp-${qIndex}`);
+        function renderQuiz() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
 
-            buttons.forEach(btn => btn.disabled = true);
+            quizData.forEach((q, qIndex) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.dataset.questionIndex = qIndex;
 
+                let optionsHTML = '';
+                q.options.forEach((opt, oIndex) => {
+                    optionsHTML += `<li><button class="option-btn" onclick="selectAnswer(${qIndex}, ${oIndex}, ${opt.originalIndex})">${String.fromCharCode(65 + oIndex)}) ${opt.text}</button></li>`;
+                });
+
+                card.innerHTML = `
+                    <div class="question-title">Q${qIndex + 1}. ${q.question}</div>
+                    <ul class="options-list" id="options-${qIndex}">
+                        ${optionsHTML}
+                    </ul>
+                    <div class="feedback-box" id="feedback-${qIndex}">
+                        <div class="status-banner" id="status-${qIndex}"></div>
+                        <div class="explanation-text" id="expl-${qIndex}"></div>
+                        <ul class="rationales-list" id="rat-${qIndex}"></ul>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function selectAnswer(qIndex, chosenOptionIndex, originalOptionIndex) {
+            const q = quizData[qIndex];
+            if (q.answered) return;
+            q.answered = true;
+            q.userChoice = originalOptionIndex;
+
+            const optionsContainer = document.getElementById(`options-${qIndex}`);
+            const buttons = optionsContainer.getElementsByClassName('option-btn');
+            
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].disabled = true;
+            }
+
+            const isCorrect = q.options[chosenOptionIndex].correct;
+
+            if (!isCorrect) {
+                wrongAudio.currentTime = 0;
+                wrongAudio.play().catch(e => console.log("Audio play blocked or missing:", e));
+            }
+
+            q.options.forEach((opt, idx) => {
+                if (opt.correct) {
+                    buttons[idx].classList.add('correct');
+                } else if (idx === chosenOptionIndex && !isCorrect) {
+                    buttons[idx].classList.add('incorrect');
+                }
+            });
+
+            const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+            const statusBanner = document.getElementById(`status-${qIndex}`);
+            const explText = document.getElementById(`expl-${qIndex}`);
+            const ratList = document.getElementById(`rat-${qIndex}`);
+
+            feedbackBox.classList.add('show');
             if (isCorrect) {
-                selectedBtn.classList.add('correct');
-                currentScore++;
+                statusBanner.textContent = "Correct!";
+                statusBanner.className = "status-banner correct";
             } else {
-                selectedBtn.classList.add('incorrect');
-                // Highlight the correct one
-                buttons.forEach(btn => {
-                    // Check button text against the actual correct text
-                    const originalItem = activeQuizData[qIndex];
-                    const correctText = originalItem.options[originalItem.correctIndex];
-                    if (btn.innerText.includes(correctText)) {
-                        btn.classList.add('correct');
+                statusBanner.textContent = "Incorrect.";
+                statusBanner.className = "status-banner incorrect";
+            }
+
+            explText.textContent = q.explanation;
+
+            let ratHTML = '';
+            q.options.forEach((opt, idx) => {
+                const letter = String.fromCharCode(65 + idx);
+                ratHTML += `<li><strong>${letter}) ${opt.text}</strong>: ${opt.why}</li>`;
+            });
+            ratList.innerHTML = ratHTML;
+
+            updateScore();
+            checkCompletion();
+        }
+
+        function updateScore() {
+            let answeredCount = 0;
+            let correctCount = 0;
+
+            quizData.forEach(q => {
+                if (q.answered) {
+                    answeredCount++;
+                    const chosen = q.options.find(opt => opt.originalIndex === q.userChoice);
+                    if (chosen && chosen.correct) {
+                        correctCount++;
                     }
-                });
+                }
+            });
 
-                // Play wrong answer sound effect
-                wrongSound.currentTime = 0;
-                wrongSound.play().catch(error => {
-                    console.log("Audio playback prevented or failed:", error);
-                });
-            }
-
-            exp.style.display = 'block';
-            answeredCount++;
-
-            updateHeader();
-
-            if (answeredCount === activeQuizData.length) {
-                showSummary();
-            }
+            const total = quizData.length;
+            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
+            
+            const progressPct = total > 0 ? (answeredCount / total) * 100 : 0;
+            document.getElementById('progressBar').style.width = progressPct + '%';
         }
 
-        function updateHeader() {
-            const total = activeQuizData.length;
-            const pct = total === 0 ? 0 : Math.round((currentScore / total) * 100);
-            document.getElementById('score-display').innerText = `Score: ${currentScore} / ${total} (${pct}%)`;
-        }
+        function checkCompletion() {
+            const allAnswered = quizData.every(q => q.answered);
+            if (allAnswered) {
+                let correctCount = quizData.filter(q => {
+                    const chosen = q.options.find(opt => opt.originalIndex === q.userChoice);
+                    return chosen && chosen.correct;
+                }).length;
+                const total = quizData.length;
+                const percentage = Math.round((correctCount / total) * 100);
 
-        function showSummary() {
-            const total = activeQuizData.length;
-            const pct = Math.round((currentScore / total) * 100);
-            const summaryCard = document.getElementById('summary-card');
-            const finalScore = document.getElementById('final-score');
-            const feedback = document.getElementById('summary-feedback');
+                document.getElementById('finalScore').textContent = `${correctCount} / ${total} (${percentage}%)`;
+                
+                let feedbackMsg = "Solid run! You're locked in.";
+                if (percentage >= 90) {
+                    feedbackMsg = "Absolute Gigachad. You drained that test dry.";
+                } else if (percentage < 70) {
+                    feedbackMsg = "You really didn't fucking know that.";
+                }
+                document.getElementById('summaryFeedback').textContent = feedbackMsg;
 
-            finalScore.innerText = `${pct}%`;
-
-            if (pct >= 90) {
-                feedback.innerText = "Absolute Gigachad. You drained that test dry.";
-            } else if (pct >= 75) {
-                feedback.innerText = "You lasted less than 30 seconds. Time for a rematch.";
-            } else {
-                feedback.innerText = "You really didn’t fucking know that.";
+                document.getElementById('summaryCard').classList.add('visible');
+                document.getElementById('summaryCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
-
-            summaryCard.style.display = 'block';
-            summaryCard.scrollIntoView({ behavior: 'smooth' });
         }
 
         function resetQuiz() {
-            currentScore = 0;
-            answeredCount = 0;
-            document.getElementById('summary-card').style.display = 'none';
-            renderQuiz();
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            initQuiz();
         }
 
-        window.onload = renderQuiz;
+        window.onload = initQuiz;
     </script>
 </body>
 </html>
