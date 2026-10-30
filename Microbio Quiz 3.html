@@ -248,7 +248,35 @@
         }
         .retake-btn:hover { background-color: var(--accent-hover); }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
+
+        /* 2-Second Popup Image Styling */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: popIn 0.15s ease-out;
+        }
+
+        .wrong-popup img {
+            max-width: 85vw;
+            max-height: 60vh;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+            border: 3px solid var(--incorrect-border);
+            display: block;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
 
         @media (max-width: 600px) {
             .sticky-header { padding: 10px 14px; }
@@ -264,6 +292,11 @@
     <!-- Audio Element for Wrong Answers -->
     <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
 
+    <!-- 2-Second Popup Image on Wrong Answer (Change src to .gif, .png, or .jpg as needed) -->
+    <div id="wrongPopup" class="wrong-popup hidden">
+        <img id="wrongImage" src="Wrong-answer.gif" alt="Wrong Answer">
+    </div>
+
     <header class="sticky-header">
         <h1>Microbio Quiz 3: Metabolism &amp; Genetics</h1>
         <div class="header-right">
@@ -277,7 +310,7 @@
         
         <div class="mode-container" id="modeSelector">
             <button class="mode-btn active" id="fullQuizBtn">Full Quiz (48)</button>
-            <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+            <button class="mode-btn" id="quickQuizBtn">Quick 15</button>
         </div>
 
         <div id="quiz"></div>
@@ -729,7 +762,7 @@
                     { text: "Transformation", correct: true, why: "Transformation transfers free DNA, usually fragments from a lysed cell, needs no special vehicle, and involves no direct donor-acceptor contact. [Lec 5, Slide #24]" },
                     { text: "Transduction", correct: false, why: "Transduction needs a vehicle: transfer is mediated by bacterial viruses. [Lec 5, Slide #26]" },
                     { text: "Conjugation", correct: false, why: "Conjugation requires cell-to-cell contact through a pilus. [Lec 5, Slide #20]" },
-                    { text: "Transposition", correct: false, why: "Transposition is recombination only, moving DNA within the chromosome rather than transferring free DNA between cells. [Lec 5, Slide #28]" }
+                    { text: "Transposition", correct: false, why: "Transposition moves DNA within the chromosome; it is recombination only, not transfer between cells. [Lec 5, Slide #28]" }
                 ]
             },
             {
@@ -779,6 +812,7 @@
         let quizMode = 'full';     // 'full' or 'quick'
         let order = [];
         let answers = {};
+        let popupTimeout = null;
 
         function fisherYates(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -814,12 +848,21 @@
             const chosen = q.options[chosenIdx];
             answers[q.id] = chosen.correct;
 
-            // Play Wrong-answer.m4a if the selected option is incorrect
+            // Trigger Audio and 2-Second Popup Image if incorrect
             if (!chosen.correct) {
                 const wrongAudio = document.getElementById('wrongAudio');
                 if (wrongAudio) {
-                    wrongAudio.currentTime = 0; // Rewind to start
+                    wrongAudio.currentTime = 0;
                     wrongAudio.play().catch(err => console.log("Audio play blocked:", err));
+                }
+
+                const popup = document.getElementById('wrongPopup');
+                if (popup) {
+                    popup.classList.remove('hidden');
+                    clearTimeout(popupTimeout);
+                    popupTimeout = setTimeout(() => {
+                        popup.classList.add('hidden');
+                    }, 2000);
                 }
             }
 
@@ -885,6 +928,9 @@
         }
 
         function renderQuiz(set) {
+            const popup = document.getElementById('wrongPopup');
+            if (popup) popup.classList.add('hidden');
+
             if (set) {
                 currentSet = set;
             } else {
