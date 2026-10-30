@@ -3,64 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Hub - Master Base</title>
+    <title>Quiz Hub - Alpha Chiro Edition</title>
     <style>
         /* =========================================================
-           1. CLASH OF CLANS THEME (DEFAULT)
-           ========================================================= */
+            1. GYM GAINZ THEME (DEFAULT)
+            ========================================================= */
         :root {
-            --bg-color: #4a7c29;
-            --bg-pattern: #5a8c39;
-            --header-bg: rgba(0, 0, 0, 0.4);
-            --header-border: #ffcc00;
-            --logo-color: #ffcc00;
-            --logo-box-bg: transparent;
-            --logo-box-text: #ffcc00;
-            --card-bg: #8b5a2b;
-            --card-border: #4a2e16;
-            --card-shadow: #2a180b;
-            --title-color: #ffffff;
-            --badge-color: #ffcc00;
-            --btn-bg-top: #ff9900;
-            --btn-bg-bottom: #ff5500;
-            --btn-border: #ffffff;
-            --btn-shadow: #992200;
-            --btn-text: #ffffff;
-        }
-
-        /* =========================================================
-           2. HUB THEME (TOGGLED)
-           ========================================================= */
-        body.hub-mode {
-            --bg-color: #0f0f0f;
-            --bg-pattern: #0f0f0f;
-            --header-bg: #0f0f0f;
-            --header-border: #222222;
+            --bg-color: #121212;
+            --bg-pattern: #1e1e1e;
+            --header-bg: rgba(20, 20, 20, 0.9);
+            --header-border: #ff9900;
             --logo-color: #ffffff;
             --logo-box-bg: #ff9900;
             --logo-box-text: #000000;
             --card-bg: #1a1a1a;
-            --card-border: #282828;
-            --card-shadow: transparent;
+            --card-border: #333333;
+            --card-shadow: rgba(0, 0, 0, 0.5);
             --title-color: #ffffff;
-            --badge-color: #888888;
             --btn-bg-top: #ff9900;
-            --btn-bg-bottom: #ff9900;
-            --btn-border: #ff9900;
-            --btn-shadow: transparent;
-            --btn-text: #000000;
+            --btn-bg-bottom: #e68a00;
+            --btn-border: #ffffff;
+            --btn-shadow: #b36b00;
+            --btn-text: #ffffff;
+        }
+
+        /* =========================================================
+            2. VIP LOUNGE THEME (TOGGLED)
+            ========================================================= */
+        body.hub-mode {
+            --bg-color: #0b0b0f;
+            --bg-pattern: #13131a;
+            --header-bg: #13131a;
+            --header-border: #d4af37;
+            --logo-color: #d4af37;
+            --logo-box-bg: #ffffff;
+            --logo-box-text: #0b0b0f;
+            --card-bg: #16161f;
+            --card-border: #2a2a3b;
+            --card-shadow: transparent;
+            --title-color: #f3f3f3;
+            --btn-bg-top: #d4af37;
+            --btn-bg-bottom: #aa8c2c;
+            --btn-border: #f3f3f3;
+            --btn-shadow: #66541a;
+            --btn-text: #0b0b0f;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
         
         body { 
-            font-family: Arial, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background: var(--bg-color);
             background-image: 
                 radial-gradient(var(--bg-pattern) 15%, transparent 16%),
                 radial-gradient(var(--bg-pattern) 15%, transparent 16%);
-            background-size: 60px 60px;
-            background-position: 0 0, 30px 30px;
+            background-size: 40px 40px;
             color: var(--title-color); 
             padding: 20px; 
             user-select: none;
@@ -75,10 +72,11 @@
             max-width: 1050px; 
             margin: 0 auto 25px auto; 
             background: var(--header-bg); 
-            padding: 12px 20px; 
-            border-radius: 8px; 
+            padding: 14px 20px; 
+            border-radius: 10px; 
             border: 2px solid var(--header-border);
-            box-shadow: 0 4px 0 #000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: relative;
         }
 
         .logo-container {
@@ -89,15 +87,40 @@
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             letter-spacing: -1px;
+            position: relative;
+        }
+
+        /* Tooltip for Logo Toggle */
+        .logo-container::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -36px;
+            left: 0;
+            background: #222;
+            color: #ff9900;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
+            font-weight: bold;
+        }
+
+        .logo-container:hover::after {
+            opacity: 1;
         }
 
         .logo-box {
             background-color: var(--logo-box-bg);
             color: var(--logo-box-text);
             padding: 2px 8px;
-            border-radius: 4px;
+            border-radius: 6px;
         }
 
         .builder-stats {
@@ -105,10 +128,6 @@
             gap: 12px;
             font-size: 13px;
             font-weight: bold;
-        }
-
-        body.hub-mode .builder-stats {
-            display: none;
         }
 
         .stat-badge {
@@ -125,8 +144,8 @@
         }
 
         /* =========================================================
-           LAYOUT 1: CLASH OF CLANS VILLAGE GRID
-           ========================================================= */
+            LAYOUT 1: GYM GAINZ RACK GRID
+            ========================================================= */
         .clash-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -139,10 +158,10 @@
 
         .building-card {
             background: var(--card-bg);
-            border: 3px solid var(--card-border);
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 6px 0 var(--card-shadow);
+            border: 2px solid var(--card-border);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 6px 12px var(--card-shadow);
             color: white;
             display: flex;
             flex-direction: column;
@@ -157,11 +176,11 @@
         }
 
         .building-icon {
-            font-size: 32px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px;
+            font-size: 30px;
+            background: rgba(255, 153, 0, 0.1);
+            padding: 10px;
             border-radius: 8px;
-            border: 1px solid #ffcc00;
+            border: 1px solid #ff9900;
         }
 
         .building-title {
@@ -172,23 +191,40 @@
 
         .level-badge {
             font-size: 11px;
-            color: #ffcc00;
+            color: #ff9900;
             margin-top: 2px;
             text-transform: uppercase;
+            font-weight: bold;
         }
 
         .attack-btn {
-            background: linear-gradient(to bottom, #ff9900, #ff5500);
-            border: 1px solid #ffffff;
+            background: linear-gradient(to bottom, var(--btn-bg-top), var(--btn-bg-bottom));
+            border: 1px solid var(--btn-border);
             border-radius: 6px;
             padding: 10px;
             text-align: center;
             font-weight: 900;
             font-size: 13px;
             text-transform: uppercase;
-            box-shadow: 0 3px 0 #992200;
-            color: #ffffff;
+            box-shadow: 0 3px 0 var(--btn-shadow);
+            color: var(--btn-text);
             margin-top: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Standout Green Button for Practice Exams */
+        .attack-btn.practice-btn-highlight {
+            background: linear-gradient(to bottom, #22c55e, #16a34a);
+            border-color: #ffffff;
+            box-shadow: 0 3px 0 #14532d;
+            color: #ffffff;
+        }
+
+        .attack-btn:hover {
+            opacity: 0.9;
         }
 
         .multi-btn-group {
@@ -204,14 +240,18 @@
             min-width: 60px;
         }
 
+        .multi-btn-group a.full-width {
+            flex: 1 1 100%;
+        }
+
         .multi-btn-group .attack-btn {
             margin-top: 0;
             width: 100%;
         }
 
         /* =========================================================
-           LAYOUT 2: VIDEO HUB GRID (ACTIVE IN HUB MODE)
-           ========================================================= */
+            LAYOUT 2: VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
+            ========================================================= */
         .hub-grid-layout {
             display: none;
         }
@@ -221,17 +261,29 @@
         }
 
         .course-section { margin-bottom: 30px; }
-        .course-title { color: #ff9900; font-size: 16px; border-bottom: 1px solid #282828; padding-bottom: 6px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .course-title { color: #d4af37; font-size: 16px; border-bottom: 1px solid #2a2a3b; padding-bottom: 6px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 18px; }
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
         
-        .hub-card { background-color: #1a1a1a; border-radius: 8px; overflow: hidden; border: 1px solid #282828; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
-        .hub-card:hover { transform: translateY(-3px); border-color: #ff9900; }
+        .hub-card { background-color: #16161f; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a3b; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
+        .hub-card:hover { transform: translateY(-3px); border-color: #d4af37; }
         
-        .card-thumbnail { background-color: #242424; height: 125px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #282828; }
+        /* Standout Green Styling for Practice Exam Hub Cards */
+        .hub-card.practice-hub-highlight {
+            border: 2px solid #22c55e;
+        }
+        .hub-card.practice-hub-highlight:hover {
+            border-color: #16a34a;
+        }
+
+        .card-thumbnail { background-color: #1e1e2b; height: 120px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #2a2a3b; }
         .thumbnail-icon { font-size: 38px; }
         
-        .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #ff9900; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #ff9900; }
+        .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #d4af37; }
+        .duration-badge.practice-badge {
+            color: #22c55e;
+            border-color: #22c55e;
+        }
         
         .card-info { padding: 12px; }
         .quiz-card-title { font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
@@ -243,20 +295,20 @@
 
     <!-- Top Navigation Bar -->
     <div class="header-bar">
-        <div class="logo-container" id="logoToggle">
-            <span>Quiz</span>
-            <span class="logo-box">Hub</span>
+        <div class="logo-container" id="logoToggle" data-tooltip="Safe for Work? Absolutely Not.">
+            <span>Chiro</span>
+            <span class="logo-box">Gainz</span>
         </div>
         <div class="builder-stats">
-            <div class="stat-badge">🔨 Builders: 2/2</div>
-            <div class="stat-badge">🏆 Trophies: 2,400</div>
+            <div class="stat-badge">🏋️‍♂️ PRs Smashed: 420</div>
+            <div class="stat-badge">💀 Subluxations: 0</div>
         </div>
     </div>
 
     <div class="main-container">
 
         <!-- =========================================================
-             1. CLASH OF CLANS LAYOUT (ACTIVE BY DEFAULT)
+             1. GYM GAINZ RACK GRID (DEFAULT VIEW)
              ========================================================= -->
         <div class="clash-grid">
             <!-- Biochem Card -->
@@ -266,41 +318,36 @@
                         <div class="building-icon">🧪</div>
                         <div>
                             <div class="building-title">Biochem</div>
-                            <div class="level-badge">Town Hall Level 2</div>
+                            <div class="level-badge">Rack Level 6</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Biochem%20Week%201.html">
-                        <div class="attack-btn">Week 1</div>
-                    </a>
-                    <a href="Biochem%20Week%202.html">
-                        <div class="attack-btn">Week 2</div>
-                    </a>
+                    <a href="Biochem%20Week%201.html"><div class="attack-btn">Thermo</div></a>
+                    <a href="Biochem%20Acid%20Base"><div class="attack-btn">Acid-Base</div></a>
+                    <a href="Biochem%20Ochem"><div class="attack-btn">O-Chem</div></a>
+                    <a href="Biochem%20Amino%20Acids"><div class="attack-btn">Amino Acids</div></a>
+                    <a href="Biochem%20Week%202.html"><div class="attack-btn">Protein Synth</div></a>
+                    <a href="Biochem%20Specialized%20Products"><div class="attack-btn">Spec Products</div></a>
                 </div>
             </div>
 
-            <!-- GenPath Card (Updated with Week 3) -->
+            <!-- GenPath Card -->
             <div class="building-card">
                 <div>
                     <div class="building-header">
                         <div class="building-icon">🔬</div>
                         <div>
                             <div class="building-title">GenPath</div>
-                            <div class="level-badge">Town Hall Level 3</div>
+                            <div class="level-badge">Rack Level 3</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Gen%20Path%20Week%201.html">
-                        <div class="attack-btn">Week 1</div>
-                    </a>
-                    <a href="Gen%20Path%20Week%202.html">
-                        <div class="attack-btn">Week 2</div>
-                    </a>
-                    <a href="Gen%20Path%20Week%203.html" style="flex: 1 1 100%;">
-                        <div class="attack-btn">Week 3</div>
-                    </a>
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Midterm 1 Practice Exam</div></a>
+                    <a href="Gen%20Path%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Gen%20Path%20Week%202.html"><div class="attack-btn">Week 2</div></a>
+                    <a href="Gen%20Path%20Week%203.html" class="full-width"><div class="attack-btn">Week 3</div></a>
                 </div>
             </div>
 
@@ -311,71 +358,53 @@
                         <div class="building-icon">🧫</div>
                         <div>
                             <div class="building-title">Microbio</div>
-                            <div class="level-badge">Town Hall Level 3</div>
+                            <div class="level-badge">Rack Level 3</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Microbio%20Quiz%201.html">
-                        <div class="attack-btn">Quiz 1</div>
-                    </a>
-                    <a href="Microbio%20Quiz%202.html">
-                        <div class="attack-btn">Quiz 2</div>
-                    </a>
-                    <a href="Microbio%20Quiz%203.html" style="flex: 1 1 100%;">
-                        <div class="attack-btn">Quiz 3</div>
-                    </a>
+                    <a href="Microbio%20Quiz%201.html"><div class="attack-btn">Quiz 1</div></a>
+                    <a href="Microbio%20Quiz%202.html"><div class="attack-btn">Quiz 2</div></a>
+                    <a href="Microbio%20Quiz%203.html" class="full-width"><div class="attack-btn">Quiz 3</div></a>
                 </div>
             </div>
 
-            <!-- Reg 1 Card -->
+            <!-- Reg 1 Card (Practice Exam on Top) -->
             <div class="building-card">
                 <div>
                     <div class="building-header">
                         <div class="building-icon">🦴</div>
                         <div>
                             <div class="building-title">Reg 1</div>
-                            <div class="level-badge">Town Hall Level 4</div>
+                            <div class="level-badge">Rack Level 5</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Reg%201%20Week%201.html">
-                        <div class="attack-btn">W1</div>
-                    </a>
-                    <a href="Reg%201%20Week%202.html">
-                        <div class="attack-btn">W2</div>
-                    </a>
-                    <a href="Reg%201%20Week%203.html">
-                        <div class="attack-btn">W3</div>
-                    </a>
-                    <a href="Forearm_Drill_Daelin.html">
-                        <div class="attack-btn">Forearm Drill</div>
-                    </a>
+                    <a href="Reg%201%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Reg 1 Lab Practice Exam</div></a>
+                    <a href="Reg%201%20Week%201.html"><div class="attack-btn">W1</div></a>
+                    <a href="Reg%201%20Week%202.html"><div class="attack-btn">W2</div></a>
+                    <a href="Reg%201%20Week%203.html"><div class="attack-btn">W3</div></a>
+                    <a href="Forearm_Drill_Daelin.html" class="full-width"><div class="attack-btn">Forearm Drill</div></a>
                 </div>
             </div>
 
-            <!-- Spinal 2 Card -->
+            <!-- Spinal 2 Card (Practice Exam on Top) -->
             <div class="building-card">
                 <div>
                     <div class="building-header">
                         <div class="building-icon">🩺</div>
                         <div>
                             <div class="building-title">Spinal 2</div>
-                            <div class="level-badge">Town Hall Level 3</div>
+                            <div class="level-badge">Rack Level 4</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Spinal%202%20Week%201.html">
-                        <div class="attack-btn">Week 1</div>
-                    </a>
-                    <a href="Spinal%202%20Week%202.html">
-                        <div class="attack-btn">Week 2</div>
-                    </a>
-                    <a href="Spinal%202%20Week%203.html" style="flex: 1 1 100%;">
-                        <div class="attack-btn">Week 3</div>
-                    </a>
+                    <a href="Spinal%202%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Spinal 2 Lab Practice Exam</div></a>
+                    <a href="Spinal%202%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Spinal%202%20Week%202.html"><div class="attack-btn">Week 2</div></a>
+                    <a href="Spinal%202%20Week%203.html" class="full-width"><div class="attack-btn">Week 3</div></a>
                 </div>
             </div>
 
@@ -386,26 +415,16 @@
                         <div class="building-icon">🫀</div>
                         <div>
                             <div class="building-title">Sys Phys</div>
-                            <div class="level-badge">Town Hall Level 5</div>
+                            <div class="level-badge">Rack Level 5</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Sys%20Phys%20Cell%20Basics.html">
-                        <div class="attack-btn">Cell Basics</div>
-                    </a>
-                    <a href="Sys%20Phys%20Osmoregulation.html">
-                        <div class="attack-btn">Osmoreg</div>
-                    </a>
-                    <a href="Sys%20Phys%20Biochem.html">
-                        <div class="attack-btn">Biochem</div>
-                    </a>
-                    <a href="Sys%20Phys%20Circulatory.html">
-                        <div class="attack-btn">Circulatory</div>
-                    </a>
-                    <a href="Sys%20Phys%20Neurology.html" style="flex: 1 1 100%;">
-                        <div class="attack-btn">Neurology</div>
-                    </a>
+                    <a href="Sys%20Phys%20Cell%20Basics.html"><div class="attack-btn">Cell Basics</div></a>
+                    <a href="Sys%20Phys%20Osmoregulation.html"><div class="attack-btn">Osmoreg</div></a>
+                    <a href="Sys%20Phys%20Biochem.html"><div class="attack-btn">Biochem</div></a>
+                    <a href="Sys%20Phys%20Circulatory.html"><div class="attack-btn">Circulatory</div></a>
+                    <a href="Sys%20Phys%20Neurology.html" class="full-width"><div class="attack-btn">Neurology</div></a>
                 </div>
             </div>
 
@@ -416,106 +435,25 @@
                         <div class="building-icon">⚡</div>
                         <div>
                             <div class="building-title">Sublux Analysis</div>
-                            <div class="level-badge">Town Hall Level 2</div>
+                            <div class="level-badge">Rack Level 2</div>
                         </div>
                     </div>
                 </div>
                 <div class="multi-btn-group">
-                    <a href="Sublux%20Terms.html">
-                        <div class="attack-btn">Terms</div>
-                    </a>
-                    <a href="Sublux%20Listings.html">
-                        <div class="attack-btn">Listings</div>
-                    </a>
+                    <a href="Sublux%20Terms.html"><div class="attack-btn">Terms</div></a>
+                    <a href="Sublux%20Listings.html"><div class="attack-btn">Listings</div></a>
                 </div>
             </div>
         </div>
 
         <!-- =========================================================
-             2. VIDEO HUB LAYOUT (ACTIVE WHEN LOGO IS CLICKED)
+             2. VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
              ========================================================= -->
         <div class="hub-grid-layout">
-
+            
+            <!-- Microbiology -->
             <div class="course-section">
-                <h2 class="course-title">Biochem</h2>
-                <div class="quiz-grid">
-                    <a href="Biochem%20Week%201.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🧪</span>
-                            <span class="duration-badge">Week 1</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">Biochem - Week 1 Quiz</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">98% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="Biochem%20Week%202.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🧪</span>
-                            <span class="duration-badge">Week 2</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">Biochem - Week 2</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- GenPath Section (Updated with Week 3 Hub Card) -->
-            <div class="course-section">
-                <h2 class="course-title">GenPath</h2>
-                <div class="quiz-grid">
-                    <a href="Gen%20Path%20Week%201.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🔬</span>
-                            <span class="duration-badge">Week 1</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">GenPath - Week 1 Quiz</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="Gen%20Path%20Week%202.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🔬</span>
-                            <span class="duration-badge">Week 2</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">GenPath - Week 2 Quiz</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="Gen%20Path%20Week%203.html" class="hub-card">
-                        <div class="card-thumbnail">
-                            <span class="thumbnail-icon">🔬</span>
-                            <span class="duration-badge">Week 3</span>
-                        </div>
-                        <div class="card-info">
-                            <div class="quiz-card-title">GenPath - Week 3 Quiz</div>
-                            <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="course-section">
-                <h2 class="course-title">Microbio</h2>
+                <h2 class="course-title">Microbiology</h2>
                 <div class="quiz-grid">
                     <a href="Microbio%20Quiz%201.html" class="hub-card">
                         <div class="card-thumbnail">
@@ -523,10 +461,10 @@
                             <span class="duration-badge">Quiz 1</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 1 Material</div>
+                            <div class="quiz-card-title">Tiny Microbes Caught Swimming Up the Gradient (Taxis Gone Wild)</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">97% rating</span>
                             </div>
                         </div>
                     </a>
@@ -536,10 +474,10 @@
                             <span class="duration-badge">Quiz 2</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 2 Material</div>
+                            <div class="quiz-card-title">Naked Mycoplasma Shows Off Zero Cell Wall (Not Clickbait)</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
                             </div>
                         </div>
                     </a>
@@ -549,67 +487,225 @@
                             <span class="duration-badge">Quiz 3</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Microbio - Quiz 3 (Lectures 4 & 5)</div>
+                            <div class="quiz-card-title">Hot Bacterial Genetics & Wild Metabolism Pathways That Will F*** Your GPA (POV)</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
                             </div>
                         </div>
                     </a>
                 </div>
             </div>
 
+            <!-- Biochemistry -->
             <div class="course-section">
-                <h2 class="course-title">Reg 1</h2>
+                <h2 class="course-title">Biochemistry</h2>
                 <div class="quiz-grid">
+                    <a href="Biochem%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Thermo</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Steamy Gibbs Free Energy & Raw Mitochondrial Gradient Action (100% Uncoupled)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Acid%20Base" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚗️</span>
+                            <span class="duration-badge">Acid-Base</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Henderson-Hasselbalch Climax: Buffers Take Deep Proton Influx In Cytosol</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Ochem" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧪</span>
+                            <span class="duration-badge">O-Chem</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Rigid Peptide Bond Refuses To Rotate: Pi-Orbital Delocalization Caught On Cam</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Amino%20Acids" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🥩</span>
+                            <span class="duration-badge">Amino Acids</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Zwitterion Gets Double Charged At pH 7.4 (Raw Side-Chain Action)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧬</span>
+                            <span class="duration-badge">Protein Synth</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Ribosomal Polysome Threesome: tRNA Thrusts Straight Into The Naked A-Site</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Specialized%20Products" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">💥</span>
+                            <span class="duration-badge">Metabolism</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Toxic Ammonia Choked Out In Hepatic Threesome (Urea Cycle Finale)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- General Pathology -->
+            <div class="course-section">
+                <h2 class="course-title">General Pathology</h2>
+                <div class="quiz-grid">
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Practice</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Gen Path Midterm 1 Practice Exam: Ultimate Prep Step-By-Step Breakdown</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Irreversible Cell Injury: Mitochondria Blows Its Entire Membrane Load</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Dirty Neutrophils Extravasate Straight Into Inflamed Tissue Pockets</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Chronic Granuloma Threesome: Macrophages & Giant Cells Lock It Down</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">95% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Regional Anatomy 1 (Practice Exam on Top) -->
+            <div class="course-section">
+                <h2 class="course-title">Anatomy & Regional Ortho</h2>
+                <div class="quiz-grid">
+                    <a href="Reg%201%20Lab%20Exam%201.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge practice-badge">Lab 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Island Fever Meltdown: Eddie Pins Upper Extremity Lines While Missing Hawaii</div>
+                            <div class="quiz-card-meta">
+                                <span>By Down-Bad Eddie</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
                     <a href="Reg%201%20Week%201.html" class="hub-card">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">🦴</span>
-                            <span class="duration-badge">Week 1</span>
+                            <span class="duration-badge">W1</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Reg 1 - Week 1 Quiz</div>
+                            <div class="quiz-card-title">Brachial Plexus Gets Completely Tangled By Step-Bro (Gone Wrong)</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">99% rating</span>
+                                <span>By Daelin</span>
+                                <span class="rating">100% rating</span>
                             </div>
                         </div>
                     </a>
                     <a href="Reg%201%20Week%202.html" class="hub-card">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">🦴</span>
-                            <span class="duration-badge">Week 2</span>
+                            <span class="duration-badge">W2</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Reg 1 - Week 2 Quiz</div>
+                            <div class="quiz-card-title">Axillary Sheath Exposed: Nerves Penetrate Cords In Broad Daylight</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
-                                <span class="rating">100% rating</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
                             </div>
                         </div>
                     </a>
                     <a href="Reg%201%20Week%203.html" class="hub-card">
                         <div class="card-thumbnail">
-                            <span class="thumbnail-icon">✋</span>
-                            <span class="duration-badge">Week 3</span>
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W3</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Reg 1 - Week 3 Quiz</div>
+                            <div class="quiz-card-title">Upper Extremity Stripped Down: Subclavian Pathway Action</div>
                             <div class="quiz-card-meta">
-                                <span>By Daelin</span>
-                                <span class="rating">100% rating</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">96% rating</span>
                             </div>
                         </div>
                     </a>
                     <a href="Forearm_Drill_Daelin.html" class="hub-card">
                         <div class="card-thumbnail">
-                            <span class="thumbnail-icon">💪</span>
-                            <span class="duration-badge">60 Qs</span>
+                            <span class="thumbnail-icon">📏</span>
+                            <span class="duration-badge">Drill</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Forearm - Muscle, Nerve &amp; Action Drill</div>
+                            <div class="quiz-card-title">Strict Forearm Drill: Zero Fun Allowed, Proper Pronation Only</div>
                             <div class="quiz-card-meta">
-                                <span>By Daelin</span>
+                                <span>By By-The-Book Daelin</span>
                                 <span class="rating">100% rating</span>
                             </div>
                         </div>
@@ -617,19 +713,164 @@
                 </div>
             </div>
 
+            <!-- Spinal Anatomy 2 (Practice Exam on Top) -->
             <div class="course-section">
-                <h2 class="course-title">Spinal 2</h2>
+                <h2 class="course-title">Spinal & Regional Adjusting</h2>
                 <div class="quiz-grid">
+                    <a href="Spinal%202%20Lab%20Exam%201.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge practice-badge">Lab 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Long-Distance Pine Overload: Eddie Sweats Over Bony Landmarks</div>
+                            <div class="quiz-card-meta">
+                                <span>By Down-Bad Eddie</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
                     <a href="Spinal%202%20Week%201.html" class="hub-card">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">🩺</span>
-                            <span class="duration-badge">Week 1</span>
+                            <span class="duration-badge">W1</span>
                         </div>
                         <div class="card-info">
-                            <div class="quiz-card-title">Spinal 2 - Week 1 Quiz</div>
+                            <div class="quiz-card-title">Hot, Steamy Vertebral Adjustments in Your Area</div>
                             <div class="quiz-card-meta">
-                                <span>By Joe</span>
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">W2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Facet Joint Capsule Rubdown: Meniscoid Fringes Trapped Tight</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">W3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Ligamentum Flavum Stretched To Its Limits While Dura Watches</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">95% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Systemic Physiology -->
+            <div class="course-section">
+                <h2 class="course-title">Systemic Physiology</h2>
+                <div class="quiz-grid">
+                    <a href="Sys%20Phys%20Cell%20Basics.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Basics</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hardcore Ion Gradients & Membrane Depolarization (Viewer Discretion Advised)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Osmoregulation.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Osmoreg</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Gushing Renal Filtrate: Loop of Henle Dries Out Every Single Drop</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">96% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Biochem.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Biochem</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Allosteric Binding Frenzy: Substrates Jam Themselves Into Active Sites</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Circulatory.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Circ</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Massive Afterload Backpressure Pounds Left Ventricle All Night</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
                                 <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Neurology.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Neuro</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Action Potential Squirts Neurotransmitter Straight Across Synapse</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Subluxation Analysis -->
+            <div class="course-section">
+                <h2 class="course-title">Subluxation Analysis</h2>
+                <div class="quiz-grid">
+                    <a href="Sublux%20Terms.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Terms</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Step-Bro, I'm Stuck... In a Bilateral Sacral Fixation</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sublux%20Listings.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Listings</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hard Posterior-Superior Thrust Snaps Fixation In Wide Open View</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
                             </div>
                         </div>
                     </a>
@@ -642,17 +883,17 @@
 
     <script>
         const logo = document.getElementById('logoToggle');
-
-        if (localStorage.getItem('quizHubTheme') === 'hub') {
+        
+        if (localStorage.getItem('quizHubTheme') === 'vip') {
             document.body.classList.add('hub-mode');
         }
 
         logo.addEventListener('click', () => {
             document.body.classList.toggle('hub-mode');
             if (document.body.classList.contains('hub-mode')) {
-                localStorage.setItem('quizHubTheme', 'hub');
+                localStorage.setItem('quizHubTheme', 'vip');
             } else {
-                localStorage.setItem('quizHubTheme', 'clash');
+                localStorage.setItem('quizHubTheme', 'gainz');
             }
         });
     </script>
