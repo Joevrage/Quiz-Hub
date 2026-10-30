@@ -112,6 +112,9 @@
 </style>
 </head>
 <body>
+<!-- Hidden audio feedback element -->
+<audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+
 <header>
   <div class="brand">Gen Path Quiz Hub<small>Midterm 1 Practice Exam &middot; Rotating Bank</small></div>
   <div class="header-right">
@@ -4397,7 +4400,7 @@ const questionBank = [
       {
         "text": "Incompatible blood transfusion",
         "correct": false,
-        "why": "Not autoimmune: the recipient attacks foreign donor red blood cells. [Lecture 4.1]"
+        "why": "Not autoimmune: the recipient attacks foreign donor cells. [Lecture 4.1]"
       },
       {
         "text": "Erythroblastosis fetalis",
@@ -5131,7 +5134,16 @@ function selectOption(qi, oi) {
   });
 
   q._result = isCorrect;
-  if (isCorrect) score++;
+  if (isCorrect) {
+    score++;
+  } else {
+    // Play wrong answer audio effect
+    const wrongAudio = document.getElementById("wrongAudio");
+    if (wrongAudio) {
+      wrongAudio.currentTime = 0;
+      wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
+    }
+  }
   answered++;
 
   const exp = document.getElementById(`exp-${qi}`);
