@@ -3,657 +3,863 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microbio Quiz 3: Comprehensive Metabolism & Genetics</title>
+    <title>Microbio Quiz 3: Bacterial Metabolism &amp; Genetics</title>
     <style>
         :root {
-            --bg-main: #0f0f0f;
+            --bg-body: #0f0f0f;
             --bg-card: #1a1a1a;
             --text-main: #ffffff;
-            --text-muted: #a3a3a3;
+            --text-dim: #888888;
             --accent: #ff9900;
+            --accent-hover: #cc7a00;
+            --border-color: #282828;
             --correct-bg: #14532d;
             --correct-border: #22c55e;
             --incorrect-bg: #7f1d1d;
             --incorrect-border: #ef4444;
-            --border-color: #333333;
+            --option-bg: #222222;
+            --option-hover: #2c2c2c;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--bg-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
             color: var(--text-main);
-            line-height: 1.6;
-            padding-bottom: 60px;
+            padding-top: 80px;
+            padding-bottom: 50px;
+            line-height: 1.5;
         }
 
-        header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            padding: 1.5rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            color: var(--accent);
-            margin-bottom: 0.5rem;
-        }
-
-        .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-        }
-
-        .header-sticky {
-            position: sticky;
-            top: 0;
-            background-color: rgba(26, 26, 26, 0.95);
-            backdrop-filter: blur(5px);
-            border-bottom: 2px solid var(--accent);
-            padding: 12px 20px;
-            z-index: 1000;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .header-container {
-            max-width: 800px;
-            margin: 0 auto;
+        .sticky-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            min-height: 60px;
+            background-color: #141414;
+            padding: 10px 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.6);
         }
 
-        .header-title {
-            font-size: 1.1rem;
+        .sticky-header h1 {
+            font-size: 1.15rem;
             font-weight: 700;
             color: var(--accent);
+            letter-spacing: 0.3px;
         }
 
-        .score-box {
+        .header-right { display: flex; align-items: center; gap: 12px; }
+
+        .hub-link {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        .hub-link:hover { color: var(--accent); }
+
+        .score-tracker {
             font-size: 1rem;
-            font-weight: 600;
-            background-color: #262626;
-            color: #ffffff;
-            padding: 6px 14px;
+            font-weight: bold;
+            background: #222222;
+            padding: 6px 16px;
             border-radius: 20px;
-            border: 1px solid var(--border-color);
+            border: 1px solid var(--accent);
+            color: var(--text-main);
+            white-space: nowrap;
         }
 
-        .progress-bar-container {
+        .quiz-container {
             width: 100%;
-            height: 6px;
-            background-color: var(--border-color);
-            position: absolute;
-            bottom: 0;
-            left: 0;
+            max-width: 850px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background-color: var(--accent);
-            transition: width 0.3s ease;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+        .intro {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
         .question-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 24px;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
         }
 
-        .question-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .options-list {
+        .question-meta {
             display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            list-style: none;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
+
+        .badge {
+            background: rgba(255, 153, 0, 0.12);
+            color: var(--accent);
+            border: 1px solid rgba(255, 153, 0, 0.45);
+            border-radius: 12px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .question-text {
+            font-size: 1.12rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            line-height: 1.45;
+        }
+
+        .options-list { display: flex; flex-direction: column; gap: 10px; }
 
         .option-btn {
-            background-color: #262626;
-            color: var(--text-main);
-            border: 1.5px solid var(--border-color);
-            padding: 14px 16px;
-            text-align: left;
-            border-radius: 8px;
+            background-color: var(--option-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 13px 18px;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
+            transition: background 0.2s, border-color 0.2s;
+            font-size: 1rem;
+            text-align: left;
+            color: var(--text-main);
+            font-family: inherit;
             display: flex;
-            align-items: center;
-            width: 100%;
+            gap: 10px;
         }
 
+        .option-letter { color: var(--accent); font-weight: 700; }
+
         .option-btn:hover:not(:disabled) {
-            background-color: #333333;
             border-color: var(--accent);
+            background-color: var(--option-hover);
         }
+
+        .option-btn:disabled { cursor: not-allowed; }
 
         .option-btn.correct {
             background-color: var(--correct-bg);
             border-color: var(--correct-border);
-            color: #fff;
+            font-weight: 600;
         }
+        .option-btn.correct .option-letter, .option-btn.incorrect .option-letter { color: #ffffff; }
 
         .option-btn.incorrect {
             background-color: var(--incorrect-bg);
             border-color: var(--incorrect-border);
-            color: #fff;
-        }
-
-        .option-btn:disabled {
-            cursor: default;
         }
 
         .feedback-box {
-            margin-top: 1rem;
-            padding: 1rem;
+            margin-top: 18px;
+            padding: 16px;
+            background-color: #141414;
             border-radius: 6px;
-            display: none;
-            background-color: #222222;
             border-left: 4px solid var(--accent);
         }
 
-        .feedback-box.show {
-            display: block;
-        }
-
         .status-banner {
-            font-weight: bold;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 6px;
         }
+        .status-banner.correct { color: var(--correct-border); }
+        .status-banner.incorrect { color: var(--incorrect-border); }
 
-        .status-banner.correct {
-            color: var(--correct-border);
-        }
-
-        .status-banner.incorrect {
-            color: var(--incorrect-border);
-        }
-
-        .explanation-text {
-            font-size: 0.9rem;
-            margin-bottom: 0.75rem;
-            color: #e5e5e5;
-        }
-
-        .rationales-list {
-            list-style: none;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            border-top: 1px solid var(--border-color);
-            padding-top: 0.5rem;
-        }
-
-        .rationales-list li {
-            margin-bottom: 0.4rem;
-        }
-
-        .summary-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 32px;
-            text-align: center;
-            display: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            margin-bottom: 2rem;
-        }
-
-        .summary-card.visible {
-            display: block;
-        }
-
-        .summary-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent);
+        .reference {
+            color: var(--text-dim);
+            font-size: 0.88rem;
             margin-bottom: 12px;
         }
 
-        .summary-score {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--accent);
-            margin-bottom: 16px;
+        .breakdown-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.93rem;
         }
 
-        .summary-text {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-        }
+        .breakdown-item { color: #d4d4d4; }
+        .breakdown-item .tag { font-weight: 700; }
+        .breakdown-item .tag.right { color: var(--correct-border); }
+        .breakdown-item .tag.wrong { color: var(--incorrect-border); }
+        .breakdown-item .opt-name { color: #ffffff; font-weight: 600; }
 
-        .reset-btn {
+        .summary-card {
+            background-color: var(--bg-card);
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        .summary-title { font-size: 1.7rem; color: var(--accent); margin-bottom: 10px; }
+        .summary-score { font-size: 2.4rem; font-weight: 800; margin-bottom: 8px; }
+        .summary-msg { color: var(--text-dim); margin-bottom: 22px; }
+
+        .retake-btn {
             background-color: var(--accent);
             color: #000000;
             border: none;
             padding: 12px 28px;
             font-size: 1rem;
             font-weight: 700;
-            border-radius: 8px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s ease;
+            font-family: inherit;
         }
+        .retake-btn:hover { background-color: var(--accent-hover); }
 
-        .reset-btn:hover {
-            background-color: #e68a00;
-        }
+        .hidden { display: none; }
 
         @media (max-width: 600px) {
-            .container {
-                margin: 1rem auto;
-                padding: 0 0.5rem;
-            }
-            .question-card {
-                padding: 1rem;
-            }
+            .sticky-header { padding: 10px 14px; }
+            .sticky-header h1 { font-size: 0.95rem; }
+            .hub-link { display: none; }
+            .score-tracker { font-size: 0.85rem; padding: 5px 10px; }
+            .question-card { padding: 16px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>Microbio Quiz 3</h1>
-        <div class="subtitle">Comprehensive Practice Quiz: Lectures 4 & 5 (Metabolism, Respiration, Fermentation & Genetics)</div>
+    <!-- Audio Element for Wrong Answers -->
+    <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+
+    <header class="sticky-header">
+        <h1>Microbio Quiz 3: Metabolism &amp; Genetics</h1>
+        <div class="header-right">
+            <a class="hub-link" href="index.html">Quiz Hub</a>
+            <div class="score-tracker" id="scoreTracker">Score: 0 / 0 (0%)</div>
+        </div>
     </header>
 
-    <div class="header-sticky">
-        <div class="header-container">
-            <div class="header-title">Microbiology: Quiz 3 Hub</div>
-            <div class="score-box" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+    <main class="quiz-container">
+        <p class="intro">Lecture 4 (Bacterial Metabolism) and Lecture 5 (Bacterial Genetics). Questions and answer choices are shuffled on every load and retake.</p>
+        <div id="quiz"></div>
+        <div class="summary-card hidden" id="summary">
+            <div class="summary-title">Quiz Complete</div>
+            <div class="summary-score" id="summaryScore"></div>
+            <div class="summary-msg" id="summaryMsg"></div>
+            <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
         </div>
-        <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="progressBar"></div>
-        </div>
-    </div>
-
-    <div class="container" id="quizContainer"></div>
-
-    <div class="container">
-        <div class="summary-card" id="summaryCard">
-            <div class="summary-title" id="summaryTitle">Quiz Completed!</div>
-            <div class="summary-score" id="finalScore">0 / 0</div>
-            <div class="summary-text" id="summaryFeedback">Here is your performance breakdown.</div>
-            <button class="reset-btn" onclick="resetQuiz()">Retake Quiz</button>
-        </div>
-    </div>
+    </main>
 
     <script>
-        const wrongAudio = new Audio('Wrong-answer.m4a');
-
-        const rawQuizData = [
-            // --- LECTURE 4: METABOLISM & FERMENTATION ---
+        const quizData = [
             {
-                question: "Which carbon and energy source is universally preferred by bacteria when multiple sources are available ('Glucose is king!')?",
+                id: 1, quarter: 1, lecture: 4, slideRef: 3, difficulty: "Easy",
+                stem: "Bacteria use which sugar to the exclusion of all others as long as it is available?",
                 options: [
-                    { text: "Lactose", correct: false, why: "Incorrect. Disaccharides require secondary breakdown enzymes and are never preferred over glucose." },
-                    { text: "Glucose", correct: true, why: "Correct! Bacteria utilize glucose preferentially to the exclusion of other sugars as long as it is available." },
-                    { text: "Fructose", correct: false, why: "Incorrect. Fructose is a monosaccharide but is not preferentially selected over glucose." },
-                    { text: "Amino acids", correct: false, why: "Incorrect. Carbohydrates like glucose are prioritized for rapid catabolism." }
-                ],
-                explanation: "Glucose is the premier carbon and energy source for bacteria ('Glucose is king!'), utilized preferentially over secondary disaccharides."
+                    { text: "Glucose", correct: true, why: "All bacteria use glucose and will use it to the exclusion of other sugars while it is available (\"Glucose is king\"). [Lec 4, Slide #3]" },
+                    { text: "Lactose", correct: false, why: "Lactose is a disaccharide; some bacteria can break down secondary disaccharides and others cannot, so it is not the universally preferred sugar. [Lec 4, Slide #3]" },
+                    { text: "Fructose", correct: false, why: "Fructose is not the sugar bacteria use preferentially; glucose holds that role. [Lec 4, Slide #3]" },
+                    { text: "Sucrose", correct: false, why: "Sucrose is a disaccharide; disaccharide use varies by species, unlike glucose, which all bacteria use first. [Lec 4, Slide #3]" }
+                ]
             },
             {
-                question: "What is the most common glycolytic pathway utilized by bacteria, yielding 2 pyruvates and 4 ATP (gross)?",
+                id: 2, quarter: 1, lecture: 4, slideRef: 5, difficulty: "Medium",
+                stem: "Which is the most common bacterial glycolytic pathway, producing 2 pyruvate and 4 ATP?",
                 options: [
-                    { text: "Embden-Meyerhof pathway", correct: true, why: "Correct! When in doubt, bacteria use the Embden-Meyerhof pathway for glycolysis." },
-                    { text: "Entner-Doudoroff pathway", correct: false, why: "Incorrect. Entner-Doudoroff is less common and yields 3 ATP and 2 ethanol." },
-                    { text: "Pentose phosphate pathway", correct: false, why: "Incorrect. Pentose phosphate pathway generates NADPH and biosynthetic precursors." },
-                    { text: "Tricarboxylic acid cycle", correct: false, why: "Incorrect. The TCA cycle occurs downstream of glycolysis." }
-                ],
-                explanation: "The Embden-Meyerhof pathway is the standard, most common glycolytic pathway across bacterial species."
+                    { text: "Embden-Meyerhof pathway", correct: true, why: "Embden-Meyerhof is the most common glycolytic pathway, resembles human glycolysis, and produces 2 pyruvate and 4 ATP. [Lec 4, Slide #5]" },
+                    { text: "Entner-Doudoroff pathway", correct: false, why: "Entner-Doudoroff is the least common pathway (very few bacteria) and produces 2 ethanol and 3 ATP, not 2 pyruvate and 4 ATP. [Lec 4, Slide #5]" },
+                    { text: "Phosphoketolase pathway", correct: false, why: "Phosphoketolase is another name for the heterolactic fermentation pathway, not a primary glycolytic pathway. [Lec 4, Slide #10]" },
+                    { text: "Butanediol pathway", correct: false, why: "Butanediol is a fermentation pathway that forms mixed acids, gases, and 2,3-butanediol; it is not a glycolytic pathway. [Lec 4, Slide #13]" }
+                ]
             },
             {
-                question: "How does the alternative Entner-Doudoroff glycolytic pathway compare to Embden-Meyerhof?",
+                id: 3, quarter: 1, lecture: 4, slideRef: 5, difficulty: "Medium",
+                stem: "Which products are generated by the Entner-Doudoroff pathway?",
                 options: [
-                    { text: "It is universal in all gram-positive rods.", correct: false, why: "Incorrect. It is a lot less common and utilized by only a few types of bacteria." },
-                    { text: "It is less common, used by only a few bacteria, and yields 2 ethanol and 3 ATP.", correct: true, why: "Correct! Entner-Doudoroff produces 2 ethanol and 3 ATP, making it slightly less energy-efficient." },
-                    { text: "It operates exclusively under obligate aerobic conditions.", correct: false, why: "Incorrect. It is an alternative glycolytic route." },
-                    { text: "It produces zero ATP molecules.", correct: false, why: "Incorrect. It yields 3 net ATP." }
-                ],
-                explanation: "The Entner-Doudoroff pathway is less common, utilized by specific bacteria, and yields 3 ATP along with 2 ethanol."
+                    { text: "2 ethanol and 3 ATP", correct: true, why: "Entner-Doudoroff, the least common alternative to Embden-Meyerhof, produces 2 ethanol and 3 ATP. [Lec 4, Slide #5]" },
+                    { text: "2 pyruvate and 4 ATP", correct: false, why: "2 pyruvate and 4 ATP are the products of the Embden-Meyerhof pathway, not Entner-Doudoroff. [Lec 4, Slide #5]" },
+                    { text: "2 lactate and 2 ATP", correct: false, why: "Lactic acid as an end product belongs to lactic fermentations, not to the Entner-Doudoroff glycolytic pathway. [Lec 4, Slide #5]" },
+                    { text: "2 acetate and 4 ATP", correct: false, why: "Acetate is not a listed Entner-Doudoroff product, and 4 ATP is the Embden-Meyerhof yield. [Lec 4, Slide #5]" }
+                ]
             },
             {
-                question: "In aerobic respiration, what molecule serves as the final (terminal) electron acceptor in the electron transport chain?",
+                id: 4, quarter: 1, lecture: 4, slideRef: 4, difficulty: "Easy",
+                stem: "Aerobic respiration uses which molecule as its final electron acceptor?",
                 options: [
-                    { text: "Nitrate (NO3-)", correct: false, why: "Incorrect. Nitrate is used in anaerobic denitrification." },
-                    { text: "Molecular oxygen (O2)", correct: true, why: "Correct! Aerobic respiration relies strictly on molecular oxygen (O2) as the final electron acceptor." },
-                    { text: "Sulfate (SO42-)", correct: false, why: "Incorrect. Sulfate is used in anaerobic sulfate reduction." },
-                    { text: "Carbon dioxide (CO2)", correct: false, why: "Incorrect. CO2 is a metabolic byproduct." }
-                ],
-                explanation: "Aerobic respiration uses molecular oxygen (O2) as the ultimate electron acceptor to generate water and maximize ATP."
+                    { text: "O₂", correct: true, why: "Aerobic respiration (glycolysis + TCA + ETC) uses O₂ as the final electron acceptor. [Lec 4, Slide #4]" },
+                    { text: "NO₃⁻", correct: false, why: "Nitrate is one of the inorganic ions used as a final electron acceptor in anaerobic respiration, not aerobic respiration. [Lec 4, Slide #4]" },
+                    { text: "SO₄²⁻", correct: false, why: "Sulfate is an inorganic final electron acceptor used in anaerobic respiration, not aerobic respiration. [Lec 4, Slide #4]" },
+                    { text: "CO₃²⁻", correct: false, why: "Carbonate is an inorganic ion acceptor of anaerobic respiration; aerobic respiration uses O₂. [Lec 4, Slide #4]" }
+                ]
             },
             {
-                question: "Which anaerobic respiratory process utilizes nitrate as a final electron acceptor and is important in agriculture soil fertilization and gut flora?",
+                id: 5, quarter: 1, lecture: 4, slideRef: 4, difficulty: "Medium",
+                stem: "Anaerobic respiration differs from fermentation because anaerobic respiration:",
                 options: [
-                    { text: "Biological methanogenesis", correct: false, why: "Incorrect. Methanogenesis produces methane from CO2/organic decay." },
-                    { text: "Denitrification", correct: true, why: "Correct! Denitrification involves agricultural nitrate soil fertilization and gut flora processing." },
-                    { text: "Sulfate reduction", correct: false, why: "Incorrect. Sulfate reduction produces hydrogen sulfide (rotten egg smell)." },
-                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation is a fermentative pathway, not anaerobic respiration." }
-                ],
-                explanation: "Denitrification is an anaerobic respiratory pathway using nitrogen/nitrate as an electron acceptor, active in agriculture and intestinal flora."
+                    { text: "Uses the TCA cycle and ETC with an inorganic ion acceptor", correct: true, why: "Anaerobic respiration is glycolysis + TCA + ETC using inorganic ions (NO₃⁻, SO₄²⁻, CO₃²⁻) as final electron acceptors; fermentation is glycolysis + fermentation only. [Lec 4, Slide #4]" },
+                    { text: "Uses only glycolysis followed by a fermentation step", correct: false, why: "Glycolysis + fermentation describes fermentation itself, not anaerobic respiration. [Lec 4, Slide #4]" },
+                    { text: "Uses molecular oxygen as the final electron acceptor", correct: false, why: "O₂ as final electron acceptor defines aerobic respiration, not anaerobic respiration. [Lec 4, Slide #4]" },
+                    { text: "Bypasses glycolysis and feeds directly into the ETC", correct: false, why: "Respiration requires glycolysis feed-in before the TCA cycle and ETC; it does not bypass glycolysis. [Lec 4, Slide #17]" }
+                ]
             },
             {
-                question: "What environmental odor or indicator is classically associated with bacterial sulfate reduction?",
+                id: 6, quarter: 1, lecture: 4, slideRef: 6, difficulty: "Medium",
+                stem: "Which statement best describes bacterial fermentation?",
                 options: [
-                    { text: "Sweet fruity aroma", correct: false, why: "Incorrect. That is typical of certain ester fermentations." },
-                    { text: "Rotten egg smell", correct: true, why: "Correct! Sulfate reduction produces hydrogen sulfide gas (H2S), resulting in a rotten egg smell." },
-                    { text: "Swamp gas bubbling", correct: false, why: "Incorrect. Swamp gas is associated with methanogenesis." },
-                    { text: "Vinegar tang", correct: false, why: "Incorrect. Vinegar is acetic acid fermentation." }
-                ],
-                explanation: "Sulfate reduction generates hydrogen sulfide, producing the characteristic rotten egg smell."
+                    { text: "Partial oxidation of an organic compound fed by glycolysis", correct: true, why: "Fermentation is the partial oxidation of an organic compound and is always fed by glycolysis; it handles overload ATP needs. [Lec 4, Slide #6]" },
+                    { text: "Complete oxidation of glucose through the TCA and ETC", correct: false, why: "Glycolysis + TCA + ETC describes respiration, not fermentation, which is only a partial oxidation. [Lec 4, Slide #4]" },
+                    { text: "A process that never occurs alongside aerobic respiration", correct: false, why: "Fermentation typically falls under anaerobic metabolism but can occur continuously alongside aerobic or anaerobic respiration. [Lec 4, Slide #6]" },
+                    { text: "Reduction of sulfate to hydrogen sulfide gas", correct: false, why: "Reducing sulfate to hydrogen sulfide is sulfate reduction, a form of anaerobic respiration, not fermentation. [Lec 4, Slide #21]" }
+                ]
             },
             {
-                question: "Biological methanogenesis is classically referenced in natural environments with which of the following?",
+                id: 7, quarter: 1, lecture: 4, slideRef: 8, difficulty: "Easy",
+                stem: "Which bacterium is the most important and well-known performer of alcoholic fermentation?",
                 options: [
-                    { text: "Cow farts and swamp gas", correct: true, why: "Correct! Methanogenesis occurs during organic decay in swamps and ruminant digestive tracts." },
-                    { text: "Hot spring sulfur vents", correct: false, why: "Incorrect. That relates to sulfur-oxidizing thermophiles." },
-                    { text: "Root nodule nitrogen fixation", correct: false, why: "Incorrect. That is nitrogenase activity." },
-                    { text: "Lactic acid milk curdling", correct: false, why: "Incorrect. That is homolactic fermentation." }
-                ],
-                explanation: "Biological methanogenesis produces methane during organic matter decay in swamps and ruminant guts ('cow farts and swamp gas')."
+                    { text: "Zymomonas mobilis", correct: true, why: "Alcoholic fermentation (pyruvic acid to ethanol and CO₂) is mainly done by yeast; Zymomonas mobilis is the most important bacterium. [Lec 4, Slide #8]" },
+                    { text: "Klebsiella", correct: false, why: "Klebsiella uses butanediol fermentation, not alcoholic fermentation. [Lec 4, Slide #13]" },
+                    { text: "Lactococcus", correct: false, why: "Lactococcus performs homolactic fermentation, with lactic acid as the sole end product. [Lec 4, Slide #9]" },
+                    { text: "Clostridium", correct: false, why: "Clostridium is primarily associated with butyric acid and butanol-acetone fermentation. [Lec 4, Slide #14]" }
+                ]
             },
             {
-                question: "Most Lactobacillus and Lactococcus species ferment glucose into lactic acid as the sole end product. This is known as:",
+                id: 8, quarter: 1, lecture: 4, slideRef: 9, difficulty: "Easy",
+                stem: "Lactobacillus, Lactococcus, and most streptococci produce lactic acid as the sole end product through which pathway?",
                 options: [
-                    { text: "Homolactic fermentation", correct: true, why: "Correct! Homolactic fermentation produces lactic acid as the sole end product." },
-                    { text: "Heterolactic fermentation", correct: false, why: "Incorrect. Heterolactic fermentation produces lactic acid, ethanol, acetic acid, and CO2." },
-                    { text: "Mixed acid fermentation", correct: false, why: "Incorrect. Mixed acid fermentation produces multiple distinct acids." },
-                    { text: "Alcoholic fermentation", correct: false, why: "Incorrect. Alcoholic fermentation yields ethanol and CO2." }
-                ],
-                explanation: "Homolactic fermentation converts pyruvate directly into lactic acid as the exclusive end product."
+                    { text: "Homolactic fermentation", correct: true, why: "In homolactic fermentation lactic acid is the sole end product; typical bacteria are Lactobacillus, Lactococcus, and most streptococci. [Lec 4, Slide #9]" },
+                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation produces lactic acid plus ethanol and/or acetic acid and CO₂, so lactic acid is not the sole product. [Lec 4, Slide #10]" },
+                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation produces lactic, acetic, and formic acids, succinate, and ethanol, not lactic acid alone. [Lec 4, Slide #11]" },
+                    { text: "Alcoholic fermentation", correct: false, why: "Alcoholic fermentation converts pyruvic acid to ethanol and CO₂, not lactic acid. [Lec 4, Slide #8]" }
+                ]
             },
             {
-                question: "Which fermentation pathway produces a complex mixture of acetic acid, lactic acid, succinic acid, formic acid, and ethanol?",
+                id: 9, quarter: 1, lecture: 4, slideRef: 10, difficulty: "Medium",
+                stem: "The heterolactic (phosphoketolase) pathway produces which set of end products?",
                 options: [
-                    { text: "Mixed acid fermentation", correct: true, why: "Correct! Mixed acid fermentation is the classic pathway yielding this exact product set." },
-                    { text: "Homolactic fermentation", correct: false, why: "Incorrect. Homolactic yields only lactic acid." },
-                    { text: "Butyric acid fermentation", correct: false, why: "Incorrect. Butyric acid fermentation is used primarily by Clostridium." },
-                    { text: "Propionic acid fermentation", correct: false, why: "Incorrect. Propionic acid fermentation yields propionic acid and acetic acid." }
-                ],
-                explanation: "Mixed acid fermentation yields multiple acids plus ethanol."
+                    { text: "Lactic acid, ethanol and/or acetic acid, and CO₂", correct: true, why: "The heterolactic (phosphoketolase) pathway, used by Lactobacillus species, produces lactic acid, ethanol and/or acetic acid, and CO₂. [Lec 4, Slide #10]" },
+                    { text: "Lactic acid as the sole end product", correct: false, why: "Lactic acid as the sole end product defines homolactic fermentation. [Lec 4, Slide #9]" },
+                    { text: "Butyric acid, acetic acid, CO₂, and H₂", correct: false, why: "These are butyric acid fermentation products, used primarily by Clostridium. [Lec 4, Slide #14]" },
+                    { text: "Acetic acid, CO₂, and propionic acid", correct: false, why: "These are the products of propionic acid fermentation of lactate. [Lec 4, Slide #16]" }
+                ]
             },
             {
-                question: "Enzymes that are produced continuously in constant amounts by a bacterial cell, regardless of substrate presence, are termed:",
+                id: 10, quarter: 1, lecture: 4, slideRef: 11, difficulty: "Medium",
+                stem: "Lactic acid, acetic acid, formic acid, succinate, and ethanol are end products of which fermentation pathway?",
                 options: [
-                    { text: "Constitutive enzymes", correct: true, why: "Correct! Constitutive enzymes are always present and active." },
-                    { text: "Inducible enzymes", correct: false, why: "Incorrect. Inducible enzymes are synthesized only in response to a substrate." },
-                    { text: "Repressible enzymes", correct: false, why: "Incorrect. Repressible enzymes are turned off by excess product." },
-                    { text: "Allosteric enzymes", correct: false, why: "Incorrect. Allosteric refers to regulatory binding sites." }
-                ],
-                explanation: "Constitutive enzymes are essential house-keeping enzymes synthesized at a constant baseline rate."
+                    { text: "Mixed acid fermentation", correct: true, why: "Mixed acid fermentation, the main pathway of Enterobacteriaceae, yields lactic, acetic, and formic acids, succinate, and ethanol. [Lec 4, Slide #11]" },
+                    { text: "Butyric acid fermentation", correct: false, why: "Butyric acid fermentation forms butyric acid, acetic acid, CO₂, and H₂, not succinate or formic acid. [Lec 4, Slide #14]" },
+                    { text: "Propionic acid fermentation", correct: false, why: "Propionic acid fermentation converts lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" },
+                    { text: "Homolactic fermentation", correct: false, why: "Homolactic fermentation yields lactic acid as the sole end product. [Lec 4, Slide #9]" }
+                ]
             },
             {
-                question: "What non-genetic regulatory mechanism involves a pathway end-product binding to the allosteric site of the initial enzyme to immediately shut it down?",
+                id: 11, quarter: 1, lecture: 4, slideRef: 11, difficulty: "Medium",
+                stem: "Enteric bacteria performing mixed acid fermentation also produce CO₂ and H₂ gas when they possess which enzyme?",
                 options: [
-                    { text: "Feedback inhibition", correct: true, why: "Correct! Feedback inhibition provides immediate, non-genetic control over metabolic flux." },
-                    { text: "Catabolite repression", correct: false, why: "Incorrect. Catabolite repression operates at the genetic transcription level." },
-                    { text: "Frameshift mutation", correct: false, why: "Incorrect. Mutations alter DNA permanently." },
-                    { text: "Operon induction", correct: false, why: "Incorrect. Induction activates transcription." }
-                ],
-                explanation: "Feedback inhibition is an instant, enzyme-level control mechanism where excess end-product allosterically inhibits the first pathway enzyme."
-            },
-
-            // --- LECTURE 5: BACTERIAL GENETICS & REPLICATION ---
-            {
-                question: "Regarding bacterial genetics, which of the following is NOT always true for all bacteria?",
-                options: [
-                    { text: "They have circular chromosomes.", correct: true, why: "Correct! While most bacteria possess circular chromosomes, a few species (e.g., Borrelia) have linear chromosomes." },
-                    { text: "They are haploid.", correct: false, why: "Incorrect. All bacteria are haploid." },
-                    { text: "Their DNA does not associate with histones.", correct: false, why: "Incorrect. Bacterial DNA lacks true histone octamers." },
-                    { text: "They have no intron/exon arrangement.", correct: false, why: "Incorrect. Bacteria completely lack intron/exon splicing." }
-                ],
-                explanation: "While the vast majority of bacteria have circular chromosomes, linear chromosomes exist in certain species, making circularity non-universal."
+                    { text: "Formate dehydrogenase", correct: true, why: "Mixed acid fermenters can produce CO₂ and H₂ gas if they have formate dehydrogenase, which cleaves byproducts into gases. [Lec 4, Slide #11]" },
+                    { text: "Phosphoketolase", correct: false, why: "Phosphoketolase names the heterolactic pathway used by Lactobacillus species, not the gas-forming enzyme of enterics. [Lec 4, Slide #10]" },
+                    { text: "DNA ligase", correct: false, why: "DNA ligase is a replisome enzyme involved in DNA replication, not in fermentation gas production. [Lec 5, Slide #5]" },
+                    { text: "Topoisomerase", correct: false, why: "Topoisomerase is a replisome enzyme acting on DNA, not a fermentation enzyme. [Lec 5, Slide #5]" }
+                ]
             },
             {
-                question: "Are plasmids required for the basic vegetative survival of a bacterial cell?",
+                id: 12, quarter: 1, lecture: 4, slideRef: 8, difficulty: "Hard",
+                stem: "Which fermentation pathway produces ethanol but does NOT produce lactic acid?",
                 options: [
-                    { text: "Yes, plasmids encode essential chromosomal replication machinery.", correct: false, why: "Incorrect. Essential genes reside on the main chromosome." },
-                    { text: "No, plasmids are non-essential extrachromosomal DNA, though they carry advantageous traits.", correct: true, why: "Correct! Plasmids are dispensable for basic life but provide adaptive benefits like antibiotic resistance." },
-                    { text: "Yes, without plasmids ribosomes cannot assemble.", correct: false, why: "Incorrect. Ribosomal RNA genes are chromosomal." },
-                    { text: "No, plasmids are only found in viruses.", correct: false, why: "Incorrect. Plasmids are extrachromosomal bacterial DNA." }
-                ],
-                explanation: "Plasmids are extrachromosomal DNA elements that carry non-essential, advantageous genes (such as R-factors for drug resistance)."
+                    { text: "Alcoholic fermentation", correct: true, why: "Alcoholic fermentation converts pyruvic acid to ethanol and CO₂ only; no lactic acid is formed. [Lec 4, Slide #8]" },
+                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation can produce ethanol, but it also produces lactic acid. [Lec 4, Slide #10]" },
+                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation produces ethanol, but lactic acid is also one of its end products. [Lec 4, Slide #11]" },
+                    { text: "Homolactic fermentation", correct: false, why: "Homolactic fermentation produces lactic acid as its sole end product and no ethanol. [Lec 4, Slide #9]" }
+                ]
             },
             {
-                question: "What unique expression capability do prokaryotes possess because they lack introns and exons and a nuclear membrane?",
+                id: 13, quarter: 2, lecture: 4, slideRef: 13, difficulty: "Medium",
+                stem: "Butanediol fermentation differs from mixed acid fermentation because it:",
                 options: [
-                    { text: "Mitotic chromosome segregation", correct: false, why: "Incorrect. Bacteria divide via binary fission." },
-                    { text: "Simultaneous transcription and translation in the cytoplasm", correct: true, why: "Correct! Without a nuclear envelope or splicing, ribosomes can translate mRNA while it is being transcribed." },
-                    { text: "Alternative splicing of transcripts", correct: false, why: "Incorrect. Splicing requires eukaryotic machinery." },
-                    { text: "Meiotic recombination", correct: false, why: "Incorrect. Bacteria reproduce asexually." }
-                ],
-                explanation: "Because prokaryotes lack a nuclear membrane and introns, transcription and translation occur concurrently in the cytoplasm."
+                    { text: "Decreases acid formation by forming acetonin", correct: true, why: "Butanediol fermentation forms mixed acids, gases, and 2,3-butanediol, but it decreases acid formation by causing the formation of acetonin. [Lec 4, Slide #13]" },
+                    { text: "Produces lactic acid as its sole end product", correct: false, why: "Lactic acid as the sole end product is homolactic fermentation. [Lec 4, Slide #9]" },
+                    { text: "Occurs only within the Clostridium genus", correct: false, why: "Butanediol fermentation is used by Klebsiella and Enterobacter; Clostridium uses butyric acid fermentation. [Lec 4, Slide #13]" },
+                    { text: "Produces no mixed acids or gases at all", correct: false, why: "Butanediol fermentation still forms mixed acids and gases, plus 2,3-butanediol. [Lec 4, Slide #13]" }
+                ]
             },
             {
-                question: "What term describes the sum of all genetic determinants in an organism?",
+                id: 14, quarter: 2, lecture: 4, slideRef: 14, difficulty: "Hard",
+                stem: "Which organism and fermentation pathway pairing is correct?",
                 options: [
-                    { text: "Phenotype", correct: false, why: "Incorrect. Phenotype is observable physical properties." },
-                    { text: "Genotype", correct: true, why: "Correct! Genotype is the complete genetic constitution." },
-                    { text: "Wild type", correct: false, why: "Incorrect. Wild type is the natural strain." },
-                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a nutritional mutant." }
-                ],
-                explanation: "Genotype represents the total genetic makeup, whereas phenotype refers to observable traits."
+                    { text: "Clostridium and butyric acid fermentation", correct: true, why: "Butyric acid fermentation is used primarily by the Clostridium genus, forming butyric acid, acetic acid, CO₂, and H₂. [Lec 4, Slide #14]" },
+                    { text: "Klebsiella and homolactic fermentation", correct: false, why: "Klebsiella uses butanediol fermentation; homolactic fermenters are Lactobacillus, Lactococcus, and most streptococci. [Lec 4, Slide #13]" },
+                    { text: "Zymomonas and propionic acid fermentation", correct: false, why: "Zymomonas mobilis performs alcoholic fermentation; propionic acid fermentation is used by propionic acid bacteria. [Lec 4, Slide #8]" },
+                    { text: "Lactococcus and butanediol fermentation", correct: false, why: "Lactococcus is homolactic; butanediol fermentation is used by Klebsiella and Enterobacter. [Lec 4, Slide #9]" }
+                ]
             },
             {
-                question: "Which genetic term refers to the observable physical or biochemical properties of an organism?",
+                id: 15, quarter: 2, lecture: 4, slideRef: 15, difficulty: "Easy",
+                stem: "Butanol and acetone are fermentation products of which organisms?",
                 options: [
-                    { text: "Genotype", correct: false, why: "Incorrect. Genotype is the underlying DNA sequence." },
-                    { text: "Phenotype", correct: true, why: "Correct! Phenotype is the observable expression of the genotype." },
-                    { text: "Revertant", correct: false, why: "Incorrect. Revertant is a back-mutant." },
-                    { text: "Auxotroph", correct: false, why: "Incorrect. Auxotroph is a growth-factor mutant." }
-                ],
-                explanation: "Phenotype is the collection of observable traits resulting from genotype-environment interactions."
+                    { text: "Certain species of clostridia", correct: true, why: "In butanol-acetone fermentation, certain species of clostridia produce butanol and acetone. [Lec 4, Slide #15]" },
+                    { text: "Klebsiella and Enterobacter", correct: false, why: "Klebsiella and Enterobacter use butanediol fermentation. [Lec 4, Slide #13]" },
+                    { text: "Lactobacillus and Lactococcus", correct: false, why: "Lactobacillus and Lactococcus are lactic acid fermenters. [Lec 4, Slide #9]" },
+                    { text: "Propionic acid bacteria", correct: false, why: "Propionic acid bacteria ferment lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" }
+                ]
             },
             {
-                question: "What is an auxotroph (nutritional mutant)?",
+                id: 16, quarter: 2, lecture: 4, slideRef: 16, difficulty: "Medium",
+                stem: "Propionic acid bacteria ferment which substrate to acetic acid, CO₂, and propionic acid?",
                 options: [
-                    { text: "A mutant strain unable to grow on minimal media without a specific added growth factor", correct: true, why: "Correct! Auxotrophs have lost biosynthetic capabilities and require pre-formed growth factors." },
-                    { text: "A strain that synthesizes all nutrients independently", correct: false, why: "Incorrect. That describes a prototroph." },
-                    { text: "A bacterium that survives only at extreme high temperatures", correct: false, why: "Incorrect. That is a thermophile." },
-                    { text: "A virus-resistant mutant", correct: false, why: "Incorrect. That is phage-resistant." }
-                ],
-                explanation: "An auxotroph is a mutant microorganism requiring an extra organic growth factor that the wild type can synthesize."
+                    { text: "Lactate", correct: true, why: "Propionic acid bacteria ferment lactate to acetic acid, CO₂, and propionic acid. [Lec 4, Slide #16]" },
+                    { text: "Succinate", correct: false, why: "Succinate is an end product of mixed acid fermentation, not the substrate of propionic acid fermentation. [Lec 4, Slide #11]" },
+                    { text: "Ethanol", correct: false, why: "Ethanol is an end product of alcoholic, heterolactic, and mixed acid fermentation, not the propionic substrate. [Lec 4, Slide #8]" },
+                    { text: "Butanediol", correct: false, why: "2,3-butanediol is a product of butanediol fermentation, not the propionic substrate. [Lec 4, Slide #13]" }
+                ]
             },
             {
-                question: "What is a 'revertant' (back-mutant)?",
+                id: 17, quarter: 2, lecture: 4, slideRef: 19, difficulty: "Medium",
+                stem: "Which anaerobic process produces and stores methane and is the final step in the decay of organic matter?",
                 options: [
-                    { text: "A mutant organism that undergoes a second mutation restoring its original wild-type phenotype", correct: true, why: "Correct! A revertant mutates back to its original wild-type form." },
-                    { text: "A bacterium that loses its plasmid during binary fission", correct: false, why: "Incorrect. That is plasmid curing." },
-                    { text: "A cell reverting from aerobic to anaerobic respiration", correct: false, why: "Incorrect. That is metabolic switching." },
-                    { text: "An endospore reverting to vegetative growth", correct: false, why: "Incorrect. That is germination." }
-                ],
-                explanation: "A revertant (back-mutant) undergoes subsequent mutations that restore its original ancestral phenotype."
+                    { text: "Biological methanogenesis", correct: true, why: "In biological methanogenesis, methanogens produce and store CH₄ under anaerobic conditions; it is also the final step in the decay of organic matter. [Lec 4, Slide #19]" },
+                    { text: "Denitrification", correct: false, why: "Denitrification removes nitrate from soil; it does not produce methane. [Lec 4, Slide #20]" },
+                    { text: "Sulfate reduction", correct: false, why: "Sulfate reduction produces hydrogen sulfide gas (rotten egg smell), not methane. [Lec 4, Slide #21]" },
+                    { text: "Butanediol fermentation", correct: false, why: "Butanediol fermentation forms mixed acids, gases, and 2,3-butanediol; it is fermentation, not methane-producing respiration. [Lec 4, Slide #13]" }
+                ]
+            },
+            {
+                id: 18, quarter: 2, lecture: 4, slideRef: 19, difficulty: "Medium",
+                stem: "Biological methanogenesis requires an outside electron acceptor in the form of:",
+                options: [
+                    { text: "CO₂", correct: true, why: "Methanogenesis is energy-generating metabolism that requires an outside electron acceptor in the form of CO₂. [Lec 4, Slide #19]" },
+                    { text: "NO₃⁻", correct: false, why: "Nitrate is the electron acceptor used in denitrification. [Lec 4, Slide #20]" },
+                    { text: "SO₄²⁻", correct: false, why: "Sulfate is the electron acceptor reduced in sulfate reduction. [Lec 4, Slide #21]" },
+                    { text: "O₂", correct: false, why: "O₂ is the final electron acceptor of aerobic respiration; methanogenesis occurs under anaerobic conditions. [Lec 4, Slide #4]" }
+                ]
+            },
+            {
+                id: 19, quarter: 2, lecture: 4, slideRef: 20, difficulty: "Medium",
+                stem: "Which form of anaerobic respiration uses nitrate as the final electron acceptor?",
+                options: [
+                    { text: "Denitrification", correct: true, why: "Denitrification uses nitrate (NO₃) as the electron acceptor; it matters in agriculture and lets gut flora like E. coli respire in the anaerobic intestine. [Lec 4, Slide #20]" },
+                    { text: "Sulfate reduction", correct: false, why: "Sulfate reduction uses sulfate and produces hydrogen sulfide gas. [Lec 4, Slide #21]" },
+                    { text: "Methanogenesis", correct: false, why: "Methanogenesis uses CO₂ as the outside electron acceptor and produces methane. [Lec 4, Slide #19]" },
+                    { text: "Mixed acid fermentation", correct: false, why: "Mixed acid fermentation is fermentation, not respiration with an inorganic electron acceptor. [Lec 4, Slide #11]" }
+                ]
+            },
+            {
+                id: 20, quarter: 2, lecture: 4, slideRef: 21, difficulty: "Medium",
+                stem: "Which anaerobic process is NOT an alternative to the use of O₂ because it occurs only under anaerobic conditions?",
+                options: [
+                    { text: "Sulfate reduction", correct: true, why: "Sulfate reduction by some obligate anaerobes is an obligatory process occurring only under anaerobic conditions; it is not an alternative to O₂ and gives a rotten egg smell. [Lec 4, Slide #21]" },
+                    { text: "Denitrification", correct: false, why: "Denitrification is usually an alternative to O₂; Pseudomonas uses O₂ when available and disregards nitrate. [Lec 4, Slide #20]" },
+                    { text: "Aerobic respiration", correct: false, why: "Aerobic respiration uses O₂ itself as the final electron acceptor. [Lec 4, Slide #4]" },
+                    { text: "Heterolactic fermentation", correct: false, why: "Heterolactic fermentation is a fermentation pathway, not an electron-acceptor process compared against O₂. [Lec 4, Slide #10]" }
+                ]
+            },
+            {
+                id: 21, quarter: 2, lecture: 4, slideRef: 20, difficulty: "Hard",
+                stem: "When both O₂ and nitrate are available in soil, Pseudomonas will:",
+                options: [
+                    { text: "Use O₂ as the acceptor and disregard nitrate", correct: true, why: "Denitrification is usually an alternative to O₂; soil bacteria such as Pseudomonas use O₂ if available and disregard NO₃. [Lec 4, Slide #20]" },
+                    { text: "Use nitrate as the acceptor and disregard O₂", correct: false, why: "This inverts the preference; nitrate is used as the alternative only when O₂ is not available. [Lec 4, Slide #20]" },
+                    { text: "Reduce sulfate to hydrogen sulfide gas", correct: false, why: "Sulfate reduction is performed by some obligate anaerobes and only under anaerobic conditions. [Lec 4, Slide #21]" },
+                    { text: "Produce and store methane gas", correct: false, why: "Methane production is methanogenesis by methanogens under anaerobic conditions, not Pseudomonas respiration. [Lec 4, Slide #19]" }
+                ]
+            },
+            {
+                id: 22, quarter: 2, lecture: 5, slideRef: 2, difficulty: "Medium",
+                stem: "Which statement about bacterial plasmids is accurate?",
+                options: [
+                    { text: "They are not essential but often carry favorable traits", correct: true, why: "Plasmids exist independently in the cytoplasm and are not essential for survival, but they often carry genes that confer favorable traits. [Lec 5, Slide #2]" },
+                    { text: "They contain all genetic material needed to survive", correct: false, why: "The chromosome, not the plasmid, contains all the genetic material a cell needs to survive. [Lec 5, Slide #2]" },
+                    { text: "They are permanently integrated into the chromosome", correct: false, why: "Plasmids exist independently within the cytoplasm, separate from the chromosome. [Lec 5, Slide #2]" },
+                    { text: "They are required for binary fission to occur", correct: false, why: "Plasmids are not essential for survival; each daughter cell receives a completed chromosome during binary fission. [Lec 5, Slide #7]" }
+                ]
+            },
+            {
+                id: 23, quarter: 2, lecture: 5, slideRef: 3, difficulty: "Medium",
+                stem: "Which feature of bacterial genetics is NOT true of all bacteria?",
+                options: [
+                    { text: "A circular chromosome", correct: true, why: "Most bacterial chromosomes are circular, but a few linear forms exist, so circularity is not universal. [Lec 5, Slide #3]" },
+                    { text: "A haploid genome", correct: false, why: "All bacteria are haploid, so this is true of every bacterium. [Lec 5, Slide #3]" },
+                    { text: "DNA without histones", correct: false, why: "Bacterial DNA is associated with polyamines, not histones, in all bacteria. [Lec 5, Slide #3]" },
+                    { text: "No intron/exon arrangement", correct: false, why: "Bacteria have no introns and exons; all DNA is usable. [Lec 5, Slide #3]" }
+                ]
+            },
+            {
+                id: 24, quarter: 2, lecture: 5, slideRef: 3, difficulty: "Easy",
+                stem: "Bacterial DNA is associated with which molecules?",
+                options: [
+                    { text: "Polyamines", correct: true, why: "Bacterial DNA is associated with polyamines, not histones. [Lec 5, Slide #3]" },
+                    { text: "Histones", correct: false, why: "Histones are specifically excluded; bacterial DNA associates with polyamines instead. [Lec 5, Slide #3]" },
+                    { text: "Exons", correct: false, why: "Bacteria have no introns or exons; all of their DNA is usable. [Lec 5, Slide #3]" },
+                    { text: "Plasmids", correct: false, why: "Plasmids are separate DNA molecules that exist independently in the cytoplasm, not molecules that package chromosomal DNA. [Lec 5, Slide #2]" }
+                ]
+            },
+            {
+                id: 25, quarter: 3, lecture: 5, slideRef: 8, difficulty: "Hard",
+                stem: "Which statement correctly describes rolling circle replication?",
+                options: [
+                    { text: "Occurs in plasmids and synthesizes DNA in a single direction", correct: true, why: "Rolling circle replication occurs in some bacterial viruses and plasmids and synthesizes DNA in a single direction, rolling out like a paper towel roll. [Lec 5, Slide #8]" },
+                    { text: "Occurs in chromosomes and synthesizes DNA in two directions", correct: false, why: "Two-directional replication with two forks is the normal method used for the circular chromosome, not rolling circle. [Lec 5, Slide #5]" },
+                    { text: "Occurs in plasmids and synthesizes DNA in two directions", correct: false, why: "The organism type is correct, but rolling circle synthesis proceeds in a single direction, not two. [Lec 5, Slide #8]" },
+                    { text: "Occurs in chromosomes and synthesizes DNA in a single direction", correct: false, why: "The direction is correct, but rolling circle occurs in plasmids and bacterial viruses; chromosomes use normal two-fork replication. [Lec 5, Slide #5]" }
+                ]
+            },
+            {
+                id: 26, quarter: 3, lecture: 5, slideRef: 10, difficulty: "Medium",
+                stem: "Which non-genetic control mechanism involves an end product inactivating the first enzyme of a pathway at an allosteric site?",
+                options: [
+                    { text: "Feedback inhibition", correct: true, why: "Feedback inhibition is non-genetic control: the end product binds the first enzyme's allosteric site and inactivates it, providing immediate coarse control. [Lec 5, Slide #10]" },
+                    { text: "Operon based repression", correct: false, why: "Operon based repression is genetic regulation built into the DNA sequence, not a non-genetic allosteric mechanism. [Lec 5, Slide #11]" },
+                    { text: "Constitutive expression", correct: false, why: "Constitutive enzymes are always present (such as glycolytic enzymes) and are not switched off by end product binding. [Lec 5, Slide #10]" },
+                    { text: "CAP activation", correct: false, why: "CAP is a glucose sensor that works with operon-based induction at the genetic level. [Lec 5, Slide #11]" }
+                ]
+            },
+            {
+                id: 27, quarter: 3, lecture: 5, slideRef: 11, difficulty: "Medium",
+                stem: "Which form of genetic regulation involves induction genes or end product repression?",
+                options: [
+                    { text: "Operon based repression", correct: true, why: "Operon based repression includes induction genes (sugar usage, combined with CAP) and end product repression. [Lec 5, Slide #11]" },
+                    { text: "Feedback inhibition", correct: false, why: "Feedback inhibition is a non-genetic allosteric enzyme mechanism, not gene induction or repression. [Lec 5, Slide #10]" },
+                    { text: "Constitutive enzymes", correct: false, why: "Constitutive enzymes are always present and are not induced or repressed. [Lec 5, Slide #10]" },
+                    { text: "Rolling circle replication", correct: false, why: "Rolling circle is a method of DNA replication in plasmids and some bacterial viruses, not gene regulation. [Lec 5, Slide #8]" }
+                ]
+            },
+            {
+                id: 28, quarter: 3, lecture: 5, slideRef: 12, difficulty: "Hard",
+                stem: "With lactose present and glucose absent, how does the lac operon respond?",
+                options: [
+                    { text: "Strong transcription, with CAP bound to the CAP site", correct: true, why: "Lactose removes the repressor from the operator, and with no glucose, CAP binds the CAP site and boosts the polymerase, giving strong transcription. [Lec 5, Slide #12]" },
+                    { text: "Low-level transcription, with CAP not bound to the CAP site", correct: false, why: "Low-level transcription with unbound CAP occurs when glucose is also present; here glucose is absent. [Lec 5, Slide #11]" },
+                    { text: "Strong transcription, with CAP not bound to the CAP site", correct: false, why: "Strong transcription is correct, but it depends on CAP being bound; CAP is unbound only when glucose is present. [Lec 5, Slide #11]" },
+                    { text: "No transcription, with CAP bound to the CAP site", correct: false, why: "No transcription occurs only when lactose is absent; with lactose present the repressor is removed and transcription proceeds. [Lec 5, Slide #12]" }
+                ]
+            },
+            {
+                id: 29, quarter: 3, lecture: 5, slideRef: 12, difficulty: "Hard",
+                stem: "When neither lactose nor glucose is present, lac operon transcription is:",
+                options: [
+                    { text: "Absent, because the repressor stays on the operator", correct: true, why: "Without lactose, the repressor remains bound to the operator and polymerase cannot transcribe; with no lactose there is no transcription regardless of glucose. [Lec 5, Slide #12]" },
+                    { text: "Low-level, because CAP is not bound to the CAP site", correct: false, why: "Low-level transcription requires lactose to remove the repressor plus glucose present; without lactose nothing is transcribed. [Lec 5, Slide #12]" },
+                    { text: "Strong, because CAP is bound to the CAP site", correct: false, why: "CAP only speeds transcription once the repressor is removed; without lactose the repressor still blocks the operator. [Lec 5, Slide #11]" },
+                    { text: "Strong, because allolactose removes the repressor", correct: false, why: "Allolactose forms only when lactose is present; with no lactose, the repressor is not removed. [Lec 5, Slide #12]" }
+                ]
+            },
+            {
+                id: 30, quarter: 3, lecture: 5, slideRef: 11, difficulty: "Hard",
+                stem: "When both glucose and lactose are present, the lac operon shows:",
+                options: [
+                    { text: "Low-level transcription, since glucose leaves CAP unbound", correct: true, why: "Lactose removes the repressor so transcription occurs, but glucose keeps CAP (the glucose sensor) off the CAP site, so it is slow. The two sugars are not used at the same rate. [Lec 5, Slide #11]" },
+                    { text: "Strong transcription, since both sugars are used equally", correct: false, why: "Bacteria use glucose to the exclusion of others while it is available, so both sugars are not used at the same time and rate. [Lec 4, Slide #3]" },
+                    { text: "No transcription, since the repressor stays on the operator", correct: false, why: "Lactose is present, so the repressor is removed from the operator and some transcription occurs. [Lec 5, Slide #12]" },
+                    { text: "Strong transcription, since CAP is bound to the CAP site", correct: false, why: "CAP binds the CAP site only when glucose is absent; with glucose present it is not bound. [Lec 5, Slide #11]" }
+                ]
+            },
+            {
+                id: 31, quarter: 3, lecture: 5, slideRef: 15, difficulty: "Medium",
+                stem: "Which statement about mutation and DNA repair in bacteria is accurate?",
+                options: [
+                    { text: "Repair can occur after a mutation arises", correct: true, why: "Heritable variation arises by mutation and/or recombination, and repair can occur. [Lec 5, Slide #15]" },
+                    { text: "Bacteria lack all DNA repair mechanisms", correct: false, why: "Bacteria do have repair mechanisms; repair can occur. [Lec 5, Slide #15]" },
+                    { text: "Repair occurs only within plasmid DNA", correct: false, why: "Repair is not restricted to plasmids; the statement that repair can occur applies to bacterial DNA generally. [Lec 5, Slide #15]" },
+                    { text: "Repair requires splicing out the introns", correct: false, why: "Bacteria have no introns or exons, so repair cannot involve intron splicing. [Lec 5, Slide #3]" }
+                ]
+            },
+            {
+                id: 32, quarter: 3, lecture: 5, slideRef: 16, difficulty: "Easy",
+                stem: "Which pairing of genetic term and definition is correct?",
+                options: [
+                    { text: "Genotype: sum of genetic determinants", correct: true, why: "Genotype is the sum of genetic determinants; phenotype is the observable properties. [Lec 5, Slide #16]" },
+                    { text: "Phenotype: sum of genetic determinants", correct: false, why: "Phenotype is the observable properties; the sum of genetic determinants is the genotype. [Lec 5, Slide #16]" },
+                    { text: "Wild type: observable properties", correct: false, why: "Wild type is the form found in nature; observable properties define the phenotype. [Lec 5, Slide #16]" },
+                    { text: "Mutant: form found in nature", correct: false, why: "A mutant is progeny expressing a mutation; the form found in nature is the wild type. [Lec 5, Slide #16]" }
+                ]
+            },
+            {
+                id: 33, quarter: 3, lecture: 5, slideRef: 16, difficulty: "Medium",
+                stem: "Which pairing of mutant type and definition is correct?",
+                options: [
+                    { text: "Revertant: a back mutant", correct: true, why: "A revertant is a back mutant; a nutritional mutant (auxotroph) cannot grow without a particular growth factor. [Lec 5, Slide #16]" },
+                    { text: "Auxotroph: a back mutant", correct: false, why: "An auxotroph (nutritional mutant) is unable to grow without a particular growth factor; the back mutant is the revertant. [Lec 5, Slide #16]" },
+                    { text: "Wild type: a back mutant", correct: false, why: "Wild type is the form found in nature, not a back mutant. [Lec 5, Slide #16]" },
+                    { text: "Revertant: needs a growth factor", correct: false, why: "A revertant is a back mutant; needing a particular growth factor defines the auxotroph. [Lec 5, Slide #16]" }
+                ]
+            },
+            {
+                id: 34, quarter: 3, lecture: 5, slideRef: 17, difficulty: "Medium",
+                stem: "A mutation that results in an amino acid replacement is a:",
+                options: [
+                    { text: "Missense mutation", correct: true, why: "A missense mutation is an amino acid replacement. [Lec 5, Slide #17]" },
+                    { text: "Nonsense mutation", correct: false, why: "A nonsense mutation is the early placement of a stop codon, not an amino acid replacement. [Lec 5, Slide #17]" },
+                    { text: "Frameshift mutation", correct: false, why: "A frameshift is a deletion or insertion that shifts how the sequence is read, not a single replacement. [Lec 5, Slide #17]" },
+                    { text: "Regulatory mutation", correct: false, why: "A regulatory mutation occurs outside the protein-coding DNA, so it does not replace an amino acid. [Lec 5, Slide #17]" }
+                ]
+            },
+            {
+                id: 35, quarter: 3, lecture: 5, slideRef: 17, difficulty: "Medium",
+                stem: "A mutation occurring in a region of DNA that does not code for the protein is a:",
+                options: [
+                    { text: "Regulatory mutation", correct: true, why: "A regulatory mutation is a mutation not occurring in the regions of DNA that actually code for the protein. [Lec 5, Slide #17]" },
+                    { text: "Missense mutation", correct: false, why: "A missense mutation replaces an amino acid, so it occurs in coding DNA. [Lec 5, Slide #17]" },
+                    { text: "Nonsense mutation", correct: false, why: "A nonsense mutation places an early stop codon within the coding sequence. [Lec 5, Slide #17]" },
+                    { text: "Frameshift mutation", correct: false, why: "A frameshift shifts how the coding sequence is read through an insertion or deletion. [Lec 5, Slide #17]" }
+                ]
+            },
+            {
+                id: 36, quarter: 3, lecture: 5, slideRef: 17, difficulty: "Hard",
+                stem: "Which pairing of mutation type and definition is correct?",
+                options: [
+                    { text: "Transition: purine for purine", correct: true, why: "A transition swaps a purine for a purine (A, G) or a pyrimidine for a pyrimidine (C, T, U). [Lec 5, Slide #17]" },
+                    { text: "Transversion: pyrimidine for pyrimidine", correct: false, why: "Pyrimidine for pyrimidine is a transition; a transversion swaps a purine for a pyrimidine or vice versa. [Lec 5, Slide #17]" },
+                    { text: "Nonsense: amino acid replacement", correct: false, why: "Amino acid replacement is missense; nonsense is the early placement of a stop codon. [Lec 5, Slide #17]" },
+                    { text: "Missense: early stop codon", correct: false, why: "An early stop codon is a nonsense mutation; missense is an amino acid replacement. [Lec 5, Slide #17]" }
+                ]
+            },
+            {
+                id: 37, quarter: 4, lecture: 5, slideRef: 18, difficulty: "Medium",
+                stem: "Which is a possible beneficial alteration that can result from a bacterial mutation?",
+                options: [
+                    { text: "Resistance", correct: true, why: "Possible beneficial alterations from mutation include morphology change, genetic control, resistance, temperature and acid preference, osmotic regulation, and enzymatic function. [Lec 5, Slide #18]" },
+                    { text: "Gaining introns", correct: false, why: "Bacteria have no introns and exons; gaining introns is not a listed alteration. [Lec 5, Slide #3]" },
+                    { text: "Histone binding", correct: false, why: "Bacterial DNA associates with polyamines, not histones; this is not a listed beneficial alteration. [Lec 5, Slide #3]" },
+                    { text: "Becoming diploid", correct: false, why: "All bacteria are haploid; becoming diploid is not a listed alteration. [Lec 5, Slide #3]" }
+                ]
+            },
+            {
+                id: 38, quarter: 4, lecture: 5, slideRef: 19, difficulty: "Medium",
+                stem: "Most mutations in bacteria are best attributed to:",
+                options: [
+                    { text: "Induced exposure to a chemical or physical mutagen", correct: true, why: "Induced mutations result from exposure to a mutagen; spontaneous replication mistakes are less common in bacteria because their DNA lacks introns and exons. [Lec 5, Slide #19]" },
+                    { text: "Spontaneous mistakes made during DNA replication", correct: false, why: "Spontaneous changes from replication mistakes or background radiation occur, but they are not the main source of bacterial mutations. [Lec 5, Slide #19]" },
+                    { text: "Errors made while splicing introns from exons", correct: false, why: "Bacteria have no introns or exons, so splicing errors cannot occur. [Lec 5, Slide #3]" },
+                    { text: "Loss of histones from the bacterial chromosome", correct: false, why: "Bacterial DNA is associated with polyamines, not histones. [Lec 5, Slide #3]" }
+                ]
+            },
+            {
+                id: 39, quarter: 4, lecture: 5, slideRef: 20, difficulty: "Easy",
+                stem: "Which method of DNA transfer requires direct cell-to-cell contact?",
+                options: [
+                    { text: "Conjugation", correct: true, why: "Conjugation is transfer by cell-to-cell contact, using a pilus. [Lec 5, Slide #20]" },
+                    { text: "Transformation", correct: false, why: "Transformation transfers free DNA with no direct contact between donor and acceptor cells. [Lec 5, Slide #24]" },
+                    { text: "Transduction", correct: false, why: "Transduction is mediated by bacterial viruses, not direct cell contact. [Lec 5, Slide #26]" },
+                    { text: "Transposition", correct: false, why: "Transposition moves DNA within the chromosome; it is recombination only, not transfer between cells. [Lec 5, Slide #28]" }
+                ]
+            },
+            {
+                id: 40, quarter: 4, lecture: 5, slideRef: 21, difficulty: "Medium",
+                stem: "Conjugation is primarily performed by which bacteria?",
+                options: [
+                    { text: "Gram-negative bacteria", correct: true, why: "Conjugation is primarily Gram (-); the F-factor (ability to form a pilus) is found only in Gram (-) bacteria. [Lec 5, Slide #21]" },
+                    { text: "Gram-positive bacteria", correct: false, why: "The F-factor needed to form a pilus is only in Gram (-) bacteria, so conjugation is not primarily Gram (+). [Lec 5, Slide #21]" },
+                    { text: "Bacteria lacking plasmids", correct: false, why: "Conjugation centers on plasmids such as the F-factor, R-factors, and RTFs. [Lec 5, Slide #21]" },
+                    { text: "Bacterial viruses", correct: false, why: "Bacterial viruses mediate transduction, not conjugation. [Lec 5, Slide #26]" }
+                ]
+            },
+            {
+                id: 41, quarter: 4, lecture: 5, slideRef: 21, difficulty: "Medium",
+                stem: "The F-factor (fertility factor) gives a bacterium the ability to:",
+                options: [
+                    { text: "Form a pilus", correct: true, why: "The F-factor (fertility factor) is the ability to form a pilus and is found only in Gram (-) bacteria. [Lec 5, Slide #21]" },
+                    { text: "Resist antibiotics", correct: false, why: "Resistance plasmids are R-factors, not the F-factor. [Lec 5, Slide #21]" },
+                    { text: "Take up free DNA", correct: false, why: "Taking up free DNA is transformation, which needs no pilus or special vehicle. [Lec 5, Slide #24]" },
+                    { text: "Package host DNA", correct: false, why: "Packaging host DNA is done by bacteriophages during transduction. [Lec 5, Slide #26]" }
+                ]
+            },
+            {
+                id: 42, quarter: 4, lecture: 5, slideRef: 21, difficulty: "Hard",
+                stem: "A resistance transfer factor (RTF) is a plasmid that combines genetic information for:",
+                options: [
+                    { text: "An F pilus and antibiotic-inhibiting enzymes", correct: true, why: "An RTF is a plasmid carrying genetic information for the F pilus and enzyme(s) that neutralize or inhibit antibiotic activity, combining F-factor and R-factor functions. [Lec 5, Slide #21]" },
+                    { text: "Phage capsids and host genome fragments", correct: false, why: "Phage carriage of host DNA describes transduction, not a conjugative plasmid. [Lec 5, Slide #26]" },
+                    { text: "Free DNA uptake and CAP site binding", correct: false, why: "Free DNA uptake is transformation and CAP binding is lac operon regulation; neither defines an RTF. [Lec 5, Slide #24]" },
+                    { text: "Polyamine synthesis and replisome enzymes", correct: false, why: "Polyamines associate with chromosomal DNA and the replisome performs replication; neither defines an RTF. [Lec 5, Slide #5]" }
+                ]
+            },
+            {
+                id: 43, quarter: 4, lecture: 5, slideRef: 21, difficulty: "Hard",
+                stem: "The primary mechanism for rapid spread of antibiotic resistance among Enterobacteriaceae may be:",
+                options: [
+                    { text: "Intergeneric conjugation", correct: true, why: "Intergeneric conjugation, seen among some Enterobacteriaceae, may be the primary mechanism for rapid spread of antibiotic resistance. [Lec 5, Slide #21]" },
+                    { text: "Generalized transduction", correct: false, why: "Generalized transduction lets phages pick up any part of the host genome, but it is not named as the main route of resistance spread. [Lec 5, Slide #26]" },
+                    { text: "Transformation of free DNA", correct: false, why: "Transformation takes up free DNA fragments from lysed cells and is not named as the main route of resistance spread. [Lec 5, Slide #24]" },
+                    { text: "Rolling circle replication", correct: false, why: "Rolling circle is a replication method for plasmids and some viruses, not a transfer mechanism between cells. [Lec 5, Slide #8]" }
+                ]
+            },
+            {
+                id: 44, quarter: 4, lecture: 5, slideRef: 24, difficulty: "Medium",
+                stem: "Which DNA transfer method moves free DNA, usually fragments from a lysed cell, with no special vehicle?",
+                options: [
+                    { text: "Transformation", correct: true, why: "Transformation transfers free DNA, usually fragments from a lysed cell, needs no special vehicle, and involves no direct donor-acceptor contact. [Lec 5, Slide #24]" },
+                    { text: "Transduction", correct: false, why: "Transduction needs a vehicle: transfer is mediated by bacterial viruses. [Lec 5, Slide #26]" },
+                    { text: "Conjugation", correct: false, why: "Conjugation requires cell-to-cell contact through a pilus. [Lec 5, Slide #20]" },
+                    { text: "Transposition", correct: false, why: "Transposition is recombination only, moving DNA within the chromosome rather than transferring free DNA between cells. [Lec 5, Slide #28]" }
+                ]
+            },
+            {
+                id: 45, quarter: 4, lecture: 5, slideRef: 26, difficulty: "Easy",
+                stem: "Which form of DNA transfer is mediated through the action of bacterial viruses?",
+                options: [
+                    { text: "Transduction", correct: true, why: "Transduction is transfer mediated through the action of bacterial viruses (bacteriophages). [Lec 5, Slide #26]" },
+                    { text: "Transformation", correct: false, why: "Transformation is the uptake of free DNA with no special vehicle. [Lec 5, Slide #24]" },
+                    { text: "Conjugation", correct: false, why: "Conjugation is transfer by direct cell-to-cell contact. [Lec 5, Slide #20]" },
+                    { text: "Transposition", correct: false, why: "Transposition moves DNA within the chromosome and is recombination only. [Lec 5, Slide #28]" }
+                ]
+            },
+            {
+                id: 46, quarter: 4, lecture: 5, slideRef: 26, difficulty: "Medium",
+                stem: "In which type of transduction can bacteriophages pick up any portion of the host's genome?",
+                options: [
+                    { text: "Generalized transduction", correct: true, why: "In generalized transduction, bacteriophages can pick up any portion of the host's genome. [Lec 5, Slide #26]" },
+                    { text: "Specialized transduction", correct: false, why: "In specialized transduction, bacteriophages pick up only specific portions of the host's DNA. [Lec 5, Slide #26]" },
+                    { text: "Intergeneric transduction", correct: false, why: "Intergeneric describes a type of conjugation among some Enterobacteriaceae, not a type of transduction. [Lec 5, Slide #21]" },
+                    { text: "High frequency transduction", correct: false, why: "High frequency recombination (Hfr) strains relate to conjugation, not transduction. [Lec 5, Slide #21]" }
+                ]
+            },
+            {
+                id: 47, quarter: 4, lecture: 5, slideRef: 20, difficulty: "Medium",
+                stem: "Which is a means of genetic recombination but NOT a mechanism of DNA transfer?",
+                options: [
+                    { text: "Transposons", correct: true, why: "Transposons are recombination only; they move DNA to different positions within the chromosome rather than transferring it between cells. [Lec 5, Slide #20]" },
+                    { text: "Conjugation", correct: false, why: "Conjugation transfers DNA between cells through cell-to-cell contact. [Lec 5, Slide #20]" },
+                    { text: "Transformation", correct: false, why: "Transformation transfers free DNA into a cell. [Lec 5, Slide #24]" },
+                    { text: "Transduction", correct: false, why: "Transduction transfers DNA between cells via bacterial viruses. [Lec 5, Slide #26]" }
+                ]
+            },
+            {
+                id: 48, quarter: 4, lecture: 5, slideRef: 28, difficulty: "Easy",
+                stem: "Transposons, also called jumping genes, are officially referred to as:",
+                options: [
+                    { text: "Mobile genetic elements", correct: true, why: "Transposons are DNA sequences that move to different chromosome positions (transposition), can cause mutation, and are officially called mobile genetic elements. [Lec 5, Slide #28]" },
+                    { text: "Resistance transfer factors", correct: false, why: "Resistance transfer factors (RTFs) are conjugative plasmids carrying pilus and antibiotic-inhibiting genes. [Lec 5, Slide #21]" },
+                    { text: "High frequency recombination strains", correct: false, why: "Hfr strains are high frequency recombination strains involved in conjugation. [Lec 5, Slide #21]" },
+                    { text: "Replisome enzyme complexes", correct: false, why: "The replisome (helicase, primase, SSBP, topoisomerase, DNA polymerase, ligase) carries out replication. [Lec 5, Slide #5]" }
+                ]
             }
         ];
 
-        let quizData = [];
+        let order = [];
+        let answers = {};
 
-        function shuffle(array) {
-            let currentIndex = array.length, randomIndex;
-            while (currentIndex !== 0) {
-                randomIndex = Math.floor(Math.random() * currentIndex);
-                currentIndex--;
-                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+        function fisherYates(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            return array;
+            return arr;
         }
 
-        function initQuiz() {
-            quizData = JSON.parse(JSON.stringify(rawQuizData));
-            shuffle(quizData);
-            quizData.forEach(q => {
-                q.options.forEach((opt, idx) => opt.originalIndex = idx);
-                shuffle(q.options);
-            });
-
-            document.getElementById('summaryCard').classList.remove('visible');
-            document.getElementById('quizContainer').style.display = 'block';
-
-            renderQuiz();
-            updateScore();
-        }
-
-        function renderQuiz() {
-            const container = document.getElementById('quizContainer');
-            container.innerHTML = '';
-
-            quizData.forEach((q, qIndex) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.dataset.questionIndex = qIndex;
-
-                let optionsHTML = '';
-                q.options.forEach((opt, oIndex) => {
-                    optionsHTML += `<li><button class="option-btn" onclick="selectAnswer(${qIndex}, ${oIndex}, ${opt.originalIndex})">${String.fromCharCode(65 + oIndex)}) ${opt.text}</button></li>`;
-                });
-
-                card.innerHTML = `
-                    <div class="question-title">Q${qIndex + 1}. ${q.question}</div>
-                    <ul class="options-list" id="options-${qIndex}">
-                        ${optionsHTML}
-                    </ul>
-                    <div class="feedback-box" id="feedback-${qIndex}">
-                        <div class="status-banner" id="status-${qIndex}"></div>
-                        <div class="explanation-text" id="expl-${qIndex}"></div>
-                        <ul class="rationales-list" id="rat-${qIndex}"></ul>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function selectAnswer(qIndex, chosenOptionIndex, originalOptionIndex) {
-            const q = quizData[qIndex];
-            if (q.answered) return;
-            q.answered = true;
-            q.userChoice = originalOptionIndex;
-
-            const optionsContainer = document.getElementById(`options-${qIndex}`);
-            const buttons = optionsContainer.getElementsByClassName('option-btn');
-            
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].disabled = true;
-            }
-
-            const isCorrect = q.options[chosenOptionIndex].correct;
-
-            if (!isCorrect) {
-                wrongAudio.currentTime = 0;
-                wrongAudio.play().catch(e => console.log("Audio play blocked or missing:", e));
-            }
-
-            q.options.forEach((opt, idx) => {
-                if (opt.correct) {
-                    buttons[idx].classList.add('correct');
-                } else if (idx === chosenOptionIndex && !isCorrect) {
-                    buttons[idx].classList.add('incorrect');
-                }
-            });
-
-            const feedbackBox = document.getElementById(`feedback-${qIndex}`);
-            const statusBanner = document.getElementById(`status-${qIndex}`);
-            const explText = document.getElementById(`expl-${qIndex}`);
-            const ratList = document.getElementById(`rat-${qIndex}`);
-
-            feedbackBox.classList.add('show');
-            if (isCorrect) {
-                statusBanner.textContent = "Correct!";
-                statusBanner.className = "status-banner correct";
-            } else {
-                statusBanner.textContent = "Incorrect.";
-                statusBanner.className = "status-banner incorrect";
-            }
-
-            explText.textContent = q.explanation;
-
-            let ratHTML = '';
-            q.options.forEach((opt, idx) => {
-                const letter = String.fromCharCode(65 + idx);
-                ratHTML += `<li><strong>${letter}) ${opt.text}</strong>: ${opt.why}</li>`;
-            });
-            ratList.innerHTML = ratHTML;
-
-            updateScore();
-            checkCompletion();
+        function shuffleQuiz() {
+            fisherYates(quizData);
+            quizData.forEach(q => fisherYates(q.options));
         }
 
         function updateScore() {
-            let answeredCount = 0;
-            let correctCount = 0;
+            const total = quizData.length;
+            const correct = Object.values(answers).filter(Boolean).length;
+            const pct = total ? Math.round((correct / total) * 100) : 0;
+            document.getElementById('scoreTracker').textContent = `Score: ${correct} / ${total} (${pct}%)`;
+            return { total, correct, pct, answered: Object.keys(answers).length };
+        }
 
-            quizData.forEach(q => {
-                if (q.answered) {
-                    answeredCount++;
-                    const chosen = q.options.find(opt => opt.originalIndex === q.userChoice);
-                    if (chosen && chosen.correct) {
-                        correctCount++;
-                    }
+        function el(tag, className, text) {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            if (text !== undefined) node.textContent = text;
+            return node;
+        }
+
+        function handleSelect(q, chosenIdx, card) {
+            if (q.id in answers) return;
+            const chosen = q.options[chosenIdx];
+            answers[q.id] = chosen.correct;
+
+            // Play Wrong-answer.m4a if the selected option is incorrect
+            if (!chosen.correct) {
+                const wrongAudio = document.getElementById('wrongAudio');
+                if (wrongAudio) {
+                    wrongAudio.currentTime = 0; // Rewind to start
+                    wrongAudio.play().catch(err => console.log("Audio play blocked:", err));
                 }
+            }
+
+            const buttons = card.querySelectorAll('.option-btn');
+            buttons.forEach((btn, i) => {
+                btn.disabled = true;
+                if (q.options[i].correct) btn.classList.add('correct');
+                else if (i === chosenIdx) btn.classList.add('incorrect');
             });
 
-            const total = quizData.length;
-            const percentage = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-            document.getElementById('scoreDisplay').textContent = `Score: ${correctCount} / ${total} (${percentage}%)`;
-            
-            const progressPct = total > 0 ? (answeredCount / total) * 100 : 0;
-            document.getElementById('progressBar').style.width = progressPct + '%';
+            const fb = el('div', 'feedback-box');
+            fb.appendChild(el('div', 'status-banner ' + (chosen.correct ? 'correct' : 'incorrect'), chosen.correct ? 'Correct!' : 'You didn’t know that?!'));
+            fb.appendChild(el('div', 'reference', `Reference: Lecture ${q.lecture}, Slide #${q.slideRef}`));
+            const list = el('ul', 'breakdown-list');
+            q.options.forEach((opt, i) => {
+                const li = el('li', 'breakdown-item');
+                li.appendChild(el('span', 'tag ' + (opt.correct ? 'right' : 'wrong'), opt.correct ? 'Correct: ' : 'Incorrect: '));
+                li.appendChild(el('span', 'opt-name', `(${String.fromCharCode(97 + i)}) ${opt.text}`));
+                li.appendChild(document.createTextNode(' — ' + opt.why));
+                list.appendChild(li);
+            });
+            fb.appendChild(list);
+            card.appendChild(fb);
+
+            const s = updateScore();
+            if (s.answered === s.total) showSummary(s);
         }
 
-        function checkCompletion() {
-            const allAnswered = quizData.every(q => q.answered);
-            if (allAnswered) {
-                let correctCount = quizData.filter(q => {
-                    const chosen = q.options.find(opt => opt.originalIndex === q.userChoice);
-                    return chosen && chosen.correct;
-                }).length;
-                const total = quizData.length;
-                const percentage = Math.round((correctCount / total) * 100);
-
-                document.getElementById('finalScore').textContent = `${correctCount} / ${total} (${percentage}%)`;
-                
-                let feedbackMsg = "Solid run! You're locked in.";
-                if (percentage >= 90) {
-                    feedbackMsg = "Absolute Gigachad. You drained that test dry.";
-                } else if (percentage < 70) {
-                    feedbackMsg = "You really didn't fucking know that.";
-                }
-                document.getElementById('summaryFeedback').textContent = feedbackMsg;
-
-                document.getElementById('summaryCard').classList.add('visible');
-                document.getElementById('summaryCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        function showSummary(s) {
+            const summary = document.getElementById('summary');
+            document.getElementById('summaryScore').textContent = `${s.correct} / ${s.total} (${s.pct}%)`;
+            let msg = '';
+            if (s.pct >= 90) {
+                msg = 'Absolute Gigachad. You drained that test dry.';
+            } else if (s.pct >= 70) {
+                msg = "Solid run! You're locked in, get in some more reps.";
+            } else {
+                msg = 'You lasted less than 30 seconds. Time for a rematch.';
             }
+            document.getElementById('summaryMsg').textContent = msg;
+            summary.classList.remove('hidden');
+            summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        function resetQuiz() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            initQuiz();
+        function renderQuiz() {
+            answers = {};
+            shuffleQuiz();
+            const container = document.getElementById('quiz');
+            container.innerHTML = '';
+            document.getElementById('summary').classList.add('hidden');
+
+            quizData.forEach((q, qIdx) => {
+                const card = el('div', 'question-card');
+                const meta = el('div', 'question-meta');
+                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${quizData.length}`));
+                meta.appendChild(el('span', 'badge', q.difficulty));
+                card.appendChild(meta);
+                card.appendChild(el('div', 'question-text', q.stem));
+
+                const opts = el('div', 'options-list');
+                q.options.forEach((opt, i) => {
+                    const btn = el('button', 'option-btn');
+                    btn.type = 'button';
+                    btn.appendChild(el('span', 'option-letter', String.fromCharCode(97 + i) + ')'));
+                    btn.appendChild(el('span', '', opt.text));
+                    btn.addEventListener('click', () => handleSelect(q, i, card));
+                    opts.appendChild(btn);
+                });
+                card.appendChild(opts);
+                container.appendChild(card);
+            });
+
+            updateScore();
+            window.scrollTo({ top: 0 });
         }
 
-        window.onload = initQuiz;
+        document.getElementById('retakeBtn').addEventListener('click', renderQuiz);
+        window.onload = renderQuiz;
     </script>
 </body>
 </html>
