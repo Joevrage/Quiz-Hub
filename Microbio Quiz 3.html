@@ -87,6 +87,32 @@
             margin-bottom: 20px;
         }
 
+        .mode-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            background-color: #222222;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
+
         .question-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
@@ -248,6 +274,12 @@
 
     <main class="quiz-container">
         <p class="intro">Lecture 4 (Bacterial Metabolism) and Lecture 5 (Bacterial Genetics). Questions and answer choices are shuffled on every load and retake.</p>
+        
+        <div class="mode-container" id="modeSelector">
+            <button class="mode-btn active" id="fullQuizBtn">Full Quiz (48)</button>
+            <button class="mode-btn" id="quickQuizBtn">Quick 15</button>
+        </div>
+
         <div id="quiz"></div>
         <div class="summary-card hidden" id="summary">
             <div class="summary-title">Quiz Complete</div>
@@ -744,6 +776,7 @@
 
         let currentSet = quizData;  // questions in the current round
         let round = 1;
+        let quizMode = 'full';     // 'full' or 'quick'
         let order = [];
         let answers = {};
 
@@ -839,8 +872,26 @@
             summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
+        function updateModeButtons() {
+            const fullBtn = document.getElementById('fullQuizBtn');
+            const quickBtn = document.getElementById('quickQuizBtn');
+            if (quizMode === 'full') {
+                fullBtn.classList.add('active');
+                quickBtn.classList.remove('active');
+            } else {
+                quickBtn.classList.add('active');
+                fullBtn.classList.remove('active');
+            }
+        }
+
         function renderQuiz(set) {
-            currentSet = set || quizData;
+            if (set) {
+                currentSet = set;
+            } else {
+                fisherYates(quizData);
+                currentSet = (quizMode === 'quick') ? quizData.slice(0, 15) : [...quizData];
+            }
+
             answers = {};
             shuffleQuiz();
             const container = document.getElementById('quiz');
@@ -872,12 +923,34 @@
             window.scrollTo({ top: 0 });
         }
 
-        document.getElementById('retakeBtn').addEventListener('click', () => { round = 1; renderQuiz(quizData); });
+        document.getElementById('fullQuizBtn').addEventListener('click', () => {
+            quizMode = 'full';
+            round = 1;
+            updateModeButtons();
+            renderQuiz();
+        });
+
+        document.getElementById('quickQuizBtn').addEventListener('click', () => {
+            quizMode = 'quick';
+            round = 1;
+            updateModeButtons();
+            renderQuiz();
+        });
+
+        document.getElementById('retakeBtn').addEventListener('click', () => {
+            round = 1;
+            renderQuiz();
+        });
+
         document.getElementById('reviewBtn').addEventListener('click', () => {
             round++;
             renderQuiz(currentSet.filter(q => !answers[q.id]));
         });
-        window.onload = () => renderQuiz(quizData);
+
+        window.onload = () => {
+            updateModeButtons();
+            renderQuiz();
+        };
     </script>
 </body>
 </html>
