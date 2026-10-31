@@ -9,33 +9,21 @@
       box-sizing: border-box;
       padding-top: env(safe-area-inset-top, 0px);
       padding-bottom: env(safe-area-inset-bottom, 0px);
-      --bg: #f5f5f4;
-      --card: #fff;
-      --bd: #ddd;
-      --tx: #1a1a1a;
-      --mu: #666;
-      --ac: #c26a00;
-      --ok: #dcfce7;
-      --okb: #16a34a;
-      --no: #fee2e2;
-      --nob: #dc2626;
-      --op: #f3f3f2;
-    }
-
-    @media (prefers-color-scheme: dark) {
-      :root:not([data-theme="light"]) {
-        --bg: #0f0f0f;
-        --card: #1a1a1a;
-        --bd: #2c2c2c;
-        --tx: #fff;
-        --mu: #999;
-        --ac: #ff9900;
-        --ok: #14532d;
-        --okb: #22c55e;
-        --no: #7f1d1d;
-        --nob: #ef4444;
-        --op: #242424;
-      }
+      --bg: #0f0f0f;
+      --card: #1a1a1a;
+      --bd: #282828;
+      --tx: #ffffff;
+      --mu: #888888;
+      --ac: #ff9900;
+      --accent: #ff9900;
+      --accent-hover: #cc7a00;
+      --border-color: #282828;
+      --ok: #14532d;
+      --okb: #22c55e;
+      --no: #7f1d1d;
+      --nob: #ef4444;
+      --op: #242424;
+      --incorrect-border: #ef4444;
     }
 
     * {
@@ -85,6 +73,33 @@
       font-weight: bold;
       color: var(--ac);
       font-size: 14px;
+    }
+
+    /* Mode Selector */
+    .mode-container {
+      max-width: 850px;
+      margin: 0 auto 16px auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .mode-btn {
+      background: #222222;
+      color: #ffffff;
+      border: 1px solid var(--border-color);
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .mode-btn.active {
+      background: var(--accent);
+      color: #000000;
+      border-color: var(--accent);
     }
 
     main {
@@ -158,9 +173,11 @@
 
     .ex {
       display: none;
-      margin-top: 6px;
-      padding: 12px 14px;
+      margin-top: 10px;
+      padding: 14px 16px;
       border-left: 3px solid var(--ac);
+      background: #121212;
+      border-radius: 4px;
       font-size: 13.5px;
       line-height: 1.45;
       color: var(--mu);
@@ -174,6 +191,7 @@
       font-weight: bold;
       display: inline-block;
       margin-bottom: 8px;
+      font-size: 15px;
     }
 
     .status-banner.correct {
@@ -184,101 +202,669 @@
       color: var(--nob);
     }
 
-    #end {
-      display: none;
-      text-align: center;
-      padding: 20px;
+    .ref-text {
+      font-size: 12px;
+      color: var(--mu);
+      margin-bottom: 10px;
+      font-style: italic;
     }
 
-    #end button {
-      background: var(--ac);
-      color: #000;
-      border: 0;
-      border-radius: 6px;
-      padding: 10px 20px;
+    .rationale-list {
+      list-style-type: none;
+      padding-left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .rationale-list li {
+      font-size: 13px;
+      line-height: 1.4;
+      color: #9ca3af;
+    }
+
+    .rationale-list li strong {
+      color: #e5e7eb;
+    }
+
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: popIn 0.15s ease-out;
+    }
+
+    .wrong-popup.hidden {
+      display: none;
+    }
+
+    .wrong-popup img {
+      max-width: 80vw;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      border: 3px solid var(--incorrect-border);
+      display: block;
+      object-fit: contain;
+      background: #111;
+    }
+
+    @keyframes popIn {
+      from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    .summary-card {
+      background: var(--card);
+      border: 1px solid var(--bd);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .summary-card.hidden {
+      display: none;
+    }
+
+    .summary-title {
+      font-size: 20px;
       font-weight: bold;
+      color: var(--ac);
+      margin-bottom: 10px;
+    }
+
+    .summary-score {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .summary-msg {
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: #e5e7eb;
+      font-weight: 600;
+    }
+
+    .retake-btn {
+      background-color: var(--accent);
+      color: #000000;
+      border: 1px solid var(--accent);
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: 10px;
+      font-family: inherit;
+      margin: 4px;
+      display: inline-block;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .retake-btn:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .retake-btn.hub-btn {
+      background-color: #222222;
+      color: #ffffff;
+      border: 1px solid var(--accent);
+    }
+
+    .retake-btn.hub-btn:hover {
+      background-color: var(--accent);
+      color: #000000;
     }
   </style>
 </head>
 <body>
 
+  <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+  <div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+  </div>
+
   <header>
     <h1>Sublux <span>Listings v2</span></h1>
-    <div id="score">0 / 0</div>
+    <div id="score">Score: 0 / 0 (0%)</div>
   </header>
+
+  <div class="mode-container" id="modeSelector">
+    <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+    <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+  </div>
 
   <main id="m"></main>
 
-  <div class="card" id="end"></div>
+  <div class="summary-card hidden" id="summary">
+    <div class="summary-title" id="summaryTitle">Quiz Complete</div>
+    <div class="summary-score" id="summaryScore"></div>
+    <div class="summary-msg" id="summaryMsg"></div>
+    <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+    <button class="retake-btn" id="reviewBtn" style="display:none">Review Missed</button>
+    <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
+  </div>
 
   <script>
-    // [category, question, [correct, wrong, wrong, wrong], explanation]
+    // [category, question, [correct, wrong, wrong, wrong], explanation, ref, rationales]
     const D = [
-      ["C2-L5 Palmer", "A segment is listed PRS. Which restrictions will motion palpation find?", ["Reduced extension, right rotation, right lateral flexion", "Reduced extension, right rotation, left lateral flexion", "Reduced extension, left rotation, right lateral flexion", "Reduced flexion, right rotation, right lateral flexion"], "P = reduced extension. Spinous right = reduced right rotation. S = wedge on the same side as the spinous, so reduced right lateral flexion."],
-      ["C2-L5 Palmer", "An L3 listing is PLI. Which restrictions will motion palpation find?", ["Reduced extension, left rotation, right lateral flexion", "Reduced extension, left rotation, left lateral flexion", "Reduced extension, right rotation, right lateral flexion", "Reduced extension, right rotation, left lateral flexion"], "Spinous left = reduced left rotation. I = wedge on the opposite side of the spinous (right), so reduced right lateral flexion. Reduced left lateral flexion would be PLS."],
-      ["C2-L5 Palmer", "T7 is PRI. Which restrictions will motion palpation find?", ["Reduced extension, right rotation, left lateral flexion", "Reduced extension, right rotation, right lateral flexion", "Reduced extension, left rotation, left lateral flexion", "Reduced extension, left rotation, right lateral flexion"], "Spinous right = reduced right rotation. Inferior = wedge opposite the spinous (left), so reduced left lateral flexion (packet: decreased LLF = PRI)."],
-      ["C2-L5 Palmer", "A segment is listed PR. Which restriction pattern fits?", ["Reduced extension and reduced right rotation", "Reduced extension and reduced left rotation", "Reduced flexion and reduced right rotation", "Reduced flexion and reduced left rotation"], "Posteriority = reduced extension. The restriction is on the same side as the spinous rotation: PR = reduced right rotation."],
-      ["C2-L5 Palmer", "Which region and contact-point pairing is correct for rotary (PRI/PLI) listings?", ["Cervical: lamina (-la)", "Cervical: transverse process (-t)", "Thoracic: mammillary process (-m)", "Lumbar: transverse process (-t)"], "Cervical = lamina (-la), thoracic = transverse process (-t), lumbar = mammillary (-m). Simple listings (PRS/PLS) contact the spinous."],
-      ["Diversified", "Palmer-Gonstead PL translates to which Diversified listing?", ["Body Right", "Body Left", "Body Posterior", "Body Right only if it is PLS"], "Spinous left means the body is posterior on the right: PL/PLS/PLI = BR. PR/PRS/PRI = BL."],
-      ["Diversified", "Diversified Body Left corresponds to which Palmer-Gonstead listing(s)?", ["PR, PRS or PRI", "PL, PLS or PLI", "PRS only", "PRI only"], "Body Left = spinous right. Diversified ignores wedging, so it covers the whole PR family."],
-      ["Diversified", "A C5 listing is Body Right. Which restrictions fit?", ["Reduced extension and reduced left rotation", "Reduced extension and reduced right rotation", "Reduced flexion and reduced left rotation", "Reduced flexion and reduced right rotation"], "Body Right = spinous left (PL), so left rotation is restricted, plus reduced extension."],
-      ["Diversified", "Diversified listings apply to which region, and what component do they leave out?", ["C2-C7; wedging", "C2-C7; posteriority", "C1-C7; wedging", "C2-L5; rotation"], "Diversified is C2-C7 only (C1 has different anatomy). It references the body and is more rotational, so it cannot tell PR from PRS."],
-      ["Diversified", "At C5 the listing is Body Left. Which way is the spinous rotated and which rotation is restricted?", ["Spinous right; reduced right rotation", "Spinous left; reduced left rotation", "Spinous right; reduced left rotation", "Spinous left; reduced right rotation"], "Body Left = PR family. The spinous is right and the restriction matches: reduced right rotation."],
-      ["Sacrum", "When the sacrum subluxates with L5 at the disc, what is the reference point and listing?", ["Sacral base; BP", "Sacral ala; BP", "Sacral base; P-R", "PSIS; BP"], "Sacrum at L5 uses the base as reference and is listed BP. The ala is involved in SI joint rotations."],
-      ["Sacrum", "How do you document the sacrum rotated posterior on the right at the SI joint?", ["P-R", "PR", "BR", "BP"], "The dash is mandatory. PR without a dash is a spinal segment, and BR is a Diversified body listing."],
-      ["Sacrum", "A SOAP note lists PR with no dash. What does it most likely mean?", ["A C2-L5 segment with the spinous rotated right", "Sacrum posterior on the right at the SI joint", "Right ilium posterior-inferior", "Diversified Body Right"], "No dash means a C2-L5 vertebra (spinous right). Diversified Body Right would be written BR."],
-      ["Sacrum", "Which statement about sacral listings is correct?", ["BP is sacrum at the L5 disc; P-R/P-L is a rotated sacrum at the SI joint", "BP is sacrum at the SI joint; P-R/P-L is sacrum at the L5 disc", "BP and P-R both reference the PSIS", "P-R/P-L reference the sacral base"], "BP = base rocks posterior at L5. P-R/P-L = one side of the sacrum rotates posterior at the SI joint."],
-      ["Sacrum", "Seated oblique motion palpation at the sacral ala shows poor motion on the left. What does this support?", ["P-L", "P-R", "BP", "PI ilium on the left"], "Poor motion on the left supports P-L; on the right, P-R. BP is checked with extension at L5/S1."],
-      ["Ilium", "What is the ilium reference point, and what does PI mean?", ["PSIS; PSIS goes posterior and inferior", "PSIS; PSIS goes anterior and inferior", "ASIS; ASIS goes posterior and inferior", "Sacral base; ilium goes posterior and inferior"], "Every ilium listing references the PSIS. PI = PSIS back and down."],
-      ["Ilium", "Which pair of ilium listings describes PSIS movement in the flexion/extension plane?", ["PI and AS", "EX and IN", "PI and EX", "AS and IN"], "PI/AS are the sagittal pair. EX/IN are the coronal pair. PI+EX and AS+IN are the married combinations."],
-      ["Ilium", "Seated, middle finger on PSIS and index on sacrum, poor motion in extension supports which ilium?", ["PI", "AS", "EX", "IN"], "Poor extension supports PI. Poor flexion supports AS."],
-      ["Ilium", "Edema at the top of the SI joint, a lower gluteal fold and a functionally short leg point to which ilium?", ["PI", "AS", "EX", "IN"], "PI: edema at the top, low gluteal fold, short leg. AS has edema at the bottom, a higher fold and a long leg. IN usually has no posterior edema."],
-      ["Ilium", "Seated lateral bending shows poor motion toward the side being tested. What does this support?", ["EX ilium", "IN ilium", "PI ilium", "AS ilium"], "Poor motion toward the tested side supports EX. Poor motion away supports IN."],
-      ["Atlas", "Why do all Palmer atlas listings start with A rather than P?", ["Posterior subluxation of C1 would need dens or transverse ligament failure", "The posterior arch cannot be palpated", "Atlas facets face only anteriorly", "It avoids confusion with the pelvis"], "The reference is the anterior arch, and C1 cannot go posterior without disrupting the dens and ligaments."],
-      ["Atlas", "Which part of an atlas listing is determined from the lateral X-ray?", ["AS or AI", "R or L laterality", "The final A or P rotation", "All three parts"], "AS/AI comes from the lateral X-ray. Laterality and rotation come from motion palpation."],
-      ["Atlas", "In ASLP, which side do you contact and what does P mean?", ["Left side; left lateral mass rotated posterior", "Right side; left lateral mass rotated posterior", "Left side; whole atlas shifted posterior", "Right side; right lateral mass rotated posterior"], "The third letter is the side of laterality (the contact side). The last letter is rotation of that side."],
-      ["Atlas", "Why must you identify atlas laterality (R or L) before adjusting?", ["It tells you which side to contact; the wrong side can worsen it", "It tells you AS versus AI", "It is read from the lateral X-ray", "It gives the occiput rotation"], "Pushing on the opposite side of the laterality can make it worse, so the R/L is the most important letter."],
-      ["Atlas", "In ASLA, what does the final A mean?", ["The left lateral mass rotated anterior", "The right lateral mass rotated anterior", "The whole atlas translated anterior", "The left lateral mass rotated posterior"], "A/P is rotation of the lateral mass on the side of laterality. ASLA = left side, anterior. ASLP = left side, posterior."],
-      ["Occiput", "How is the occiput dash RS or LS determined in this class?", ["Occiput condyle challenge (palpation)", "Lateral cervical X-ray", "Dvorak test", "Opposite of the atlas laterality"], "PS comes from the lateral X-ray. RS/LS comes from the condyle challenge. RA/RP comes from the atlas."],
-      ["Occiput", "Atlas is ASRP and the occiput is PS-RS. What is the occiput rotation component?", ["RA", "RP", "LA", "LP"], "Occiput rotation is opposite the atlas on the same side: atlas right posterior means occiput right anterior."],
-      ["Occiput", "Decode PS-LS-LP.", ["Posterior-superior; left side superior; left side rotated posterior", "Posterior-superior; left side superior; left side rotated anterior", "Posterior sacrum; left ala; left posterior", "Anterior-superior; left side superior; left side rotated posterior"], "PS = posterior-superior (lateral X-ray), LS = laterality, LP = rotation on that same left side."],
-      ["Occiput", "When the atlas goes AS, which occiput listing is typically taught alongside it?", ["PS", "AS", "PI", "AI"], "The atlas and occiput move opposite each other. Atlas AS goes with occiput PS (the lecture focus). gas."],
-      ["Occiput", "Which occiput listing is internally consistent?", ["PS-RS-RP", "PS-RS-LA", "PS-LS-RA", "PS-LS-RP"], "Laterality and rotation must be on the same side: RS goes with RA/RP, LS with LA/LP."],
-      ["Region ID", "Which listing can only be an ilium?", ["PI", "BP", "PS", "ASL"], "PI, AS, EX and IN are ilium. BP is sacrum, PS is occiput, ASL is atlas."],
-      ["Region ID", "Which segment is a PS-LS listing?", ["Occiput", "Atlas", "Sacrum", "Ilium"], "Occiput listings start with PS or AS and use a dash. Atlas listings are AS/AI plus R/L."],
-      ["Region ID", "What are the coccyx listings?", ["A, A-R, A-L", "P, P-R, P-L", "PI, AS, EX, IN", "AI, AS, ASR, ASL"], "The coccyx misaligns anterior, listed A, A-R or A-L."],
-      ["Spondy vs BP", "On a lateral X-ray L4 and the sacrum line up, but L5 sits forward of both. What is it?", ["Anterior spondylolisthesis of L5", "BP sacrum", "P-L sacrum", "PI ilium"], "L5 slipped forward relative to L4 and sacrum, so it is a true spondy."],
-      ["Spondy vs BP", "On a lateral X-ray L4 and L5 are aligned and the sacral base is posterior to both. What is it?", ["BP sacrum", "Anterior spondylolisthesis of L5", "Posterior L5", "P-R sacrum"], "L4 and L5 stay in line while the sacrum rocks back. That is BP. Always check L4 before calling a spondy."]
+      [
+        "C2-L5 Palmer",
+        "A segment is listed PRS. Which restrictions will motion palpation find?",
+        ["Reduced extension, right rotation, right lateral flexion", "Reduced extension, right rotation, left lateral flexion", "Reduced extension, left rotation, right lateral flexion", "Reduced flexion, right rotation, right lateral flexion"],
+        "P = reduced extension. Spinous right = reduced right rotation. S = wedge on the same side as the spinous, so reduced right lateral flexion.",
+        "Lecture 2, Slide #34",
+        [
+          "(a) Reduced extension, right rotation, right lateral flexion — Correct. Posteriority restricts extension, spinous right restricts right rotation, and same-side (S) superior wedging restricts right lateral flexion.",
+          "(b) Reduced extension, right rotation, left lateral flexion — Incorrect. Same-side wedging restricts lateral flexion to the side of spinous deviation, not the opposite side.",
+          "(c) Reduced extension, left rotation, right lateral flexion — Incorrect. Spinous right restricts right rotation, not left rotation.",
+          "(d) Reduced flexion, right rotation, right lateral flexion — Incorrect. Posteriority restricts extension, not flexion."
+        ]
+      ],
+      [
+        "C2-L5 Palmer",
+        "An L3 listing is PLI. Which restrictions will motion palpation find?",
+        ["Reduced extension, left rotation, right lateral flexion", "Reduced extension, left rotation, left lateral flexion", "Reduced extension, right rotation, right lateral flexion", "Reduced extension, right rotation, left lateral flexion"],
+        "Spinous left = reduced left rotation. I = wedge on the opposite side of the spinous (right), so reduced right lateral flexion. Reduced left lateral flexion would be PLS.",
+        "Lecture 2, Slide #36",
+        [
+          "(a) Reduced extension, left rotation, right lateral flexion — Correct. Posteriority reduces extension, spinous left reduces left rotation, and inferior (I) wedging on the opposite side restricts lateral flexion to the right.",
+          "(b) Reduced extension, left rotation, left lateral flexion — Incorrect. Left lateral flexion restriction applies to PLS listings where wedging is on the same side.",
+          "(c) Reduced extension, right rotation, right lateral flexion — Incorrect. Spinous left produces left rotational restriction.",
+          "(d) Reduced extension, right rotation, left lateral flexion — Incorrect. Mismatches both the rotational and lateral bending restriction patterns."
+        ]
+      ],
+      [
+        "C2-L5 Palmer",
+        "T7 is PRI. Which restrictions will motion palpation find?",
+        ["Reduced extension, right rotation, left lateral flexion", "Reduced extension, right rotation, right lateral flexion", "Reduced extension, left rotation, left lateral flexion", "Reduced extension, left rotation, right lateral flexion"],
+        "Spinous right = reduced right rotation. Inferior = wedge opposite the spinous (left), so reduced left lateral flexion (packet: decreased LLF = PRI).",
+        "Lecture 3, Slide #12",
+        [
+          "(a) Reduced extension, right rotation, left lateral flexion — Correct. Spinous right causes right rotation restriction, and inferior (I) wedging opposite the spinous creates left lateral flexion restriction.",
+          "(b) Reduced extension, right rotation, right lateral flexion — Incorrect. Same-side wedging would cause right lateral flexion restriction (PRS).",
+          "(c) Reduced extension, left rotation, left lateral flexion — Incorrect. Spinous right restricts right rotation.",
+          "(d) Reduced extension, left rotation, right lateral flexion — Incorrect. Incorrect combination of rotational and lateral bending vectors."
+        ]
+      ],
+      [
+        "C2-L5 Palmer",
+        "A segment is listed PR. Which restriction pattern fits?",
+        ["Reduced extension and reduced right rotation", "Reduced extension and reduced left rotation", "Reduced flexion and reduced right rotation", "Reduced flexion and reduced left rotation"],
+        "Posteriority = reduced extension. The restriction is on the same side as the spinous rotation: PR = reduced right rotation.",
+        "Lecture 2, Slide #30",
+        [
+          "(a) Reduced extension and reduced right rotation — Correct. Posteriority restricts extension, and spinous right restricts right rotation.",
+          "(b) Reduced extension and reduced left rotation — Incorrect. Spinous right restricts right rotation, not left.",
+          "(c) Reduced flexion and reduced right rotation — Incorrect. Posteriority restricts extension, not flexion.",
+          "(d) Reduced flexion and reduced left rotation — Incorrect. Both extension and rotation directions are misidentified."
+        ]
+      ],
+      [
+        "C2-L5 Palmer",
+        "Which region and contact-point pairing is correct for rotary (PRI/PLI) listings?",
+        ["Cervical: lamina (-la)", "Cervical: transverse process (-t)", "Thoracic: mammillary process (-m)", "Lumbar: transverse process (-t)"],
+        "Cervical = lamina (-la), thoracic = transverse process (-t), lumbar = mammillary (-m). Simple listings (PRS/PLS) contact the spinous.",
+        "Lecture 3, Slide #18",
+        [
+          "(a) Cervical: lamina (-la) — Correct. Rotary cervical listings utilize the lamina contact point designated by '-la'.",
+          "(b) Cervical: transverse process (-t) — Incorrect. Transverse process contacts are used in the thoracic spine.",
+          "(c) Thoracic: mammillary process (-m) — Incorrect. Mammillary processes are contact points in the lumbar spine.",
+          "(d) Lumbar: transverse process (-t) — Incorrect. Lumbar rotary listings utilize mammillary processes (-m)."
+        ]
+      ],
+      [
+        "Diversified",
+        "Palmer-Gonstead PL translates to which Diversified listing?",
+        ["Body Right", "Body Left", "Body Posterior", "Body Right only if it is PLS"],
+        "Spinous left means the body is posterior on the right: PL/PLS/PLI = BR. PR/PRS/PRI = BL.",
+        "Lecture 3, Slide #22",
+        [
+          "(a) Body Right — Correct. A spinous left listing (PL) swings the anterior vertebral body posterior on the right, translating to Body Right in Diversified.",
+          "(b) Body Left — Incorrect. Body Left corresponds to spinous right (PR) families.",
+          "(c) Body Posterior — Incorrect. Diversified designates specific right or left lateral body rotation.",
+          "(d) Body Right only if it is PLS — Incorrect. Diversified ignores wedge designators, translating all PL variants to Body Right."
+        ]
+      ],
+      [
+        "Diversified",
+        "Diversified Body Left corresponds to which Palmer-Gonstead listing(s)?",
+        ["PR, PRS or PRI", "PL, PLS or PLI", "PRS only", "PRI only"],
+        "Body Left = spinous right. Diversified ignores wedging, so it covers the whole PR family.",
+        "Lecture 3, Slide #23",
+        [
+          "(a) PR, PRS or PRI — Correct. Body Left indicates spinous right, encompassing the entire PR group regardless of wedge type.",
+          "(b) PL, PLS or PLI — Incorrect. These represent spinous left listings, translating to Body Right.",
+          "(c) PRS only — Incorrect. Diversified groups all wedge variations together under the primary rotational listing.",
+          "(d) PRI only — Incorrect. Excludes other members of the PR family."
+        ]
+      ],
+      [
+        "Diversified",
+        "A C5 listing is Body Right. Which restrictions fit?",
+        ["Reduced extension and reduced left rotation", "Reduced extension and reduced right rotation", "Reduced flexion and reduced left rotation", "Reduced flexion and reduced right rotation"],
+        "Body Right = spinous left (PL), so left rotation is restricted, plus reduced extension.",
+        "Lecture 3, Slide #25",
+        [
+          "(a) Reduced extension and reduced left rotation — Correct. Body Right equals spinous left (PL), restricting extension and left rotation.",
+          "(b) Reduced extension and reduced right rotation — Incorrect. Right rotation restriction corresponds to Body Left.",
+          "(c) Reduced flexion and reduced left rotation — Incorrect. Extension is restricted in posterior listings, not flexion.",
+          "(d) Reduced flexion and reduced right rotation — Incorrect. Both parameters are incorrect."
+        ]
+      ],
+      [
+        "Diversified",
+        "Diversified listings apply to which region, and what component do they leave out?",
+        ["C2-C7; wedging", "C2-C7; posteriority", "C1-C7; wedging", "C2-L5; rotation"],
+        "Diversified is C2-C7 only (C1 has different anatomy). It references the body and is more rotational, so it cannot tell PR from PRS.",
+        "Lecture 3, Slide #26",
+        [
+          "(a) C2-C7; wedging — Correct. Diversified cervical listings cover C2 through C7 and omit wedge components.",
+          "(b) C2-C7; posteriority — Incorrect. Posteriority is maintained in Diversified listings.",
+          "(c) C1-C7; wedging — Incorrect. C1 is excluded due to unique upper cervical articulation.",
+          "(d) C2-L5; rotation — Incorrect. Diversified cervical system does not extend down to the lumbar spine."
+        ]
+      ],
+      [
+        "Diversified",
+        "At C5 the listing is Body Left. Which way is the spinous rotated and which rotation is restricted?",
+        ["Spinous right; reduced right rotation", "Spinous left; reduced left rotation", "Spinous right; reduced left rotation", "Spinous left; reduced right rotation"],
+        "Body Left = PR family. The spinous is right and the restriction matches: reduced right rotation.",
+        "Lecture 3, Slide #28",
+        [
+          "(a) Spinous right; reduced right rotation — Correct. Body Left means spinous right, restricting right rotation.",
+          "(b) Spinous left; reduced left rotation — Incorrect. Spinous left corresponds to Body Right.",
+          "(c) Spinous right; reduced left rotation — Incorrect. Spinous right restricts right rotation, not left.",
+          "(d) Spinous left; reduced right rotation — Incorrect. Mismatches spinous position and restriction."
+        ]
+      ],
+      [
+        "Sacrum",
+        "When the sacrum subluxates with L5 at the disc, what is the reference point and listing?",
+        ["Sacral base; BP", "Sacral ala; BP", "Sacral base; P-R", "PSIS; BP"],
+        "Sacrum at L5 uses the base as reference and is listed BP. The ala is involved in SI joint rotations.",
+        "Lecture 4, Slide #5",
+        [
+          "(a) Sacral base; BP — Correct. The sacral base is the reference point for lumbosacral articulations, listed as Base Posterior (BP).",
+          "(b) Sacral ala; BP — Incorrect. Sacral ala is referenced during SI joint rotations.",
+          "(c) Sacral base; P-R — Incorrect. Hyphenated listings denote SI joint rotations, not L5 disc subluxations.",
+          "(d) PSIS; BP — Incorrect. PSIS is the reference point for ilium innominate listings."
+        ]
+      ],
+      [
+        "Sacrum",
+        "How do you document the sacrum rotated posterior on the right at the SI joint?",
+        ["P-R", "PR", "BR", "BP"],
+        "The dash is mandatory. PR without a dash is a spinal segment, and BR is a Diversified body listing.",
+        "Lecture 4, Slide #8",
+        [
+          "(a) P-R — Correct. The hyphen is mandatory for sacral SI joint listings to distinguish them from spinal vertebra listings.",
+          "(b) PR — Incorrect. Without a dash, PR designates a C2-L5 spinal segment spinous right listing.",
+          "(c) BR — Incorrect. BR denotes a Diversified cervical body listing.",
+          "(d) BP — Incorrect. BP designates sacral base posteriority relative to L5."
+        ]
+      ],
+      [
+        "Sacrum",
+        "A SOAP note lists PR with no dash. What does it most likely mean?",
+        ["A C2-L5 segment with the spinous rotated right", "Sacrum posterior on the right at the SI joint", "Right ilium posterior-inferior", "Diversified Body Right"],
+        "No dash means a C2-L5 vertebra (spinous right). Diversified Body Right would be written BR.",
+        "Lecture 4, Slide #10",
+        [
+          "(a) A C2-L5 segment with the spinous rotated right — Correct. Absence of a hyphen indicates a standard spinal vertebra listing.",
+          "(b) Sacrum posterior on the right at the SI joint — Incorrect. Requires a hyphen (P-R).",
+          "(c) Right ilium posterior-inferior — Incorrect. Innominate listings use PI nomenclature.",
+          "(d) Diversified Body Right — Incorrect. Diversified body listings use BR notation."
+        ]
+      ],
+      [
+        "Sacrum",
+        "Which statement about sacral listings is correct?",
+        ["BP is sacrum at the L5 disc; P-R/P-L is a rotated sacrum at the SI joint", "BP is sacrum at the SI joint; P-R/P-L is sacrum at the L5 disc", "BP and P-R both reference the PSIS", "P-R/P-L reference the sacral base"],
+        "BP = base rocks posterior at L5. P-R/P-L = one side of the sacrum rotates posterior at the SI joint.",
+        "Lecture 4, Slide #14",
+        [
+          "(a) BP is sacrum at the L5 disc; P-R/P-L is a rotated sacrum at the SI joint — Correct. Accurately defines the two distinct sacral articulation listing conventions.",
+          "(b) BP is sacrum at the SI joint; P-R/P-L is sacrum at the L5 disc — Incorrect. Reverses anatomical reference levels.",
+          "(c) BP and P-R both reference the PSIS — Incorrect. PSIS references ilium innominates.",
+          "(d) P-R/P-L reference the sacral base — Incorrect. P-R/P-L reference sacral ala rotation at the SI joint."
+        ]
+      ],
+      [
+        "Sacrum",
+        "Seated oblique motion palpation at the sacral ala shows poor motion on the left. What does this support?",
+        ["P-L", "P-R", "BP", "PI ilium on the left"],
+        "Poor motion on the left supports P-L; on the right, P-R. BP is checked with extension at L5/S1.",
+        "Lecture 4, Slide #19",
+        [
+          "(a) P-L — Correct. Restricted motion during seated oblique palpation on the left supports a P-L sacral listing.",
+          "(b) P-R — Incorrect. Right-sided motion restriction supports P-R.",
+          "(c) BP — Incorrect. BP is evaluated via lumbosacral extension testing.",
+          "(d) PI ilium on the left — Incorrect. Ilium testing relies on PSIS landmark movement."
+        ]
+      ],
+      [
+        "Ilium",
+        "What is the ilium reference point, and what does PI mean?",
+        ["PSIS; PSIS goes posterior and inferior", "PSIS; PSIS goes anterior and inferior", "ASIS; PSIS goes posterior and inferior", "Sacral base; ilium goes posterior and inferior"],
+        "Every ilium listing references the PSIS. PI = PSIS back and down.",
+        "Lecture 4, Slide #24",
+        [
+          "(a) PSIS; PSIS goes posterior and inferior — Correct. PSIS is the universal ilium reference, and PI indicates posterior-inferior displacement.",
+          "(b) PSIS; PSIS goes anterior and inferior — Incorrect. Anterior-inferior describes an AS listing.",
+          "(c) ASIS; PSIS goes posterior and inferior — Incorrect. ASIS is not the primary ilium listing reference point.",
+          "(d) Sacral base; ilium goes posterior and inferior — Incorrect. Sacral base references lumbosacral articulation."
+        ]
+      ],
+      [
+        "Ilium",
+        "Which pair of ilium listings describes PSIS movement in the flexion/extension plane?",
+        ["PI and AS", "EX and IN", "PI and EX", "AS and IN"],
+        "PI/AS are the sagittal pair. EX/IN are the coronal pair. PI+EX and AS+IN are the married combinations.",
+        "Lecture 4, Slide #28",
+        [
+          "(a) PI and AS — Correct. PI and AS operate in the sagittal plane (flexion/extension).",
+          "(b) EX and IN — Incorrect. EX and IN operate in the coronal/transverse plane.",
+          "(c) PI and EX — Incorrect. Combines sagittal and coronal components into a married listing.",
+          "(d) AS and IN — Incorrect. Represents another married compound pairing."
+        ]
+      ],
+      [
+        "Ilium",
+        "Seated, middle finger on PSIS and index on sacrum, poor motion in extension supports which ilium?",
+        ["PI", "AS", "EX", "IN"],
+        "Poor extension supports PI. Poor flexion supports AS.",
+        "Lecture 4, Slide #33",
+        [
+          "(a) PI — Correct. Reduced posterior rocking motion during extension palpation supports a Posterior-Inferior (PI) ilium.",
+          "(b) AS — Incorrect. AS listings exhibit restricted motion during flexion.",
+          "(c) EX — Incorrect. EX/IN involve coronal plane transverse mechanics.",
+          "(d) IN — Incorrect. Evaluated via lateral bending or coronal plane challenge."
+        ]
+      ],
+      [
+        "Ilium",
+        "Edema at the top of the SI joint, a lower gluteal fold and a functionally short leg point to which ilium?",
+        ["PI", "AS", "EX", "IN"],
+        "PI: edema at the top, low gluteal fold, short leg. AS has edema at the bottom, a higher fold and a long leg. IN usually has no posterior edema.",
+        "Lecture 4, Slide #37",
+        [
+          "(a) PI — Correct. Superior SI edema, low gluteal fold, and functional leg shortening characterize a PI ilium.",
+          "(b) AS — Incorrect. AS presents with inferior SI edema, high gluteal fold, and leg lengthening.",
+          "(c) EX — Incorrect. EX alters transverse pelvic width and foot flare.",
+          "(d) IN — Incorrect. IN typically lacks posterior inflammatory edema."
+        ]
+      ],
+      [
+        "Ilium",
+        "Seated lateral bending shows poor motion toward the side being tested. What does this support?",
+        ["EX ilium", "IN ilium", "PI ilium", "AS ilium"],
+        "Poor motion toward the tested side supports EX. Poor motion away supports IN.",
+        "Lecture 4, Slide #42",
+        [
+          "(a) EX ilium — Correct. Restricted motion when laterally bending toward the tested side indicates an EX ilium.",
+          "(b) IN ilium — Incorrect. Poor motion away from the tested side supports IN.",
+          "(c) PI ilium — Incorrect. Evaluated via sagittal extension challenges.",
+          "(d) AS ilium — Incorrect. Evaluated via sagittal flexion challenges."
+        ]
+      ],
+      [
+        "Atlas",
+        "Why do all Palmer atlas listings start with A rather than P?",
+        ["Posterior subluxation of C1 would need dens or transverse ligament failure", "The posterior arch cannot be palpated", "Atlas facets face only anteriorly", "It avoids confusion with the pelvis"],
+        "The reference is the anterior arch, and C1 cannot go posterior without disrupting the dens and ligaments.",
+        "Lecture 5, Slide #4",
+        [
+          "(a) Posterior subluxation of C1 would need dens or transverse ligament failure — Correct. Anatomical containment by the dens and transverse ligament prevents posterior C1 translation without severe trauma.",
+          "(b) The posterior arch cannot be palpated — Incorrect. The posterior arch is readily palpable.",
+          "(c) Atlas facets face only anteriorly — Incorrect. Facet orientation does not dictate posterior impossibility.",
+          "(d) It avoids confusion with the pelvis — Incorrect. Nomenclature is based strictly on cervical structural biomechanics."
+        ]
+      ],
+      [
+        "Atlas",
+        "Which part of an atlas listing is determined from the lateral X-ray?",
+        ["AS or AI", "R or L laterality", "The final A or P rotation", "All three parts"],
+        "AS/AI comes from the lateral X-ray. Laterality and rotation come from motion palpation.",
+        "Lecture 5, Slide #9",
+        [
+          "(a) AS or AI — Correct. Sagittal plane tilt (AS or AI) is determined radiographically from the lateral cervical film.",
+          "(b) R or L laterality — Incorrect. Laterality is assessed via motion palpation and physical exam.",
+          "(c) The final A or P rotation — Incorrect. Rotation is determined through palpatory challenge.",
+          "(d) All three parts — Incorrect. Only the first component (AS/AI) is derived from lateral radiography."
+        ]
+      ],
+      [
+        "Atlas",
+        "In ASLP, which side do you contact and what does P mean?",
+        ["Left side; left lateral mass rotated posterior", "Right side; left lateral mass rotated posterior", "Left side; whole atlas shifted posterior", "Right side; right lateral mass rotated posterior"],
+        "The third letter is the side of laterality (the contact side). The last letter is rotation of that side.",
+        "Lecture 5, Slide #15",
+        [
+          "(a) Left side; left lateral mass rotated posterior — Correct. 'L' designates left laterality (contact side), and 'P' indicates posterior rotation of that left lateral mass.",
+          "(b) Right side; left lateral mass rotated posterior — Incorrect. Mismatches laterality letter designation.",
+          "(c) Left side; whole atlas shifted posterior — Incorrect. Atlas does not translate entirely posterior.",
+          "(d) Right side; right lateral mass rotated posterior — Incorrect. Denotes ASRP, not ASLP."
+        ]
+      ],
+      [
+        "Atlas",
+        "Why must you identify atlas laterality (R or L) before adjusting?",
+        ["It tells you which side to contact; the wrong side can worsen it", "It tells you AS versus AI", "It is read from the lateral X-ray", "It gives the occiput rotation"],
+        "Pushing on the opposite side of the laterality can make it worse, so the R/L is the most important letter.",
+        "Lecture 5, Slide #20",
+        [
+          "(a) It tells you which side to contact; the wrong side can worsen it — Correct. Laterality dictates the primary contact side; adjusting the incorrect side exacerbates the subluxation.",
+          "(b) It tells you AS versus AI — Incorrect. Sagittal tilt is determined radiographically.",
+          "(c) It is read from the lateral X-ray — Incorrect. Laterality is established clinically.",
+          "(d) It gives the occiput rotation — Incorrect. Occiput rotation is an independent cranial listing component."
+        ]
+      ],
+      [
+        "Atlas",
+        "In ASLA, what does the final A mean?",
+        ["The left lateral mass rotated anterior", "The right lateral mass rotated anterior", "The whole atlas translated anterior", "The left lateral mass rotated posterior"],
+        "A/P is rotation of the lateral mass on the side of laterality. ASLA = left side, anterior. ASLP = left side, posterior.",
+        "Lecture 5, Slide #24",
+        [
+          "(a) The left lateral mass rotated anterior — Correct. In ASLA, 'L' establishes the left contact side, and 'A' indicates anterior rotation of that left lateral mass.",
+          "(b) The right lateral mass rotated anterior — Incorrect. Laterality is on the left side.",
+          "(c) The whole atlas translated anterior — Incorrect. Represents rotational malposition of the lateral mass rather than whole-bone translation.",
+          "(d) The left lateral mass rotated posterior — Incorrect. 'A' stands for anterior rotation, not posterior."
+        ]
+      ],
+      [
+        "Occiput",
+        "How is the occiput dash RS or LS determined in this class?",
+        ["Occiput condyle challenge (palpation)", "Lateral cervical X-ray", "Dvorak test", "Opposite of the atlas laterality"],
+        "PS comes from the lateral X-ray. RS/LS comes from the condyle challenge. RA/RP comes from the atlas.",
+        "Lecture 5, Slide #32",
+        [
+          "(a) Occiput condyle challenge (palpation) — Correct. Occiput laterality (RS/LS) is determined via the occipital condyle palpatory challenge.",
+          "(b) Lateral cervical X-ray — Incorrect. Lateral films provide the initial PS/AS sagittal rocking designation.",
+          "(c) Dvorak test — Incorrect. Dvorak test evaluates cervical segmental rotation and ligamentous integrity.",
+          "(d) Opposite of the atlas laterality — Incorrect. Atlas laterality is separate from occiput condylar challenge findings."
+        ]
+      ],
+      [
+        "Occiput",
+        "Atlas is ASRP and the occiput is PS-RS. What is the occiput rotation component?",
+        ["RA", "RP", "LA", "LP"],
+        "Occiput rotation is opposite the atlas on the same side: atlas right posterior means occiput right anterior.",
+        "Lecture 5, Slide #38",
+        [
+          "(a) RA — Correct. Occiput rotation is opposite to atlas on the matching side; atlas right posterior (RP) dictates occiput right anterior (RA).",
+          "(b) RP — Incorrect. Same-side occiput rotation opposes atlas rotation.",
+          "(c) LA — Incorrect. Mismatches laterality side.",
+          "(d) LP — Incorrect. Incorrect side and rotational direction."
+        ]
+      ],
+      [
+        "Occiput",
+        "Decode PS-LS-LP.",
+        ["Posterior-superior; left side superior; left side rotated posterior", "Posterior-superior; left side superior; left side rotated anterior", "Posterior sacrum; left ala; left posterior", "Anterior-superior; left side superior; left side rotated posterior"],
+        "PS = posterior-superior (lateral X-ray), LS = laterality, LP = rotation on that same left side.",
+        "Lecture 5, Slide #44",
+        [
+          "(a) Posterior-superior; left side superior; left side rotated posterior — Correct. PS = Posterior-Superior, LS = Left Superior laterality, LP = Left Posterior rotation.",
+          "(b) Posterior-superior; left side superior; left side rotated anterior — Incorrect. Final letter 'P' indicates posterior rotation, not anterior.",
+          "(c) Posterior sacrum; left ala; left posterior — Incorrect. Mixes occipital cranial terminology with sacral SI joint listings.",
+          "(d) Anterior-superior; left side superior; left side rotated posterior — Incorrect. Initial designation is Posterior-Superior (PS)."
+        ]
+      ],
+      [
+        "Occiput",
+        "When the atlas goes AS, which occiput listing is typically taught alongside it?",
+        ["PS", "AS", "PI", "AI"],
+        "The atlas and occiput move opposite each other. Atlas AS goes with occiput PS (the lecture focus).",
+        "Lecture 5, Slide #49",
+        [
+          "(a) PS — Correct. Biomechanically, atlas anterior-superior (AS) pairing most commonly accompanies occiput posterior-superior (PS).",
+          "(b) AS — Incorrect. Occiput typically exhibits a complementary posterior rock.",
+          "(c) PI — Incorrect. PI is an ilium listing nomenclature.",
+          "(d) AI — Incorrect. AI refers to inferior atlas displacement."
+        ]
+      ],
+      [
+        "Occiput",
+        "Which occiput listing is internally consistent?",
+        ["PS-RS-RP", "PS-RS-LA", "PS-LS-RA", "PS-LS-RP"],
+        "Laterality and rotation must be on the same side: RS goes with RA/RP, LS with LA/LP.",
+        "Lecture 5, Slide #53",
+        [
+          "(a) PS-RS-RP — Correct. Laterality and rotation components must match sides (Right Superior laterality pairs exclusively with Right Anterior or Right Posterior rotation).",
+          "(b) PS-RS-LA — Incorrect. Mismatches right laterality with left rotation.",
+          "(c) PS-LS-RA — Incorrect. Mismatches left laterality with right rotation.",
+          "(d) PS-LS-RP — Incorrect. Mismatches left laterality with right rotation."
+        ]
+      ],
+      [
+        "Region ID",
+        "Which listing can only be an ilium?",
+        ["PI", "BP", "PS", "ASL"],
+        "PI, AS, EX and IN are ilium. BP is sacrum, PS is occiput, ASL is atlas.",
+        "Lecture 1, Slide #12",
+        [
+          "(a) PI — Correct. PI, AS, EX, and IN are exclusive ilium innominate listing codes.",
+          "(b) BP — Incorrect. BP designates a lumbosacral base posterior sacrum listing.",
+          "(c) PS — Incorrect. PS designates an occiput cranial listing.",
+          "(d) ASL — Incorrect. ASL represents an atlas cervical listing."
+        ]
+      ],
+      [
+        "Region ID",
+        "Which segment is a PS-LS listing?",
+        ["Occiput", "Atlas", "Sacrum", "Ilium"],
+        "Occiput listings start with PS or AS and use a dash. Atlas listings are AS/AI plus R/L.",
+        "Lecture 1, Slide #15",
+        [
+          "(a) Occiput — Correct. Occiput listings begin with PS/AS followed by a hyphenated laterality designator.",
+          "(b) Atlas — Incorrect. Atlas listings use AS/AI without hyphens.",
+          "(c) Sacrum — Incorrect. Sacrum uses BP or hyphenated SI joint codes (P-R/P-L).",
+          "(d) Ilium — Incorrect. Ilium uses PI, AS, EX, IN."
+        ]
+      ],
+      [
+        "Region ID",
+        "What are the coccyx listings?",
+        ["A, A-R, A-L", "P, P-R, P-L", "PI, AS, EX, IN", "AI, AS, ASR, ASL"],
+        "The coccyx misaligns anterior, listed A, A-R or A-L.",
+        "Lecture 1, Slide #18",
+        [
+          "(a) A, A-R, A-L — Correct. Coccyx subluxations misalign anteriorly and are categorized as A, A-R, or A-L.",
+          "(b) P, P-R, P-L — Incorrect. Posterior coccygeal listings are not clinically recognized.",
+          "(c) PI, AS, EX, IN — Incorrect. These represent innominate ilium listings.",
+          "(d) AI, AS, ASR, ASL — Incorrect. These represent atlas cervical listings."
+        ]
+      ],
+      [
+        "Spondy vs BP",
+        "On a lateral X-ray L4 and the sacrum line up, but L5 sits forward of both. What is it?",
+        ["Anterior spondylolisthesis of L5", "BP sacrum", "P-L sacrum", "PI ilium"],
+        "L5 slipped forward relative to L4 and sacrum, so it is a true spondy.",
+        "Lecture 3, Slide #31",
+        [
+          "(a) Anterior spondylolisthesis of L5 — Correct. When L5 is displaced anteriorly relative to both S1 and L4, true anterior spondylolisthesis is confirmed.",
+          "(b) BP sacrum — Incorrect. BP involves posterior sacral base rocking while maintaining normal L4-L5 alignment.",
+          "(c) P-L sacrum — Incorrect. P-L denotes SI joint sacral ala rotation.",
+          "(d) PI ilium — Incorrect. Ilium misalignments are evaluated via pelvic radiography and PSIS landmarks."
+        ]
+      ],
+      [
+        "Spondy vs BP",
+        "On a lateral X-ray L4 and L5 are aligned and the sacral base is posterior to both. What is it?",
+        ["BP sacrum", "Anterior spondylolisthesis of L5", "Posterior L5", "P-R sacrum"],
+        "L4 and L5 stay in line while the sacrum rocks back. That is BP. Always check L4 before calling a spondy.",
+        "Lecture 3, Slide #35",
+        [
+          "(a) BP sacrum — Correct. Maintenance of normal L4-L5 alignment combined with a posteriorly rocked sacral base confirms a Base Posterior (BP) sacrum.",
+          "(b) Anterior spondylolisthesis of L5 — Incorrect. Requires anterior displacement of L5 relative to L4.",
+          "(c) Posterior L5 — Incorrect. Not standard chiropractic listing nomenclature.",
+          "(d) P-R sacrum — Incorrect. P-R designates unilateral SI joint rotation."
+        ]
+      ]
     ];
 
-    let ans = 0;
-    let cor = 0;
+    let currentSet = [];
+    let round = 1;
+    let quizMode = 'full';
+    let answers = {};
+    let popupTimeout = null;
+    let missed = [];
 
-    const sh = a => {
-      for (let i = a.length - 1; i > 0; i--) {
+    const wrongAudio = document.getElementById('wrongAudio');
+    const wrongPopup = document.getElementById('wrongPopup');
+
+    const fisherYates = array => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.random() * (i + 1) | 0;
-        [a[i], a[j]] = [a[j], a[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return a;
+      return arr;
     };
 
-    function render() {
-      ans = cor = 0;
-      sc();
-      document.getElementById('end').style.display = 'none';
+    function initQuiz(mode = 'full') {
+      quizMode = mode;
+      round = 1;
+      missed = [];
+      answers = {};
 
+      const fullShuffled = fisherYates(D);
+      currentSet = (quizMode === 'quick') ? fullShuffled.slice(0, 15) : fullShuffled;
+
+      document.getElementById('fullQuizBtn').classList.toggle('active', quizMode === 'full');
+      document.getElementById('quickQuizBtn').classList.toggle('active', quizMode === 'quick');
+
+      document.getElementById('summary').classList.add('hidden');
+      renderQuiz(currentSet);
+    }
+
+    function renderQuiz(set) {
       const m = document.getElementById('m');
       m.innerHTML = '';
+      answers = {};
 
-      sh(D.slice()).forEach((d, n) => {
+      set.forEach((d, n) => {
         const c = document.createElement('div');
         c.className = 'card';
-        c.innerHTML = '<div class="tag">' + d[0] + ' · Question ' + (n + 1) + ' of ' + D.length + '</div><div class="q"></div>';
+        c.id = `card_${n}`;
+
+        const labelPrefix = (round === 1) ? `Question ${n + 1} of ${set.length}` : `Review Question ${n + 1} of ${set.length}`;
+        c.innerHTML = `<div class="tag">${d[0]} · ${labelPrefix}</div><div class="q"></div>`;
         c.querySelector('.q').textContent = d[1];
 
-        const opts = sh(d[2].map((t, i) => ({ t, ok: i === 0 })));
+        const opts = fisherYates(d[2].map((t, i) => ({ t, ok: i === 0 })));
         const bs = [];
 
         opts.forEach((o, i) => {
@@ -292,67 +878,154 @@
           b.onclick = () => {
             if (b.classList.contains('lk')) return;
             bs.forEach(x => x.classList.add('lk'));
-            ans++;
+            answers[n] = o.ok;
 
             bs.forEach((x, k) => {
               if (opts[k].ok) x.classList.add('ok');
             });
 
-            if (o.ok) {
-              cor++;
-            } else {
-              b.classList.add('no');
-            }
-
             const banner = c.querySelector('.status-banner');
             if (o.ok) {
+              b.classList.add('ok');
               banner.className = 'status-banner correct';
               banner.textContent = 'Correct!';
             } else {
+              b.classList.add('no');
               banner.className = 'status-banner incorrect';
               banner.textContent = 'You didn’t know that?!';
+
+              wrongAudio.currentTime = 0;
+              wrongAudio.play().catch(() => {});
+              wrongPopup.classList.remove('hidden');
+              if (popupTimeout) clearTimeout(popupTimeout);
+              popupTimeout = setTimeout(() => {
+                wrongPopup.classList.add('hidden');
+              }, 2000);
             }
 
             ex.style.display = 'block';
-            sc();
-            if (ans === D.length) fin();
+            updateScoreUI();
+            checkAllAnswered(set);
           };
         });
 
         const ex = document.createElement('div');
         ex.className = 'ex';
-        ex.innerHTML = '<div class="status-banner"></div><br><strong>Why:</strong> ';
-        ex.appendChild(document.createTextNode(d[3]));
+
+        let rationalesHtml = '<ul class="rationale-list">';
+        d[5].forEach(rat => {
+          rationalesHtml += `<li><strong>${rat.split(' — ')[0]}</strong> — ${rat.split(' — ')[1]}</li>`;
+        });
+        rationalesHtml += '</ul>';
+
+        ex.innerHTML = `
+          <div class="status-banner"></div>
+          <div class="ref-text">Reference: ${d[4]}</div>
+          <div style="margin-bottom:8px;"><strong>Explanation:</strong> ${d[3]}</div>
+          ${rationalesHtml}
+        `;
         c.appendChild(ex);
 
         m.appendChild(c);
       });
+
+      updateScoreUI();
     }
 
-    function sc() {
-      const pct = ans ? Math.round(cor / ans * 100) : 0;
-      document.getElementById('score').textContent = cor + ' / ' + ans + ' (' + pct + '%)';
+    function updateScoreUI() {
+      const total = currentSet.length;
+      let correctCount = 0;
+      let answeredCount = 0;
+
+      Object.keys(answers).forEach(k => {
+        answeredCount++;
+        if (answers[k]) correctCount++;
+      });
+
+      const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+      const label = (round === 1) ? 'Score' : `Review ${round - 1}`;
+      document.getElementById('score').textContent = `${label}: ${correctCount} / ${answeredCount} (${pct}%)`;
     }
 
-    function fin() {
-      const e = document.getElementById('end');
-      e.style.display = 'block';
+    function checkAllAnswered(set) {
+      if (Object.keys(answers).length === set.length) {
+        showSummary(set);
+      }
+    }
 
-      const pct = D.length ? Math.round(cor / D.length * 100) : 0;
+    function showSummary(set) {
+      let correctCount = 0;
+      missed = [];
+
+      set.forEach((d, n) => {
+        if (answers[n]) {
+          correctCount++;
+        } else {
+          missed.push(d);
+        }
+      });
+
+      const total = set.length;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      const summaryCard = document.getElementById('summary');
+      const summaryTitle = document.getElementById('summaryTitle');
+      const summaryScore = document.getElementById('summaryScore');
+      const summaryMsg = document.getElementById('summaryMsg');
+      const reviewBtn = document.getElementById('reviewBtn');
+
+      if (round === 1) {
+        summaryTitle.textContent = 'Quiz Complete';
+      } else {
+        summaryTitle.textContent = `Review Round ${round - 1} Complete`;
+      }
+
+      summaryScore.textContent = `Final Score: ${correctCount} / ${total} (${pct}%)`;
+
       let msg = '';
-
       if (pct >= 90) {
         msg = 'Absolute Gigachad. You drained that test dry.';
       } else if (pct >= 70) {
-        msg = 'You lasted less than 30 seconds. Time for a rematch.';
+        msg = "Solid run! You're locked in, get in some more reps.";
       } else {
-        msg = "You really didn't fucking know that.";
+        msg = 'You lasted less than 30 seconds. Time for a rematch.';
+      }
+      summaryMsg.textContent = msg;
+
+      if (missed.length > 0) {
+        reviewBtn.style.display = 'inline-block';
+        reviewBtn.textContent = `Review Missed (${missed.length})`;
+      } else {
+        reviewBtn.style.display = 'none';
+        if (round > 1) {
+          summaryMsg.textContent += ' Everything cleared. All correct.';
+        }
       }
 
-      e.innerHTML = '<h2>Final: ' + cor + ' / ' + D.length + ' (' + pct + '%)</h2><p style="margin:10px 0; font-weight:bold;">' + msg + '</p><button onclick="render();scrollTo(0,0)">Retake Quiz</button>';
+      summaryCard.classList.remove('hidden');
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
 
-    render();
+    document.getElementById('fullQuizBtn').onclick = () => initQuiz('full');
+    document.getElementById('quickQuizBtn').onclick = () => initQuiz('quick');
+
+    document.getElementById('retakeBtn').onclick = () => {
+      initQuiz(quizMode);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    document.getElementById('reviewBtn').onclick = () => {
+      if (missed.length > 0) {
+        round++;
+        document.getElementById('summary').classList.add('hidden');
+        renderQuiz(missed);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    };
+
+    window.onload = () => {
+      initQuiz('full');
+    };
   </script>
 </body>
 </html>
