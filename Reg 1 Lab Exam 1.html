@@ -422,6 +422,13 @@
             </div>
             <div class="control-row">
                 <span class="control-label">Testing Mode</span>
+                <div class="control-row">
+                    <span class="control-label">Quiz Length</span>
+                    <div class="filter-group">
+                        <button class="btn-mode active" id="len-full" onclick="setLength('full')">Full Drill</button>
+                        <button class="btn-mode" id="len-quick" onclick="setLength('quick')">Quickie (15)</button>
+                    </div>
+                </div>
                 <div class="filter-group">
                     <button class="btn-mode active" id="mode-mcq" onclick="setMode('mcq')">Multiple Choice Mode</button>
                     <button class="btn-mode" id="mode-typein" onclick="setMode('typein')">Type-In (Practical Lab Exam Mode)</button>
@@ -2156,6 +2163,8 @@
         // Core App State
         let currentScope = "all";
         let currentMode = "mcq";
+        let currentLength = "full";      // NEW
+        const QUICK_COUNT = 15;          // NEW
         let activePool = [];
         let userResponses = {};
 
@@ -2234,6 +2243,13 @@
             renderQuestions();
         }
 
+        function setLength(len) {
+            currentLength = len;
+            document.getElementById('len-full').classList.toggle('active', len === 'full');
+            document.getElementById('len-quick').classList.toggle('active', len === 'quick');
+            initPool();   // re-shuffle and re-slice, resets score
+        }
+        
         function initPool() {
             if (currentScope === "all") {
                 activePool = JSON.parse(JSON.stringify(rawMasterData));
@@ -2241,6 +2257,12 @@
                 activePool = rawMasterData.filter(item => item.section === currentScope);
             }
             shuffleArray(activePool);
+        
+            // NEW: Quickie mode trims to a random subset
+            if (currentLength === 'quick') {
+                activePool = activePool.slice(0, QUICK_COUNT);
+            }
+        
             userResponses = {};
             document.getElementById('summary-card').style.display = 'none';
             renderQuestions();
