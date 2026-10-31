@@ -111,6 +111,32 @@
     header { flex-direction: column; align-items: flex-start; padding: 10px 14px; }
     .card { padding: 18px 16px; }
   }
+ /* Mode Selector Toggle Buttons */
+        .mode-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .mode-btn {
+            background-color: #222222;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
 </style>
 </head>
 <body>
@@ -129,6 +155,10 @@
 <main>
   <section class="intro" id="intro"></section>
   <div id="quiz-container"></div>
+  <div class="mode-container" id="modeSelector">
+             <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+             <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+         </div>
   <section class="card" id="summary-card">
     <div class="summary-title" id="summary-title">Final Score</div>
     <div class="summary-pct" id="summary-pct">0%</div>
@@ -140,6 +170,11 @@
 </main>
 
 <script>
+let currentSet = quizData;
+        let round = 1;
+        let quizMode = 'full'; // 'full' or 'quick'
+        let answers = {};
+        let popupTimeout = null;
 const QUESTIONS_PER_ATTEMPT = 50;
 const STORAGE_KEY = "genpath_mt1_seen_v1";
 const QUARTER_NAMES = {
@@ -5060,131 +5095,88 @@ function renderIntro() {
     `<div class="row"><button class="link-btn" onclick="resetRotation()">Reset rotation history</button></div>`;
 }
 
-function renderQuiz() {
-  score = 0;
-  answered = 0;
-  quizData = buildQuizData();
-  const container = document.getElementById("quiz-container");
-  container.innerHTML = "";
-  document.getElementById("summary-card").classList.remove("show");
+function renderQuiz(set) {
+            const popup = document.getElementById('wrongPopup');
+            if (popup) popup.classList.add('hidden');
 
-  quizData.forEach((q, qi) => {
-    const card = document.createElement("section");
-    card.className = "card";
-    card.id = `card-${qi}`;
-    const diffLabel = q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1);
-    card.innerHTML = `
-      <div class="q-meta">
-        <span class="q-num">Question ${qi + 1} of ${quizData.length}</span>
-        <span class="badge">${escapeHTML(QUARTER_NAMES[q.quarter] || "")}</span>
-        <span class="badge">${diffLabel}</span>
-        ${q.priority ? '<span class="badge hot">Exam flag</span>' : ""}
-      </div>
-      <div class="stem">${escapeHTML(q.stem)}</div>
-      <div class="options">
-        ${q.options.map((o, oi) => `
-          <button class="option-btn" data-q="${qi}" data-o="${oi}">
-            <span class="letter">${String.fromCharCode(65 + oi)})</span>
-            <span>${escapeHTML(o.text)}</span>
-          </button>`).join("")}
-      </div>
-      <div class="explanation" id="exp-${qi}"></div>`;
-    container.appendChild(card);
-  });
+            if (set) {
+                currentSet = set;
+            } else {
+                fisherYates(quizData);
+                currentSet = (quizMode === 'quick') ? quizData.slice(0, 15) : [...quizData];
+            }
 
-  container.querySelectorAll(".option-btn").forEach(btn => {
-    btn.addEventListener("click", () => selectOption(+btn.dataset.q, +btn.dataset.o));
-  });
+            answers = {};
+            shuffleQuiz();
+            const container = document.getElementById('quiz');
+            container.innerHTML = '';
+            document.getElementById('summary').classList.add('hidden');
 
-  renderIntro();
-  updateHeader();
-  window.scrollTo({ top: 0 });
-}
+            currentSet.forEach((q, qIdx) => {
+                const card = el('div', 'question-card');
+                const meta = el('div', 'question-meta');
+                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${currentSet.length}`));
+                meta.appendChild(el('span', 'badge', q.difficulty));
+                card.appendChild(meta);
+                card.appendChild(el('div', 'question-text', q.stem));
 
-function selectOption(qi, oi) {
-  const q = quizData[qi];
-  if (q._locked) return;
-  q._locked = true;
+                const opts = el('div', 'options-list');
+                q.options.forEach((opt, i) => {
+                    const btn = el('button', 'option-btn');
+                    btn.type = 'button';
+                    btn.appendChild(el('span', 'option-letter', String.fromCharCode(97 + i) + ')'));
+                    btn.appendChild(el('span', '', opt.text));
+                    btn.addEventListener('click', () => handleSelect(q, i, card));
+                    opts.appendChild(btn);
+                });
+                card.appendChild(opts);
+                container.appendChild(card);
+            });
 
-  const card = document.getElementById(`card-${qi}`);
-  const buttons = card.querySelectorAll(".option-btn");
-  const isCorrect = q.options[oi].correct;
-  buttons.forEach((b, bi) => {
-    b.disabled = true;
-    if (q.options[bi].correct) b.classList.add("correct");
-    else if (bi === oi) b.classList.add("incorrect");
-    else b.classList.add("dim");
-  });
+            updateScore();
+            window.scrollTo({ top: 0 });
+        }
 
-  q._result = isCorrect;
-  if (isCorrect) {
-    score++;
-  } else {
-    const wrongAudio = document.getElementById("wrongAudio");
-    if (wrongAudio) {
-      wrongAudio.currentTime = 0;
-      wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
-    }
-  }
-  answered++;
+        function updateModeButtons() {
+            const fullBtn = document.getElementById('fullQuizBtn');
+            const quickBtn = document.getElementById('quickQuizBtn');
+            if (quizMode === 'full') {
+                fullBtn.classList.add('active');
+                quickBtn.classList.remove('active');
+            } else {
+                quickBtn.classList.add('active');
+                fullBtn.classList.remove('active');
+            }
+        }
 
-  const correctOption = q.options.find(o => o.correct) || q.options[0];
-  const conceptText = correctOption.why.replace(/\[.*?\]\s*$/, "").trim();
+        document.getElementById('fullQuizBtn').addEventListener('click', () => {
+            quizMode = 'full';
+            round = 1;
+            updateModeButtons();
+            renderQuiz();
+        });
 
-  const exp = document.getElementById(`exp-${qi}`);
-  exp.innerHTML = `
-    <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "Incorrect."}</div>
-    <div class="concept-box"><strong>Core Concept:</strong> ${escapeHTML(conceptText)}</div>
-    <ul class="breakdown">
-      ${q.options.map((o, bi) => `
-        <li><strong>${String.fromCharCode(65 + bi)}) ${escapeHTML(o.text)}:</strong> ${escapeHTML(o.why)}</li>
-      `).join("")}
-    </ul>`;
-  exp.classList.add("show");
+        document.getElementById('quickQuizBtn').addEventListener('click', () => {
+            quizMode = 'quick';
+            round = 1;
+            updateModeButtons();
+            renderQuiz();
+        });
 
-  updateHeader();
-  if (answered === quizData.length) showSummary();
-}
+        document.getElementById('retakeBtn').addEventListener('click', () => {
+            round = 1;
+            renderQuiz();
+        });
 
-function getFeedback(pct) {
-  if (pct >= 90) return { msg: "Absolute Gigachad. You drained that test dry.", color: "#22c55e" };
-  if (pct >= 70) return { msg: "You lasted less than 30 seconds. Time for a rematch.", color: "#ff9900" };
-  return { msg: "You really didn’t fucking know that.", color: "#ef4444" };
-}
+        document.getElementById('reviewBtn').addEventListener('click', () => {
+            round++;
+            renderQuiz(currentSet.filter(q => !answers[q.id]));
+        });
 
-function showSummary() {
-  const total = quizData.length;
-  const pct = Math.round((score / total) * 100);
-  const fb = getFeedback(pct);
-  document.getElementById("summary-pct").textContent = pct + "%";
-  document.getElementById("summary-raw").textContent = `${score} of ${total} correct`;
-  const feedback = document.getElementById("summary-feedback");
-  feedback.textContent = fb.msg;
-  feedback.style.color = fb.color;
-
-  const rows = [1, 2, 3, 4].map(qt => {
-    const qs = quizData.filter(q => q.quarter === qt);
-    const right = qs.filter(q => q._result).length;
-    const p = qs.length ? Math.round(right / qs.length * 100) : 0;
-    return `<tr><td>${escapeHTML(QUARTER_NAMES[qt])}</td><td class="num">${right} / ${qs.length}</td>` +
-           `<td class="num" style="color:${p >= 70 ? "#22c55e" : "#ef4444"}">${p}%</td></tr>`;
-  }).join("");
-  document.getElementById("topic-table").innerHTML =
-    `<tr><th>Topic block</th><th class="num">Correct</th><th class="num">%</th></tr>${rows}`;
-
-  const card = document.getElementById("summary-card");
-  card.classList.add("show");
-  card.scrollIntoView({ behavior: "smooth", block: "center" });
-}
-
-function resetQuiz() { renderQuiz(); }
-
-function resetRotation() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
-  renderQuiz();
-}
-
-window.onload = renderQuiz;
+        window.onload = () => {
+            updateModeButtons();
+            renderQuiz();
+        };
 </script>
 </body>
 </html>
