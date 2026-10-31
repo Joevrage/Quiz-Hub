@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gen Path Midterm 1 Practice Exam</title>
+<title>Gen Path Midterm 1 Practice Exam - Quiz Hub</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -62,7 +62,7 @@
     padding: 12px 16px; font-size: 0.98rem; cursor: pointer; font-family: inherit;
     transition: border-color .15s ease, background .15s ease;
   }
-  .option-btn .letter { color: #ff9900; font-weight: 700; min-width: 1.3em; }
+  .option-btn .letter { color: #ff9900; font-weight: 700; min-width: 1.5em; }
   .option-btn:hover:not(:disabled) { border-color: #ff9900; background: #2b2b2b; }
   .option-btn:disabled { cursor: default; }
   .option-btn.correct { background: #14532d; border-color: #22c55e; }
@@ -73,21 +73,23 @@
 
   .explanation {
     display: none; margin-top: 16px; background: #222222; border-left: 4px solid #ff9900;
-    border-radius: 6px; padding: 16px 18px; font-size: 0.92rem;
+    border-radius: 6px; padding: 18px 20px; font-size: 0.94rem;
   }
   .explanation.show { display: block; }
   .banner {
     display: inline-block; font-weight: 800; font-size: 1.05rem; padding: 6px 14px;
-    border-radius: 6px; margin-bottom: 10px; border: 1px solid;
+    border-radius: 6px; margin-bottom: 12px; border: 1px solid;
   }
   .banner.good { color: #22c55e; background: #14532d; border-color: #22c55e; }
   .banner.bad { color: #ffffff; background: #7f1d1d; border-color: #ef4444; }
-  .reference { color: #ff9900; font-weight: 600; margin-bottom: 10px; }
-  .breakdown { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-  .breakdown li { color: #bbbbbb; padding-left: 4px; }
+  .concept-box {
+    margin-bottom: 14px; color: #e5e5e5; font-size: 0.95rem; line-height: 1.6;
+    background: #1a1a1a; padding: 10px 14px; border-radius: 6px; border: 1px solid #2d2d2d;
+  }
+  .concept-box strong { color: #ff9900; }
+  .breakdown { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .breakdown li { color: #bbbbbb; padding-left: 2px; line-height: 1.5; }
   .breakdown li strong { color: #ffffff; }
-  .breakdown li .tag-c { color: #22c55e; font-weight: 700; }
-  .breakdown li .tag-x { color: #ef4444; font-weight: 700; }
 
   #summary-card { display: none; text-align: center; border: 1px solid #ff9900; padding: 34px 24px; }
   #summary-card.show { display: block; }
@@ -112,8 +114,8 @@
 </style>
 </head>
 <body>
-<!-- Hidden audio feedback element -->
-<audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 
 <header>
   <div class="brand">Gen Path Quiz Hub<small>Midterm 1 Practice Exam &middot; Rotating Bank</small></div>
@@ -138,9 +140,6 @@
 </main>
 
 <script>
-// ============================================================================
-// CONFIG
-// ============================================================================
 const QUESTIONS_PER_ATTEMPT = 50;
 const STORAGE_KEY = "genpath_mt1_seen_v1";
 const QUARTER_NAMES = {
@@ -150,9 +149,6 @@ const QUARTER_NAMES = {
   4: "Week 4: Hypersensitivities"
 };
 
-// ============================================================================
-// FULL QUESTION BANK (every attempt draws QUESTIONS_PER_ATTEMPT from here)
-// ============================================================================
 const questionBank = [
   {
     "id": "Q1-01",
@@ -170,7 +166,7 @@ const questionBank = [
       {
         "text": "Measurable by the clinician",
         "correct": true,
-        "why": "Correct: a sign can be objectively measured, such as a fever confirmed by taking the temperature. [Lecture 1.1]"
+        "why": "A sign can be objectively measured, such as a fever confirmed by taking the temperature. [Lecture 1.1]"
       },
       {
         "text": "The cause of a disease",
@@ -210,7 +206,7 @@ const questionBank = [
       {
         "text": "Hyperplasia",
         "correct": true,
-        "why": "Correct: a goiter shows an increase in the number of thyroid cells, produced by mitosis. [Lecture 1.1]"
+        "why": "A goiter shows an increase in the number of thyroid cells, produced by mitosis. [Lecture 1.1]"
       }
     ]
   },
@@ -225,7 +221,7 @@ const questionBank = [
       {
         "text": "Pathological hypertrophy",
         "correct": true,
-        "why": "Correct: the heart enlarges from pumping against high resistance, but it becomes fatigued rather than stronger and can progress to heart failure. [Lecture 1.1]"
+        "why": "The heart enlarges from pumping against high resistance, but it becomes fatigued rather than stronger and can progress to heart failure. [Lecture 1.1]"
       },
       {
         "text": "Physiological hypertrophy",
@@ -270,7 +266,7 @@ const questionBank = [
       {
         "text": "Atrophy",
         "correct": true,
-        "why": "Correct: atrophy is a decrease in cell size from disuse ('use it or lose it'). [Lecture 1.1]"
+        "why": "Atrophy is a decrease in cell size from disuse ('use it or lose it'). [Lecture 1.1]"
       }
     ]
   },
@@ -300,7 +296,7 @@ const questionBank = [
       {
         "text": "Metaplasia",
         "correct": true,
-        "why": "Correct: Barrett's esophagus is metaplasia, where one recognizable normal cell type is replaced by another not usually found there. [Lecture 1.1]"
+        "why": "Barrett's esophagus is metaplasia, where one recognizable normal cell type is replaced by another not usually found there. [Lecture 1.1]"
       }
     ]
   },
@@ -325,7 +321,7 @@ const questionBank = [
       {
         "text": "Dysplasia",
         "correct": true,
-        "why": "Correct: dysplasia is the precancerous change in size, shape, or function and is the last reversible stage. [Lecture 1.1]"
+        "why": "Dysplasia is the precancerous change in size, shape, or function and is the last reversible stage. [Lecture 1.1]"
       },
       {
         "text": "Hyperplasia",
@@ -355,7 +351,7 @@ const questionBank = [
       {
         "text": "Dysplasia",
         "correct": true,
-        "why": "Correct: metaplasia and dysplasia both reverse when the stressor is removed; dysplasia is the last reversible step before cancer. [Lecture 1.1]"
+        "why": "Metaplasia and dysplasia both reverse when the stressor is removed; dysplasia is the last reversible step before cancer. [Lecture 1.1]"
       },
       {
         "text": "Aplasia",
@@ -380,7 +376,7 @@ const questionBank = [
       {
         "text": "Are undifferentiated and irreversibly changed",
         "correct": true,
-        "why": "Correct: anaplasia is cancer; the cell resembles nothing from its tissue of origin and cannot revert. [Lecture 1.1]"
+        "why": "Anaplasia is cancer; the cell resembles nothing from its tissue of origin and cannot revert. [Lecture 1.1]"
       },
       {
         "text": "Change only in size, not in cell type",
@@ -405,7 +401,7 @@ const questionBank = [
       {
         "text": "Aplasia",
         "correct": true,
-        "why": "Correct: aplasia means the tissue did not form in the first place. [Lecture 1.1]"
+        "why": "Aplasia means the tissue did not form in the first place. [Lecture 1.1]"
       },
       {
         "text": "Anaplasia",
@@ -435,7 +431,7 @@ const questionBank = [
       {
         "text": "They are always irreversible once they have begun",
         "correct": false,
-        "why": "False: adaptations such as metaplasia and dysplasia reverse when the stressor is removed; anaplasia is the exception. [Lecture 2.1]"
+        "why": "Adaptations such as metaplasia and dysplasia reverse when the stressor is removed; anaplasia is the exception. [Lecture 2.1]"
       },
       {
         "text": "They allow cells to withstand stress of any severity",
@@ -450,7 +446,7 @@ const questionBank = [
       {
         "text": "They let cells change structure or function to escape injury",
         "correct": true,
-        "why": "Correct: cells adapt to stress to maintain homeostasis and avoid injury. [Lecture 2.1]"
+        "why": "Cells adapt to stress to maintain homeostasis and avoid injury. [Lecture 2.1]"
       }
     ]
   },
@@ -480,7 +476,7 @@ const questionBank = [
       {
         "text": "hydropic change; cloudy swelling",
         "correct": true,
-        "why": "Correct: hydropic change is water entering the cell; cloudy swelling is the 'swampy' appearance it causes. Both are reversible. [Lecture 1.1]"
+        "why": "Hydropic change is water entering the cell; cloudy swelling is the 'swampy' appearance it causes. Both are reversible. [Lecture 1.1]"
       }
     ]
   },
@@ -495,7 +491,7 @@ const questionBank = [
       {
         "text": "The nucleus becomes damaged",
         "correct": true,
-        "why": "Correct: as long as the nucleus is intact the cell can recover; once the nucleus is affected, the cell always dies. [Lecture 1.1]"
+        "why": "As long as the nucleus is intact the cell can recover; once the nucleus is affected, the cell always dies. [Lecture 1.1]"
       },
       {
         "text": "Water first begins to enter the cell",
@@ -525,7 +521,7 @@ const questionBank = [
       {
         "text": "Pyknosis",
         "correct": true,
-        "why": "Correct: pyknosis is chromatin condensation, the first visible nuclear sign that the cell will die. [Lecture 1.1]"
+        "why": "Pyknosis is chromatin condensation, the first visible nuclear sign that the cell will die. [Lecture 1.1]"
       },
       {
         "text": "Karyorrhexis",
@@ -565,7 +561,7 @@ const questionBank = [
       {
         "text": "Burst chaotically instead of packaging their contents",
         "correct": true,
-        "why": "Correct: necrosis is uncontrolled, so the cell essentially explodes and the nucleus fades, leaving inflammation behind. [Lecture 1.1]"
+        "why": "Necrosis is uncontrolled, so the cell essentially explodes and the nucleus fades, leaving inflammation behind. [Lecture 1.1]"
       },
       {
         "text": "Regain normal function once the stressor is gone",
@@ -595,7 +591,7 @@ const questionBank = [
       {
         "text": "Congenital disorders are present at birth but need not be genetic",
         "correct": true,
-        "why": "Correct: congenital means present at birth, which can come from genetic, environmental, multifactorial, or unknown causes. [Lecture 1.1]"
+        "why": "Congenital means present at birth, which can come from genetic, environmental, multifactorial, or unknown causes. [Lecture 1.1]"
       },
       {
         "text": "Chromosomal disorders usually first appear after age 25",
@@ -625,7 +621,7 @@ const questionBank = [
       {
         "text": "Lack a second X chromosome to override the mutation",
         "correct": true,
-        "why": "Correct: with only one X, a mutation on it is expressed; females have a second X, so disease tends to be milder or not expressed. [Lecture 1.1]"
+        "why": "With only one X, a mutation on it is expressed; females have a second X, so disease tends to be milder or not expressed. [Lecture 1.1]"
       },
       {
         "text": "Express recessive alleles only on autosomes",
@@ -655,7 +651,7 @@ const questionBank = [
       {
         "text": "Huntington's disease",
         "correct": true,
-        "why": "Correct: Huntington's is an autosomal dominant basal ganglia disorder; atrophy of the basal ganglia causes chorea. [Lecture 1.1]"
+        "why": "Huntington's is an autosomal dominant basal ganglia disorder; atrophy of the basal ganglia causes chorea. [Lecture 1.1]"
       },
       {
         "text": "Marfan syndrome",
@@ -690,7 +686,7 @@ const questionBank = [
       {
         "text": "Arachnodactyly, lens subluxation, mitral valve prolapse",
         "correct": true,
-        "why": "Correct: Marfan's patients are tall and thin with spider-like fingers, lens subluxation, mitral valve prolapse, and vascular weakness. [Lecture 1.1]"
+        "why": "Marfan's patients are tall and thin with spider-like fingers, lens subluxation, mitral valve prolapse, and vascular weakness. [Lecture 1.1]"
       }
     ]
   },
@@ -720,7 +716,7 @@ const questionBank = [
       {
         "text": "Joint hypermobility and stretchy, fragile skin",
         "correct": true,
-        "why": "Correct: the common type shows hypermobile joints and stretchy skin, so care focuses on strengthening rather than adjusting hypermobile joints. [Lecture 1.1]"
+        "why": "The common type shows hypermobile joints and stretchy skin, so care focuses on strengthening rather than adjusting hypermobile joints. [Lecture 1.1]"
       }
     ]
   },
@@ -735,7 +731,7 @@ const questionBank = [
       {
         "text": "Blue sclera",
         "correct": true,
-        "why": "Correct: in osteogenesis imperfecta (brittle bone disease) the white of the eye has a bluish tint. [Lecture 1.1]"
+        "why": "In osteogenesis imperfecta (brittle bone disease) the white of the eye has a bluish tint. [Lecture 1.1]"
       },
       {
         "text": "Cherry red spot in the macula",
@@ -770,7 +766,7 @@ const questionBank = [
       {
         "text": "Recessive neurodegeneration with a cherry red macula",
         "correct": true,
-        "why": "Correct: Tay-Sachs is autosomal recessive and causes neurodegeneration from buildup in the nervous system and retina, with a cherry red macular spot. [Lecture 1.1]"
+        "why": "Tay-Sachs is autosomal recessive and causes neurodegeneration from buildup in the nervous system and retina, with a cherry red macular spot. [Lecture 1.1]"
       },
       {
         "text": "X-linked muscle weakness with Gower's sign",
@@ -795,7 +791,7 @@ const questionBank = [
       {
         "text": "A chloride channel",
         "correct": true,
-        "why": "Correct: the chloride channel defect produces sticky mucus in the lungs and GI tract, leading to recurrent infections and malabsorption. [Lecture 1.1]"
+        "why": "The chloride channel defect produces sticky mucus in the lungs and GI tract, leading to recurrent infections and malabsorption. [Lecture 1.1]"
       },
       {
         "text": "Type I collagen",
@@ -840,7 +836,7 @@ const questionBank = [
       {
         "text": "Fatty tissue replaces the muscle tissue",
         "correct": true,
-        "why": "Correct: the calves look enlarged, but muscle is replaced by fat, so muscle cells are not actually growing and weakness progresses. [Lecture 1.1]"
+        "why": "The calves look enlarged, but muscle is replaced by fat, so muscle cells are not actually growing and weakness progresses. [Lecture 1.1]"
       }
     ]
   },
@@ -865,7 +861,7 @@ const questionBank = [
       {
         "text": "VIII",
         "correct": true,
-        "why": "Correct: hemophilia A, the most common type, is an X-linked factor VIII deficiency. [Lecture 1.1]"
+        "why": "Hemophilia A, the most common type, is an X-linked factor VIII deficiency. [Lecture 1.1]"
       },
       {
         "text": "XII",
@@ -890,7 +886,7 @@ const questionBank = [
       {
         "text": "Less factor X is made, so less fibrin forms",
         "correct": true,
-        "why": "Correct: factor VIII is needed to make factor X, where the common pathway begins; without it, less fibrin, the protein scaffold of the clot, is formed. [Lecture 1.3]"
+        "why": "Factor VIII is needed to make factor X, where the common pathway begins; without it, less fibrin, the protein scaffold of the clot, is formed. [Lecture 1.3]"
       },
       {
         "text": "Plasmin breaks fibrin down too quickly",
@@ -920,7 +916,7 @@ const questionBank = [
       {
         "text": "Sickle cell disease: autosomal recessive",
         "correct": true,
-        "why": "Correct: sickle cell disease is one of the autosomal recessive disorders, along with Tay-Sachs and cystic fibrosis. [Lecture 1.1]"
+        "why": "Sickle cell disease is one of the autosomal recessive disorders, along with Tay-Sachs and cystic fibrosis. [Lecture 1.1]"
       },
       {
         "text": "Duchenne muscular dystrophy: autosomal dominant",
@@ -955,7 +951,7 @@ const questionBank = [
       {
         "text": "45,XO; short female, often with a webbed neck",
         "correct": true,
-        "why": "Correct: Turner's is a missing X chromosome in females, who are typically short, may have a webbed neck, and have reproductive problems. [Lecture 1.2]"
+        "why": "Turner's is a missing X chromosome in females, who are typically short, may have a webbed neck, and have reproductive problems. [Lecture 1.2]"
       },
       {
         "text": "47,XXY; short female with a webbed neck",
@@ -980,7 +976,7 @@ const questionBank = [
       {
         "text": "Alters how genes are expressed and can be reversed",
         "correct": true,
-        "why": "Correct: epigenetics influences how DNA is read or expressed and reverts when the environment or stressor changes. [Lecture 1.2]"
+        "why": "Epigenetics influences how DNA is read or expressed and reverts when the environment or stressor changes. [Lecture 1.2]"
       },
       {
         "text": "Always arises during conception",
@@ -1010,7 +1006,7 @@ const questionBank = [
       {
         "text": "Epigenetic modifiers",
         "correct": true,
-        "why": "Correct: environmental factors or stressors that alter gene expression are epigenetic modifiers. [Lecture 1.2]"
+        "why": "Environmental factors or stressors that alter gene expression are epigenetic modifiers. [Lecture 1.2]"
       },
       {
         "text": "Point mutations",
@@ -1035,7 +1031,7 @@ const questionBank = [
       {
         "text": "Chemical",
         "correct": true,
-        "why": "Correct: these chemical secretions protect exposed areas that cannot be covered by skin and still work. [Lecture 1.2]"
+        "why": "These chemical secretions protect exposed areas that cannot be covered by skin and still work. [Lecture 1.2]"
       },
       {
         "text": "Physical",
@@ -1070,7 +1066,7 @@ const questionBank = [
       {
         "text": "Lymphocytes",
         "correct": true,
-        "why": "Correct: lymphocytes (T and B cells) are the only adaptive white blood cells; they form memory and amplify the response. [Lecture 1.3]"
+        "why": "Lymphocytes (T and B cells) are the only adaptive white blood cells; they form memory and amplify the response. [Lecture 1.3]"
       },
       {
         "text": "Tears and mucus",
@@ -1095,7 +1091,7 @@ const questionBank = [
       {
         "text": "The dermis is vascularized, but the epidermis is not",
         "correct": true,
-        "why": "Correct: a pin through the epidermis does not bleed; blood vessels are found only in the deeper dermis. [Lecture 1.2]"
+        "why": "A pin through the epidermis does not bleed; blood vessels are found only in the deeper dermis. [Lecture 1.2]"
       },
       {
         "text": "The epidermis holds the vessels used for heat loss",
@@ -1140,7 +1136,7 @@ const questionBank = [
       {
         "text": "Erythrocytes, leukocytes, and thrombocytes",
         "correct": true,
-        "why": "Correct: formed elements are the blood cells: red blood cells, white blood cells, and platelets. [Lecture 1.2]"
+        "why": "Formed elements are the blood cells: red blood cells, white blood cells, and platelets. [Lecture 1.2]"
       }
     ]
   },
@@ -1165,7 +1161,7 @@ const questionBank = [
       {
         "text": "Serum",
         "correct": true,
-        "why": "Correct: removing formed elements leaves plasma; removing clotting factors from plasma leaves serum, which is mainly water. [Lecture 1.2]"
+        "why": "Removing formed elements leaves plasma; removing clotting factors from plasma leaves serum, which is mainly water. [Lecture 1.2]"
       },
       {
         "text": "Fibrin",
@@ -1195,7 +1191,7 @@ const questionBank = [
       {
         "text": "An increase in normal white blood cells",
         "correct": true,
-        "why": "Correct: leukocytosis means more normal white blood cells, as when the body is fighting an infection. [Lecture 1.2]"
+        "why": "Leukocytosis means more normal white blood cells, as when the body is fighting an infection. [Lecture 1.2]"
       },
       {
         "text": "An increase in circulating platelets",
@@ -1215,7 +1211,7 @@ const questionBank = [
       {
         "text": "Normocytic: acute blood loss",
         "correct": true,
-        "why": "Correct: with sudden hemorrhage, red cells are lost before the body can change their size, so they stay normal-sized. [Lecture 1.2]"
+        "why": "With sudden hemorrhage, red cells are lost before the body can change their size, so they stay normal-sized. [Lecture 1.2]"
       },
       {
         "text": "Microcytic: vitamin deficiency",
@@ -1260,7 +1256,7 @@ const questionBank = [
       {
         "text": "Damage arising inside the blood vessel",
         "correct": true,
-        "why": "Correct: intrinsic damage comes from inside the vessel, such as hypertension or atherosclerotic plaque. [Lecture 1.3]"
+        "why": "Intrinsic damage comes from inside the vessel, such as hypertension or atherosclerotic plaque. [Lecture 1.3]"
       }
     ]
   },
@@ -1280,7 +1276,7 @@ const questionBank = [
       {
         "text": "XII",
         "correct": true,
-        "why": "Correct: factor XII, the Hageman (plasma contact) factor, contacts medial collagen and starts the intrinsic cascade. [Lecture 1.3]"
+        "why": "Factor XII, the Hageman (plasma contact) factor, contacts medial collagen and starts the intrinsic cascade. [Lecture 1.3]"
       },
       {
         "text": "VIII",
@@ -1310,7 +1306,7 @@ const questionBank = [
       {
         "text": "Is negatively charged like collagen and activates factor XII",
         "correct": true,
-        "why": "Correct: both glass and medial collagen are negatively charged, so either can activate factor XII. [Lecture 1.3]"
+        "why": "Both glass and medial collagen are negatively charged, so either can activate factor XII. [Lecture 1.3]"
       },
       {
         "text": "Is positively charged and attracts clotting factors",
@@ -1335,7 +1331,7 @@ const questionBank = [
       {
         "text": "Cleave fibrinogen into fibrin",
         "correct": true,
-        "why": "Correct: factor X leads to prothrombin becoming thrombin, which cleaves fibrinogen to fibrin, the clot's scaffolding. [Lecture 1.3]"
+        "why": "Factor X leads to prothrombin becoming thrombin, which cleaves fibrinogen to fibrin, the clot's scaffolding. [Lecture 1.3]"
       },
       {
         "text": "Activate factor XII on medial collagen",
@@ -3435,7 +3431,7 @@ const questionBank = [
       {
         "text": "Mother's IgG crossing the placenta to the fetus",
         "correct": true,
-        "why": "Natural passive: mom's IgG crosses the placenta (and IgA in breast milk) to protect the baby. [Lecture 4.1]"
+        "why": "Mom's IgG crosses the placenta (and IgA in breast milk) to protect the baby without activating the infant's own immune memory. [Lecture 4.1]"
       },
       {
         "text": "Catching a cold and forming memory cells",
@@ -3770,7 +3766,7 @@ const questionBank = [
       {
         "text": "It is a harmless antigen that the body perceives as harmful",
         "correct": true,
-        "why": "Correct: an allergen is a harmless antigen that causes no issue in most people but is perceived as harmful in some. [Lecture 4.1]"
+        "why": "An allergen is a harmless antigen that causes no issue in most people but is perceived as harmful in some. [Lecture 4.1]"
       },
       {
         "text": "It activates many T cell receptors at once",
@@ -3810,7 +3806,7 @@ const questionBank = [
       {
         "text": "atopic",
         "correct": true,
-        "why": "Correct: atopic/atopy means an atypical reaction that most people would not have. [Lecture 4.1]"
+        "why": "Atopic/atopy means an atypical reaction that most people would not have. [Lecture 4.1]"
       }
     ]
   },
@@ -3825,7 +3821,7 @@ const questionBank = [
       {
         "text": "Involvement of multiple body systems at once",
         "correct": true,
-        "why": "Correct: anaphylaxis means the reaction is systemic, involving multiple systems rather than one spot. [Lecture 4.1]"
+        "why": "Anaphylaxis means the reaction is systemic, involving multiple systems rather than one spot. [Lecture 4.1]"
       },
       {
         "text": "Formation of immune complexes in the blood",
@@ -3855,7 +3851,7 @@ const questionBank = [
       {
         "text": "Widespread vasoconstriction that raises blood pressure",
         "correct": false,
-        "why": "Opposite effect: histamine vasodilates; vessel constriction is what the EpiPen (adrenaline) helps produce. [Lecture 4.1]"
+        "why": "Histamine vasodilates; vessel constriction is what the EpiPen (adrenaline) helps produce. [Lecture 4.1]"
       },
       {
         "text": "Complement-mediated lysis of red blood cells",
@@ -3870,7 +3866,7 @@ const questionBank = [
       {
         "text": "Widespread vasodilation that drops blood pressure",
         "correct": true,
-        "why": "Correct: histamine released in many areas vasodilates systemically, blood pressure drops, and the body goes into shock. [Lecture 4.1]"
+        "why": "Histamine released in many areas vasodilates systemically, blood pressure drops, and the body goes into shock. [Lecture 4.1]"
       }
     ]
   },
@@ -3900,7 +3896,7 @@ const questionBank = [
       {
         "text": "It drives B cell isotype switching to IgE",
         "correct": true,
-        "why": "Correct: IL-4 co-stimulates the B cell to isotype switch so its plasma cells secrete IgE. [Lecture 4.1]"
+        "why": "IL-4 co-stimulates the B cell to isotype switch so its plasma cells secrete IgE. [Lecture 4.1]"
       }
     ]
   },
@@ -3925,7 +3921,7 @@ const questionBank = [
       {
         "text": "They either stabilize or enhance mast cell degranulation",
         "correct": true,
-        "why": "Correct: eosinophils either stabilize the mast cell membrane or enhance degranulation; why they choose one is unknown. [Lecture 4.1]"
+        "why": "Eosinophils either stabilize the mast cell membrane or enhance degranulation; why they choose one is unknown. [Lecture 4.1]"
       },
       {
         "text": "They form immune complexes with the allergen",
@@ -3955,7 +3951,7 @@ const questionBank = [
       {
         "text": "The Fc (stem) portion",
         "correct": true,
-        "why": "Correct: IgE binds the mast cell membrane by its Fc (stem) portion, leaving the Fab free to bind allergen. [Lecture 4.1]"
+        "why": "IgE binds the mast cell membrane by its Fc (stem) portion, leaving the Fab free to bind allergen. [Lecture 4.1]"
       },
       {
         "text": "The attached complement C3b",
@@ -3980,7 +3976,7 @@ const questionBank = [
       {
         "text": "APC on MHC II, CD4 Th2, IL-4, B cell makes IgE, IgE on mast cell, histamine",
         "correct": true,
-        "why": "Correct: APC presents allergen on MHC II to CD4 Th2, IL-4 switches the B cell to IgE, IgE mounts mast cells, re-exposure releases histamine. [Lecture 4.1]"
+        "why": "APC presents allergen on MHC II to CD4 Th2, IL-4 switches the B cell to IgE, IgE mounts mast cells, re-exposure releases histamine. [Lecture 4.1]"
       },
       {
         "text": "Mast cell releases histamine, Th2 secretes IL-4, B cell makes IgE, APC on MHC II",
@@ -4005,7 +4001,7 @@ const questionBank = [
       {
         "text": "IgE is only being mounted on mast cells during sensitization",
         "correct": true,
-        "why": "Correct: in the sensitization stage IgE binds mast cells and stops there; the subsequent exposure triggers degranulation. [Lecture 4.1]"
+        "why": "In the sensitization stage IgE binds mast cells and stops there; the subsequent exposure triggers degranulation. [Lecture 4.1]"
       },
       {
         "text": "IgM cannot cross the placenta during first exposure",
@@ -4050,7 +4046,7 @@ const questionBank = [
       {
         "text": "eczema",
         "correct": true,
-        "why": "Correct: eczema (atopic dermatitis) is the third E, after eosinophils and IgE. [Lecture 4.1]"
+        "why": "Eczema (atopic dermatitis) is the third E, after eosinophils and IgE. [Lecture 4.1]"
       }
     ]
   },
@@ -4080,7 +4076,7 @@ const questionBank = [
       {
         "text": "Contact dermatitis",
         "correct": true,
-        "why": "Correct: contact dermatitis (poison ivy/oak) is Type IV, delayed and cell mediated. [Lecture 4.3]"
+        "why": "Contact dermatitis (poison ivy/oak) is Type IV, delayed and cell mediated. [Lecture 4.3]"
       }
     ]
   },
@@ -4095,7 +4091,7 @@ const questionBank = [
       {
         "text": "Type II antigen is on a cell surface; Type III antigen is soluble",
         "correct": true,
-        "why": "Correct: Type II antibodies target antigen on a whole cell, while Type III binds a loose, dissolved antigen. [Lecture 4.1]"
+        "why": "Type II antibodies target antigen on a whole cell, while Type III binds a loose, dissolved antigen. [Lecture 4.1]"
       },
       {
         "text": "Type II involves T cells only; Type III involves antibodies",
@@ -4125,7 +4121,7 @@ const questionBank = [
       {
         "text": "It alters cell function without killing the cell",
         "correct": true,
-        "why": "Correct: noncytotoxic Type II alters how the cell works but does not cause lysis. [Lecture 4.1]"
+        "why": "Noncytotoxic Type II alters how the cell works but does not cause lysis. [Lecture 4.1]"
       },
       {
         "text": "It lyses the target cell through complement action",
@@ -4165,7 +4161,7 @@ const questionBank = [
       {
         "text": "AB positive",
         "correct": true,
-        "why": "Correct: AB positive can receive from anyone; AB has both antigens and positives can receive Rh-positive blood. [Lecture 4.1]"
+        "why": "AB positive can receive from anyone; AB has both antigens and positives can receive Rh-positive blood. [Lecture 4.1]"
       },
       {
         "text": "A negative",
@@ -4195,7 +4191,7 @@ const questionBank = [
       {
         "text": "IgM, through agglutination",
         "correct": true,
-        "why": "Correct: IgM clumps the foreign red blood cells (agglutination), followed by complement-mediated hemolysis. [Lecture 4.1]"
+        "why": "IgM clumps the foreign red blood cells (agglutination), followed by complement-mediated hemolysis. [Lecture 4.1]"
       },
       {
         "text": "IgA, through neutralization",
@@ -4225,7 +4221,7 @@ const questionBank = [
       {
         "text": "Type II cytotoxic, not autoimmune: anti-A IgM clumps donor cells and complement lyses them",
         "correct": true,
-        "why": "Correct: recipient anti-A IgM agglutinates the foreign cells, complement causes hemolysis, and no self cells are attacked. [Lecture 4.1]"
+        "why": "Recipient anti-A IgM agglutinates the foreign cells, complement causes hemolysis, and no self cells are attacked. [Lecture 4.1]"
       },
       {
         "text": "Type I, not autoimmune: anti-A IgE triggers mast cells to release histamine",
@@ -4255,7 +4251,7 @@ const questionBank = [
       {
         "text": "Rh-negative mother carrying an Rh-positive fetus",
         "correct": true,
-        "why": "Correct: the Rh-positive fetus carries a red cell protein the Rh-negative mother does not recognize. [Lecture 4.1]"
+        "why": "The Rh-positive fetus carries a red cell protein the Rh-negative mother does not recognize. [Lecture 4.1]"
       },
       {
         "text": "Rh-negative mother carrying an Rh-negative fetus",
@@ -4290,7 +4286,7 @@ const questionBank = [
       {
         "text": "Only IgG is small enough to cross the placenta",
         "correct": true,
-        "why": "Correct: memory IgM and IgG both form, but only IgG crosses the placenta to destroy fetal red cells. [Lecture 4.2]"
+        "why": "Memory IgM and IgG both form, but only IgG crosses the placenta to destroy fetal red cells. [Lecture 4.2]"
       }
     ]
   },
@@ -4320,7 +4316,7 @@ const questionBank = [
       {
         "text": "Artificial passive, because the mother is given anti-Rh antibodies",
         "correct": true,
-        "why": "Correct: RhoGAM injects ready-made antibodies against the rhesus antigen, so it is artificial passive. [Lecture 4.1]"
+        "why": "RhoGAM injects ready-made antibodies against the rhesus antigen, so it is artificial passive. [Lecture 4.1]"
       }
     ]
   },
@@ -4335,7 +4331,7 @@ const questionBank = [
       {
         "text": "Bilirubin can cross the immature fetal blood-brain barrier",
         "correct": true,
-        "why": "Correct: hemoglobin is converted to bilirubin, which causes jaundice and can cross the immature blood-brain barrier. [Lecture 4.1]"
+        "why": "Hemoglobin is converted to bilirubin, which causes jaundice and can cross the immature blood-brain barrier. [Lecture 4.1]"
       },
       {
         "text": "Released histamine sends the fetus into anaphylactic shock",
@@ -4370,7 +4366,7 @@ const questionBank = [
       {
         "text": "Glomerulus and pulmonary membranes",
         "correct": true,
-        "why": "Correct: the G and P stand for glomerulus (kidneys) and pulmonary (lungs) basement membranes. [Lecture 4.1]"
+        "why": "The G and P stand for glomerulus (kidneys) and pulmonary (lungs) basement membranes. [Lecture 4.1]"
       },
       {
         "text": "Renal arteries and synovium",
@@ -4395,7 +4391,7 @@ const questionBank = [
       {
         "text": "Goodpasture's disease",
         "correct": true,
-        "why": "Correct: Goodpasture's attacks the body's own basement membranes, so it is autoimmune. [Lecture 4.1]"
+        "why": "Goodpasture's attacks the body's own basement membranes, so it is autoimmune. [Lecture 4.1]"
       },
       {
         "text": "Incompatible blood transfusion",
@@ -4440,7 +4436,7 @@ const questionBank = [
       {
         "text": "They mimic TSH and overstimulate the TSH receptor",
         "correct": true,
-        "why": "Correct: the antibody acts like thyroid stimulating hormone, overactivating the thyroid; it is the only excitatory example. [Lecture 4.1]"
+        "why": "The antibody acts like thyroid stimulating hormone, overactivating the thyroid; it is the only excitatory example. [Lecture 4.1]"
       }
     ]
   },
@@ -4465,7 +4461,7 @@ const questionBank = [
       {
         "text": "exophthalmos",
         "correct": true,
-        "why": "Correct: exophthalmos (bulging eyes) is the hallmark of Graves' disease. [Lecture 4.1]"
+        "why": "Exophthalmos (bulging eyes) is the hallmark of Graves' disease. [Lecture 4.1]"
       },
       {
         "text": "erythema migrans",
@@ -4490,7 +4486,7 @@ const questionBank = [
       {
         "text": "Competing with acetylcholine for its receptors on the muscle",
         "correct": true,
-        "why": "Correct: antibodies bind the acetylcholine receptor and compete with acetylcholine (competitive inhibition), without killing cells. [Lecture 4.1]"
+        "why": "Antibodies bind the acetylcholine receptor and compete with acetylcholine (competitive inhibition), without killing cells. [Lecture 4.1]"
       },
       {
         "text": "Lysing muscle cells through the membrane attack complex",
@@ -4520,7 +4516,7 @@ const questionBank = [
       {
         "text": "ptosis",
         "correct": true,
-        "why": "Correct: ptosis (droopy eyelid) is the hallmark sign of myasthenia gravis. [Lecture 4.3]"
+        "why": "Ptosis (droopy eyelid) is the hallmark sign of myasthenia gravis. [Lecture 4.3]"
       },
       {
         "text": "jaundice",
@@ -4555,7 +4551,7 @@ const questionBank = [
       {
         "text": "Lambert-Eaton is presynaptic, with less acetylcholine released",
         "correct": true,
-        "why": "Correct: Lambert-Eaton antibodies attack presynaptic calcium channels so less acetylcholine is released; MG is postsynaptic. [Lecture 4.1]"
+        "why": "Lambert-Eaton antibodies attack presynaptic calcium channels so less acetylcholine is released; MG is postsynaptic. [Lecture 4.1]"
       },
       {
         "text": "Lambert-Eaton is postsynaptic, with receptors blocked",
@@ -4580,7 +4576,7 @@ const questionBank = [
       {
         "text": "Soluble antigen-antibody complex precipitates, activates complement, and causes vasculitis",
         "correct": true,
-        "why": "Correct: the immune complex precipitates onto the endothelium, complement activates, and the injured vessel becomes inflamed. [Lecture 4.1]"
+        "why": "The immune complex precipitates onto the endothelium, complement activates, and the injured vessel becomes inflamed. [Lecture 4.1]"
       },
       {
         "text": "Allergen binds IgE on mast cells, triggering degranulation and histamine release",
@@ -4610,7 +4606,7 @@ const questionBank = [
       {
         "text": "IgG and IgM; IgG is best at precipitation",
         "correct": true,
-        "why": "Correct: only IgG and IgM circulate in blood, and IgG is the best at precipitating soluble antigen. [Lecture 4.3]"
+        "why": "Only IgG and IgM circulate in blood, and IgG is the best at precipitating soluble antigen. [Lecture 4.3]"
       },
       {
         "text": "IgE and IgG; IgE is best at precipitation",
@@ -4635,7 +4631,7 @@ const questionBank = [
       {
         "text": "Faulty apoptosis leaves fragments that are precipitated, causing Type III vasculitis",
         "correct": true,
-        "why": "Correct: defective apoptosis leaves fragments treated as antigen; they are precipitated, leading to vasculitis (Type III). [Lecture 4.1]"
+        "why": "Defective apoptosis leaves fragments treated as antigen; they are precipitated, leading to vasculitis (Type III). [Lecture 4.1]"
       },
       {
         "text": "Antibodies mimic a hormone and overstimulate a gland, causing Type II disease",
@@ -4670,7 +4666,7 @@ const questionBank = [
       {
         "text": "vasculitis from immune complex precipitation",
         "correct": true,
-        "why": "Correct: the rash is the vasculitis caused by immune complex precipitation in facial blood vessels. [Lecture 4.1]"
+        "why": "The rash is the vasculitis caused by immune complex precipitation in facial blood vessels. [Lecture 4.1]"
       },
       {
         "text": "T cell reaction to contact with an irritant",
@@ -4695,7 +4691,7 @@ const questionBank = [
       {
         "text": "Renal arteries",
         "correct": true,
-        "why": "Correct: hep B immune complexes cause polyarteritis nodosa, typically in the renal arteries of the kidneys. [Lecture 4.1]"
+        "why": "Hep B immune complexes cause polyarteritis nodosa, typically in the renal arteries of the kidneys. [Lecture 4.1]"
       },
       {
         "text": "Pulmonary basement membranes",
@@ -4740,7 +4736,7 @@ const questionBank = [
       {
         "text": "Its hallmark is erythema migrans, and Type III complexes drive late symptoms",
         "correct": true,
-        "why": "Correct: the bull's-eye rash (erythema migrans) is the hallmark, and hypersensitivity complexes add late-stage symptoms like Lyme arthritis. [Lecture 4.1]"
+        "why": "The bull's-eye rash (erythema migrans) is the hallmark, and hypersensitivity complexes add late-stage symptoms like Lyme arthritis. [Lecture 4.1]"
       }
     ]
   },
@@ -4765,7 +4761,7 @@ const questionBank = [
       {
         "text": "local, at an injection site; systemic, against injected serum antibodies",
         "correct": true,
-        "why": "Correct: Arthus is precipitation and complement activation at the injection site; serum sickness is systemic, against another person's antibodies. [Lecture 4.1]"
+        "why": "Arthus is precipitation and complement activation at the injection site; serum sickness is systemic, against another person's antibodies. [Lecture 4.1]"
       },
       {
         "text": "local, from a tick bite; systemic, from a hepatitis B virus",
@@ -4795,7 +4791,7 @@ const questionBank = [
       {
         "text": "Antibodies bind a faulty IgG with an extra Fc sugar and precipitate it in synovial fluid",
         "correct": true,
-        "why": "Correct: the faulty IgG is treated as antigen, normal IgM/IgG bind it (antibody against antibody), and the complex precipitates in the joint. [Lecture 4.1]"
+        "why": "The faulty IgG is treated as antigen, normal IgM/IgG bind it (antibody against antibody), and the complex precipitates in the joint. [Lecture 4.1]"
       },
       {
         "text": "Th1 cells recognize a joint protein, recruiting macrophages without antibody",
@@ -4815,7 +4811,7 @@ const questionBank = [
       {
         "text": "delayed",
         "correct": true,
-        "why": "Correct: Type IV is delayed because T cells take time to recruit the players needed for a reaction. [Lecture 4.3]"
+        "why": "Type IV is delayed because T cells take time to recruit the players needed for a reaction. [Lecture 4.3]"
       },
       {
         "text": "immediate",
@@ -4860,7 +4856,7 @@ const questionBank = [
       {
         "text": "A Type IV reaction to skin contact that forms over about 24 to 48 hours",
         "correct": true,
-        "why": "Correct: contact dermatitis (poison ivy/oak) is Type IV, forming over time, often 24 to 48 hours, up to about 72. [Lecture 4.3]"
+        "why": "Contact dermatitis (poison ivy/oak) is Type IV, forming over time, often 24 to 48 hours, up to about 72. [Lecture 4.3]"
       }
     ]
   },
@@ -4880,7 +4876,7 @@ const questionBank = [
       {
         "text": "It is driven by T helper 1 cells and macrophages, with no antibodies",
         "correct": true,
-        "why": "Correct: granulomas are cell mediated, formed by Th1 recruiting macrophages; with no B cells or antibodies, Types I-III are excluded. [Lecture 4.3]"
+        "why": "Granulomas are cell mediated, formed by Th1 recruiting macrophages; with no B cells or antibodies, Types I-III are excluded. [Lecture 4.3]"
       },
       {
         "text": "It is driven by IgG complexes precipitating in the tissue",
@@ -4910,7 +4906,7 @@ const questionBank = [
       {
         "text": "It is autoimmune, blunts intestinal villi, and is possibly Type IV",
         "correct": true,
-        "why": "Correct: celiac is an autoimmune reaction to gluten that blunts villi; it is thought possibly Type IV, though Type III is debated. [Lecture 4.3]"
+        "why": "Celiac is an autoimmune reaction to gluten that blunts villi; it is thought possibly Type IV, though Type III is debated. [Lecture 4.3]"
       },
       {
         "text": "It forms granulomas in the intestinal wall and is Type II",
@@ -4935,7 +4931,7 @@ const questionBank = [
       {
         "text": "Clot formation via coagulation, in Type III",
         "correct": true,
-        "why": "Correct: injuring a vessel can activate the coagulation pathway, and precipitation in a vessel points to Type III. [Lecture 4.1]"
+        "why": "Injuring a vessel can activate the coagulation pathway, and precipitation in a vessel points to Type III. [Lecture 4.1]"
       },
       {
         "text": "Clot formation via coagulation, in Type II",
@@ -4956,14 +4952,10 @@ const questionBank = [
   }
 ];
 
-// The active attempt. Header totals are computed from quizData.length.
 let quizData = [];
 let score = 0;
 let answered = 0;
 
-// ============================================================================
-// HELPERS
-// ============================================================================
 function fisherYates(arr) {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -4984,11 +4976,11 @@ function loadSeen() {
   try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
   catch (e) { return new Set(); }
 }
+
 function saveSeen(set) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); } catch (e) { /* storage unavailable */ }
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); } catch (e) { }
 }
 
-// Weighted pick without replacement (exam-flagged items count double).
 function weightedPick(pool, k) {
   const items = pool.slice();
   const out = [];
@@ -5005,14 +4997,10 @@ function weightedPick(pool, k) {
   return out;
 }
 
-// ============================================================================
-// ROTATION: stratified draw by quarter + difficulty, unseen questions first
-// ============================================================================
 function drawAttempt() {
   const seen = loadSeen();
   const quarters = [1, 2, 3, 4];
   const n = Math.min(QUESTIONS_PER_ATTEMPT, questionBank.length);
-  // Split n evenly across quarters; leftover slots go to random quarters.
   const perQuarter = {};
   quarters.forEach(q => perQuarter[q] = Math.floor(n / 4));
   fisherYates(quarters.slice()).slice(0, n % 4).forEach(q => perQuarter[q]++);
@@ -5021,7 +5009,6 @@ function drawAttempt() {
   quarters.forEach(qt => {
     const inQuarter = questionBank.filter(q => q.quarter === qt);
     let unseen = inQuarter.filter(q => !seen.has(q.id));
-    // Once a topic block is exhausted, start its rotation over.
     if (unseen.length < perQuarter[qt]) {
       inQuarter.forEach(q => seen.delete(q.id));
       const carry = unseen;
@@ -5030,7 +5017,6 @@ function drawAttempt() {
       perQuarter[qt] -= carry.length;
     }
     const want = perQuarter[qt];
-    // Keep the 20 / 60 / 20 difficulty mix inside each block.
     const target = { easy: Math.round(want * 0.2), hard: Math.round(want * 0.2) };
     target.medium = want - target.easy - target.hard;
     const chosen = [];
@@ -5048,16 +5034,12 @@ function drawAttempt() {
   return picked;
 }
 
-// Deep-copy the draw, then Two-Way Fisher-Yates: question order + option order.
 function buildQuizData() {
   const drawn = JSON.parse(JSON.stringify(drawAttempt()));
   drawn.forEach(q => fisherYates(q.options));
   return fisherYates(drawn);
 }
 
-// ============================================================================
-// RENDERING
-// ============================================================================
 function updateHeader() {
   const total = quizData.length;
   const pct = total ? Math.round((score / total) * 100) : 0;
@@ -5074,7 +5056,7 @@ function renderIntro() {
     `<strong>${quizData.length} questions this round</strong>, drawn from a bank of ${questionBank.length} ` +
     `covering all four Midterm 1 topic blocks. Each retake rotates in questions you haven't seen yet ` +
     `(${Math.max(fresh, 0)} still unseen after this draw). Questions marked <span class="badge hot">Exam flag</span> ` +
-    `(${flagged} in the bank) cover points she said to know for the exam, and they come up more often.` +
+    `(${flagged} in the bank) cover points designated for the exam.` +
     `<div class="row"><button class="link-btn" onclick="resetRotation()">Reset rotation history</button></div>`;
 }
 
@@ -5102,7 +5084,8 @@ function renderQuiz() {
       <div class="options">
         ${q.options.map((o, oi) => `
           <button class="option-btn" data-q="${qi}" data-o="${oi}">
-            <span class="letter">${String.fromCharCode(97 + oi)}.</span><span>${escapeHTML(o.text)}</span>
+            <span class="letter">${String.fromCharCode(65 + oi)})</span>
+            <span>${escapeHTML(o.text)}</span>
           </button>`).join("")}
       </div>
       <div class="explanation" id="exp-${qi}"></div>`;
@@ -5137,7 +5120,6 @@ function selectOption(qi, oi) {
   if (isCorrect) {
     score++;
   } else {
-    // Play wrong answer audio effect
     const wrongAudio = document.getElementById("wrongAudio");
     if (wrongAudio) {
       wrongAudio.currentTime = 0;
@@ -5146,15 +5128,17 @@ function selectOption(qi, oi) {
   }
   answered++;
 
+  const correctOption = q.options.find(o => o.correct) || q.options[0];
+  const conceptText = correctOption.why.replace(/\[.*?\]\s*$/, "").trim();
+
   const exp = document.getElementById(`exp-${qi}`);
   exp.innerHTML = `
-    <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "You didn\u2019t know that?!"}</div>
-    <div class="reference">Reference: ${escapeHTML(refLabel(q.slideRef))}</div>
+    <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "Incorrect."}</div>
+    <div class="concept-box"><strong>Core Concept:</strong> ${escapeHTML(conceptText)}</div>
     <ul class="breakdown">
       ${q.options.map((o, bi) => `
-        <li><strong>${String.fromCharCode(97 + bi)}. ${escapeHTML(o.text)}</strong>
-        &mdash; <span class="${o.correct ? "tag-c" : "tag-x"}">${o.correct ? "Correct." : "Incorrect."}</span>
-        ${escapeHTML(o.why)}</li>`).join("")}
+        <li><strong>${String.fromCharCode(65 + bi)}) ${escapeHTML(o.text)}:</strong> ${escapeHTML(o.why)}</li>
+      `).join("")}
     </ul>`;
   exp.classList.add("show");
 
@@ -5165,7 +5149,7 @@ function selectOption(qi, oi) {
 function getFeedback(pct) {
   if (pct >= 90) return { msg: "Absolute Gigachad. You drained that test dry.", color: "#22c55e" };
   if (pct >= 70) return { msg: "You lasted less than 30 seconds. Time for a rematch.", color: "#ff9900" };
-  return { msg: "You really didn\u2019t fucking know that.", color: "#ef4444" };
+  return { msg: "You really didn’t fucking know that.", color: "#ef4444" };
 }
 
 function showSummary() {
@@ -5178,7 +5162,6 @@ function showSummary() {
   feedback.textContent = fb.msg;
   feedback.style.color = fb.color;
 
-  // Per-topic breakdown so you know which block to review.
   const rows = [1, 2, 3, 4].map(qt => {
     const qs = quizData.filter(q => q.quarter === qt);
     const right = qs.filter(q => q._result).length;
@@ -5197,7 +5180,7 @@ function showSummary() {
 function resetQuiz() { renderQuiz(); }
 
 function resetRotation() {
-  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
+  try { localStorage.removeItem(STORAGE_KEY); } catch (e) { }
   renderQuiz();
 }
 
