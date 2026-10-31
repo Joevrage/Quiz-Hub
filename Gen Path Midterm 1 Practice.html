@@ -5110,62 +5110,64 @@ let currentSet = [];
             window.scrollTo({ top: 0 });
         }
 
-        function selectOption(qi, oi) {
-            const q = quizData[qi];
-            if (q._locked) return;
-            q._locked = true;
+        let popupTimeout = null; // Put this variable at the top of your script
 
-            const card = document.getElementById(`card-${qi}`);
-            const buttons = card.querySelectorAll(".option-btn");
-            const isCorrect = q.options[oi].correct;
-            
-            buttons.forEach((b, bi) => {
-                b.disabled = true;
-                if (q.options[bi].correct) b.classList.add("correct");
-                else if (bi === oi) b.classList.add("incorrect");
-                else b.classList.add("dim");
+        function handleSelection(qIdx, selectedOptIdx) {
+            const card = document.getElementById(`card-${qIdx}`);
+            const optionElements = card.querySelectorAll('.option-item');
+            const feedbackBox = document.getElementById(`feedback-${qIdx}`);
+            const statusBanner = document.getElementById(`status-${qIdx}`);
+            const qData = activeQuizData[qIdx];
+            const isCorrect = qData.options[selectedOptIdx].isCorrect;
+
+            // Lock all options in this card
+            optionElements.forEach(opt => {
+                opt.classList.add('disabled');
+                opt.onclick = null;
             });
 
-            q._result = isCorrect;
+            // Color-code selections
             if (isCorrect) {
-                score++;
+                optionElements[selectedOptIdx].classList.add('correct');
+                statusBanner.className = 'status-banner correct';
+                statusBanner.innerText = 'Correct!';
+                currentScore++;
             } else {
-                // Place this inside your incorrect answer condition (where wrongAudio.play() happens):
-            const wrongAudio = document.getElementById("wrongAudio");
-            if (wrongAudio) {
-                wrongAudio.currentTime = 0;
-                wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
-            }
-            
-            // TRIGGER THE IMAGE POPUP FOR 2 SECONDS:
-            const popup = document.getElementById('wrongPopup');
-            if (popup) {
-                popup.classList.remove('hidden');
-                clearTimeout(popupTimeout);
-                popupTimeout = setTimeout(() => {
-                    popup.classList.add('hidden');
-                }, 2000);
-            }
+                optionElements[selectedOptIdx].classList.add('incorrect');
+                statusBanner.className = 'status-banner incorrect';
+                statusBanner.innerText = 'You Didn"'"t Know That?!';
+
+                // Reveal correct option in green
+                qData.options.forEach((opt, idx) => {
+                    if (opt.isCorrect) {
+                        optionElements[idx].classList.add('correct');
+                    }
+                });
+
+                // PLAY WRONG AUDIO & SHOW ERIJAH.PNG FOR 2 SECONDS
+                const wrongAudio = document.getElementById('wrongAudio');
+                if (wrongAudio) {
+                    wrongAudio.currentTime = 0;
+                    wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
+                }
+
+                const popup = document.getElementById('wrongPopup');
+                if (popup) {
+                    popup.classList.remove('hidden');
+                    clearTimeout(popupTimeout);
+                    popupTimeout = setTimeout(() => {
+                        popup.classList.add('hidden');
+                    }, 2000);
                 }
             }
-            answered++;
 
-            const correctOption = q.options.find(o => o.correct) || q.options[0];
-            const conceptText = correctOption.why.replace(/\[.*?\]\s*$/, "").trim();
+            feedbackBox.style.display = 'block';
+            answeredCount++;
+            updateTracker();
 
-            const exp = document.getElementById(`exp-${qi}`);
-            exp.innerHTML = `
-                <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "Incorrect."}</div>
-                <div class="concept-box"><strong>Core Concept:</strong> ${escapeHTML(conceptText)}</div>
-                <ul class="breakdown">
-                  ${q.options.map((o, bi) => `
-                    <li><strong>${String.fromCharCode(65 + bi)}) ${escapeHTML(o.text)}:</strong> ${escapeHTML(o.why)}</li>
-                  `).join("")}
-                </ul>`;
-            exp.classList.add("show");
-
-            updateHeader();
-            if (answered === quizData.length) showSummary();
+            if (answeredCount === activeQuizData.length) {
+                displaySummary();
+            }
         }
 
         function showSummary() {
