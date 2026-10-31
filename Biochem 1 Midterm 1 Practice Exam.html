@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biochem 1 Midterm 1 Practice Exam</title>
+<style>
+:root {
+    --bg-main: #0f0f0f;
+    --bg-alt: #1a1a1a;
+    --card-bg: #1a1a1a;
+    --border-color: #282828;
+    --accent: #ff9900;
+    --accent-hover: #ffad33;
+    --text-main: #ffffff;
+    --text-muted: #888888;
+    --correct-bg: #14532d;
+    --correct-border: #22c55e;
+    --incorrect-bg: #7f1d1d;
+    --incorrect-border: #ef4444;
+}
+* { box-sizing: border-box; }
+body {
+    margin: 0;
+    background: var(--bg-main);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+}
+.sticky-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+.header-title { font-weight: 700; font-size: 1rem; color: var(--text-main); }
+.header-title span { color: var(--accent); }
+.score-display {
+    font-weight: 700;
+    color: #000000;
+    background: var(--accent);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+.container { max-width: 860px; margin: 0 auto; padding: 84px 16px 60px; }
+.intro { text-align: center; margin-bottom: 18px; }
+.intro h1 { margin: 0 0 6px; font-size: 1.6rem; }
+.intro p { margin: 0; color: var(--text-muted); font-size: 0.95rem; }
+.mode-container { display: flex; justify-content: center; gap: 10px; margin: 18px 0 24px; }
+.mode-btn {
+    background: #222222;
+    color: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 10px 24px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s, color 0.2s;
+}
+.mode-btn.active { background: var(--accent); color: #000000; border-color: var(--accent); }
+.question-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.q-badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.q-badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #000000;
+    font-weight: 700;
+    font-size: 0.8rem;
+    padding: 3px 10px;
+    border-radius: 4px;
+}
+.q-badge.muted { background: #222222; color: var(--text-muted); border: 1px solid var(--border-color); }
+.q-stem { font-size: 1.05rem; font-weight: 600; margin-bottom: 14px; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option-btn {
+    text-align: left;
+    background: #222222;
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 0.98rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+.option-btn:hover:not(:disabled) { border-color: var(--accent); }
+.option-btn:disabled { cursor: default; }
+.option-btn .letter { color: var(--accent); font-weight: 700; margin-right: 8px; }
+.option-btn.correct { background: var(--correct-bg); border-color: var(--correct-border); }
+.option-btn.incorrect { background: var(--incorrect-bg); border-color: var(--incorrect-border); }
+.option-btn.correct .letter, .option-btn.incorrect .letter { color: #ffffff; }
+.explanation {
+    margin-top: 14px;
+    background: #141414;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+.status-banner { font-weight: 800; font-size: 1.05rem; margin-bottom: 6px; }
+.status-banner.good { color: var(--correct-border); }
+.status-banner.bad { color: var(--incorrect-border); }
+.ref-line { color: var(--text-muted); font-size: 0.88rem; margin-bottom: 10px; }
+.breakdown { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.breakdown li { font-size: 0.92rem; padding-left: 10px; border-left: 3px solid var(--border-color); }
+.breakdown li.is-correct { border-left-color: var(--correct-border); }
+.breakdown li.is-wrong { border-left-color: var(--incorrect-border); }
+.breakdown .tag { font-weight: 700; }
+.breakdown li.is-correct .tag { color: var(--correct-border); }
+.breakdown li.is-wrong .tag { color: var(--incorrect-border); }
+.summary-card {
+    background: var(--card-bg);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 28px 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+.summary-title { font-size: 1.5rem; font-weight: 800; color: var(--accent); margin-bottom: 8px; }
+.summary-score { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+.summary-msg { color: var(--text-muted); margin-bottom: 18px; font-size: 1.02rem; }
+.retake-btn {
+    background-color: var(--accent);
+    color: #000000;
+    border: 1px solid var(--accent);
+    padding: 12px 28px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: inherit;
+    margin: 4px;
+    display: inline-block;
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+}
+.retake-btn:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+.retake-btn.hub-btn {
+    background-color: #222222;
+    color: #ffffff;
+    border: 1px solid var(--accent);
+}
+.retake-btn.hub-btn:hover {
+    background-color: var(--accent);
+    color: #000000;
+}
+.hidden { display: none !important; }
+.wrong-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2000;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: popIn 0.15s ease-out;
+}
+.wrong-popup img {
+    max-width: 80vw;
+    max-height: 55vh;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+    border: 3px solid var(--incorrect-border);
+    display: block;
+    object-fit: contain;
+    background: #111;
+}
+@keyframes popIn {
+    from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+@media (max-width: 600px) {
+    .header-title { font-size: 0.85rem; }
+    .score-display { font-size: 0.82rem; padding: 5px 10px; }
+    .q-stem { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="sticky-header">
+    <div class="header-title">Biochem 1 <span>Midterm 1</span></div>
+    <div class="score-display" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+</header>
+
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer" onerror="console.warn('Erijah.png not found. Verify file path and casing.');">
+</div>
+
+<main class="container">
+    <div class="intro">
+        <h1>Biochem 1 Midterm 1 Practice Exam</h1>
+        <p>Intermolecular forces · Acid–base, pKa &amp; titration · Genetic code · Nucleotides &amp; HMP · Special products</p>
+    </div>
+
+    <div class="mode-container" id="modeSelector">
+        <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+        <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+    </div>
+
+    <div id="quiz"></div>
+
+    <div class="summary-card hidden" id="summary">
+        <div class="summary-title">Quiz Complete</div>
+        <div class="summary-score" id="summaryScore"></div>
+        <div class="summary-msg" id="summaryMsg"></div>
+        <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+        <button class="retake-btn" id="reviewBtn" style="display:none">Review Missed</button>
+        <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
+    </div>
+</main>
+
+<script>
+const quizData = [
+    // ===================== QUARTER 1 — WEEK 1 =====================
+    {
+        id: 1,
+        quarter: 1,
+        slideRef: "Class 1 Notes",
+        stem: "A reaction with a negative ΔG is _______ and forms products that are _______.",
+        options: [
+            { text: "exergonic; lower in energy and more stable", correct: true, why: "Negative ΔG means energy is released (EXO = energy OUT), so products sit at a lower free energy and lower free energy equals greater stability. [Class 1 Notes]" },
+            { text: "endergonic; higher in energy and less stable", correct: false, why: "This describes a positive ΔG: energy is put in and stored, raising the products to a higher, less stable state. The sign is inverted. [Class 1 Notes]" },
+            { text: "exergonic; higher in energy and less stable", correct: false, why: "The label is right but the energy direction is wrong. An exergonic reaction releases energy, so its products end lower, not higher. [Class 1 Notes]" },
+            { text: "endergonic; lower in energy and more stable", correct: false, why: "Endergonic reactions require energy input and give higher-energy products. A drop to lower energy is exergonic. [Class 1 Notes]" }
+        ]
+    },
+    {
+        id: 2,
+        quarter: 1,
+        slideRef: "Class 2 Notes",
+        stem: "Which property of a reversible reaction does an enzyme change?",
+        options: [
+            { text: "The activation energy and therefore the reaction rate", correct: true, why: "Enzymes provide an alternate pathway with a lower activation-energy barrier. This speeds both the forward and reverse reactions, which is a kinetic effect. [Class 2 Notes]" },
+            { text: "The free-energy change (ΔG) between reactants and products", correct: false, why: "ΔG is a thermodynamic property of the start and end states. Enzymes cannot change it. [Class 2 Notes]" },
+            { text: "The equilibrium constant and position of equilibrium", correct: false, why: "Keq is set by ΔG, so it stays the same. Enzymes only change how fast equilibrium is reached. [Class 2 Notes]" },
+            { text: "The relative stability of the reactants and products", correct: false, why: "Relative stability is thermodynamics (ΔG). Enzymes change kinetics, not which state is more stable. [Class 2 Notes]" }
+        ]
+    },
+    {
+        id: 3,
+        quarter: 1,
+        slideRef: "Class 1 Notes",
+        stem: "When liquid water vaporizes, which interactions are disrupted?",
+        options: [
+            { text: "Hydrogen bonds between neighboring water molecules", correct: true, why: "Vaporization frees each molecule from the hydrogen-bonded liquid network, which is an intermolecular change. The H₂O molecule stays intact. [Class 1 Notes]" },
+            { text: "Covalent O–H bonds inside each water molecule", correct: false, why: "A phase change does not break the covalent O–H bonds. Vapor is still H₂O, just no longer linked to other water molecules. [Class 1 Notes]" },
+            { text: "Ionic bonds between H⁺ and OH⁻ within the liquid", correct: false, why: "Liquid water is not held together by H⁺–OH⁻ ionic bonds. Phase changes disrupt hydrogen bonding between intact molecules. [Class 1 Notes]" },
+            { text: "Temporary dipoles only, leaving hydrogen bonds intact", correct: false, why: "This has it backward. Hydrogen bonds are the interactions that must be overcome to vaporize water. [Class 1 Notes]" }
+        ]
+    },
+    {
+        id: 4,
+        quarter: 1,
+        slideRef: "Class 2 Notes",
+        stem: "In the hydration cage around an H⁺ ion, water molecules point their _______ toward the ion.",
+        options: [
+            { text: "oxygen ends, which carry partial negative charge", correct: true, why: "Water's dipole lets the electronegative oxygen side face positive ions such as H⁺. The hydrogen side faces negative ions. [Class 2 Notes]" },
+            { text: "hydrogen ends, which carry partial positive charge", correct: false, why: "The partially positive hydrogen side is repelled by a cation. It points toward negative ions instead. [Class 2 Notes]" },
+            { text: "oxygen and hydrogen ends in equal numbers", correct: false, why: "Orientation is not random or balanced. Electrostatic attraction lines up the negative oxygen side toward the cation. [Class 2 Notes]" },
+            { text: "nonpolar faces, since water lacks a dipole", correct: false, why: "Water has a permanent dipole. That dipole is what lets it form a solvation cage around ions. [Class 2 Notes]" }
+        ]
+    },
+    {
+        id: 5,
+        quarter: 1,
+        slideRef: "Class 2 Notes",
+        stem: "Resonance in acetate gives each carbon–oxygen bond an average bond order of about:",
+        options: [
+            { text: "1.0", correct: false, why: "A bond order of 1.0 would mean pure single bonds. Resonance shares double-bond character across both C–O bonds. [Class 2 Notes]" },
+            { text: "1.5", correct: true, why: "Two equivalent Lewis structures spread one π bond over two C–O bonds, giving an average bond order of about 1.5. [Class 2 Notes]" },
+            { text: "2.0", correct: false, why: "A bond order of 2.0 would mean both bonds are full double bonds. Acetate has only one π bond shared across both C–O bonds. [Class 2 Notes]" },
+            { text: "3.0", correct: false, why: "A triple bond (such as N₂) has one σ and two π bonds. Acetate's C–O bonds have nothing like that. [Class 2 Notes]" }
+        ]
+    },
+    {
+        id: 6,
+        quarter: 1,
+        slideRef: "Class 2 Notes",
+        stem: "Resonance stabilization of a conjugate base makes its parent acid:",
+        options: [
+            { text: "stronger, with a lower pKa", correct: true, why: "A more stable conjugate base makes losing H⁺ more favorable. That strengthens the acid, and a stronger acid has a lower pKa. [Class 2 Notes]" },
+            { text: "weaker, with a higher pKa", correct: false, why: "Stabilizing the base favors H⁺ release, which strengthens the acid. This is the opposite direction. [Class 2 Notes]" },
+            { text: "stronger, with a higher pKa", correct: false, why: "The acid does get stronger, but a stronger acid has a lower pKa. 'Higher pKa' contradicts it. [Class 2 Notes]" },
+            { text: "unchanged in strength and pKa", correct: false, why: "Conjugate-base stability directly controls acid strength. That is why acetate resonance was taught. [Class 2 Notes]" }
+        ]
+    },
+    {
+        id: 7,
+        quarter: 1,
+        slideRef: "Class 3 Notes",
+        stem: "Stomach fluid at pH 2 contains how many times more H⁺ than a fluid at pH 5?",
+        options: [
+            { text: "3 times", correct: false, why: "This treats pH as a linear scale. Each pH unit is a 10-fold change, so 3 units is 10³, not 3. [Class 3 Notes]" },
+            { text: "30 times", correct: false, why: "This multiplies 10 by the difference instead of raising 10 to the difference. The factor is 10³. [Class 3 Notes]" },
+            { text: "100 times", correct: false, why: "100-fold is a 2-unit difference. pH 2 versus pH 5 is a 3-unit difference. [Class 3 Notes]" },
+            { text: "1,000 times", correct: true, why: "pH = −log[H⁺], so a 3-unit difference equals 10³ = 1,000-fold more H⁺ at the lower pH. [Class 3 Notes]" }
+        ]
+    },
+    {
+        id: 8,
+        quarter: 1,
+        slideRef: "Class 3 Notes",
+        stem: "At blood pH 7.4, with a carbonic acid pKa of 6.4, the ratio of HCO₃⁻ to H₂CO₃ is about:",
+        options: [
+            { text: "1 : 10", correct: false, why: "This inverts the ratio. With pH above pKa, the conjugate base (bicarbonate) is the more concentrated form. [Class 3 Notes]" },
+            { text: "1 : 1", correct: false, why: "A 1:1 ratio happens only when pH = pKa. Here the pH is one unit higher. [Class 3 Notes]" },
+            { text: "10 : 1", correct: true, why: "Henderson–Hasselbalch: base/acid = 10^(7.4 − 6.4) = 10¹, so about 10 bicarbonate per 1 carbonic acid. [Class 3 Notes]" },
+            { text: "100 : 1", correct: false, why: "100:1 needs a 2-unit pH–pKa difference. The difference here is only 1 unit. [Class 3 Notes]" }
+        ]
+    },
+    {
+        id: 9,
+        quarter: 1,
+        slideRef: "Lecture 4.2",
+        stem: "In the blood buffer system, HCO₃⁻ is the _______ and is named _______.",
+        options: [
+            { text: "conjugate base; bicarbonate", correct: true, why: "HCO₃⁻ is what remains after carbonic acid releases H⁺, which makes it the conjugate base. Its name is bicarbonate. [Lecture 4.2]" },
+            { text: "conjugate acid; bicarbonate", correct: false, why: "The name is correct but the role is reversed. H₂CO₃ is the conjugate acid, and HCO₃⁻ is the base left after H⁺ leaves. [Lecture 4.2]" },
+            { text: "conjugate base; carbonic acid", correct: false, why: "Carbonic acid is H₂CO₃, the protonated form. HCO₃⁻ is bicarbonate. [Lecture 4.2]" },
+            { text: "conjugate acid; carbonic acid", correct: false, why: "Both the role and the name describe H₂CO₃, not HCO₃⁻. [Lecture 4.2]" }
+        ]
+    },
+    {
+        id: 10,
+        quarter: 1,
+        slideRef: "Class 3 Notes",
+        stem: "Which conjugate acid–base pair primarily buffers the interior of cells?",
+        options: [
+            { text: "H₂CO₃ / HCO₃⁻", correct: false, why: "The carbonic acid/bicarbonate pair is the main blood and interstitial-fluid buffer, working with the lungs. It is not the intracellular one. [Class 3 Notes]" },
+            { text: "H₂PO₄⁻ / HPO₄²⁻", correct: true, why: "Dihydrogen phosphate and monohydrogen phosphate buffer the cell interior. HPO₄²⁻ captures excess H⁺ to form H₂PO₄⁻. [Class 3 Notes]" },
+            { text: "Acetic acid / acetate", correct: false, why: "Acetate was the resonance example for conjugate-base stability. It was not named as the intracellular buffer. [Class 2 Notes]" },
+            { text: "HCl / Cl⁻", correct: false, why: "Strong mineral acids dissociate almost completely (very large Ka). They do not form an effective buffering pair. [Class 2 Notes]" }
+        ]
+    },
+    {
+        id: 11,
+        quarter: 1,
+        slideRef: "Class 3 Notes",
+        stem: "When H⁺ is added to the buffer HA ⇌ H⁺ + A⁻, the equilibrium:",
+        options: [
+            { text: "shifts left as A⁻ captures the added H⁺", correct: true, why: "Le Châtelier: the conjugate base A⁻ absorbs the added H⁺ and forms HA. This limits the drop in pH. [Class 3 Notes]" },
+            { text: "shifts right as HA releases more H⁺", correct: false, why: "A rightward shift happens when base is added or H⁺ is removed. Adding H⁺ drives the system left. [Class 3 Notes]" },
+            { text: "does not shift because buffers are static", correct: false, why: "Buffer equilibria are dynamic. They shift to counter changes, which is how they act as chemical shock absorbers. [Class 3 Notes]" },
+            { text: "shifts left as HA captures the added H⁺", correct: false, why: "HA is already protonated. The species that accepts H⁺ is the conjugate base A⁻. [Class 3 Notes]" }
+        ]
+    },
+    {
+        id: 12,
+        quarter: 1,
+        slideRef: "Class 3 Notes",
+        stem: "The side-chain Ka values of lysine (pKa 10.5) and arginine (pKa 12.5) differ by a factor of:",
+        options: [
+            { text: "2", correct: false, why: "2 is the linear pKa difference. On a log scale, 2 units means 10² for Ka. [Class 3 Notes]" },
+            { text: "20", correct: false, why: "This multiplies 10 by 2 instead of raising 10 to the power of 2. [Class 3 Notes]" },
+            { text: "100", correct: true, why: "Two pKa units = 10² = 100-fold difference in Ka. Arginine, with the higher pKa, is the more strongly basic side chain. [Class 3 Notes]" },
+            { text: "1,000", correct: false, why: "1,000-fold needs a 3-unit difference. Lysine and arginine differ by 2 units. [Class 3 Notes]" }
+        ]
+    },
+
+    // ===================== QUARTER 2 — WEEK 2 =====================
+    {
+        id: 13,
+        quarter: 2,
+        slideRef: "Class 5 Notes",
+        stem: "At a pH equal to an ionizable group's pKa, that group is:",
+        options: [
+            { text: "50% protonated and 50% deprotonated", correct: true, why: "pKa is defined as the pH where the acid and conjugate-base forms of a group are equal (log 1 = 0 in Henderson–Hasselbalch). [Class 5 Notes]" },
+            { text: "fully protonated", correct: false, why: "A group is fully protonated well below its pKa. At pKa, half of it has lost H⁺. [Class 5 Notes]" },
+            { text: "fully deprotonated", correct: false, why: "A group is fully deprotonated well above its pKa. At pKa, the two forms are 50/50. [Class 5 Notes]" },
+            { text: "at the molecule's isoelectric point", correct: false, why: "pI is the pH of zero net charge for the whole molecule, usually between two pKa values. It is not the pKa of a single group. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 14,
+        quarter: 2,
+        slideRef: "Class 6 Notes",
+        stem: "On an amino acid titration curve, the flattest regions indicate:",
+        options: [
+            { text: "strongest buffering, centered on a pKa", correct: true, why: "Flat regions show pH resisting change as OH⁻ is added. Each half-equivalence point in these regions marks a pKa. [Class 6 Notes]" },
+            { text: "equivalence points, where buffering is weakest", correct: false, why: "Equivalence points sit on the steep parts of the curve, where small amounts of base cause large pH jumps. [Class 5 Notes]" },
+            { text: "the isoelectric point of the amino acid", correct: false, why: "pI is a single pH of zero net charge. It falls on a steep segment between buffering zones, not in a flat zone. [Class 5 Notes]" },
+            { text: "complete deprotonation of all groups", correct: false, why: "Full deprotonation occurs only at the end of the curve. Flat zones are 50/50 mixtures of adjacent forms. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 15,
+        quarter: 2,
+        slideRef: "Class 5 Notes",
+        stem: "Using pKa values of 2.2 and 9.8, the isoelectric point of alanine is:",
+        options: [
+            { text: "3.8", correct: false, why: "3.8 is half the difference, (9.8 − 2.2)/2. pI is the average of the two values, not half their difference. [Class 5 Notes]" },
+            { text: "6.0", correct: true, why: "With no ionizable side chain, pI = (pKa1 + pKa2)/2 = (2.2 + 9.8)/2 = 6.0. [Class 5 Notes]" },
+            { text: "7.6", correct: false, why: "7.6 is histidine's pI (an average of 6.0 and 9.17). It is not alanine's. [Class 5 Notes]" },
+            { text: "12.0", correct: false, why: "12.0 is the sum of the pKa values. pI requires dividing that sum by 2. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 16,
+        quarter: 2,
+        slideRef: "Class 6 Notes",
+        stem: "At pH 7.4, the predominant form of alanine carries a net charge of _______.",
+        options: [
+            { text: "+1", correct: false, why: "+1 (COOH and NH₃⁺) dominates only at low pH, below the carboxyl pKa of about 2.2. [Class 6 Notes]" },
+            { text: "0", correct: true, why: "pH 7.4 is between 2.2 and 9.8, so the carboxyl is COO⁻ and the amino is NH₃⁺. The zwitterion with net charge 0 dominates. [Class 6 Notes]" },
+            { text: "−1", correct: false, why: "−1 needs the amino group deprotonated, which happens only well above pKa 9.8. [Class 6 Notes]" },
+            { text: "+2", correct: false, why: "Alanine has only two ionizable groups, so its maximum charge is +1. +2 belongs to fully protonated histidine. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 17,
+        quarter: 2,
+        slideRef: "Class 6 Notes",
+        stem: "At pH 7.4, the ratio of protonated to deprotonated α-amino groups on alanine (pKa 9.8) is about:",
+        options: [
+            { text: "2.4 : 1", correct: false, why: "2.4 is the pH–pKa difference itself. The ratio is 10 raised to that difference. [Class 6 Notes]" },
+            { text: "24 : 1", correct: false, why: "This multiplies 10 by 2.4 instead of using 10^2.4. [Class 6 Notes]" },
+            { text: "250 : 1", correct: true, why: "10^(9.8 − 7.4) = 10^2.4 ≈ 251:1 protonated (the instructor estimated about 300:1). Most amino groups stay NH₃⁺. [Class 6 Notes]" },
+            { text: "1 : 250", correct: false, why: "This is inverted. With pH below pKa, the protonated NH₃⁺ form is the majority. [Class 6 Notes]" }
+        ]
+    },
+    {
+        id: 18,
+        quarter: 2,
+        slideRef: "Class 5 Notes",
+        stem: "After 1.5 equivalents of OH⁻ are added to fully protonated histidine, the pH is about:",
+        options: [
+            { text: "1.82, the α-carboxyl pKa", correct: false, why: "pH 1.82 is the first half-equivalence point, at 0.5 equivalent (forms A and B at 50/50). [Class 5 Notes]" },
+            { text: "6.0, the imidazole side-chain pKa", correct: true, why: "1.5 equivalents is halfway through the second stage, where forms B (+1) and C (0) are 50/50. pH equals the imidazole pKa of about 6.0. [Class 5 Notes]" },
+            { text: "9.17, the α-amino pKa", correct: false, why: "pH 9.17 is the third half-equivalence point, at 2.5 equivalents (C and D at 50/50). [Class 5 Notes]" },
+            { text: "7.59, the isoelectric point", correct: false, why: "pI (about 7.59) is where net charge is zero. It falls near 2 equivalents, not at a half-equivalence point. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 19,
+        quarter: 2,
+        slideRef: "Class 5 Notes",
+        stem: "Histidine's pI is calculated by averaging the pKa values of its:",
+        options: [
+            { text: "imidazole side chain and α-amino group", correct: true, why: "The neutral form C sits between the imidazole pKa (~6.0) and the amino pKa (~9.17), so pI ≈ (6.0 + 9.17)/2 = 7.59. [Class 5 Notes]" },
+            { text: "α-carboxyl group and α-amino group", correct: false, why: "That rule works for alanine, which has no ionizable side chain. Histidine's neutral form is flanked by the side-chain and amino pKas. [Class 5 Notes]" },
+            { text: "α-carboxyl group and imidazole side chain", correct: false, why: "Averaging these brackets the +1 form B, not the neutral form C. [Class 5 Notes]" },
+            { text: "α-carboxyl, imidazole, and α-amino groups", correct: false, why: "pI uses only the two pKas on either side of the zero-charge form. Averaging all three is incorrect. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 20,
+        quarter: 2,
+        slideRef: "Class 7 Notes",
+        stem: "In a lysosome at pH ~4.5–5, the predominant form of histidine has a net charge of:",
+        options: [
+            { text: "+2", correct: false, why: "+2 needs the carboxyl still protonated, which is true only below its pKa of about 1.82. [Class 5 Notes]" },
+            { text: "+1", correct: true, why: "At pH 4.5–5, the carboxyl (pKa 1.82) has lost H⁺, while the imidazole (~6.0) and amino (9.17) groups stay protonated. This is form B, +1. [Class 5 Notes]" },
+            { text: "0", correct: false, why: "The neutral form C needs the imidazole deprotonated, which happens above its pKa of about 6.0. [Class 5 Notes]" },
+            { text: "−1", correct: false, why: "−1 needs the amino group deprotonated, above pKa 9.17. That is far from lysosomal pH. [Class 5 Notes]" }
+        ]
+    },
+    {
+        id: 21,
+        quarter: 2,
+        slideRef: "Class 3 Notes",
+        stem: "At pH 7.4, the ratio of deprotonated to protonated histidine imidazole groups (pKa 6.0) is about:",
+        options: [
+            { text: "1 : 25", correct: false, why: "Inverted. With pH above the pKa, the deprotonated form is the majority. [Class 3 Notes]" },
+            { text: "1 : 1", correct: false, why: "1:1 occurs only at pH = pKa (6.0). pH 7.4 is 1.4 units higher. [Class 3 Notes]" },
+            { text: "25 : 1", correct: true, why: "10^(7.4 − 6.0) = 10^1.4 ≈ 25:1 deprotonated to protonated. [Class 3 Notes]" },
+            { text: "1,000 : 1", correct: false, why: "1,000:1 requires a 3-unit difference. Histidine's pKa is only 1.4 units below pH 7.4, which is why it is so pH-sensitive. [Class 3 Notes]" }
+        ]
+    },
+    {
+        id: 22,
+        quarter: 2,
+        slideRef: "Class 8 Notes",
+        stem: "L-DOPA is converted to dopamine by a _______ reaction that requires _______.",
+        options: [
+            { text: "hydroxylation; tetrahydrobiopterin (BH4)", correct: false, why: "Hydroxylation with BH4 is the tyrosine → L-DOPA step (tyrosine hydroxylase). The next step removes CO₂. [Class 8 Notes]" },
+            { text: "decarboxylation; PLP (vitamin B6)", correct: true, why: "Aromatic amino acid decarboxylase removes the carboxyl group as CO₂ and depends on PLP, the active form of vitamin B6. [Class 8 Notes]" },
+            { text: "decarboxylation; tetrahydrobiopterin (BH4)", correct: false, why: "The reaction type is right but the cofactor is not. BH4 supports the hydroxylases, and decarboxylases use B6/PLP. [Tutor Session]" },
+            { text: "methylation; S-adenosylmethionine (SAM)", correct: false, why: "SAM-dependent methylation is the final norepinephrine → epinephrine step (PNMT). [Class 8 Notes]" }
+        ]
+    },
+    {
+        id: 23,
+        quarter: 2,
+        slideRef: "Class 4 Notes",
+        stem: "L-DOPA is classified as an amino acid but dopamine is not, because L-DOPA:",
+        options: [
+            { text: "retains both its amino and carboxyl groups", correct: true, why: "L-DOPA still has the amino and carboxyl groups. Decarboxylation removes the carboxyl, leaving dopamine as an amine. [Class 4 Notes]" },
+            { text: "is incorporated into normal body proteins", correct: false, why: "L-DOPA is specifically not built into normal proteins. It is an amino acid by structure only. [Class 4 Notes]" },
+            { text: "contains an aromatic ring in its side chain", correct: false, why: "Dopamine also has the aromatic ring. The ring is not what defines an amino acid. [Class 4 Notes]" },
+            { text: "carries a hydroxyl group on its beta carbon", correct: false, why: "The beta-hydroxyl is added later by dopamine β-hydroxylase to make norepinephrine. L-DOPA does not have it. [Class 4 Notes]" }
+        ]
+    },
+    {
+        id: 24,
+        quarter: 2,
+        slideRef: "Tutor Session",
+        stem: "In order, conversion of tryptophan to serotonin requires:",
+        options: [
+            { text: "hydroxylation with BH4, then decarboxylation with PLP", correct: true, why: "Tryptophan hydroxylase (BH4) forms 5-HTP, then a B6/PLP-dependent decarboxylase removes CO₂ to make serotonin. [Tutor Session]" },
+            { text: "decarboxylation with PLP, then hydroxylation with BH4", correct: false, why: "The steps are reversed. 5-HTP, the hydroxylated amino acid, is formed first and then decarboxylated. [Quiz 2]" },
+            { text: "hydroxylation with vitamin C, then methylation with SAM", correct: false, why: "Vitamin C with copper supports dopamine β-hydroxylase, and SAM methylates norepinephrine. Neither makes serotonin. [Class 8 Notes]" },
+            { text: "methylation with SAM, then decarboxylation with PLP", correct: false, why: "Methylation and acetylation turn serotonin into melatonin afterward. They do not form serotonin. [Class 4 Notes]" }
+        ]
+    },
+    {
+        id: 25,
+        quarter: 2,
+        slideRef: "Class 4 Notes",
+        stem: "Rotation is restricted around the peptide C–N bond because:",
+        options: [
+            { text: "the nitrogen lone pair resonates with the carbonyl, giving partial double-bond character", correct: true, why: "Amide resonance delocalizes the N lone pair into C=O, giving the C–N bond partial double-bond character, which restricts rotation. [Class 4 Notes]" },
+            { text: "the nitrogen is protonated to NH₃⁺ at physiological pH", correct: false, why: "The peptide nitrogen is not readily protonated, because its lone pair is tied up in resonance. [Class 8 Notes]" },
+            { text: "it is a true triple bond with one σ and two π bonds", correct: false, why: "A triple bond (as in N₂) is a different bond type. The peptide bond is formally single with partial double-bond character. [Class 7 Notes]" },
+            { text: "the α-carbon single bonds on either side are locked", correct: false, why: "Those single bonds next to the α-carbon are where backbone rotation does happen. [Class 8 Notes]" }
+        ]
+    },
+
+    // ===================== QUARTER 3 — WEEK 3 =====================
+    {
+        id: 26,
+        quarter: 3,
+        slideRef: "Class 6 Notes",
+        stem: "A tRNA anticodon reads 5′-UUC-3′. The mRNA codon it pairs with, written 5′→3′, is:",
+        options: [
+            { text: "5′-GAA-3′", correct: true, why: "Pair antiparallel: 5′-UUC-3′ aligns with 3′-AAG-5′, which is rewritten 5′→3′ as GAA (glutamate). [Class 6 Notes]" },
+            { text: "5′-AAG-3′", correct: false, why: "This is the complement written in the wrong direction. The antiparallel partner must be reversed before it is read 5′→3′. [Tutor Session]" },
+            { text: "5′-CTT-3′", correct: false, why: "This uses DNA rules (T) and does not pair U with A. mRNA uses U, and UUC pairs with AAG. [Class 6 Notes]" },
+            { text: "5′-UUC-3′", correct: false, why: "This copies the anticodon instead of pairing with it. Codon and anticodon are complementary, not identical. [Class 6 Notes]" }
+        ]
+    },
+    {
+        id: 27,
+        quarter: 3,
+        slideRef: "Assignment 2",
+        stem: "Using AUA = Ile, UAU = Tyr, UAA = Stop, and AUG = Met, the tRNA with anticodon 5′-UAU-3′ carries _______.",
+        options: [
+            { text: "isoleucine", correct: true, why: "The anticodon pairs with codon 5′-AUA-3′, which the code chart reads as isoleucine. [Assignment 2]" },
+            { text: "tyrosine", correct: false, why: "Tyrosine is the answer only if UAU is the mRNA codon. Here UAU is the anticodon, so you must convert it first. [Class 7 Notes]" },
+            { text: "no amino acid (stop)", correct: false, why: "Stop codons have no matching charged tRNA. The paired codon AUA is a sense codon. [Tutor Session]" },
+            { text: "methionine", correct: false, why: "Methionine is AUG. The anticodon 5′-UAU-3′ pairs with AUA, not AUG. [Assignment 2]" }
+        ]
+    },
+    {
+        id: 28,
+        quarter: 3,
+        slideRef: "Class 7 Notes",
+        stem: "A DNA template strand reads 3′-TAC CTT AAA-5′. Using AUG Met, GAA Glu, UUU Phe, UAC Tyr, CUU Leu, AAA Lys, the peptide is:",
+        options: [
+            { text: "Met – Glu – Phe", correct: true, why: "The mRNA is complementary and antiparallel: 3′-TAC CTT AAA-5′ → 5′-AUG GAA UUU-3′ → Met–Glu–Phe. [Class 7 Notes]" },
+            { text: "Tyr – Leu – Lys", correct: false, why: "This reads the template itself as if it were mRNA (T→U). The template must be complemented first. [Class 7 Notes]" },
+            { text: "Phe – Glu – Met", correct: false, why: "The codons are right but the order is reversed. Translation reads mRNA 5′→3′, starting at AUG. [Class 7 Notes]" },
+            { text: "Lys – Leu – Tyr", correct: false, why: "This reads the uncomplemented template in reverse. It combines both errors: no pairing and the wrong direction. [Tutor Session]" }
+        ]
+    },
+    {
+        id: 29,
+        quarter: 3,
+        slideRef: "Assignment 2",
+        stem: "The enzyme that charges each tRNA with its specific amino acid is:",
+        options: [
+            { text: "aminoacyl-tRNA synthetase", correct: true, why: "Aminoacyl-tRNA synthetases attach the correct amino acid to the 3′ end of its tRNA in the cytosol. Charging must come before incorporation. [Assignment 2]" },
+            { text: "peptidyl transferase", correct: false, why: "Peptidyl transferase is the ribosome's large-subunit activity that forms the next peptide bond. It does not load tRNAs. [Assignment 2]" },
+            { text: "RNA polymerase", correct: false, why: "RNA polymerase transcribes DNA into RNA. It has no role in attaching amino acids to tRNA. [Class 6 Notes]" },
+            { text: "PRPP synthetase", correct: false, why: "PRPP synthetase activates ribose-5-phosphate for nucleotide synthesis. It is unrelated to translation. [Assignment 3]" }
+        ]
+    },
+    {
+        id: 30,
+        quarter: 3,
+        slideRef: "Class 7 Notes",
+        stem: "Cortisol-mediated inhibition of polyribosome assembly causes protein synthesis to:",
+        options: [
+            { text: "slow in rate without necessarily stopping", correct: true, why: "Fewer ribosomes translate each mRNA, so throughput drops. Translation continues at a reduced rate, which makes this a kinetics question. [Class 7 Notes]" },
+            { text: "stop completely in all affected cells", correct: false, why: "This was specifically corrected: cortisol reduces the rate and does not abolish translation. [Class 7 Notes]" },
+            { text: "accelerate as the amino acid pool expands", correct: false, why: "Unused amino acids are diverted toward pathways such as hepatic gluconeogenesis (PEPCK). Translation does not speed up. [Class 7 Notes]" },
+            { text: "shift entirely to mitochondrial ribosomes", correct: false, why: "No such shift was described. The effect is a reduced rate of polysome-driven mass production. [Class 7 Notes]" }
+        ]
+    },
+    {
+        id: 31,
+        quarter: 3,
+        slideRef: "Class 4 Notes",
+        stem: "Introns are removed from precursor RNA by:",
+        options: [
+            { text: "uridine-rich snRNPs that excise the intron as a lariat", correct: true, why: "Spliceosomes built from uridine-rich small nuclear ribonucleoproteins excise the intron as a lariat and join the exons. [Class 4 Notes]" },
+            { text: "peptidyl transferase that excises the intron as tRNA", correct: false, why: "Peptidyl transferase forms peptide bonds on the ribosome. It does not process RNA, and introns do not become tRNA. [Class 7 Notes]" },
+            { text: "RNA polymerase that skips introns during copying", correct: false, why: "Transcription copies introns into the primary transcript. They are removed afterward during RNA processing. [Class 6 Notes]" },
+            { text: "deoxyribonucleases that cut introns from the DNA", correct: false, why: "Deoxyribonucleases cleave DNA phosphoester bonds. Splicing removes introns from RNA, not DNA. [Assignment 3]" }
+        ]
+    },
+    {
+        id: 32,
+        quarter: 3,
+        slideRef: "Class 7 Notes",
+        stem: "Adenosine is a _______, whereas ATP is a _______.",
+        options: [
+            { text: "nucleotide; nucleoside", correct: false, why: "This swaps the terms. Adenosine has no phosphate, and ATP has three. [Class 7 Notes]" },
+            { text: "nucleoside; nucleotide", correct: true, why: "Nucleoside = base + sugar (adenosine). Nucleotide = base + sugar + at least one phosphate (ATP). [Class 7 Notes]" },
+            { text: "nitrogenous base; nucleoside", correct: false, why: "Adenine is the base. Adenosine already includes ribose, and ATP has phosphates, so it is more than a nucleoside. [Class 7 Notes]" },
+            { text: "nucleoside; nucleic acid", correct: false, why: "A nucleic acid is a polymer of nucleotides, such as DNA or RNA. ATP is a single nucleotide. [Lecture 3.3]" }
+        ]
+    },
+    {
+        id: 33,
+        quarter: 3,
+        slideRef: "Tutor Session",
+        stem: "Which pair of nitrogenous bases are purines with two fused rings?",
+        options: [
+            { text: "Adenine and guanine", correct: true, why: "'Pure as gold' = A and G. Purines have two fused rings, while pyrimidines have one. [Tutor Session]" },
+            { text: "Cytosine and thymine", correct: false, why: "Cytosine and thymine are single-ring pyrimidines. [Class 7 Notes]" },
+            { text: "Cytosine and uracil", correct: false, why: "Both are pyrimidines with one ring. Uracil replaces thymine in RNA. [Class 7 Notes]" },
+            { text: "Adenine and thymine", correct: false, why: "These are base-pairing partners. Adenine is a purine, but thymine is a single-ring pyrimidine. [Tutor Session]" }
+        ]
+    },
+    {
+        id: 34,
+        quarter: 3,
+        slideRef: "Class 7 Notes",
+        stem: "G–C base pairs are held by _______ hydrogen bonds, and A–T pairs by _______.",
+        options: [
+            { text: "three; two", correct: true, why: "G–C forms three hydrogen bonds. A–T (or A–U) forms two ('T for two'). [Class 7 Notes]" },
+            { text: "two; three", correct: false, why: "Reversed. G–C is the three-bond pair, and A–T is the two-bond pair. [Tutor Session]" },
+            { text: "three; three", correct: false, why: "A–T and G–C are not equivalent. A–T forms only two hydrogen bonds. [Class 7 Notes]" },
+            { text: "two; two", correct: false, why: "G–C forms three hydrogen bonds, not two. [Class 7 Notes]" }
+        ]
+    },
+    {
+        id: 35,
+        quarter: 3,
+        slideRef: "Class 8 Notes",
+        stem: "The hexose monophosphate (pentose phosphate) pathway supplies:",
+        options: [
+            { text: "ribose-5-phosphate and NADPH", correct: true, why: "Starting from glucose-6-phosphate, the HMP supplies ribose-5-phosphate for nucleotides and NADPH for reductions such as BH4 regeneration. [Class 8 Notes]" },
+            { text: "ribose-5-phosphate and ATP", correct: false, why: "ATP comes from glycolysis and mitochondrial pathways. The HMP's reducing product is NADPH. [Class 7 Notes]" },
+            { text: "deoxyribose and NADH", correct: false, why: "The HMP makes ribose-5-phosphate, not deoxyribose, and its reduced carrier is NADPH, not NADH. [Assignment 3]" },
+            { text: "PRPP and FADH₂", correct: false, why: "PRPP is made afterward from ribose-5-phosphate by PRPP synthetase. FADH₂ is not an HMP product. [Assignment 3]" }
+        ]
+    },
+    {
+        id: 36,
+        quarter: 3,
+        slideRef: "Assignment 3",
+        stem: "Loss of purine-nucleotide feedback inhibition of PRPP synthetase leads to:",
+        options: [
+            { text: "hyperuricemia and gout", correct: true, why: "Excess PRPP overdrives de novo purine synthesis. The surplus purines are degraded to uric acid, causing hyperuricemia and gout. [Assignment 3]" },
+            { text: "megaloblastic anemia", correct: false, why: "Megaloblastic anemia comes from impaired DNA synthesis due to folate or B12 deficiency. It is not caused by PRPP overproduction. [Quiz 2]" },
+            { text: "a methyl-folate trap", correct: false, why: "The folate trap is N5-methyl-THF accumulating in B12 deficiency. It is unrelated to PRPP synthetase. [Quiz 2]" },
+            { text: "decreased purine synthesis", correct: false, why: "Losing feedback inhibition increases PRPP and purine synthesis. It does not decrease it. [Assignment 3]" }
+        ]
+    },
+    {
+        id: 37,
+        quarter: 3,
+        slideRef: "Class 8 Notes",
+        stem: "Which folate form donates carbons during de novo purine ring synthesis?",
+        options: [
+            { text: "N10-formyl-tetrahydrofolate", correct: true, why: "N10-formyl-THF supplies one-carbon units at two steps of purine ring assembly on the ribose framework. [Class 8 Notes]" },
+            { text: "N5,N10-methylene-tetrahydrofolate", correct: false, why: "N5,N10-methylene-THF donates the carbon for dUMP → dTMP (thymidine). [Class 8 Notes]" },
+            { text: "N5-methyl-tetrahydrofolate", correct: false, why: "N5-methyl-THF works with B12 to remethylate homocysteine to methionine. [Class 8 Notes]" },
+            { text: "Tetrahydrobiopterin (BH4)", correct: false, why: "BH4 is not a folate. It is the cofactor for aromatic amino acid hydroxylases. [Class 8 Notes]" }
+        ]
+    },
+    {
+        id: 38,
+        quarter: 3,
+        slideRef: "Class 8 Notes",
+        stem: "At pH 7, tyrosine's phenolic side-chain OH (pKa 10.1) is:",
+        options: [
+            { text: "almost entirely protonated, since phenolate resonance is weak", correct: true, why: "The ring delocalizes the phenolate charge only weakly, so pKa is 10.1. At pH 7, only about 0.08% is deprotonated (10^−3.1). [Class 8 Notes]" },
+            { text: "mostly deprotonated, with carboxylate-like resonance", correct: false, why: "The phenolate is much less stabilized than a carboxylate (pKa 2.2), so the OH stays mostly protonated at pH 7. [Class 8 Notes]" },
+            { text: "about 50% protonated and 50% deprotonated", correct: false, why: "A 50/50 mix happens only at pH = pKa (10.1). pH 7 is about 3 units lower. [Class 8 Notes]" },
+            { text: "fully deprotonated, because aromatic rings are strong acids", correct: false, why: "Tyrosine's side chain is a weak acid. Its high pKa means very little ionization at pH 7. [Class 8 Notes]" }
+        ]
+    },
+
+    // ===================== QUARTER 4 — WEEK 4 =====================
+    {
+        id: 39,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "Nonpolar side chains such as valine interact with each other mainly through:",
+        options: [
+            { text: "temporary dipoles from shifting electron density", correct: true, why: "With no permanent dipole, electron movement creates brief, random charge separations. These hydrophobic interactions hold nonpolar side chains together. [Lecture 4.1]" },
+            { text: "permanent dipoles from electronegative atoms", correct: false, why: "Permanent dipoles need electronegative O or N pulling bonding electrons. Valine's C–H side chain has almost no electronegativity difference. [Lecture 4.3]" },
+            { text: "ionic attraction between full formal charges", correct: false, why: "Ionic bridges need charged side chains (Lys/Arg with Asp/Glu). Valine carries no charge. [Lecture 4.1]" },
+            { text: "covalent disulfide bonds between side chains", correct: false, why: "Disulfide bridges form only between oxidized cysteine sulfhydryl groups. Valine has no sulfur. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 40,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "A polar side chain has a permanent dipole because:",
+        options: [
+            { text: "an electronegative O or N pulls bonding electrons toward itself", correct: true, why: "Oxygen or nitrogen hogs the shared bond pair, so the bond dipoles do not cancel. On average, the charge separation is permanent. [Lecture 4.1]" },
+            { text: "its electrons move faster than those in nonpolar chains", correct: false, why: "Electron speed creates only temporary dipoles. Permanence comes from unequal sharing driven by electronegativity. [Lecture 4.1]" },
+            { text: "it always carries a full positive or negative charge", correct: false, why: "Polar does not mean charged. Some polar side chains have a dipole but do not ionize. [Class 1 Notes]" },
+            { text: "its C–H bonds share electrons exactly equally", correct: false, why: "Equal sharing (C and H have nearly equal electronegativity) is what makes a group nonpolar. [Lecture 4.3]" }
+        ]
+    },
+    {
+        id: 41,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "An ionic bridge in a folded protein forms between the side chains of:",
+        options: [
+            { text: "lysine and glutamate", correct: true, why: "Protonated lysine (+) and deprotonated glutamate (−) attract once water is excluded, bridging two protein strands. [Lecture 4.1]" },
+            { text: "valine and leucine", correct: false, why: "Both are nonpolar branched side chains. They interdigitate through hydrophobic interactions, not ionic ones. [Lecture 4.1]" },
+            { text: "cysteine and cysteine", correct: false, why: "Two cysteines form a covalent disulfide bridge after oxidation. That is not an electrostatic bridge. [Lecture 4.1]" },
+            { text: "phenylalanine and tryptophan", correct: false, why: "These planar aromatic side chains stack hydrophobically. Neither carries a charge. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 42,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "At pH ~7, the lysine side chain (pKa 10.5) is positively charged in a ratio of about:",
+        options: [
+            { text: "3.5 : 1", correct: false, why: "3.5 is the linear pKa–pH difference. The ratio is 10 raised to that difference. [Lecture 4.1]" },
+            { text: "10 : 1", correct: false, why: "10:1 needs only a 1-unit difference. Lysine sits about 3 orders of magnitude above pH 7. [Lecture 4.1]" },
+            { text: "35 : 1", correct: false, why: "This multiplies 10 by 3.5 rather than using 10^3.5. [Lecture 4.1]" },
+            { text: "1,000 : 1", correct: true, why: "About 3 orders of magnitude (10³) separate pKa 10.5 from pH 7, so lysine is about 1,000:1 positively charged. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 43,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "A disulfide bridge differs from an ionic bridge because it is:",
+        options: [
+            { text: "a covalent bond formed by oxidizing two cysteine side chains", correct: true, why: "Oxidizing two cysteine sulfhydryls forms a covalent S–S bond. It is far more permanent than any intermolecular attraction. [Lecture 4.1]" },
+            { text: "an electrostatic attraction between cysteine and lysine", correct: false, why: "Electrostatic attraction between opposite charges defines an ionic bridge. A disulfide involves no charges. [Lecture 4.1]" },
+            { text: "a hydrogen bond between two methionine side chains", correct: false, why: "Methionine is the methyl donor (via SAM). Disulfide bridges form only from cysteine. [Lecture 4.1]" },
+            { text: "a temporary dipole between two thiol groups", correct: false, why: "Temporary dipoles describe hydrophobic interactions. A disulfide is a permanent covalent bond. [Lecture 4.3]" }
+        ]
+    },
+    {
+        id: 44,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "Within each αβ dimer of hemoglobin, the two subunits are held together mainly by _______ interactions.",
+        options: [
+            { text: "hydrophobic", correct: true, why: "The α and β subunits present complementary nonpolar domains that fit like a hand in a glove. Many hydrophobic interactions glue the 'intra'-dimer together. [Lecture 4.1]" },
+            { text: "ionic bridge", correct: false, why: "Ionic bridges join one αβ dimer to the other across the gap (the 'inter'-dimer interface), not α to β within a dimer. [Lecture 4.1]" },
+            { text: "disulfide", correct: false, why: "No covalent disulfide bonds were described for hemoglobin dimer assembly. The interface is hydrophobic. [Lecture 4.1]" },
+            { text: "water-mediated hydrogen bond", correct: false, why: "The dimer interface excludes water. Hydrophobic domains are stable because water is kept out. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 45,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "Phenylalanine and tryptophan are favored at hydrophobic protein interfaces because their side chains are:",
+        options: [
+            { text: "planar and nonpolar, allowing them to stack", correct: true, why: "Flat aromatic rings slide together like books on a shelf, creating many stacking interactions without a dipole. [Lecture 4.1]" },
+            { text: "positively charged at physiological pH", correct: false, why: "Only lysine and arginine (and sometimes histidine) carry positive charge. Phe and Trp are uncharged. [Lecture 4.1]" },
+            { text: "carrying strong permanent dipoles", correct: false, why: "A strong dipole would let water in and loosen the hydrophobic interface. That is why tyrosine is excluded. [Lecture 4.1]" },
+            { text: "able to form disulfide crosslinks", correct: false, why: "Disulfide crosslinks require cysteine sulfur. Aromatic hydrocarbons cannot form them. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 46,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "Despite having a planar ring, tyrosine is poorly suited to a hydrophobic interface because its:",
+        options: [
+            { text: "phenolic OH creates a dipole that draws water in", correct: true, why: "Tyrosine's OH gives it a strong dipole. Water would try to enter the interface and loosen the hydrophobic hold. [Lecture 4.1]" },
+            { text: "ring lacks aromatic resonance stabilization", correct: false, why: "Tyrosine's ring is aromatic, like phenylalanine's. The issue is the polar OH, not the ring. [Class 4 Notes]" },
+            { text: "side chain is positively charged at pH 7.4", correct: false, why: "Tyrosine's side chain is a weak acid (pKa 10.1) that stays mostly neutral OH at pH 7. It is not positively charged. [Class 8 Notes]" },
+            { text: "side chain forms ionic bridges with lysine", correct: false, why: "Ionic bridges need a negatively charged side chain such as Asp or Glu. Tyrosine is mostly uncharged at pH 7. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 47,
+        quarter: 4,
+        slideRef: "Lecture 4.1",
+        stem: "The two αβ dimers of hemoglobin are joined to each other mainly by:",
+        options: [
+            { text: "ionic bridges between oppositely charged side chains", correct: true, why: "Across the gap between dimers, positive Lys/Arg pair with negative Asp/Glu. These 'inter'-dimer ionic bridges stabilize the tetramer. [Lecture 4.1]" },
+            { text: "hydrophobic stacking of phenylalanine rings", correct: false, why: "Hydrophobic stacking holds α to β within each dimer. The dimer-to-dimer interface relies on ionic bridges. [Lecture 4.1]" },
+            { text: "covalent disulfide bridges between subunits", correct: false, why: "The tetramer interface was described as ionic, giving it some 'softness' to shift. It is not covalent. [Lecture 4.1]" },
+            { text: "peptide bonds linking the two dimers", correct: false, why: "Peptide bonds join amino acids within one chain. Separate subunits associate through intermolecular forces. [Lecture 4.1]" }
+        ]
+    },
+    {
+        id: 48,
+        quarter: 4,
+        slideRef: "Lecture 4.3",
+        stem: "In sickle-cell hemoglobin, valine replacing glutamate on β-globin promotes aggregation of deoxygenated Hb because valine side chains:",
+        options: [
+            { text: "interlock hydrophobically with valines on neighboring β chains", correct: true, why: "Nonpolar valines interdigitate ('scissor together') with valines on other β chains, especially when Hb is deoxygenated, causing aggregation and sickling. [Lecture 4.3]" },
+            { text: "repel one another through negative charges", correct: false, why: "Glu–Glu negative repulsion is what normally prevents aggregation. Valine loses that charge, which removes the protection. [Lecture 4.3]" },
+            { text: "form ionic bridges with lysine and arginine", correct: false, why: "Valine has no charge, so it cannot form ionic bridges. Only a negative glutamate could pair stably with Lys/Arg. [Lecture 4.3]" },
+            { text: "hydrogen bond more strongly with water", correct: false, why: "Valine has no permanent dipole and is hydrophobic. It avoids water rather than bonding with it. [Lecture 4.3]" }
+        ]
+    },
+    {
+        id: 49,
+        quarter: 4,
+        slideRef: "Class 7 Notes",
+        stem: "A coding-strand change from 5′-GAG-3′ to 5′-GTG-3′ produces which mRNA codon? (GUG Val, CAC His, GAG Glu, CUC Leu)",
+        options: [
+            { text: "5′-GUG-3′, valine", correct: true, why: "mRNA matches the coding strand with U for T: GTG → GUG = valine. This is the Glu → Val sickle-cell point mutation. [Class 7 Notes]" },
+            { text: "5′-CAC-3′, histidine", correct: false, why: "CAC is the complement of GTG, as if the coding strand were the template. The coding strand matches mRNA directly. [Class 7 Notes]" },
+            { text: "5′-GAG-3′, glutamate", correct: false, why: "GAG is the original codon. The A→T change in DNA becomes A→U in mRNA, so the codon does change. [Class 7 Notes]" },
+            { text: "5′-CUC-3′, leucine", correct: false, why: "CUC is the complement of the original GAG. It ignores both the mutation and the coding-strand rule. [Tutor Session]" }
+        ]
+    },
+    {
+        id: 50,
+        quarter: 4,
+        slideRef: "Lecture 4.3",
+        stem: "Membrane-spanning segments of integral proteins are stable in the lipid bilayer because their side chains are mostly _______.",
+        options: [
+            { text: "nonpolar", correct: true, why: "The bilayer interior is nonpolar, so embedded segments need compatible hydrophobic side chains to anchor in place. [Lecture 4.3]" },
+            { text: "acidic and negatively charged", correct: false, why: "Charged side chains are hydrophilic and incompatible with the nonpolar lipid phase. [Class 1 Notes]" },
+            { text: "basic and positively charged", correct: false, why: "Positive Lys/Arg side chains attract water dipoles and would destabilize a segment inside the bilayer. [Lecture 4.1]" },
+            { text: "polar with permanent dipoles", correct: false, why: "Permanent dipoles interact well with water but not with the nonpolar membrane interior. [Lecture 4.3]" }
+        ]
+    }
+];
+
+let currentSet = quizData;
+let round = 1;
+let quizMode = 'full';
+let answers = {};
+let popupTimeout = null;
+
+const weekLabels = { 1: 'Week 1', 2: 'Week 2', 3: 'Week 3', 4: 'Week 4' };
+const letters = ['a', 'b', 'c', 'd'];
+
+function fisherYates(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function shuffleQuiz() {
+    fisherYates(currentSet);
+    currentSet.forEach(q => fisherYates(q.options));
+}
+
+function escapeHtml(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+}
+
+function updateScore() {
+    const total = currentSet.length;
+    const correct = Object.values(answers).filter(v => v === true).length;
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    const label = round === 1 ? 'Score' : `Review ${round - 1}`;
+    document.getElementById('scoreDisplay').textContent = `${label}: ${correct} / ${total} (${pct}%)`;
+}
+
+function updateModeButtons() {
+    document.getElementById('fullQuizBtn').classList.toggle('active', quizMode === 'full');
+    document.getElementById('quickQuizBtn').classList.toggle('active', quizMode === 'quick');
+}
+
+function renderQuiz(set) {
+    const popup = document.getElementById('wrongPopup');
+    if (popup) popup.classList.add('hidden');
+
+    if (set) {
+        currentSet = set;
+    } else {
+        fisherYates(quizData);
+        currentSet = (quizMode === 'quick') ? quizData.slice(0, 15) : [...quizData];
+    }
+
+    answers = {};
+    shuffleQuiz();
+
+    const quizEl = document.getElementById('quiz');
+    quizEl.innerHTML = '';
+    document.getElementById('summary').classList.add('hidden');
+
+    currentSet.forEach((q, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.id = `card-${q.id}`;
+
+        const badgeRow = document.createElement('div');
+        badgeRow.className = 'q-badge-row';
+        badgeRow.innerHTML = `<span class="q-badge">Question ${qIdx + 1} of ${currentSet.length}</span><span class="q-badge muted">${weekLabels[q.quarter]}</span>`;
+        card.appendChild(badgeRow);
+
+        const stem = document.createElement('div');
+        stem.className = 'q-stem';
+        stem.textContent = q.stem;
+        card.appendChild(stem);
+
+        const optWrap = document.createElement('div');
+        optWrap.className = 'options';
+        q.options.forEach((opt, oIdx) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<span class="letter">${letters[oIdx]}.</span>${escapeHtml(opt.text)}`;
+            btn.addEventListener('click', () => handleSelect(q, oIdx, card));
+            optWrap.appendChild(btn);
+        });
+        card.appendChild(optWrap);
+
+        const expl = document.createElement('div');
+        expl.className = 'explanation hidden';
+        card.appendChild(expl);
+
+        quizEl.appendChild(card);
+    });
+
+    updateScore();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleSelect(q, oIdx, card) {
+    if (q.id in answers) return;
+    const chosen = q.options[oIdx];
+    const isCorrect = chosen.correct === true;
+    answers[q.id] = isCorrect;
+
+    const buttons = card.querySelectorAll('.option-btn');
+    buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (q.options[i].correct) btn.classList.add('correct');
+        if (i === oIdx && !isCorrect) btn.classList.add('incorrect');
+    });
+
+    if (!isCorrect) {
+        const wrongAudio = document.getElementById('wrongAudio');
+        const popup = document.getElementById('wrongPopup');
+        if (wrongAudio) {
+            wrongAudio.currentTime = 0;
+            wrongAudio.play().catch(err => console.log('Audio play blocked:', err));
+        }
+        if (popup) {
+            popup.classList.remove('hidden');
+            if (popupTimeout) clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 2000);
+        }
+    }
+
+    const expl = card.querySelector('.explanation');
+    const items = q.options.map((opt, i) => {
+        const cls = opt.correct ? 'is-correct' : 'is-wrong';
+        const tag = opt.correct ? 'Correct' : 'Incorrect';
+        return `<li class="${cls}"><span class="tag">${letters[i]}. ${tag}:</span> <strong>${escapeHtml(opt.text)}</strong> — ${escapeHtml(opt.why)}</li>`;
+    }).join('');
+    expl.innerHTML = `
+        <div class="status-banner ${isCorrect ? 'good' : 'bad'}">${isCorrect ? 'Correct!' : 'You didn’t know that?!'}</div>
+        <div class="ref-line">Reference: ${weekLabels[q.quarter]}, ${escapeHtml(q.slideRef)}</div>
+        <ul class="breakdown">${items}</ul>`;
+    expl.classList.remove('hidden');
+
+    updateScore();
+    if (Object.keys(answers).length === currentSet.length) showSummary();
+}
+
+function showSummary() {
+    const total = currentSet.length;
+    const correct = Object.values(answers).filter(v => v === true).length;
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    const missed = currentSet.filter(q => !answers[q.id]);
+
+    const summary = document.getElementById('summary');
+    const titleEl = summary.querySelector('.summary-title');
+    const scoreEl = document.getElementById('summaryScore');
+    const msgEl = document.getElementById('summaryMsg');
+    const reviewBtn = document.getElementById('reviewBtn');
+
+    scoreEl.textContent = `${correct} / ${total} (${pct}%)`;
+
+    if (round === 1) {
+        titleEl.textContent = 'Quiz Complete';
+        if (pct >= 90) {
+            msgEl.textContent = 'Absolute Gigachad. You drained that test dry.';
+        } else if (pct >= 70) {
+            msgEl.textContent = "Solid run! You're locked in, get in some more reps.";
+        } else {
+            msgEl.textContent = 'You really didn’t fucking know that.';
+        }
+    } else {
+        titleEl.textContent = `Review Round ${round - 1} Complete`;
+        msgEl.textContent = missed.length > 0 ? `${missed.length} still missed. Go again.` : 'Everything cleared. All correct.';
+    }
+
+    if (missed.length > 0) {
+        reviewBtn.style.display = 'inline-block';
+        reviewBtn.textContent = `Review Missed (${missed.length})`;
+    } else {
+        reviewBtn.style.display = 'none';
+    }
+
+    summary.classList.remove('hidden');
+    summary.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+document.getElementById('fullQuizBtn').addEventListener('click', () => {
+    quizMode = 'full';
+    updateModeButtons();
+    round = 1;
+    renderQuiz();
+});
+
+document.getElementById('quickQuizBtn').addEventListener('click', () => {
+    quizMode = 'quick';
+    updateModeButtons();
+    round = 1;
+    renderQuiz();
+});
+
+document.getElementById('retakeBtn').addEventListener('click', () => { round = 1; renderQuiz(); });
+document.getElementById('reviewBtn').addEventListener('click', () => { round++; renderQuiz(currentSet.filter(q => !answers[q.id])); });
+
+window.onload = () => { updateModeButtons(); renderQuiz(); };
+</script>
+</body>
+</html>
