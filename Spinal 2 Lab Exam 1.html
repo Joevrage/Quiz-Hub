@@ -272,6 +272,7 @@
             cursor: not-allowed;
         }
 
+        /* Structured Feedback Box */
         .feedback-box {
             padding: 14px 16px;
             border-radius: 6px;
@@ -314,9 +315,9 @@
         }
 
         .spelling-note {
-            font-size: 0.82rem;
+            font-size: 0.85rem;
             color: #facc15;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-style: italic;
         }
 
@@ -333,7 +334,7 @@
         }
 
         .rationales-list li {
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             font-size: 0.88rem;
             line-height: 1.4;
         }
@@ -389,9 +390,9 @@
         <div class="nav-row">
             <span class="panel-label">Question Scope:</span>
             <button class="filter-btn active" onclick="setScope('all')">All Images (Comprehensive)</button>
-            <button class="filter-btn" onclick="setScope('week1')">Week 1 (Layers 1 & 2)</button>
-            <button class="filter-btn" onclick="setScope('week2')">Week 2 (Layer 3 & Erectors)</button>
-            <button class="filter-btn" onclick="setScope('week3_4')">Weeks 3 & 4 (Deep Back & Suboccipitals)</button>
+            <button class="filter-btn" onclick="setScope('week1')">Week 1 (Layers 1 &amp; 2)</button>
+            <button class="filter-btn" onclick="setScope('week2')">Week 2 (Layer 3 &amp; Erectors)</button>
+            <button class="filter-btn" onclick="setScope('week3_4')">Weeks 3 &amp; 4 (Deep Back &amp; Suboccipitals)</button>
         </div>
         <div class="nav-row">
             <span class="panel-label">Format:</span>
@@ -405,14 +406,13 @@
     <div class="quiz-body">
         <div class="summary-card" id="final-summary" style="display: none;">
             <h2>Practical Drill Complete!</h2>
-            <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px;"></p>
-            <button class="btn" id="reset-btn">Reset & Retake Drill</button>
+            <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px; line-height: 1.5;"></p>
+            <button class="btn" id="reset-btn">Reset &amp; Retake Drill</button>
         </div>
     </div>
 </div>
 
 <script>
-    // Master data bank with accepted spellings & AKAs
     const masterImageQuestions = [
         // --- WEEK 1 ---
         {
@@ -946,15 +946,21 @@
         }
     ];
 
-    // State Variables
     let currentScope = 'all';
-    let currentQuizType = 'mc'; // 'mc' or 'typein'
+    let currentQuizType = 'mc';
     let activeQuestions = [];
     let userAnswers = [];
     let answeredCount = 0;
     let correctCount = 0;
 
-    // Fuzzy matching / Levenshtein Distance for Spelling Check
+    function playWrongSound() {
+        const audio = document.getElementById('wrongAudio');
+        if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(function() {});
+        }
+    }
+
     function levenshteinDistance(a, b) {
         const matrix = [];
         for (let i = 0; i <= b.length; i++) matrix[i] = [i];
@@ -966,9 +972,9 @@
                     matrix[i][j] = matrix[i - 1][j - 1];
                 } else {
                     matrix[i][j] = Math.min(
-                        matrix[i - 1][j - 1] + 1, // substitution
-                        matrix[i][j - 1] + 1,     // insertion
-                        matrix[i - 1][j] + 1      // deletion
+                        matrix[i - 1][j - 1] + 1,
+                        matrix[i][j - 1] + 1,
+                        matrix[i - 1][j] + 1
                     );
                 }
             }
@@ -986,7 +992,6 @@
         for (const target of acceptedList) {
             const cleanTarget = target.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
             
-            // Direct exact or substring match
             if (cleanInput === cleanTarget) {
                 return { isCorrect: true, closestMatch: target, distance: 0 };
             }
@@ -998,7 +1003,6 @@
             }
         }
 
-        // Allow up to 2 character typos depending on length
         const allowedTypos = matchedTarget.length > 7 ? 2 : 1;
         const isCloseEnough = lowestDistance <= allowedTypos;
 
@@ -1064,13 +1068,13 @@
             card.className = 'question-card';
             card.id = `q-card-${qIndex}`;
 
-            // Image Loader
+            // Image Loader with Fallbacks
             const imgWrap = document.createElement('div');
             imgWrap.className = 'image-wrapper';
             const img = document.createElement('img');
             
-            // GitHub Path Fallbacks
             const pathsToTry = [
+                `Images/Spinal%202/${encodeURIComponent(q.image)}`,
                 `Images/Spinal 2/${q.image}`,
                 `./Images/Spinal 2/${q.image}`,
                 `../Images/Spinal 2/${q.image}`,
@@ -1105,7 +1109,7 @@
             qText.textContent = `${qIndex + 1}. ${q.question}`;
             card.appendChild(qText);
 
-            // Render based on chosen mode
+            // Render Modes
             if (currentQuizType === 'mc') {
                 const optionsList = document.createElement('ul');
                 optionsList.className = 'options-list';
@@ -1132,7 +1136,6 @@
 
                 card.appendChild(optionsList);
             } else {
-                // Type-in input group
                 const inputGroup = document.createElement('div');
                 inputGroup.className = 'input-group';
 
@@ -1165,7 +1168,7 @@
                 card.appendChild(inputGroup);
             }
 
-            // Feedback Box
+            // Structured Feedback Container
             const feedback = document.createElement('div');
             feedback.className = 'feedback-box';
             feedback.id = `feedback-${qIndex}`;
@@ -1175,7 +1178,6 @@
         });
     }
 
-    // Handler for Multiple Choice Mode
     function selectAnswerMC(qIndex, optIndex) {
         if (userAnswers[qIndex] !== null) return;
 
@@ -1187,8 +1189,7 @@
         if (isCorrect) {
             correctCount++;
         } else {
-            const wrongAudio = document.getElementById('wrongAudio');
-            if (wrongAudio) wrongAudio.play();
+            playWrongSound();
         }
 
         for (let i = 0; i < q.options.length; i++) {
@@ -1205,7 +1206,6 @@
         renderFeedbackUI(qIndex, isCorrect, "");
     }
 
-    // Handler for Type-In Mode with Spell-Checking
     function submitTypeInAnswer(qIndex) {
         if (userAnswers[qIndex] !== null) return;
 
@@ -1213,7 +1213,7 @@
         const submitBtnEl = document.getElementById(`submit-btn-${qIndex}`);
         const userTyped = inputEl.value;
 
-        if (!userTyped.trim()) return; // Don't allow empty submit
+        if (!userTyped.trim()) return;
 
         const q = activeQuestions[qIndex];
         userAnswers[qIndex] = userTyped;
@@ -1227,8 +1227,7 @@
         if (isCorrect) {
             correctCount++;
         } else {
-            const wrongAudio = document.getElementById('wrongAudio');
-            if (wrongAudio) wrongAudio.play();
+            playWrongSound();
         }
 
         let spellNote = "";
@@ -1248,29 +1247,22 @@
         
         let rationalesHTML = '<ul class="rationales-list">';
         q.rationales.forEach(rat => {
-            rationalesHTML += `<li>- ${rat}</li>`;
+            rationalesHTML += `<li>${rat}</li>`;
         });
         rationalesHTML += '</ul>';
 
         const noteHTML = note ? `<div class="spelling-note">ℹ️ ${note}</div>` : '';
+        const bannerText = isCorrect ? "Correct!" : "Incorrect.";
 
-        if (isCorrect) {
-            feedbackEl.classList.add('correct');
-            feedbackEl.innerHTML = `
-                <div class="status-banner">Correct!</div>
-                ${noteHTML}
-                <div class="explanation-text">${q.explanation}</div>
-                ${rationalesHTML}
-            `;
-        } else {
-            feedbackEl.classList.add('incorrect');
-            feedbackEl.innerHTML = `
-                <div class="status-banner">You didn’t know that?!</div>
-                ${noteHTML}
-                <div class="explanation-text">${q.explanation}</div>
-                ${rationalesHTML}
-            `;
-        }
+        feedbackEl.classList.toggle('correct', isCorrect);
+        feedbackEl.classList.toggle('incorrect', !isCorrect);
+
+        feedbackEl.innerHTML = `
+            <div class="status-banner">${bannerText}</div>
+            ${noteHTML}
+            <div class="explanation-text">${q.explanation}</div>
+            ${rationalesHTML}
+        `;
 
         updateHeaderScore();
 
@@ -1287,7 +1279,7 @@
 
     function showFinalSummary() {
         const total = activeQuestions.length;
-        const percent = Math.round((correctCount / total) * 100);
+        const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
         const summaryBox = document.getElementById('final-summary');
         summaryBox.style.display = 'block';
 
