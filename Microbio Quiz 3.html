@@ -250,7 +250,7 @@
 
         .hidden { display: none !important; }
 
-        /* 2-Second Popup Image Styling */
+        /* Centered 2-Second Popup Image Styling */
         .wrong-popup {
             position: fixed;
             top: 50%;
@@ -265,12 +265,14 @@
         }
 
         .wrong-popup img {
-            max-width: 85vw;
-            max-height: 60vh;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
             border: 3px solid var(--incorrect-border);
             display: block;
+            object-fit: contain;
+            background: #111;
         }
 
         @keyframes popIn {
@@ -292,9 +294,9 @@
     <!-- Audio Element for Wrong Answers -->
     <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
 
-    <!-- 2-Second Popup Image on Wrong Answer (Change src to .gif, .png, or .jpg as needed) -->
+    <!-- 2-Second Popup Image on Wrong Answer -->
     <div id="wrongPopup" class="wrong-popup hidden">
-        <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+        <img id="wrongImage" src="Erijah.png" alt="Wrong Answer" onerror="console.warn('Erijah.png not found. Verify file path and casing.');">
     </div>
 
     <header class="sticky-header">
@@ -762,7 +764,7 @@
                     { text: "Transformation", correct: true, why: "Transformation transfers free DNA, usually fragments from a lysed cell, needs no special vehicle, and involves no direct donor-acceptor contact. [Lec 5, Slide #24]" },
                     { text: "Transduction", correct: false, why: "Transduction needs a vehicle: transfer is mediated by bacterial viruses. [Lec 5, Slide #26]" },
                     { text: "Conjugation", correct: false, why: "Conjugation requires cell-to-cell contact through a pilus. [Lec 5, Slide #20]" },
-                    { text: "Transposition", correct: false, why: "Transposition moves DNA within the chromosome; it is recombination only, not transfer between cells. [Lec 5, Slide #28]" }
+                    { text: "Transposition", correct: false, why: "Transposition is recombination only, moving DNA within the chromosome rather than transferring free DNA between cells. [Lec 5, Slide #28]" }
                 ]
             },
             {
@@ -807,10 +809,9 @@
             }
         ];
 
-        let currentSet = quizData;  // questions in the current round
+        let currentSet = quizData;
         let round = 1;
-        let quizMode = 'full';     // 'full' or 'quick'
-        let order = [];
+        let quizMode = 'full';
         let answers = {};
         let popupTimeout = null;
 
@@ -848,7 +849,6 @@
             const chosen = q.options[chosenIdx];
             answers[q.id] = chosen.correct;
 
-            // Trigger Audio and 2-Second Popup Image if incorrect
             if (!chosen.correct) {
                 const wrongAudio = document.getElementById('wrongAudio');
                 if (wrongAudio) {
