@@ -137,41 +137,10 @@
             color: #000000;
             border-color: var(--accent);
         }
-         /* 2-Second Popup Image Styling */
-        .wrong-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2000;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: popIn 0.15s ease-out;
-        }
-        
-        .wrong-popup img {
-            max-width: 80vw;
-            max-height: 55vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-            border: 3px solid var(--incorrect-border, #ef4444);
-            display: block;
-            object-fit: contain;
-            background: #111;
-        }
-        
-        @keyframes popIn {
-            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
 </style>
 </head>
 <body>
-<div id="wrongPopup" class="wrong-popup hidden">
-    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
-</div>
+
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 
 <header>
@@ -5110,64 +5079,50 @@ let currentSet = [];
             window.scrollTo({ top: 0 });
         }
 
-        let popupTimeout = null; // Put this variable at the top of your script
+        function selectOption(qi, oi) {
+            const q = quizData[qi];
+            if (q._locked) return;
+            q._locked = true;
 
-        function handleSelection(qIdx, selectedOptIdx) {
-            const card = document.getElementById(`card-${qIdx}`);
-            const optionElements = card.querySelectorAll('.option-item');
-            const feedbackBox = document.getElementById(`feedback-${qIdx}`);
-            const statusBanner = document.getElementById(`status-${qIdx}`);
-            const qData = activeQuizData[qIdx];
-            const isCorrect = qData.options[selectedOptIdx].isCorrect;
-
-            // Lock all options in this card
-            optionElements.forEach(opt => {
-                opt.classList.add('disabled');
-                opt.onclick = null;
+            const card = document.getElementById(`card-${qi}`);
+            const buttons = card.querySelectorAll(".option-btn");
+            const isCorrect = q.options[oi].correct;
+            
+            buttons.forEach((b, bi) => {
+                b.disabled = true;
+                if (q.options[bi].correct) b.classList.add("correct");
+                else if (bi === oi) b.classList.add("incorrect");
+                else b.classList.add("dim");
             });
 
-            // Color-code selections
+            q._result = isCorrect;
             if (isCorrect) {
-                optionElements[selectedOptIdx].classList.add('correct');
-                statusBanner.className = 'status-banner correct';
-                statusBanner.innerText = 'Correct!';
-                currentScore++;
+                score++;
             } else {
-                optionElements[selectedOptIdx].classList.add('incorrect');
-                statusBanner.className = 'status-banner incorrect';
-                statusBanner.innerText = 'You Didn"'"t Know That?!';
-
-                // Reveal correct option in green
-                qData.options.forEach((opt, idx) => {
-                    if (opt.isCorrect) {
-                        optionElements[idx].classList.add('correct');
-                    }
-                });
-
-                // PLAY WRONG AUDIO & SHOW ERIJAH.PNG FOR 2 SECONDS
-                const wrongAudio = document.getElementById('wrongAudio');
+                const wrongAudio = document.getElementById("wrongAudio");
                 if (wrongAudio) {
                     wrongAudio.currentTime = 0;
                     wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
                 }
-
-                const popup = document.getElementById('wrongPopup');
-                if (popup) {
-                    popup.classList.remove('hidden');
-                    clearTimeout(popupTimeout);
-                    popupTimeout = setTimeout(() => {
-                        popup.classList.add('hidden');
-                    }, 2000);
-                }
             }
+            answered++;
 
-            feedbackBox.style.display = 'block';
-            answeredCount++;
-            updateTracker();
+            const correctOption = q.options.find(o => o.correct) || q.options[0];
+            const conceptText = correctOption.why.replace(/\[.*?\]\s*$/, "").trim();
 
-            if (answeredCount === activeQuizData.length) {
-                displaySummary();
-            }
+            const exp = document.getElementById(`exp-${qi}`);
+            exp.innerHTML = `
+                <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "Incorrect."}</div>
+                <div class="concept-box"><strong>Core Concept:</strong> ${escapeHTML(conceptText)}</div>
+                <ul class="breakdown">
+                  ${q.options.map((o, bi) => `
+                    <li><strong>${String.fromCharCode(65 + bi)}) ${escapeHTML(o.text)}:</strong> ${escapeHTML(o.why)}</li>
+                  `).join("")}
+                </ul>`;
+            exp.classList.add("show");
+
+            updateHeader();
+            if (answered === quizData.length) showSummary();
         }
 
         function showSummary() {
