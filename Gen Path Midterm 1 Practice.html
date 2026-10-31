@@ -154,7 +154,7 @@
 
 <main>
   <section class="intro" id="intro"></section>
-  <div id="quiz-container"></div>
+  <div id="quiz"></div>
   <div class="mode-container" id="modeSelector">
              <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
              <button class="mode-btn" id="quickQuizBtn">Quickie</button>
@@ -5102,38 +5102,90 @@ function renderQuiz(set) {
             if (set) {
                 currentSet = set;
             } else {
-                fisherYates(quizData);
-                currentSet = (quizMode === 'quick') ? quizData.slice(0, 15) : [...quizData];
+                // Determine pool size based on mode (15 for quickie, or 50 full attempt)
+                const targetCount = (quizMode === 'quick') ? 15 : QUESTIONS_PER_ATTEMPT;
+                
+                // Draw attempt using your rotating question bank logic
+                const seen = loadSeen();
+                const quarters = [1, 2, 3, 4];
+                const n = Math.min(targetCount, questionBank.length);
+                const perQuarter = {};
+                quarters.forEach(q => perQuarter[q] = Math.floor(n / 4));
+                fisherYates(quarters.slice()).slice(0, n % 4).forEach(q => perQuarter[q]++);
+
+                const picked = [];
+                quarters.forEach(qt => {
+                    const inQuarter = questionBank.filter(q => q.quarter === qt);
+                    let unseen = inQuarter.filter(q => !seen.has(q.id));
+                    if (unseen.length < perQuarter[qt]) {
+                        inQuarter.forEach(q => seen.delete(q.id));
+                        const carry = unseen;
+                        unseen = inQuarter.filter(q => !carry.includes(q));
+                        picked.push(...carry);
+                        perQuarter[qt] -= carry.length;
+                    }
+                    const want = perQuarter[qt];
+                    const target = { easy: Math.round(want * 0.2), hard: Math.round(want * 0.2) };
+                    target.medium = want - target.easy - target.hard;
+                    const chosen = [];
+                    ["easy", "medium", "hard"].forEach(d => {
+                        chosen.push(...weightedPick(unseen.filter(q => q.difficulty === d), target[d]));
+                    });
+                    if (chosen.length < want) {
+                        chosen.push(...weightedPick(unseen.filter(q => !chosen.includes(q)), want - chosen.length));
+                    }
+                    picked.push(...chosen);
+                });
+
+                picked.forEach(q => seen.add(q.id));
+                saveSeen(seen);
+                
+                currentSet = JSON.parse(JSON.stringify(picked));
             }
 
+            score = 0;
+            answered = 0;
             answers = {};
-            shuffleQuiz();
+            quizData = JSON.parse(JSON.stringify(currentSet));
+            quizData.forEach(q => fisherYates(q.options));
+            quizData = fisherYates(quizData);
+
             const container = document.getElementById('quiz');
+            if (!container) return;
             container.innerHTML = '';
-            document.getElementById('summary').classList.add('hidden');
+            
+            const summaryCard = document.getElementById('summary');
+            if (summaryCard) summaryCard.classList.add('hidden');
 
-            currentSet.forEach((q, qIdx) => {
-                const card = el('div', 'question-card');
-                const meta = el('div', 'question-meta');
-                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${currentSet.length}`));
-                meta.appendChild(el('span', 'badge', q.difficulty));
-                card.appendChild(meta);
-                card.appendChild(el('div', 'question-text', q.stem));
-
-                const opts = el('div', 'options-list');
-                q.options.forEach((opt, i) => {
-                    const btn = el('button', 'option-btn');
-                    btn.type = 'button';
-                    btn.appendChild(el('span', 'option-letter', String.fromCharCode(97 + i) + ')'));
-                    btn.appendChild(el('span', '', opt.text));
-                    btn.addEventListener('click', () => handleSelect(q, i, card));
-                    opts.appendChild(btn);
-                });
-                card.appendChild(opts);
+            quizData.forEach((q, qi) => {
+                const card = document.createElement("section");
+                card.className = "card question-card";
+                card.id = `card-${qi}`;
+                const diffLabel = q.difficulty ? q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1) : "";
+                card.innerHTML = `
+                  <div class="q-meta question-meta">
+                    <span class="q-num badge">Question ${qi + 1} of ${quizData.length}</span>
+                    <span class="badge">${escapeHTML(QUARTER_NAMES[q.quarter] || "")}</span>
+                    ${diffLabel ? `<span class="badge">${diffLabel}</span>` : ""}
+                    ${q.priority ? '<span class="badge hot">Exam flag</span>' : ""}
+                  </div>
+                  <div class="stem question-text">${escapeHTML(q.stem)}</div>
+                  <div class="options options-list">
+                    ${q.options.map((o, oi) => `
+                      <button class="option-btn" data-q="${qi}" data-o="${oi}">
+                        <span class="letter option-letter">${String.fromCharCode(65 + oi)}.</span><span>${escapeHTML(o.text)}</span>
+                      </button>`).join("")}
+                  </div>
+                  <div class="explanation" id="exp-${qi}"></div>`;
                 container.appendChild(card);
             });
 
-            updateScore();
+            container.querySelectorAll(".option-btn").forEach(btn => {
+                btn.addEventListener("click", () => selectOption(+btn.dataset.q, +btn.dataset.o));
+            });
+
+            renderIntro();
+            updateHeader();
             window.scrollTo({ top: 0 });
         }
 
