@@ -174,11 +174,6 @@
 </main>
 
 <script>
-let currentSet = [];
-        let round = 1;
-        let quizMode = 'full'; // 'full' or 'quick'
-        let answers = {};
-        let popupTimeout = null;
 const QUESTIONS_PER_ATTEMPT = 50;
 const STORAGE_KEY = "genpath_mt1_seen_v1";
 const QUARTER_NAMES = {
@@ -4991,193 +4986,84 @@ const questionBank = [
   }
 ];
 
-let quizData = [];
-let score = 0;
-let answered = 0;
+let currentSet = [];
+        let round = 1;
+        let quizMode = 'full'; // 'full' or 'quick'
+        let answers = {};
+        let popupTimeout = null;
 
-function fisherYates(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
+        function fisherYates(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
 
-function escapeHTML(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-}
+        function escapeHTML(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        }
 
-function refLabel(ref) {
-  return /^\d\.\d$/.test(String(ref)) ? "Lecture " + ref : String(ref);
-}
+        function updateHeader() {
+            const total = quizData.length;
+            const pct = total ? Math.round((score / total) * 100) : 0;
+            const scoreDisplay = document.getElementById("score-display");
+            const answeredDisplay = document.getElementById("answered-display");
+            const progressBar = document.getElementById("progress-bar");
+            
+            if (scoreDisplay) scoreDisplay.textContent = `Score: ${score} / ${total} (${pct}%)`;
+            if (answeredDisplay) answeredDisplay.textContent = `Answered ${answered} / ${total}`;
+            if (progressBar) progressBar.style.width = total ? (answered / total * 100) + "%" : "0";
+        }
 
-function loadSeen() {
-  try { return new Set(JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")); }
-  catch (e) { return new Set(); }
-}
-
-function saveSeen(set) {
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify([...set])); } catch (e) { }
-}
-
-function weightedPick(pool, k) {
-  const items = pool.slice();
-  const out = [];
-  while (out.length < k && items.length) {
-    const total = items.reduce((s, q) => s + (q.priority ? 2 : 1), 0);
-    let r = Math.random() * total;
-    let idx = 0;
-    for (; idx < items.length; idx++) {
-      r -= items[idx].priority ? 2 : 1;
-      if (r <= 0) break;
-    }
-    out.push(items.splice(Math.min(idx, items.length - 1), 1)[0]);
-  }
-  return out;
-}
-
-function drawAttempt() {
-  const seen = loadSeen();
-  const quarters = [1, 2, 3, 4];
-  const n = Math.min(QUESTIONS_PER_ATTEMPT, questionBank.length);
-  const perQuarter = {};
-  quarters.forEach(q => perQuarter[q] = Math.floor(n / 4));
-  fisherYates(quarters.slice()).slice(0, n % 4).forEach(q => perQuarter[q]++);
-
-  const picked = [];
-  quarters.forEach(qt => {
-    const inQuarter = questionBank.filter(q => q.quarter === qt);
-    let unseen = inQuarter.filter(q => !seen.has(q.id));
-    if (unseen.length < perQuarter[qt]) {
-      inQuarter.forEach(q => seen.delete(q.id));
-      const carry = unseen;
-      unseen = inQuarter.filter(q => !carry.includes(q));
-      picked.push(...carry);
-      perQuarter[qt] -= carry.length;
-    }
-    const want = perQuarter[qt];
-    const target = { easy: Math.round(want * 0.2), hard: Math.round(want * 0.2) };
-    target.medium = want - target.easy - target.hard;
-    const chosen = [];
-    ["easy", "medium", "hard"].forEach(d => {
-      chosen.push(...weightedPick(unseen.filter(q => q.difficulty === d), target[d]));
-    });
-    if (chosen.length < want) {
-      chosen.push(...weightedPick(unseen.filter(q => !chosen.includes(q)), want - chosen.length));
-    }
-    picked.push(...chosen);
-  });
-
-  picked.forEach(q => seen.add(q.id));
-  saveSeen(seen);
-  return picked;
-}
-
-function buildQuizData() {
-  const drawn = JSON.parse(JSON.stringify(drawAttempt()));
-  drawn.forEach(q => fisherYates(q.options));
-  return fisherYates(drawn);
-}
-
-function updateHeader() {
-  const total = quizData.length;
-  const pct = total ? Math.round((score / total) * 100) : 0;
-  document.getElementById("score-display").textContent = `Score: ${score} / ${total} (${pct}%)`;
-  document.getElementById("answered-display").textContent = `Answered ${answered} / ${total}`;
-  document.getElementById("progress-bar").style.width = total ? (answered / total * 100) + "%" : "0";
-}
-
-function renderIntro() {
-  const seen = loadSeen();
-  const fresh = questionBank.length - seen.size;
-  const flagged = questionBank.filter(q => q.priority).length;
-  document.getElementById("intro").innerHTML =
-    `<strong>${quizData.length} questions this round</strong>, drawn from a bank of ${questionBank.length} ` +
-    `covering all four Midterm 1 topic blocks. Each retake rotates in questions you haven't seen yet ` +
-    `(${Math.max(fresh, 0)} still unseen after this draw). Questions marked <span class="badge hot">Exam flag</span> ` +
-    `(${flagged} in the bank) cover points designated for the exam.` +
-    `<div class="row"><button class="link-btn" onclick="resetRotation()">Reset rotation history</button></div>`;
-}
-
-function renderQuiz(set) {
+        function renderQuiz(set) {
             const popup = document.getElementById('wrongPopup');
             if (popup) popup.classList.add('hidden');
 
             if (set) {
                 currentSet = set;
             } else {
-                // Determine pool size based on mode (15 for quickie, or 50 full attempt)
-                const targetCount = (quizMode === 'quick') ? 15 : QUESTIONS_PER_ATTEMPT;
-                
-                // Draw attempt using your rotating question bank logic
-                const seen = loadSeen();
-                const quarters = [1, 2, 3, 4];
-                const n = Math.min(targetCount, questionBank.length);
-                const perQuarter = {};
-                quarters.forEach(q => perQuarter[q] = Math.floor(n / 4));
-                fisherYates(quarters.slice()).slice(0, n % 4).forEach(q => perQuarter[q]++);
-
-                const picked = [];
-                quarters.forEach(qt => {
-                    const inQuarter = questionBank.filter(q => q.quarter === qt);
-                    let unseen = inQuarter.filter(q => !seen.has(q.id));
-                    if (unseen.length < perQuarter[qt]) {
-                        inQuarter.forEach(q => seen.delete(q.id));
-                        const carry = unseen;
-                        unseen = inQuarter.filter(q => !carry.includes(q));
-                        picked.push(...carry);
-                        perQuarter[qt] -= carry.length;
-                    }
-                    const want = perQuarter[qt];
-                    const target = { easy: Math.round(want * 0.2), hard: Math.round(want * 0.2) };
-                    target.medium = want - target.easy - target.hard;
-                    const chosen = [];
-                    ["easy", "medium", "hard"].forEach(d => {
-                        chosen.push(...weightedPick(unseen.filter(q => q.difficulty === d), target[d]));
-                    });
-                    if (chosen.length < want) {
-                        chosen.push(...weightedPick(unseen.filter(q => !chosen.includes(q)), want - chosen.length));
-                    }
-                    picked.push(...chosen);
-                });
-
-                picked.forEach(q => seen.add(q.id));
-                saveSeen(seen);
-                
-                currentSet = JSON.parse(JSON.stringify(picked));
+                // If Quickie mode is selected, take 15 questions; otherwise take the full bank
+                const targetCount = (quizMode === 'quick') ? 15 : questionBank.length;
+                let pool = [...questionBank];
+                fisherYates(pool);
+                currentSet = pool.slice(0, targetCount);
             }
 
             score = 0;
             answered = 0;
             answers = {};
+            
+            // Deep copy and shuffle questions and options
             quizData = JSON.parse(JSON.stringify(currentSet));
             quizData.forEach(q => fisherYates(q.options));
             quizData = fisherYates(quizData);
 
-            const container = document.getElementById('quiz');
+            const container = document.getElementById('quiz-container');
             if (!container) return;
             container.innerHTML = '';
             
-            const summaryCard = document.getElementById('summary');
-            if (summaryCard) summaryCard.classList.add('hidden');
+            const summaryCard = document.getElementById('summary-card');
+            if (summaryCard) summaryCard.classList.remove('show');
 
             quizData.forEach((q, qi) => {
                 const card = document.createElement("section");
-                card.className = "card question-card";
+                card.className = "card";
                 card.id = `card-${qi}`;
                 const diffLabel = q.difficulty ? q.difficulty.charAt(0).toUpperCase() + q.difficulty.slice(1) : "";
+                
                 card.innerHTML = `
-                  <div class="q-meta question-meta">
-                    <span class="q-num badge">Question ${qi + 1} of ${quizData.length}</span>
-                    <span class="badge">${escapeHTML(QUARTER_NAMES[q.quarter] || "")}</span>
+                  <div class="q-meta">
+                    <span class="q-num">Question ${qi + 1} of ${quizData.length}</span>
+                    <span class="badge">${escapeHTML(QUARTER_NAMES[q.quarter] || "General")}</span>
                     ${diffLabel ? `<span class="badge">${diffLabel}</span>` : ""}
                     ${q.priority ? '<span class="badge hot">Exam flag</span>' : ""}
                   </div>
-                  <div class="stem question-text">${escapeHTML(q.stem)}</div>
-                  <div class="options options-list">
+                  <div class="stem">${escapeHTML(q.stem)}</div>
+                  <div class="options">
                     ${q.options.map((o, oi) => `
                       <button class="option-btn" data-q="${qi}" data-o="${oi}">
-                        <span class="letter option-letter">${String.fromCharCode(65 + oi)}.</span><span>${escapeHTML(o.text)}</span>
+                        <span class="letter">${String.fromCharCode(65 + oi)}.</span><span>${escapeHTML(o.text)}</span>
                       </button>`).join("")}
                   </div>
                   <div class="explanation" id="exp-${qi}"></div>`;
@@ -5188,14 +5074,92 @@ function renderQuiz(set) {
                 btn.addEventListener("click", () => selectOption(+btn.dataset.q, +btn.dataset.o));
             });
 
-            renderIntro();
             updateHeader();
             window.scrollTo({ top: 0 });
+        }
+
+        function selectOption(qi, oi) {
+            const q = quizData[qi];
+            if (q._locked) return;
+            q._locked = true;
+
+            const card = document.getElementById(`card-${qi}`);
+            const buttons = card.querySelectorAll(".option-btn");
+            const isCorrect = q.options[oi].correct;
+            
+            buttons.forEach((b, bi) => {
+                b.disabled = true;
+                if (q.options[bi].correct) b.classList.add("correct");
+                else if (bi === oi) b.classList.add("incorrect");
+                else b.classList.add("dim");
+            });
+
+            q._result = isCorrect;
+            if (isCorrect) {
+                score++;
+            } else {
+                const wrongAudio = document.getElementById("wrongAudio");
+                if (wrongAudio) {
+                    wrongAudio.currentTime = 0;
+                    wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
+                }
+            }
+            answered++;
+
+            const correctOption = q.options.find(o => o.correct) || q.options[0];
+            const conceptText = correctOption.why.replace(/\[.*?\]\s*$/, "").trim();
+
+            const exp = document.getElementById(`exp-${qi}`);
+            exp.innerHTML = `
+                <div class="banner ${isCorrect ? "good" : "bad"}">${isCorrect ? "Correct!" : "Incorrect."}</div>
+                <div class="concept-box"><strong>Core Concept:</strong> ${escapeHTML(conceptText)}</div>
+                <ul class="breakdown">
+                  ${q.options.map((o, bi) => `
+                    <li><strong>${String.fromCharCode(65 + bi)}) ${escapeHTML(o.text)}:</strong> ${escapeHTML(o.why)}</li>
+                  `).join("")}
+                </ul>`;
+            exp.classList.add("show");
+
+            updateHeader();
+            if (answered === quizData.length) showSummary();
+        }
+
+        function showSummary() {
+            const total = quizData.length;
+            const pct = Math.round((score / total) * 100);
+            
+            const pctEl = document.getElementById("summary-pct");
+            const rawEl = document.getElementById("summary-raw");
+            const feedbackEl = document.getElementById("summary-feedback");
+            
+            if (pctEl) pctEl.textContent = pct + "%";
+            if (rawEl) rawEl.textContent = `${score} of ${total} correct`;
+            
+            if (feedbackEl) {
+                if (pct >= 90) {
+                    feedbackEl.textContent = "Absolute Gigachad. You drained that test dry.";
+                    feedbackEl.style.color = "#22c55e";
+                } else if (pct >= 70) {
+                    feedbackEl.textContent = "You lasted less than 30 seconds. Time for a rematch.";
+                    feedbackEl.style.color = "#ff9900";
+                } else {
+                    feedbackEl.textContent = "You really didn’t fucking know that.";
+                    feedbackEl.style.color = "#ef4444";
+                }
+            }
+
+            const card = document.getElementById("summary-card");
+            if (card) {
+                card.classList.add("show");
+                card.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
         }
 
         function updateModeButtons() {
             const fullBtn = document.getElementById('fullQuizBtn');
             const quickBtn = document.getElementById('quickQuizBtn');
+            if (!fullBtn || !quickBtn) return;
+            
             if (quizMode === 'full') {
                 fullBtn.classList.add('active');
                 quickBtn.classList.remove('active');
@@ -5219,17 +5183,10 @@ function renderQuiz(set) {
             renderQuiz();
         });
 
-        document.getElementById('retakeBtn').addEventListener('click', () => {
-            round = 1;
-            renderQuiz();
-        });
+        function resetQuiz() { 
+            renderQuiz(); 
+        }
 
-        document.getElementById('reviewBtn').addEventListener('click', () => {
-            round++;
-            renderQuiz(currentSet.filter(q => !answers[q.id]));
-        });
-
-        // Ensure everything runs safely once the page loads
         window.onload = () => {
             updateModeButtons();
             renderQuiz();
