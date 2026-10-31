@@ -10,9 +10,9 @@
             --bg-card: #1a1a1a;
             --border-card: #282828;
             --text-main: #ffffff;
-            --text-muted: #a3a3a3;
+            --text-muted: #888888;
             --accent: #ff9900;
-            --accent-hover: #e68a00;
+            --accent-hover: #cc7a00;
             --correct-bg: #14532d;
             --correct-border: #22c55e;
             --correct-text: #e2fbe8;
@@ -72,6 +72,37 @@
             max-width: 820px;
             margin: 1.5rem auto;
             padding: 0 1.0rem;
+        }
+
+        /* Mode Container */
+        .mode-container {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .mode-btn {
+            background-color: #222222;
+            color: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
+
+        .mode-btn:hover:not(.active) {
+            border-color: var(--accent);
+            background-color: #303030;
         }
 
         /* Control Panel */
@@ -346,7 +377,7 @@
         }
 
         /* Summary Card */
-        #summary-card {
+        #summary-card, .summary-card {
             background-color: var(--bg-card);
             border: 2px solid var(--accent);
             border-radius: 8px;
@@ -356,39 +387,90 @@
             display: none;
         }
 
-        #summary-card h2 {
+        .summary-card.hidden {
+            display: none !important;
+        }
+
+        .summary-title {
             font-size: 1.8rem;
             font-weight: 800;
             margin-bottom: 0.8rem;
         }
 
-        .score-display {
+        .summary-score {
             font-size: 3.2rem;
             font-weight: 900;
             color: var(--accent);
             margin-bottom: 1rem;
         }
 
-        #summary-feedback {
+        .summary-msg {
             font-size: 1.05rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
         }
 
-        .reset-btn {
+        .retake-btn {
             background-color: var(--accent);
             color: #000000;
-            border: none;
-            padding: 0.9rem 2.2rem;
-            font-size: 1.0rem;
-            font-weight: 800;
+            border: 1px solid var(--accent);
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.2s;
+            font-family: inherit;
+            margin: 4px;
+            display: inline-block;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
         }
 
-        .reset-btn:hover {
+        .retake-btn:hover {
             background-color: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .retake-btn.hub-btn {
+            background-color: #222222;
+            color: #ffffff;
+            border: 1px solid var(--accent);
+        }
+
+        .retake-btn.hub-btn:hover {
+            background-color: var(--accent);
+            color: #000000;
+        }
+
+        /* Wrong Answer Popup Overlay */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: popIn 0.15s ease-out;
+        }
+        .wrong-popup.hidden {
+            display: none !important;
+        }
+        .wrong-popup img {
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--incorrect-border);
+            display: block;
+            object-fit: contain;
+            background: #111;
+        }
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
         @keyframes fadeIn {
@@ -402,12 +484,23 @@
     <!-- Audio element for incorrect answers -->
     <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 
+    <!-- Visual popup container for incorrect answers -->
+    <div id="wrongPopup" class="wrong-popup hidden">
+        <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+    </div>
+
     <header>
         <div class="header-title">Regional Anatomy 1: Lab Practical Drill</div>
         <div id="score-header">Score: 0 / 0 (0%)</div>
     </header>
 
     <div class="container">
+        <!-- Mode Container Toggle -->
+        <div class="mode-container" id="modeSelector">
+            <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+            <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+        </div>
+
         <!-- Control Panel -->
         <div class="control-panel">
             <div class="control-row">
@@ -422,13 +515,6 @@
             </div>
             <div class="control-row">
                 <span class="control-label">Testing Mode</span>
-                <div class="control-row">
-                    <span class="control-label">Quiz Length</span>
-                    <div class="filter-group">
-                        <button class="btn-mode active" id="len-full" onclick="setLength('full')">Full Drill</button>
-                        <button class="btn-mode" id="len-quick" onclick="setLength('quick')">Quickie (15)</button>
-                    </div>
-                </div>
                 <div class="filter-group">
                     <button class="btn-mode active" id="mode-mcq" onclick="setMode('mcq')">Multiple Choice Mode</button>
                     <button class="btn-mode" id="mode-typein" onclick="setMode('typein')">Type-In (Practical Lab Exam Mode)</button>
@@ -437,14 +523,17 @@
         </div>
 
         <!-- Quiz Container -->
+        <div id="quiz"></div>
         <div id="quiz-container"></div>
 
         <!-- Completion Card -->
-        <div id="summary-card">
-            <h2>Practical Drill Complete!</h2>
-            <div class="score-display" id="final-score-display">0 / 0 (0%)</div>
-            <p id="summary-feedback"></p>
-            <button class="reset-btn" onclick="resetQuiz()">Reset & Retake Drill</button>
+        <div class="summary-card hidden" id="summary">
+            <div class="summary-title" id="summaryTitle">Quiz Complete</div>
+            <div class="summary-score" id="summaryScore"></div>
+            <div class="summary-msg" id="summaryMsg"></div>
+            <button class="retake-btn" id="retakeBtn" onclick="resetQuiz()">Retake Quiz</button>
+            <button class="retake-btn" id="reviewBtn" style="display:none" onclick="startReview()">Review Missed</button>
+            <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
         </div>
     </div>
 
@@ -2163,10 +2252,12 @@
         // Core App State
         let currentScope = "all";
         let currentMode = "mcq";
-        let currentLength = "full";      // NEW
-        const QUICK_COUNT = 15;          // NEW
+        let currentLength = "full";
+        const QUICK_COUNT = 15;
         let activePool = [];
         let userResponses = {};
+        let round = 1;
+        let popupTimeout = null;
 
         // Levenshtein distance implementation for smart fuzzy matching
         function getLevenshteinDistance(a, b) {
@@ -2233,6 +2324,7 @@
             document.querySelectorAll('#scope-filters .btn-filter').forEach(btn => {
                 btn.classList.toggle('active', btn.innerText.toLowerCase().includes(scope.toLowerCase()) || (scope === 'all' && btn.innerText.includes('All')));
             });
+            round = 1;
             initPool();
         }
 
@@ -2247,24 +2339,26 @@
             currentLength = len;
             document.getElementById('len-full').classList.toggle('active', len === 'full');
             document.getElementById('len-quick').classList.toggle('active', len === 'quick');
-            initPool();   // re-shuffle and re-slice, resets score
+            round = 1;
+            initPool();
         }
         
         function initPool() {
+            let pool = [];
             if (currentScope === "all") {
-                activePool = JSON.parse(JSON.stringify(rawMasterData));
+                pool = JSON.parse(JSON.stringify(rawMasterData));
             } else {
-                activePool = rawMasterData.filter(item => item.section === currentScope);
+                pool = rawMasterData.filter(item => item.section === currentScope);
             }
-            shuffleArray(activePool);
+            shuffleArray(pool);
         
-            // NEW: Quickie mode trims to a random subset
             if (currentLength === 'quick') {
-                activePool = activePool.slice(0, QUICK_COUNT);
+                pool = pool.slice(0, QUICK_COUNT);
             }
         
+            activePool = pool;
             userResponses = {};
-            document.getElementById('summary-card').style.display = 'none';
+            document.getElementById('summary').classList.add('hidden');
             renderQuestions();
             updateScore();
         }
@@ -2348,7 +2442,7 @@
 
             const item = activePool[qIdx];
             const isCorrect = (selectedText === item.canonical);
-            userResponses[qIdx] = { correct: isCorrect, answer: selectedText };
+            userResponses[qIdx] = { correct: isCorrect, answer: selectedText, item: item };
 
             const card = document.getElementById(`card-${qIdx}`);
             const buttons = card.querySelectorAll('.option-btn');
@@ -2359,12 +2453,24 @@
                 selectedBtn.classList.add('correct');
             } else {
                 selectedBtn.classList.add('incorrect');
-                // Trigger wrong audio feedback automatically on incorrect answer
+                
+                // Trigger wrong audio feedback
                 const wrongAudio = document.getElementById('wrongAudio');
                 if (wrongAudio) {
                     wrongAudio.currentTime = 0;
                     wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
                 }
+
+                // Trigger visual wrong popup image feedback
+                const wrongPopup = document.getElementById('wrongPopup');
+                if (wrongPopup) {
+                    wrongPopup.classList.remove('hidden');
+                    if (popupTimeout) clearTimeout(popupTimeout);
+                    popupTimeout = setTimeout(() => {
+                        wrongPopup.classList.add('hidden');
+                    }, 2000);
+                }
+
                 buttons.forEach(btn => {
                     if (btn.innerText.includes(item.canonical)) {
                         btn.classList.add('correct');
@@ -2377,8 +2483,7 @@
         }
 
         // Guard for fuzzy matching: never award a typo-match when the input is the
-        // exact name of a DIFFERENT known structure in the bank (e.g. typing
-        // "teres major" on a "teres minor" question).
+        // exact name of a DIFFERENT known structure in the bank
         const knownStructureNames = new Set(
             rawMasterData.flatMap(q => [q.canonical, ...q.synonyms, ...q.distractors])
                 .map(s => s.toLowerCase())
@@ -2417,7 +2522,7 @@
                 }
             }
 
-            userResponses[qIdx] = { correct: isCorrect, answer: inputEl.value };
+            userResponses[qIdx] = { correct: isCorrect, answer: inputEl.value, item: item };
 
             if (isCorrect) {
                 inputEl.style.borderColor = "var(--correct-border)";
@@ -2425,11 +2530,22 @@
             } else {
                 inputEl.style.borderColor = "var(--incorrect-border)";
                 inputEl.style.backgroundColor = "var(--incorrect-bg)";
-                // Trigger wrong audio feedback automatically on incorrect type-in answer
+                
+                // Trigger wrong audio feedback
                 const wrongAudio = document.getElementById('wrongAudio');
                 if (wrongAudio) {
                     wrongAudio.currentTime = 0;
                     wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
+                }
+
+                // Trigger visual wrong popup image feedback
+                const wrongPopup = document.getElementById('wrongPopup');
+                if (wrongPopup) {
+                    wrongPopup.classList.remove('hidden');
+                    if (popupTimeout) clearTimeout(popupTimeout);
+                    popupTimeout = setTimeout(() => {
+                        wrongPopup.classList.add('hidden');
+                    }, 2000);
                 }
             }
 
@@ -2445,11 +2561,11 @@
 
             let rationalesHTML = '';
             item.shuffledOptions.forEach((optText, idx) => {
-                const letter = String.fromCharCode(65 + idx);
+                const letter = String.fromCharCode(97 + idx); // (a), (b), (c), (d)
                 const expl = item.rationales[optText] || (optText === item.canonical ? "Correct anatomical identification." : "Incorrect distractor.");
                 rationalesHTML += `
                     <li class="rationale-item">
-                        <strong>${letter}) ${optText}</strong>: ${expl}
+                        <strong>(${letter}) ${optText}</strong> — ${expl}
                     </li>
                 `;
             });
@@ -2473,35 +2589,94 @@
             const total = activePool.length;
             const pct = total === 0 ? 0 : Math.round((correctCount / total) * 100);
 
-            document.getElementById('score-header').innerText = `Score: ${correctCount} / ${total} (${pct}%)`;
+            const label = round === 1 ? "Score" : `Review ${round - 1}`;
+            document.getElementById('score-header').innerText = `${label}: ${correctCount} / ${total} (${pct}%)`;
 
             if (answeredCount === total && total > 0) {
-                showSummary(pct);
+                showSummary(correctCount, total, pct);
             }
         }
 
-        function showSummary(pct) {
-            const summaryCard = document.getElementById('summary-card');
-            const feedback = document.getElementById('summary-feedback');
+        function showSummary(correctCount, total, pct) {
+            const summaryCard = document.getElementById('summary');
+            const summaryTitle = document.getElementById('summaryTitle');
+            const summaryScore = document.getElementById('summaryScore');
+            const feedback = document.getElementById('summaryMsg');
+            const reviewBtn = document.getElementById('reviewBtn');
 
-            if (pct >= 90) {
-                feedback.innerText = "Absolute Gigachad. You drained that test dry.";
-            } else if (pct >= 70) {
-                feedback.innerText = "You lasted less than 30 seconds. Time for a rematch.";
+            summaryScore.innerText = `${correctCount} / ${total} (${pct}%)`;
+
+            if (round === 1) {
+                summaryTitle.innerText = "Quiz Complete";
+                if (pct >= 90) {
+                    feedback.innerText = "Absolute Gigachad. You drained that test dry.";
+                } else if (pct >= 70) {
+                    feedback.innerText = "Solid run! You're locked in, get in some more reps.";
+                } else {
+                    feedback.innerText = "You lasted less than 30 seconds. Time for a rematch.";
+                }
             } else {
-                feedback.innerText = "You really didn’t fucking know that.";
+                summaryTitle.innerText = `Review Round ${round - 1} Complete`;
+                if (correctCount === total) {
+                    feedback.innerText = "Everything cleared. All correct.";
+                } else {
+                    feedback.innerText = `${total - correctCount} still missed. Go again.`;
+                }
             }
 
+            const missed = Object.values(userResponses).filter(r => !r.correct);
+            if (missed.length > 0 && round === 1) {
+                reviewBtn.style.display = 'inline-block';
+                reviewBtn.innerText = `Review Missed (${missed.length})`;
+            } else {
+                reviewBtn.style.display = 'none';
+            }
+
+            summaryCard.classList.remove('hidden');
             summaryCard.style.display = 'block';
             summaryCard.scrollIntoView({ behavior: 'smooth' });
         }
 
+        function startReview() {
+            const missedItems = Object.values(userResponses).filter(r => !r.correct).map(r => r.item);
+            if (missedItems.length === 0) return;
+            round++;
+            activePool = missedItems;
+            shuffleArray(activePool);
+            userResponses = {};
+            document.getElementById('summary').classList.add('hidden');
+            document.getElementById('summary').style.display = 'none';
+            renderQuestions();
+            updateScore();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function resetQuiz() {
+            round = 1;
             initPool();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.onload = () => {
+            // Mode selector event listeners for Quickie vs Full Quiz functionality
+            const fullQuizBtn = document.getElementById('fullQuizBtn');
+            const quickQuizBtn = document.getElementById('quickQuizBtn');
+            if (fullQuizBtn && quickQuizBtn) {
+                fullQuizBtn.onclick = () => {
+                    fullQuizBtn.classList.add('active');
+                    quickQuizBtn.classList.remove('active');
+                    currentLength = 'full';
+                    round = 1;
+                    initPool();
+                };
+                quickQuizBtn.onclick = () => {
+                    quickQuizBtn.classList.add('active');
+                    fullQuizBtn.classList.remove('active');
+                    currentLength = 'quick';
+                    round = 1;
+                    initPool();
+                };
+            }
             initPool();
         };
     </script>
