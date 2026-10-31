@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Subluxation Analysis: Foundations & Clinical Principles (Tech-135)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -42,9 +42,94 @@
       border-color: #ef4444 !important;
       color: #ffffff !important;
     }
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: popIn 0.15s ease-out;
+    }
+    .wrong-popup.hidden {
+      display: none;
+    }
+    .wrong-popup img {
+      max-width: 80vw;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+      border: 3px solid #ef4444;
+      display: block;
+      object-fit: contain;
+      background: #111;
+    }
+    @keyframes popIn {
+      from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    .mode-container {
+      max-width: 56rem;
+      margin: 0 auto 1.5rem auto;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .mode-btn {
+      background: #222222;
+      color: #ffffff;
+      border: 1px solid #404040;
+      padding: 8px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .mode-btn.active {
+      background: #ff9900;
+      color: #000000;
+      border-color: #ff9900;
+    }
+    .retake-btn {
+      background-color: #ff9900;
+      color: #000000;
+      border: 1px solid #ff9900;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: inherit;
+      margin: 4px;
+      display: inline-block;
+      text-decoration: none;
+      transition: background-color 0.2s, color 0.2s;
+    }
+    .retake-btn:hover {
+      background-color: #cc7a00;
+      border-color: #cc7a00;
+    }
+    .retake-btn.hub-btn {
+      background-color: #222222;
+      color: #ffffff;
+      border: 1px solid #ff9900;
+    }
+    .retake-btn.hub-btn:hover {
+      background-color: #ff9900;
+      color: #000000;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center pb-16">
+
+  <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+  <div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+  </div>
 
   <!-- Sticky Top Bar -->
   <header class="sticky top-0 z-50 w-full bg-[#1a1a1a]/95 backdrop-blur border-b border-[#333333] py-3 px-4 sm:px-8 shadow-md">
@@ -71,11 +156,26 @@
       <p class="text-sm text-gray-400">Vertebral Subluxation Complex, Pelvic Listings, Landmark Palpation, and Documentation Standards.</p>
     </div>
 
+    <!-- Mode Selector Container -->
+    <div class="mode-container" id="modeSelector">
+      <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+      <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+    </div>
+
     <!-- Container for dynamic questions -->
     <div id="quizContainer" class="flex flex-col space-y-6"></div>
 
     <!-- Final Summary Container -->
-    <div id="summaryCard" class="hidden bg-[#1a1a1a] border border-[#333333] rounded-2xl p-8 shadow-2xl flex flex-col items-center text-center space-y-4"></div>
+    <div id="summaryCard" class="hidden bg-[#1a1a1a] border border-[#333333] rounded-2xl p-8 shadow-2xl flex flex-col items-center text-center space-y-4">
+      <div class="text-xl font-bold text-[#ff9900]" id="summaryTitle">Quiz Complete</div>
+      <div class="text-lg font-bold" id="summaryScore"></div>
+      <div class="text-base text-gray-200 font-semibold" id="summaryMsg"></div>
+      <div>
+        <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+        <button class="retake-btn" id="reviewBtn" style="display:none">Review Missed</button>
+        <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
+      </div>
+    </div>
   </main>
 
   <script>
@@ -90,11 +190,12 @@
         ],
         correct: 2,
         summary: "The NBCE defines a chiropractic subluxation as a joint dysfunction that occurs in skeletal joints, affects the nervous system, may reduce function, and may contribute to disability or illness.",
+        reference: "Lecture 1, Slide #4",
         rationales: [
-          "A) A partial dislocation of articular surfaces lacking neurological consequence: Incorrect. This reflects a rigid medical dictionary position that ignores nervous system impact.",
-          "B) A bone out of place causing direct mechanical compression on spinal nerves: Incorrect. This represents an outdated dogmatic model rather than board examination standards.",
-          "C) A joint dysfunction that occurs in skeletal joints, affects the nervous system, and may reduce function or contribute to disability: Correct. This matches the official NBCE board definition.",
-          "D) A functional, structural, and pathological articular change restricted entirely to the axial motor units: Incorrect. This resembles the ACC consensus definition while erroneously restricting scope."
+          "(a) A partial dislocation of articular surfaces lacking neurological consequence — Incorrect. This reflects a rigid medical dictionary position that ignores nervous system impact.",
+          "(b) A bone out of place causing direct mechanical compression on spinal nerves — Incorrect. This represents an outdated dogmatic model rather than board examination standards.",
+          "(c) A joint dysfunction that occurs in skeletal joints, affects the nervous system, and may reduce function or contribute to disability — Correct. This matches the official NBCE board definition.",
+          "(d) A functional, structural, and pathological articular change restricted entirely to the axial motor units — Incorrect. This resembles the ACC consensus definition while erroneously restricting scope."
         ]
       },
       {
@@ -107,11 +208,12 @@
         ],
         correct: 1,
         summary: "The ACC consensus definition states: 'A chiropractic subluxation is a complex of functional and/or structural and/or pathological articular changes that compromise neural integrity and may influence organ system function and general health.'",
+        reference: "Lecture 1, Slide #6",
         rationales: [
-          "A) Result in spinal hypermobility at primary levels: Incorrect. Subluxations predominantly create articular hypomobility and fixation rather than hypermobility.",
-          "B) Compromise neural integrity and may influence organ system function: Correct. Directly matches the ACC consensus wording.",
-          "C) Indicate immediate surgical decompression criteria: Incorrect. Subluxations fall within conservative chiropractic scope, not surgical emergencies.",
-          "D) Require identical high-velocity mechanical line of drive at every junction: Incorrect. Adjustments vary significantly based on segmental listings and mechanics."
+          "(a) Result in spinal hypermobility at primary levels — Incorrect. Subluxations predominantly create articular hypomobility and fixation rather than hypermobility.",
+          "(b) Compromise neural integrity and may influence organ system function — Correct. Directly matches the ACC consensus wording.",
+          "(c) Indicate immediate surgical decompression criteria — Incorrect. Subluxations fall within conservative chiropractic scope, not surgical emergencies.",
+          "(d) Require identical high-velocity mechanical line of drive at every junction — Incorrect. Adjustments vary significantly based on segmental listings and mechanics."
         ]
       },
       {
@@ -124,11 +226,12 @@
         ],
         correct: 3,
         summary: "Histopathology encompasses the cellular, fluid, and inflammatory changes associated with subluxation, specifically including local tissue edema, cellular infiltration, and active inflammation identified via palpation or instrumentation.",
+        reference: "Lecture 1, Slide #12",
         rationales: [
-          "A) Kinesiopathology: Incorrect. Kinesiopathology refers to altered movement patterns, range of motion restrictions, and joint fixations.",
-          "B) Neuropathology: Incorrect. Neuropathology pertains to aberrant neurological function, sensory/motor alterations, and reflex changes.",
-          "C) Myopathology: Incorrect. Myopathology involves muscular tone changes, including hypertonicity, spasm, weakness, or atrophy.",
-          "D) Histopathology: Correct. Tissue edema, cellular infiltration, and localized inflammatory signs fall strictly under histopathology."
+          "(a) Kinesiopathology — Incorrect. Kinesiopathology refers to altered movement patterns, range of motion restrictions, and joint fixations.",
+          "(b) Neuropathology — Incorrect. Neuropathology pertains to aberrant neurological function, sensory/motor alterations, and reflex changes.",
+          "(c) Myopathology — Incorrect. Myopathology involves muscular tone changes, including hypertonicity, spasm, weakness, or atrophy.",
+          "(d) Histopathology — Correct. Tissue edema, cellular infiltration, and localized inflammatory signs fall strictly under histopathology."
         ]
       },
       {
@@ -141,11 +244,12 @@
         ],
         correct: 0,
         summary: "Myopathology reflects changes in muscular tone, which can present as hyperactivity (spasm, hypertonicity, myofascial trigger points) or hypoactivity (flaccidity, atrophy, loss of tone) secondary to joint dysfunction.",
+        reference: "Lecture 1, Slide #10",
         rationales: [
-          "A) Myopathology: Correct. Erector spinae hypertonicity and muscle spasm are classic expressions of myopathology within the VSC framework.",
-          "B) Histopathology: Incorrect. Histopathology governs local fluid edema, cellular changes, and vascular inflammation.",
-          "C) Neuropathology: Incorrect. Neuropathology addresses neural fiber compression, facilitation, and reflex pathways.",
-          "D) Pathophysiology: Incorrect. Pathophysiology relates to long-term degenerative remodeling and structural tissue degeneration."
+          "(a) Myopathology — Correct. Erector spinae hypertonicity and muscle spasm are classic expressions of myopathology within the VSC framework.",
+          "(b) Histopathology — Incorrect. Histopathology governs local fluid edema, cellular changes, and vascular inflammation.",
+          "(c) Neuropathology — Incorrect. Neuropathology addresses neural fiber compression, facilitation, and reflex pathways.",
+          "(d) Pathophysiology — Incorrect. Pathophysiology relates to long-term degenerative remodeling and structural tissue degeneration."
         ]
       },
       {
@@ -158,11 +262,12 @@
         ],
         correct: 1,
         summary: "Kinesiopathology describes aberrant joint biomechanics, including hypomobility (fixation dysfunction), loss of end-play/joint play, hypermobility, and positional dyskinesia.",
+        reference: "Lecture 1, Slide #8",
         rationales: [
-          "A) Histopathology: Incorrect. Histopathology deals with localized tissue inflammation and chemical exudate.",
-          "B) Kinesiopathology: Correct. Joint hypomobility and loss of joint end-play springiness define kinesiopathology.",
-          "C) Myopathology: Incorrect. Myopathology addresses muscle tone and contractile tissue dysfunction.",
-          "D) Pathophysiology: Incorrect. Pathophysiology encompasses end-stage degenerative osseous changes."
+          "(a) Histopathology — Incorrect. Histopathology deals with localized tissue inflammation and chemical exudate.",
+          "(b) Kinesiopathology — Correct. Joint hypomobility and loss of joint end-play springiness define kinesiopathology.",
+          "(c) Myopathology — Incorrect. Myopathology addresses muscle tone and contractile tissue dysfunction.",
+          "(d) Pathophysiology — Incorrect. Pathophysiology encompasses end-stage degenerative osseous changes."
         ]
       },
       {
@@ -175,11 +280,12 @@
         ],
         correct: 0,
         summary: "Pathophysiology represents long-term bio-structural, histochemical, and trophic degenerative end-stage changes resulting from chronic uncorrected joint complexes, such as joint degeneration, osseous remodeling, and systemic/end-organ changes.",
+        reference: "Lecture 1, Slide #14",
         rationales: [
-          "A) Pathophysiology: Correct. Disc desiccation, subchondral sclerosis, and endplate remodeling represent end-stage pathophysiological degeneration.",
-          "B) Neuropathology: Incorrect. Neuropathology focuses on nervous system signaling alterations.",
-          "C) Kinesiopathology: Incorrect. Kinesiopathology describes functional range of motion alterations.",
-          "D) Myopathology: Incorrect. Myopathology pertains strictly to muscular tissue changes."
+          "(a) Pathophysiology — Correct. Disc desiccation, subchondral sclerosis, and endplate remodeling represent end-stage pathophysiological degeneration.",
+          "(b) Neuropathology — Incorrect. Neuropathology focuses on nervous system signaling alterations.",
+          "(c) Kinesiopathology — Incorrect. Kinesiopathology describes functional range of motion alterations.",
+          "(d) Myopathology — Incorrect. Myopathology pertains strictly to muscular tissue changes."
         ]
       },
       {
@@ -192,11 +298,12 @@
         ],
         correct: 1,
         summary: "Documenting a clinical subluxation requires establishing at least three distinct objective indicators across different categories (e.g., visualization/posture, static palpation, motion palpation/instrumentation), rather than relying on multiple findings from a single category.",
+        reference: "Lecture 2, Slide #5",
         rationales: [
-          "A) At least three clinical findings derived from the same analysis category: Incorrect. Relying on a single examination category does not satisfy robust objective documentation standards.",
-          "B) At least three clinical findings derived from distinct analysis categories: Correct. Documentation requires at least three independent findings drawn from different analytical categories.",
-          "C) Two static palpation findings confirmed by subjective pain rating: Incorrect. Subjective pain is non-objective, and two findings fail the three-indicator minimum.",
-          "D) A single radiographic misalignment listing without motion palpatory correlation: Incorrect. Static imaging alone without functional confirmation is clinically insufficient."
+          "(a) At least three clinical findings derived from the same analysis category — Incorrect. Relying on a single examination category does not satisfy robust objective documentation standards.",
+          "(b) At least three clinical findings derived from distinct analysis categories — Correct. Documentation requires at least three independent findings drawn from different analytical categories.",
+          "(c) Two static palpation findings confirmed by subjective pain rating — Incorrect. Subjective pain is non-objective, and two findings fail the three-indicator minimum.",
+          "(d) A single radiographic misalignment listing without motion palpatory correlation — Incorrect. Static imaging alone without functional confirmation is clinically insufficient."
         ]
       },
       {
@@ -209,11 +316,12 @@
         ],
         correct: 1,
         summary: "The atlas (C1) transverse process is palpable in the fossa between the posterior border of the ramus/angle of the mandible and the mastoid process, positioned anterior to the sternocleidomastoid muscle.",
+        reference: "Lecture 5, Slide #12",
         rationales: [
-          "A) Immediately anterior to the angle of the mandible: Incorrect. This does not correctly isolate the retro-mandibular fossa where C1 transverse process lies.",
-          "B) Between the tip of the mastoid process and the angle of the mandible, anterior to the sternocleidomastoid: Correct. Matches exact anatomical landmarking criteria for C1 transverse process palpation.",
-          "C) Midway between the mastoid tip and external occipital protuberance: Incorrect. Describes superior cranial landmarks.",
-          "D) Inferior to the cricoid cartilage in line with the carotid tubercle: Incorrect. Corresponds to lower cervical levels (Chassaignac's tubercle at C6)."
+          "(a) Immediately anterior to the angle of the mandible — Incorrect. This does not correctly isolate the retro-mandibular fossa where C1 transverse process lies.",
+          "(b) Between the tip of the mastoid process and the angle of the mandible, anterior to the sternocleidomastoid — Correct. Matches exact anatomical landmarking criteria for C1 transverse process palpation.",
+          "(c) Midway between the mastoid tip and external occipital protuberance — Incorrect. Describes superior cranial landmarks.",
+          "(d) Inferior to the cricoid cartilage in line with the carotid tubercle — Incorrect. Corresponds to lower cervical levels (Chassaignac's tubercle at C6)."
         ]
       },
       {
@@ -226,11 +334,12 @@
         ],
         correct: 1,
         summary: "C6 is recognized as the lowest freely movable cervical segment during extension; upon extending the head and neck, C6 translates/glides anteriorly, while C7 (vertebra prominens) remains fixed and palpable.",
+        reference: "Lecture 2, Slide #18",
         rationales: [
-          "A) C6 has a larger bifid tubercle than C7: Incorrect. C7 is characteristically non-bifid (vertebra prominens), while C6 is bifid.",
-          "B) C6 is the last spinous process that freely translates/moves anteriorly with extension, whereas C7 remains relatively stationary: Correct. C6 glides anteriorly during extension while C7 remains stable, allowing clear differentiation.",
-          "C) C7 rotates to the ipsilateral side of lateral bending while C6 rotates contralaterally: Incorrect. Both segments follow standard cervical coupling mechanics.",
-          "D) C6 completely obscures the spinal canal during posterior glides: Incorrect. Anatomically inaccurate statement regarding spinal movement."
+          "(a) C6 has a larger bifid tubercle than C7 — Incorrect. C7 is characteristically non-bifid (vertebra prominens), while C6 is bifid.",
+          "(b) C6 is the last spinous process that freely translates/moves anteriorly with extension, whereas C7 remains relatively stationary — Correct. C6 glides anteriorly during extension while C7 remains stable, allowing clear differentiation.",
+          "(c) C7 rotates to the ipsilateral side of lateral bending while C6 rotates contralaterally — Incorrect. Both segments follow standard cervical coupling mechanics.",
+          "(d) C6 completely obscures the spinal canal during posterior glides — Incorrect. Anatomically inaccurate statement regarding spinal movement."
         ]
       },
       {
@@ -243,11 +352,12 @@
         ],
         correct: 1,
         summary: "SHARP is the standard clinical mnemonic for the classical signs of local inflammation: Swelling (tumor), Heat (calor), Altered function (functio laesa), Redness (rubor), and Pain (dolor).",
+        reference: "Lecture 2, Slide #22",
         rationales: [
-          "A) Spasm, Hypertonicity, Asymmetry, Radiating symptoms, Palpable mass: Incorrect. Describes general clinical presentation rather than classic inflammation.",
-          "B) Swelling, Heat, Altered function, Redness, Pain: Correct. SHARP represents Swelling, Heat, Altered function, Redness, and Pain.",
-          "C) Subluxation, Hyperactivity, Articular deficit, Rigidity, Paresthesia: Incorrect. Lists chiropractic diagnostic terms rather than inflammatory signs.",
-          "D) Stiffness, Hypomobility, Atrophy, Restriction, Pathophysiology: Incorrect. Refers to VSC kinesiopathology and degeneration."
+          "(a) Spasm, Hypertonicity, Asymmetry, Radiating symptoms, Palpable mass — Incorrect. Describes general clinical presentation rather than classic inflammation.",
+          "(b) Swelling, Heat, Altered function, Redness, Pain — Correct. SHARP represents Swelling, Heat, Altered function, Redness, and Pain.",
+          "(c) Subluxation, Hyperactivity, Articular deficit, Rigidity, Paresthesia — Incorrect. Lists chiropractic diagnostic terms rather than inflammatory signs.",
+          "(d) Stiffness, Hypomobility, Atrophy, Restriction, Pathophysiology — Incorrect. Refers to VSC kinesiopathology and degeneration."
         ]
       },
       {
@@ -260,11 +370,12 @@
         ],
         correct: 1,
         summary: "Paraspinal heat instrumentation measures localized bilateral cutaneous temperature differentials (heat emission), reflecting altered sympathetic vasomotor tone and inflammatory vascular dilatation adjacent to subluxated segments.",
+        reference: "Lecture 19, Slide #4",
         rationales: [
-          "A) Superficial dermal electrical conductance: Incorrect. Measured by electrodermal or EDA skin resistance devices, not thermal sensors.",
-          "B) Skin temperature differentials generated by localized vasodilation and inflammation: Correct. Dual-probe instrumentation detects skin temperature asymmetries caused by localized vasomotor and inflammatory changes.",
-          "C) Subcutaneous motor unit action potential amplitude: Incorrect. Measured by surface electromyography (sEMG).",
-          "D) Direct mechanical tension of the supraspinous ligament: Incorrect. Ligamentous tension cannot be quantified via thermal sensors."
+          "(a) Superficial dermal electrical conductance — Incorrect. Measured by electrodermal or EDA skin resistance devices, not thermal sensors.",
+          "(b) Skin temperature differentials generated by localized vasodilation and inflammation — Correct. Dual-probe instrumentation detects skin temperature asymmetries caused by localized vasomotor and inflammatory changes.",
+          "(c) Subcutaneous motor unit action potential amplitude — Incorrect. Measured by surface electromyography (sEMG).",
+          "(d) Direct mechanical tension of the supraspinous ligament — Incorrect. Ligamentous tension cannot be quantified via thermal sensors."
         ]
       },
       {
@@ -277,11 +388,12 @@
         ],
         correct: 0,
         summary: "When evaluating the lumbosacral joint (sacrum vs L5), the sacral base is the reference (e.g., BP for Base Posterior). When listing the sacrum relative to the ilium at the SI joint, the sacral ala is the reference point and requires a hyphenated notation (P-R or P-L) to differentiate it from spinal segmental rotation.",
+        reference: "Lecture 4, Slide #5",
         rationales: [
-          "A) Sacral base (BP) for L5 articulations; sacral ala with a hyphenated notation (P-R or P-L) for SI joint articulations: Correct. Differentiates lumbosacral base posteriority from hyphenated SI joint sacral rotations.",
-          "B) PSIS for both lumbar and sacroiliac junctions with directional arrows: Incorrect. PSIS is the reference landmark for ilium innominate listings, not sacral base or SI joint sacrum listings.",
-          "C) Sacral apex for L5 junction; ischial spine for SI junction: Incorrect. Anatomically incorrect reference points.",
-          "D) Coccygeal horns for SI articulation; S2 tubercle for lumbosacral articulation: Incorrect. Incorrect anatomical listing conventions."
+          "(a) Sacral base (BP) for L5 articulations; sacral ala with a hyphenated notation (P-R or P-L) for SI joint articulations — Correct. Differentiates lumbosacral base posteriority from hyphenated SI joint sacral rotations.",
+          "(b) PSIS for both lumbar and sacroiliac junctions with directional arrows — Incorrect. PSIS is the reference landmark for ilium innominate listings, not sacral base or SI joint sacrum listings.",
+          "(c) Sacral apex for L5 junction; ischial spine for SI junction — Incorrect. Anatomically incorrect reference points.",
+          "(d) Coccygeal horns for SI articulation; S2 tubercle for lumbosacral articulation — Incorrect. Incorrect anatomical listing conventions."
         ]
       },
       {
@@ -294,11 +406,12 @@
         ],
         correct: 1,
         summary: "The posterior superior iliac spine (PSIS) is the universal reference landmark for ilium listings (PI, AS, IN, EX) relative to the adjacent sacrum.",
+        reference: "Lecture 4, Slide #24",
         rationales: [
-          "A) Anterior superior iliac spine (ASIS): Incorrect. ASIS is used for postural observation, not primary ilium listing construction.",
-          "B) Posterior superior iliac spine (PSIS): Correct. PSIS serves as the universal reference marker for innominate subluxation listings.",
-          "C) Ischial tuberosity: Incorrect. Ischial tuberosity is utilized in leg check analysis.",
-          "D) Iliac crest tubercle: Incorrect. Not utilized as the primary ilium listing reference landmark."
+          "(a) Anterior superior iliac spine (ASIS) — Incorrect. ASIS is used for postural observation, not primary ilium listing construction.",
+          "(b) Posterior superior iliac spine (PSIS) — Correct. PSIS serves as the universal reference marker for innominate subluxation listings.",
+          "(c) Ischial tuberosity — Incorrect. Ischial tuberosity is utilized in leg check analysis.",
+          "(d) Iliac crest tubercle — Incorrect. Not utilized as the primary ilium listing reference landmark."
         ]
       },
       {
@@ -311,52 +424,67 @@
         ],
         correct: 1,
         summary: "PIEx and ASIN are designated as 'married' listings because their component vector shifts naturally correspond and reinforce similar clinical adaptations (e.g., PI and Ex both contribute to functional leg shortening and specific lumbar spine curvature dynamics), unlike unmarried pairs (PIIN and ASEx) which exert conflicting mechanical effects.",
+        reference: "Lecture 4, Slide #30",
         rationales: [
-          "A) PIIN and ASEx: Incorrect. These represent conflicting or 'unmarried' biomechanical combinations.",
-          "B) PIEx and ASIN: Correct. PIEx and ASIN are married listings that synergistically reinforce matching postural and functional adaptations.",
-          "C) PIIN and PIEx: Incorrect. Represents a mixture of divergent internal/external transverse mechanics.",
-          "D) ASEx and ASIN: Incorrect. Combines opposing rotational components."
+          "(a) PIIN and ASEx — Incorrect. These represent conflicting or 'unmarried' biomechanical combinations.",
+          "(b) PIEx and ASIN — Correct. PIEx and ASIN are married listings that synergistically reinforce matching postural and functional adaptations.",
+          "(c) PIIN and PIEx — Incorrect. Represents a mixture of divergent internal/external transverse mechanics.",
+          "(d) ASEx and ASIN — Incorrect. Combines opposing rotational components."
         ]
       }
     ];
 
-    let currentQuestions = [];
-    let score = 0;
-    let answeredCount = 0;
+    let currentSet = [];
+    let round = 1;
+    let quizMode = 'full';
+    let answers = {};
+    let popupTimeout = null;
+    let missed = [];
 
-    // Fisher-Yates shuffle algorithm
-    function shuffleArray(array) {
+    const wrongAudio = document.getElementById('wrongAudio');
+    const wrongPopup = document.getElementById('wrongPopup');
+
+    const fisherYates = array => {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.random() * (i + 1) | 0;
         [arr[i], arr[j]] = [arr[j], arr[i]];
       }
       return arr;
+    };
+
+    function initQuiz(mode = 'full') {
+      quizMode = mode;
+      round = 1;
+      missed = [];
+      answers = {};
+
+      const fullShuffled = fisherYates(quizData);
+      currentSet = (quizMode === 'quick') ? fullShuffled.slice(0, 15) : fullShuffled;
+
+      document.getElementById('fullQuizBtn').classList.toggle('active', quizMode === 'full');
+      document.getElementById('quickQuizBtn').classList.toggle('active', quizMode === 'quick');
+
+      document.getElementById('summaryCard').classList.add('hidden');
+      renderQuiz(currentSet);
     }
 
-    function renderQuiz() {
-      currentQuestions = shuffleArray(quizData);
-      score = 0;
-      answeredCount = 0;
-      updateScoreUI();
+    function renderQuiz(set) {
+      const container = document.getElementById('quizContainer');
+      container.innerHTML = '';
+      answers = {};
 
-      const summaryCard = document.getElementById("summaryCard");
-      summaryCard.classList.add("hidden");
-      summaryCard.innerHTML = "";
-
-      const container = document.getElementById("quizContainer");
-      container.innerHTML = "";
-
-      currentQuestions.forEach((item, index) => {
+      set.forEach((item, index) => {
         const questionCard = document.createElement("div");
         questionCard.className = "bg-[#1a1a1a] border border-[#333333] rounded-2xl p-6 shadow-lg flex flex-col space-y-4";
         questionCard.id = `qCard_${index}`;
 
+        const labelPrefix = (round === 1) ? `Question ${index + 1} of ${set.length}` : `Review Question ${index + 1} of ${set.length}`;
         const questionHeader = document.createElement("div");
         questionHeader.className = "flex items-start justify-between gap-4";
         questionHeader.innerHTML = `
           <span class="text-xs font-bold uppercase tracking-wider text-[#ff9900] bg-[#ff9900]/10 px-2.5 py-1 rounded-md border border-[#ff9900]/20">
-            Question ${index + 1}
+            ${labelPrefix}
           </span>
         `;
 
@@ -368,22 +496,78 @@
         optionsGroup.className = "grid grid-cols-1 gap-2.5 pt-2";
         optionsGroup.id = `optionsGroup_${index}`;
 
-        item.options.forEach((optText, optIdx) => {
+        const opts = fisherYates(item.options.map((t, i) => ({ t, ok: i === item.correct })));
+        const buttons = [];
+
+        opts.forEach((o, optIdx) => {
           const letter = String.fromCharCode(65 + optIdx);
           const btn = document.createElement("button");
           btn.className = "option-btn text-left p-3.5 rounded-xl text-sm sm:text-base font-normal flex items-start space-x-3 w-full";
           btn.id = `q${index}_opt${optIdx}`;
-          btn.onclick = () => handleAnswer(index, optIdx);
+          
           btn.innerHTML = `
             <span class="font-bold text-gray-400 select-none">${letter}.</span>
-            <span class="text-gray-200 flex-1">${optText}</span>
+            <span class="text-gray-200 flex-1">${o.t}</span>
           `;
+          buttons.push(btn);
           optionsGroup.appendChild(btn);
+
+          btn.onclick = () => {
+            if (btn.classList.contains('lk')) return;
+            buttons.forEach(x => {
+              x.disabled = true;
+              x.classList.add('lk');
+            });
+            answers[index] = o.ok;
+
+            buttons.forEach((x, k) => {
+              if (opts[k].ok) x.classList.add("correct-choice");
+            });
+
+            const banner = feedbackBox.querySelector('.status-banner');
+            if (o.ok) {
+              btn.classList.add("correct-choice");
+              banner.className = 'status-banner correct font-bold text-green-400 mb-2 flex items-center space-x-1.5';
+              banner.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span>Correct!</span>`;
+            } else {
+              btn.classList.add("incorrect-choice");
+              banner.className = 'status-banner incorrect font-bold text-red-400 mb-2 flex items-center space-x-1.5';
+              banner.innerHTML = `<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg><span>You didn’t know that?!</span>`;
+
+              wrongAudio.currentTime = 0;
+              wrongAudio.play().catch(() => {});
+              wrongPopup.classList.remove('hidden');
+              if (popupTimeout) clearTimeout(popupTimeout);
+              popupTimeout = setTimeout(() => {
+                wrongPopup.classList.add('hidden');
+              }, 2000);
+            }
+
+            feedbackBox.classList.remove("hidden");
+            updateScoreUI();
+            checkAllAnswered(set);
+          };
         });
 
         const feedbackBox = document.createElement("div");
         feedbackBox.id = `feedback_${index}`;
-        feedbackBox.className = "hidden mt-3 p-4 rounded-xl border text-sm leading-relaxed";
+        feedbackBox.className = "hidden mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#121212] border-[#282828]";
+
+        let rationalesHtml = '<ul class="list-none space-y-1 mt-2 text-xs text-gray-300">';
+        item.rationales.forEach(rat => {
+          const parts = rat.split(' — ');
+          const optLetter = parts[0] || '';
+          const optText = parts[1] || rat;
+          rationalesHtml += `<li><strong>${optLetter}</strong> — ${optText}</li>`;
+        });
+        rationalesHtml += '</ul>';
+
+        feedbackBox.innerHTML = `
+          <div class="status-banner"></div>
+          <div class="text-xs text-gray-400 italic mb-2">Reference: ${item.reference}</div>
+          <div class="mb-2 text-gray-200">${item.summary}</div>
+          ${rationalesHtml}
+        `;
 
         questionCard.appendChild(questionHeader);
         questionCard.appendChild(questionText);
@@ -392,100 +576,119 @@
 
         container.appendChild(questionCard);
       });
-    }
 
-    function handleAnswer(questionIdx, selectedIdx) {
-      const q = currentQuestions[questionIdx];
-      const optionsGroup = document.getElementById(`optionsGroup_${questionIdx}`);
-      const buttons = optionsGroup.querySelectorAll("button");
-      const feedbackBox = document.getElementById(`feedback_${questionIdx}`);
-
-      // Lock buttons
-      buttons.forEach(btn => btn.disabled = true);
-
-      const isCorrect = (selectedIdx === q.correct);
-
-      if (isCorrect) {
-        score++;
-        buttons[selectedIdx].classList.add("correct-choice");
-        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#14532d]/40 border-[#22c55e] text-green-200";
-      } else {
-        buttons[selectedIdx].classList.add("incorrect-choice");
-        buttons[q.correct].classList.add("correct-choice");
-        feedbackBox.className = "mt-3 p-4 rounded-xl border text-sm leading-relaxed bg-[#7f1d1d]/40 border-[#ef4444] text-red-200";
-      }
-
-      const statusHtml = isCorrect 
-        ? `<div class="font-bold text-green-400 mb-2 flex items-center space-x-1.5"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg><span>Correct!</span></div>`
-        : `<div class="font-bold text-red-400 mb-2 flex items-center space-x-1.5"><svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg><span>You didn’t know that?!</span></div>`;
-
-      let rationalesHtml = '<ul class="list-none space-y-1 mt-2 text-xs text-gray-300">';
-      q.rationales.forEach(rat => {
-        rationalesHtml += `<li><strong>${rat}</strong></li>`;
-      });
-      rationalesHtml += '</ul>';
-
-      feedbackBox.innerHTML = `
-        ${statusHtml}
-        <div class="mb-2 text-gray-200">${q.summary}</div>
-        ${rationalesHtml}
-      `;
-
-      feedbackBox.classList.remove("hidden");
-      answeredCount++;
       updateScoreUI();
+    }
 
-      if (answeredCount === currentQuestions.length) {
-        showFinalSummary();
+    function updateScoreUI() {
+      const total = currentSet.length;
+      let correctCount = 0;
+      let answeredCount = 0;
+
+      Object.keys(answers).forEach(k => {
+        answeredCount++;
+        if (answers[k]) correctCount++;
+      });
+
+      const currentScoreEl = document.getElementById("currentScore");
+      const totalQuestionsEl = document.getElementById("totalQuestions");
+      const scorePercentEl = document.getElementById("scorePercent");
+
+      currentScoreEl.textContent = correctCount;
+      totalQuestionsEl.textContent = total;
+      
+      const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+      scorePercentEl.textContent = `${pct}%`;
+
+      const label = (round === 1) ? 'Score' : `Review ${round - 1}`;
+      document.getElementById('scoreBox').innerHTML = `${label}: <span id="currentScore">${correctCount}</span> / <span id="totalQuestions">${total}</span> (<span id="scorePercent">${pct}%</span>)`;
+    }
+
+    function checkAllAnswered(set) {
+      if (Object.keys(answers).length === set.length) {
+        showFinalSummary(set);
       }
     }
 
-    function showFinalSummary() {
-      const summaryCard = document.getElementById("summaryCard");
-      const total = currentQuestions.length;
-      const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-      let msg = "";
+    function showFinalSummary(set) {
+      let correctCount = 0;
+      missed = [];
 
+      set.forEach((item, index) => {
+        if (answers[index]) {
+          correctCount++;
+        } else {
+          missed.push(item);
+        }
+      });
+
+      const total = set.length;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+
+      const summaryCard = document.getElementById("summaryCard");
+      const summaryTitle = document.getElementById("summaryTitle");
+      const summaryScore = document.getElementById("summaryScore");
+      const summaryMsg = document.getElementById("summaryMsg");
+      const reviewBtn = document.getElementById("reviewBtn");
+      const retakeBtn = document.getElementById("retakeBtn");
+
+      if (round === 1) {
+        summaryTitle.textContent = 'Quiz Complete';
+      } else {
+        summaryTitle.textContent = `Review Round ${round - 1} Complete`;
+      }
+
+      summaryScore.innerHTML = `Final Score: <span class="text-[#ff9900]">${correctCount} / ${total} (${pct}%)</span>`;
+
+      let msg = "";
       if (pct >= 90) {
         msg = "Absolute Gigachad. You drained that test dry.";
       } else if (pct >= 70) {
-        msg = "You lasted less than 30 seconds. Time for a rematch.";
+        msg = "Solid run! You're locked in, get in some more reps.";
       } else {
-        msg = "You really didn't fucking know that.";
+        msg = "You lasted less than 30 seconds. Time for a rematch.";
       }
 
-      summaryCard.innerHTML = `
-        <h2 class="text-2xl font-black text-white">Final Score: <span class="text-[#ff9900]">${score} / ${total} (${pct}%)</span></h2>
-        <p class="text-base sm:text-lg font-bold text-gray-200">${msg}</p>
-        <button onclick="resetQuiz()" class="mt-4 bg-[#ff9900] hover:bg-[#e68a00] text-black font-extrabold px-6 py-2.5 rounded-xl transition shadow-lg text-sm sm:text-base">
-          Retake Quiz
-        </button>
-      `;
+      if (missed.length > 0) {
+        reviewBtn.style.display = 'inline-block';
+        reviewBtn.textContent = `Review Missed (${missed.length})`;
+      } else {
+        reviewBtn.style.display = 'none';
+        if (round > 1) {
+          msg += ' Everything cleared. All correct.';
+        }
+      }
+
+      summaryMsg.textContent = msg;
+      retakeBtn.textContent = 'Retake Quiz';
+      retakeBtn.onclick = () => {
+        initQuiz(quizMode);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      reviewBtn.onclick = () => {
+        if (missed.length > 0) {
+          round++;
+          summaryCard.classList.add("hidden");
+          renderQuiz(missed);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      };
 
       summaryCard.classList.remove("hidden");
       summaryCard.scrollIntoView({ behavior: "smooth" });
     }
 
-    function updateScoreUI() {
-      const total = currentQuestions.length;
-      const currentScoreEl = document.getElementById("currentScore");
-      const totalQuestionsEl = document.getElementById("totalQuestions");
-      const scorePercentEl = document.getElementById("scorePercent");
-
-      currentScoreEl.textContent = score;
-      totalQuestionsEl.textContent = total;
-      
-      const pct = answeredCount > 0 ? Math.round((score / total) * 100) : 0;
-      scorePercentEl.textContent = `${pct}%`;
-    }
+    document.getElementById('fullQuizBtn').onclick = () => initQuiz('full');
+    document.getElementById('quickQuizBtn').onclick = () => initQuiz('quick');
 
     function resetQuiz() {
+      initQuiz(quizMode);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      renderQuiz();
     }
 
     window.onload = function() {
-      renderQuiz();
+      initQuiz('full');
     };
   </script>
 </body>
