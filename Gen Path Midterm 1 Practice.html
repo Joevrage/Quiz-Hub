@@ -137,10 +137,42 @@
             color: #000000;
             border-color: var(--accent);
         }
+        .wrong-popup.hidden { display: none !important; }
+         /* 2-Second Popup Image Styling */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: popIn 0.15s ease-out;
+        }
+        
+        .wrong-popup img {
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--incorrect-border, #ef4444);
+            display: block;
+            object-fit: contain;
+            background: #111;
+        }
+        
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
 </style>
 </head>
 <body>
-
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+</div>
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 
 <header>
@@ -5095,14 +5127,25 @@ let currentSet = [];
                 else b.classList.add("dim");
             });
 
-            q._result = isCorrect;
+			q._result = isCorrect;
             if (isCorrect) {
                 score++;
             } else {
+                // 1. Play wrong answer audio effect
                 const wrongAudio = document.getElementById("wrongAudio");
                 if (wrongAudio) {
                     wrongAudio.currentTime = 0;
                     wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
+                }
+
+                // 2. Show Erijah.png popup for exactly 2 seconds
+                const popup = document.getElementById('wrongPopup');
+                if (popup) {
+                    popup.classList.remove('hidden');
+                    clearTimeout(popupTimeout);
+                    popupTimeout = setTimeout(() => {
+                        popup.classList.add('hidden');
+                    }, 2000);
                 }
             }
             answered++;
