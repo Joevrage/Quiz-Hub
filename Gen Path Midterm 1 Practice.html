@@ -167,6 +167,21 @@
             from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
             to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
+	.stfu-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid #ff9900;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: .85rem;
+        }
+        .stfu-btn.muted {
+            background: #ff9900;
+            color: #000;
+        }
 </style>
 </head>
 <body>
@@ -178,6 +193,7 @@
 <header>
   <div class="brand">Gen Path Quiz Hub<small>Midterm 1 Practice Exam &middot; Rotating Bank</small></div>
   <div class="header-right">
+    <button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
     <span class="pill" id="answered-display">Answered 0 / 0</span>
     <span class="pill" id="score-display">Score: 0 / 0 (0%)</span>
   </div>
@@ -5024,6 +5040,31 @@ let currentSet = [];
         let quizMode = 'full'; // 'full' or 'quick'
         let answers = {};
         let popupTimeout = null;
+		let muted = false;
+		try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+		
+function updateStfuButton() {
+	const b = document.getElementById('stfuBtn');
+	if (!b) return;
+	b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+	b.classList.toggle('muted', muted);
+	if (muted) {
+		const a = document.getElementById('wrongAudio');
+		if (a) {
+			a.pause();
+			a.currentTime = 0;
+		}
+		if (popupTimeout) clearTimeout(popupTimeout);
+		const p = document.getElementById('wrongPopup');
+		if (p) p.classList.add('hidden');
+	}
+}
+
+function toggleStfu() {
+    muted = !muted;
+    try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+    updateStfuButton();
+}
 
         function fisherYates(arr) {
             for (let i = arr.length - 1; i > 0; i--) {
@@ -5131,21 +5172,23 @@ let currentSet = [];
             if (isCorrect) {
                 score++;
             } else {
-                // 1. Play wrong answer audio effect
-                const wrongAudio = document.getElementById("wrongAudio");
-                if (wrongAudio) {
-                    wrongAudio.currentTime = 0;
-                    wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
-                }
+                if (!muted) {
+                    // 1. Play wrong answer audio effect
+                    const wrongAudio = document.getElementById("wrongAudio");
+                    if (wrongAudio) {
+                        wrongAudio.currentTime = 0;
+                        wrongAudio.play().catch(err => console.log("Audio play blocked/failed:", err));
+                    }
 
-                // 2. Show Erijah.png popup for exactly 2 seconds
-                const popup = document.getElementById('wrongPopup');
-                if (popup) {
-                    popup.classList.remove('hidden');
-                    clearTimeout(popupTimeout);
-                    popupTimeout = setTimeout(() => {
-                        popup.classList.add('hidden');
-                    }, 2000);
+                    // 2. Show Erijah.png popup for exactly 2 seconds
+                    const popup = document.getElementById('wrongPopup');
+                    if (popup) {
+                        popup.classList.remove('hidden');
+                        clearTimeout(popupTimeout);
+                        popupTimeout = setTimeout(() => {
+                            popup.classList.add('hidden');
+                        }, 2000);
+                    }
                 }
             }
             answered++;
@@ -5231,7 +5274,12 @@ let currentSet = [];
             renderQuiz(); 
         }
 
-        window.onload = () => {
+		window.onload = () => {
+            const stfuBtn = document.getElementById('stfuBtn');
+            if (stfuBtn) {
+                stfuBtn.addEventListener('click', toggleStfu);
+            }
+            updateStfuButton();
             updateModeButtons();
             renderQuiz();
         };
