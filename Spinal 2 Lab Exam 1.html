@@ -373,16 +373,69 @@
         .btn:hover {
             opacity: 0.9;
         }
+        /* Hub link + header right side */
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .hub-link { color: var(--text-sub); text-decoration: none; font-size: 0.9rem; }
+        .hub-link:hover { color: var(--accent-orange); }
+        .btn-hub {
+            background-color: #242424;
+            color: #ffffff;
+            border: 1px solid var(--accent-orange);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn { margin-left: 4px; margin-right: 4px; }
+
+        .hidden { display: none !important; }
+
+        /* Wrong-answer popup image */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: popIn 0.15s ease-out;
+        }
+        .wrong-popup img {
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--incorrect-border);
+            display: block;
+            object-fit: contain;
+            background: #111;
+        }
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+        @media (max-width: 600px) {
+            .hub-link { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 
+<!-- 2-second popup image on wrong answer -->
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer" onerror="console.warn('Erijah.png not found. Verify file path and casing.');">
+</div>
+
 <div class="quiz-container">
     <div class="sticky-header">
         <h1 id="quiz-title">Spinal 2 Practical Hub</h1>
-        <div class="score-tracker" id="score-tracker">Score: 0 / 0 (0%)</div>
+        <div class="header-right">
+            <a class="hub-link" href="index.html">Quiz Hub</a>
+            <div class="score-tracker" id="score-tracker">Score: 0 / 0 (0%)</div>
+        </div>
     </div>
 
     <!-- Mode & Filter Control Panel -->
@@ -398,6 +451,7 @@
             <span class="panel-label">Format:</span>
             <button class="mode-btn active" id="btn-mc" onclick="setQuizType('mc')">Multiple Choice</button>
             <button class="mode-btn" id="btn-typein" onclick="setQuizType('typein')">Type-In (Lab Exam Mode)</button>
+            <button class="mode-btn" id="btn-quickie" onclick="toggleQuickie()">Quickie (10)</button>
         </div>
     </div>
 
@@ -405,9 +459,11 @@
 
     <div class="quiz-body">
         <div class="summary-card" id="final-summary" style="display: none;">
-            <h2>Practical Drill Complete!</h2>
+            <h2 id="summary-title">Practical Drill Complete!</h2>
             <p id="final-score-text" style="font-size: 1.15rem; margin-top: 6px; line-height: 1.5;"></p>
             <button class="btn" id="reset-btn">Reset &amp; Retake Drill</button>
+            <button class="btn" id="review-btn" style="display:none">Review Missed</button>
+            <a href="index.html" class="btn btn-hub">Back to Main Page</a>
         </div>
     </div>
 </div>
@@ -950,6 +1006,11 @@
     let currentQuizType = 'mc';
     let activeQuestions = [];
     let userAnswers = [];
+    let userResults = [];
+    let reviewRound = 1;
+    let quickieOn = false;
+    const QUICKIE_SIZE = 10;   // change this number for a longer or shorter Quickie
+    let popupTimeout = null;
     let answeredCount = 0;
     let correctCount = 0;
 
@@ -958,6 +1019,14 @@
         if (audio) {
             audio.currentTime = 0;
             audio.play().catch(function() {});
+        }
+        const popup = document.getElementById('wrongPopup');
+        if (popup) {
+            popup.classList.remove('hidden');
+            clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(function() {
+                popup.classList.add('hidden');
+            }, 2000);
         }
     }
 
@@ -1056,6 +1125,10 @@
 
     function renderQuiz() {
         userAnswers = new Array(activeQuestions.length).fill(null);
+        userResults = new Array(activeQuestions.length).fill(null);
+        document.getElementById('final-summary').style.display = 'none';
+        const popupEl = document.getElementById('wrongPopup');
+        if (popupEl) popupEl.classList.add('hidden');
         answeredCount = 0;
         correctCount = 0;
         updateHeaderScore();
@@ -1186,6 +1259,7 @@
         answeredCount++;
 
         const isCorrect = (optIndex === q.correct);
+        userResults[qIndex] = isCorrect;
         if (isCorrect) {
             correctCount++;
         } else {
@@ -1224,6 +1298,7 @@
 
         const matchResult = checkAnswerFuzzy(userTyped, q.accepted);
         const isCorrect = matchResult.isCorrect;
+        userResults[qIndex] = isCorrect;
         if (isCorrect) {
             correctCount++;
         } else {
@@ -1274,31 +1349,66 @@
     function updateHeaderScore() {
         const total = activeQuestions.length;
         const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-        document.getElementById('score-tracker').innerText = `Score: ${correctCount} / ${total} (${percent}%)`;
+        const label = reviewRound === 1 ? 'Score' : `Review ${reviewRound - 1}`;
+        document.getElementById('score-tracker').innerText = `${label}: ${correctCount} / ${total} (${percent}%)`;
     }
 
     function showFinalSummary() {
         const total = activeQuestions.length;
         const percent = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+        const missedCount = userResults.filter(r => r === false).length;
         const summaryBox = document.getElementById('final-summary');
+        const reviewBtn = document.getElementById('review-btn');
         summaryBox.style.display = 'block';
 
         let tierMessage = "";
-        if (percent >= 90) {
-            tierMessage = "Absolute Gigachad. You drained that test dry.";
-        } else if (percent >= 70) {
-            tierMessage = "You lasted less than 30 seconds. Time for a rematch.";
+        if (reviewRound === 1) {
+            document.getElementById('summary-title').innerText = "Practical Drill Complete!";
+            if (percent >= 90) {
+                tierMessage = "Absolute Gigachad. You drained that test dry.";
+            } else if (percent >= 70) {
+                tierMessage = "You lasted less than 30 seconds. Time for a rematch.";
+            } else {
+                tierMessage = "You really didn’t fucking know that.";
+            }
         } else {
-            tierMessage = "You really didn’t fucking know that.";
+            document.getElementById('summary-title').innerText = `Review Round ${reviewRound - 1} Complete`;
+            tierMessage = missedCount
+                ? `${missedCount} still missed. Go again.`
+                : "Everything cleared. All correct.";
         }
+
+        reviewBtn.style.display = missedCount ? 'inline-block' : 'none';
+        reviewBtn.textContent = `Review Missed (${missedCount})`;
 
         document.getElementById('final-score-text').innerHTML = `Final Score: ${correctCount} out of ${total} (${percent}%)<br><br><strong>${tierMessage}</strong>`;
         summaryBox.scrollIntoView({ behavior: 'smooth' });
     }
 
-    function resetQuiz() {
-        document.getElementById('final-summary').style.display = 'none';
+    function startReview() {
+        const missed = activeQuestions.filter((q, i) => userResults[i] === false);
+        if (!missed.length) return;
+        reviewRound++;
+        activeQuestions = JSON.parse(JSON.stringify(missed));
         shuffleArray(activeQuestions);
+        renderQuiz();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleQuickie() {
+        quickieOn = !quickieOn;
+        document.getElementById('btn-quickie').classList.toggle('active', quickieOn);
+        resetQuiz();
+    }
+
+    function resetQuiz() {
+        reviewRound = 1;
+        const pool = (currentScope === 'all')
+            ? masterImageQuestions
+            : masterImageQuestions.filter(q => q.week === currentScope);
+        activeQuestions = JSON.parse(JSON.stringify(pool));
+        shuffleArray(activeQuestions);
+        if (quickieOn) activeQuestions = activeQuestions.slice(0, QUICKIE_SIZE);
         renderQuiz();
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -1306,6 +1416,7 @@
     window.onload = function() {
         filterAndReset();
         document.getElementById('reset-btn').addEventListener('click', resetQuiz);
+        document.getElementById('review-btn').addEventListener('click', startReview);
     };
 </script>
 </body>
