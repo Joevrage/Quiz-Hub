@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Microbiology Lecture 6 – Acquisition of Bacteria</title>
+<style>
+:root{--bg:#0f0f0f;--card:#1a1a1a;--border-color:#282828;--accent:#ff9900;--accent-hover:#ffb340;--text:#ffffff;--muted:#888888;--correct-bg:#14532d;--correct-border:#22c55e;--incorrect-bg:#7f1d1d;--incorrect-border:#ef4444}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5}
+.header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px solid var(--border-color);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.header h1{font-size:1rem;margin:0;color:var(--accent)}
+#progress{font-weight:700}
+.stfu-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem}
+.stfu-btn.muted{background:var(--accent);color:#000}
+.container{max-width:820px;margin:0 auto;padding:16px}
+.mode-container{display:flex;justify-content:center;gap:8px;margin:12px 0}
+.mode-btn{background:#222222;color:#ffffff;border:1px solid var(--border-color);padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:700;font-family:inherit}
+.mode-btn.active{background:var(--accent);color:#000000;border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--border-color);border-radius:10px;padding:18px;margin-bottom:18px}
+.badge{display:inline-block;background:var(--accent);color:#000;font-weight:700;font-size:.75rem;padding:3px 10px;border-radius:12px;margin-bottom:10px}
+.stem{font-size:1.05rem;font-weight:600;margin-bottom:14px}
+.opt{display:block;width:100%;text-align:left;background:#222;color:#fff;border:1px solid var(--border-color);border-radius:8px;padding:10px 14px;margin-bottom:8px;cursor:pointer;font-family:inherit;font-size:.95rem}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default}
+.opt.correct{background:var(--correct-bg);border-color:var(--correct-border)}
+.opt.incorrect{background:var(--incorrect-bg);border-color:var(--incorrect-border)}
+.explain{margin-top:12px;padding:12px;background:#141414;border:1px solid var(--border-color);border-radius:8px}
+.banner{font-weight:800;margin-bottom:6px}
+.banner.good{color:var(--correct-border)}.banner.bad{color:var(--incorrect-border)}
+.ref{color:var(--accent);font-size:.85rem;margin-bottom:8px}
+.explain ul{margin:0;padding-left:18px;color:#ddd;font-size:.88rem}
+.explain li{margin-bottom:6px}
+.explain li.ok{color:#86efac}
+.summary-card{text-align:center;background:var(--card);border:1px solid var(--border-color);border-radius:10px;padding:28px;margin-bottom:30px}
+.summary-title{font-size:1.5rem;font-weight:800;color:var(--accent)}
+.summary-score{font-size:2rem;font-weight:800;margin:10px 0}
+.summary-msg{color:var(--muted);margin-bottom:16px}
+.hidden{display:none !important}
+.wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
+.wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid var(--incorrect-border);display:block;object-fit:contain;background:#111}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+.retake-btn{background-color:var(--accent);color:#000000;border:1px solid var(--accent);padding:12px 28px;font-size:1rem;font-weight:700;border-radius:6px;cursor:pointer;font-family:inherit;margin:4px;display:inline-block;text-decoration:none;transition:background-color .2s,color .2s}
+.retake-btn:hover{background-color:var(--accent-hover);border-color:var(--accent-hover)}
+.retake-btn.hub-btn{background-color:#222222;color:#ffffff;border:1px solid var(--accent)}
+.retake-btn.hub-btn:hover{background-color:var(--accent);color:#000000}
+</style>
+</head>
+<body>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer" onerror="console.warn('Erijah.png not found. Verify file path and casing.');">
+</div>
+
+<div class="header">
+    <h1>Micro Lecture 6: Acquisition of Bacteria</h1>
+    <span id="progress">Score: 0 / 0 (0%)</span>
+    <button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
+</div>
+
+<div class="container">
+    <div class="mode-container" id="modeSelector">
+        <button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+        <button class="mode-btn" id="quickQuizBtn">Quickie</button>
+    </div>
+    <div id="quiz"></div>
+    <div class="summary-card hidden" id="summary">
+        <div class="summary-title">Quiz Complete</div>
+        <div class="summary-score" id="summaryScore"></div>
+        <div class="summary-msg" id="summaryMsg"></div>
+        <button class="retake-btn" id="retakeBtn">Retake Quiz</button>
+        <button class="retake-btn" id="reviewBtn" style="display:none">Review Missed</button>
+        <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
+    </div>
+</div>
+
+<script>
+const quizData = [
+{id:1,quarter:1,slideRef:2,stem:"Microbes that engage in mutual or commensal associations with humans, restricted to outer surfaces, are called _______ flora.",options:[
+{text:"Natural",correct:true,why:"Natural flora are mutual or commensal microbes restricted mostly to outer surfaces without penetrating sterile tissues. [Slide #2]"},
+{text:"Sterile",correct:false,why:"Sterile describes sites and fluids that should hold no microbes, not a microbial population. [Slide #2]"},
+{text:"Pathogenic",correct:false,why:"Pathogenic microbes cause harm; natural flora live in mutual or commensal association. [Slide #2]"},
+{text:"Opportunistic",correct:false,why:"Opportunistic pathogens infect when host defenses are compromised; this is the infection line of entry, not natural flora. [Slide #2]"}]},
+{id:2,quarter:1,slideRef:3,stem:"Which site normally harbors natural flora?",options:[
+{text:"Outer opening of the urethra",correct:true,why:"The outer urethral opening is listed as a normal flora site. [Slide #3]"},
+{text:"Urine within the bladder",correct:false,why:"Urine in kidneys, ureters, and bladder is a sterile fluid. [Slide #4]"},
+{text:"Cerebrospinal fluid",correct:false,why:"CSF is a sterile fluid; microbes here indicate infection. [Slide #4]"},
+{text:"Blood within the heart",correct:false,why:"Blood and the circulatory system are sterile. [Slide #4]"}]},
+{id:3,quarter:1,slideRef:4,stem:"Which of the following is a sterile site or fluid?",options:[
+{text:"Saliva within the salivary gland",correct:true,why:"Saliva is sterile prior to entering the oral cavity. [Slide #4]"},
+{text:"External ear canal",correct:false,why:"The external ear and canal harbor normal flora. [Slide #3]"},
+{text:"Vagina",correct:false,why:"The vagina is a normal flora site. [Slide #3]"},
+{text:"Colon",correct:false,why:"The colon is part of the GI tract harboring normal flora. [Slide #3]"}]},
+{id:4,quarter:1,slideRef:4,stem:"Which pair of fluids is sterile within its gland or tract but acquires microbes after exiting to the outside?",options:[
+{text:"Saliva and semen",correct:true,why:"Saliva is sterile before entering the oral cavity and semen is sterile before entering the urethra. [Slide #4]"},
+{text:"Blood and cerebrospinal fluid",correct:false,why:"Both remain sterile internal fluids; neither is defined by acquiring microbes on exit. [Slide #4]"},
+{text:"Urine and cerebrospinal fluid",correct:false,why:"CSF stays internal and sterile; urine is sterile only in kidneys, ureters, and bladder. [Slide #4]"},
+{text:"Blood and urine",correct:false,why:"Blood is sterile throughout the circulatory system and does not exit to acquire flora. [Slide #4]"}]},
+{id:5,quarter:1,slideRef:3,stem:"Natural flora of the external eye are found on which structures?",options:[
+{text:"Lids and lash follicles",correct:true,why:"The external eye, including lids and lash follicles, harbors normal flora. [Slide #3]"},
+{text:"Internal eye",correct:false,why:"The internal eye is a sterile site. [Slide #4]"},
+{text:"Middle and inner ear",correct:false,why:"These are sterile sites, not part of the eye. [Slide #4]"},
+{text:"Sinuses",correct:false,why:"Sinuses are listed as sterile anatomical sites. [Slide #4]"}]},
+{id:6,quarter:2,slideRef:5,stem:"Biofilms form when organisms attach to a substrate by an _______ that binds them into organized layers.",options:[
+{text:"Extracellular matrix",correct:true,why:"An extracellular matrix binds organisms together in complex organized layers. [Slide #5]"},
+{text:"Endospore coat",correct:false,why:"Endospores are dormant survival bodies, not binding matrices for biofilms. [Slide #5]"},
+{text:"F pilus bridge",correct:false,why:"Conjugation pili transfer DNA; they do not form the biofilm matrix. [Slide #5]"},
+{text:"Plasmid network",correct:false,why:"Plasmids are DNA elements, not a structural matrix. [Slide #5]"}]},
+{id:7,quarter:2,slideRef:5,stem:"Natural flora commonly form biofilms in which set of locations?",options:[
+{text:"Skin, oral cavity, and large intestine",correct:true,why:"Biofilms formed by natural flora are common on skin, oral cavity, and large intestine. [Slide #5]"},
+{text:"Brain, heart, and lungs",correct:false,why:"These are sterile internal organs. [Slide #4]"},
+{text:"Blood, bladder, and kidneys",correct:false,why:"These are sterile sites and fluids. [Slide #4]"},
+{text:"Bones, muscles, and glands",correct:false,why:"These are sterile internal tissues. [Slide #4]"}]},
+{id:8,quarter:2,slideRef:6,stem:"The first exposure to microbes that become natural flora occurs when the _______.",options:[
+{text:"Fetal membranes break",correct:true,why:"The first exposure occurs with breaking of the fetal membrane, exposing the fetus to the mother's vaginal bacteria. [Slide #6]"},
+{text:"Child passes through the birth canal",correct:false,why:"Passage through the birth canal is the second exposure. [Slide #6]"},
+{text:"Child takes its first breath",correct:false,why:"This is not listed as an exposure stage; the first exposure precedes birth. [Slide #6]"},
+{text:"Child begins eating solid foods",correct:false,why:"Food contributes to the fourth exposure during the following 18 months. [Slide #6]"}]},
+{id:9,quarter:2,slideRef:6,stem:"Which bacteria predominate in the intestinal flora of a breastfed infant?",options:[
+{text:"Bifidobacteria",correct:true,why:"Breastfed infants select for bifidobacteria in the fourth exposure. [Slide #6]"},
+{text:"Coliforms",correct:false,why:"Coliforms are part of the broader mix seen in bottle-fed infants. [Slide #6]"},
+{text:"Enteric streptococci",correct:false,why:"Enteric streptococci are associated with bottle feeding. [Slide #6]"},
+{text:"Staphylococci",correct:false,why:"Staphylococci are part of the mix seen with bottle feeding. [Slide #6]"}]},
+{id:10,quarter:2,slideRef:7,stem:"Which of the following is the least common on the skin overall?",options:[
+{text:"Staphylococcus",correct:true,why:"Staphylococcus makes up only about 5% of skin flora, less than any of the four phyla. [Slide #7]"},
+{text:"Actinobacteria",correct:false,why:"Actinobacteria are the most abundant skin phylum at 51.8%. [Slide #7]"},
+{text:"Firmicutes",correct:false,why:"Firmicutes make up 24.4% of skin flora. [Slide #7]"},
+{text:"Proteobacteria",correct:false,why:"Proteobacteria make up 16.5% of skin flora. [Slide #7]"}]},
+{id:11,quarter:3,slideRef:8,stem:"The most common residents of the mouth are aerobic _______ species.",options:[
+{text:"Streptococcus",correct:true,why:"Aerobic Streptococcus species are the most common oral residents. [Slide #8]"},
+{text:"Bacteroides",correct:false,why:"Bacteroides are predominantly anaerobic large intestine residents. [Slide #9]"},
+{text:"Bifidobacterium",correct:false,why:"Bifidobacterium is an anaerobic intestinal resident. [Slide #9]"},
+{text:"Clostridium",correct:false,why:"Clostridium is an anaerobic large intestine resident. [Slide #9]"}]},
+{id:12,quarter:3,slideRef:8,stem:"Which two oral species make a major contribution to dental caries?",options:[
+{text:"S. mutans and S. sanguis",correct:true,why:"S. mutans and S. sanguis contribute substantially to dental caries. [Slide #8]"},
+{text:"S. salivarius and S. mitis",correct:false,why:"These are oral residents but not the species tied to caries. [Slide #8]"},
+{text:"S. aureus and S. epidermidis",correct:false,why:"These staphylococci are associated with nasal and skin sites. [Slide #10]"},
+{text:"S. sanguis and S. salivarius",correct:false,why:"Only S. sanguis is a caries contributor; S. salivarius is not. [Slide #8]"}]},
+{id:13,quarter:3,slideRef:9,stem:"The large intestine is predominantly populated by which bacteria?",options:[
+{text:"Anaerobic Bacteroides and Bifidobacterium",correct:true,why:"Large intestine flora are predominantly anaerobic, including Bacteroides and Bifidobacterium. [Slide #9]"},
+{text:"Aerobic Streptococcus and Staphylococcus",correct:false,why:"Aerobic streptococci dominate the mouth, not the large intestine. [Slide #8]"},
+{text:"Microaerophilic Neisseria and Haemophilus",correct:false,why:"These are respiratory tract residents. [Slide #10]"},
+{text:"Facultative coliforms such as E. coli",correct:false,why:"Coliforms are present in smaller numbers. [Slide #9]"}]},
+{id:14,quarter:3,slideRef:9,stem:"Large intestine flora produce gas and _______, which gives feces its odor.",options:[
+{text:"Skatole",correct:true,why:"Flora produce gas and skatole, the compound that makes feces smell. [Slide #9]"},
+{text:"Riboflavin",correct:false,why:"Riboflavin is a vitamin produced by flora, not an odor compound. [Slide #9]"},
+{text:"Pyridoxine",correct:false,why:"Pyridoxine is a vitamin generated by flora. [Slide #9]"},
+{text:"Propionic acid",correct:false,why:"Propionic acid is a fermentation acid produced by flora, not the odor compound. [Slide #9]"}]},
+{id:15,quarter:3,slideRef:10,stem:"Which organism is found at the nasal entrance, nasal vestibule, and anterior nasopharynx?",options:[
+{text:"Staphylococcus aureus",correct:true,why:"S. aureus resides at the nasal entrance, vestibule, and anterior nasopharynx. [Slide #10]"},
+{text:"Neisseria",correct:false,why:"Neisseria is found in the nasopharynx behind the soft palate. [Slide #10]"},
+{text:"Haemophilus",correct:false,why:"Haemophilus is found in the tonsils and lower pharynx. [Slide #10]"},
+{text:"Lactobacillus",correct:false,why:"Lactobacilli predominate in the vagina after puberty. [Slide #11]"}]},
+{id:16,quarter:4,slideRef:11,stem:"Which bacteria predominate in the vagina from puberty until menopause?",options:[
+{text:"Lactobacilli",correct:true,why:"After puberty until menopause the vagina is primarily lactobacilli. [Slide #11]"},
+{text:"Diphtheroids",correct:false,why:"Diphtheroids are prepubertal residents. [Slide #11]"},
+{text:"Coliforms",correct:false,why:"Coliforms occur in the prepubertal vagina. [Slide #11]"},
+{text:"Staphylococci",correct:false,why:"Staphylococci are prepubertal residents. [Slide #11]"}]},
+{id:17,quarter:4,slideRef:11,stem:"Which sequence follows increased estrogen in the vagina after puberty?",options:[
+{text:"Increased glycogen, increased lactobacilli, increased acid",correct:true,why:"Estrogen raises glycogen, attracting lactobacilli that produce acid and block other microbes. [Slide #11]"},
+{text:"Increased glycogen, decreased lactobacilli, increased acid",correct:false,why:"Glycogen attracts lactobacilli, so their numbers increase. [Slide #11]"},
+{text:"Decreased glycogen, increased lactobacilli, increased acid",correct:false,why:"Estrogen increases glycogen; it does not decrease it. [Slide #11]"},
+{text:"Increased glycogen, increased lactobacilli, decreased acid",correct:false,why:"Lactobacilli are acid-producing, so acid increases. [Slide #11]"}]},
+{id:18,quarter:4,slideRef:12,stem:"Which benefit of flora is described as repression of pathogenic microbial growth?",options:[
+{text:"Microbial antagonism",correct:true,why:"Microbial antagonism is repression of pathogenic microbial growth. [Slide #12]"},
+{text:"Trophic effects",correct:false,why:"Trophic effects involve cell turnover, not repression of pathogens. [Slide #12]"},
+{text:"Metabolic function",correct:false,why:"Metabolic function involves vitamin and acid production. [Slide #12]"},
+{text:"Immune desensitization",correct:false,why:"This involves the immune system tolerating microbes, not repressing pathogen growth. [Slide #12]"}]},
+{id:19,quarter:4,slideRef:13,stem:"Salmonella food poisoning in a healthy adult is an example of which type of agent?",options:[
+{text:"True pathogen",correct:true,why:"True pathogens cause disease in healthy persons with normal immune defenses. [Slide #13]"},
+{text:"Opportunistic pathogen",correct:false,why:"Opportunistic pathogens infect when defenses are compromised or the microbe is outside its natural environment. [Slide #13]"},
+{text:"Natural flora member",correct:false,why:"Natural flora remain restricted to outer surfaces without invading sterile tissue. [Slide #2]"},
+{text:"Commensal resident",correct:false,why:"Commensals benefit without harming; this agent causes disease. [Slide #2]"}]},
+{id:20,quarter:4,slideRef:15,stem:"A bladder infection by normal colon flora in a patient receiving chemotherapy is classified as which of the following?",options:[
+{text:"Opportunistic infection",correct:true,why:"Flora established outside their natural site in a compromised host (chemotherapy weakens defenses) is opportunistic. [Slide #15]"},
+{text:"True pathogen infection",correct:false,why:"True pathogens cause disease in healthy hosts with normal defenses. [Slide #13]"},
+{text:"Commensal association",correct:false,why:"Commensalism involves no harm; this is an infection. [Slide #2]"},
+{text:"Mutualistic association",correct:false,why:"Mutualism benefits both parties; here the host is harmed. [Slide #2]"}]},
+{id:21,quarter:1,slideRef:2,stem:"Which pair represents the two lines of entry for acquiring bacteria?",options:[
+{text:"Natural flora and infection",correct:true,why:"The two lines of entry are natural flora and infection (true or opportunistic pathogen). [Slide #2]"},
+{text:"Biofilm and capsule",correct:false,why:"Biofilms and capsules are structures or communities, not lines of entry. [Slide #5]"},
+{text:"Sterile site and normal flora",correct:false,why:"Sterile sites are anatomical locations that should hold no microbes, not a line of entry. [Slide #4]"},
+{text:"Infection and sterile site",correct:false,why:"Sterile sites are not a line of entry; natural flora is the other line. [Slide #2]"}]},
+{id:22,quarter:1,slideRef:3,stem:"Which GI tract site harbors natural flora?",options:[
+{text:"Rectum",correct:true,why:"The mouth, colon, rectum, and anus are GI sites harboring normal flora. [Slide #3]"},
+{text:"Pancreas",correct:false,why:"Glands such as the pancreas are sterile. [Slide #4]"},
+{text:"Liver",correct:false,why:"The liver is a sterile internal organ. [Slide #4]"},
+{text:"Bladder",correct:false,why:"The bladder is sterile and is not part of the GI tract. [Slide #4]"}]},
+{id:23,quarter:1,slideRef:3,stem:"Which site in the upper respiratory tract harbors natural flora?",options:[
+{text:"Pharynx",correct:true,why:"The oral cavity, pharynx, and nasal mucosa harbor normal flora. [Slide #3]"},
+{text:"Sinuses",correct:false,why:"Sinuses are sterile sites. [Slide #4]"},
+{text:"Lungs",correct:false,why:"Lungs are sterile internal organs. [Slide #4]"},
+{text:"Middle ear",correct:false,why:"The middle and inner ear are sterile. [Slide #4]"}]},
+{id:24,quarter:1,slideRef:4,stem:"Urine is sterile in which location?",options:[
+{text:"Ureters",correct:true,why:"Urine in the kidneys, ureters, and bladder is sterile. [Slide #4]"},
+{text:"Outer opening of the urethra",correct:false,why:"This opening harbors normal flora, so urine is no longer sterile once it reaches it. [Slide #3]"},
+{text:"External genitalia",correct:false,why:"The external genitalia harbor normal flora. [Slide #3]"},
+{text:"Vagina",correct:false,why:"The vagina harbors normal flora. [Slide #3]"}]},
+{id:25,quarter:1,slideRef:4,stem:"Brain, heart, and _______ are sterile internal organs.",options:[
+{text:"Lungs",correct:true,why:"Lungs are listed among sterile internal tissues and organs. [Slide #4]"},
+{text:"Pharynx",correct:false,why:"The pharynx harbors normal flora. [Slide #3]"},
+{text:"Rectum",correct:false,why:"The rectum harbors normal flora. [Slide #3]"},
+{text:"Vagina",correct:false,why:"The vagina harbors normal flora. [Slide #3]"}]},
+{id:26,quarter:1,slideRef:3,stem:"Microbes concentrate near the two ends of the GI tract because it is _______.",options:[
+{text:"One long tube open to the outside at both ends",correct:true,why:"The GI tract is essentially one long tube open at both ends, so microbes are found nearest the openings. [Slide #3]"},
+{text:"A sealed tube closed to the outside",correct:false,why:"The tract is open to the outside at the mouth and anus. [Slide #3]"},
+{text:"A series of separate sterile compartments",correct:false,why:"It is a continuous tube, and flora sit near the openings rather than in sterile compartments. [Slide #3]"},
+{text:"A tube lined with sterile mucosa throughout",correct:false,why:"The mouth, colon, rectum, and anus harbor flora, so the lining is not sterile throughout. [Slide #3]"}]},
+{id:27,quarter:1,slideRef:4,stem:"Isolation of a microbe from which site most strongly indicates infection rather than natural flora?",options:[
+{text:"Middle ear",correct:true,why:"The middle ear is sterile, so microbes there indicate infection. [Slide #4]"},
+{text:"External ear canal",correct:false,why:"The external ear and canal harbor normal flora. [Slide #3]"},
+{text:"Lash follicles",correct:false,why:"Lids and lash follicles harbor normal flora. [Slide #3]"},
+{text:"Vagina",correct:false,why:"The vagina harbors normal flora. [Slide #3]"}]},
+{id:28,quarter:1,slideRef:2,stem:"Which statement distinguishes natural flora from an infecting microbe?",options:[
+{text:"Natural flora stay on outer surfaces; infecting microbes invade sterile tissue",correct:true,why:"Natural flora are restricted to outer surfaces, whereas infection involves penetrating defenses and invading sterile tissue. [Slide #2]"},
+{text:"Natural flora invade sterile tissue; infecting microbes stay on outer surfaces",correct:false,why:"This inverts the relationship; flora do not penetrate sterile tissues. [Slide #2]"},
+{text:"Both stay on outer surfaces; only infecting microbes form biofilms",correct:false,why:"Natural flora also create biofilms, and infecting microbes invade sterile tissue. [Slide #5]"},
+{text:"Both invade sterile tissue; only natural flora cause disease",correct:false,why:"Natural flora do not invade sterile tissue, and pathogens are the disease-causing agents. [Slide #2]"}]},
+{id:29,quarter:2,slideRef:5,stem:"How do biofilms of natural flora protect the host?",options:[
+{text:"They form a good-bacteria film that blocks other microbes from taking up residency",correct:true,why:"Flora biofilms occupy the surface and prevent other microbes from establishing. [Slide #5]"},
+{text:"They secrete exotoxins that lyse host cells",correct:false,why:"Biofilms of flora are cooperative, not host-damaging. [Slide #5]"},
+{text:"They convert sterile sites into flora sites",correct:false,why:"Sterile sites should remain microbe-free; flora are restricted to outer surfaces. [Slide #4]"},
+{text:"They induce endospore formation in pathogens",correct:false,why:"Endospores form in response to hostile conditions, not as a biofilm defense. [Slide #5]"}]},
+{id:30,quarter:2,slideRef:6,stem:"The second exposure to microbes that become natural flora occurs _______.",options:[
+{text:"During passage through the birth canal",correct:true,why:"The second exposure is during birth, picking up staph, strep, and lactobacilli. [Slide #6]"},
+{text:"When the fetal membrane breaks",correct:false,why:"This is the first exposure. [Slide #6]"},
+{text:"Within 8 to 12 hours after birth",correct:false,why:"This is the third exposure. [Slide #6]"},
+{text:"Throughout the next 18 months",correct:false,why:"This is the fourth exposure. [Slide #6]"}]},
+{id:31,quarter:2,slideRef:6,stem:"Which timing describes the third exposure to future natural flora?",options:[
+{text:"Within 8 to 12 hours after birth",correct:true,why:"The third exposure occurs within 8 to 12 hours, with coliforms, lactobacilli, enteric strep, and staph. [Slide #6]"},
+{text:"During rupture of the fetal membrane",correct:false,why:"This is the first exposure. [Slide #6]"},
+{text:"During passage through the birth canal",correct:false,why:"This is the second exposure. [Slide #6]"},
+{text:"During the following 18 months",correct:false,why:"This is the fourth exposure. [Slide #6]"}]},
+{id:32,quarter:2,slideRef:6,stem:"Why does breastfeeding select for bifidobacteria?",options:[
+{text:"Infants cannot break down breast milk oligosaccharides, but bifidobacteria can",correct:true,why:"Short-chain oligosaccharides are indigestible to the infant, so bifidobacteria that digest them accumulate. [Slide #6]"},
+{text:"Infants break down oligosaccharides, leaving none for bifidobacteria",correct:false,why:"Infants cannot digest them; bifidobacteria use them. [Slide #6]"},
+{text:"Formula supplies oligosaccharides that only bifidobacteria can digest",correct:false,why:"The oligosaccharides are the breast milk feature that selects for bifidobacteria. [Slide #6]"},
+{text:"Bifidobacteria are unable to digest oligosaccharides and are selected by default",correct:false,why:"Bifidobacteria process the nutrient, which is why they are selected. [Slide #6]"}]},
+{id:33,quarter:2,slideRef:6,stem:"The fourth exposure to future natural flora spans about _______ months.",options:[
+{text:"18",correct:true,why:"The fourth exposure covers the next 18 months and establishes intestinal flora. [Slide #6]"},
+{text:"2",correct:false,why:"The 8 to 12 hour window is the third exposure; the fourth lasts far longer. [Slide #6]"},
+{text:"6",correct:false,why:"The fourth exposure lasts 18 months. [Slide #6]"},
+{text:"36",correct:false,why:"The fourth exposure lasts 18 months, not 36. [Slide #6]"}]},
+{id:34,quarter:2,slideRef:7,stem:"Skin microbes reside only in or on which layer?",options:[
+{text:"Dead cell layers",correct:true,why:"Skin microbes reside only in or on the dead cell layers. [Slide #7]"},
+{text:"Dermis",correct:false,why:"Microbes do not extend into the dermis except around follicles and glands. [Slide #7]"},
+{text:"Subcutaneous layer",correct:false,why:"Microbes do not reach subcutaneous levels except around follicles and glands. [Slide #7]"},
+{text:"Living epidermal layer",correct:false,why:"Microbes are limited to the dead cell layers. [Slide #7]"}]},
+{id:35,quarter:2,slideRef:7,stem:"Which sequence ranks the skin phyla from most to least abundant?",options:[
+{text:"Actinobacteria, Firmicutes, Proteobacteria, Bacteroidetes",correct:true,why:"Skin phyla are Actinobacteria 51.8%, Firmicutes 24.4%, Proteobacteria 16.5%, Bacteroidetes 6.3%. [Slide #7]"},
+{text:"Firmicutes, Actinobacteria, Proteobacteria, Bacteroidetes",correct:false,why:"Actinobacteria (51.8%) outnumber Firmicutes (24.4%). [Slide #7]"},
+{text:"Actinobacteria, Proteobacteria, Firmicutes, Bacteroidetes",correct:false,why:"Firmicutes (24.4%) outnumber Proteobacteria (16.5%). [Slide #7]"},
+{text:"Actinobacteria, Firmicutes, Bacteroidetes, Proteobacteria",correct:false,why:"Proteobacteria (16.5%) outnumber Bacteroidetes (6.3%). [Slide #7]"}]},
+{id:36,quarter:3,slideRef:8,stem:"One estimate places the number of microbe types in the mouth at which value?",options:[
+{text:"Over 600",correct:true,why:"The mouth harbors over 600 types of microbes by one estimate. [Slide #8]"},
+{text:"About 6",correct:false,why:"The estimate is over 600 types. [Slide #8]"},
+{text:"About 60",correct:false,why:"The estimate is over 600 types. [Slide #8]"},
+{text:"About 160",correct:false,why:"The estimate is over 600 types. [Slide #8]"}]},
+{id:37,quarter:3,slideRef:8,stem:"Which organism is NOT an oral Streptococcus listed among the major residents of the mouth?",options:[
+{text:"S. aureus",correct:true,why:"S. aureus is a Staphylococcus found in the nasal region, not an oral streptococcus. [Slide #10]"},
+{text:"S. sanguis",correct:false,why:"S. sanguis is a listed oral streptococcus. [Slide #8]"},
+{text:"S. salivarius",correct:false,why:"S. salivarius is a listed oral streptococcus. [Slide #8]"},
+{text:"S. mitis",correct:false,why:"S. mitis is a listed oral streptococcus. [Slide #8]"}]},
+{id:38,quarter:3,slideRef:8,stem:"S. mutans and S. sanguis promote caries by producing a sugar-derived _______ that attracts other microbes.",options:[
+{text:"Slime layer",correct:true,why:"These species make a slime layer that traps other microbes and sugars against the teeth. [Slide #8]"},
+{text:"Endospore",correct:false,why:"Endospores are dormant survival bodies, not an attractant film. [Slide #8]"},
+{text:"Exotoxin",correct:false,why:"Caries contribution is through a surface film, not a secreted toxin. [Slide #8]"},
+{text:"F pilus",correct:false,why:"F pili mediate conjugation, not plaque formation. [Slide #8]"}]},
+{id:39,quarter:3,slideRef:9,stem:"Microbes make up what proportion of fecal volume?",options:[
+{text:"10 to 50%",correct:true,why:"Microbes are very abundant, making up 10 to 50% of fecal volume. [Slide #9]"},
+{text:"Less than 5%",correct:false,why:"Microbes are 10 to 50% of fecal volume. [Slide #9]"},
+{text:"60 to 70%",correct:false,why:"The range is 10 to 50%. [Slide #9]"},
+{text:"80 to 90%",correct:false,why:"The range is 10 to 50%. [Slide #9]"}]},
+{id:40,quarter:3,slideRef:9,stem:"Which pair of intestinal bacteria is noted for forming protective biofilms?",options:[
+{text:"Bifidobacterium and Bacteroides",correct:true,why:"These predominant anaerobes form biofilm in the intestine that blocks other microbes. [Slide #9]"},
+{text:"E. coli and Enterobacter",correct:false,why:"These are coliforms present in smaller numbers. [Slide #9]"},
+{text:"Enterobacter and Citrobacter",correct:false,why:"These are coliforms present in smaller numbers. [Slide #9]"},
+{text:"Citrobacter and E. coli",correct:false,why:"These are coliforms present in smaller numbers. [Slide #9]"}]},
+{id:41,quarter:3,slideRef:9,stem:"Which organism is a coliform found in the large intestine?",options:[
+{text:"Citrobacter",correct:true,why:"E. coli, Enterobacter, and Citrobacter are the coliforms listed. [Slide #9]"},
+{text:"Bacteroides",correct:false,why:"Bacteroides is a predominant anaerobe, not a coliform. [Slide #9]"},
+{text:"Fusobacterium",correct:false,why:"Fusobacterium is a predominant anaerobe, not a coliform. [Slide #9]"},
+{text:"Clostridium",correct:false,why:"Clostridium is a predominant anaerobe, not a coliform. [Slide #9]"}]},
+{id:42,quarter:3,slideRef:10,stem:"Neisseria colonizes which respiratory location?",options:[
+{text:"Nasopharyngeal mucous membranes behind the soft palate",correct:true,why:"Neisseria is found on nasopharyngeal mucous membranes behind the soft palate. [Slide #10]"},
+{text:"Nasal vestibule and entrance",correct:false,why:"This is where S. aureus is found. [Slide #10]"},
+{text:"Tonsils and lower pharynx",correct:false,why:"Streptococci and Haemophilus are found here. [Slide #10]"},
+{text:"Lower lung tissue",correct:false,why:"The lungs are sterile. [Slide #4]"}]},
+{id:43,quarter:3,slideRef:10,stem:"A healthy person with asymptomatic S. aureus at the nasal entrance is best described as which of the following?",options:[
+{text:"A natural flora carrier",correct:true,why:"S. aureus is a normal nasal resident restricted to the surface without invading sterile tissue. [Slide #10]"},
+{text:"A true pathogen infection",correct:false,why:"Infection requires invasion of sterile tissue, which is absent here. [Slide #13]"},
+{text:"An opportunistic infection",correct:false,why:"The microbe sits in its natural site in a healthy host. [Slide #13]"},
+{text:"A sterile site contamination",correct:false,why:"The nasal entrance is a flora site, not a sterile site. [Slide #3]"}]},
+{id:44,quarter:4,slideRef:11,stem:"Females are more prone to UTIs because the female urethra is _______ than the male urethra.",options:[
+{text:"Shorter",correct:true,why:"The female urethra is shorter and closer to the outside, so microbes travel a shorter distance. [Slide #11]"},
+{text:"Longer",correct:false,why:"The male urethra is the longer one. [Slide #11]"},
+{text:"More sterile",correct:false,why:"The female urethra is more likely to carry bacteria because of its proximity to the outside. [Slide #11]"},
+{text:"More acidic",correct:false,why:"Urethral length, not acidity, explains the difference. [Slide #11]"}]},
+{id:45,quarter:4,slideRef:11,stem:"Which group represents the principal residents of the urethra?",options:[
+{text:"Nonhemolytic streptococci, staphylococci, and corynebacteria",correct:true,why:"These are the principal urethral residents, with occasional coliforms. [Slide #11]"},
+{text:"Bacteroides, Bifidobacterium, and Clostridium",correct:false,why:"These are large intestine anaerobes. [Slide #9]"},
+{text:"Neisseria, Haemophilus, and oral streptococci",correct:false,why:"These are respiratory tract residents. [Slide #10]"},
+{text:"Actinobacteria, Firmicutes, and Proteobacteria",correct:false,why:"These are phyla of skin flora. [Slide #7]"}]},
+{id:46,quarter:4,slideRef:12,stem:"Which benefit of flora involves promoting cell sloughing and turnover to help lower cancer risk?",options:[
+{text:"Trophic effects",correct:true,why:"Trophic effects promote cell changeover, decreasing the potential for cancer. [Slide #12]"},
+{text:"Microbial antagonism",correct:false,why:"Antagonism represses pathogenic microbial growth. [Slide #12]"},
+{text:"Metabolic function",correct:false,why:"Metabolic function involves vitamin and acid production. [Slide #12]"},
+{text:"Immune desensitization",correct:false,why:"This involves reduced immune reactivity to harmless microbes. [Slide #12]"}]},
+{id:47,quarter:4,slideRef:12,stem:"Which pair of flora benefits is described as correlation rather than proven causation?",options:[
+{text:"Allergy prevention and prevention of IBS",correct:true,why:"Links between good flora and fewer allergies or less IBS are correlations. [Slide #12]"},
+{text:"Trophic effects and metabolic function",correct:false,why:"These are established functional benefits. [Slide #12]"},
+{text:"Microbial antagonism and trophic effects",correct:false,why:"These are established functional benefits. [Slide #12]"},
+{text:"Metabolic function and microbial antagonism",correct:false,why:"These are established functional benefits. [Slide #12]"}]},
+{id:48,quarter:4,slideRef:12,stem:"Production of vitamins and acids by flora is an example of which benefit?",options:[
+{text:"Metabolic function",correct:true,why:"Vitamin and acid generation is the metabolic function of flora. [Slide #12]"},
+{text:"Trophic effects",correct:false,why:"Trophic effects concern cell turnover. [Slide #12]"},
+{text:"Microbial antagonism",correct:false,why:"Antagonism concerns repression of pathogens. [Slide #12]"},
+{text:"Allergy prevention",correct:false,why:"Allergy prevention is a correlated benefit, not a metabolic output. [Slide #12]"}]},
+{id:49,quarter:4,slideRef:13,stem:"Which situation defines an opportunistic pathogen?",options:[
+{text:"Infects when host defenses are compromised or when established outside its natural environment",correct:true,why:"Opportunistic pathogens cause infection under compromised defenses or when displaced from their natural site. [Slide #13]"},
+{text:"Infects healthy persons with normal immune defenses",correct:false,why:"This describes a true pathogen. [Slide #13]"},
+{text:"Remains restricted to outer surfaces without invading",correct:false,why:"This describes natural flora. [Slide #2]"},
+{text:"Lives in sterile sites without causing disease",correct:false,why:"Microbes in sterile sites indicate infection. [Slide #4]"}]},
+{id:50,quarter:4,slideRef:15,stem:"Which of the following weakens host defenses and increases susceptibility to infection?",options:[
+{text:"Chemotherapy",correct:true,why:"Chemotherapy and immunosuppressive drugs weaken host defenses. [Slide #15]"},
+{text:"Lactobacilli colonization",correct:false,why:"Lactobacilli are protective flora, not a weakening factor. [Slide #11]"},
+{text:"Bifidobacteria accumulation",correct:false,why:"Bifidobacteria are beneficial flora. [Slide #6]"},
+{text:"Biofilm formation by natural flora",correct:false,why:"Flora biofilms help prevent pathogen colonization. [Slide #5]"}]}
+];
+
+let currentSet = quizData;
+let round = 1;
+let quizMode = 'full';
+let answers = {};
+let popupTimeout = null;
+let muted = false;
+try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+function fisherYates(arr){for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}return arr;}
+function shuffleQuiz(){fisherYates(currentSet);currentSet.forEach(q=>fisherYates(q.options));}
+
+function updateStfuButton(){
+    const b=document.getElementById('stfuBtn');
+    b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+    b.classList.toggle('muted', muted);
+    if(muted){
+        const a=document.getElementById('wrongAudio');
+        a.pause(); a.currentTime=0;
+        clearTimeout(popupTimeout);
+        document.getElementById('wrongPopup').classList.add('hidden');
+    }
+}
+function toggleStfu(){
+    muted=!muted;
+    try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+    updateStfuButton();
+}
+
+function updateModeButtons(){
+    document.getElementById('fullQuizBtn').classList.toggle('active',quizMode==='full');
+    document.getElementById('quickQuizBtn').classList.toggle('active',quizMode==='quick');
+}
+
+function updateProgress(){
+    const label = round===1 ? 'Score' : `Review ${round-1}`;
+    const correct = Object.values(answers).filter(v=>v===true).length;
+    const total = currentSet.length;
+    const pct = total ? Math.round(correct/total*100) : 0;
+    document.getElementById('progress').textContent = `${label}: ${correct} / ${total} (${pct}%)`;
+}
+
+function renderQuiz(set){
+    const popup=document.getElementById('wrongPopup');
+    if(popup) popup.classList.add('hidden');
+    clearTimeout(popupTimeout);
+    if(set){currentSet=set;}
+    else{fisherYates(quizData);currentSet=(quizMode==='quick')?quizData.slice(0,15):[...quizData];}
+    answers={};
+    shuffleQuiz();
+    document.getElementById('summary').classList.add('hidden');
+    const quiz=document.getElementById('quiz');
+    quiz.innerHTML='';
+    const letters=['a','b','c','d'];
+    currentSet.forEach((q,qIdx)=>{
+        const card=document.createElement('div');
+        card.className='card';
+        card.innerHTML=`<span class="badge">Question ${qIdx+1} of ${currentSet.length}</span><div class="stem">${q.stem}</div>`;
+        const optWrap=document.createElement('div');
+        q.options.forEach((o,oIdx)=>{
+            const btn=document.createElement('button');
+            btn.className='opt';
+            btn.textContent=`${letters[oIdx]}. ${o.text}`;
+            btn.addEventListener('click',()=>handleSelect(q,oIdx,card,optWrap));
+            optWrap.appendChild(btn);
+        });
+        card.appendChild(optWrap);
+        quiz.appendChild(card);
+    });
+    updateProgress();
+    window.scrollTo(0,0);
+}
+
+function handleSelect(q,idx,card,optWrap){
+    if(q.id in answers) return;
+    const chosen=q.options[idx];
+    const btns=optWrap.querySelectorAll('.opt');
+    btns.forEach(b=>b.disabled=true);
+    answers[q.id]=chosen.correct;
+    btns.forEach((b,i)=>{
+        if(q.options[i].correct) b.classList.add('correct');
+    });
+    if(!chosen.correct){
+        btns[idx].classList.add('incorrect');
+        if(!muted){
+            const audio=document.getElementById('wrongAudio');
+            audio.currentTime=0;
+            audio.play().catch(err=>console.log('Audio play blocked:',err));
+            document.getElementById('wrongPopup').classList.remove('hidden');
+            clearTimeout(popupTimeout);
+            popupTimeout=setTimeout(()=>document.getElementById('wrongPopup').classList.add('hidden'),2000);
+        }
+    }
+    const letters=['a','b','c','d'];
+    const box=document.createElement('div');
+    box.className='explain';
+    box.innerHTML=`<div class="banner ${chosen.correct?'good':'bad'}">${chosen.correct?'Correct!':'You didn’t know that?!'}</div>
+    <div class="ref">Reference: Lecture 6, Slide #${q.slideRef}</div>
+    <ul>${q.options.map((o,i)=>`<li class="${o.correct?'ok':''}"><b>${letters[i]}. ${o.correct?'Correct':'Incorrect'}:</b> ${o.why}</li>`).join('')}</ul>`;
+    card.appendChild(box);
+    updateProgress();
+    if(Object.keys(answers).length===currentSet.length) showSummary();
+}
+
+function showSummary(){
+    const total=currentSet.length;
+    const correct=currentSet.filter(q=>answers[q.id]===true).length;
+    const missed=currentSet.filter(q=>!answers[q.id]);
+    const pct=Math.round(correct/total*100);
+    document.querySelector('#summary .summary-title').textContent = round===1 ? 'Quiz Complete' : `Review Round ${round-1} Complete`;
+    document.getElementById('summaryScore').textContent=`${correct} / ${total} (${pct}%)`;
+    let msg;
+    if(round>1){ msg = missed.length ? `${missed.length} still missed. Go again.` : 'Everything cleared. All correct.'; }
+    else if(pct>=90) msg='Absolute Gigachad. You drained that test dry.';
+    else if(pct>=70) msg="Solid run! You're locked in, get in some more reps.";
+    else msg='You really didn’t fucking know that.';
+    document.getElementById('summaryMsg').textContent=msg;
+    const rb=document.getElementById('reviewBtn');
+    if(missed.length){rb.style.display='inline-block';rb.textContent=`Review Missed (${missed.length})`;}
+    else rb.style.display='none';
+    const s=document.getElementById('summary');
+    s.classList.remove('hidden');
+    s.scrollIntoView({behavior:'smooth'});
+}
+
+document.getElementById('fullQuizBtn').addEventListener('click',()=>{quizMode='full';round=1;updateModeButtons();renderQuiz();});
+document.getElementById('quickQuizBtn').addEventListener('click',()=>{quizMode='quick';round=1;updateModeButtons();renderQuiz();});
+document.getElementById('retakeBtn').addEventListener('click',()=>{round=1;renderQuiz();});
+document.getElementById('reviewBtn').addEventListener('click',()=>{round++;renderQuiz(currentSet.filter(q=>!answers[q.id]));});
+document.getElementById('stfuBtn').addEventListener('click',toggleStfu);
+window.onload=()=>{updateModeButtons();updateStfuButton();renderQuiz();};
+</script>
+</body>
+</html>
