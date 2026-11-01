@@ -5090,28 +5090,30 @@ function toggleStfu() {
             if (progressBar) progressBar.style.width = total ? (answered / total * 100) + "%" : "0";
         }
 
-        function renderQuiz(set) {
-            const popup = document.getElementById('wrongPopup');
-            if (popup) popup.classList.add('hidden');
-
-            if (set) {
-                currentSet = set;
-            } else {
-                // If Quickie mode is selected, take 15 questions; otherwise take the full bank
-                const targetCount = (quizMode === 'quick') ? 15 : questionBank.length;
-                let pool = [...questionBank];
-                fisherYates(pool);
-                currentSet = pool.slice(0, targetCount);
-            }
-
-            score = 0;
-            answered = 0;
-            answers = {};
-            
-            // Deep copy and shuffle questions and options
-            quizData = JSON.parse(JSON.stringify(currentSet));
-            quizData.forEach(q => fisherYates(q.options));
-            quizData = fisherYates(quizData);
+		function renderQuiz(set) {
+			const popup = document.getElementById('wrongPopup');
+			if (popup) popup.classList.add('hidden');
+		
+			if (set) {
+				currentSet = set;
+			} else {
+				// Quickie = 15 questions; Full Quiz = exactly 50 rotating questions
+				const targetCount = (quizMode === 'quick') ? 15 : Math.min(QUESTIONS_PER_ATTEMPT, questionBank.length);
+				let pool = [...questionBank];
+				fisherYates(pool);
+				currentSet = pool.slice(0, targetCount);
+			}
+		
+			score = 0;
+			answered = 0;
+			answers = {};
+			
+			// Deep copy and shuffle questions and options
+			quizData = JSON.parse(JSON.stringify(currentSet));
+			quizData.forEach(q => fisherYates(q.options));
+			quizData = fisherYates(quizData);
+		
+			// ... rest of renderQuiz stays exactly the same
 
             const container = document.getElementById('quiz-container');
             if (!container) return;
