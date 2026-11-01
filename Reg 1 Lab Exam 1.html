@@ -441,6 +441,21 @@
             background-color: var(--accent);
             color: #000000;
         }
+        .stfu-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid var(--accent);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: .85rem;
+        }
+        .stfu-btn.muted {
+            background: var(--accent);
+            color: #000;
+        }
 
         /* Wrong Answer Popup Overlay */
         .wrong-popup {
@@ -489,9 +504,12 @@
         <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
     </div>
 
-    <header>
+<header>
         <div class="header-title">Regional Anatomy 1: Lab Practical Drill</div>
-        <div id="score-header">Score: 0 / 0 (0%)</div>
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
+            <div id="score-header">Score: 0 / 0 (0%)</div>
+        </div>
     </header>
 
     <div class="container">
@@ -2259,6 +2277,32 @@
         let round = 1;
         let popupTimeout = null;
 
+        let muted = false;
+        try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+        function updateStfuButton() {
+            const b = document.getElementById('stfuBtn');
+            if (!b) return;
+            b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+            b.classList.toggle('muted', muted);
+            if (muted) {
+                const a = document.getElementById('wrongAudio');
+                if (a) {
+                    a.pause();
+                    a.currentTime = 0;
+                }
+                if (popupTimeout) clearTimeout(popupTimeout);
+                const p = document.getElementById('wrongPopup');
+                if (p) p.classList.add('hidden');
+            }
+        }
+
+        function toggleStfu() {
+            muted = !muted;
+            try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+            updateStfuButton();
+        }
+
         // Levenshtein distance implementation for smart fuzzy matching
         function getLevenshteinDistance(a, b) {
             const matrix = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
@@ -2454,21 +2498,23 @@
             } else {
                 selectedBtn.classList.add('incorrect');
                 
-                // Trigger wrong audio feedback
-                const wrongAudio = document.getElementById('wrongAudio');
-                if (wrongAudio) {
-                    wrongAudio.currentTime = 0;
-                    wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
-                }
+                if (!muted) {
+                    // Trigger wrong audio feedback
+                    const wrongAudio = document.getElementById('wrongAudio');
+                    if (wrongAudio) {
+                        wrongAudio.currentTime = 0;
+                        wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
+                    }
 
-                // Trigger visual wrong popup image feedback
-                const wrongPopup = document.getElementById('wrongPopup');
-                if (wrongPopup) {
-                    wrongPopup.classList.remove('hidden');
-                    if (popupTimeout) clearTimeout(popupTimeout);
-                    popupTimeout = setTimeout(() => {
-                        wrongPopup.classList.add('hidden');
-                    }, 2000);
+                    // Trigger visual wrong popup image feedback
+                    const wrongPopup = document.getElementById('wrongPopup');
+                    if (wrongPopup) {
+                        wrongPopup.classList.remove('hidden');
+                        if (popupTimeout) clearTimeout(popupTimeout);
+                        popupTimeout = setTimeout(() => {
+                            wrongPopup.classList.add('hidden');
+                        }, 2000);
+                    }
                 }
 
                 buttons.forEach(btn => {
@@ -2531,21 +2577,23 @@
                 inputEl.style.borderColor = "var(--incorrect-border)";
                 inputEl.style.backgroundColor = "var(--incorrect-bg)";
                 
-                // Trigger wrong audio feedback
-                const wrongAudio = document.getElementById('wrongAudio');
-                if (wrongAudio) {
-                    wrongAudio.currentTime = 0;
-                    wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
-                }
+                if (!muted) {
+                    // Trigger wrong audio feedback
+                    const wrongAudio = document.getElementById('wrongAudio');
+                    if (wrongAudio) {
+                        wrongAudio.currentTime = 0;
+                        wrongAudio.play().catch(e => console.log("Audio play prevented:", e));
+                    }
 
-                // Trigger visual wrong popup image feedback
-                const wrongPopup = document.getElementById('wrongPopup');
-                if (wrongPopup) {
-                    wrongPopup.classList.remove('hidden');
-                    if (popupTimeout) clearTimeout(popupTimeout);
-                    popupTimeout = setTimeout(() => {
-                        wrongPopup.classList.add('hidden');
-                    }, 2000);
+                    // Trigger visual wrong popup image feedback
+                    const wrongPopup = document.getElementById('wrongPopup');
+                    if (wrongPopup) {
+                        wrongPopup.classList.remove('hidden');
+                        if (popupTimeout) clearTimeout(popupTimeout);
+                        popupTimeout = setTimeout(() => {
+                            wrongPopup.classList.add('hidden');
+                        }, 2000);
+                    }
                 }
             }
 
@@ -2658,6 +2706,14 @@
         }
 
         window.onload = () => {
+            const stfuBtn = document.getElementById('stfuBtn');
+            if (stfuBtn) {
+                stfuBtn.addEventListener('click', toggleStfu);
+            }
+            updateStfuButton();
+
+            // ... your existing mode selector listeners and initPool() call ...
+        };
             // Mode selector event listeners for Quickie vs Full Quiz functionality
             const fullQuizBtn = document.getElementById('fullQuizBtn');
             const quickQuizBtn = document.getElementById('quickQuizBtn');
