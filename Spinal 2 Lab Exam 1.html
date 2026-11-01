@@ -16,6 +16,9 @@
             --correct-border: #22c55e;
             --incorrect-bg: #7f1d1d;
             --incorrect-border: #ef4444;
+            --warning-bg: rgba(161, 98, 7, 0.35);
+            --warning-border: #eab308;
+            --warning-text: #fef08a;
         }
 
         * {
@@ -63,6 +66,24 @@
             letter-spacing: 0.5px;
         }
 
+        .header-right { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        .hub-link { 
+            color: var(--text-sub); 
+            text-decoration: none; 
+            font-size: 0.88rem; 
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .hub-link:hover { 
+            color: var(--accent-orange); 
+        }
+
         .score-tracker {
             font-size: 0.95rem;
             font-weight: bold;
@@ -72,6 +93,25 @@
             padding: 6px 14px;
             border-radius: 20px;
             white-space: nowrap;
+        }
+
+        .stfu-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid var(--accent-orange);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .stfu-btn.muted {
+            background: var(--accent-orange);
+            color: #000;
         }
 
         .control-panel {
@@ -239,11 +279,16 @@
             font-size: 1rem;
             color: #ffffff;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, background-color 0.2s;
         }
 
         .text-input:focus {
             border-color: #3b82f6;
+        }
+
+        .text-input.input-warning {
+            border-color: var(--warning-border) !important;
+            background-color: rgba(66, 32, 6, 0.4) !important;
         }
 
         .text-input:disabled {
@@ -298,6 +343,12 @@
             color: #fde8e8;
         }
 
+        .feedback-box.warning {
+            background-color: var(--warning-bg);
+            border: 1.5px solid var(--warning-border);
+            color: var(--warning-text);
+        }
+
         .status-banner {
             font-size: 1.05rem;
             font-weight: 800;
@@ -314,11 +365,16 @@
             color: #f87171;
         }
 
+        .feedback-box.warning .status-banner {
+            color: #facc15;
+        }
+
         .spelling-note {
-            font-size: 0.85rem;
+            font-size: 0.88rem;
             color: #facc15;
             margin-bottom: 8px;
             font-style: italic;
+            line-height: 1.4;
         }
 
         .explanation-text {
@@ -366,27 +422,27 @@
             border-radius: 6px;
             cursor: pointer;
             margin-top: 14px;
+            margin-left: 4px;
+            margin-right: 4px;
             touch-action: manipulation;
             transition: opacity 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn:hover {
             opacity: 0.9;
         }
-        /* Hub link + header right side */
-        .header-right { display: flex; align-items: center; gap: 12px; }
-        .hub-link { color: var(--text-sub); text-decoration: none; font-size: 0.9rem; }
-        .hub-link:hover { color: var(--accent-orange); }
+
         .btn-hub {
             background-color: #242424;
             color: #ffffff;
             border: 1px solid var(--accent-orange);
-            text-decoration: none;
-            display: inline-block;
         }
-        .btn { margin-left: 4px; margin-right: 4px; }
 
-        .hidden { display: none !important; }
+        .hidden { 
+            display: none !important; 
+        }
 
         /* Wrong-answer popup image */
         .wrong-popup {
@@ -401,6 +457,7 @@
             align-items: center;
             animation: popIn 0.15s ease-out;
         }
+
         .wrong-popup img {
             max-width: 80vw;
             max-height: 55vh;
@@ -411,12 +468,15 @@
             object-fit: contain;
             background: #111;
         }
+
         @keyframes popIn {
             from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
             to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
+
         @media (max-width: 600px) {
             .hub-link { display: none; }
+            .sticky-header h1 { font-size: 0.95rem; }
         }
     </style>
 </head>
@@ -433,6 +493,7 @@
     <div class="sticky-header">
         <h1 id="quiz-title">Spinal 2 Practical Hub</h1>
         <div class="header-right">
+            <button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
             <a class="hub-link" href="index.html">Quiz Hub</a>
             <div class="score-tracker" id="score-tracker">Score: 0 / 0 (0%)</div>
         </div>
@@ -1009,24 +1070,52 @@
     let userResults = [];
     let reviewRound = 1;
     let quickieOn = false;
-    const QUICKIE_SIZE = 10;   // change this number for a longer or shorter Quickie
+    const QUICKIE_SIZE = 10;
     let popupTimeout = null;
     let answeredCount = 0;
     let correctCount = 0;
 
-    function playWrongSound() {
-        const audio = document.getElementById('wrongAudio');
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(function() {});
-        }
-        const popup = document.getElementById('wrongPopup');
-        if (popup) {
-            popup.classList.remove('hidden');
+    let muted = false;
+    try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+    function updateStfuButton() {
+        const b = document.getElementById('stfuBtn');
+        if (!b) return;
+        b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+        b.classList.toggle('muted', muted);
+        if (muted) {
+            const a = document.getElementById('wrongAudio');
+            if (a) {
+                a.pause();
+                a.currentTime = 0;
+            }
             clearTimeout(popupTimeout);
-            popupTimeout = setTimeout(function() {
-                popup.classList.add('hidden');
-            }, 2000);
+            const popup = document.getElementById('wrongPopup');
+            if (popup) popup.classList.add('hidden');
+        }
+    }
+
+    function toggleStfu() {
+        muted = !muted;
+        try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+        updateStfuButton();
+    }
+
+    function triggerWrongFeedback() {
+        if (!muted) {
+            const audio = document.getElementById('wrongAudio');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(function() {});
+            }
+            const popup = document.getElementById('wrongPopup');
+            if (popup) {
+                popup.classList.remove('hidden');
+                clearTimeout(popupTimeout);
+                popupTimeout = setTimeout(function() {
+                    popup.classList.add('hidden');
+                }, 2000);
+            }
         }
     }
 
@@ -1053,7 +1142,7 @@
 
     function checkAnswerFuzzy(userInput, acceptedList) {
         const cleanInput = userInput.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
-        if (!cleanInput) return { isCorrect: false, closestMatch: "", distance: 99 };
+        if (!cleanInput) return { isExact: false, isTypo: false, closestMatch: "", distance: 99 };
 
         let lowestDistance = 999;
         let matchedTarget = acceptedList[0];
@@ -1062,7 +1151,7 @@
             const cleanTarget = target.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
             
             if (cleanInput === cleanTarget) {
-                return { isCorrect: true, closestMatch: target, distance: 0 };
+                return { isExact: true, isTypo: false, closestMatch: target, distance: 0 };
             }
 
             const dist = levenshteinDistance(cleanInput, cleanTarget);
@@ -1076,7 +1165,8 @@
         const isCloseEnough = lowestDistance <= allowedTypos;
 
         return {
-            isCorrect: isCloseEnough,
+            isExact: false,
+            isTypo: isCloseEnough,
             closestMatch: matchedTarget,
             distance: lowestDistance
         };
@@ -1263,7 +1353,7 @@
         if (isCorrect) {
             correctCount++;
         } else {
-            playWrongSound();
+            triggerWrongFeedback();
         }
 
         for (let i = 0; i < q.options.length; i++) {
@@ -1277,7 +1367,7 @@
             }
         }
 
-        renderFeedbackUI(qIndex, isCorrect, "");
+        renderFeedbackUI(qIndex, isCorrect ? 'correct' : 'incorrect', "");
     }
 
     function submitTypeInAnswer(qIndex) {
@@ -1290,54 +1380,75 @@
         if (!userTyped.trim()) return;
 
         const q = activeQuestions[qIndex];
-        userAnswers[qIndex] = userTyped;
-        answeredCount++;
-
-        inputEl.disabled = true;
-        submitBtnEl.disabled = true;
-
         const matchResult = checkAnswerFuzzy(userTyped, q.accepted);
-        const isCorrect = matchResult.isCorrect;
-        userResults[qIndex] = isCorrect;
-        if (isCorrect) {
+
+        if (matchResult.isExact) {
+            // Perfect match: Lock question and register score
+            userAnswers[qIndex] = userTyped;
+            answeredCount++;
             correctCount++;
+            userResults[qIndex] = true;
+            inputEl.disabled = true;
+            submitBtnEl.disabled = true;
+            inputEl.classList.remove('input-warning');
+            renderFeedbackUI(qIndex, 'correct', "");
+        } else if (matchResult.isTypo) {
+            // Minor spelling mistake: Show yellow warning and require correction to proceed
+            inputEl.classList.add('input-warning');
+            inputEl.focus();
+            inputEl.select();
+            const warningNote = `⚠️ Close! You have a spelling mistake (matched closest term: "${matchResult.closestMatch}"). Correct the spelling and click Check again.`;
+            renderFeedbackUI(qIndex, 'warning', warningNote);
         } else {
-            playWrongSound();
+            // Completely wrong: Lock question and mark incorrect
+            userAnswers[qIndex] = userTyped;
+            answeredCount++;
+            userResults[qIndex] = false;
+            inputEl.disabled = true;
+            submitBtnEl.disabled = true;
+            inputEl.classList.remove('input-warning');
+            triggerWrongFeedback();
+            const note = `Correct Term: ${q.options[q.correct]}`;
+            renderFeedbackUI(qIndex, 'incorrect', note);
         }
-
-        let spellNote = "";
-        if (isCorrect && matchResult.distance > 0) {
-            spellNote = `Spelling adjusted: matched "${matchResult.closestMatch}"`;
-        } else if (!isCorrect) {
-            spellNote = `Correct Term: ${q.options[q.correct]}`;
-        }
-
-        renderFeedbackUI(qIndex, isCorrect, spellNote);
     }
 
-    function renderFeedbackUI(qIndex, isCorrect, note) {
+    function renderFeedbackUI(qIndex, state, note) {
         const q = activeQuestions[qIndex];
         const feedbackEl = document.getElementById(`feedback-${qIndex}`);
-        feedbackEl.classList.add('show');
-        
+        feedbackEl.className = 'feedback-box show';
+
         let rationalesHTML = '<ul class="rationales-list">';
         q.rationales.forEach(rat => {
             rationalesHTML += `<li>${rat}</li>`;
         });
         rationalesHTML += '</ul>';
 
-        const noteHTML = note ? `<div class="spelling-note">ℹ️ ${note}</div>` : '';
-        const bannerText = isCorrect ? "Correct!" : "You Didn't Know That?!";
-
-        feedbackEl.classList.toggle('correct', isCorrect);
-        feedbackEl.classList.toggle('incorrect', !isCorrect);
-
-        feedbackEl.innerHTML = `
-            <div class="status-banner">${bannerText}</div>
-            ${noteHTML}
-            <div class="explanation-text">${q.explanation}</div>
-            ${rationalesHTML}
-        `;
+        if (state === 'correct') {
+            feedbackEl.classList.add('correct');
+            feedbackEl.innerHTML = `
+                <div class="status-banner">Correct!</div>
+                <div class="explanation-text">${q.explanation}</div>
+                ${rationalesHTML}
+            `;
+        } else if (state === 'warning') {
+            feedbackEl.classList.add('warning');
+            feedbackEl.innerHTML = `
+                <div class="status-banner">Spelling Error — Try Again!</div>
+                <div class="spelling-note">${note}</div>
+                <div class="explanation-text">${q.explanation}</div>
+            `;
+            return; // Exit early without finalizing score or completing card
+        } else {
+            feedbackEl.classList.add('incorrect');
+            const noteHTML = note ? `<div class="spelling-note" style="color: #fca5a5;">ℹ️ ${note}</div>` : '';
+            feedbackEl.innerHTML = `
+                <div class="status-banner">Incorrect.</div>
+                ${noteHTML}
+                <div class="explanation-text">${q.explanation}</div>
+                ${rationalesHTML}
+            `;
+        }
 
         updateHeaderScore();
 
@@ -1414,6 +1525,8 @@
     }
 
     window.onload = function() {
+        updateStfuButton();
+        document.getElementById('stfuBtn').addEventListener('click', toggleStfu);
         filterAndReset();
         document.getElementById('reset-btn').addEventListener('click', resetQuiz);
         document.getElementById('review-btn').addEventListener('click', startReview);
