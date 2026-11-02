@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spinal Anatomy II Midterm Practice</title>
+<style>
+:root{--accent:#ff9900}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f0f;color:#fff;font-family:system-ui,Segoe UI,Arial,sans-serif}
+header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px solid #282828;padding:10px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.brand{font-weight:800;color:var(--accent)}.brand small{display:block;color:#888;font-weight:400;font-size:.75rem}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:#0f0f0f;border:1px solid #282828;border-radius:20px;padding:4px 12px;font-size:.8rem}
+.progress-track{width:100%;height:4px;background:#282828}#progress-bar{height:100%;width:0;background:var(--accent);transition:width .3s}
+.stfu-btn{background:#222;color:#fff;border:1px solid var(--accent,#ff9900);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
+.stfu-btn.muted{background:var(--accent,#ff9900);color:#000}
+.mode-container{display:flex;justify-content:center;gap:8px;margin:16px}
+.mode-btn{background:#1a1a1a;color:#888;border:1px solid #282828;border-radius:6px;padding:8px 18px;font-weight:700;cursor:pointer}
+.mode-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+#quiz-container{max-width:800px;margin:0 auto;padding:0 12px 60px}
+.card{background:#1a1a1a;border:1px solid #282828;border-radius:10px;padding:18px;margin-bottom:18px}
+.badges{display:flex;gap:6px;margin-bottom:8px;font-size:.7rem}
+.badge{background:var(--accent);color:#000;border-radius:4px;padding:2px 7px;font-weight:700}.badge.g{background:#282828;color:#888}
+.stem{font-size:1.05rem;font-weight:600;margin-bottom:12px}
+.option-btn{display:block;width:100%;text-align:left;background:#0f0f0f;color:#fff;border:1px solid #282828;border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-size:.95rem;font-family:inherit}
+.option-btn:hover:not(:disabled){border-color:var(--accent)}
+.option-btn.correct{background:#14532d;border-color:#22c55e}.option-btn.incorrect{background:#7f1d1d;border-color:#ef4444}.option-btn.dim{opacity:.5}
+.expl{margin-top:10px;border-top:1px solid #282828;padding-top:10px;font-size:.88rem;color:#ccc}
+.status{font-weight:800;font-size:1rem}.status.ok{color:#22c55e}.status.bad{color:#ef4444}
+.core{background:#0f0f0f;border-left:3px solid var(--accent);padding:8px 10px;margin:8px 0}
+.expl li{margin-bottom:5px}.expl b{color:#fff}
+.summary{text-align:center}.summary h2{color:var(--accent)}
+.summary table{margin:12px auto;border-collapse:collapse}.summary td,.summary th{border:1px solid #282828;padding:6px 14px}
+.summary button{background:var(--accent);color:#000;border:0;border-radius:6px;padding:9px 16px;margin:4px;font-weight:700;cursor:pointer}
+.wrong-popup.hidden{display:none !important}
+.wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
+.wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid #ef4444;display:block;object-fit:contain;background:#111}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+</style></head><body>
+<header>
+<div class="brand">Spinal Anatomy II Quiz Hub<small>Midterm Practice Exam &middot; Rotating Bank</small></div>
+<div class="header-right">
+<button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
+<span class="pill" id="answered-display">Answered 0 / 0</span>
+<span class="pill" id="score-display">Score: 0 / 0 (0%)</span>
+</div>
+<div class="progress-track"><div id="progress-bar"></div></div>
+</header>
+<div class="mode-container" id="modeSelector">
+<button class="mode-btn active" id="fullQuizBtn">Full Quiz</button>
+<button class="mode-btn" id="quickQuizBtn">Quickie</button>
+</div>
+<div id="quiz-container"></div>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
+<script>
+// Q(id, quarter, slide, difficulty, priority, stem, [[text, why], ...], indexOfCorrect)
+function Q(id,quarter,s,d,p,stem,o,ci){return{id,quarter,slideRef:s,difficulty:d,priority:p,stem,
+options:o.map((x,i)=>({text:x[0],correct:i===ci,why:x[1]+' [Slide #'+s+']'}))}}
+const questionBank=[
+// ---- Quarter 1 (slides 1-12)
+Q(1,1,3,'easy',true,'The upper trapezius is innervated primarily by the _______ nerve.',[
+['dorsal scapular','Incorrect: the dorsal scapular nerve (C5) feeds levator scapula and the rhomboids, not trapezius.'],
+['thoracodorsal','Incorrect: the thoracodorsal nerve (C6-C8) feeds latissimus dorsi.'],
+['spinal accessory (CN XI)','Correct: trapezius is supplied by the spinal accessory nerve, CN XI.'],
+['suboccipital','Incorrect: the suboccipital nerve (dorsal ramus C1) feeds the suboccipital muscles.']],2),
+Q(2,1,4,'easy',true,'Latissimus dorsi inserts on which structure?',[
+['Spine of the scapula','Incorrect: the spine of the scapula is a trapezius insertion.'],
+['Intertubercular groove of the humerus','Correct: latissimus dorsi inserts on the medial intertubercular groove of the humerus.'],
+['Medial border of the scapula','Incorrect: the medial border is the insertion of levator scapula and the rhomboids.'],
+['Lateral third of the clavicle','Incorrect: the lateral clavicle is a trapezius insertion.']],1),
+Q(3,1,6,'medium',false,'Levator scapula attaches to the transverse processes of which vertebrae?',[
+['C1-C4','Correct: levator scapula arises from TP C1-C4 and inserts on the superior medial scapular border.'],
+['C7-T1','Incorrect: SP C7-T1 is the rhomboid minor attachment (spinous, not transverse, processes).'],
+['T2-T5','Incorrect: SP T2-T5 is the rhomboid major attachment.'],
+['T1-T6','Incorrect: TP T1-T6 relates to the semispinalis muscles, not levator scapula.']],0),
+Q(4,1,8,'medium',true,'The _______ attaches to spinous processes T2-T5 and the medial scapular border below rhomboid minor.',[
+['rhomboid major','Correct: rhomboid major spans SP T2-T5 to the medial border down to the inferior angle.'],
+['rhomboid minor','Incorrect: rhomboid minor attaches SP C7-T1, superior to the major.'],
+['levator scapula','Incorrect: levator scapula originates on TP C1-C4.'],
+['latissimus dorsi','Incorrect: latissimus dorsi originates SP T7-L5 and inserts on the humerus.']],0),
+Q(5,1,10,'medium',false,'Splenius capitis inserts on the:',[
+['transverse processes of C1-C4','Incorrect: that is the splenius cervicis insertion.'],
+['mastoid process and superior nuchal line','Correct: capitis reaches the skull at the mastoid process and superior nuchal line.'],
+['inferior nuchal line','Incorrect: the inferior nuchal line is a suboccipital rectus attachment.'],
+['spinous process of C2','Incorrect: C2 SP is an origin for rectus capitis posterior major and oblique capitis inferior.']],1),
+Q(6,1,7,'hard',true,'Which muscle attaches SP C7-T1, retracts the scapula, and rotates the glenoid cavity inferiorly?',[
+['Trapezius','Incorrect: trapezius rotates the scapula superiorly, the opposite rotation.'],
+['Levator scapula','Incorrect: levator scapula elevates the scapula and originates on TP C1-C4.'],
+['Rhomboid minor','Correct: rhomboid minor (SP C7-T1) retracts and inferiorly rotates the glenoid cavity.'],
+['Latissimus dorsi','Incorrect: latissimus dorsi acts on the humerus and arises from SP T7-L5.']],2),
+// ---- Quarter 2 (slides 13-24)
+Q(7,2,13,'medium',true,'Serratus posterior superior elevates the ribs during:',[
+['quiet expiration','Incorrect: SPS acts in forced inspiration; it does not elevate ribs for expiration.'],
+['forced inspiration','Correct: SPS (SP C7-T3 to ribs 2-5) elevates ribs in forced inspiration.'],
+['forced expiration','Incorrect: stabilizing ribs in forced expiration is serratus posterior inferior.'],
+['cervical extension','Incorrect: it is a respiratory muscle with no cervical extension action.']],1),
+Q(8,2,14,'easy',false,'Serratus posterior inferior inserts on which ribs?',[
+['Ribs 2-5','Incorrect: ribs 2-5 are the superior serratus insertion.'],
+['Ribs 3-12','Incorrect: ribs 3-12 are the longissimus thoracis insertion.'],
+['Ribs 9-12','Correct: SPI arises SP T11-L2 and inserts on ribs 9-12.'],
+['Ribs 1-6','Incorrect: ribs 1-6 describe the iliocostalis thoracis insertion region, not SPI.']],2),
+Q(9,2,16,'medium',false,'Iliocostalis lumborum inserts on the:',[
+['upper 6 ribs','Incorrect: the upper 6 ribs are the iliocostalis thoracis insertion.'],
+['mastoid process','Incorrect: the mastoid is a capitis insertion.'],
+['transverse processes of C4-C6','Incorrect: that is the iliocostalis cervicis insertion.'],
+['lower 6 ribs','Correct: iliocostalis lumborum runs from the iliac crest/sacrum/SP T11-L5 to the lower 6 ribs.']],3),
+Q(10,2,17,'medium',true,'Iliocostalis thoracis originates on the _______ and inserts on the _______.',[
+['lower 6 ribs; upper 6 ribs','Correct: thoracis runs rib to rib, lower 6 up to upper 6.'],
+['upper 6 ribs; lower 6 ribs','Incorrect: the direction is inverted.'],
+['iliac crest; lower 6 ribs','Incorrect: that describes iliocostalis lumborum.'],
+['ribs 3-6; TP C4-C6','Incorrect: that describes iliocostalis cervicis.']],0),
+Q(11,2,20,'medium',false,'Longissimus thoracis inserts on the transverse processes of T1-T12 and:',[
+['ribs 3-12','Correct: longissimus thoracis also inserts on ribs 3-12.'],
+['ribs 9-12','Incorrect: ribs 9-12 are the serratus posterior inferior insertion.'],
+['the mastoid process','Incorrect: the mastoid is the longissimus capitis insertion.'],
+['SP T4-T7','Incorrect: SP T4-T7 is the spinalis insertion.']],0),
+Q(12,2,22,'medium',false,'Longissimus capitis inserts on the:',[
+['inferior nuchal line','Incorrect: the inferior nuchal line is a suboccipital attachment.'],
+['occipital region between the nuchal lines','Incorrect: that is the semispinalis capitis insertion.'],
+['mastoid process','Correct: longissimus capitis (articular processes C4-C7, TP T1-T5) inserts on the mastoid.'],
+['transverse process of C1','Incorrect: TP C1 is the oblique capitis superior origin.']],2),
+Q(13,2,24,'medium',false,'Spinalis thoracis originates on SP T11-L2 and inserts on:',[
+['SP T4-T7','Correct: spinalis thoracis inserts on SP T4-T7.'],
+['ribs 3-12','Incorrect: that is longissimus thoracis.'],
+['the mastoid process','Incorrect: spinalis thoracis does not reach the skull.'],
+['TP C4-C6','Incorrect: that is iliocostalis cervicis.']],0),
+// ---- Quarter 3 (slides 25-36)
+Q(14,3,25,'easy',true,'Which erector spinae muscle may be absent?',[
+['Spinalis cervicis','Correct: spinalis cervicis (SP C7-T2 to SP T4-T7) may be absent.'],
+['Iliocostalis thoracis','Incorrect: iliocostalis thoracis is a consistent muscle.'],
+['Longissimus thoracis','Incorrect: longissimus thoracis is a consistent muscle.'],
+['Iliocostalis lumborum','Incorrect: iliocostalis lumborum is a consistent muscle.']],0),
+Q(15,3,28,'medium',false,'Semispinalis thoracis runs from the transverse processes of T7-T12 to the spinous processes of:',[
+['C2-C5','Incorrect: that is the semispinalis cervicis insertion.'],
+['C6-T4','Correct: thoracis inserts on SP C6-T4.'],
+['C2-L5','Incorrect: that is the multifidus insertion range.'],
+['T4-T7','Incorrect: that is the spinalis insertion.']],1),
+Q(16,3,30,'hard',true,'Contraction of the right semispinalis capitis rotates the head toward which side, and why?',[
+['Right; it acts ipsilaterally','Incorrect: transversospinalis muscles rotate contralaterally, not ipsilaterally.'],
+['Left; it acts contralaterally','Correct: semispinalis capitis extends, laterally flexes, and rotates the head contralaterally.'],
+['Left; it acts ipsilaterally','Incorrect: left rotation from the right muscle is contralateral, not ipsilateral.'],
+['Neither; it only extends','Incorrect: it also laterally flexes and contralaterally rotates.']],1),
+Q(17,3,32,'medium',true,'Multifidus inserts how many segments above its origin?',[
+['1','Incorrect: one segment is rotatores brevis.'],
+['2','Incorrect: two segments is rotatores longus.'],
+['3-4','Correct: multifidus spans 3-4 segments above its origin.'],
+['5-6','Incorrect: no transversospinalis muscle in this set uses 5-6 segments.']],2),
+Q(18,3,34,'hard',true,'Ranked from most to fewest segments spanned above the origin, which order is correct?',[
+['Rotatores brevis, rotatores longus, multifidus','Incorrect: this order is inverted.'],
+['Rotatores longus, multifidus, rotatores brevis','Incorrect: multifidus (3-4) spans more than longus (2).'],
+['Multifidus, rotatores brevis, rotatores longus','Incorrect: brevis (1) spans fewer than longus (2).'],
+['Multifidus, rotatores longus, rotatores brevis','Correct: multifidus 3-4, rotatores longus 2, rotatores brevis 1.']],3),
+Q(19,3,35,'medium',false,'Rotatores brevis produces which actions?',[
+['Extension and contralateral rotation','Correct: rotatores extend and rotate contralaterally.'],
+['Extension and lateral flexion','Incorrect: rotatores do not laterally flex.'],
+['Lateral flexion only','Incorrect: that is intertransversarii.'],
+['Ipsilateral rotation and flexion','Incorrect: rotation is contralateral and there is no flexion.']],0),
+// ---- Quarter 4 (slides 37-47)
+Q(20,4,38,'hard',true,'Intertransversarii are innervated by _______ rami, except the medial lumbar muscles, which receive _______ rami.',[
+['ventral; dorsal','Correct: ventral rami, except medial lumbar (dorsal rami).'],
+['dorsal; ventral','Incorrect: the pattern is inverted.'],
+['dorsal; dorsal','Incorrect: most intertransversarii are ventral-ramus muscles.'],
+['ventral; ventral','Incorrect: the medial lumbar exception is dorsal.']],0),
+Q(21,4,40,'easy',false,'Rectus capitis posterior minor arises from the posterior tubercle of C1 and produces:',[
+['extension of the head','Correct: it extends the head.'],
+['ipsilateral rotation of the head','Incorrect: that is rectus capitis posterior major.'],
+['flexion of the head','Incorrect: it lies posterior, so it cannot flex.'],
+['rotation of C1','Incorrect: that is oblique capitis inferior.']],0),
+Q(22,4,41,'medium',true,'Which suboccipital muscle arises from SP C2, inserts on the inferior nuchal line, and extends and ipsilaterally rotates the head?',[
+['Rectus capitis posterior major','Correct: RCPM (SP C2) extends and ipsilaterally rotates the head.'],
+['Rectus capitis posterior minor','Incorrect: minor arises from C1 and only extends.'],
+['Oblique capitis superior','Incorrect: OCS arises from TP C1 and laterally flexes.'],
+['Oblique capitis inferior','Incorrect: OCI inserts on TP C1, not the skull.']],0),
+Q(23,4,43,'hard',true,'Which suboccipital muscle does NOT attach to the skull?',[
+['Rectus capitis posterior minor','Incorrect: it inserts on the inferior nuchal line.'],
+['Rectus capitis posterior major','Incorrect: it inserts on the inferior nuchal line.'],
+['Oblique capitis superior','Incorrect: it inserts between the nuchal lines.'],
+['Oblique capitis inferior','Correct: OCI runs from SP C2 to TP C1 and rotates C1 ipsilaterally.']],3),
+Q(24,4,44,'medium',false,'Which meningeal layer directly hugs the surface of the spinal cord?',[
+['Dura mater','Incorrect: dura is the tough outer layer.'],
+['Arachnoid mater','Incorrect: arachnoid is the web-like middle layer.'],
+['Pia mater','Correct: pia mater adheres closest to the CNS.'],
+['Denticulate ligament','Incorrect: it is an extension of pia mater, not a layer.']],2),
+Q(25,4,45,'medium',false,'The filum terminale is an extension of which structure that tethers the conus medullaris?',[
+['Dura mater','Incorrect: the filum is not dura.'],
+['Pia mater','Correct: it is a pia mater extension anchoring the cord inferiorly.'],
+['Cauda equina nerve roots','Incorrect: it is not a nerve.'],
+['Arachnoid mater','Incorrect: the filum is not arachnoid.']],1),
+Q(26,4,46,'medium',true,'Denticulate ligaments are extensions of the:',[
+['dura mater','Incorrect: dura attaches to bones and muscles.'],
+['arachnoid mater','Incorrect: arachnoid forms trabecular web-like tissue.'],
+['filum terminale','Incorrect: the filum anchors the cord inferiorly.'],
+['pia mater','Correct: denticulate ligaments suspend the cord as pia extensions.']],3)
+];
+
+const QUESTIONS_PER_ATTEMPT=50;
+let currentSet=[],round=1,quizMode='full',answers={},popupTimeout=null,quizData=[],score=0,answered=0;
+let muted=false;try{muted=localStorage.getItem('stfuErijah')==='1'}catch(e){}
+function updateStfuButton(){const b=document.getElementById('stfuBtn');if(!b)return;
+b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
+if(muted){const a=document.getElementById('wrongAudio');if(a){a.pause();a.currentTime=0}
+if(popupTimeout)clearTimeout(popupTimeout);const p=document.getElementById('wrongPopup');if(p)p.classList.add('hidden')}}
+function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}updateStfuButton()}
+function fisherYates(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function updateModeButtons(){document.getElementById('fullQuizBtn').classList.toggle('active',quizMode==='full');
+document.getElementById('quickQuizBtn').classList.toggle('active',quizMode==='quick')}
+function setMode(m){quizMode=m;round=1;updateModeButtons();renderQuiz()}
+function updateHeader(){const n=quizData.length,pct=answered?Math.round(score/answered*100):0;
+document.getElementById('answered-display').textContent='Answered '+answered+' / '+n;
+document.getElementById('score-display').textContent='Score: '+score+' / '+answered+' ('+pct+'%)';
+document.getElementById('progress-bar').style.width=(n?answered/n*100:0)+'%'}
+function renderQuiz(set){
+const popup=document.getElementById('wrongPopup');if(popup)popup.classList.add('hidden');
+if(set){currentSet=set}else{const t=(quizMode==='quick')?Math.min(15,questionBank.length):Math.min(QUESTIONS_PER_ATTEMPT,questionBank.length);
+let pool=[...questionBank];fisherYates(pool);currentSet=pool.slice(0,t)}
+score=0;answered=0;answers={};
+quizData=JSON.parse(JSON.stringify(currentSet));quizData.forEach(q=>fisherYates(q.options));quizData=fisherYates(quizData);
+const c=document.getElementById('quiz-container');c.innerHTML='';
+quizData.forEach((q,qi)=>{const d=document.createElement('div');d.className='card';d.id='card-'+qi;
+d.innerHTML='<div class="badges"><span class="badge">Q'+(qi+1)+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+q.stem+'</div>'+
+q.options.map((o,oi)=>'<button class="option-btn" onclick="selectOption('+qi+','+oi+')">'+'abcd'[oi]+'. '+o.text+'</button>').join('');
+c.appendChild(d)});
+updateHeader();window.scrollTo({top:0})}
+function selectOption(qi,oi){
+const q=quizData[qi];if(q._locked)return;q._locked=true;
+const card=document.getElementById('card-'+qi),buttons=card.querySelectorAll('.option-btn'),isCorrect=q.options[oi].correct;
+buttons.forEach((b,bi)=>{b.disabled=true;if(q.options[bi].correct)b.classList.add('correct');else if(bi===oi)b.classList.add('incorrect');else b.classList.add('dim')});
+q._result=isCorrect;
+if(isCorrect){score++}else if(!muted){
+const wa=document.getElementById('wrongAudio');if(wa){wa.currentTime=0;wa.play().catch(err=>console.log('Audio play blocked:',err))}
+const popup=document.getElementById('wrongPopup');if(popup){popup.classList.remove('hidden');clearTimeout(popupTimeout);popupTimeout=setTimeout(()=>popup.classList.add('hidden'),2000)}}
+answered++;
+const core=q.options.find(o=>o.correct).why;
+const e=document.createElement('div');e.className='expl';
+e.innerHTML='<div class="status '+(isCorrect?'ok':'bad')+'">'+(isCorrect?'Correct!':'Incorrect.')+'</div><div class="core"><b>Core Concept:</b> '+core+'</div><ul>'+
+q.options.map((o,i)=>'<li><b>'+'abcd'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>';
+card.appendChild(e);updateHeader();
+if(answered===quizData.length)setTimeout(showSummary,600)}
+function showSummary(){
+const n=quizData.length,pct=Math.round(score/n*100);
+let msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
+const rows=['easy','medium','hard'].map(d=>{const a=quizData.filter(q=>q.difficulty===d);return '<tr><td>'+d+'</td><td>'+a.filter(q=>q._result).length+' / '+a.length+'</td></tr>'}).join('');
+const s=document.createElement('div');s.className='card summary';
+s.innerHTML='<h2>'+pct+'%</h2><p>'+score+' / '+n+' correct</p><p>'+msg+'</p><table><tr><th>Difficulty</th><th>Correct</th></tr>'+rows+'</table>'+
+'<button onclick="round++;renderQuiz()">Retake Quiz</button><button onclick="reviewMissed()">Review Missed</button><button onclick="location.href=\'index.html\'">Back to Main Page</button>';
+document.getElementById('quiz-container').appendChild(s);s.scrollIntoView({behavior:'smooth'})}
+function reviewMissed(){const ids=quizData.filter(q=>!q._result).map(q=>q.id);
+if(!ids.length){alert('Nothing missed. Nice.');return}
+round++;renderQuiz(questionBank.filter(q=>ids.includes(q.id)))}
+window.onload=()=>{
+const b=document.getElementById('stfuBtn');if(b)b.addEventListener('click',toggleStfu);
+document.getElementById('fullQuizBtn').addEventListener('click',()=>setMode('full'));
+document.getElementById('quickQuizBtn').addEventListener('click',()=>setMode('quick'));
+updateStfuButton();updateModeButtons();renderQuiz()};
+</script></body></html>
