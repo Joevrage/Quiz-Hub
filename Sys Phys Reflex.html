@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sys Phys Week 4 Wed Quiz</title>
+<style>
+:root{--accent:#ff9900}
+*{box-sizing:border-box}body{margin:0;background:#0f0f0f;color:#fff;font-family:system-ui,sans-serif;padding-bottom:60px}
+header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px solid #282828;padding:10px 16px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.brand{font-weight:800;color:var(--accent)}.brand small{display:block;color:#888;font-weight:400;font-size:.75rem}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:#0f0f0f;border:1px solid #282828;border-radius:20px;padding:4px 10px;font-size:.8rem}
+.progress-track{width:100%;height:4px;background:#282828}#progress-bar{height:4px;width:0;background:var(--accent);transition:width .3s}
+.stfu-btn{background:#222;color:#fff;border:1px solid var(--accent,#ff9900);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
+.stfu-btn.muted{background:var(--accent,#ff9900);color:#000}
+.mode-container{display:flex;justify-content:center;gap:10px;margin:16px}
+.mode-btn{background:#1a1a1a;color:#888;border:1px solid #282828;border-radius:6px;padding:8px 16px;cursor:pointer;font-weight:700}
+.mode-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+#quiz-container{max-width:760px;margin:0 auto;padding:0 12px}
+.card{background:#1a1a1a;border:1px solid #282828;border-radius:10px;padding:16px;margin-bottom:16px}
+.badge{display:inline-block;background:var(--accent);color:#000;font-size:.7rem;font-weight:800;border-radius:4px;padding:2px 6px;margin-right:6px}
+.stem{font-size:1.05rem;margin:10px 0}
+.option-btn{display:block;width:100%;text-align:left;background:#0f0f0f;color:#fff;border:1px solid #282828;border-radius:8px;padding:10px 12px;margin:6px 0;cursor:pointer;font-size:.95rem;font-family:inherit}
+.option-btn:hover:not(:disabled){border-color:var(--accent)}
+.option-btn.correct{background:#14532d;border-color:#22c55e}.option-btn.incorrect{background:#7f1d1d;border-color:#ef4444}.option-btn.dim{opacity:.5}
+.expl{margin-top:12px;border-top:1px solid #282828;padding-top:10px;font-size:.9rem;color:#ccc}
+.status{font-weight:800;font-size:1rem}.status.ok{color:#22c55e}.status.bad{color:#ef4444}
+.expl ul{padding-left:18px}.expl .core{background:#0f0f0f;border-left:3px solid var(--accent);padding:8px;margin:8px 0}
+.summary{text-align:center}.summary h2{color:var(--accent)}.summary table{margin:12px auto;border-collapse:collapse}.summary td,.summary th{border:1px solid #282828;padding:6px 14px}
+.act{background:var(--accent);color:#000;border:0;border-radius:6px;padding:10px 16px;font-weight:800;cursor:pointer;margin:6px}
+.wrong-popup.hidden{display:none!important}
+.wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
+.wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid #ef4444;display:block;object-fit:contain;background:#111}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+</style></head><body>
+<header>
+<div class="brand">Gen Path Quiz Hub<small>Midterm Practice Exam &middot; Rotating Bank</small></div>
+<div class="header-right"><button class="stfu-btn" id="stfuBtn">STFU Erijah</button><span class="pill" id="answered-display">Answered 0 / 0</span><span class="pill" id="score-display">Score: 0 / 0 (0%)</span></div>
+<div class="progress-track"><div id="progress-bar"></div></div>
+</header>
+<div class="mode-container" id="modeSelector"><button class="mode-btn active" id="fullQuizBtn">Full Quiz</button><button class="mode-btn" id="quickQuizBtn">Quickie</button></div>
+<div id="quiz-container"></div>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
+<script>
+function Q(id,quarter,slideRef,difficulty,priority,stem,opts,ci){
+  return {id,quarter,slideRef,difficulty,priority,stem,options:opts.map((o,i)=>({text:o[0],correct:i===ci,why:o[1]+" [Slide #"+slideRef+"]"}))};
+}
+const questionBank=[
+Q(1,1,11,"easy",true,"A reflex in which the Ia afferent synapses directly on the agonist alpha motor neuron is called a _______ reflex.",[
+["monosynaptic","Only one synapse (afferent onto the agonist alpha motor neuron) is involved."],
+["disynaptic","Two synapses occur only on the antagonist pathway through an interneuron, not the agonist pathway."],
+["trisynaptic","No third synapse exists in the stretch reflex arc."],
+["tetrasynaptic","Four synapses are not part of this reflex."]],0),
+Q(2,1,12,"medium",true,"Which structure synapses on the alpha motor neuron of the antagonist muscle to produce reciprocal inhibition?",[
+["Gamma motor neuron","Gamma neurons supply the spindle contractile elements, not the antagonist muscle."],
+["Group Ib afferent fiber","Ib fibers belong to GTOs and are not the interneuron pathway of the stretch reflex."],
+["Group Ia inhibitory interneuron","A collateral of the Ia fiber synapses on this short anterior horn interneuron, which inhibits the antagonist alpha neuron."],
+["Group II afferent fiber","Group II fibers contribute little to the tendon-tap reflex."]],2),
+Q(3,1,13,"easy",false,"Extrapyramidal upper motor neuron pathways originate in the _______.",[
+["brainstem","Extrapyramidal tracts start in the brainstem."],
+["motor cortex","The cortex is the origin of pyramidal tracts."],
+["anterior horn","The anterior horn houses lower motor neurons."],
+["dorsal root ganglion","This holds sensory cell bodies, not UMNs."]],0),
+Q(4,1,14,"medium",true,"Which of the following structures is NOT part of the corticospinal tract pathway?",[
+["Internal capsule","The tract runs through the internal capsule."],
+["Medullary pyramids","The tract runs through the medullary pyramids."],
+["Motor cortex","The tract begins in the motor cortex (precentral gyrus)."],
+["Dorsal root ganglion","This is a sensory structure of the PNS; UMNs never leave the CNS."]],3),
+Q(5,2,18,"medium",true,"Which intrafusal fiber has nuclei clumped in the center and averages about two per muscle spindle?",[
+["Nuclear bag fiber","Bag fibers bulge centrally with clumped nuclei and are fewer than chain fibers."],
+["Nuclear chain fiber","Chain fibers are narrow, with nuclei strung out linearly, about six per spindle."],
+["Extrafusal fiber","Extrafusal fibers run tendon to tendon and are not within the spindle."],
+["Contractile element","Polar regions contain sarcomeres at the spindle ends, not central nuclei."]],0),
+Q(6,2,19,"hard",true,"Which intrafusal fiber type, involved mainly in muscle tone, is innervated by both annulospiral and flower spray endings?",[
+["Nuclear bag fiber","Bag fibers carry Ia annulospiral endings only."],
+["Nuclear chain fiber","Chain fibers receive Ia annulospiral plus Group II flower spray endings and contribute mainly to tone."],
+["Extrafusal fiber","Extrafusal fibers are not sensed by spindle endings."],
+["Golgi tendon organ","GTOs use Ib fibers at the musculotendinous junction."]],1),
+Q(7,2,21,"medium",true,"The contractile elements of a muscle spindle are innervated by _______ motor neurons.",[
+["alpha","Alpha neurons supply extrafusal fibers."],
+["gamma","Gamma neurons supply the spindle contractile elements."],
+["Ia","Ia is a sensory (afferent) fiber."],
+["Ib","Ib is the sensory fiber of the GTO."]],1),
+Q(8,2,24,"hard",true,"During voluntary contraction, which mechanism keeps the muscle spindle from going slack as the extrafusal fibers shorten?",[
+["Gamma-driven contraction of polar sarcomeres together with alpha-driven extrafusal contraction","Alpha and gamma signals co-fire from the motor cortex, so spindle ends tighten as the muscle shortens."],
+["Relaxation of the spindle polar regions","Relaxation would increase slack, the opposite of the needed effect."],
+["Ib afferent inhibition of the alpha neuron","Ib belongs to GTOs and does not maintain spindle tension."],
+["Alpha neuron innervation of the spindle midpoint","The spindle center has no sarcomeres and is not alpha-innervated."]],0),
+Q(9,2,25,"medium",false,"Where are Golgi tendon organs found?",[
+["Muscle belly equator","The equatorial belly location is characteristic of muscle spindles."],
+["Musculotendinous junction","GTOs sit at the muscle-tendon junction and use group Ib afferents."],
+["Dorsal horn","The dorsal horn is gray matter in the cord, not a muscle receptor site."],
+["Neuromuscular junction","This is where alpha neurons meet extrafusal fibers."]],1),
+Q(10,3,34,"medium",true,"A low affinity receptor in a negative feedback cycle binds its ligand only when ligand levels are:",[
+["high","Binding occurs only when plenty of ligand is present, which shuts production off."],
+["low","Low levels leave the receptor unbound so production continues."],
+["absent","With no ligand there is nothing to bind."],
+["unchanged","Binding depends on excess, not on stable baseline levels."]],0),
+Q(11,3,36,"medium",true,"Stretch of the cervix by the baby's head triggers release of which hormone in a positive feedback cycle?",[
+["Prolactin","Prolactin makes milk and is unrelated to Ferguson's reflex."],
+["Vasopressin","ADH is not the hormone of this reflex."],
+["Dopamine","Dopamine inhibits prolactin in the letdown story."],
+["Oxytocin","Oxytocin drives stronger myometrial contractions, causing more stretch."]],3),
+Q(12,3,37,"hard",true,"Which cells release TRH, and which pituitary cells does it stimulate to release TSH?",[
+["Magnocellular neurons; thyrotrophs","Magnocellular neurons release ADH, not TRH."],
+["Parvocellular neurons; thyrotrophs","Parvocellular neurons of the paraventricular nucleus release TRH, which stimulates thyrotrophs."],
+["Parvocellular neurons; corticotrophs","Corticotrophs respond to CRH to release ACTH."],
+["Magnocellular neurons; corticotrophs","Neither the source nor the target matches the thyroid axis."]],1),
+Q(13,4,46,"medium",true,"In hyperthermia, the preoptic area signals the RVLM to inhibit sympathetic noradrenergic output, which causes:",[
+["dermal arteriole vasodilation","Reduced vasoconstrictor output opens arterioles and increases skin blood flow."],
+["dermal arteriole vasoconstriction","Vasoconstriction results from increased noradrenergic output, as in cold."],
+["inhibition of eccrine sweating","Sweating is stimulated, not inhibited, during heat."],
+["decreased skin capillary flow","Flow increases with vasodilation."]],0),
+Q(14,4,48,"easy",true,"Which nerve fiber stimulates eccrine sweat glands during hyperthermia?",[
+["Sympathetic noradrenergic fiber","Noradrenergic fibers vasoconstrict and are inhibited in heat."],
+["Parasympathetic fiber","Sweat glands are driven by sympathetic fiber."],
+["Somatic motor fiber","Somatic motor fibers supply skeletal muscle."],
+["Sympathetic cholinergic fiber","Postganglionic cholinergic sympathetic fibers stimulate sweat release."]],3),
+Q(15,4,55,"medium",false,"Which gland type is the main source of body odor, found mainly in the axilla and perineal region?",[
+["Eccrine gland","Eccrine glands produce watery sweat connected directly to the skin surface."],
+["Sebaceous gland","Sebaceous glands secrete oil and, if blocked, cause acne."],
+["Apocrine gland","Apocrine glands activate in adolescence and secrete ammonia, proteins, and sugars."],
+["Apoeccrine gland","These are hybrid glands, not the main source of odor."]],2),
+Q(16,1,8,"easy",false,"A stretch reflex tests the afferent limb, the efferent limb, and the spinal cord _______ matter.",[
+["gray","The reflex integrates in spinal cord gray matter."],
+["white","White matter holds tracts, not the reflex synapse."],
+["dura","Dura is a meningeal layer, not neural tissue."],
+["pial","Pia is a meningeal layer, not neural tissue."]],0),
+Q(17,1,8,"medium",true,"Upper motor neuron dysfunction typically presents with which reflex finding?",[
+["Hyperreflexia and/or clonus","UMN dysfunction produces exaggerated reflexes and/or clonus."],
+["Absent reflexes only","Areflexia suggests an afferent, spinal, or efferent lesion."],
+["Normal reflexes with weakness","UMN lesions alter reflexes."],
+["Hyporeflexia with atrophy","This pattern points to lower motor neuron involvement."]],0),
+Q(18,1,9,"medium",true,"Which sensory fibers, living in muscle spindles, carry the tap-induced stretch signal in the patellar reflex?",[
+["Group Ib","Ib fibers belong to GTOs."],
+["Group Ia","Group Ia fibers carry the brief wave of action potentials from spindles."],
+["Group II","Group II fibers contribute little to the tendon-tap reflex."],
+["Alpha motor","Alpha fibers are efferent, not sensory."]],1),
+Q(19,1,10,"medium",true,"In the patellar reflex, the afferent signal travels in the _______ nerve and enters the spinal cord at L4.",[
+["sciatic","The sciatic nerve is not the quadriceps nerve in this slide."],
+["tibial","The tibial nerve is not the nerve shown for the quadriceps."],
+["femoral","The femoral nerve carries the signal to the L4 spinal nerve."],
+["obturator","The obturator nerve is not the nerve shown."]],2),
+Q(20,1,11,"hard",true,"After entering the posterior horn, the Ia fiber's collaterals target which pair of structures in the patellar reflex?",[
+["Agonist alpha motor neuron and Ia inhibitory interneuron","One collateral excites the quadriceps alpha neuron; another activates the interneuron that inhibits the antagonist."],
+["Agonist gamma neuron and Ib interneuron","Gamma neurons and Ib interneurons are not the reflex targets."],
+["Antagonist alpha neuron and Group II fiber","The antagonist is reached only indirectly through an interneuron."],
+["Upper motor neuron and corticospinal tract","The reflex does not involve the brain."]],0),
+Q(21,1,12,"medium",false,"When the quadriceps reflexively contracts, which muscle reflexively relaxes through reciprocal inhibition?",[
+["Hamstrings","Hamstrings are the antagonist and relax."],
+["Quadriceps","The quadriceps is the agonist and contracts."],
+["Soleus","The soleus is not the antagonist in this reflex."],
+["Gluteus maximus","This is not the antagonist shown."]],0),
+Q(22,2,17,"medium",false,"Which fibers run the entire length of the muscle from tendon to tendon?",[
+["Intrafusal fibers","Intrafusal fibers sit in spindles and do not connect tendons."],
+["Extrafusal fibers","Extrafusal fibers do the work and span tendon to tendon."],
+["Nuclear bag fibers","Bag fibers are intrafusal."],
+["Nuclear chain fibers","Chain fibers are intrafusal."]],1),
+Q(23,2,20,"medium",true,"Where are the contractile elements (polar regions) of the muscle spindle located?",[
+["At both ends","Sarcomeres sit at both ends of the spindle."],
+["In the center only","No sarcomeres exist in the middle."],
+["At the tendon","GTOs, not spindle contractile elements, are tendon-related."],
+["Around the annulospiral ending","The ending wraps the equatorial region."]],0),
+Q(24,2,23,"medium",false,"Alpha and gamma motor signals during voluntary contraction arise at the same time from the:",[
+["cerebellum","The slide places the origin in the motor cortex."],
+["dorsal horn","The dorsal horn is sensory."],
+["primary motor cortex","Both signals originate there and descend together."],
+["medullary pyramids","These are only a pathway along the route."]],2),
+Q(25,2,26,"medium",true,"Activation of a Golgi tendon organ causes the contracting muscle to:",[
+["shut down to reduce tension","The inverse myotatic reflex turns off the contracting muscle."],
+["contract harder","GTOs reduce, not increase, contraction."],
+["lengthen its spindle","GTOs are not spindle regulators."],
+["trigger a stretch reflex","GTOs have nothing to do with stretch reflexes."]],0),
+Q(26,2,26,"medium",false,"Regimented heavy weight training _______ GTOs, raising the risk of muscle or tendon tears.",[
+["sensitizes","Sensitization would protect against tears."],
+["desensitizes","Desensitization reduces the GTO protective effect."],
+["regenerates","GTOs are not regenerated by training."],
+["bypasses","The brain overriding is separate from training effects."]],1),
+Q(27,3,33,"easy",false,"A ligand released from a cell that binds its receptor on that same cell is called an _______.",[
+["autocrine","Autocrines turn around and bind the releasing cell."],
+["paracrine","Paracrines act on nearby cells."],
+["endocrine","Hormones travel through the blood."],
+["effector","An effector is a part of the feedback system, not a ligand type."]],0),
+Q(28,3,33,"medium",false,"A paracrine ligand reaches its receptor by traveling:",[
+["through the blood to distant tissue","This describes a hormone."],
+["through the interstitium over a short distance","Paracrines diffuse a short distance in the interstitium."],
+["back onto the releasing cell only","This describes an autocrine."],
+["down an axon","This describes neurotransmission."]],1),
+Q(29,3,32,"medium",true,"Which is a classic example of a double negative feedback system?",[
+["Ferguson's reflex","It is a positive feedback cycle."],
+["Letdown reflex","It is a positive feedback cycle."],
+["Thyroid hormone","Thyroid hormone is shut off at two levels."],
+["Suckling-induced oxytocin release","This is part of positive feedback."]],2),
+Q(30,3,37,"easy",true,"TSH stimulates the _______ cells of the thyroid gland.",[
+["parafollicular","These are not the TSH target on the slide."],
+["follicular","TSH stimulates follicular cells to make thyroid hormone."],
+["thyrotroph","Thyrotrophs are pituitary cells that make TSH."],
+["parvocellular","These are hypothalamic neurons that release TRH."]],1),
+Q(31,3,38,"hard",true,"If parvocellular neuron receptors fail to bind thyroid hormone, what still limits TSH release?",[
+["Low-affinity thyroid hormone receptors on thyrotrophs","Thyrotrophs also use low-affinity receptors to inhibit TSH."],
+["ADH release from magnocellular neurons","ADH is unrelated."],
+["Gamma motor neuron activity","This is unrelated to hormone feedback."],
+["Increased TRH secretion","TRH increase would worsen the problem."]],0),
+Q(32,3,39,"medium",false,"Which component of a negative feedback system receives the sensor's signal and decides whether to act?",[
+["Sensor","It detects the imbalance."],
+["Controller","The controller receives the afferent signal and decides."],
+["Effector","It carries out the fix."],
+["Efferent limb","It only carries the controller's message."]],1),
+Q(33,3,39,"hard",true,"Which sequence correctly orders the five parts of a negative feedback system?",[
+["Controller, afferent limb, sensor, efferent limb, effector","The sensor must come first."],
+["Sensor, afferent limb, controller, efferent limb, effector","Detect, signal, decide, signal, fix."],
+["Sensor, efferent limb, controller, afferent limb, effector","The limbs are in the wrong places."],
+["Effector, efferent limb, controller, afferent limb, sensor","This reverses the order."]],1),
+Q(34,4,45,"easy",true,"The anterior _______ area of the hypothalamus is the body's major thermoregulatory center.",[
+["preoptic","The anterior preoptic area is the major thermoregulatory center."],
+["supraoptic","This nucleus houses magnocellular neurons."],
+["paraventricular","This nucleus houses parvocellular and magnocellular neurons."],
+["mammillary","This is not the thermoregulatory center."]],0),
+Q(35,4,44,"medium",false,"Approximately what percentage of dermal capillaries are open at a given time?",[
+["10%","Only about 10% are on so the heart is not overworked."],
+["30%","This overstates the baseline."],
+["60%","This overstates the baseline."],
+["90%","This overstates the baseline."]],0),
+Q(36,4,57,"medium",false,"Which two mechanisms account for heat loss through the skin?",[
+["Radiation and evaporation","Both are named for skin heat loss."],
+["Conduction and shivering","Shivering generates heat."],
+["Vasoconstriction and piloerection","These retain heat."],
+["Convulsion and perfusion","These are not heat loss mechanisms."]],0),
+Q(37,4,50,"easy",false,"Hyperthermia is diagnosed when body temperature rises above:",[
+["98.6°F","This is normal temperature."],
+["100°F","Above 100°F defines hyperthermia."],
+["104°F","This is far above the threshold."],
+["106°F","This is far above the threshold."]],1),
+Q(38,4,51,"hard",true,"Why do tachycardia and hypotension develop in significant hyperthermia?",[
+["Few skin capillaries open, so the heart rests","The opposite occurs."],
+["Nearly all skin capillaries open, so the heart pumps fast but cannot maintain pressure through the extra pipes","Instead of 10%, 100% of capillaries open, dropping pressure."],
+["Skin arterioles constrict, raising afterload","Constriction would raise pressure."],
+["Sweat glands stop, so blood volume rises","Sweating continues and volume does not rise."]],1),
+Q(39,4,53,"medium",false,"Nitric oxide released from arteriole endothelial cells during local heat causes:",[
+["vasodilation of arterioles and precapillary sphincters","NO relaxes both, flooding the superficial dermis."],
+["vasoconstriction of arterioles","This is the opposite effect."],
+["sweat gland inhibition","NO does not do this."],
+["bradycardia","This is not described."]],0),
+Q(40,4,54,"medium",false,"Placing a hyperthermic person's hands and forearms in ice water helps primarily by:",[
+["raising core blood flow resistance","This is not the mechanism."],
+["returning cold blood to the core quickly","Cooled blood returns to the core and lowers its temperature."],
+["stimulating cholinergic fibers","This is not the described mechanism."],
+["blocking radiation","Cooling enhances heat loss."]],1)
+];
+
+const QUESTIONS_PER_ATTEMPT=50;
+let currentSet=[],round=1,quizMode='full',answers={},popupTimeout=null,quizData=[],score=0,answered=0;
+let muted=false;try{muted=localStorage.getItem('stfuErijah')==='1';}catch(e){}
+function updateStfuButton(){const b=document.getElementById('stfuBtn');if(!b)return;b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
+ if(muted){const a=document.getElementById('wrongAudio');if(a){a.pause();a.currentTime=0;}if(popupTimeout)clearTimeout(popupTimeout);const p=document.getElementById('wrongPopup');if(p)p.classList.add('hidden');}}
+function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0');}catch(e){}updateStfuButton();}
+function fisherYates(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function updateModeButtons(){document.getElementById('fullQuizBtn').classList.toggle('active',quizMode==='full');document.getElementById('quickQuizBtn').classList.toggle('active',quizMode==='quick');}
+function setMode(m){quizMode=m;round=1;updateModeButtons();renderQuiz();}
+function updateHeader(){const t=quizData.length,pct=answered?Math.round(score/answered*100):0;
+ document.getElementById('answered-display').textContent='Answered '+answered+' / '+t;
+ document.getElementById('score-display').textContent='Score: '+score+' / '+answered+' ('+pct+'%)';
+ document.getElementById('progress-bar').style.width=(t?answered/t*100:0)+'%';}
+function renderQuiz(set){
+ const popup=document.getElementById('wrongPopup');if(popup)popup.classList.add('hidden');
+ if(set){currentSet=set;}else{const n=(quizMode==='quick')?15:Math.min(QUESTIONS_PER_ATTEMPT,questionBank.length);let pool=[...questionBank];fisherYates(pool);currentSet=pool.slice(0,n);}
+ score=0;answered=0;answers={};
+ quizData=JSON.parse(JSON.stringify(currentSet));quizData.forEach(q=>fisherYates(q.options));quizData=fisherYates(quizData);
+ const c=document.getElementById('quiz-container');c.innerHTML='';
+ quizData.forEach((q,qi)=>{const d=document.createElement('div');d.className='card';d.id='card-'+qi;
+  d.innerHTML='<div><span class="badge">Q'+(qi+1)+'</span>'+(q.priority?'<span class="badge">HIGH YIELD</span>':'')+'</div><div class="stem">'+q.stem+'</div>'+
+  q.options.map((o,oi)=>'<button class="option-btn" onclick="selectOption('+qi+','+oi+')">'+'abcd'[oi]+') '+o.text+'</button>').join('');
+  c.appendChild(d);});
+ updateHeader();window.scrollTo({top:0});}
+function selectOption(qi,oi){
+ const q=quizData[qi];if(q._locked)return;q._locked=true;
+ const card=document.getElementById('card-'+qi);const buttons=card.querySelectorAll('.option-btn');const isCorrect=q.options[oi].correct;
+ buttons.forEach((b,bi)=>{b.disabled=true;if(q.options[bi].correct)b.classList.add('correct');else if(bi===oi)b.classList.add('incorrect');else b.classList.add('dim');});
+ q._result=isCorrect;
+ if(isCorrect){score++;}else if(!muted){
+  const wa=document.getElementById('wrongAudio');if(wa){wa.currentTime=0;wa.play().catch(err=>console.log('Audio play blocked:',err));}
+  const p=document.getElementById('wrongPopup');if(p){p.classList.remove('hidden');clearTimeout(popupTimeout);popupTimeout=setTimeout(()=>{p.classList.add('hidden');},2000);}}
+ answered++;
+ const correctOpt=q.options.find(o=>o.correct);
+ const e=document.createElement('div');e.className='expl';
+ e.innerHTML='<div class="status '+(isCorrect?'ok':'bad')+'">'+(isCorrect?'Correct!':'Incorrect.')+'</div><div class="core"><b>Core Concept:</b> '+correctOpt.why+'</div><ul>'+
+  q.options.map((o,i)=>'<li><b>'+'abcd'[i]+') '+(o.correct?'(Correct) ':'')+'</b>'+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>';
+ card.appendChild(e);updateHeader();
+ if(answered===quizData.length)setTimeout(showSummary,400);}
+function showSummary(){
+ const t=quizData.length,pct=Math.round(score/t*100);
+ const msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn\u2019t fucking know that.';
+ const q=[0,0,0,0],qt=[0,0,0,0];quizData.forEach(x=>{qt[x.quarter-1]++;if(x._result)q[x.quarter-1]++;});
+ const d=document.createElement('div');d.className='card summary';
+ d.innerHTML='<h2>'+score+' / '+t+' ('+pct+'%)</h2><p>'+msg+'</p><table><tr><th>Deck Quarter</th><th>Correct</th></tr>'+
+  q.map((v,i)=>'<tr><td>Q'+(i+1)+'</td><td>'+v+' / '+qt[i]+'</td></tr>').join('')+'</table>'+
+  '<button class="act" onclick="round++;renderQuiz()">Retake Quiz</button><button class="act" onclick="reviewMissed()">Review Missed</button><button class="act" onclick="location.href=\'index.html\'">Back to Main Page</button>';
+ document.getElementById('quiz-container').appendChild(d);d.scrollIntoView({behavior:'smooth'});}
+function reviewMissed(){const missed=quizData.filter(x=>!x._result).map(x=>{const c=JSON.parse(JSON.stringify(x));delete c._locked;delete c._result;return c;});
+ if(!missed.length){alert('Nothing missed!');return;}renderQuiz(missed);}
+window.onload=()=>{
+ const b=document.getElementById('stfuBtn');if(b)b.addEventListener('click',toggleStfu);
+ document.getElementById('fullQuizBtn').addEventListener('click',()=>setMode('full'));
+ document.getElementById('quickQuizBtn').addEventListener('click',()=>setMode('quick'));
+ updateStfuButton();updateModeButtons();renderQuiz();};
+</script></body></html>
