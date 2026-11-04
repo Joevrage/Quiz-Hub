@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regional Anatomy 1 Week 4 Quiz Hub</title>
+<style>
+:root{--accent:#ff9900}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f0f;color:#fff;font-family:system-ui,Segoe UI,Arial,sans-serif;line-height:1.45}
+header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px solid #282828}
+.header-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;padding:10px 16px}
+.brand{font-weight:800;font-size:1.05rem}.brand span{color:var(--accent)}
+.brand small{display:block;color:#888;font-weight:400;font-size:.72rem}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:#0f0f0f;border:1px solid #282828;border-radius:99px;padding:4px 12px;font-size:.8rem;color:#ccc}
+.score-pill{color:var(--accent);border-color:var(--accent)}
+.progress-track{width:100%;height:4px;background:#282828}#progress-bar{height:4px;width:0;background:var(--accent);transition:width .3s}
+.stfu-btn{background:#222;color:#fff;border:1px solid var(--accent,#ff9900);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;transition:all .2s ease;white-space:nowrap}
+.stfu-btn.muted{background:var(--accent,#ff9900);color:#000}
+.hidden{display:none!important}
+.mode-container{display:flex;justify-content:center;gap:10px;margin:18px 0 6px;flex-wrap:wrap}
+.mode-btn{background:#1a1a1a;color:#ccc;border:1px solid #282828;border-radius:8px;padding:8px 20px;font-weight:700;cursor:pointer;font-family:inherit}
+.mode-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.quickie-options-bar{display:flex;justify-content:center;align-items:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+.quickie-label{color:#888;font-size:.85rem}
+.count-chip{background:#1a1a1a;color:#ccc;border:1px solid #282828;border-radius:99px;padding:5px 14px;font-weight:600;cursor:pointer;font-family:inherit;font-size:.82rem}
+.count-chip.active{background:var(--accent);color:#000;border-color:var(--accent)}
+#quiz-container{max-width:820px;margin:0 auto;padding:12px 16px 60px}
+.card{background:#1a1a1a;border:1px solid #282828;border-radius:12px;padding:18px;margin:14px 0}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.badge{background:var(--accent);color:#000;font-size:.7rem;font-weight:800;border-radius:4px;padding:2px 8px;text-transform:uppercase}
+.badge.alt{background:#282828;color:#888}
+.stem{font-size:1.05rem;font-weight:600;margin:6px 0 12px}
+.option-btn{display:block;width:100%;text-align:left;background:#0f0f0f;color:#fff;border:1px solid #282828;border-radius:8px;padding:10px 14px;margin:8px 0;font-family:inherit;font-size:.95rem;cursor:pointer}
+.option-btn:hover:not(:disabled){border-color:var(--accent)}
+.option-btn:disabled{cursor:default;color:#fff}
+.option-btn.correct{background:#14532d;border-color:#22c55e}
+.option-btn.incorrect{background:#7f1d1d;border-color:#ef4444}
+.option-btn.dim{opacity:.5}
+.explain{margin-top:12px;border-top:1px solid #282828;padding-top:12px;font-size:.9rem}
+.banner{font-weight:800;font-size:1.05rem}.banner.ok{color:#22c55e}.banner.bad{color:#ef4444}
+.concept{background:#0f0f0f;border-left:3px solid var(--accent);padding:8px 12px;margin:8px 0;color:#ddd}
+.explain ul{padding-left:18px;margin:6px 0;color:#bbb}.explain li{margin:5px 0}.explain li.c{color:#22c55e}
+.summary{text-align:center}.big{font-size:2.6rem;font-weight:800;color:var(--accent)}
+.tier{font-size:1.1rem;margin:10px 0 16px}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.9rem}th,td{border-bottom:1px solid #282828;padding:6px;text-align:center}th{color:#888}
+.actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.actions button,.actions a{background:var(--accent);color:#000;border:0;border-radius:8px;padding:10px 18px;font-weight:800;cursor:pointer;font-family:inherit;text-decoration:none;font-size:.9rem}
+.actions .sec{background:#222;color:#fff;border:1px solid #282828}
+.wrong-popup.hidden{display:none!important}
+.wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
+.wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid #ef4444;display:block;object-fit:contain;background:#111}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+</style></head><body>
+<header>
+<div class="header-row">
+<div class="brand">
+<div>Regional Anatomy 1 <span>Week 4 Quiz Hub</span></div>
+<small>NBCE Part 1 Board Prep &middot; Rotating Bank</small>
+</div>
+<div class="header-right">
+<button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
+<span class="pill" id="answered-display">Answered: 0 / 0</span>
+<span class="pill score-pill" id="score-display">Score: 0 / 0 (0%)</span>
+</div>
+</div>
+<div class="progress-track"><div id="progress-bar"></div></div>
+</header>
+
+<div class="mode-container" id="modeSelector">
+<button class="mode-btn active" id="fullQuizBtn">Full Quiz (50 Qs)</button>
+<button class="mode-btn" id="quickQuizBtn">Quickie Drill</button>
+</div>
+<div class="quickie-options-bar hidden" id="quickieOptionsBar">
+<span class="quickie-label">Duration:</span>
+<button class="count-chip" data-count="10">10 Questions</button>
+<button class="count-chip active" data-count="25">25 Questions</button>
+<button class="count-chip" data-count="35">35 Questions</button>
+</div>
+
+<div id="quiz-container"></div>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
+
+<script>
+/* Builder: first option listed is the correct one (shuffled at draw time).
+   Q(slide, difficulty e/m/h, priority 0/1, stem, [[text, why], ...])
+   Quarter = Math.ceil(slide/20). Deck order: Q1 shoulder (1-25), Q2 arm + anterior/posterior forearm (26-50),
+   Q3 posterior forearm + hand (51-75), Q4 plexus, vessels, elbow, entrapments, other nerves (76-100). */
+let _id=0;
+function Q(slide,d,p,stem,o){
+  _id++;
+  return {id:_id,quarter:Math.ceil(slide/20),slideRef:slide,difficulty:{e:"easy",m:"medium",h:"hard"}[d],priority:!!p,stem:stem,
+    options:o.map((x,i)=>({text:x[0],correct:i===0,why:x[1]+" [Slide #"+slide+"]"}))};
+}
+const questionBank=[
+/* ===== QUARTER 1 (slides 1-20): BRACHIAL PLEXUS FOUNDATION ===== */
+Q(1,"e",1,"The brachial plexus is formed from the nerve roots of _______.",[
+ ["C5-T1","Correct: the plexus is built from roots C5 through T1."],
+ ["C1-C4","Incorrect: C1-C4 form the cervical plexus."],
+ ["T2-T6","Incorrect: these thoracic levels form intercostal nerves."],
+ ["L1-S1","Incorrect: these levels form the lumbar and sacral plexuses."]]),
+Q(2,"m",1,"Which sequence correctly orders the brachial plexus from proximal to distal?",[
+ ["Roots, trunks, divisions, cords, branches","Correct: this is the proximal-to-distal order."],
+ ["Roots, divisions, trunks, cords, branches","Incorrect: trunks come before divisions."],
+ ["Roots, trunks, cords, divisions, branches","Incorrect: divisions come before cords."],
+ ["Trunks, roots, divisions, cords, branches","Incorrect: roots are the most proximal component."]]),
+Q(3,"e",1,"The cords of the brachial plexus are named for their orientation around the _______ artery.",[
+ ["axillary","Correct: lateral, medial, and posterior cords surround the axillary artery."],
+ ["brachial","Incorrect: the cords lie proximal to the brachial artery."],
+ ["radial","Incorrect: the radial artery is in the forearm."],
+ ["deep brachial","Incorrect: this artery lies in the arm near the radial groove."]]),
+Q(4,"m",1,"Which pair are the terminal branches of the lateral cord?",[
+ ["Musculocutaneous nerve and half of the median nerve","Correct: the lateral cord gives these two branches."],
+ ["Ulnar nerve and half of the median nerve","Incorrect: these are medial cord branches."],
+ ["Axillary nerve and radial nerve","Incorrect: these are posterior cord branches."],
+ ["Radial nerve and ulnar nerve","Incorrect: these arise from the posterior and medial cords."]]),
+Q(5,"m",1,"Which pair are the terminal branches of the medial cord?",[
+ ["Ulnar nerve and the other half of the median nerve","Correct: the medial cord gives these two branches."],
+ ["Musculocutaneous nerve and half of the median nerve","Incorrect: these are lateral cord branches."],
+ ["Axillary nerve and radial nerve","Incorrect: these are posterior cord branches."],
+ ["Axillary nerve and ulnar nerve","Incorrect: the axillary nerve comes from the posterior cord."]]),
+Q(6,"m",0,"Which pair are the terminal branches of the posterior cord?",[
+ ["Axillary nerve and radial nerve","Correct: the posterior cord ends by splitting into these two nerves."],
+ ["Musculocutaneous nerve and axillary nerve","Incorrect: the musculocutaneous nerve is from the lateral cord."],
+ ["Radial nerve and ulnar nerve","Incorrect: the ulnar nerve is from the medial cord."],
+ ["Median nerve and radial nerve","Incorrect: the median nerve is formed by lateral and medial cord contributions."]]),
+Q(7,"m",1,"From which spinal levels does the musculocutaneous nerve arise?",[
+ ["C5-C7","Correct: the musculocutaneous nerve is C5-C7."],
+ ["C8-T1","Incorrect: these levels contribute to the medial cord and ulnar nerve."],
+ ["C2-C4","Incorrect: these levels form the cervical plexus."],
+ ["T2-T4","Incorrect: these thoracic levels are outside the brachial plexus."]]),
+Q(8,"m",0,"Which muscles are supplied by the musculocutaneous nerve?",[
+ ["Biceps brachii, brachialis, and coracobrachialis","Correct: these are the anterior arm muscles."],
+ ["Triceps brachii, anconeus, and brachioradialis","Incorrect: these are radial nerve muscles."],
+ ["Deltoid, teres minor, and supraspinatus","Incorrect: these are supplied by the axillary and suprascapular nerves."],
+ ["Pronator teres, flexor carpi radialis, and palmaris longus","Incorrect: these are median nerve muscles."]]),
+Q(9,"m",0,"Sensation over the lateral forearm is supplied by which nerve?",[
+ ["Lateral antebrachial cutaneous nerve","Correct: it is the sensory continuation of the musculocutaneous nerve."],
+ ["Medial antebrachial cutaneous nerve","Incorrect: this supplies the medial forearm and arises from the medial cord."],
+ ["Dorsal cutaneous branch of the ulnar nerve","Incorrect: this supplies the medial dorsal hand."],
+ ["Palmar cutaneous branch of the median nerve","Incorrect: this supplies the lateral palm, not the lateral forearm."]]),
+Q(10,"m",1,"From which spinal levels does the median nerve arise?",[
+ ["C6-T1","Correct: the median nerve is C6-T1."],
+ ["C1-C3","Incorrect: these levels form the upper cervical plexus."],
+ ["T2-T4","Incorrect: these thoracic levels are outside the brachial plexus."],
+ ["L4-L5","Incorrect: these levels form the lumbar plexus and sciatic nerve."]]),
+Q(11,"h",1,"Which forearm muscle pair is supplied by the median nerve?",[
+ ["Pronator teres and pronator quadratus","Correct: both pronators are median-supplied."],
+ ["Flexor carpi ulnaris and medial flexor digitorum profundus","Incorrect: these are the ulnar-supplied forearm muscles."],
+ ["Supinator and extensor carpi radialis longus","Incorrect: these are radial nerve muscles."],
+ ["Brachialis and coracobrachialis","Incorrect: these arm muscles are musculocutaneous-supplied."]]),
+Q(12,"e",0,"The median nerve supplies palmar sensation to which digits?",[
+ ["Thumb through the radial half of the ring finger","Correct: the lateral 3.5 digits."],
+ ["Little finger and ulnar half of the ring finger","Incorrect: this is ulnar nerve territory."],
+ ["Index through little finger","Incorrect: the little finger is ulnar-supplied."],
+ ["Thumb and index finger only","Incorrect: the median also supplies the middle finger and half the ring finger."]]),
+Q(13,"h",1,"Which nerve supplies the dorsal fingertips and nail beds of digits 1 through 3.5?",[
+ ["Median nerve","Correct: median digital branches wrap to the dorsal tips."],
+ ["Radial nerve","Incorrect: the superficial radial nerve supplies the dorsum of the hand and proximal digits."],
+ ["Ulnar nerve","Incorrect: it supplies the medial 1.5 digits."],
+ ["Musculocutaneous nerve","Incorrect: it ends in the forearm."]]),
+Q(14,"m",0,"From which spinal levels does the ulnar nerve arise?",[
+ ["C8-T1","Correct: the ulnar nerve is C8-T1."],
+ ["C2-C4","Incorrect: these levels form the cervical plexus."],
+ ["T3-T5","Incorrect: these thoracic levels are outside the plexus."],
+ ["L1-L2","Incorrect: these levels form the lumbar plexus."]]),
+Q(15,"m",1,"Which hand muscle is supplied by the ulnar nerve?",[
+ ["Adductor pollicis","Correct: it is ulnar-supplied despite acting on the thumb."],
+ ["Abductor pollicis brevis","Incorrect: it is supplied by the recurrent median nerve."],
+ ["Opponens pollicis","Incorrect: it is supplied by the recurrent median nerve."],
+ ["First lumbrical","Incorrect: lumbricals 1 and 2 are median-supplied."]]),
+Q(16,"e",0,"The ulnar nerve supplies palmar and dorsal sensation to which digits?",[
+ ["Little finger and ulnar half of the ring finger","Correct: the medial 1.5 digits."],
+ ["Thumb and index finger","Incorrect: these are median and radial territory."],
+ ["Middle finger and radial half of the ring finger","Incorrect: this is median territory."],
+ ["Thumb through the radial half of the ring finger","Incorrect: this is the median lateral 3.5 digits."]]),
+Q(17,"m",0,"Which muscle pair is supplied by the axillary nerve?",[
+ ["Deltoid and teres minor","Correct: the axillary nerve (C5-C6) supplies both."],
+ ["Supraspinatus and infraspinatus","Incorrect: these are supplied by the suprascapular nerve."],
+ ["Teres major and subscapularis","Incorrect: these are supplied by the subscapular nerves."],
+ ["Biceps brachii and brachialis","Incorrect: these are musculocutaneous-supplied."]]),
+Q(18,"m",1,"Which muscles are supplied by the radial nerve?",[
+ ["Triceps, supinator, and wrist and finger extensors","Correct: the radial nerve supplies the extensor compartments."],
+ ["Pronator teres, flexor carpi radialis, and flexor pollicis longus","Incorrect: these are median nerve muscles."],
+ ["Hypothenar muscles, interossei, and adductor pollicis","Incorrect: these are ulnar nerve muscles."],
+ ["Biceps brachii, brachialis, and coracobrachialis","Incorrect: these are musculocutaneous-supplied."]]),
+Q(19,"h",1,"Which nerve supplies the dorsum of the hand and proximal dorsal digits 1 through 3.5?",[
+ ["Radial nerve","Correct: the superficial radial branch covers the lateral dorsal hand."],
+ ["Ulnar nerve","Incorrect: it supplies the medial dorsum and medial 1.5 digits."],
+ ["Median nerve","Incorrect: it supplies only the dorsal tips and nail beds of these digits."],
+ ["Axillary nerve","Incorrect: it supplies skin over the shoulder."]]),
+Q(20,"h",1,"Which nerve supplies the anterior arm muscles and the skin of the lateral forearm?",[
+ ["Musculocutaneous","Correct: muscular branches reach the anterior arm and its cutaneous continuation reaches the forearm."],
+ ["Radial","Incorrect: it supplies the posterior arm and forearm."],
+ ["Median","Incorrect: it supplies no arm muscles."],
+ ["Axillary","Incorrect: it supplies the deltoid and teres minor."]]),
+
+/* ===== QUARTER 2 (slides 21-40): LAB REVIEW STRUCTURES ===== */
+Q(21,"e",1,"The radial artery passes through the _______ on the dorsolateral wrist.",[
+ ["anatomical snuffbox","Correct: its pulse can be felt in the snuffbox."],
+ ["tunnel of Guyon","Incorrect: this carries the ulnar nerve and artery."],
+ ["carpal tunnel","Incorrect: this carries the median nerve and flexor tendons."],
+ ["quadrangular space","Incorrect: this is at the shoulder."]]),
+Q(22,"h",1,"Which feature distinguishes the lumbricals from the interossei?",[
+ ["Lumbricals attach to tendons; interossei attach to bone","Correct: lumbricals arise from FDP tendons while interossei arise from metacarpals."],
+ ["Lumbricals attach to bone; interossei attach to tendons","Incorrect: this inverts the relationship."],
+ ["Lumbricals lie deep between the metacarpals; interossei lie superficially","Incorrect: the interossei are the deeper muscles."],
+ ["Lumbricals are all ulnar-supplied; interossei are all median-supplied","Incorrect: lumbricals are split and all interossei are ulnar-supplied."]]),
+Q(23,"m",0,"Which muscle group lies deep to the flexor tendons and attaches to bone between the metacarpals?",[
+ ["Interossei","Correct: they lie between and attach to the metacarpals."],
+ ["Lumbricals","Incorrect: these lie in the same plane as the tendons and attach to them."],
+ ["Thenar muscles","Incorrect: these form the thumb-side eminence."],
+ ["Hypothenar muscles","Incorrect: these form the little-finger-side eminence."]]),
+Q(24,"h",1,"The oblique head of the adductor pollicis arises from the capitate and metacarpals _______.",[
+ ["2 and 3","Correct: it skips over to the third metacarpal and carpal bones before reaching the thumb."],
+ ["1 and 2","Incorrect: the origin extends to the third metacarpal."],
+ ["3 and 4","Incorrect: the origin begins at the second metacarpal."],
+ ["4 and 5","Incorrect: these are not part of the origin."]]),
+Q(25,"e",0,"A muscle seen between metacarpals on the dorsum of the hand is a _______.",[
+ ["dorsal interosseous","Correct: only dorsal interossei are visible on the back of the hand."],
+ ["palmar interosseous","Incorrect: palmar interossei lie on the palmar side."],
+ ["lumbrical","Incorrect: lumbricals lie in the palm with the flexor tendons."],
+ ["adductor pollicis","Incorrect: it lies on the palmar side."]]),
+Q(26,"e",0,"Which nerve runs with the ulnar artery?",[
+ ["Ulnar nerve","Correct: the two travel together with no distinguishing feature between them."],
+ ["Median nerve","Incorrect: the median nerve enters the hand through the carpal tunnel."],
+ ["Radial nerve","Incorrect: it travels with the radial artery branches and the deep brachial artery."],
+ ["Musculocutaneous nerve","Incorrect: it ends in the forearm as a cutaneous nerve."]]),
+Q(27,"m",1,"The ulnar nerve and artery enter the hand through the _______.",[
+ ["tunnel of Guyon","Correct: it lies superficial to the flexor retinaculum."],
+ ["carpal tunnel","Incorrect: the median nerve passes through here."],
+ ["cubital tunnel only","Incorrect: this is at the elbow."],
+ ["anatomical snuffbox","Incorrect: this contains the radial artery."]]),
+Q(28,"m",1,"Which flexor tendon ends at the wrist rather than the digits?",[
+ ["Flexor carpi radialis","Correct: carpi muscles stop at the wrist."],
+ ["Flexor digitorum superficialis","Incorrect: digitorum tendons reach the digits."],
+ ["Flexor digitorum profundus","Incorrect: digitorum tendons reach the digits."],
+ ["Flexor pollicis longus","Incorrect: it reaches the thumb."]]),
+Q(29,"m",0,"Which flexor extends to the distal phalanx of the digits?",[
+ ["Flexor digitorum profundus","Correct: it passes through the split superficialis tendon to the digit tips."],
+ ["Flexor digitorum superficialis","Incorrect: it ends at the middle phalanges."],
+ ["Flexor carpi ulnaris","Incorrect: it ends at the carpals and fifth metacarpal."],
+ ["Palmaris longus","Incorrect: it ends in the palmar aponeurosis."]]),
+Q(30,"m",0,"Which structure connects the shafts of the radius and ulna?",[
+ ["interosseous membrane","Correct: it spans between the two forearm bones."],
+ ["annular ligament","Incorrect: it encircles the radial head."],
+ ["flexor retinaculum","Incorrect: it forms the carpal tunnel roof."],
+ ["palmar aponeurosis","Incorrect: it is the central palmar fascia."]]),
+Q(31,"m",0,"Which small muscle near the elbow assists the triceps and is much smaller than the supinator?",[
+ ["Anconeus","Correct: it is a small muscle assisting terminal elbow extension."],
+ ["Brachialis","Incorrect: it is a large anterior arm flexor."],
+ ["Pronator quadratus","Incorrect: it is at the distal forearm."],
+ ["Brachioradialis","Incorrect: it is a long lateral forearm muscle."]]),
+Q(32,"m",0,"Which muscle is the deepest and most distal pronator of the forearm?",[
+ ["Pronator quadratus","Correct: it lies just above the wrist across the radius and ulna."],
+ ["Pronator teres","Incorrect: it is proximal and more superficial."],
+ ["Supinator","Incorrect: it is a supinator."],
+ ["Flexor carpi radialis","Incorrect: it is a wrist flexor and radial deviator."]]),
+Q(33,"m",0,"The palmar aponeurosis is continuous with the tendon of which muscle?",[
+ ["Palmaris longus","Correct: the apex of the aponeurosis blends with its tendon."],
+ ["Flexor carpi radialis","Incorrect: this inserts at the second metacarpal."],
+ ["Flexor carpi ulnaris","Incorrect: this inserts at the pisiform and fifth metacarpal."],
+ ["Flexor digitorum superficialis","Incorrect: this inserts on the middle phalanges."]]),
+Q(34,"m",0,"Which structure forms the roof of the carpal tunnel?",[
+ ["Flexor retinaculum","Correct: the transverse carpal ligament roofs the tunnel."],
+ ["Extensor retinaculum","Incorrect: this is on the dorsal wrist."],
+ ["Palmar aponeurosis","Incorrect: this is superficial central palm fascia."],
+ ["Interosseous membrane","Incorrect: this lies in the forearm."]]),
+Q(35,"m",0,"Which anterior arm muscle lies deep to the biceps and does not reach the shoulder?",[
+ ["Brachialis","Correct: it arises from the distal humerus."],
+ ["Coracobrachialis","Incorrect: it arises from the coracoid process."],
+ ["Triceps brachii","Incorrect: it is in the posterior compartment."],
+ ["Anconeus","Incorrect: it is near the posterior elbow."]]),
+Q(36,"m",0,"Which head of the triceps lies deepest and arises inferior to the radial groove?",[
+ ["Medial head","Correct: it is largely covered by the other two heads."],
+ ["Long head","Incorrect: it arises from the scapula."],
+ ["Lateral head","Incorrect: it arises superior to the radial groove."],
+ ["Short head","Incorrect: the triceps has no short head."]]),
+Q(37,"e",0,"The extensor digiti minimi extends the _______ finger.",[
+ ["little","Correct: minimi refers to the little finger."],
+ ["index","Incorrect: the extensor indicis extends the index finger."],
+ ["middle","Incorrect: the middle finger has no dedicated extensor."],
+ ["ring","Incorrect: the ring finger has no dedicated extensor."]]),
+Q(38,"m",0,"How many palmar interossei are there?",[
+ ["Three","Correct: they serve digits 2, 4, and 5."],
+ ["Four","Incorrect: four is the number of dorsal interossei."],
+ ["Two","Incorrect: there are three."],
+ ["Five","Incorrect: there are three."]]),
+Q(39,"h",1,"Which muscle lies in the same plane as the FDP tendons and is supplied by the median nerve?",[
+ ["First lumbrical","Correct: lumbricals 1 and 2 are median-supplied."],
+ ["Third lumbrical","Incorrect: lumbricals 3 and 4 are ulnar-supplied."],
+ ["Dorsal interosseous","Incorrect: it lies deeper and is ulnar-supplied."],
+ ["Palmar interosseous","Incorrect: it lies deeper and is ulnar-supplied."]]),
+Q(40,"h",0,"Which tendon lies between the flexor carpi radialis and flexor carpi ulnaris at the wrist and may be absent?",[
+ ["Palmaris longus","Correct: it lies centrally and is absent in about 14%."],
+ ["Flexor pollicis longus","Incorrect: it is deeper and always present."],
+ ["Flexor digitorum superficialis","Incorrect: it is deeper and always present."],
+ ["Extensor carpi radialis longus","Incorrect: it is on the posterior forearm."]]),
+
+/* ===== QUARTER 3 (slides 41-60): ELBOW LIGAMENTS, CONDITIONS, ENTRAPMENTS ===== */
+Q(41,"e",1,"Which three ligaments are the main ligaments of the elbow?",[
+ ["Radial collateral, annular, and ulnar collateral","Correct: these are the three main elbow ligaments."],
+ ["Radial collateral, ulnar collateral, and transverse carpal","Incorrect: the transverse carpal ligament is at the wrist."],
+ ["Annular, ulnar collateral, and glenohumeral","Incorrect: glenohumeral ligaments are in the shoulder."],
+ ["Radial collateral, annular, and anterior cruciate","Incorrect: the anterior cruciate is a knee ligament."]]),
+Q(42,"m",1,"Which description fits the radial collateral ligament?",[
+ ["Fan-like; arises from the lateral epicondyle and blends with the annular ligament","Correct: it starts at a point and fans out."],
+ ["Triangular; arises from the medial epicondyle and ends at the olecranon","Incorrect: this describes the ulnar collateral ligament."],
+ ["Horizontal band encircling the head of the radius","Incorrect: this describes the annular ligament."],
+ ["Sheet spanning the shafts of the radius and ulna","Incorrect: this describes the interosseous membrane."]]),
+Q(43,"m",0,"The collateral ligaments of the elbow primarily resist _______ forces.",[
+ ["side-to-side","Correct: they prevent the joint from opening on either side."],
+ ["flexion-extension","Incorrect: the hinge joint moves freely in these directions."],
+ ["rotational","Incorrect: the annular ligament manages pronation and supination."],
+ ["compressive","Incorrect: bone alignment resists compression rather than collateral ligaments."]]),
+Q(44,"m",1,"What is the main role of the annular ligament?",[
+ ["Holds the radial head while permitting pronation and supination","Correct: the radial head rotates inside the ligament."],
+ ["Resists side-to-side forces on the medial elbow","Incorrect: this is a collateral ligament role."],
+ ["Connects the shafts of the radius and ulna","Incorrect: this is the interosseous membrane."],
+ ["Limits elbow hyperflexion","Incorrect: this is not its main role."]]),
+Q(45,"m",0,"Which cue separates the annular ligament from the collateral ligaments?",[
+ ["Collaterals cross the sides of the joint; the annular encircles the radial head","Correct: this is the key positional cue."],
+ ["Collaterals encircle the radial head; the annular crosses the sides of the joint","Incorrect: this inverts the cue."],
+ ["Collaterals are horizontal; the annular is vertical","Incorrect: the annular is the horizontal one."],
+ ["Collaterals attach only to the radius; the annular only to the ulna","Incorrect: the attachments do not follow this pattern."]]),
+Q(46,"m",1,"Which description fits the ulnar collateral ligament?",[
+ ["Triangular; broad at the medial epicondyle, narrowing to the olecranon","Correct: it starts broad and ends at a point."],
+ ["Fan-like; arises from a point on the lateral epicondyle","Incorrect: this describes the radial collateral ligament."],
+ ["Horizontal; encircles the radial head","Incorrect: this describes the annular ligament."],
+ ["Triangular; broad at the lateral epicondyle, narrowing to the radial head","Incorrect: it is on the medial side."]]),
+Q(47,"h",1,"Which pairing for the ulnar collateral ligament bands is correct?",[
+ ["Anterior is strongest; posterior is weakest","Correct: the anterior band is the main stabilizer and the posterior band fills in the triangle."],
+ ["Posterior is strongest; anterior is weakest","Incorrect: this inverts the strength pattern."],
+ ["Oblique is strongest; anterior is weakest","Incorrect: the oblique band connects along the olecranon but is not the strongest."],
+ ["Oblique is strongest; posterior is weakest","Incorrect: the anterior band is strongest."]]),
+Q(48,"e",0,"The ulnar collateral ligament has _______ bands.",[
+ ["three","Correct: anterior, posterior, and oblique."],
+ ["two","Incorrect: there are three."],
+ ["four","Incorrect: there are three."],
+ ["five","Incorrect: there are three."]]),
+Q(49,"m",1,"Lateral epicondylitis (tennis elbow) involves strain of which structures?",[
+ ["Common extensor muscles at the lateral epicondyle","Correct: repetitive strain affects the extensors."],
+ ["Common flexor muscles at the medial epicondyle","Incorrect: this describes medial epicondylitis."],
+ ["Biceps tendon at the radial tuberosity","Incorrect: this is not the epicondylitis site."],
+ ["Triceps tendon at the olecranon","Incorrect: this is not the epicondylitis site."]]),
+Q(50,"m",1,"Which muscle is involved in medial epicondylitis?",[
+ ["Pronator teres","Correct: it arises from the medial epicondyle along with the flexors."],
+ ["Supinator","Incorrect: it arises from the lateral epicondyle."],
+ ["Extensor carpi radialis brevis","Incorrect: it arises from the lateral epicondyle."],
+ ["Anconeus","Incorrect: it arises from the lateral epicondyle."]]),
+Q(51,"m",0,"Why are the terms medial and lateral epicondylitis preferred over golfer's and tennis elbow?",[
+ ["Either condition can result from either sport","Correct: the names are more specific about location."],
+ ["Each condition only occurs in non-athletes","Incorrect: athletes are commonly affected."],
+ ["Both affect the same epicondyle","Incorrect: they affect opposite epicondyles."],
+ ["Only one of the two conditions is common","Incorrect: both occur."]]),
+Q(52,"e",0,"One of the best ways to help epicondylitis is _______ from repetitive tasks.",[
+ ["rest","Correct: rest and improved ergonomics are the primary approach."],
+ ["forceful gripping","Incorrect: this overloads the strained tendons."],
+ ["repetitive resisted exercise","Incorrect: this keeps overloading the strained tendons."],
+ ["elbow manipulation","Incorrect: the cause is overuse, not a joint restriction."]]),
+Q(53,"h",1,"What distinguishes Little League elbow from pitcher's elbow?",[
+ ["An open growth plate is pulled on in Little League elbow; collateral ligaments are stressed without one","Correct: the mechanism is the same but the anatomy differs."],
+ ["An open growth plate is stressed in pitcher's elbow; collaterals in Little League elbow","Incorrect: this inverts the pattern."],
+ ["Little League elbow affects the annular ligament only","Incorrect: it involves the growth plate."],
+ ["Pitcher's elbow involves the radial head only","Incorrect: it involves the collateral ligaments."]]),
+Q(54,"m",0,"What does a radiograph of a 17-year-old with Little League elbow show?",[
+ ["An abnormal line at the growth plate by the epicondyle","Correct: a faint crack or widening is seen compared with a clean gap on the normal side."],
+ ["A clean, normal growth plate gap","Incorrect: this is the normal comparison elbow."],
+ ["A fractured olecranon","Incorrect: this is not the described finding."],
+ ["A dislocated radial head","Incorrect: this is not the described finding."]]),
+Q(55,"m",0,"Which approach is appropriate for a strained or fractured elbow?",[
+ ["Avoid adjusting the elbow until it heals; adjust nearby joints","Correct: avoid worsening the injury while still treating the shoulder and wrist."],
+ ["Adjust the elbow immediately to restore motion","Incorrect: this risks worsening the injury."],
+ ["Adjust only the elbow and no other joints","Incorrect: neighboring joints can be adjusted."],
+ ["Rotate the radial head aggressively","Incorrect: this risks worsening the injury."]]),
+Q(56,"e",0,"Both carpal tunnel syndrome and pronator teres syndrome involve entrapment of which nerve?",[
+ ["median","Correct: they differ by site along the same nerve."],
+ ["ulnar","Incorrect: ulnar entrapment occurs at the elbow or Guyon's canal."],
+ ["radial","Incorrect: radial entrapment occurs at the supinator."],
+ ["axillary","Incorrect: this is a shoulder nerve."]]),
+Q(57,"h",1,"A tap that reproduces pain, tingling, and numbness over the proximal forearm suggests entrapment at the _______.",[
+ ["pronator teres","Correct: a positive Tinel sign over the proximal forearm localizes to the pronator teres."],
+ ["carpal tunnel","Incorrect: a positive Tinel sign at the wrist localizes to the carpal tunnel."],
+ ["tunnel of Guyon","Incorrect: this involves the ulnar nerve."],
+ ["supinator","Incorrect: this involves the deep radial nerve."]]),
+Q(58,"m",1,"Chronic carpal tunnel syndrome can atrophy which muscles?",[
+ ["Thenar muscles","Correct: this loses opposition and produces an ape hand appearance."],
+ ["Hypothenar muscles","Incorrect: these are ulnar-supplied."],
+ ["Dorsal interossei","Incorrect: these are ulnar-supplied."],
+ ["Lumbricals 3 and 4","Incorrect: these are ulnar-supplied."]]),
+Q(59,"h",1,"Which finding most specifically suggests pronator teres syndrome rather than carpal tunnel?",[
+ ["Pain reproduced by pronation against resistance","Correct: pronating tightens the muscle over the nerve."],
+ ["Thenar muscle atrophy","Incorrect: this suggests chronic carpal tunnel syndrome."],
+ ["Positive Phalen test","Incorrect: this points to the wrist."],
+ ["Positive Tinel sign at the wrist","Incorrect: this points to the carpal tunnel."]]),
+Q(60,"m",0,"Surgery for carpal tunnel syndrome cuts open which structure?",[
+ ["Flexor retinaculum","Correct: this makes extra room for the median nerve."],
+ ["Extensor retinaculum","Incorrect: this is on the dorsal wrist."],
+ ["Palmar aponeurosis","Incorrect: this is cut for Dupuytren contracture."],
+ ["Annular ligament","Incorrect: this is an elbow ligament."]]),
+
+/* ===== QUARTER 4 (slides 61-80): THORACIC OUTLET, OTHER NERVES, TUNNELS, SPACES ===== */
+Q(61,"m",1,"Which structures pass through the thoracic outlet and can be compressed?",[
+ ["Brachial plexus, subclavian-axillary artery, and subclavian-axillary vein","Correct: these all pass through the same narrow space."],
+ ["Brachial plexus, brachial artery, and cephalic vein","Incorrect: the brachial artery is in the arm."],
+ ["Radial nerve, deep brachial artery, and basilic vein","Incorrect: these lie in the arm."],
+ ["Long thoracic nerve, thoracodorsal artery, and median cubital vein","Incorrect: these are not the main outlet structures."]]),
+Q(62,"e",1,"The most common form of thoracic outlet syndrome is _______.",[
+ ["neurogenic","Correct: it presents with pain, tingling, and numbness down the arm."],
+ ["venous","Incorrect: venous compression is less common."],
+ ["arterial","Incorrect: arterial compression is the least common."],
+ ["lymphatic","Incorrect: this is not a recognized type."]]),
+Q(63,"m",1,"Which pairing of thoracic outlet syndrome type and sign is correct?",[
+ ["Venous: bluish color and swelling; arterial: pallor and coldness","Correct: veins back up while arteries lose perfusion."],
+ ["Venous: pallor and coldness; arterial: bluish color and swelling","Incorrect: this inverts the signs."],
+ ["Neurogenic: bluish color and swelling","Incorrect: neurogenic causes pain, tingling, and numbness."],
+ ["Neurogenic: pallor and coldness","Incorrect: neurogenic causes pain, tingling, and numbness."]]),
+Q(64,"m",0,"Why is arterial thoracic outlet syndrome the least common?",[
+ ["The tunica media helps keep the artery open","Correct: veins have little to prevent flattening, so they compress more easily."],
+ ["Arteries are located outside the thoracic outlet","Incorrect: the subclavian-axillary artery passes through it."],
+ ["Arteries lack any wall layers","Incorrect: arteries have thick walls."],
+ ["Arteries are not affected by ribs or muscles","Incorrect: they can be compressed by them."]]),
+Q(65,"m",1,"Which can compress the thoracic outlet?",[
+ ["Tight scalene muscles or a cervical rib","Correct: either can narrow the outlet."],
+ ["Tight brachioradialis","Incorrect: it is in the forearm."],
+ ["Weak triceps","Incorrect: it is not near the outlet."],
+ ["Tight supinator","Incorrect: it is in the forearm."]]),
+Q(66,"m",0,"Compression beneath which muscle is now termed pectoralis minor syndrome?",[
+ ["Pectoralis minor","Correct: compression is now identified by the specific site."],
+ ["Subclavius","Incorrect: this muscle is not named for the syndrome."],
+ ["Serratus anterior","Incorrect: this muscle is not named for the syndrome."],
+ ["Anterior scalene","Incorrect: this is a separate source of outlet compression."]]),
+Q(67,"h",1,"Which pairing of pectoral nerve, cord, and level is correct?",[
+ ["Lateral pectoral: lateral cord, C5-C6; medial pectoral: medial cord, C8-T1","Correct: the lateral pectoral supplies the major; the medial supplies both."],
+ ["Lateral pectoral: medial cord, C5-C6; medial pectoral: lateral cord, C8-T1","Incorrect: the cords are inverted."],
+ ["Lateral pectoral: lateral cord, C8-T1; medial pectoral: medial cord, C5-C6","Incorrect: the levels are inverted."],
+ ["Lateral pectoral: posterior cord, C5-C6; medial pectoral: posterior cord, C8-T1","Incorrect: both come from the lateral and medial cords."]]),
+Q(68,"m",1,"The suprascapular nerve arises from the superior trunk and supplies which muscles?",[
+ ["Supraspinatus and infraspinatus","Correct: it abducts and laterally rotates the humerus."],
+ ["Deltoid and teres minor","Incorrect: these are supplied by the axillary nerve."],
+ ["Rhomboids and levator scapulae","Incorrect: these are supplied by the dorsal scapular nerve."],
+ ["Subscapularis and teres major","Incorrect: these are supplied by the subscapular nerves."]]),
+Q(69,"h",1,"Which statement about the subscapular nerves is correct?",[
+ ["They arise from the posterior cord; the lower one also supplies the teres major","Correct: the subscapularis receives both and the teres major only the lower."],
+ ["They arise from the lateral cord; the upper one supplies the teres major","Incorrect: they arise from the posterior cord."],
+ ["They arise from the medial cord; both supply the teres major","Incorrect: the medial cord is not their origin."],
+ ["They arise from the posterior cord; both supply only the teres major","Incorrect: they supply the subscapularis too."]]),
+Q(70,"e",0,"The thoracodorsal nerve supplies the _______.",[
+ ["latissimus dorsi","Correct: thoracic plus dorsum identifies the back muscle."],
+ ["serratus anterior","Incorrect: this is supplied by the long thoracic nerve."],
+ ["trapezius","Incorrect: this is supplied by the spinal accessory nerve."],
+ ["teres minor","Incorrect: this is supplied by the axillary nerve."]]),
+Q(71,"m",1,"The dorsal scapular nerve arises from C5 and supplies which muscles?",[
+ ["Rhomboids and levator scapulae","Correct: it runs to the back of the scapular region."],
+ ["Supraspinatus and infraspinatus","Incorrect: these are supplied by the suprascapular nerve."],
+ ["Trapezius and sternocleidomastoid","Incorrect: these are supplied by the spinal accessory nerve."],
+ ["Pectoralis major and minor","Incorrect: these are supplied by the pectoral nerves."]]),
+Q(72,"e",0,"The spinal accessory nerve is cranial nerve _______.",[
+ ["XI","Correct: it supplies the trapezius and sternocleidomastoid."],
+ ["X","Incorrect: this is the vagus nerve."],
+ ["XII","Incorrect: this is the hypoglossal nerve."],
+ ["IX","Incorrect: this is the glossopharyngeal nerve."]]),
+Q(73,"m",1,"A spinal accessory nerve lesion produces which sign?",[
+ ["Drooping of the shoulder with limited arm abduction","Correct: without a working trapezius the arm cannot be abducted far."],
+ ["Marked winging of the entire scapula","Incorrect: this is a long thoracic nerve lesion."],
+ ["Loss of thumb opposition","Incorrect: this is a median nerve lesion."],
+ ["Wrist drop","Incorrect: this is a radial nerve lesion."]]),
+Q(74,"m",1,"A long thoracic nerve lesion paralyzes the _______ and produces marked scapular winging.",[
+ ["serratus anterior","Correct: the nerve supplies this punching muscle."],
+ ["trapezius","Incorrect: this is supplied by the spinal accessory nerve."],
+ ["rhomboid major","Incorrect: this is supplied by the dorsal scapular nerve."],
+ ["latissimus dorsi","Incorrect: this is supplied by the thoracodorsal nerve."]]),
+Q(75,"h",1,"The lateral antebrachial cutaneous nerve continues from the musculocutaneous nerve after it supplies which muscle?",[
+ ["Brachialis","Correct: after branching to the brachialis, the nerve becomes the lateral antebrachial cutaneous nerve."],
+ ["Coracobrachialis","Incorrect: the nerve pierces this muscle earlier."],
+ ["Brachioradialis","Incorrect: this is a radial nerve muscle."],
+ ["Pronator teres","Incorrect: this is a median nerve muscle."]]),
+Q(76,"m",1,"Which nerve passes beneath the supinator?",[
+ ["Deep radial nerve","Correct: this is how it is identified as the deep branch."],
+ ["Superficial radial nerve","Incorrect: it supplies skin and does not pass under the supinator."],
+ ["Median nerve","Incorrect: it passes through the carpal tunnel."],
+ ["Ulnar nerve","Incorrect: it passes around the olecranon region and the tunnel of Guyon."]]),
+Q(77,"h",1,"Which nerve and passage pairing is correct?",[
+ ["Radial nerve, spiral groove of the humerus","Correct: the radial nerve winds around the humerus here."],
+ ["Median nerve, tunnel of Guyon","Incorrect: Guyon's tunnel carries the ulnar nerve."],
+ ["Ulnar nerve, carpal tunnel","Incorrect: the median nerve passes through the carpal tunnel."],
+ ["Axillary nerve, spiral groove of the humerus","Incorrect: the axillary nerve passes through the quadrangular space."]]),
+Q(78,"m",1,"The triangular space is bordered by the teres minor, teres major, and the long head of the _______.",[
+ ["triceps","Correct: these three borders make the space, which transmits the circumflex scapular artery."],
+ ["biceps","Incorrect: the biceps is not a border."],
+ ["deltoid","Incorrect: the deltoid is not a border."],
+ ["brachialis","Incorrect: the brachialis is an anterior arm muscle."]]),
+Q(79,"m",1,"Which pair passes through the quadrangular space?",[
+ ["Axillary nerve and posterior circumflex humeral artery","Correct: the humerus forms the extra border of this space."],
+ ["Axillary nerve and circumflex scapular artery","Incorrect: the circumflex scapular artery passes through the triangular space."],
+ ["Radial nerve and posterior circumflex humeral artery","Incorrect: the radial nerve winds around the spiral groove."],
+ ["Radial nerve and circumflex scapular artery","Incorrect: neither passes through the quadrangular space."]]),
+Q(80,"e",0,"Which statement correctly describes vessel direction in the upper limb?",[
+ ["Arteries run from the neck down the arm; veins return from the hand upward","Correct: venous drainage proceeds backward."],
+ ["Arteries run from the hand to the neck; veins run from the neck to the hand","Incorrect: this inverts the flow."],
+ ["Both arteries and veins run from the neck to the hand","Incorrect: veins return blood toward the heart."],
+ ["Both arteries and veins run from the hand to the neck","Incorrect: arteries carry blood away from the heart."]])
+];
+
+/* ---------- Integrity check: 100 questions, 20 per quarter ---------- */
+(function(){const c={1:0,2:0,3:0,4:0};questionBank.forEach(q=>c[q.quarter]++);console.log('Bank size',questionBank.length,c);})();
+
+/* ---------- State ---------- */
+const QUESTIONS_PER_FULL = 50;
+let currentSet = [];
+let quizData = [];
+let round = 1;
+let quizMode = 'full';
+let quickCount = 25;
+let score = 0;
+let answered = 0;
+let answers = {};
+let popupTimeout = null;
+let bankIndices = [];
+
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function resetBankIndices() {
+    bankIndices = Array.from({ length: questionBank.length }, (_, i) => i);
+    for (let i = bankIndices.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [bankIndices[i], bankIndices[j]] = [bankIndices[j], bankIndices[i]];
+    }
+}
+
+function drawQuestionsForRound() {
+    const targetCount = (quizMode === 'full')
+        ? Math.min(QUESTIONS_PER_FULL, questionBank.length)
+        : Math.min(quickCount, questionBank.length);
+    if (bankIndices.length < targetCount) {
+        resetBankIndices();
+    }
+    const selectedIndices = bankIndices.splice(0, targetCount);
+    currentSet = selectedIndices.map(idx => {
+        const q = JSON.parse(JSON.stringify(questionBank[idx]));
+        for (let i = q.options.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
+        }
+        return q;
+    });
+    quizData = currentSet;
+}
+
+let muted = false;
+try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+function updateStfuButton() {
+    const b = document.getElementById('stfuBtn');
+    if (!b) return;
+    b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+    b.classList.toggle('muted', muted);
+    if (muted) {
+        const a = document.getElementById('wrongAudio');
+        if (a) { a.pause(); a.currentTime = 0; }
+        if (popupTimeout) clearTimeout(popupTimeout);
+        const p = document.getElementById('wrongPopup');
+        if (p) p.classList.add('hidden');
+    }
+}
+function toggleStfu() {
+    muted = !muted;
+    try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+    updateStfuButton();
+}
+
+/* ---------- UI ---------- */
+function updateModeButtons(){
+    document.getElementById('fullQuizBtn').classList.toggle('active',quizMode==='full');
+    document.getElementById('quickQuizBtn').classList.toggle('active',quizMode==='quick');
+    document.getElementById('quickieOptionsBar').classList.toggle('hidden',quizMode!=='quick');
+}
+function setMode(m){quizMode=m;round=1;updateModeButtons();renderQuiz();}
+function setQuickCount(n,chip){
+    quickCount=n;round=1;
+    document.querySelectorAll('.count-chip').forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    renderQuiz();
+}
+function updateHeader(){
+    const total=quizData.length,pct=answered?Math.round(score/answered*100):0;
+    document.getElementById('answered-display').textContent='Answered: '+answered+' / '+total;
+    document.getElementById('score-display').textContent='Score: '+score+' / '+answered+' ('+pct+'%)';
+    document.getElementById('progress-bar').style.width=(total?answered/total*100:0)+'%';
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function renderQuiz(reviewSet){
+    const popup=document.getElementById('wrongPopup');if(popup)popup.classList.add('hidden');
+    const wa=document.getElementById('wrongAudio');if(wa){wa.pause();wa.currentTime=0;}
+    if(reviewSet){
+        currentSet=reviewSet.map(src=>{const q=JSON.parse(JSON.stringify(src));shuffle(q.options);return q;});
+        shuffle(currentSet);
+        quizData=currentSet;
+    } else {
+        drawQuestionsForRound();
+    }
+    score=0;answered=0;answers={};
+    const L=['a','b','c','d'];
+    document.getElementById('quiz-container').innerHTML=quizData.map((q,qi)=>
+        '<div class="card" id="card-'+qi+'"><div class="meta"><span class="badge">Q'+(qi+1)+'</span><span class="badge alt">Quarter '+q.quarter+'</span><span class="badge alt">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div>'
+        +'<div class="stem">'+esc(q.stem).replace(/_{3,}/g,'<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u>')+'</div>'
+        +q.options.map((o,oi)=>'<button class="option-btn" onclick="selectOption('+qi+','+oi+')"><b>'+L[oi]+'.</b> '+esc(o.text)+'</button>').join('')
+        +'<div id="exp-'+qi+'"></div></div>'
+    ).join('');
+    updateHeader();
+    window.scrollTo({top:0});
+}
+
+function selectOption(qi,oi){
+    const q=quizData[qi];
+    if(q._locked)return;
+    q._locked=true;
+    const card=document.getElementById('card-'+qi);
+    const buttons=card.querySelectorAll('.option-btn');
+    const isCorrect=q.options[oi].correct;
+    buttons.forEach((b,bi)=>{
+        b.disabled=true;
+        if(q.options[bi].correct)b.classList.add('correct');
+        else if(bi===oi)b.classList.add('incorrect');
+        else b.classList.add('dim');
+    });
+    q._result=isCorrect;
+    answers[qi]=oi;
+    if(isCorrect){score++;}
+    else if(!muted){
+        const wa=document.getElementById('wrongAudio');
+        if(wa){wa.currentTime=0;wa.play().catch(err=>console.log('Audio play blocked:',err));}
+        const popup=document.getElementById('wrongPopup');
+        if(popup){popup.classList.remove('hidden');clearTimeout(popupTimeout);popupTimeout=setTimeout(()=>popup.classList.add('hidden'),2000);}
+    }
+    answered++;
+    const L=['a','b','c','d'];
+    document.getElementById('exp-'+qi).innerHTML='<div class="explain"><div class="banner '+(isCorrect?'ok':'bad')+'">'+(isCorrect?'Correct!':'You didn\u2019t know that?!')+'</div>'
+        +'<div class="concept">Reference: Quarter '+q.quarter+', Slide #'+q.slideRef+'</div><ul>'
+        +q.options.map((o,i)=>'<li class="'+(o.correct?'c':'')+'"><b>'+L[i]+'.</b> '+esc(o.text)+' &mdash; '+esc(o.why)+'</li>').join('')+'</ul></div>';
+    updateHeader();
+    if(answered===quizData.length)setTimeout(showSummary,700);
+}
+
+function showSummary(){
+    const total=quizData.length,pct=Math.round(score/total*100);
+    const tier=pct>=90?'Absolute Gigachad. You drained that test dry.':(pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn\u2019t fucking know that.');
+    const qs={};quizData.forEach(q=>{qs[q.quarter]=qs[q.quarter]||{t:0,c:0};qs[q.quarter].t++;if(q._result)qs[q.quarter].c++;});
+    const rows=Object.keys(qs).sort().map(k=>'<tr><td>Quarter '+k+'</td><td>'+qs[k].c+' / '+qs[k].t+'</td><td>'+Math.round(qs[k].c/qs[k].t*100)+'%</td></tr>').join('');
+    const missed=quizData.filter(q=>!q._result).length;
+    const d=document.createElement('div');d.className='card summary';d.id='summary';
+    d.innerHTML='<div class="big">'+pct+'%</div><div>'+score+' / '+total+' correct</div><div class="tier">'+tier+'</div>'
+        +'<table><tr><th>Deck Quarter</th><th>Correct</th><th>%</th></tr>'+rows+'</table>'
+        +'<div class="actions"><button onclick="retake()">Retake Quiz</button>'
+        +(missed?'<button class="sec" onclick="reviewMissed()">Review Missed ('+missed+')</button>':'')
+        +'<a class="sec" href="index.html">Back to Main Base</a></div>';
+    document.getElementById('quiz-container').appendChild(d);
+    d.scrollIntoView({behavior:'smooth'});
+}
+function retake(){round++;renderQuiz();}
+function reviewMissed(){
+    const ids=quizData.filter(q=>!q._result).map(q=>q.id);
+    renderQuiz(questionBank.filter(q=>ids.includes(q.id)));
+}
+
+window.addEventListener('load',()=>{
+    document.getElementById('stfuBtn').addEventListener('click',toggleStfu);
+    document.getElementById('fullQuizBtn').addEventListener('click',()=>setMode('full'));
+    document.getElementById('quickQuizBtn').addEventListener('click',()=>setMode('quick'));
+    document.querySelectorAll('.count-chip').forEach(chip=>{
+        chip.addEventListener('click',()=>setQuickCount(parseInt(chip.dataset.count,10),chip));
+    });
+    resetBankIndices();
+    updateStfuButton();updateModeButtons();renderQuiz();
+});
+</script></body></html>
