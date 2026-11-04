@@ -2892,16 +2892,15 @@ function drawQuestionsForRound() {
     ? Math.min(QUESTIONS_PER_FULL, questionBank.length)
     : Math.min(quickCount, questionBank.length);
 
-  // If fewer indices remain than needed for this round, replenish and reshuffle
   if (bankIndices.length < targetCount) {
     resetBankIndices();
   }
 
-  // Slice exactly targetCount questions from the rotating index pool
   const selectedIndices = bankIndices.splice(0, targetCount);
   currentSet = selectedIndices.map(idx => {
     const q = JSON.parse(JSON.stringify(questionBank[idx]));
-    // Scramble options for each question
+    delete q._locked;
+    delete q._result;
     for (let i = q.options.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
@@ -2910,7 +2909,7 @@ function drawQuestionsForRound() {
   });
   quizData = currentSet;
 }
-
+  
 let muted = false;
 try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
 
@@ -2961,6 +2960,8 @@ function renderQuiz(customSet) {
   if (customSet) {
     quizData = JSON.parse(JSON.stringify(customSet));
     quizData.forEach(q => {
+      delete q._locked;
+      delete q._result;
       for (let i = q.options.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [q.options[i], q.options[j]] = [q.options[j], q.options[i]];
@@ -3012,7 +3013,6 @@ function renderQuiz(customSet) {
   updateHeader();
   window.scrollTo({ top: 0 });
 }
-
 function selectOption(qi, oi) {
   const q = quizData[qi];
   if (q._locked) return;
