@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Systemic Physiology Wk 5 Wed: Kidney 101 &amp; Renal Endocrine Quiz Hub</title>
+<style>
+:root{--accent:#ff9900;--bg:#0f0f0f;--card:#1a1a1a;--bd:#282828;--mut:#888}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,Segoe UI,Arial,sans-serif;line-height:1.45}
+header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px solid var(--bd);padding:10px 16px}
+.header-row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-weight:800}.brand span{color:var(--accent)}.brand small{display:block;color:var(--mut);font-weight:400}
+.header-right{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.pill{background:#222;border:1px solid var(--bd);border-radius:20px;padding:4px 10px;font-size:.8rem}.score-pill{color:var(--accent)}
+.progress-track{height:5px;background:#282828;margin-top:8px;border-radius:3px}#progress-bar{height:100%;width:0;background:var(--accent);border-radius:3px;transition:width .3s}
+.stfu-btn{background:#222;color:#fff;border:1px solid var(--accent,#ff9900);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;transition:all .2s ease;white-space:nowrap}
+.stfu-btn.muted{background:var(--accent,#ff9900);color:#000}
+main{max-width:820px;margin:0 auto;padding:16px}
+.mode-container,.quickie-options-bar{display:flex;justify-content:center;gap:8px;margin:12px 0;flex-wrap:wrap;align-items:center}
+.hidden{display:none!important}.quickie-label{color:var(--mut)}
+.mode-btn,.count-chip,.btn{background:#222;color:#fff;border:1px solid var(--bd);border-radius:6px;padding:8px 14px;cursor:pointer;font-family:inherit;font-weight:600;text-decoration:none;font-size:.9rem}
+.mode-btn.active,.count-chip.active,.btn.primary{background:var(--accent);color:#000;border-color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:16px;margin-bottom:16px}
+.badges{display:flex;gap:6px;margin-bottom:8px;font-size:.72rem}.badge{background:var(--accent);color:#000;border-radius:4px;padding:2px 7px;font-weight:700}.badge.g{background:#282828;color:var(--mut)}
+.stem{font-weight:600;margin-bottom:12px}
+.opt{display:block;width:100%;text-align:left;background:#111;color:#fff;border:1px solid var(--bd);border-radius:8px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font:inherit}
+.opt:hover:not(:disabled){border-color:var(--accent)}.opt:disabled{cursor:default;opacity:.95}
+.opt.ok{background:#14532d;border-color:#22c55e}.opt.bad{background:#7f1d1d;border-color:#ef4444}
+.expl{margin-top:10px;border-top:1px solid var(--bd);padding-top:10px;font-size:.88rem}
+.banner{font-weight:800;margin-bottom:4px}.banner.c{color:#22c55e}.banner.w{color:#ef4444}
+.ref{color:var(--accent);margin-bottom:6px}.expl ul{padding-left:18px;margin:0}.expl li{margin-bottom:5px;color:#ccc}.expl li.right{color:#fff}
+.summary{text-align:center}.big{font-size:2.4rem;color:var(--accent);font-weight:800}.summary .btn{margin:4px}
+.wrong-popup.hidden{display:none!important}
+.wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
+.wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid #ef4444;display:block;object-fit:contain;background:#111}
+@keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+</style></head><body>
+<header><div class="header-row">
+<div class="brand"><div>Systemic Physiology <span>Wk 5 Wed: Kidney 101 &amp; Renal Endocrine Quiz Hub</span></div><small>NBCE Part 1 Board Prep &middot; Rotating Bank</small></div>
+<div class="header-right"><button class="stfu-btn" id="stfuBtn">STFU Erijah</button><span class="pill" id="answered-display">Answered: 0 / 0</span><span class="pill score-pill" id="score-display">Score: 0 / 0 (0%)</span></div>
+</div><div class="progress-track"><div id="progress-bar"></div></div></header>
+<main>
+<div class="mode-container" id="modeSelector"><button class="mode-btn active" id="fullQuizBtn">Full Quiz (50 Qs)</button><button class="mode-btn" id="quickQuizBtn">Quickie Drill</button></div>
+<div class="quickie-options-bar hidden" id="quickieOptionsBar"><span class="quickie-label">Duration:</span>
+<button class="count-chip" data-count="10">10 Questions</button><button class="count-chip active" data-count="25">25 Questions</button><button class="count-chip" data-count="35">35 Questions</button></div>
+<div id="quiz-container"></div>
+</main>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
+<script>
+// q(slide, difficulty, priority, stem, [correctText, why], [wrongText, why] x3)
+const q=(s,d,p,stem,...o)=>({slideRef:s,quarter:s<=10?1:s<=20?2:s<=30?3:4,difficulty:d,priority:p,stem,options:o.map((x,i)=>({text:x[0],correct:i===0,why:x[1]+' [Slide #'+s+']'}))});
+const questionBank=[
+q(7,'easy',true,'The most dangerous toxin that accumulates when the kidneys fail is _______.',
+ ['Potassium (K+)','Hyperkalemia can trigger ventricular fibrillation, making K+ the number one lethal toxin.'],['Sodium (Na+)','Sodium excess shifts osmolality but is not the first lethal toxin of renal failure.'],['Urea','Urea accumulates but is not the deadliest acute toxin.'],['Creatinine','Creatinine is a GFR marker, not the lethal toxin.']),
+q(7,'easy',false,'The right kidney sits lower than the left because it is pushed down by the _______.',
+ ['liver','The liver occupies the right upper abdomen and displaces the right kidney inferiorly.'],['spleen','The spleen is on the left and does not displace the right kidney.'],['stomach','The stomach lies mainly left of midline.'],['pancreas','The pancreas does not push the right kidney down.']),
+q(8,'medium',true,'The renal columns are fingerlike extensions of which kidney region into the medulla?',
+ ['Cortex','Renal columns are cortex tissue, not medulla, even though they dive between the pyramids.'],['Medulla','The medulla is the pyramids; columns lie between them.'],['Capsule','The capsule is the thick fibrous outer covering only.'],['Renal pelvis','The pelvis collects urine from major calyxes.']),
+q(9,'medium',true,'Which of the following is NOT part of the nephron?',
+ ['Collecting duct','The collecting duct (like the afferent arteriole) comes after the nephron.'],['Distal convoluted tubule','The DCT is a renal tubule of the nephron.'],['Bowman space','Bowman space, with the glomerulus, forms the renal corpuscle.'],['Thin descending limb','The thin descending limb is part of the loop of Henle.']),
+q(10,'medium',true,'Filtrate becomes _______ once it passes out of Bowman space.',
+ ['tubular fluid','Filtrate in Bowman space is renamed tubular fluid as it enters the PCT.'],['urine','Tubular fluid becomes urine only after passing the papillary duct into the minor calyx.'],['interstitial fluid','Interstitial fluid is outside the tubules.'],['lymph','Lymph is not formed from filtrate.']),
+q(11,'medium',false,'Tubular fluid leaving the thick ascending limb passes next into the:',
+ ['distal convoluted tubule','Order: TAL, then DCT, connecting tubule, collecting duct.'],['proximal convoluted tubule','The PCT is upstream of the loop of Henle.'],['thin descending limb','The thin descending limb precedes the thin and thick ascending limbs.'],['collecting duct','The connecting tubule comes first, and the collecting duct is not part of the nephron.']),
+q(12,'hard',true,'Compared with afferent arteriolar blood, efferent arteriolar blood has the same osmolality but a greater:',
+ ['oncotic pressure','Water is lost but albumin is not filtered, so protein concentration and oncotic pressure rise.'],['blood volume','Efferent blood volume is lower because filtrate was lost.'],['sodium concentration','Water and ions are filtered together, so osmolality is unchanged.'],['filtered albumin load','Albumin is too large and negatively charged to be filtered.']),
+q(13,'medium',true,'Moving a substance from the blood, through the interstitium and a tubular cell, into the tubular fluid is called _______.',
+ ['secretion','Movement into the tubular fluid is secretion, even the first step into the cell.'],['reabsorption','Reabsorption moves substances from tubular fluid back to blood.'],['excretion','Excretion is elimination of urine to the toilet.'],['filtration','Filtration is glomerulus to Bowman space.']),
+q(16,'medium',false,'Fat-soluble vitamins (D, E, A, K) are mainly NOT filtered because they:',
+ ['travel bound to large blood proteins','Bound to large carriers, they cannot pass the filtration barrier.'],['are too small to filter','Size is not the issue; the carrier proteins are.'],['are destroyed in the glomerulus','They are not destroyed there.'],['are reabsorbed in Bowman space','Reabsorption does not occur in Bowman space.']),
+q(16,'medium',true,'Filtered insulin and glucagon are not reabsorbed intact; instead they are _______ in the proximal convoluted tubule.',
+ ['destroyed','About 20% of insulin and glucagon is filtered and broken down in the PCT.'],['secreted by principal cells','Principal cells are not involved.'],['stored in macula densa cells','Macula densa cells sense NaCl.'],['excreted unchanged','They are destroyed, not excreted intact.']),
+q(17,'medium',true,'Creatinine is a good marker of GFR because it is filtered and:',
+ ['not reabsorbed','Creatinine is removed by filtration and not reabsorbed, so clearance tracks GFR.'],['fully reabsorbed in the PCT','Full reabsorption would hide it from urine.'],['bound to albumin','Albumin-bound substances are not filtered.'],['stored in the liver','Creatinine is a muscle waste, not liver-stored.']),
+q(20,'medium',true,'Renin is secreted by the _______ cells of the afferent arteriole.',
+ ['juxtaglomerular (granular)','JG cells are baroreceptors; renin creation is the rate-limiting step of RAAS.'],['macula densa','Macula densa cells sense low NaCl and signal JG cells.'],['principal','Principal cells handle Na+/K+/water in the collecting duct.'],['peritubular fibroblast','These cells release EPO.']),
+q(20,'medium',false,'Decreased NaCl in the tubular fluid increases renin release indirectly through signaling from the _______ cells.',
+ ['macula densa','Macula densa cells detect low tubular NaCl and signal JG cells.'],['principal','Principal cells do not sense NaCl for renin.'],['intercalated','Intercalated cells handle acid-base transport.'],['podocyte','Podocytes form the filtration barrier.']),
+q(21,'medium',true,'Erythropoietin is released from _______ in response to renal interstitial hypoxia.',
+ ['peritubular interstitial fibroblasts','These cells taste interstitial O2 and release EPO when it drops.'],['juxtaglomerular cells','JG cells release renin.'],['hepatocytes','Hepatocytes make 25-hydroxylase, not renal EPO.'],['principal cells','Principal cells transport ions.']),
+q(22,'medium',true,'Calcitriol is made in the _______ of proximal convoluted tubule cells.',
+ ['mitochondria','1-alpha hydroxylase sits in PCT mitochondria.'],['nucleus','The nucleus holds DNA, not this enzyme.'],['basolateral membrane','Not the site of calcitriol synthesis.'],['peroxisomes','Peroxisomes handle fatty acids and oxidants.']),
+q(23,'easy',true,'Calcidiol is converted to calcitriol by the enzyme _______.',
+ ['1-alpha hydroxylase','This renal enzyme adds the second hydroxyl group.'],['25-hydroxylase','This liver enzyme makes calcidiol from cholecalciferol.'],['hexokinase','Hexokinase phosphorylates glucose.'],['glycogen phosphorylase','Glycogen phosphorylase drives glycogenolysis.']),
+q(24,'hard',false,'After cholecalciferol enters the blood, its first hydroxylation to calcidiol occurs in the:',
+ ['liver','Hepatocyte 25-hydroxylase makes calcidiol.'],['proximal convoluted tubule','The PCT performs the second step, making calcitriol.'],['stratum basale','Skin makes cholecalciferol from 7-dehydrocholesterol via UVB.'],['parathyroid gland','The parathyroid releases PTH.']),
+q(26,'medium',true,'Which hormone stimulates renal 1-alpha hydroxylase to produce calcitriol?',
+ ['Parathyroid hormone','PTH, released when plasma calcium falls, activates the enzyme.'],['Calcitonin','Calcitonin lowers blood calcium.'],['Aldosterone','Aldosterone regulates Na+/K+.'],['Erythropoietin','EPO stimulates red blood cell production.']),
+q(27,'medium',true,'In duodenal and jejunal enterocytes, calcitriol stimulates insertion of which apical calcium channel?',
+ ['TRPV6','Calcitriol induces TRPV6 so calcium enters down its gradient.'],['PMCA1b','PMCA1b is the basolateral export pump.'],['Calbindin-D','Calbindin-D is a carrier, not a channel.'],['GLUT4','GLUT4 is a glucose transporter.']),
+q(28,'hard',true,'Intestinal calcium is exported across the basolateral surface by _______, which is delivered there by _______.',
+ ['PMCA1b; calbindin-D','Calbindin-D chaperones Ca++ to the PMCA1b pumps.'],['TRPV6; calbindin-D','TRPV6 is the apical entry channel.'],['PMCA1b; TRPV6','TRPV6 does not shuttle calcium.'],['Calbindin-D; PMCA1b','Roles are reversed: PMCA1b is the pump.']),
+q(30,'easy',false,'The kidneys receive about _______ of cardiac output despite being only 0.5% of body weight.',
+ ['20%','Pound for pound, kidneys demand the greatest share of cardiac output.'],['5%','Far too low.'],['10%','Too low.'],['40%','Too high.']),
+q(30,'medium',false,'Of the roughly 47 gallons filtered daily, the tubules reabsorb about:',
+ ['99.2%','Nearly everything filtered returns, about 46.6 gallons.'],['92%','Too low.'],['75%','Too low.'],['50%','Far too low.']),
+q(31,'medium',false,'Unlike the liver, damaged kidney tissue:',
+ ['cannot regenerate','Kidneys do not regenerate; nephrons lost are gone.'],['regenerates fully','This describes the liver.'],['regenerates from renal columns','Renal columns are cortex tissue, not regenerative.'],['regenerates from collecting ducts','Collecting ducts do not regenerate nephrons.']),
+q(32,'medium',true,'Which structure is found in the renal cortex but NOT in the medulla?',
+ ['Renal corpuscles','The medulla contains no renal corpuscles.'],['Loops of Henle','Loops of Henle live in the pyramids.'],['Collecting ducts','Collecting ducts run through the pyramids.'],['Renal papillae','Papillae are medullary pyramid tips.']),
+q(34,'medium',false,'The renal pelvis directly collects urine from the:',
+ ['major calyxes','Minor calyx drains to major calyx, which empties into the pelvis.'],['minor calyxes','Minor calyxes drain to major calyxes first.'],['collecting ducts','They empty through papillae into minor calyxes.'],['ureters','The ureters carry urine away from the pelvis.']),
+q(37,'medium',true,'Cortical nephrons make up about _______ of nephrons and do not concentrate urine.',
+ ['80%','They are the workhorses of bulk reabsorption and secretion.'],['20%','That is the juxtamedullary share.'],['50%','Not the split.'],['95%','Too high.']),
+q(38,'hard',false,'The vasa recta surrounding juxtamedullary nephrons are which capillary type?',
+ ['Fenestrated','Vasa recta are fenestrated, slow-moving capillaries.'],['Continuous','Continuous capillaries are the least leaky (e.g. brain).'],['Discontinuous (sinusoidal)','Sinusoidal capillaries occur in liver, spleen, marrow.'],['Arteriolar','Vasa recta are capillaries, not arterioles.']),
+q(39,'hard',true,'The vasa recta preserve the hyperosmolar deep medulla because ions picked up in the descending limb are:',
+ ['returned in the ascending limb','The countercurrent exchanger gives back the ions, so the gradient stays.'],['permanently carried into the systemic blood','This would wash out the gradient.'],['pumped into tubular fluid by Na+/K+-ATPase','Not the exchanger mechanism.'],['filtered back into Bowman space','Not a vasa recta function.']),
+q(40,'medium',true,'Tubular fluid becomes urine once it enters the _______ through the papillary duct.',
+ ['minor calyx','Past the renal papilla, tubular fluid is called urine.'],['collecting duct','It is still tubular fluid there.'],['distal convoluted tubule','The DCT is upstream.'],['Bowman space','Bowman space holds filtrate.'])
+].map((x,i)=>(x.id=i+1,x));
+
+const QUESTIONS_PER_FULL=50;
+let currentSet=[],quizData=[],round=1,quizMode='full',quickCount=25,score=0,answered=0,answers={},popupTimeout=null,bankIndices=[];
+function resetBankIndices(){bankIndices=Array.from({length:questionBank.length},(_,i)=>i);for(let i=bankIndices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[bankIndices[i],bankIndices[j]]=[bankIndices[j],bankIndices[i]];}}
+function shuffleOpts(q){for(let i=q.options.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q.options[i],q.options[j]]=[q.options[j],q.options[i]];}return q;}
+function drawQuestionsForRound(){
+ const t=quizMode==='full'?Math.min(QUESTIONS_PER_FULL,questionBank.length):Math.min(quickCount,questionBank.length);
+ if(bankIndices.length<t)resetBankIndices();
+ currentSet=bankIndices.splice(0,t).map(i=>shuffleOpts(JSON.parse(JSON.stringify(questionBank[i]))));quizData=currentSet;}
+let muted=false;try{muted=localStorage.getItem('stfuErijah')==='1';}catch(e){}
+function updateStfuButton(){const b=document.getElementById('stfuBtn');if(!b)return;b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
+ if(muted){const a=document.getElementById('wrongAudio');if(a){a.pause();a.currentTime=0;}if(popupTimeout)clearTimeout(popupTimeout);const p=document.getElementById('wrongPopup');if(p)p.classList.add('hidden');}}
+function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0');}catch(e){}updateStfuButton();}
+
+const $=id=>document.getElementById(id),QC=$('quiz-container');
+function updateHeader(){const n=quizData.length,pct=answered?Math.round(score/answered*100):0;
+ $('answered-display').textContent='Answered: '+answered+' / '+n;$('score-display').textContent='Score: '+score+' / '+answered+' ('+pct+'%)';$('progress-bar').style.width=(n?answered/n*100:0)+'%';}
+function wrongFeedback(){if(muted)return;const a=$('wrongAudio');try{a.currentTime=0;const p=a.play();if(p&&p.catch)p.catch(()=>{});}catch(e){}
+ const pop=$('wrongPopup');pop.classList.remove('hidden');if(popupTimeout)clearTimeout(popupTimeout);popupTimeout=setTimeout(()=>pop.classList.add('hidden'),1800);}
+function startRound(){score=0;answered=0;answers={};drawQuestionsForRound();render();}
+function render(){
+ QC.innerHTML='';
+ quizData.forEach((q,qi)=>{
+  const c=document.createElement('div');c.className='card';
+  c.innerHTML='<div class="badges"><span class="badge">Q'+(qi+1)+'</span><span class="badge g">Quarter '+q.quarter+'</span><span class="badge g">Slide '+q.slideRef+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-Yield</span>':'')+'</div><div class="stem">'+q.stem+'</div>';
+  const L='abcd';
+  q.options.forEach((o,oi)=>{const b=document.createElement('button');b.className='opt';b.textContent=L[oi]+') '+o.text;b.onclick=()=>pick(q,qi,oi,c);c.appendChild(b);});
+  const e=document.createElement('div');e.className='expl hidden';c.appendChild(e);QC.appendChild(c);});
+ updateHeader();}
+function pick(q,qi,oi,card){
+ if(answers[qi]!==undefined)return;answers[qi]=oi;answered++;
+ const ok=q.options[oi].correct;if(ok)score++;else{q.missed=true;wrongFeedback();}
+ const btns=card.querySelectorAll('.opt');
+ btns.forEach((b,i)=>{b.disabled=true;if(q.options[i].correct)b.classList.add('ok');else if(i===oi)b.classList.add('bad');});
+ const e=card.querySelector('.expl');e.classList.remove('hidden');
+ e.innerHTML='<div class="banner '+(ok?'c':'w')+'">'+(ok?'Correct!':'You didn’t know that?!')+'</div><div class="ref">Reference: Week 5 Wed (Quarter '+q.quarter+'), Slide #'+q.slideRef+'</div><ul>'+q.options.map((o,i)=>'<li class="'+(o.correct?'right':'')+'"><b>'+'abcd'[i]+')</b> '+(o.correct?'✔ ':'✘ ')+o.why+'</li>').join('')+'</ul>';
+ updateHeader();if(answered===quizData.length)setTimeout(showSummary,400);}
+function showSummary(){
+ const n=quizData.length,pct=Math.round(score/n*100),msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn\'t fucking know that.';
+ const d=document.createElement('div');d.className='card summary';
+ d.innerHTML='<div class="big">'+pct+'%</div><div>'+score+' / '+n+' correct</div><p>'+msg+'</p><button class="btn primary" id="retakeBtn">Retake Quiz</button><button class="btn" id="reviewBtn">Review Missed</button><a class="btn" href="index.html">Back to Main Base</a>';
+ QC.appendChild(d);
+ $('retakeBtn').onclick=()=>{round++;startRound();window.scrollTo(0,0);};
+ $('reviewBtn').onclick=()=>{const m=quizData.filter(x=>x.missed).map(x=>{const c=JSON.parse(JSON.stringify(x));delete c.missed;return shuffleOpts(c);});
+  if(!m.length){alert('Nothing missed. Respect.');return;}quizData=m;score=0;answered=0;answers={};render();window.scrollTo(0,0);};
+ d.scrollIntoView({behavior:'smooth'});}
+function setMode(m){quizMode=m;$('fullQuizBtn').classList.toggle('active',m==='full');$('quickQuizBtn').classList.toggle('active',m==='quick');$('quickieOptionsBar').classList.toggle('hidden',m!=='quick');round=1;startRound();}
+$('fullQuizBtn').textContent='Full Quiz ('+Math.min(QUESTIONS_PER_FULL,questionBank.length)+' Qs)';
+$('fullQuizBtn').onclick=()=>setMode('full');$('quickQuizBtn').onclick=()=>setMode('quick');
+document.querySelectorAll('.count-chip').forEach(ch=>ch.onclick=()=>{document.querySelectorAll('.count-chip').forEach(x=>x.classList.remove('active'));ch.classList.add('active');quickCount=parseInt(ch.dataset.count,10);round=1;startRound();});
+$('stfuBtn').onclick=toggleStfu;updateStfuButton();resetBankIndices();startRound();
+</script></body></html>
