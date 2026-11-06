@@ -33,9 +33,14 @@ h1{font-size:1.4rem;text-align:center;margin:12px 0 4px}
 .btn{background:var(--accent);color:#000;border:0;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-family:inherit}
 .btn.alt{background:#333;color:#fff}
 .explain{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)}
-.banner{font-weight:800;margin-bottom:4px}
+.banner{font-weight:800;margin-bottom:6px}
 .banner.good{color:var(--ok)}.banner.bad{color:var(--bad)}
-.ans{margin:6px 0}
+.target-nerve{color:var(--accent);font-weight:700;margin-bottom:6px}
+.ans{margin:6px 0;line-height:1.45}
+.rationale-list{margin-top:10px;padding-top:8px;border-top:1px solid #333;font-size:0.9rem}
+.rationale-title{font-weight:700;color:#ddd;margin-bottom:6px}
+.rationale-item{margin-bottom:6px;line-height:1.4;color:#ccc}
+.rationale-item strong{color:var(--accent);margin-right:4px}
 #summary{display:none;text-align:center}
 .summary-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin:0 0 8px}
 @media(max-width:480px){.fillrow{flex-direction:column}}
@@ -60,258 +65,564 @@ h1{font-size:1.4rem;text-align:center;margin:12px 0 4px}
 </main>
 <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
 <script>
-// Number-only labels for options
-const N_NUM=["","CN I","CN II","CN III","CN IV","CN V","CN VI","CN VII","CN VIII","CN IX","CN X","CN XI","CN XII"];
+const N_NUM = ["", "CN I", "CN II", "CN III", "CN IV", "CN V", "CN VI", "CN VII", "CN VIII", "CN IX", "CN X", "CN XI", "CN XII"];
+const N_NAME = ["", "Olfactory", "Optic", "Oculomotor", "Trochlear", "Trigeminal", "Abducent", "Facial", "Vestibulocochlear", "Glossopharyngeal", "Vagus", "Spinal Accessory", "Hypoglossal"];
 
-// Full name lookup table for answer reveal
-const N_FULL=["","CN I (Olfactory)","CN II (Optic)","CN III (Oculomotor)","CN IV (Trochlear)","CN V (Trigeminal)","CN VI (Abducent)","CN VII (Facial)","CN VIII (Vestibulocochlear)","CN IX (Glossopharyngeal)","CN X (Vagus)","CN XI (Spinal Accessory)","CN XII (Hypoglossal)"];
+const NERVE_TESTS = {
+  1: "Olfaction / smell tested one nostril at a time with non-irritating scents.",
+  2: "Visual acuity (Snellen), visual fields (confrontation), and afferent pupillary light reflex.",
+  3: "Extraocular movements (medial, superior, inferior rectus, inferior oblique), levator palpebrae, and pupillary constriction.",
+  4: "Superior oblique muscle (downward and inward gaze).",
+  5: "Facial cutaneous sensation (forehead, cheek, jaw), muscles of mastication, and jaw jerk reflex.",
+  6: "Lateral rectus muscle (eye abduction / looking lateral).",
+  7: "Muscles of facial expression, taste on anterior 2/3 of tongue, and lacrimal/salivary secretions.",
+  8: "Hearing (Rinne, rub/whisper test) and vestibular balance (Romberg's test).",
+  9: "Sensory limb of gag reflex, posterior 1/3 tongue taste, and swallowing assistance.",
+  10: "Motor limb of gag reflex, soft palate elevation (saying 'Ahhh'), vocal cord function, and swallowing.",
+  11: "Motor innervation to sternocleidomastoid (head turn) and trapezius (shoulder shrug).",
+  12: "Motor innervation to tongue muscles (protrusion and deviation testing)."
+};
 
 // TEST -> NERVE: [test/finding, correct nerve #, [3 wrong nerve #s], explanation]
-const T=[
-["Eyes closed, one nostril blocked, scent held under the other nostril",1,[2,7,12],"Smell is CN I (Olfactory), tested one nostril at a time."],
-["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)",2,[3,8,11],"Visual acuity is CN II (Optic)."],
-["Visual field confrontation: wiggling fingers brought into peripheral vision",2,[3,4,6],"Visual fields are CN II (Optic; sensory)."],
-["Sensory (afferent) limb of the pupillary light reflex",2,[3,5,7],"CN II (Optic) carries light information in; CN III (Oculomotor) carries the pupillomotor response out."],
-["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae",3,[2,4,6],"CN III (Oculomotor) parasympathetics constrict the pupil."],
-["Near reaction: convergence, accommodation and miosis as a finger approaches the nose",3,[2,4,6],"CN III (Oculomotor) innervates medial rectus, sphincter pupillae, and ciliary muscle (afferent limb is CN II)."],
-["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze",6,[3,4,5],"CN VI (Abducent) innervates the lateral rectus muscle."],
-["Weak down-and-in gaze: superior oblique dysfunction",4,[3,6,7],"CN IV (Trochlear) innervates the superior oblique muscle."],
-["Ptosis (droopy lid) from levator palpebrae superioris weakness",3,[4,6,7],"CN III (Oculomotor) innervates levator palpebrae superioris."],
-["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed",5,[7,9,11],"Facial sensation across V1, V2, and V3 is CN V (Trigeminal)."],
-["Bite down and palpate masseter and temporalis",5,[7,10,11],"Muscles of mastication are innervated by the motor division of CN V (Trigeminal)."],
-["Jaw jerk reflex",5,[7,9,12],"Jaw jerk is a monosynaptic reflex mediated by CN V (Trigeminal)."],
-["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing",7,[5,10,12],"Muscles of facial expression are innervated by CN VII (Facial)."],
-["Taste on the anterior 2/3 of the tongue",7,[5,9,12],"CN VII (Facial - chorda tympani) carries taste from the anterior 2/3."],
-["Taste on the posterior 1/3 of the tongue",9,[7,10,12],"CN IX (Glossopharyngeal) carries taste and general sensation from the posterior 1/3."],
-["Questions about dry eye and dry mouth (parasympathetic to lacrimal and salivary glands)",7,[5,9,10],"CN VII (Facial) parasympathetic fibers supply lacrimal, submandibular, and sublingual glands."],
-["Romberg's test: feet together, eyes closed, observe wobble",8,[2,7,10],"Romberg tests the vestibular division of CN VIII (Vestibulocochlear)."],
-["Rinne's test (mastoid vs. in front of the ear)",8,[7,9,11],"Rinne is a cochlear (hearing) test evaluating CN VIII (Vestibulocochlear)."],
-["Rub / whisper test for auditory acuity",8,[7,9,10],"Auditory acuity is CN VIII (Vestibulocochlear)."],
-["Sensory limb of the gag reflex",9,[5,10,12],"Gag reflex: sensory limb is CN IX (Glossopharyngeal); motor limb is CN X (Vagus)."],
-["Motor limb of the gag reflex",10,[9,7,12],"Gag reflex: motor limb is CN X (Vagus); sensory limb is CN IX (Glossopharyngeal)."],
-["Patient says \"Ahhh\"; watch soft palate rise and check the uvula",10,[9,7,12],"Palatal elevation and uvula symmetry are mediated by CN X (Vagus)."],
-["Patient swallows; thyroid cartilage should rise symmetrically",10,[9,12,11],"Swallowing motor innervation of pharyngeal constrictors is primarily CN X (Vagus)."],
-["Shrug the shoulders against resistance",11,[10,12,5],"Trapezius elevation is innervated by CN XI (Spinal Accessory)."],
-["Rotate head against resistance (sternocleidomastoid)",11,[10,12,5],"Sternocleidomastoid rotation is innervated by CN XI (Spinal Accessory)."],
-["Stick tongue out and check for deviation",12,[10,9,7],"Tongue protrusion is driven by genioglossus via CN XII (Hypoglossal)."],
-["Push tongue into the cheek against the examiner's hand",12,[10,9,5],"Tongue muscle strength is CN XII (Hypoglossal)."]
+const T = [
+  ["Eyes closed, one nostril blocked, scent held under the other nostril", 1, [2, 7, 12], "Smell is evaluated one nostril at a time with non-pungent scents."],
+  ["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)", 2, [3, 8, 11], "Visual acuity reflects the afferent sensory pathway of the optic system."],
+  ["Visual field confrontation: wiggling fingers brought into peripheral vision", 2, [3, 4, 6], "Peripheral visual field boundaries assess retinal and optic nerve sensory transmission."],
+  ["Sensory (afferent) limb of the pupillary light reflex", 2, [3, 5, 7], "Carries the light impulse from the retina into the brainstem pretectal nuclei."],
+  ["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae", 3, [2, 4, 6], "Preganglionic parasympathetic fibers travel to ciliary ganglion to constrict the pupil."],
+  ["Near reaction: convergence, accommodation and miosis as a finger approaches the nose", 3, [2, 4, 6], "Controls the medial recti (convergence) and ciliary / pupillary sphincter muscles (accommodation & miosis)."],
+  ["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze", 6, [3, 4, 5], "Innervates the lateral rectus muscle, which abducts the eye laterally."],
+  ["Weak down-and-in gaze: superior oblique dysfunction", 4, [3, 6, 7], "Innervates the superior oblique muscle, moving the eye down and toward the nose."],
+  ["Ptosis (droopy lid) from levator palpebrae superioris weakness", 3, [4, 6, 7], "Somatic motor fibers innervate the levator palpebrae superioris to elevate the upper eyelid."],
+  ["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed", 5, [7, 9, 11], "Carries somatosensory feedback from the V1 (ophthalmic), V2 (maxillary), and V3 (mandibular) divisions."],
+  ["Bite down and palpate masseter and temporalis", 5, [7, 10, 11], "Motor branch of V3 (mandibular) supplies the muscles of mastication."],
+  ["Jaw jerk reflex", 5, [7, 9, 12], "Monosynaptic stretch reflex mediated afferently and efferently via V3 mandibular fibers."],
+  ["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing", 7, [5, 10, 12], "Supplies motor control to all muscles of facial expression."],
+  ["Taste on the anterior 2/3 of the tongue", 7, [5, 9, 12], "Special sensory taste fibers travel along the chorda tympani branch."],
+  ["Taste on the posterior 1/3 of the tongue", 9, [7, 10, 12], "Provides both general sensation and special sensory taste to the posterior third of the tongue."],
+  ["Questions about dry eye and dry mouth (parasympathetic to lacrimal and salivary glands)", 7, [5, 9, 10], "Parasympathetic components stimulate the lacrimal gland and submandibular/sublingual glands."],
+  ["Romberg's test: feet together, eyes closed, observe wobble", 8, [2, 7, 10], "Assesses the vestibular branch responsible for static balance and spatial orientation."],
+  ["Rinne's test (mastoid vs. in front of the ear)", 8, [7, 9, 11], "Assesses air vs. bone conduction through the cochlear division."],
+  ["Rub / whisper test for auditory acuity", 8, [7, 9, 10], "Cochlear division transmits acoustic frequencies for auditory perception."],
+  ["Sensory limb of the gag reflex", 9, [5, 10, 12], "Carries tactile afferent sensations from the posterior pharyngeal wall."],
+  ["Motor limb of the gag reflex", 10, [9, 7, 12], "Supplies motor branch efferents to the pharyngeal constrictor muscles causing reflex contraction."],
+  ["Patient says \"Ahhh\"; watch soft palate rise and check the uvula", 10, [9, 7, 12], "Vagal motor fibers elevate the levator veli palatini muscles symmetrically."],
+  ["Patient swallows; thyroid cartilage should rise symmetrically", 10, [9, 12, 11], "Coordinated pharyngeal and laryngeal motor contractions during deglutition are driven by vagus efferents."],
+  ["Shrug the shoulders against resistance", 11, [10, 12, 5], "Provides somatic motor innervation to the upper trapezius muscle."],
+  ["Rotate head against resistance (sternocleidomastoid)", 11, [10, 12, 5], "Somatic motor fibers drive contralateral head rotation via the sternocleidomastoid."],
+  ["Stick tongue out and check for deviation", 12, [10, 9, 7], "Supplies the intrinsic and extrinsic tongue muscles, notably the genioglossus."],
+  ["Push tongue into the cheek against the examiner's hand", 12, [10, 9, 5], "Assesses unilateral motor strength and resistance of the genioglossus muscle."]
 ];
 
-// NERVE + TEST -> RESULT: [stem, correct, [3 wrong], explanation, optionalRevealedNerve]
-const R=[
-["CN XII: on protrusion the tongue deviates to the right. What does this indicate?","Right-sided tongue weakness","Left-sided tongue weakness|Normal finding|CN X lesion","The tongue deviates toward the weak side (CN XII Hypoglossal).","CN XII (Hypoglossal)"],
-["CN V motor: on opening the mouth the jaw deviates to the left. Which side is weak?","Left","Right|Neither, this is normal|Both equally","The jaw deviates toward the weak side due to pterygoid weakness (CN V Trigeminal).","CN V (Trigeminal)"],
-["CN X: patient says \"Ahhh\". Which is the NORMAL finding?","Soft palate rises equally, uvula stays midline","Uvula deviates to one side|Soft palate stays flat|Tongue deviates","Symmetric elevation with a midline uvula is normal (CN X Vagus).","CN X (Vagus)"],
-["CN VIII Rinne: bone conduction is greater than air conduction. What is this?","Conduction hearing loss","Sensorineural (nerve) hearing loss|Normal hearing|Vestibular loss","Normal is air > 2x bone; bone > air indicates a conduction deficit (CN VIII Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
-["CN VIII Rinne: air conduction is greater than bone but less than 2x. What is this?","Nerve (sensorineural) hearing loss","Conduction hearing loss|Normal hearing|Facial nerve palsy","Air still beats bone, but not by the normal 2x ratio (CN VIII Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
-["CN VIII Romberg: patient wobbles much more with eyes closed than with eyes open. How is this read?","Abnormal (positive) Romberg","Normal finding|Light reflex failure|Conjugate gaze","The amount of wobble is compared with eyes open; tests vestibular portion of CN VIII (Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
-["CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?","Consensual light reflex","Direct light reflex|Near reaction|Accommodation","Contralateral constriction is consensual (CN III Oculomotor efferent).","CN III (Oculomotor)"],
-["CN III: light is shone into the right eye and the RIGHT pupil constricts. Which reflex is this?","Direct light reflex","Consensual light reflex|Convergence|Accommodation","Ipsilateral constriction is the direct reflex (CN III Oculomotor efferent).","CN III (Oculomotor)"],
-["CN III/IV/VI: eyes jerk at the end of an extreme gaze position. What is this called?","Nystagmus","Conjugate gaze|Miosis|Accommodation","Twitching/jerking at the end of gaze is nystagmus (CN III, IV, VI).","CN III (Oculomotor), CN IV (Trochlear), CN VI (Abducent)"],
-["CN III near reaction: which is NOT an expected response as a finger approaches the nose?","Pupil dilation","Convergence|Accommodation|Miosis","The pupils constrict (miosis) during near reaction (CN III Oculomotor).","CN III (Oculomotor)"],
-["CN VII: patient cannot raise the right eyebrow or smile symmetrically. Which nerve is affected?","CN VII","CN V|CN XII|CN X","Facial expression muscles are CN VII (Facial).","CN VII (Facial)"],
-["CN XI: patient cannot shrug the left shoulder against resistance. Which muscle is weak?","Left trapezius","Left masseter|Left temporalis|Left stylopharyngeus","Trapezius is tested by shrug, CN XI (Spinal Accessory).","CN XI (Spinal Accessory)"],
-["CN II: patient cannot read below the 20/40 line with the Snellen chart. This is documented as:","Visual acuity of 20/40","Visual field of 20/40|Convergence of 20/40|Miosis grade 40","Acuity is recorded as the line number next to the chart line (CN II Optic).","CN II (Optic)"],
-["Spinal nerve DTR graded 4: what is the finding?","Hyperactive with clonus","Absent reflex|Sluggish, needs reinforcement|Average response","0 absent, 1 sluggish, 2 average, 3 brisk, 4 hyperactive with clonus."],
-["Myotome graded 3 (Fair): what can the patient do?","Full ROM against gravity but cannot resist","Full ROM with gravity eliminated|Full ROM with some resistance|No contraction","3 = full ROM against gravity without resistance."],
-["Myotome graded 2 (Poor): what can the patient do?","Full ROM with gravity eliminated","Full ROM against gravity|Slight twitch only|Full ROM with full resistance","2 = full ROM only when gravity is eliminated."],
-["Patient feels pain from a light cotton-swab touch. What is this called?","Allodynia","Hypoesthesia|Hyperesthesia|Paresthesia","Allodynia is pain from a normally non-painful stimulus."],
-["Patient reports reduced sensation to sharp/soft touch in a dermatome. What is this called?","Hypoesthesia","Hyperesthesia|Paresthesia|Allodynia","Hypoesthesia = decreased sensation."],
-["Biceps reflex is absent on one side only. Which spinal level is being tested?","C5","C7|L4|S1","Biceps C5, brachioradialis C6, triceps C7."],
-["Absent Achilles reflex on one side. Which spinal level is being tested?","S1","L4|L5|C7","Patellar L4, medial hamstring L5, Achilles S1."]
+// NERVE + TEST -> RESULT: [stem, [options: {text, correct, why}], explanation]
+const R = [
+  [
+    "CN XII: on protrusion the tongue deviates to the right. What does this indicate?",
+    [
+      { text: "Right-sided tongue weakness", correct: true, why: "The active unaffected genioglossus muscle unopposedly pushes the tongue toward the weak (damaged) side." },
+      { text: "Left-sided tongue weakness", correct: false, why: "A left-sided lesion would cause the tongue to deviate toward the left upon protrusion." },
+      { text: "Normal finding", correct: false, why: "A normal tongue protrudes straight along the midline without lateral deviation." },
+      { text: "CN X lesion", correct: false, why: "CN X controls uvula and palatal deviation, not tongue deviation." }
+    ],
+    "On protrusion, the functional muscle pushes the tongue toward the side of the lesion (the weak side)."
+  ],
+  [
+    "CN V motor: on opening the mouth the jaw deviates to the left. Which side is weak?",
+    [
+      { text: "Left", correct: true, why: "The pterygoid muscles push forward; weakness on the left allows the intact right side to push the mandible toward the left." },
+      { text: "Right", correct: false, why: "Right-sided weakness would allow the intact left pterygoid to shift the jaw toward the right." },
+      { text: "Neither, this is normal", correct: false, why: "Normal jaw opening occurs directly in the midline without asymmetry." },
+      { text: "Both equally", correct: false, why: "Bilateral weakness would present as weak bite or open bite, not lateral jaw deviation." }
+    ],
+    "The lateral pterygoid muscles push forward and medially; weakness on one side causes the jaw to deviate toward the weak side."
+  ],
+  [
+    "CN X: patient says \"Ahhh\". Which is the NORMAL finding?",
+    [
+      { text: "Soft palate rises equally, uvula stays midline", correct: true, why: "Bilateral levator veli palatini muscles pull equally on the palate, keeping the uvula vertical." },
+      { text: "Uvula deviates to one side", correct: false, why: "Uvular deviation is pathological and points toward the intact, strong side away from the lesion." },
+      { text: "Soft palate stays flat", correct: false, why: "Failure of the palate to rise bilaterally indicates bilateral vagal paralysis." },
+      { text: "Tongue deviates", correct: false, why: "Tongue deviation tests CN XII function, not the palatal motor branch of CN X." }
+    ],
+    "Normal innervation results in symmetric, bilateral elevation of the soft palate and a midline uvula."
+  ],
+  [
+    "CN VIII Rinne: bone conduction is greater than air conduction. What is this?",
+    [
+      { text: "Conduction hearing loss", correct: true, why: "Obstruction or pathology in the external canal or middle ear prevents normal air transmission (BC > AC is abnormal)." },
+      { text: "Sensorineural (nerve) hearing loss", correct: false, why: "In sensorineural loss, AC remains greater than BC, but overall duration is reduced." },
+      { text: "Normal hearing", correct: false, why: "Normal hearing demonstrates air conduction lasting twice as long as bone conduction (AC > 2x BC)." },
+      { text: "Vestibular loss", correct: false, why: "Vestibular loss causes vertigo or balance ataxia, not hearing conduction defects." }
+    ],
+    "Air conduction should normally be greater than bone conduction; bone conduction exceeding air conduction indicates a mechanical conductive issue."
+  ],
+  [
+    "CN VIII Rinne: air conduction is greater than bone but less than 2x. What is this?",
+    [
+      { text: "Nerve (sensorineural) hearing loss", correct: true, why: "Sound is still heard longer via air than bone, but cochlear/cochlear nerve damage blunts normal acoustic amplification." },
+      { text: "Conduction hearing loss", correct: false, why: "Conduction loss causes bone conduction to equal or exceed air conduction (BC >= AC)." },
+      { text: "Normal hearing", correct: false, why: "Normal acoustic conduction requires air conduction to last at least twice as long as bone conduction." },
+      { text: "Facial nerve palsy", correct: false, why: "Facial nerve palsy can cause hyperacusis due to stapedius weakness, not a blunted AC:BC Rinne ratio." }
+    ],
+    "Sensorineural hearing loss preserves AC > BC, but the transmission efficiency is impaired (less than the normal 2:1 ratio)."
+  ],
+  [
+    "CN VIII Romberg: patient wobbles much more with eyes closed than with eyes open. How is this read?",
+    [
+      { text: "Abnormal (positive) Romberg", correct: true, why: "Excessive sway with eyes closed indicates loss of vestibular or dorsal column proprioception that was previously compensated by vision." },
+      { text: "Normal finding", correct: false, why: "Normal individuals maintain stability with minimal sway whether eyes are open or closed." },
+      { text: "Light reflex failure", correct: false, why: "The light reflex assesses CN II and CN III pupillary pathways, unrelated to postural balance." },
+      { text: "Conjugate gaze", correct: false, why: "Conjugate gaze describes coordinated bilateral eye movement, not postural control." }
+    ],
+    "A positive Romberg test indicates that balance depends heavily on visual fixation due to vestibular or dorsal column sensory ataxia."
+  ],
+  [
+    "CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?",
+    [
+      { text: "Consensual light reflex", correct: true, why: "Constriction of the pupil opposite to the stimulated eye represents the consensual (indirect) reflex." },
+      { text: "Direct light reflex", correct: false, why: "The direct reflex is pupillary constriction occurring in the same eye receiving the light stimulus." },
+      { text: "Near reaction", correct: false, why: "Near reaction occurs in response to an approaching target, not an isolated penlight stimulus." },
+      { text: "Accommodation", correct: false, why: "Accommodation is lens curvature change mediated during near fixation." }
+    ],
+    "Light shone into one eye traveling across bilateral Edinger-Westphal nuclei produces contralateral constriction (the consensual response)."
+  ],
+  [
+    "CN III: light is shone into the right eye and the RIGHT pupil constricts. Which reflex is this?",
+    [
+      { text: "Direct light reflex", correct: true, why: "Pupillary constriction within the illuminated eye is the direct light reflex." },
+      { text: "Consensual light reflex", correct: false, why: "Consensual response is constriction in the contralateral unilluminated eye." },
+      { text: "Convergence", correct: false, why: "Convergence is bilateral medial rectus contraction when looking at near targets." },
+      { text: "Accommodation", correct: false, why: "Accommodation describes ciliary body contraction to adjust lens thickness." }
+    ],
+    "Ipsilateral constriction in response to direct focal light input is the direct pupillary light reflex."
+  ],
+  [
+    "CN III/IV/VI: eyes jerk at the end of an extreme gaze position. What is this called?",
+    [
+      { text: "Nystagmus", correct: true, why: "Involuntary rhythmic oscillating or jerking movement of the eyes is designated nystagmus." },
+      { text: "Conjugate gaze", correct: false, why: "Conjugate gaze refers to smooth, parallel, coordinated movement of both eyes." },
+      { text: "Miosis", correct: false, why: "Miosis refers specifically to pupillary constriction." },
+      { text: "Accommodation", correct: false, why: "Accommodation is optical refocusing on nearby objects." }
+    ],
+    "Rhythmic jerking or oscillatory movements at extreme angles of lateral or vertical gaze indicate nystagmus."
+  ],
+  [
+    "CN III near reaction: which is NOT an expected response as a finger approaches the nose?",
+    [
+      { text: "Pupil dilation", correct: true, why: "Pupils constrict (miosis) during the near triad; pupillary dilation (mydriasis) is the opposite of the normal near reflex." },
+      { text: "Convergence", correct: false, why: "Convergence (both eyes turning medially via CN III) is an expected component." },
+      { text: "Accommodation", correct: false, why: "Accommodation (ciliary muscle rounding the lens via CN III) is an expected component." },
+      { text: "Miosis", correct: false, why: "Miosis (sphincter pupillae constriction via CN III) is an expected component." }
+    ],
+    "The near triad consists of convergence, accommodation, and miosis; pupillary dilation does not occur."
+  ],
+  [
+    "CN VII: patient cannot raise the right eyebrow or smile symmetrically. Which nerve is affected?",
+    [
+      { text: "CN VII", correct: true, why: "Supplies all motor branches to the muscles of facial expression, including frontalis and orbicularis oris." },
+      { text: "CN V", correct: false, why: "Supplies facial sensation and muscles of mastication, not muscles of facial expression." },
+      { text: "CN XII", correct: false, why: "Supplies motor control to tongue musculature." },
+      { text: "CN X", correct: false, why: "Supplies motor control to the pharynx, larynx, and soft palate." }
+    ],
+    "The facial nerve (CN VII) provides complete motor innervation to the superficial muscles of facial expression."
+  ],
+  [
+    "CN XI: patient cannot shrug the left shoulder against resistance. Which muscle is weak?",
+    [
+      { text: "Left trapezius", correct: true, why: "The spinal accessory nerve provides primary somatic motor innervation to the trapezius." },
+      { text: "Left masseter", correct: false, why: "Innervated by the mandibular division of the trigeminal nerve (CN V3)." },
+      { text: "Left temporalis", correct: false, why: "Innervated by deep temporal branches of the trigeminal nerve (CN V3)." },
+      { text: "Left stylopharyngeus", correct: false, why: "Innervated exclusively by the glossopharyngeal nerve (CN IX)." }
+    ],
+    "Shoulder elevation (shrug) specifically isolates the upper fibers of the trapezius innervated by CN XI."
+  ],
+  [
+    "CN II: patient cannot read below the 20/40 line with the Snellen chart. This is documented as:",
+    [
+      { text: "Visual acuity of 20/40", correct: true, why: "Visual acuity is documented as the standard fraction corresponding to the lowest legible line." },
+      { text: "Visual field of 20/40", correct: false, why: "Visual fields assess peripheral vision degrees, not Snellen chart fractions." },
+      { text: "Convergence of 20/40", correct: false, why: "Convergence evaluates medial ocular alignment, measured in distance (cm) to near point." },
+      { text: "Miosis grade 40", correct: false, why: "Miosis describes pupil diameter measured directly in millimeters (mm)." }
+    ],
+    "Snellen performance is recorded as visual acuity relative to a standard 20-foot distance."
+  ],
+  [
+    "Spinal nerve DTR graded 4: what is the finding?",
+    [
+      { text: "Hyperactive with clonus", correct: true, why: "Grade 4 deep tendon reflex indicates markedly hyperactive response with sustained rhythmic beats of clonus." },
+      { text: "Absent reflex", correct: false, why: "An absent deep tendon reflex with no contraction is graded 0." },
+      { text: "Sluggish, needs reinforcement", correct: false, why: "A sluggish reflex elicitable only with reinforcement (Jendrassik) is graded 1." },
+      { text: "Average response", correct: false, why: "A normal, physiological, average deep tendon reflex is graded 2." }
+    ],
+    "Deep tendon reflexes are graded 0 (absent), 1+ (hypoactive), 2+ (normal), 3+ (brisk), and 4+ (hyperactive with clonus)."
+  ],
+  [
+    "Myotome graded 3 (Fair): what can the patient do?",
+    [
+      { text: "Full ROM against gravity but cannot resist", correct: true, why: "Grade 3 represents active movement through full ROM against gravity with zero added resistance." },
+      { text: "Full ROM with gravity eliminated", correct: false, why: "Active movement through full ROM only with gravity eliminated is classified as Grade 2 (Poor)." },
+      { text: "Full ROM with some resistance", correct: false, why: "Movement against gravity with moderate resistance is classified as Grade 4 (Good)." },
+      { text: "No contraction", correct: false, why: "Zero muscle contraction or palpated tone is classified as Grade 0 (Zero)." }
+    ],
+    "Grade 3 indicates muscle strength sufficient to overcome gravity through a complete joint range of motion, but breaking immediately under resistance."
+  ],
+  [
+    "Myotome graded 2 (Poor): what can the patient do?",
+    [
+      { text: "Full ROM with gravity eliminated", correct: true, why: "Grade 2 represents movement through complete range of motion only when placed in a gravity-minimized plane." },
+      { text: "Full ROM against gravity", correct: false, why: "Completing ROM against gravity requires at least Grade 3 strength." },
+      { text: "Slight twitch only", correct: false, why: "Visible or palpable twitch without joint movement is classified as Grade 1 (Trace)." },
+      { text: "Full ROM with full resistance", correct: false, why: "Full ROM against maximum examiner resistance is classified as Grade 5 (Normal)." }
+    ],
+    "Grade 2 strength cannot overcome gravitational pull and requires gravity elimination to achieve full range of motion."
+  ],
+  [
+    "Patient feels pain from a light cotton-swab touch. What is this called?",
+    [
+      { text: "Allodynia", correct: true, why: "Pain provoked by a stimulus that does not normally provoke pain is clinically termed allodynia." },
+      { text: "Hypoesthesia", correct: false, why: "Hypoesthesia represents abnormally decreased sensitivity to stimulation." },
+      { text: "Hyperesthesia", correct: false, why: "Hyperesthesia is increased sensitivity to stimulation, not specifically pain from innocuous touch." },
+      { text: "Paresthesia", correct: false, why: "Paresthesia describes spontaneous abnormal sensations such as tingling, prickling, or pins-and-needles." }
+    ],
+    "Allodynia occurs when non-noxious stimuli (like light touch or clothes rubbing against skin) trigger nociceptive pain signals."
+  ],
+  [
+    "Patient reports reduced sensation to sharp/soft touch in a dermatome. What is this called?",
+    [
+      { text: "Hypoesthesia", correct: true, why: "Reduced or diminished cutaneous sensation to tactile or pinprick stimulation is hypoesthesia." },
+      { text: "Hyperesthesia", correct: false, why: "Hyperesthesia denotes exaggerated cutaneous tactile sensitivity." },
+      { text: "Paresthesia", correct: false, why: "Paresthesias are spontaneous pins-and-needles or numbness sensations." },
+      { text: "Allodynia", correct: false, why: "Allodynia represents pain elicited by normally non-painful stimuli." }
+    ],
+    "Hypoesthesia denotes decreased sensory perception along the cutaneous distribution of a peripheral or spinal nerve."
+  ],
+  [
+    "Biceps reflex is absent on one side only. Which spinal level is being tested?",
+    [
+      { text: "C5", correct: true, why: "The deep tendon stretch reflex of the biceps brachii tendon primarily interrogates the C5 spinal cord level (musculocutaneous nerve)." },
+      { text: "C7", correct: false, why: "The triceps reflex primarily evaluates the C7 spinal level." },
+      { text: "L4", correct: false, why: "The patellar tendon reflex evaluates the L4 spinal level." },
+      { text: "S1", correct: false, why: "The Achilles tendon reflex evaluates the S1 spinal level." }
+    ],
+    "The biceps reflex isolates the C5 spinal segment (with secondary contributions from C6)."
+  ],
+  [
+    "Absent Achilles reflex on one side. Which spinal level is being tested?",
+    [
+      { text: "S1", correct: true, why: "The Achilles (calcaneal) reflex isolates the S1 nerve root via the tibial branch of the sciatic nerve." },
+      { text: "L4", correct: false, why: "The patellar reflex primarily isolates the L4 nerve root." },
+      { text: "L5", correct: false, why: "The medial hamstring reflex tests L5 (L5 has no standard single tendon reflex, but medial hamstring is used)." },
+      { text: "C7", correct: false, why: "The triceps reflex tests the upper extremity C7 spinal root." }
+    ],
+    "The Achilles tendon tap primarily assesses the S1 nerve root integrity."
+  ]
 ];
 
-// FILL-IN: [stem, [accepted answers], answer shown, explanation]
-const F=[
-["CN I is tested with the sense of ____.",["smell","olfaction"],"smell","CN I = Olfactory."],
-["Snellen wall chart is read from ____ feet away.",["20","20 feet","20 ft","20ft"],"20 feet","Pocket chart is 14 inches."],
-["Snellen pocket chart is read from ____ inches away.",["14","14 inches","14 in","14in"],"14 inches","Wall chart is 20 feet."],
-["For visual field confrontation, the examiner sits about an ____ length away.",["arm","arms","arm's","an arm"],"arm","Examiner compares the patient's periphery with their own."],
-["The three near-reaction responses are convergence, accommodation, and ____.",["miosis","pupil constriction","constriction"],"miosis","Pupils constrict up close."],
-["Pupil constriction in the SAME eye the light is shone into is the ____ light reflex.",["direct"],"direct","Ipsilateral = direct."],
-["Pupil constriction in the OPPOSITE eye is the ____ light reflex.",["consensual"],"consensual","Contralateral = consensual."],
-["Involuntary jerking at the end of a gaze position is called ____.",["nystagmus"],"nystagmus","Normal gaze is smooth and conjugate."],
-["Both eyes moving smoothly in the same direction is called ____ gaze.",["conjugate"],"conjugate","Abnormal = nystagmus or lag."],
-["Cardinal field of gaze follows what letter pattern?",["h","an h","h pattern"],"H","Six cardinal positions."],
-["Which cranial nerve (number or name) innervates the lateral rectus?",["vi","6","cn vi","cn 6","abducent","abducens"],"CN VI (Abducent)","LR6 SO4 for the rest of CN III."],
-["Which cranial nerve (number or name) innervates the superior oblique?",["iv","4","cn iv","cn 4","trochlear"],"CN IV (Trochlear)","CN IV = superior oblique."],
-["CN III parasympathetics supply the sphincter pupillae and the ____ muscle.",["ciliary"],"ciliary","Pupil constriction and accommodation (CN III Oculomotor)."],
-["The two muscles palpated while the patient bites down (CN V) are masseter and ____.",["temporalis"],"temporalis","Muscles of mastication (CN V Trigeminal)."],
-["On mouth opening, the jaw deviates toward the ____ side.",["weak","weaker","affected"],"weak","Pterygoid weakness pulls the jaw to that side (CN V Trigeminal)."],
-["Taste for the anterior 2/3 of the tongue is CN ____.",["vii","7","cn vii","cn 7","facial"],"CN VII (Facial)","Posterior 1/3 is CN IX (Glossopharyngeal)."],
-["Taste for the posterior 1/3 of the tongue is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX (Glossopharyngeal)","Anterior 2/3 is CN VII (Facial)."],
-["In Romberg's test the patient closes their ____ and the examiner watches for wobble.",["eyes","eye"],"eyes","Compare with eyes open (CN VIII Vestibulocochlear)."],
-["Normally, air conduction is greater than ____ times bone conduction (Rinne).",["2","two","2x","2 times"],"2","Less than 2x suggests a nerve problem (CN VIII Vestibulocochlear)."],
-["The sensory limb of the gag reflex is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX (Glossopharyngeal)","Motor limb is CN X (Vagus)."],
-["The motor limb of the gag reflex is CN ____.",["x","10","cn x","cn 10","vagus"],"CN X (Vagus)","Sensory limb is CN IX (Glossopharyngeal)."],
-["CN XI innervates the sternocleidomastoid and the ____.",["trapezius","trap","traps"],"trapezius","Tested with head rotation and shoulder shrug (CN XI Spinal Accessory)."],
-["The protruded tongue deviates toward the ____ side.",["weak","weaker","affected"],"weak","CN XII (Hypoglossal)."],
-["How many pairs of spinal nerves are there?",["31","thirty one","thirty-one"],"31","8 C, 12 T, 5 L, 5 S, 1 Co."],
-["Which spinal nerve is sensory only (C1 is motor only)?",["co1","co 1","coccygeal","coccygeal 1","coccygeal nerve"],"Co1 (coccygeal)","C1 motor only, Co1 sensory only."],
-["A dermatome is a region of skin innervated by the sensory endings of one ____.",["spinal nerve","spinal nerves","nerve"],"spinal nerve","Dermatome = skin; myotome = muscle."],
-["A myotome tests an ____ muscle contraction.",["isometric"],"isometric","Graded 0 to 5."],
-["Myotome grade 5 is described as ____.",["normal"],"Normal","Full ROM against gravity with full resistance."],
-["Myotome grade 3 (Fair): full ROM ____ but cannot resist.",["against gravity"],"against gravity","Grade 2 is with gravity eliminated."],
-["Myotome grade 2 (Poor): full ROM with gravity ____.",["eliminated","removed"],"eliminated","Grade 3 is against gravity."],
-["Reflex grade 0 means the reflex is ____.",["absent"],"absent","0 absent to 4 hyperactive with clonus."],
-["Reflex grade 4 is hyperactive with ____.",["clonus"],"clonus","Graded on a 0 to 4 scale."],
-["Reflex grade 1 is sluggish and needs ____.",["reinforcement"],"reinforcement","Grade 2 is average."],
-["Biceps reflex spinal level: C___",["5","c5"],"C5","Brachioradialis C6, triceps C7."],
-["Brachioradialis reflex spinal level: C___",["6","c6"],"C6","Biceps C5, triceps C7."],
-["Triceps reflex spinal level: C___",["7","c7"],"C7","Biceps C5, brachioradialis C6."],
-["Patellar tendon reflex spinal level: L___",["4","l4"],"L4","Medial hamstring L5, Achilles S1."],
-["Achilles reflex spinal level: S___",["1","s1"],"S1","Patellar L4, medial hamstring L5."],
-["Abnormal sensations in a dermatome include hypoesthesia, hyperesthesia, paresthesia, and ____.",["allodynia"],"allodynia","Pain from a non-painful stimulus."]
+// FILL-IN: [stem, [accepted answers], answer shown, explanation, revealedNerve]
+const F = [
+  ["CN I is tested with the sense of ____.", ["smell", "olfaction"], "smell", "Olfactory receptor neurons pass through the cribriform plate to transmit odorant signals.", "CN I (Olfactory)"],
+  ["Snellen wall chart is read from ____ feet away.", ["20", "20 feet", "20 ft", "20ft"], "20 feet", "20 feet is the standard optical infinity distance used to test distance visual acuity.", "CN II (Optic)"],
+  ["Snellen pocket chart is read from ____ inches away.", ["14", "14 inches", "14 in", "14in"], "14 inches", "14 inches represents the calibrated reading distance for near-card visual acuity.", "CN II (Optic)"],
+  ["For visual field confrontation, the examiner sits about an ____ length away.", ["arm", "arms", "arm's", "an arm"], "arm", "Sitting an arm's length away allows direct 1-to-1 confrontation of peripheral boundaries.", "CN II (Optic)"],
+  ["The three near-reaction responses are convergence, accommodation, and ____.", ["miosis", "pupil constriction", "constriction"], "miosis", "Parasympathetic activation through CN III constricts the pupil during near viewing.", "CN III (Oculomotor)"],
+  ["Pupil constriction in the SAME eye the light is shone into is the ____ light reflex.", ["direct"], "direct", "Ipsilateral pupillary constriction constitutes the direct light reflex.", "CN II / CN III"],
+  ["Pupil constriction in the OPPOSITE eye is the ____ light reflex.", ["consensual"], "consensual", "Bilateral projection to both Edinger-Westphal nuclei produces contralateral constriction.", "CN II / CN III"],
+  ["Involuntary jerking at the end of a gaze position is called ____.", ["nystagmus"], "nystagmus", "Nystagmus is rhythmic oscillatory ocular tremor typically observed on extreme lateral gaze.", "CN III, IV, VI"],
+  ["Both eyes moving smoothly in the same direction is called ____ gaze.", ["conjugate"], "conjugate", "Conjugate gaze denotes synchronized binocular tracking across all visual fields.", "CN III, IV, VI"],
+  ["Cardinal field of gaze follows what letter pattern?", ["h", "an h", "h pattern"], "H", "The 'H-pattern' methodically isolates all six extraocular muscle vectors.", "CN III, IV, VI"],
+  ["Which cranial nerve (number or name) innervates the lateral rectus?", ["vi", "6", "cn vi", "cn 6", "abducent", "abducens"], "CN VI (Abducent)", "The lateral rectus muscle is exclusively innervated by CN VI (LR6 SO4 remainder 3).", "CN VI (Abducent)"],
+  ["Which cranial nerve (number or name) innervates the superior oblique?", ["iv", "4", "cn iv", "cn 4", "trochlear"], "CN IV (Trochlear)", "The superior oblique muscle is innervated exclusively by CN IV.", "CN IV (Trochlear)"],
+  ["CN III parasympathetics supply the sphincter pupillae and the ____ muscle.", ["ciliary"], "ciliary", "Ciliary muscle contraction relaxes the zonules, rounding the lens for near focus.", "CN III (Oculomotor)"],
+  ["The two muscles palpated while the patient bites down (CN V) are masseter and ____.", ["temporalis"], "temporalis", "Temporalis and masseter muscles are palpable primary elevators of the mandible.", "CN V (Trigeminal)"],
+  ["On mouth opening, the jaw deviates toward the ____ side.", ["weak", "weaker", "affected"], "weak", "Unilateral lateral pterygoid weakness causes the mandible to push toward the lesion.", "CN V (Trigeminal)"],
+  ["Taste for the anterior 2/3 of the tongue is CN ____.", ["vii", "7", "cn vii", "cn 7", "facial"], "CN VII", "Taste fibers travel via the chorda tympani of CN VII.", "CN VII (Facial)"],
+  ["Taste for the posterior 1/3 of the tongue is CN ____.", ["ix", "9", "cn ix", "cn 9", "glossopharyngeal"], "CN IX", "CN IX conveys both taste and general somatic sensation to the posterior third.", "CN IX (Glossopharyngeal)"],
+  ["In Romberg's test the patient closes their ____ and the examiner watches for wobble.", ["eyes", "eye"], "eyes", "Removing visual fixation exposes underlying proprioceptive or vestibular balance defects.", "CN VIII (Vestibulocochlear)"],
+  ["Normally, air conduction is greater than ____ times bone conduction (Rinne).", ["2", "two", "2x", "2 times"], "2", "Normal cochlear acoustic conduction through air lasts at least twice as long as bone conduction.", "CN VIII (Vestibulocochlear)"],
+  ["The sensory limb of the gag reflex is CN ____.", ["ix", "9", "cn ix", "cn 9", "glossopharyngeal"], "CN IX", "Afferent mucosal touch sensation of the oropharynx is mediated by CN IX.", "CN IX (Glossopharyngeal)"],
+  ["The motor limb of the gag reflex is CN ____.", ["x", "10", "cn x", "cn 10", "vagus"], "CN X", "Pharyngeal constrictor contraction is mediated by vagal motor fibers.", "CN X (Vagus)"],
+  ["CN XI innervates the sternocleidomastoid and the ____.", ["trapezius", "trap", "traps"], "trapezius", "Motor fibers from C1-C5 spinal accessory roots innervate the trapezius and SCM.", "CN XI (Spinal Accessory)"],
+  ["The protruded tongue deviates toward the ____ side.", ["weak", "weaker", "affected"], "weak", "The active contralateral genioglossus pushes the tongue toward the paretic side.", "CN XII (Hypoglossal)"],
+  ["How many pairs of spinal nerves are there?", ["31", "thirty one", "thirty-one"], "31", "There are 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, and 1 coccygeal pair.", "Spinal Nerves"],
+  ["Which spinal nerve is sensory only (C1 is motor only)?", ["co1", "co 1", "coccygeal", "coccygeal 1", "coccygeal nerve"], "Co1 (coccygeal)", "C1 typically lacks a dorsal root (motor only); Co1 contains sensory fibers without significant motor roots.", "Spinal Nerves"],
+  ["A dermatome is a region of skin innervated by the sensory endings of one ____.", ["spinal nerve", "spinal nerves", "nerve"], "spinal nerve", "A dermatome is an isolated cutaneous area supplied by a single posterior spinal root.", "Spinal Nerves"],
+  ["A myotome tests an ____ muscle contraction.", ["isometric"], "isometric", "Graded muscle testing applies isometric resistance to evaluate specific spinal cord root levels.", "Spinal Nerves"],
+  ["Myotome grade 5 is described as ____.", ["normal"], "Normal", "Full active range of motion against gravity and strong maximal resistance.", "Spinal Nerves"],
+  ["Myotome grade 3 (Fair): full ROM ____ but cannot resist.", ["against gravity"], "against gravity", "Completes full range against gravity, but yields under examiner resistance.", "Spinal Nerves"],
+  ["Myotome grade 2 (Poor): full ROM with gravity ____.", ["eliminated", "removed"], "eliminated", "Complete range is achievable only in a plane perpendicular to gravitational pull.", "Spinal Nerves"],
+  ["Reflex grade 0 means the reflex is ____.", ["absent"], "absent", "No muscular response or contraction is elicited even with reinforcement.", "Spinal Nerves"],
+  ["Reflex grade 4 is hyperactive with ____.", ["clonus"], "clonus", "Indicates upper motor neuron disinhibition producing repetitive rhythmic oscillations.", "Spinal Nerves"],
+  ["Reflex grade 1 is sluggish and needs ____.", ["reinforcement"], "reinforcement", "Hypoactive reflex requiring isometric recruitment maneuvers to elicit a response.", "Spinal Nerves"],
+  ["Biceps reflex spinal level: C___", ["5", "c5"], "C5", "The C5 nerve root mediates the biceps deep tendon reflex.", "C5 Nerve Root"],
+  ["Brachioradialis reflex spinal level: C___", ["6", "c6"], "C6", "The C6 nerve root mediates the brachioradialis deep tendon reflex.", "C6 Nerve Root"],
+  ["Triceps reflex spinal level: C___", ["7", "c7"], "C7", "The C7 nerve root mediates the triceps deep tendon reflex.", "C7 Nerve Root"],
+  ["Patellar tendon reflex spinal level: L___", ["4", "l4"], "L4", "The L4 nerve root mediates the quadriceps patellar tendon stretch reflex.", "L4 Nerve Root"],
+  ["Achilles reflex spinal level: S___", ["1", "s1"], "S1", "The S1 nerve root mediates the triceps surae calcaneal reflex.", "S1 Nerve Root"],
+  ["Abnormal sensations in a dermatome include hypoesthesia, hyperesthesia, paresthesia, and ____.", ["allodynia"], "allodynia", "Allodynia involves pain perception triggered by non-noxious mechanical stimuli.", "Sensory Evaluation"]
 ];
 
-const quizData=[];
+const quizData = [];
 
-// Build MC items for Test -> Nerve: options show number only (e.g. "CN II"), answer reveals full name
-T.forEach((t,i)=>quizData.push({
-  kind:"mc",
-  tag:"Test → Nerve",
-  stem:"Which cranial nerve does this test? "+t[0],
-  revealedNerve: N_FULL[t[1]],
-  opts:[t[1],...t[2]].map((n,j)=>({text:N_NUM[n],correct:j===0})),
-  why:t[3]
-}));
+// Populate Test -> Nerve
+T.forEach(t => {
+  const correctNum = t[1];
+  const wrongNums = t[2];
+  const allNums = [correctNum, ...wrongNums];
+  
+  const options = allNums.map((num, idx) => {
+    const isCorrect = (idx === 0);
+    return {
+      text: N_NUM[num],
+      correct: isCorrect,
+      why: isCorrect 
+        ? `${N_NUM[num]} (${N_NAME[num]}): Correct. ${t[3]}`
+        : `${N_NUM[num]} (${N_NAME[num]}): Incorrect. Primarily responsible for: ${NERVE_TESTS[num]}`
+    };
+  });
 
-// Build MC items for Nerve -> Result
-R.forEach(r=>quizData.push({
-  kind:"mc",
-  tag:"Nerve → Result",
-  stem:r[0],
-  opts:[r[1],...r[2].split("|")].map((x,j)=>({text:x,correct:j===0})),
-  why:r[3],
-  revealedNerve:r[4]||null
-}));
+  quizData.push({
+    kind: "mc",
+    tag: "Test → Nerve",
+    revealedNerve: `${N_NUM[correctNum]} (${N_NAME[correctNum]})`,
+    stem: "Which cranial nerve does this test? " + t[0],
+    opts: options,
+    why: t[3]
+  });
+});
 
-// Build Fill-in items
-F.forEach(f=>quizData.push({
-  kind:"fill",
-  tag:"Fill-in",
-  stem:f[0],
-  acc:f[1],
-  ans:f[2],
-  why:f[3]
-}));
+// Populate Nerve -> Result
+R.forEach(r => {
+  quizData.push({
+    kind: "mc",
+    tag: "Nerve → Result",
+    stem: r[0],
+    opts: r[1],
+    why: r[2]
+  });
+});
 
-quizData.forEach((q,i)=>q.id=i+1);
+// Populate Fill-in
+F.forEach(f => {
+  quizData.push({
+    kind: "fill",
+    tag: "Fill-in",
+    stem: f[0],
+    acc: f[1],
+    ans: f[2],
+    why: f[3],
+    revealedNerve: f[4]
+  });
+});
 
-const MODES={all:"All Modes",t:"Test → Nerve",r:"Nerve → Result",f:"Fill-in"};
-const COUNTS=[25, 50, 86];
+quizData.forEach((q, i) => q.id = i + 1);
 
-let mode="all", countChoice=86, round=1, set=[], answers={};
-const L="abcd";
-const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-const norm=s=>s.toLowerCase().replace(/[^a-z0-9\s'\/-]/g,"").replace(/\s+/g," ").trim();
-const isMatch=(inp,acc)=>{const n=norm(inp);return n&&acc.some(a=>{a=norm(a);return n===a||(a.length>3&&n.includes(a));});};
+const MODES = { all: "All Modes", t: "Test → Nerve", r: "Nerve → Result", f: "Fill-in" };
+const COUNTS = [25, 50, 86];
 
-function header(){const c=Object.values(answers).filter(v=>v).length,t=set.length;
-document.getElementById("header").textContent=`${round===1?"Score":"Review "+(round-1)}: ${c} / ${t} (${t?Math.round(c/t*100):0}%)`;}
+let mode = "all", countChoice = 86, round = 1, set = [], answers = {};
+const L = "ABCD";
 
-function pool(){
-  let p=[];
-  if(mode==="t") p = quizData.filter(q=>q.tag==="Test → Nerve");
-  else if(mode==="r") p = quizData.filter(q=>q.tag==="Nerve → Result");
-  else if(mode==="f") p = quizData.filter(q=>q.kind==="fill");
+const shuf = a => {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+};
+
+const norm = s => s.toLowerCase().replace(/[^a-z0-9\s'\/-]/g, "").replace(/\s+/g, " ").trim();
+const isMatch = (inp, acc) => {
+  const n = norm(inp);
+  return n && acc.some(a => {
+    a = norm(a);
+    return n === a || (a.length > 3 && n.includes(a));
+  });
+};
+
+function header() {
+  const c = Object.values(answers).filter(v => v).length, t = set.length;
+  document.getElementById("header").textContent = `${round === 1 ? "Score" : "Review " + (round - 1)}: ${c} / ${t} (${t ? Math.round(c / t * 100) : 0}%)`;
+}
+
+function pool() {
+  let p = [];
+  if (mode === "t") p = quizData.filter(q => q.tag === "Test → Nerve");
+  else if (mode === "r") p = quizData.filter(q => q.tag === "Nerve → Result");
+  else if (mode === "f") p = quizData.filter(q => q.kind === "fill");
   else p = [...quizData];
   
   const shuffled = shuf([...p]);
   return shuffled.slice(0, Math.min(countChoice, shuffled.length));
 }
 
-function render(custom){
-set=custom||pool();answers={};
-set.forEach(q=>{if(q.opts)shuf(q.opts);});
-document.getElementById("summary").style.display="none";
-const quiz=document.getElementById("quiz");quiz.innerHTML="";
-set.forEach((q,n)=>{
-const card=document.createElement("div");card.className="card";
-card.innerHTML=`<span class="badge">Question ${n+1} of ${set.length}</span><span class="badge tag">${q.tag}</span><p class="stem"></p><div class="body"></div><div class="explain"></div>`;
-card.querySelector(".stem").textContent=q.stem;
-const body=card.querySelector(".body");
-if(q.kind==="mc"){q.opts.forEach((o,i)=>{const b=document.createElement("button");b.className="opt";b.textContent=`${L[i]}. ${o.text}`;b.onclick=()=>pickMC(q,i,card);body.appendChild(b);});}
-else{body.innerHTML=`<div class="fillrow"><input type="text" placeholder="Type your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn">Check</button></div>`;
-const inp=body.querySelector("input"),btn=body.querySelector("button");
-btn.onclick=()=>checkFill(q,inp,btn,card);
-inp.onkeydown=e=>{if(e.key==="Enter")checkFill(q,inp,btn,card);};}
-quiz.appendChild(card);});
-header();window.scrollTo(0,0);}
-
-function wrongSound(){const a=document.getElementById("wrongAudio");try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
-
-function explain(card,ok,q,extra){
-  const ex=card.querySelector(".explain");
-  let nerveRevealHtml = "";
-  if(q.revealedNerve){
-    nerveRevealHtml = `<div class="ans" style="color:var(--accent);font-weight:700;margin-bottom:6px;">Target Nerve: ${q.revealedNerve}</div>`;
-  }
-  ex.innerHTML=`<div class="banner ${ok?"good":"bad"}">${ok?"Correct!":"Incorrect"}</div>${nerveRevealHtml}${extra||""}<div class="ans">${q.why}</div>`;
-  ex.style.display="block";
+function render(custom) {
+  set = custom || pool();
+  answers = {};
+  set.forEach(q => { if (q.opts) shuf(q.opts); });
+  document.getElementById("summary").style.display = "none";
+  const quiz = document.getElementById("quiz");
+  quiz.innerHTML = "";
+  
+  set.forEach((q, n) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `<span class="badge">Question ${n + 1} of ${set.length}</span><span class="badge tag">${q.tag}</span><p class="stem"></p><div class="body"></div><div class="explain"></div>`;
+    card.querySelector(".stem").textContent = q.stem;
+    const body = card.querySelector(".body");
+    
+    if (q.kind === "mc") {
+      q.opts.forEach((o, i) => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.textContent = `${L[i]}. ${o.text}`;
+        b.onclick = () => pickMC(q, i, card);
+        body.appendChild(b);
+      });
+    } else {
+      body.innerHTML = `<div class="fillrow"><input type="text" placeholder="Type your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn">Check</button></div>`;
+      const inp = body.querySelector("input"), btn = body.querySelector("button");
+      btn.onclick = () => checkFill(q, inp, btn, card);
+      inp.onkeydown = e => { if (e.key === "Enter") checkFill(q, inp, btn, card); };
+    }
+    quiz.appendChild(card);
+  });
+  header();
+  window.scrollTo(0, 0);
 }
 
-function pickMC(q,i,card){
-if(q.id in answers)return;
-const ok=q.opts[i].correct;answers[q.id]=ok;
-card.querySelectorAll(".opt").forEach((b,j)=>{b.disabled=true;if(q.opts[j].correct)b.classList.add("correct");else if(j===i)b.classList.add("incorrect");});
-if(!ok)wrongSound();
-explain(card,ok,q);done();}
+function wrongSound() {
+  const a = document.getElementById("wrongAudio");
+  try { a.currentTime = 0; a.play().catch(() => {}); } catch (e) {}
+}
 
-function checkFill(q,inp,btn,card){
-if(q.id in answers||!inp.value.trim())return;
-const ok=isMatch(inp.value,q.acc);answers[q.id]=ok;
-inp.disabled=true;btn.disabled=true;inp.classList.add(ok?"correct":"incorrect");
-let extra="";
-if(!ok){wrongSound();extra=`<div class="ans"><strong>Answer:</strong> ${q.ans}</div><button class="btn alt override">I actually knew it</button>`;}
-explain(card,ok,q,extra);
-const ov=card.querySelector(".override");
-if(ov)ov.onclick=()=>{answers[q.id]=true;ov.remove();const b=card.querySelector(".banner");b.className="banner good";b.textContent="Counted as correct";header();if(Object.keys(answers).length===set.length)summary();};
-done();}
+function explain(card, ok, q, extra) {
+  const ex = card.querySelector(".explain");
+  let nerveBanner = q.revealedNerve ? `<div class="target-nerve">Target: ${q.revealedNerve}</div>` : "";
+  
+  let rationaleHTML = "";
+  if (q.opts) {
+    rationaleHTML = '<div class="rationale-list"><div class="rationale-title">Option Rationale:</div>';
+    q.opts.forEach((opt, idx) => {
+      rationaleHTML += `<div class="rationale-item"><strong>${L[idx]})</strong> ${opt.why}</div>`;
+    });
+    rationaleHTML += '</div>';
+  }
 
-function done(){header();if(Object.keys(answers).length===set.length)summary();}
+  ex.innerHTML = `
+    <div class="banner ${ok ? "good" : "bad"}">${ok ? "Correct!" : "You didn’t know that?!"}</div>
+    ${nerveBanner}
+    ${extra || ""}
+    <div class="ans"><strong>Explanation:</strong> ${q.why}</div>
+    ${rationaleHTML}
+  `;
+  ex.style.display = "block";
+}
 
-function summary(){
-const total=set.length,missed=set.filter(q=>!answers[q.id]),pct=Math.round((total-missed.length)/total*100);
-const t=document.querySelector(".summary-title"),m=document.getElementById("summaryMsg");
-if(round===1){t.textContent="Quiz Complete";m.textContent=pct>=90?"Outstanding! You have thoroughly mastered cranial and spinal nerve exams.":pct>=70?"Solid run! Keep drilling to lock in rapid recall.":"Time for a rematch. Review missed questions and run it again.";}
-else{t.textContent=`Review Round ${round-1} Complete`;m.textContent=missed.length?`${missed.length} still missed. Go again.`:"Everything cleared. All correct.";}
-const rb=document.getElementById("reviewBtn");
-if(missed.length){rb.style.display="inline-block";rb.textContent=`Review Missed (${missed.length})`;}else rb.style.display="none";
-const s=document.getElementById("summary");s.style.display="block";s.scrollIntoView({behavior:"smooth"});}
+function pickMC(q, i, card) {
+  if (q.id in answers) return;
+  const ok = q.opts[i].correct;
+  answers[q.id] = ok;
+  card.querySelectorAll(".opt").forEach((b, j) => {
+    b.disabled = true;
+    if (q.opts[j].correct) b.classList.add("correct");
+    else if (j === i) b.classList.add("incorrect");
+  });
+  if (!ok) wrongSound();
+  explain(card, ok, q);
+  done();
+}
+
+function checkFill(q, inp, btn, card) {
+  if (q.id in answers || !inp.value.trim()) return;
+  const ok = isMatch(inp.value, q.acc);
+  answers[q.id] = ok;
+  inp.disabled = true;
+  btn.disabled = true;
+  inp.classList.add(ok ? "correct" : "incorrect");
+  
+  let extra = "";
+  if (!ok) {
+    wrongSound();
+    extra = `<div class="ans"><strong>Answer:</strong> ${q.ans}</div><button class="btn alt override">I actually knew it</button>`;
+  }
+  explain(card, ok, q, extra);
+  
+  const ov = card.querySelector(".override");
+  if (ov) {
+    ov.onclick = () => {
+      answers[q.id] = true;
+      ov.remove();
+      const b = card.querySelector(".banner");
+      b.className = "banner good";
+      b.textContent = "Counted as correct";
+      header();
+      if (Object.keys(answers).length === set.length) summary();
+    };
+  }
+  done();
+}
+
+function done() {
+  header();
+  if (Object.keys(answers).length === set.length) summary();
+}
+
+function summary() {
+  const total = set.length, missed = set.filter(q => !answers[q.id]), pct = Math.round((total - missed.length) / total * 100);
+  const t = document.querySelector(".summary-title"), m = document.getElementById("summaryMsg");
+  if (round === 1) {
+    t.textContent = "Quiz Complete";
+    m.textContent = pct >= 90 ? "Absolute Gigachad. You drained that test dry." : pct >= 70 ? "Solid run! You're locked in, get in some more reps." : "You lasted less than 30 seconds. Time for a rematch.";
+  } else {
+    t.textContent = `Review Round ${round - 1} Complete`;
+    m.textContent = missed.length ? `${missed.length} still missed. Go again.` : "Everything cleared. All correct.";
+  }
+  const rb = document.getElementById("reviewBtn");
+  if (missed.length) {
+    rb.style.display = "inline-block";
+    rb.textContent = `Review Missed (${missed.length})`;
+  } else {
+    rb.style.display = "none";
+  }
+  const s = document.getElementById("summary");
+  s.style.display = "block";
+  s.scrollIntoView({ behavior: "smooth" });
+}
 
 // Setup Mode buttons
-const modesEl=document.getElementById("modes");
-Object.entries(MODES).forEach(([k,v])=>{
-  const b=document.createElement("button");
-  b.className="mode-btn"+(k===mode?" active":"");
-  b.textContent=v;
-  b.dataset.k=k;
-  b.onclick=()=>{
-    mode=k; round=1;
-    modesEl.querySelectorAll(".mode-btn").forEach(x=>x.classList.toggle("active",x.dataset.k===k));
+const modesEl = document.getElementById("modes");
+Object.entries(MODES).forEach(([k, v]) => {
+  const b = document.createElement("button");
+  b.className = "mode-btn" + (k === mode ? " active" : "");
+  b.textContent = v;
+  b.dataset.k = k;
+  b.onclick = () => {
+    mode = k;
+    round = 1;
+    modesEl.querySelectorAll(".mode-btn").forEach(x => x.classList.toggle("active", x.dataset.k === k));
     render();
   };
   modesEl.appendChild(b);
 });
 
 // Setup Question Count buttons
-const countsEl=document.getElementById("counts");
-COUNTS.forEach(cnt=>{
-  const b=document.createElement("button");
-  b.className="count-btn"+(cnt===countChoice?" active":"");
-  b.textContent=`${cnt === 86 ? 'All (86)' : cnt} Questions`;
-  b.dataset.c=cnt;
-  b.onclick=()=>{
-    countChoice=cnt; round=1;
-    countsEl.querySelectorAll(".count-btn").forEach(x=>x.classList.toggle("active",Number(x.dataset.c)===cnt));
+const countsEl = document.getElementById("counts");
+COUNTS.forEach(cnt => {
+  const b = document.createElement("button");
+  b.className = "count-btn" + (cnt === countChoice ? " active" : "");
+  b.textContent = `${cnt === 86 ? 'All (86)' : cnt} Questions`[cite: 3];
+  b.dataset.c = cnt;
+  b.onclick = () => {
+    countChoice = cnt;
+    round = 1;
+    countsEl.querySelectorAll(".count-btn").forEach(x => x.classList.toggle("active", Number(x.dataset.c) === cnt));
     render();
   };
   countsEl.appendChild(b);
 });
 
-document.getElementById("retakeBtn").onclick=()=>{round=1;render();};
-document.getElementById("reviewBtn").onclick=()=>{round++;render(set.filter(q=>!answers[q.id]));};
+document.getElementById("retakeBtn").onclick = () => { round = 1; render(); };
+document.getElementById("reviewBtn").onclick = () => { round++; render(set.filter(q => !answers[q.id])); };
 render();
 </script>
 </body>
