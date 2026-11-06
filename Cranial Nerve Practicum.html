@@ -3,809 +3,743 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lab Practicum: Cranial & Spinal Nerves</title>
+<title>Lab Practicum: Cranial & Spinal Nerve Roots (Myotomes, Dermatomes & DTRs)</title>
 <style>
-:root{--bg:#0f0f0f;--card:#1a1a1a;--bd:#282828;--accent:#ff9900;--muted:#888;--okbg:#14532d;--ok:#22c55e;--badbg:#7f1d1d;--bad:#ef4444}
+:root{
+  --bg:#0f0f0f;
+  --card:#1a1a1a;
+  --card-sub:#222;
+  --bd:#282828;
+  --accent:#ff9900;
+  --accent-soft:rgba(255,153,0,0.15);
+  --muted:#888;
+  --okbg:#14532d;
+  --ok:#22c55e;
+  --badbg:#7f1d1d;
+  --bad:#ef4444;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5}
-#header{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--bd);padding:14px 20px;text-align:center;font-weight:700;color:var(--accent)}
-main{max-width:820px;margin:0 auto;padding:20px 16px 60px}
-h1{font-size:1.4rem;text-align:center;margin:12px 0 4px}
-.sub{text-align:center;color:var(--muted);margin:0 0 18px}
-.controls-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:20px}
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,sans-serif;
+  line-height:1.55;
+}
+#header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:var(--card);
+  border-bottom:1px solid var(--bd);
+  padding:12px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  max-width:960px;
+  margin:0 auto;
+}
+.header-score{font-weight:700;color:var(--accent);font-size:1.05rem}
+.header-actions{display:flex;gap:8px}
+main{max-width:880px;margin:0 auto;padding:18px 16px 80px}
+h1{font-size:1.5rem;text-align:center;margin:12px 0 4px;font-weight:800;letter-spacing:-0.02em}
+.sub{text-align:center;color:var(--muted);margin:0 0 18px;font-size:0.95rem}
+
+.controls-wrap{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  margin-bottom:22px;
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:12px;
+  padding:14px;
+}
 .modes,.counts{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
-.mode-btn,.count-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--bd);background:#222;color:#fff;cursor:pointer;font-weight:600;font-family:inherit;font-size:.9rem}
-.mode-btn.active,.count-btn.active{background:var(--accent);color:#000;border-color:var(--accent)}
-.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:20px}
-.badge{display:inline-block;background:var(--accent);color:#000;font-size:.75rem;font-weight:700;padding:3px 10px;border-radius:999px;margin:0 6px 10px 0}
-.badge.tag{background:#333;color:#ddd}
-.stem{font-size:1.05rem;font-weight:600;margin:0 0 14px}
-.opt{display:block;width:100%;text-align:left;background:#222;color:#fff;border:1px solid var(--bd);border-radius:8px;padding:12px 14px;margin-bottom:8px;font-size:.95rem;cursor:pointer;font-family:inherit}
-.opt:hover:not(:disabled){border-color:var(--accent)}
+.mode-btn,.count-btn{
+  padding:8px 14px;
+  border-radius:8px;
+  border:1px solid var(--bd);
+  background:var(--card-sub);
+  color:#eee;
+  cursor:pointer;
+  font-weight:600;
+  font-family:inherit;
+  font-size:.85rem;
+  transition:all 0.15s ease;
+}
+.mode-btn:hover,.count-btn:hover{border-color:var(--accent);color:#fff}
+.mode-btn.active,.count-btn.active{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700}
+
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:20px;margin-bottom:18px}
+.badge{display:inline-block;background:var(--accent);color:#000;font-size:.75rem;font-weight:800;padding:3px 10px;border-radius:999px;margin:0 6px 10px 0}
+.badge.tag{background:#333;color:#ddd;font-weight:600}
+.stem{font-size:1.05rem;font-weight:600;margin:0 0 14px;color:#f3f4f6}
+
+.opt{
+  display:block;
+  width:100%;
+  text-align:left;
+  background:var(--card-sub);
+  color:#e5e7eb;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  padding:12px 14px;
+  margin-bottom:8px;
+  font-size:.95rem;
+  cursor:pointer;
+  font-family:inherit;
+  transition:background 0.15s ease, border-color 0.15s ease;
+}
+.opt:hover:not(:disabled){border-color:var(--accent);color:#fff}
 .opt:disabled{cursor:default}
-.opt.correct{background:var(--okbg);border-color:var(--ok)}
-.opt.incorrect{background:var(--badbg);border-color:var(--bad)}
+.opt.correct{background:var(--okbg)!important;border-color:var(--ok)!important;color:#fff!important;font-weight:600}
+.opt.incorrect{background:var(--badbg)!important;border-color:var(--bad)!important;color:#fff!important}
+
 .fillrow{display:flex;gap:8px}
-.fillrow input{flex:1;background:#222;color:#fff;border:1px solid var(--bd);border-radius:8px;padding:11px 14px;font-size:1rem;font-family:inherit}
+.fillrow input{
+  flex:1;
+  background:var(--card-sub);
+  color:#fff;
+  border:1px solid var(--bd);
+  border-radius:8px;
+  padding:11px 14px;
+  font-size:1rem;
+  font-family:inherit;
+}
 .fillrow input:focus{outline:none;border-color:var(--accent)}
 .fillrow input.correct{border-color:var(--ok);background:var(--okbg)}
 .fillrow input.incorrect{border-color:var(--bad);background:var(--badbg)}
-.btn{background:var(--accent);color:#000;border:0;border-radius:8px;padding:10px 18px;font-weight:700;cursor:pointer;font-family:inherit}
-.btn.alt{background:#333;color:#fff}
-.explain{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd)}
-.banner{font-weight:800;margin-bottom:6px}
-.banner.good{color:var(--ok)}.banner.bad{color:var(--bad)}
-.target-nerve{color:var(--accent);font-weight:700;margin-bottom:6px}
-.ans{margin:6px 0;line-height:1.45}
-.rationale-list{margin-top:10px;padding-top:8px;border-top:1px solid #333;font-size:0.9rem}
-.rationale-title{font-weight:700;color:#ddd;margin-bottom:6px}
-.rationale-item{margin-bottom:6px;line-height:1.4;color:#ccc}
-.rationale-item strong{color:var(--accent);margin-right:4px}
+
+.btn{
+  background:var(--accent);
+  color:#000;
+  border:0;
+  border-radius:8px;
+  padding:9px 16px;
+  font-weight:700;
+  cursor:pointer;
+  font-family:inherit;
+  font-size:0.9rem;
+  transition:opacity 0.15s ease;
+}
+.btn:hover{opacity:0.9}
+.btn.alt{background:#333;color:#fff;border:1px solid #444}
+.btn.alt:hover{background:#444}
+
+.explain{
+  display:none;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--bd);
+}
+.banner{font-weight:800;font-size:1rem;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.banner.good{color:var(--ok)}
+.banner.bad{color:var(--bad)}
+.target-nerve{
+  background:var(--accent-soft);
+  color:var(--accent);
+  padding:6px 12px;
+  border-radius:6px;
+  font-weight:800;
+  margin-bottom:8px;
+  display:inline-block;
+  font-size:0.95rem;
+}
+.ans{margin:6px 0;line-height:1.5;color:#e5e7eb}
+.rationale-list{
+  margin-top:12px;
+  padding:12px;
+  background:#141414;
+  border:1px solid #2d2d2d;
+  border-radius:8px;
+  font-size:0.88rem;
+}
+.rationale-title{font-weight:800;color:var(--accent);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em}
+.rationale-item{margin-bottom:6px;line-height:1.45;color:#ccc}
+.rationale-item strong{color:#fff;margin-right:4px}
+
+/* Cheat Sheet Modal */
+#matrixModal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:50;
+  padding:20px;
+  overflow-y:auto;
+}
+.modal-content{
+  max-width:920px;
+  margin:20px auto;
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:12px;
+  padding:20px;
+}
+.table-wrap{overflow-x:auto}
+table.matrix{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.85rem;
+  margin-top:12px;
+}
+table.matrix th, table.matrix td{
+  padding:10px 12px;
+  border:1px solid var(--bd);
+  text-align:left;
+}
+table.matrix th{background:#262626;color:var(--accent);font-weight:700}
+table.matrix tr:nth-child(even){background:rgba(255,255,255,0.02)}
+
 #summary{display:none;text-align:center}
-.summary-title{font-size:1.4rem;font-weight:800;color:var(--accent);margin:0 0 8px}
-@media(max-width:480px){.fillrow{flex-direction:column}}
+.summary-title{font-size:1.5rem;font-weight:800;color:var(--accent);margin:0 0 8px}
+@media(max-width:560px){
+  .fillrow{flex-direction:column}
+  #header{flex-direction:column;gap:8px}
+}
 </style>
 </head>
 <body>
-<div id="header">Score: 0 / 0 (0%)</div>
+
+<div id="header">
+  <div class="header-score" id="scoreDisplay">Score: 0 / 0 (0%)</div>
+  <div class="header-actions">
+    <button class="btn alt" id="toggleMatrixBtn">&#128214; Spinal Level Matrix</button>
+  </div>
+</div>
+
 <main>
-<h1>Lab Practicum: Cranial & Spinal Nerves</h1>
-<p class="sub">Test &rarr; nerve, nerve &rarr; result, spinal mechanics, and autonomic pathways</p>
+<h1>Lab Practicum: Cranial & Spinal Nerve Roots</h1>
+<p class="sub">Myotomes, Dermatomes, DTRs &amp; Cranial Nerve Examination Triads</p>
+
 <div class="controls-wrap">
   <div class="modes" id="modes"></div>
   <div class="counts" id="counts"></div>
 </div>
+
 <div id="quiz"></div>
+
 <div id="summary" class="card">
-<div class="summary-title"></div>
-<p id="summaryMsg"></p>
-<button class="btn" id="retakeBtn">Retake</button>
-<button class="btn alt" id="reviewBtn" style="display:none">Review Missed</button>
+  <div class="summary-title"></div>
+  <p id="summaryMsg"></p>
+  <div style="display:flex;justify-content:center;gap:10px;margin-top:16px;">
+    <button class="btn" id="retakeBtn">Retake Full Set</button>
+    <button class="btn alt" id="reviewBtn" style="display:none">Review Missed</button>
+  </div>
 </div>
 </main>
+
+<!-- Quick Matrix Reference Modal -->
+<div id="matrixModal">
+  <div class="modal-content">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+      <h2 style="margin:0;font-size:1.25rem;color:var(--accent)">Spinal Nerve Root Neurological Examination Reference</h2>
+      <button class="btn alt" id="closeMatrixBtn">&times; Close</button>
+    </div>
+    <div class="table-wrap">
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Spinal Level</th>
+            <th>Primary Myotome &amp; Action</th>
+            <th>Dermatome Test Landmark</th>
+            <th>Deep Tendon Reflex (DTR)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>C1</strong></td><td>Neck flexion (rectus/longus capitis)</td><td>None (frequently lacks GSA/dorsal root)</td><td>None</td></tr>
+          <tr><td><strong>C2</strong></td><td>Neck extension &amp; rotation</td><td>Occiput / Vertex of skull</td><td>None</td></tr>
+          <tr><td><strong>C3</strong></td><td>Lateral neck flexion</td><td>Lateral neck / Supraclavicular fossa</td><td>None</td></tr>
+          <tr><td><strong>C4</strong></td><td>Shoulder shrug / elevation (trapezius/levator)</td><td>Acromioclavicular (AC) joint / Top of shoulder</td><td>None</td></tr>
+          <tr><td><strong>C5</strong></td><td>Shoulder abduction (deltoid) &amp; elbow flexion</td><td>Lateral arm (lateral deltoid)</td><td><strong>Biceps Reflex</strong></td></tr>
+          <tr><td><strong>C6</strong></td><td>Wrist extension (ECRL/ECRB) &amp; elbow flexion</td><td>Lateral forearm, thumb, and index finger</td><td><strong>Brachioradialis Reflex</strong></td></tr>
+          <tr><td><strong>C7</strong></td><td>Elbow extension (triceps) &amp; wrist flexion</td><td>Middle finger (dorsal &amp; palmar)</td><td><strong>Triceps Reflex</strong></td></tr>
+          <tr><td><strong>C8</strong></td><td>Finger flexion (deep finger flexors / tight fist)</td><td>Medial hand, ring &amp; little fingers, distal medial forearm</td><td>None</td></tr>
+          <tr><td><strong>T1</strong></td><td>Finger abduction/adduction (interossei)</td><td>Medial arm / axillary border</td><td>None</td></tr>
+          <tr><td><strong>T4</strong></td><td>Intercostals</td><td>Nipple line (4th intercostal space)</td><td>None</td></tr>
+          <tr><td><strong>T10</strong></td><td>Abdominal wall musculature</td><td>Umbilicus (belly button)</td><td>Superficial abdominal reflex</td></tr>
+          <tr><td><strong>T12</strong></td><td>Lower abdominal muscles</td><td>Inguinal ligament / groin crease region</td><td>None</td></tr>
+          <tr><td><strong>L1</strong></td><td>Hip flexion (psoas initiation)</td><td>Inguinal region / upper groin</td><td>None</td></tr>
+          <tr><td><strong>L2</strong></td><td>Hip flexion (iliopsoas) &amp; adduction</td><td>Anterior mid/proximal thigh</td><td>None</td></tr>
+          <tr><td><strong>L3</strong></td><td>Knee extension (quadriceps femoris)</td><td>Anterior distal thigh &amp; over the knee (patella)</td><td>Patellar Reflex (secondary)</td></tr>
+          <tr><td><strong>L4</strong></td><td>Ankle dorsiflexion &amp; inversion (tibialis anterior)</td><td>Medial lower leg, medial malleolus &amp; medial foot</td><td><strong>Patellar Tendon Reflex</strong></td></tr>
+          <tr><td><strong>L5</strong></td><td>Great toe extension (EHL) &amp; heel walking</td><td>Anterolateral lower leg, dorsum of foot, big toe</td><td><strong>Medial Hamstring Reflex</strong></td></tr>
+          <tr><td><strong>S1</strong></td><td>Plantarflexion &amp; eversion (peroneals, gastrocs / toe walk)</td><td>Lateral foot border, 5th digit &amp; posterior heel</td><td><strong>Achilles Tendon Reflex</strong></td></tr>
+          <tr><td><strong>S2</strong></td><td>Knee flexion (hamstrings)</td><td>Posterior mid-thigh / popliteal fossa</td><td>None</td></tr>
+          <tr><td><strong>S2–S4</strong></td><td>Sphincter control &amp; pelvic floor</td><td>Perineal saddle area ("saddle anesthesia")</td><td>Anal wink / Bulbocavernosus</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+
 <script>
+// Roman numeral masks and lookup maps
 const N_NUM = ["", "CN I", "CN II", "CN III", "CN IV", "CN V", "CN VI", "CN VII", "CN VIII", "CN IX", "CN X", "CN XI", "CN XII"];
 const N_NAME = ["", "Olfactory", "Optic", "Oculomotor", "Trochlear", "Trigeminal", "Abducent", "Facial", "Vestibulocochlear", "Glossopharyngeal", "Vagus", "Spinal Accessory", "Hypoglossal"];
 
-const NERVE_TESTS = {
-  1: "Olfaction / smell tested one nostril at a time with non-irritating scents.",
-  2: "Visual acuity (Snellen), visual fields (confrontation), and afferent pupillary light reflex.",
-  3: "Extraocular movements (medial, superior, inferior rectus, inferior oblique), levator palpebrae, and pupillary constriction.",
-  4: "Superior oblique muscle (downward and inward gaze).",
-  5: "Facial cutaneous sensation (forehead, cheek, jaw), muscles of mastication, and jaw jerk reflex.",
-  6: "Lateral rectus muscle (eye abduction / looking lateral).",
-  7: "Muscles of facial expression, taste on anterior 2/3 of tongue, and lacrimal/salivary secretions.",
+const CN_ACTIONS = {
+  1: "Olfaction / smell tested one nostril at a time with non-pungent scents.",
+  2: "Visual acuity (Snellen), confrontation visual fields, and afferent pupillary light reflex.",
+  3: "Extraocular movement (medial/sup/inf recti, inf oblique), levator palpebrae, and pupillomotor sphincter constriction.",
+  4: "Superior oblique extraocular motor innervation (downward and inward gaze).",
+  5: "Cutaneous facial sensation across V1, V2, V3, and motor muscles of mastication (jaw jerk).",
+  6: "Lateral rectus muscle (eye abduction / lateral gaze).",
+  7: "Muscles of facial expression, anterior 2/3 tongue taste, and lacrimal/salivary secretions.",
   8: "Hearing (Rinne, rub/whisper test) and vestibular balance (Romberg's test).",
-  9: "Sensory limb of gag reflex, posterior 1/3 tongue taste, and swallowing assistance.",
-  10: "Motor limb of gag reflex, soft palate elevation (saying 'Ahhh'), vocal cord function, and swallowing.",
+  9: "Sensory limb of gag reflex, posterior 1/3 tongue taste, and pharyngeal sensation.",
+  10: "Motor limb of gag reflex, soft palate elevation ('Ahhh' test), uvula symmetry, and vocal cord innervation.",
   11: "Motor innervation to sternocleidomastoid (head turn) and trapezius (shoulder shrug).",
-  12: "Motor innervation to tongue muscles (protrusion and deviation testing)."
+  12: "Tongue motor movement (protrusion and deviation resistance via genioglossus)."
 };
 
-// TEST -> NERVE: [test/finding, correct nerve #, [3 wrong nerve #s], explanation]
-const T = [
-  ["Eyes closed, one nostril blocked, scent held under the other nostril", 1, [2, 7, 12], "Smell is evaluated one nostril at a time with non-pungent scents."],
-  ["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)", 2, [3, 8, 11], "Visual acuity reflects the afferent sensory pathway of the optic system."],
-  ["Visual field confrontation: wiggling fingers brought into peripheral vision", 2, [3, 4, 6], "Peripheral visual field boundaries assess retinal and optic nerve sensory transmission."],
-  ["Sensory (afferent) limb of the pupillary light reflex", 2, [3, 5, 7], "Carries the light impulse from the retina into the brainstem pretectal nuclei."],
-  ["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae", 3, [2, 4, 6], "Preganglionic parasympathetic fibers travel to ciliary ganglion to constrict the pupil."],
-  ["Near reaction: convergence, accommodation and miosis as a finger approaches the nose", 3, [2, 4, 6], "Controls the medial recti (convergence) and ciliary / pupillary sphincter muscles (accommodation & miosis)."],
-  ["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze", 6, [3, 4, 5], "Innervates the lateral rectus muscle, which abducts the eye laterally."],
-  ["Weak down-and-in gaze: superior oblique dysfunction", 4, [3, 6, 7], "Innervates the superior oblique muscle, moving the eye down and toward the nose."],
-  ["Ptosis (droopy lid) from levator palpebrae superioris weakness", 3, [4, 6, 7], "Somatic motor fibers innervate the levator palpebrae superioris to elevate the upper eyelid."],
-  ["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed", 5, [7, 9, 11], "Carries somatosensory feedback from the V1 (ophthalmic), V2 (maxillary), and V3 (mandibular) divisions."],
-  ["Bite down and palpate masseter and temporalis", 5, [7, 10, 11], "Motor branch of V3 (mandibular) supplies the muscles of mastication."],
-  ["Jaw jerk reflex", 5, [7, 9, 12], "Monosynaptic stretch reflex mediated afferently and efferently via V3 mandibular fibers."],
-  ["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing", 7, [5, 10, 12], "Supplies motor control to all muscles of facial expression."],
-  ["Taste on the anterior 2/3 of the tongue", 7, [5, 9, 12], "Special sensory taste fibers travel along the chorda tympani branch."],
-  ["Taste on the posterior 1/3 of the tongue", 9, [7, 10, 12], "Provides both general sensation and special sensory taste to the posterior third of the tongue."],
-  ["Questions about dry eye and dry mouth (parasympathetic to lacrimal and salivary glands)", 7, [5, 9, 10], "Parasympathetic components stimulate the lacrimal gland and submandibular/sublingual glands."],
-  ["Romberg's test: feet together, eyes closed, observe wobble", 8, [2, 7, 10], "Assesses the vestibular branch responsible for static balance and spatial orientation."],
-  ["Rinne's test (mastoid vs. in front of the ear)", 8, [7, 9, 11], "Assesses air vs. bone conduction through the cochlear division."],
-  ["Rub / whisper test for auditory acuity", 8, [7, 9, 10], "Cochlear division transmits acoustic frequencies for auditory perception."],
-  ["Sensory limb of the gag reflex", 9, [5, 10, 12], "Carries tactile afferent sensations from the posterior pharyngeal wall."],
-  ["Motor limb of the gag reflex", 10, [9, 7, 12], "Supplies motor branch efferents to the pharyngeal constrictor muscles causing reflex contraction."],
-  ["Patient says \"Ahhh\"; watch soft palate rise and check the uvula", 10, [9, 7, 12], "Vagal motor fibers elevate the levator veli palatini muscles symmetrically."],
-  ["Patient swallows; thyroid cartilage should rise symmetrically", 10, [9, 12, 11], "Coordinated pharyngeal and laryngeal motor contractions during deglutition are driven by vagus efferents."],
-  ["Shrug the shoulders against resistance", 11, [10, 12, 5], "Provides somatic motor innervation to the upper trapezius muscle."],
-  ["Rotate head against resistance (sternocleidomastoid)", 11, [10, 12, 5], "Somatic motor fibers drive contralateral head rotation via the sternocleidomastoid."],
-  ["Stick tongue out and check for deviation", 12, [10, 9, 7], "Supplies the intrinsic and extrinsic tongue muscles, notably the genioglossus."],
-  ["Push tongue into the cheek against the examiner's hand", 12, [10, 9, 5], "Assesses unilateral motor strength and resistance of the genioglossus muscle."]
+// 1. CRANIAL TESTS -> NERVE (MC)
+const T_CN = [
+  ["Eyes closed, one nostril blocked, scent held under the other nostril", 1, [2, 7, 12], "CN I transmits olfactory sensation directly through the cribriform plate."],
+  ["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)", 2, [3, 8, 11], "CN II sensory fibers mediate visual acuity."],
+  ["Visual field confrontation: wiggling fingers brought into peripheral vision", 2, [3, 4, 6], "CN II sensory pathway carries spatial peripheral vision fields."],
+  ["Sensory (afferent) limb of the pupillary light reflex", 2, [3, 5, 7], "CN II senses incoming photons and transmits signals to the pretectal nuclei."],
+  ["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae", 3, [2, 4, 6], "CN III carries visceral parasympathetic efferents from Edinger-Westphal to constrict the pupil."],
+  ["Near reaction: convergence, accommodation and miosis as a finger approaches the nose", 3, [2, 4, 6], "CN III directs the medial recti, ciliary muscle, and sphincter pupillae for near focus."],
+  ["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze", 6, [3, 4, 5], "CN VI supplies the lateral rectus muscle (LR6)."],
+  ["Weak down-and-in gaze: superior oblique dysfunction", 4, [3, 6, 7], "CN IV supplies the superior oblique muscle (SO4)."],
+  ["Ptosis (droopy eyelid) from levator palpebrae superioris weakness", 3, [4, 6, 7], "CN III provides motor innervation to the levator palpebrae superioris."],
+  ["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed", 5, [7, 9, 11], "CN V carries tactile cutaneous facial sensation via V1, V2, and V3 branches."],
+  ["Bite down and palpate masseter and temporalis", 5, [7, 10, 11], "CN V (V3 mandibular branch) provides motor supply to the muscles of mastication."],
+  ["Jaw jerk reflex", 5, [7, 9, 12], "CN V provides both afferent sensory stretch and efferent motor contraction to the temporalis and masseter."],
+  ["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing", 7, [5, 10, 12], "CN VII supplies somatic motor branches to all muscles of facial expression."],
+  ["Taste on the anterior 2/3 of the tongue", 7, [5, 9, 12], "CN VII transmits gustatory fibers from the anterior tongue via the chorda tympani."],
+  ["Taste on the posterior 1/3 of the tongue", 9, [7, 10, 12], "CN IX conveys both taste and tactile sensation from the posterior tongue third."],
+  ["Dry eye and dry mouth evaluation (parasympathetic to lacrimal and salivary glands)", 7, [5, 9, 10], "CN VII distributes parasympathetic secretomotor fibers to lacrimal and submandibular/sublingual glands."],
+  ["Romberg's test: feet together, eyes closed, observe wobble", 8, [2, 7, 10], "CN VIII vestibular apparatus coordinates proprioceptive spatial equilibrium."],
+  ["Rinne's test (mastoid bone vs. air conduction)", 8, [7, 9, 11], "CN VIII cochlear division mediates auditory acoustic frequencies."],
+  ["Sensory limb of the gag reflex", 9, [5, 10, 12], "CN IX carries afferent visceral touch impulses from the posterior pharyngeal mucosa."],
+  ["Motor limb of the gag reflex", 10, [9, 7, 12], "CN X supplies the motor efferents driving pharyngeal constrictor elevation."],
+  ["Patient says 'Ahhh'; watch soft palate rise and check the uvula", 10, [9, 7, 12], "CN X provides motor fibers to the levator veli palatini muscles to symmetrically lift the palate."],
+  ["Shrug the shoulders against resistance", 11, [10, 12, 5], "CN XI supplies motor innervation to the upper trapezius muscle."],
+  ["Rotate head against resistance (sternocleidomastoid)", 11, [10, 12, 5], "CN XI provides motor innervation to the sternocleidomastoid muscle."],
+  ["Stick tongue out and check for lateral deviation", 12, [10, 9, 7], "CN XII supplies the intrinsic and extrinsic tongue musculature (genioglossus)."]
 ];
 
-// NERVE + TEST -> RESULT: [stem, [options: {text, correct, why}], explanation]
-const R = [
+// 2. CRANIAL FINDINGS / RESULTS (MC)
+const R_CN = [
   [
     "CN XII: on protrusion the tongue deviates to the right. What does this indicate?",
+    "CN XII (Hypoglossal)",
     [
-      { text: "Right-sided tongue weakness", correct: true, why: "The active unaffected genioglossus muscle pushes the tongue toward the weak (damaged) side." },
-      { text: "Left-sided tongue weakness", correct: false, why: "A left-sided lesion would cause the tongue to deviate toward the left." },
-      { text: "Normal finding", correct: false, why: "A normal tongue protrudes straight along the midline without deviation." },
-      { text: "CN X lesion", correct: false, why: "CN X controls uvula and palatal deviation, not tongue deviation." }
+      { text: "Right-sided tongue weakness", correct: true, why: "Correct. The intact contralateral genioglossus muscle unopposedly pushes the tongue toward the weak (lesioned) side." },
+      { text: "Left-sided tongue weakness", correct: false, why: "Incorrect. Left-sided weakness causes the tongue to deviate toward the left." },
+      { text: "Normal physiological variant", correct: false, why: "Incorrect. Normal tongue protrusion is straight in the midline." },
+      { text: "CN X vagal nerve lesion", correct: false, why: "Incorrect. CN X lesions cause soft palate asymmetry and uvular deviation, not tongue deviation." }
     ],
-    "On protrusion, the functional muscle pushes the tongue toward the side of the lesion (the weak side)."
+    "Tongue musculature pushes toward the weak side on protrusion due to unilateral genioglossus paresis."
   ],
   [
     "CN V motor: on opening the mouth the jaw deviates to the left. Which side is weak?",
+    "CN V (Trigeminal)",
     [
-      { text: "Left", correct: true, why: "The pterygoids push forward; weakness on the left allows the intact right side to push the mandible toward the left." },
-      { text: "Right", correct: false, why: "Right-sided weakness would allow the intact left pterygoid to shift the jaw toward the right." },
-      { text: "Neither, this is normal", correct: false, why: "Normal jaw opening occurs directly in the midline without asymmetry." },
-      { text: "Both equally", correct: false, why: "Bilateral weakness presents as weak bite or open bite, not lateral jaw deviation." }
+      { text: "Left", correct: true, why: "Correct. Pterygoid muscles push forward; unilateral weakness on the left allows the intact right side to push the mandible toward the left." },
+      { text: "Right", correct: false, why: "Incorrect. Right pterygoid weakness causes the jaw to deviate toward the right." },
+      { text: "Neither, this is a normal opening pattern", correct: false, why: "Incorrect. Symmetrical jaw opening tracks directly in the midline." },
+      { text: "Both equally", correct: false, why: "Incorrect. Bilateral weakness presents with an inability to clamp the jaw or an open bite." }
     ],
-    "The lateral pterygoid muscles push forward and medially; weakness on one side causes the jaw to deviate toward the weak side."
+    "The lateral pterygoids push the mandible forward; weakness on one side causes deviation toward the weak side."
   ],
   [
-    "CN X: patient says \"Ahhh\". Which is the NORMAL finding?",
+    "CN X: patient says 'Ahhh'. Which is the expected NORMAL finding?",
+    "CN X (Vagus)",
     [
-      { text: "Soft palate rises equally, uvula stays midline", correct: true, why: "Bilateral levator veli palatini muscles pull equally on the palate, keeping the uvula vertical." },
-      { text: "Uvula deviates to one side", correct: false, why: "Uvular deviation is pathological and points toward the intact, strong side away from the lesion." },
-      { text: "Soft palate stays flat", correct: false, why: "Failure of the palate to rise bilaterally indicates bilateral vagal paralysis." },
-      { text: "Tongue deviates", correct: false, why: "Tongue deviation tests CN XII function, not CN X." }
+      { text: "Soft palate rises equally, uvula stays midline", correct: true, why: "Correct. Symmetrical bilateral levator veli palatini contraction keeps the uvula vertical in the midline." },
+      { text: "Uvula deviates toward the left side", correct: false, why: "Incorrect. Uvular deviation indicates unilateral vagal paresis." },
+      { text: "Soft palate remains completely flat", correct: false, why: "Incorrect. Flat soft palate indicates bilateral vagal paralysis." },
+      { text: "Tongue deviates toward the left side", correct: false, why: "Incorrect. Tongue deviation is mediated by CN XII, not CN X." }
     ],
-    "Normal innervation results in symmetric, bilateral elevation of the soft palate and a midline uvula."
-  ],
-  [
-    "CN VIII Rinne: bone conduction is greater than air conduction. What is this?",
-    [
-      { text: "Conduction hearing loss", correct: true, why: "Obstruction in the canal or middle ear impairs air transmission (BC > AC is abnormal)." },
-      { text: "Sensorineural (nerve) hearing loss", correct: false, why: "In sensorineural loss, AC remains greater than BC, but duration is reduced." },
-      { text: "Normal hearing", correct: false, why: "Normal hearing demonstrates air conduction lasting twice as long as bone conduction (AC > 2x BC)." },
-      { text: "Vestibular loss", correct: false, why: "Vestibular loss causes vertigo or balance ataxia, not hearing conduction defects." }
-    ],
-    "Air conduction should normally be greater than bone conduction; bone conduction exceeding air conduction indicates a mechanical conductive issue."
-  ],
-  [
-    "CN VIII Rinne: air conduction is greater than bone but less than 2x. What is this?",
-    [
-      { text: "Nerve (sensorineural) hearing loss", correct: true, why: "Sound is heard longer via air than bone, but nerve damage blunts normal acoustic amplification." },
-      { text: "Conduction hearing loss", correct: false, why: "Conduction loss causes bone conduction to equal or exceed air conduction (BC >= AC)." },
-      { text: "Normal hearing", correct: false, why: "Normal acoustic conduction requires air conduction to last at least twice as long as bone conduction." },
-      { text: "Facial nerve palsy", correct: false, why: "Facial nerve palsy can cause hyperacusis due to stapedius weakness, not a blunted AC:BC Rinne ratio." }
-    ],
-    "Sensorineural hearing loss preserves AC > BC, but the transmission efficiency is impaired (less than the normal 2:1 ratio)."
-  ],
-  [
-    "CN VIII Romberg: patient wobbles much more with eyes closed than with eyes open. How is this read?",
-    [
-      { text: "Abnormal (positive) Romberg", correct: true, why: "Excessive sway with eyes closed indicates loss of vestibular or dorsal column proprioception compensated by vision." },
-      { text: "Normal finding", correct: false, why: "Normal individuals maintain stability with minimal sway whether eyes are open or closed." },
-      { text: "Light reflex failure", correct: false, why: "The light reflex assesses CN II and CN III pupillary pathways, unrelated to postural balance." },
-      { text: "Conjugate gaze", correct: false, why: "Conjugate gaze describes coordinated bilateral eye movement, not postural control." }
-    ],
-    "A positive Romberg test indicates that balance depends heavily on visual fixation due to vestibular or dorsal column sensory ataxia."
-  ],
-  [
-    "CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?",
-    [
-      { text: "Consensual light reflex", correct: true, why: "Constriction of the pupil opposite to the stimulated eye represents the consensual (indirect) reflex." },
-      { text: "Direct light reflex", correct: false, why: "The direct reflex is pupillary constriction occurring in the illuminated eye." },
-      { text: "Near reaction", correct: false, why: "Near reaction occurs in response to an approaching target, not an isolated penlight stimulus." },
-      { text: "Accommodation", correct: false, why: "Accommodation is lens curvature change mediated during near fixation." }
-    ],
-    "Light shone into one eye traveling across bilateral Edinger-Westphal nuclei produces contralateral constriction (the consensual response)."
-  ],
-  [
-    "CN III: light is shone into the right eye and the RIGHT pupil constricts. Which reflex is this?",
-    [
-      { text: "Direct light reflex", correct: true, why: "Pupillary constriction within the illuminated eye is the direct light reflex." },
-      { text: "Consensual light reflex", correct: false, why: "Consensual response is constriction in the contralateral unilluminated eye." },
-      { text: "Convergence", correct: false, why: "Convergence is bilateral medial rectus contraction when looking at near targets." },
-      { text: "Accommodation", correct: false, why: "Accommodation describes ciliary body contraction to adjust lens thickness." }
-    ],
-    "Ipsilateral constriction in response to direct focal light input is the direct pupillary light reflex."
-  ],
-  [
-    "CN III/IV/VI: eyes jerk at the end of an extreme gaze position. What is this called?",
-    [
-      { text: "Nystagmus", correct: true, why: "Involuntary rhythmic oscillating or jerking movement of the eyes is designated nystagmus." },
-      { text: "Conjugate gaze", correct: false, why: "Conjugate gaze refers to smooth, parallel, coordinated movement of both eyes." },
-      { text: "Miosis", correct: false, why: "Miosis refers specifically to pupillary constriction." },
-      { text: "Accommodation", correct: false, why: "Accommodation is optical refocusing on nearby objects." }
-    ],
-    "Rhythmic jerking or oscillatory movements at extreme angles of lateral or vertical gaze indicate nystagmus."
-  ],
-  [
-    "CN III near reaction: which is NOT an expected response as a finger approaches the nose?",
-    [
-      { text: "Pupil dilation", correct: true, why: "Pupils constrict (miosis) during the near triad; pupillary dilation (mydriasis) is the opposite of the normal near reflex." },
-      { text: "Convergence", correct: false, why: "Convergence (both eyes turning medially via CN III) is an expected component." },
-      { text: "Accommodation", correct: false, why: "Accommodation (ciliary muscle rounding the lens via CN III) is an expected component." },
-      { text: "Miosis", correct: false, why: "Miosis (sphincter pupillae constriction via CN III) is an expected component." }
-    ],
-    "The near triad consists of convergence, accommodation, and miosis; pupillary dilation does not occur."
+    "Normal vagal function produces equal, bilateral elevation of the palatal arches with a midline uvula."
   ],
   [
     "CN VII: patient cannot raise the right eyebrow or smile symmetrically. Which nerve is affected?",
+    "CN VII (Facial)",
     [
-      { text: "CN VII", correct: true, why: "Supplies all motor branches to the muscles of facial expression, including frontalis and orbicularis oris." },
-      { text: "CN V", correct: false, why: "Supplies facial sensation and muscles of mastication, not muscles of facial expression." },
-      { text: "CN XII", correct: false, why: "Supplies motor control to tongue musculature." },
-      { text: "CN X", correct: false, why: "Supplies motor control to the pharynx, larynx, and soft palate." }
+      { text: "CN VII", correct: true, why: "Correct. CN VII supplies all motor branches to the muscles of facial expression." },
+      { text: "CN V", correct: false, why: "Incorrect. CN V supplies facial sensation and muscles of mastication." },
+      { text: "CN XII", correct: false, why: "Incorrect. CN XII innervates tongue muscles." },
+      { text: "CN X", correct: false, why: "Incorrect. CN X supplies the pharynx, larynx, and soft palate." }
     ],
-    "The facial nerve (CN VII) provides complete motor innervation to the superficial muscles of facial expression."
+    "The facial nerve (CN VII) provides motor innervation to frontalis, orbicularis oculi, and orbicularis oris."
   ],
   [
-    "CN XI: patient cannot shrug the left shoulder against resistance. Which muscle is weak?",
+    "CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?",
+    "CN III (Oculomotor)",
     [
-      { text: "Left trapezius", correct: true, why: "The spinal accessory nerve provides primary somatic motor innervation to the trapezius." },
-      { text: "Left masseter", correct: false, why: "Innervated by the mandibular division of the trigeminal nerve (CN V3)." },
-      { text: "Left temporalis", correct: false, why: "Innervated by deep temporal branches of the trigeminal nerve (CN V3)." },
-      { text: "Left stylopharyngeus", correct: false, why: "Innervated exclusively by the glossopharyngeal nerve (CN IX)." }
+      { text: "Consensual light reflex", correct: true, why: "Correct. Constriction in the contralateral eye is the consensual (indirect) response." },
+      { text: "Direct light reflex", correct: false, why: "Incorrect. The direct reflex occurs in the same eye receiving the light stimulus." },
+      { text: "Near reaction", correct: false, why: "Incorrect. Near reaction is elicited by an approaching visual target." },
+      { text: "Accommodation", correct: false, why: "Incorrect. Accommodation refers to lens rounding via ciliary contraction." }
     ],
-    "Shoulder elevation (shrug) specifically isolates the upper fibers of the trapezius innervated by CN XI."
-  ],
-  [
-    "CN II: patient cannot read below the 20/40 line with the Snellen chart. This is documented as:",
-    [
-      { text: "Visual acuity of 20/40", correct: true, why: "Visual acuity is documented as the standard fraction corresponding to the lowest legible line." },
-      { text: "Visual field of 20/40", correct: false, why: "Visual fields assess peripheral vision degrees, not Snellen chart fractions." },
-      { text: "Convergence of 20/40", correct: false, why: "Convergence evaluates medial ocular alignment, measured in distance (cm) to near point." },
-      { text: "Miosis grade 40", correct: false, why: "Miosis describes pupil diameter measured directly in millimeters (mm)." }
-    ],
-    "Snellen performance is recorded as visual acuity relative to a standard 20-foot distance."
-  ],
-  [
-    "Spinal nerve DTR graded 4: what is the finding?",
-    [
-      { text: "Hyperactive with clonus", correct: true, why: "Grade 4 deep tendon reflex indicates markedly hyperactive response with sustained rhythmic beats of clonus." },
-      { text: "Absent reflex", correct: false, why: "An absent deep tendon reflex with no contraction is graded 0." },
-      { text: "Sluggish, needs reinforcement", correct: false, why: "A sluggish reflex elicitable only with reinforcement (Jendrassik) is graded 1." },
-      { text: "Average response", correct: false, why: "A normal, physiological, average deep tendon reflex is graded 2." }
-    ],
-    "Deep tendon reflexes are graded 0 (absent), 1+ (hypoactive), 2+ (normal), 3+ (brisk), and 4+ (hyperactive with clonus)."
-  ],
-  [
-    "Myotome graded 3 (Fair): what can the patient do?",
-    [
-      { text: "Full ROM against gravity but cannot resist", correct: true, why: "Grade 3 represents active movement through full ROM against gravity with zero added resistance." },
-      { text: "Full ROM with gravity eliminated", correct: false, why: "Active movement through full ROM only with gravity eliminated is classified as Grade 2 (Poor)." },
-      { text: "Full ROM with some resistance", correct: false, why: "Movement against gravity with moderate resistance is classified as Grade 4 (Good)." },
-      { text: "No contraction", correct: false, why: "Zero muscle contraction or palpated tone is classified as Grade 0 (Zero)." }
-    ],
-    "Grade 3 indicates muscle strength sufficient to overcome gravity through a complete joint range of motion, but breaking immediately under resistance."
-  ],
-  [
-    "Myotome graded 2 (Poor): what can the patient do?",
-    [
-      { text: "Full ROM with gravity eliminated", correct: true, why: "Grade 2 represents movement through complete range of motion only when placed in a gravity-minimized plane." },
-      { text: "Full ROM against gravity", correct: false, why: "Completing ROM against gravity requires at least Grade 3 strength." },
-      { text: "Slight twitch only", correct: false, why: "Visible or palpable twitch without joint movement is classified as Grade 1 (Trace)." },
-      { text: "Full ROM with full resistance", correct: false, why: "Full ROM against maximum examiner resistance is classified as Grade 5 (Normal)." }
-    ],
-    "Grade 2 strength cannot overcome gravitational pull and requires gravity elimination to achieve full range of motion."
-  ],
-  [
-    "Patient feels pain from a light cotton-swab touch. What is this called?",
-    [
-      { text: "Allodynia", correct: true, why: "Pain provoked by a stimulus that does not normally provoke pain is clinically termed allodynia." },
-      { text: "Hypoesthesia", correct: false, why: "Hypoesthesia represents abnormally decreased sensitivity to stimulation." },
-      { text: "Hyperesthesia", correct: false, why: "Hyperesthesia is increased sensitivity to stimulation, not specifically pain from innocuous touch." },
-      { text: "Paresthesia", correct: false, why: "Paresthesia describes spontaneous abnormal sensations such as tingling, prickling, or pins-and-needles." }
-    ],
-    "Allodynia occurs when non-noxious stimuli (like light touch or clothes rubbing against skin) trigger nociceptive pain signals."
-  ],
-  [
-    "Patient reports reduced sensation to sharp/soft touch in a dermatome. What is this called?",
-    [
-      { text: "Hypoesthesia", correct: true, why: "Reduced or diminished cutaneous sensation to tactile or pinprick stimulation is hypoesthesia." },
-      { text: "Hyperesthesia", correct: false, why: "Hyperesthesia denotes exaggerated cutaneous tactile sensitivity." },
-      { text: "Paresthesia", correct: false, why: "Paresthesias are spontaneous pins-and-needles or numbness sensations." },
-      { text: "Allodynia", correct: false, why: "Allodynia represents pain elicited by normally non-painful stimuli." }
-    ],
-    "Hypoesthesia denotes decreased sensory perception along the cutaneous distribution of a peripheral or spinal nerve."
-  ],
-  [
-    "Biceps reflex is absent on one side only. Which spinal level is being tested?",
-    [
-      { text: "C5", correct: true, why: "The deep tendon stretch reflex of the biceps brachii tendon primarily interrogates the C5 spinal cord level (musculocutaneous nerve)." },
-      { text: "C7", correct: false, why: "The triceps reflex primarily evaluates the C7 spinal level." },
-      { text: "L4", correct: false, why: "The patellar tendon reflex evaluates the L4 spinal level." },
-      { text: "S1", correct: false, why: "The Achilles tendon reflex evaluates the S1 spinal level." }
-    ],
-    "The biceps reflex isolates the C5 spinal segment (with secondary contributions from C6)."
-  ],
-  [
-    "Absent Achilles reflex on one side. Which spinal level is being tested?",
-    [
-      { text: "S1", correct: true, why: "The Achilles (calcaneal) reflex isolates the S1 nerve root via the tibial branch of the sciatic nerve." },
-      { text: "L4", correct: false, why: "The patellar reflex primarily isolates the L4 nerve root." },
-      { text: "L5", correct: false, why: "The medial hamstring reflex tests L5 (L5 has no standard single tendon reflex, but medial hamstring is used)." },
-      { text: "C7", correct: false, why: "The triceps reflex tests the upper extremity C7 spinal root." }
-    ],
-    "The Achilles tendon tap primarily assesses the S1 nerve root integrity."
+    "Bilateral projection across the pretectal area to both Edinger-Westphal nuclei produces the consensual reflex."
   ]
 ];
 
-// SPINAL NERVES & AUTONOMICS QUESTIONS
-const SP = [
+// 3. SPINAL MYOTOMES & DTRs (MC)
+const SP_MYO_DTR = [
   {
-    topic: "Spinal Nerve Topography",
-    revealedNerve: "C1 and C2 Exits",
-    stem: "Through which anatomical structure do the C1 and C2 spinal nerves exit the spinal axis?",
+    stem: "A patient demonstrates weakness in shoulder abduction (deltoid) and elbow flexion. A diminished biceps deep tendon reflex is noted. Which neurological level is affected?",
+    target: "C5 Nerve Root",
     opts: [
-      { text: "Through distinct intervertebral foramina formed by the C1 and C2 pedicles", correct: false, why: "Incorrect. C1 and C2 do not exit through true intervertebral foramina (IVFs)." },
-      { text: "Above and below the proximal portion of the posterior arch of Atlas", correct: true, why: "Correct. C1 leaves above the posterior arch of Atlas (in the groove for the vertebral artery), and C2 exits below the posterior arch of Atlas." },
-      { text: "Through the anterior sacral foramina along the anterior arch", correct: false, why: "Incorrect. Sacral foramina are located in the sacrum, not the upper cervical spine." },
-      { text: "Distal to the intertransverse space within the transverse foramina", correct: false, why: "Incorrect. Transverse foramina transmit vertebral vessels, not exiting nerve trunks." }
+      { text: "C5", correct: true, why: "Correct. C5 supplies the deltoid (shoulder abduction) and biceps; its primary reflex is the Biceps DTR." },
+      { text: "C6", correct: false, why: "Incorrect. C6 myotome tests wrist extension (ECRL/ECRB); its reflex is the brachioradialis." },
+      { text: "C7", correct: false, why: "Incorrect. C7 myotome tests elbow extension (triceps); its reflex is the triceps DTR." },
+      { text: "C4", correct: false, why: "Incorrect. C4 myotome tests shoulder shrug (trapezius/levator scapulae); C4 has no standard DTR." }
     ],
-    why: "Spinal nerves C3 through L5 exit via true intervertebral foramina (IVF). However, C1 leaves above the posterior arch of Atlas, and C2 exits below it."
+    why: "C5 neurological exam evaluates shoulder abduction (deltoid), elbow flexion (biceps), and the Biceps tendon stretch reflex."
   },
   {
-    topic: "Sacral Spinal Nerves",
-    revealedNerve: "Sacral Hiatus (S5 & Co1)",
-    stem: "Which spinal nerve pairs exit specifically through the sacral hiatus rather than through sacral intervertebral foramina?",
+    stem: "You instruct a patient to extend their wrist against manual resistance (testing extensor carpi radialis longus/brevis). Tapping the distal radius elicits a diminished reflex. Which spinal nerve root is being tested?",
+    target: "C6 Nerve Root",
     opts: [
-      { text: "S1 and S2", correct: false, why: "Incorrect. S1 and S2 exit through the anterior and posterior sacral foramina." },
-      { text: "S3 and S4", correct: false, why: "Incorrect. S3 and S4 exit through sacral foramina." },
-      { text: "The 5th sacral and 1st coccygeal spinal nerves", correct: true, why: "Correct. S5 and Co1 exit inferiorly through the sacral hiatus." },
-      { text: "The 4th sacral and 5th sacral spinal nerves", correct: false, why: "Incorrect. S4 exits via the fourth sacral foramen." }
+      { text: "C5", correct: false, why: "Incorrect. C5 evaluates shoulder abduction and the biceps reflex." },
+      { text: "C6", correct: true, why: "Correct. C6 tests wrist extension (ECRL/B) and elbow flexion; its primary reflex is the Brachioradialis DTR." },
+      { text: "C7", correct: false, why: "Incorrect. C7 evaluates elbow extension and the triceps reflex." },
+      { text: "C8", correct: false, why: "Incorrect. C8 evaluates finger flexion (tight fist) and has no standard DTR." }
     ],
-    why: "Spinal nerves S1–S4 exit via the sacral foramina; S5 and Co1 exit inferiorly through the sacral hiatus."
+    why: "The C6 nerve root mediates wrist extension (ECRL/ECRB) and the Brachioradialis reflex."
   },
   {
-    topic: "Suboccipital Anatomy",
-    revealedNerve: "C1 (Suboccipital Nerve)",
-    stem: "Which trio of structures is transmitted directly within the groove for the vertebral artery located on the posterior arch of the Atlas?",
+    stem: "During an upper extremity motor exam, a patient displays weakness during elbow extension (triceps push) and wrist flexion. Tapping the triceps tendon produces no muscular twitch. Which spinal level is involved?",
+    target: "C7 Nerve Root",
     opts: [
-      { text: "V2 vertebral artery, C2 spinal nerve, and greater occipital nerve", correct: false, why: "Incorrect. V2 runs through transverse foramina, and C2 exits below Atlas." },
-      { text: "V3 segment of the vertebral artery, C1 spinal nerve, and suboccipital venous plexus", correct: true, why: "Correct. The groove for the vertebral artery transmits V3, the C1 spinal nerve (suboccipital nerve), and the suboccipital venous plexus." },
-      { text: "V4 segment of the vertebral artery, dorsal root ganglion of C1, and spinal accessory nerve", correct: false, why: "Incorrect. C1 characteristically lacks a dorsal root ganglion." },
-      { text: "Vertebral basilar junction, suboccipital nerve, and lesser occipital nerve", correct: false, why: "Incorrect. The vertebrobasilar junction lies inside the cranium." }
+      { text: "C6", correct: false, why: "Incorrect. C6 mediates wrist extension and the brachioradialis reflex." },
+      { text: "C7", correct: true, why: "Correct. C7 innervates the triceps for elbow extension; its primary reflex is the Triceps DTR." },
+      { text: "C8", correct: false, why: "Incorrect. C8 mediates finger flexion (making a fist); C8 has no DTR." },
+      { text: "T1", correct: false, why: "Incorrect. T1 mediates finger abduction/adduction via intrinsic interossei." }
     ],
-    why: "The groove on the posterior arch of Atlas transmits the V3 vertebral artery, C1 spinal nerve, and suboccipital venous plexus."
+    why: "The C7 nerve root provides motor innervation to the triceps (elbow extension) and mediates the Triceps stretch reflex."
   },
   {
-    topic: "Neural Foramen Anatomy",
-    revealedNerve: "Intervertebral Foramen Boundaries",
-    stem: "Which anatomical structures form the precise anatomical roof and floor of a typical lumbar intervertebral foramen (IVF)?",
+    stem: "To test the C8 myotome, what specific clinical action and muscle group should the examiner assess?",
+    target: "C8 Nerve Root",
     opts: [
-      { text: "Superior and inferior articular facets", correct: false, why: "Incorrect. Articular facets form the posterior wall (zygapophyseal joint)." },
-      { text: "Posterior longitudinal ligament and ligamentum flavum", correct: false, why: "Incorrect. These ligaments border the neural canal." },
-      { text: "Pedicles of the adjacent vertebrae", correct: true, why: "Correct. The roof and floor of the IVF are formed by the pedicles of the superior and inferior vertebrae." },
-      { text: "Intervertebral disc and posterior vertebral body", correct: false, why: "Incorrect. These structures form the anterior wall of the IVF." }
+      { text: "Finger abduction and adduction against resistance (interossei)", correct: false, why: "Incorrect. Finger abduction/adduction evaluates the T1 nerve root." },
+      { text: "Finger flexion (flexor digitorum profundus/superficialis - making a tight fist)", correct: true, why: "Correct. C8 myotome isolates finger flexion (making a tight fist and resisting the examiner opening the fingers)." },
+      { text: "Elbow extension and triceps tendon strike", correct: false, why: "Incorrect. Elbow extension isolates the C7 nerve root." },
+      { text: "Shoulder abduction and deltoid push", correct: false, why: "Incorrect. Shoulder abduction isolates C5." }
     ],
-    why: "The pedicles of adjacent vertebrae form the superior roof and inferior floor of the IVF."
+    why: "C8 myotome is tested via finger flexion (resisting finger extension from a closed fist). C8 has no standard DTR."
   },
   {
-    topic: "Spinal Nerve Composition",
-    revealedNerve: "GVA (General Visceral Afferents)",
-    stem: "Which functional fiber classification is classically restricted to the T1–L2 and S2–S4 levels rather than being present in every single spinal nerve?",
+    stem: "A patient is unable to abduct and adduct their fingers against resistance when the fingers are spread wide (interossei weakness). Which nerve root is being tested, and does it have a standard DTR?",
+    target: "T1 Nerve Root",
     opts: [
-      { text: "General Somatic Efferent (GSE)", correct: false, why: "Incorrect. GSE motor fibers innervate skeletal muscle across all spinal levels." },
-      { text: "General Somatic Afferent (GSA)", correct: false, why: "Incorrect. GSA fibers convey skin/muscle sensation across all spinal nerves except C1." },
-      { text: "General Visceral Efferent (GVE)", correct: false, why: "Incorrect. GVE sympathetic fibers exit via gray rami at all 31 levels." },
-      { text: "General Visceral Afferent (GVA)", correct: true, why: "Correct. GVA fibers transmitting visceral pain and stretch hitchhike exclusively along sympathetic (T1–L2) and parasympathetic (S2–S4) outflow pathways." }
+      { text: "T1; has no standard deep tendon reflex", correct: true, why: "Correct. T1 myotome tests the palmar and dorsal interossei (finger abduction/adduction) and does not have a standard DTR." },
+      { text: "C8; has a standard triceps deep tendon reflex", correct: false, why: "Incorrect. C8 tests finger flexion, not interossei, and the triceps reflex is C7." },
+      { text: "T1; has an axillary tendon reflex", correct: false, why: "Incorrect. There is no axillary tendon reflex." },
+      { text: "C7; has a wrist extensor reflex", correct: false, why: "Incorrect. C7 tests elbow extension and the triceps reflex." }
     ],
-    why: "General Visceral Afferents (GVA) are classically restricted to T1–L2 and S2–S4 spinal nerve pathways."
+    why: "T1 myotome tests intrinsic interossei (finger abduction/adduction). T1 has no standard clinical deep tendon reflex."
   },
   {
-    topic: "Spinal Nerve Topography",
-    revealedNerve: "Mixed Spinal Nerve Trunk",
-    stem: "At what anatomical position is the true spinal nerve trunk located relative to adjacent nervous structures?",
+    stem: "You instruct a patient to actively elevate and shrug both shoulders toward their ears against your downward manual resistance. What spinal nerve root myotome is being isolated?",
+    target: "C4 Nerve Root",
     opts: [
-      { text: "Medial to the emergence of the anterior and posterior rootlets", correct: false, why: "Incorrect. Rootlets emerge directly from the spinal cord." },
-      { text: "Distal (lateral) to the dorsal root ganglion and proximal to the bifurcation of the ventral and dorsal rami", correct: true, why: "Correct. The mixed spinal nerve trunk is very short, forming lateral to the DRG and bifurcating into ventral and dorsal primary rami." },
-      { text: "Within the subarachnoid space proximal to the dural sleeve reflection", correct: false, why: "Incorrect. The spinal nerve trunk lies extradurally." },
-      { text: "Distal to the bifurcation of the medial and lateral branches of the posterior primary ramus", correct: false, why: "Incorrect. Medial/lateral branches are terminal divisions of the dorsal ramus." }
+      { text: "C3", correct: false, why: "Incorrect. C3 tests lateral neck flexion." },
+      { text: "C4", correct: true, why: "Correct. C4 innervates the upper trapezius and levator scapulae for shoulder elevation / shrug (in conjunction with CN XI)." },
+      { text: "C5", correct: false, why: "Incorrect. C5 tests shoulder abduction (deltoid)." },
+      { text: "C1", correct: false, why: "Incorrect. C1 tests rectus and longus capitis for neck flexion." }
     ],
-    why: "The true mixed spinal nerve trunk is very short, located immediately lateral to the dorsal root ganglion and proximal to the primary rami."
+    why: "C4 myotome is evaluated by resisting shoulder elevation/shrug (upper trapezius/levator scapulae). C4 has no standard DTR."
   },
   {
-    topic: "Spinal Innervation & Pain",
-    revealedNerve: "Medial Branch of Dorsal Ramus",
-    stem: "A patient presents with sharp, localized back pain provoked during spinal extension and rotation (positive Kemp's test). Which specific neural branch transmits nociceptive input from the involved zygapophyseal (facet) joints and supplies the multifidus muscle segmentally?",
+    stem: "A patient is seated and asked to walk on their heels with toes pointing up. They exhibit foot drop and cannot dorsiflex or invert the foot. Tapping the patellar tendon reveals a sluggish, diminished response. Which nerve root is compromised?",
+    target: "L4 Nerve Root",
     opts: [
-      { text: "Lateral branch of the dorsal ramus", correct: false, why: "Incorrect. The lateral branch supplies iliocostalis and overlying skin." },
-      { text: "Sinuvertebral nerve (recurrent meningeal nerve)", correct: false, why: "Incorrect. The sinuvertebral nerve innervates the outer annulus and PLL." },
-      { text: "Medial branch of the dorsal ramus", correct: true, why: "Correct. The medial branch of the dorsal ramus innervates the Z-joints and supplies the multifidus segmentally." },
-      { text: "Intermediate branch of the dorsal ramus", correct: false, why: "Incorrect. The intermediate branch supplies longissimus." }
+      { text: "L4", correct: true, why: "Correct. L4 innervates the tibialis anterior (ankle dorsiflexion and inversion); its primary reflex is the Patellar tendon DTR." },
+      { text: "L5", correct: false, why: "Incorrect. L5 innervates extensor hallucis longus (great toe extension) and the medial hamstring reflex." },
+      { text: "S1", correct: false, why: "Incorrect. S1 innervates peroneus muscles and gastrocnemius (plantarflexion/toe walk); reflex is Achilles." },
+      { text: "L2", correct: false, why: "Incorrect. L2 innervates iliopsoas for hip flexion; L2 has no standard DTR." }
     ],
-    why: "The medial branch of the dorsal ramus innervates facet joints (Z-joints) and segmentally supplies the multifidus."
+    why: "L4 neurological level controls tibialis anterior (dorsiflexion/inversion) and the Patellar tendon reflex."
   },
   {
-    topic: "Discogenic Pathology",
-    revealedNerve: "Sinuvertebral Nerve",
-    stem: "Annular tears through the outer lamellae of the intervertebral disc cause discogenic pain. Which nerve provides sensory innervation to the outer third of the annulus fibrosus to mediate this pain?",
+    stem: "To test the L5 myotome, the clinician instructs the patient to extend their big toe upward against downward thumb pressure. Which muscle is being tested, and what is the corresponding reflex?",
+    target: "L5 Nerve Root",
     opts: [
-      { text: "Medial branch of the dorsal ramus", correct: false, why: "Incorrect. Medial branches supply facet joints and multifidus." },
-      { text: "Sinuvertebral nerve", correct: true, why: "Correct. Sinuvertebral nerves (recurrent meningeal nerves of Luschka) innervate the outer annulus fibrosus and posterior longitudinal ligament." },
-      { text: "Lateral branch of the dorsal ramus", correct: false, why: "Incorrect. Lateral branches supply back skin and iliocostalis." },
-      { text: "Gray ramus communicans directly", correct: false, why: "Incorrect. Gray rami carry postganglionic sympathetic fibers." }
+      { text: "Tibialis anterior; Patellar tendon reflex", correct: false, why: "Incorrect. Tibialis anterior and patellar reflex test L4." },
+      { text: "Extensor hallucis longus (EHL); Medial hamstring reflex", correct: true, why: "Correct. L5 myotome isolates extensor hallucis longus (EHL / big toe extension); its corresponding reflex is the Medial Hamstring (semitendinosus/semimembranosus)." },
+      { text: "Peroneus longus and brevis; Achilles tendon reflex", correct: false, why: "Incorrect. Peroneal muscles and Achilles reflex test S1." },
+      { text: "Gastrocnemius; Babinski reflex", correct: false, why: "Incorrect. Gastrocnemius is S1; Babinski is an upper motor neuron sign." }
     ],
-    why: "Discogenic pain resulting from an annular tear is mediated through the sinuvertebral nerve."
+    why: "L5 isolates the extensor hallucis longus (EHL / big toe extension) and medial hamstring reflex."
   },
   {
-    topic: "Disc Innervation Nuance",
-    revealedNerve: "Multi-level Sinuvertebral Innervation",
-    stem: "According to anatomical research on spinal nociception, the L3 intervertebral disc receives sensory innervation from which specific nerve roots?",
+    stem: "A patient cannot perform a toe walk on their tiptoes (plantarflexion and eversion weakness). Tapping their Achilles tendon with a reflex hammer elicits zero response. Which spinal level is involved?",
+    target: "S1 Nerve Root",
     opts: [
-      { text: "L3 sinuvertebral nerve only", correct: false, why: "Incorrect. Discs exhibit multi-level overlapping innervation." },
-      { text: "L3 and L2 sinuvertebral nerves", correct: true, why: "Correct. The L3 disc is innervated by both its own L3 sinuvertebral nerve and sinuvertebral fibers from L2 above." },
-      { text: "L3, L4, and L5 dorsal rami medial branches", correct: false, why: "Incorrect. Dorsal rami medial branches supply facet joints, not discs." },
-      { text: "L1 ventral ramus directly", correct: false, why: "Incorrect. L1 does not innervate the L3 disc." }
+      { text: "L4", correct: false, why: "Incorrect. L4 mediates dorsiflexion (heel walk) and patellar reflex." },
+      { text: "L5", correct: false, why: "Incorrect. L5 mediates great toe extension and medial hamstring reflex." },
+      { text: "S1", correct: true, why: "Correct. S1 innervates gastrocnemius, soleus, and peroneus longus/brevis for plantarflexion and eversion; its reflex is the Achilles DTR." },
+      { text: "S2", correct: false, why: "Incorrect. S2 innervates hamstrings for knee flexion and has no standard DTR." }
     ],
-    why: "Intervertebral discs receive overlapping innervation; e.g., the L3 disc is innervated by both L3 and L2 sinuvertebral nerves."
+    why: "The S1 nerve root controls ankle plantarflexion/eversion (peroneals/gastrocnemius) and the Achilles tendon reflex."
   },
   {
-    topic: "Intervertebral Disc Physiology",
-    revealedNerve: "Avascular Disc Nutrition",
-    stem: "Why is the healthy adult nucleus pulposus obligatorily dependent on anaerobic glycolysis for cellular ATP production?",
+    stem: "Which spinal nerve roots are evaluated when testing hip flexion (iliopsoas muscle) in a seated patient?",
+    target: "L1 - L2 Nerve Roots",
     opts: [
-      { text: "Disc cells completely lack mitochondria and citric acid cycle enzymes from early embryogenesis", correct: false, why: "Incorrect. Disc cells possess cellular enzymes but lack adequate oxygen tension." },
-      { text: "High intradiscal compressive pressures physically eliminate all intracellular glucose transport", correct: false, why: "Incorrect. Glucose diffuses into the disc despite compressive load." },
-      { text: "The disc is completely avascular except at its outermost annular rim, yielding very low tissue oxygen tension", correct: true, why: "Correct. The intervertebral disc is avascular except for its outermost periphery, forcing cells in the nucleus pulposus to rely on anaerobic glycolysis." },
-      { text: "Lactic acid concentrations in the center of the disc inhibit all aerobic oxidative phosphorylation", correct: false, why: "Incorrect. Lactic acid is a byproduct of glycolysis, not the primary cause of hypoxia." }
+      { text: "L1 and L2", correct: true, why: "Correct. L1 and L2 supply the iliopsoas for hip flexion; neither has a standard clinical DTR." },
+      { text: "L4 and L5", correct: false, why: "Incorrect. L4 and L5 innervate foot and toe dorsiflexors." },
+      { text: "S1 and S2", correct: false, why: "Incorrect. S1 and S2 innervate plantarflexors and knee flexors." },
+      { text: "C8 and T1", correct: false, why: "Incorrect. C8 and T1 are upper extremity nerve roots." }
     ],
-    why: "Because intervertebral discs lack blood vessels (except on their outer periphery), their cells must rely entirely on anaerobic glycolysis for ATP."
+    why: "Hip flexion (iliopsoas) evaluates the L1 and L2 nerve roots. Neither has a standard deep tendon reflex."
   },
   {
-    topic: "Sympathetic Nervous System",
-    revealedNerve: "Bulbospinal Tract",
-    stem: "During baroreceptor-mediated or stress-induced sympathetic drive, pre-sympathetic axons descend from the rostral ventrolateral medulla (RVLM) via which tract to synapse in the spinal cord?",
+    stem: "A clinician tests knee extension by having the seated patient kick their lower leg forward against resistance (quadriceps femoris). Which spinal nerve root primarily drives this action?",
+    target: "L3 Nerve Root",
     opts: [
-      { text: "Rubrospinal tract", correct: false, why: "Incorrect. The rubrospinal tract mediates flexor motor tone." },
-      { text: "Bulbospinal tract", correct: true, why: "Correct. Bulbospinal neurons carry sympathetic drive from the RVLM down to the intermediolateral cell column in the lateral horn." },
-      { text: "Tectospinal tract", correct: false, why: "Incorrect. The tectospinal tract coordinates reflex head movements to visual stimuli." },
-      { text: "Lateral corticospinal tract", correct: false, why: "Incorrect. The lateral corticospinal tract mediates voluntary skeletal muscle movement." }
+      { text: "L1", correct: false, why: "Incorrect. L1 mediates hip flexion." },
+      { text: "L2", correct: false, why: "Incorrect. L2 mediates hip flexion/adduction." },
+      { text: "L3", correct: true, why: "Correct. L3 innervates the quadriceps femoris for knee extension (with secondary contribution to the patellar reflex)." },
+      { text: "S1", correct: false, why: "Incorrect. S1 mediates ankle plantarflexion." }
     ],
-    why: "Sympathetic motor commands descend from the RVLM to the spinal cord via the bulbospinal tract."
-  },
-  {
-    topic: "Sympathetic Nervous System",
-    revealedNerve: "Intermediolateral Cell Column (IML)",
-    stem: "Where are the cell bodies of the preganglionic sympathetic neurons located, representing the official origin of the sympathetic nervous system?",
-    opts: [
-      { text: "Sympathetic paravertebral chain ganglia", correct: false, why: "Incorrect. Chain ganglia house postganglionic sympathetic cell bodies." },
-      { text: "Dorsal root ganglia between T1 and L2", correct: false, why: "Incorrect. DRGs house sensory pseudounipolar cell bodies." },
-      { text: "Intermediolateral cell columns (IML) in the lateral horn", correct: true, why: "Correct. The IML in the lateral horn of spinal cord segments T1–L2 houses preganglionic sympathetic cell bodies." },
-      { text: "Rostral ventrolateral medulla (RVLM)", correct: false, why: "Incorrect. The RVLM is the central brainstem vasomotor command center." }
-    ],
-    why: "Preganglionic sympathetic neuron cell bodies are located in the intermediolateral cell columns (IML) of the spinal cord's lateral horn (T1–L2)."
-  },
-  {
-    topic: "Autonomic Anatomy",
-    revealedNerve: "White vs. Gray Rami Communicantes",
-    stem: "Which statement accurately describes the anatomical distribution and fiber content of the white versus gray rami communicantes?",
-    opts: [
-      { text: "White rami are present at all 31 spinal levels; gray rami exist exclusively from T1 to L2", correct: false, why: "Incorrect. This reverses the actual distribution." },
-      { text: "White rami contain unmyelinated postganglionic fibers; gray rami contain myelinated preganglionic fibers", correct: false, why: "Incorrect. This reverses fiber myelination and functional types." },
-      { text: "White rami carry preganglionic fibers and exist only from T1 to L2; gray rami carry postganglionic fibers and exist at all 31 spinal levels", correct: true, why: "Correct. White rami (myelinated preganglionic) are restricted to T1–L2; gray rami (unmyelinated postganglionic) attach to all 31 spinal nerves." },
-      { text: "Both white and gray rami exist at every spinal level but attach to opposite primary rami", correct: false, why: "Incorrect. White rami are strictly confined to thoracolumbar levels T1–L2." }
-    ],
-    why: "White rami carry preganglionic sympathetic fibers and exist only from T1 to L2, whereas gray rami carry postganglionic fibers and attach to all 31 spinal nerves."
-  },
-  {
-    topic: "Postganglionic Distribution",
-    revealedNerve: "Dorsal Ramus Sympathetic U-Turn",
-    stem: "After unmyelinated postganglionic sympathetic fibers travel through the gray ramus communicans back into the ventral ramus, what pathway do the fibers destined for the posterior body take?",
-    opts: [
-      { text: "They pass directly across the anterior longitudinal ligament into the adjacent vertebra", correct: false, why: "Incorrect. Sympathetic fibers do not cross anterior ligaments to reach posterior structures." },
-      { text: "They travel proximally up the ventral ramus, touch the distal edge of the spinal nerve, and turn into the dorsal ramus", correct: true, why: "Correct. About 50% travel distally down the ventral ramus; the other 50% loop proximally up the ventral ramus, touch the spinal nerve edge, and descend down the dorsal ramus." },
-      { text: "They ascend two full vertebral levels within the sympathetic chain before crossing the pedicle", correct: false, why: "Incorrect. Chain ascension occurs for preganglionic routing prior to synapsing." },
-      { text: "They exit the spinal cord through the dorsal sensory rootlets into the posterior primary division", correct: false, why: "Incorrect. Sympathetic motor efferents never travel retrograde through sensory rootlets." }
-    ],
-    why: "Approximately 50% of postganglionic sympathetic fibers travel distally down the ventral ramus, while the other 50% execute a U-turn up the ventral ramus and turn into the dorsal ramus."
-  },
-  {
-    topic: "Sympathetic Targets",
-    revealedNerve: "Sympathetic Triad",
-    stem: "Postganglionic sympathetic fibers (GVE) exiting via gray rami supply which triad of peripheral effector structures?",
-    opts: [
-      { text: "Striated skeletal motor units, muscle spindles, and Golgi tendon organs", correct: false, why: "Incorrect. These are somatic motor and proprioceptive structures." },
-      { text: "Arteriole smooth muscle (tunica media), sweat glands, and arrector pili muscles", correct: true, why: "Correct. Gray rami distribute postganglionic sympathetics to arteriole tunica media (vasoconstriction), sweat glands (sudomotor), and arrector pili muscles (piloerection)." },
-      { text: "Visceral peritoneal nociceptors, pacinian corpuscles, and joint capsule mechanoreceptors", correct: false, why: "Incorrect. These are sensory receptor endings." },
-      { text: "Sebaceous glands, lymphatic endothelium, and superficial cutaneous thermoreceptors", correct: false, why: "Incorrect. This is not the classical postganglionic triad." }
-    ],
-    why: "Postganglionic sympathetic fibers supply arteriole tunica media, sweat glands, and arrector pili muscles."
-  },
-  {
-    topic: "Sympathetic Splanchnic Pathways",
-    revealedNerve: "Splanchnic Nerve Routing",
-    stem: "When a preganglionic sympathetic fiber enters the paravertebral sympathetic chain ganglion via a white ramus communicans, which of the following is NOT one of its potential anatomical trajectories?",
-    opts: [
-      { text: "Synapse immediately with a postganglionic neuron in that same ganglion level", correct: false, why: "Incorrect. Synapsing at the level of entry is a standard pathway." },
-      { text: "Ascend or descend through the sympathetic trunk to synapse in a higher or lower chain ganglion", correct: false, why: "Incorrect. Ascending/descending in the chain is another standard pathway." },
-      { text: "Pass directly through the sympathetic trunk without synapsing, emerging as a splanchnic nerve to synapse in a prevertebral (collateral) ganglion", correct: false, why: "Incorrect. Passing through to form splanchnic nerves is the third standard pathway." },
-      { text: "Pass backward through the dorsal root ganglion to terminate directly upon sensory cell bodies", correct: true, why: "Correct. Preganglionic sympathetic fibers never pass backward into sensory dorsal root ganglia." }
-    ],
-    why: "Preganglionic sympathetic fibers synapse at the same level, ascend/descend in the chain, or pass through to form splanchnic nerves; they never pass backward into sensory dorsal root ganglia."
-  },
-  {
-    topic: "Autonomic Division Outflows",
-    revealedNerve: "Thoracolumbar vs. Craniosacral",
-    stem: "Which anatomical description correctly defines the difference between sympathetic and parasympathetic central nervous system outflows?",
-    opts: [
-      { text: "Sympathetic is craniosacral (CN III, VII, IX, X and S2–S4); parasympathetic is thoracolumbar (T1–L2)", correct: false, why: "Incorrect. This completely reverses sympathetic and parasympathetic outflows." },
-      { text: "Sympathetic is thoracolumbar (T1–L2); parasympathetic is craniosacral (CN III, VII, IX, X and S2–S4)", correct: true, why: "Correct. Sympathetic outflow is thoracolumbar (T1–L2); parasympathetic outflow is craniosacral (CN III, VII, IX, X and S2–S4)." },
-      { text: "Sympathetic emerges from all 31 pairs; parasympathetic emerges solely from the brainstem", correct: false, why: "Incorrect. Parasympathetic also has a sacral outflow (S2–S4)." },
-      { text: "Sympathetic emerges from C1–T12; parasympathetic emerges from L1–Co1", correct: false, why: "Incorrect. This anatomical distribution is entirely incorrect." }
-    ],
-    why: "The sympathetic nervous system features thoracolumbar outflow (T1–L2), while the parasympathetic nervous system features craniosacral outflow (CN III, VII, IX, X and S2–S4)."
-  },
-  {
-    topic: "Embryological Segmentation",
-    revealedNerve: "Somite Differentiation",
-    stem: "During early human development, the paraxial mesoderm segregates into which three distinct functional tissue layers?",
-    opts: [
-      { text: "Ectoderm, mesoderm, and endoderm", correct: false, why: "Incorrect. These are the three primary germ layers of the early embryo." },
-      { text: "Dermatome, myotome, and sclerotome", correct: true, why: "Correct. Paraxial mesoderm forms somites that divide into dermatome, myotome, and sclerotome." },
-      { text: "Epimysium, perimysium, and endomysium", correct: false, why: "Incorrect. These are connective tissue sheaths within skeletal muscle." },
-      { text: "Lamina lucida, lamina densa, and reticular lamina", correct: false, why: "Incorrect. These are sublayers of basement membranes." }
-    ],
-    why: "Paraxial mesoderm somites segregate into the dermatome, myotome, and sclerotome."
-  },
-  {
-    topic: "Clinical Diagnosis",
-    revealedNerve: "Radicular Pain vs. Radiculopathy",
-    stem: "A clinician evaluates a patient reporting sharp pain radiating down the posterior thigh and calf in a narrow strip. Examination reveals an absent Achilles reflex, gastrocnemius weakness, and hypesthesia. How should these findings be formally categorized?",
-    opts: [
-      { text: "The subjective radiating pain is radiculopathy; the objective reflex and motor deficits represent radicular pain", correct: false, why: "Incorrect. This reverses the definitions of subjective pain versus objective deficits." },
-      { text: "The subjective radiating pain is radicular pain; the objective loss of reflex, motor power, and sensation defines radiculopathy", correct: true, why: "Correct. Radiating pain is termed radicular pain, whereas objective neurological deficits (reflex loss, weakness, sensory drop) constitute radiculopathy." },
-      { text: "Both the radiating pain and the physical examination deficits are categorized as neuropathic centralization", correct: false, why: "Incorrect. Centralization is a mechanical directional preference response, not a neurological diagnosis." },
-      { text: "The presence of pain throughout the limb indicates non-organic psychogenic conversion disorder", correct: false, why: "Incorrect. Objective reflex and motor deficits confirm organic nerve root compression." }
-    ],
-    why: "Radicular pain is a subjective symptom of radiating pain, whereas radiculopathy is an objective clinical diagnosis proven by neurological exam deficits (reflex loss, weakness, sensory changes)."
-  },
-  {
-    topic: "Reflex Physiology",
-    revealedNerve: "Reciprocal Inhibition",
-    stem: "Tapping the patellar ligament with a reflex hammer elicits a brisk contraction of the quadriceps and simultaneous inhibition of the hamstrings. What is the physiological term for this reciprocal relaxation of the antagonist muscle?",
-    opts: [
-      { text: "Autogenic excitation", correct: false, why: "Incorrect. Autogenic excitation stimulates the agonist muscle." },
-      { text: "Reciprocal inhibition", correct: true, why: "Correct. Reciprocal inhibition coordinates movement by relaxing the antagonistic muscle group while the agonist contracts." },
-      { text: "Clonic facilitation", correct: false, why: "Incorrect. Clonus is pathological rhythmic oscillation, not normal reflex relaxation." },
-      { text: "Crossed extensor reflex", correct: false, why: "Incorrect. The crossed extensor reflex stabilizes the contralateral limb during withdrawal." }
-    ],
-    why: "Simultaneous relaxation of the antagonist muscle during a stretch reflex is called reciprocal inhibition."
-  },
-  {
-    topic: "Reflex Physiology & Examination",
-    revealedNerve: "Muscle Spindle Stretch Reflex Arc",
-    stem: "Which receptor and neural circuitry mediate the monosynaptic muscle stretch reflex (myotatic reflex) when a tendon is struck?",
-    opts: [
-      { text: "Golgi tendon organs detecting tension, relaying through descending cerebral tracts to alpha motor neurons", correct: false, why: "Incorrect. GTOs mediate disynaptic autogenic inhibition, not monosynaptic stretch reflexes." },
-      { text: "Pacinian corpuscles detecting vibration, sending signals via the sympathetic chain to gamma efferents", correct: false, why: "Incorrect. Pacinian corpuscles sense deep vibration and pressure." },
-      { text: "Muscle spindles detecting a micro-stretch, transmitting action potentials to the spinal cord to excite the agonist motor nerve without brain involvement", correct: true, why: "Correct. Muscle spindles sense micro-stretches, sending afferent signals directly into the spinal cord to excite the agonist alpha motor neuron without brain intervention." },
-      { text: "Free nerve endings detecting tissue deformation, synapsing in the brainstem reticular formation", correct: false, why: "Incorrect. Free nerve endings mediate pain and temperature." }
-    ],
-    why: "The monosynaptic muscle stretch reflex is mediated by intrafusal muscle spindles sending afferent signals to excite the agonist motor nerve in the spinal cord without brain involvement."
-  },
-  {
-    topic: "Muscle Spindle vs GTO Function",
-    revealedNerve: "Spindle vs. GTO",
-    stem: "What is the primary physiological distinction between intrafusal muscle spindles and Golgi tendon organs (GTOs)?",
-    opts: [
-      { text: "Muscle spindles detect changes in muscle length and rate of stretch, whereas GTOs detect muscle tension and prevent overload damage", correct: true, why: "Correct. Spindles are in parallel and sense length/stretch; GTOs are in series at tendons and sense tension to protect against overload." },
-      { text: "Muscle spindles detect excessive tendon force, whereas GTOs detect light cutaneous touch", correct: false, why: "Incorrect. This reverses their physiological roles." },
-      { text: "Muscle spindles cause reciprocal contraction of antagonists, whereas GTOs cause agonist muscle spasm", correct: false, why: "Incorrect. GTOs inhibit agonist motor neurons to prevent tendon tear." },
-      { text: "Muscle spindles are located exclusively in tendons, whereas GTOs are located in the center of the muscle belly", correct: false, why: "Incorrect. Spindles are in muscle bellies; GTOs are in tendons." }
-    ],
-    why: "Muscle spindles sense length and rate of stretch, whereas Golgi tendon organs (GTOs) sense muscle tension to prevent structural overload."
-  },
-  {
-    topic: "Motor Innervation Classes",
-    revealedNerve: "Gamma Motor Neurons",
-    stem: "Which class of lower motor neurons innervates the intrafusal fibers of the muscle spindle to calibrate and maintain its sensitivity during active muscle contraction?",
-    opts: [
-      { text: "Alpha motor neurons", correct: false, why: "Incorrect. Alpha motor neurons innervate extrafusal skeletal muscle fibers for force generation." },
-      { text: "Gamma motor neurons", correct: true, why: "Correct. Gamma motor neurons innervate intrafusal spindle fibers, taking up slack so the spindle remains sensitive during muscle shortening." },
-      { text: "Beta secretase neurons", correct: false, why: "Incorrect. This is a biochemical protease involved in Alzheimer's amyloid processing." },
-      { text: "Autonomic preganglionic fibers", correct: false, why: "Incorrect. Autonomic fibers innervate visceral organs, glands, and smooth muscle." }
-    ],
-    why: "Gamma motor neurons innervate intrafusal muscle spindle fibers to maintain their stretch sensitivity during muscle contraction."
-  },
-  {
-    topic: "Sensory Afferent Fiber Types",
-    revealedNerve: "Type Ia Afferents",
-    stem: "Which primary sensory afferent fiber type wraps around the central non-contractile region of nuclear bag and nuclear chain fibers to convey rapid stretch signals in the myotatic reflex arc?",
-    opts: [
-      { text: "Type Ia afferent fibers", correct: true, why: "Correct. Type Ia primary afferents wrap around intrafusal fibers (annulospiral endings) to transmit rapid dynamic stretch." },
-      { text: "Type Ib afferent fibers", correct: false, why: "Incorrect. Type Ib afferents transmit tension signals from Golgi tendon organs." },
-      { text: "Type C unmyelinated fibers", correct: false, why: "Incorrect. Type C fibers transmit slow dull pain and temperature." },
-      { text: "Type A-delta fibers", correct: false, why: "Incorrect. Type A-delta fibers transmit fast sharp pain." }
-    ],
-    why: "Type Ia afferent fibers wrap around intrafusal muscle spindles to transmit rapid dynamic stretch signals."
-  },
-  {
-    topic: "Neurological Examination",
-    revealedNerve: "Neurological Level Triad",
-    stem: "What are the three mandatory components of a standard neurological level (spinal nerve root) evaluation?",
-    opts: [
-      { text: "Goniometry, palpation, and dermatomal warmth mapping", correct: false, why: "Incorrect. These are physical and orthopedic assessment tools." },
-      { text: "Reflex testing, muscle (myotome) testing, and sensation (dermatome) testing", correct: true, why: "Correct. A neurological level evaluation requires testing reflexes, motor strength (myotomes), and sensation (dermatomes)." },
-      { text: "Orthopedic testing, vascular palpation, and cranial nerve screening", correct: false, why: "Incorrect. Cranial nerves test brainstem function, not spinal nerve roots." },
-      { text: "Posture assessment, joint play motion palpation, and pain score grading", correct: false, why: "Incorrect. These assess biomechanical joint restriction." }
-    ],
-    why: "A neurological level assessment evaluates spinal nerve root integrity via reflex testing, myotome muscle testing, and dermatome sensation testing."
-  },
-  {
-    topic: "Clinical Reflex Grading",
-    revealedNerve: "Wexler Scale Grade 2+",
-    stem: "According to the standardized Wexler reflex grading scale, what score represents a normal, average physiological response during deep tendon reflex testing?",
-    opts: [
-      { text: "0", correct: false, why: "Incorrect. 0 represents an absent reflex (areflexia)." },
-      { text: "1+", correct: false, why: "Incorrect. 1+ represents a hypoactive or trace reflex." },
-      { text: "2+", correct: true, why: "Correct. 2+ is the standard score for a normal, average physiological reflex response." },
-      { text: "4+", correct: false, why: "Incorrect. 4+ represents hyperactive reflexes with clonus." }
-    ],
-    why: "On the Wexler reflex scale, 2+ represents a normal, average physiological reflex response."
-  },
-  {
-    topic: "Upper vs Lower Motor Neuron Signs",
-    revealedNerve: "LMN Reflex Findings",
-    stem: "A herniated disc compressing a spinal nerve root produces a lower motor neuron (LMN) lesion within that specific reflex arc. What reflex finding is expected at that neurological level?",
-    opts: [
-      { text: "Hyperreflexia with sustained clonus (4+)", correct: false, why: "Incorrect. Hyperreflexia is a sign of upper motor neuron (UMN) lesions." },
-      { text: "Hyporeflexia or complete absence of the reflex (0 to 1+)", correct: true, why: "Correct. LMN lesions disrupt the peripheral reflex arc, resulting in hyporeflexia or areflexia (0 to 1+)." },
-      { text: "Normal physiological response (2+) with a positive Babinski sign", correct: false, why: "Incorrect. Babinski sign indicates central UMN pathology." },
-      { text: "Spastic hypertonia without loss of muscle bulk", correct: false, why: "Incorrect. Spasticity is a UMN sign; LMN lesions cause flaccidity and atrophy." }
-    ],
-    why: "Lower motor neuron (LMN) nerve root lesions disrupt the peripheral reflex arc, leading to hyporeflexia or areflexia (0 to 1+)."
-  },
-  {
-    topic: "Clinical Examination Maneuvers",
-    revealedNerve: "Jendrassik Maneuver",
-    stem: "When eliciting a patellar tendon reflex proves difficult in a tense patient, the clinician instructs the patient to hook their flexed fingers together and pull apart isometrically upon the hammer strike. What is the clinical name and purpose of this reinforcement maneuver?",
-    opts: [
-      { text: "Valsalva maneuver; to elevate intrathoracic pressure and stimulate baroreceptors", correct: false, why: "Incorrect. Valsalva increases intrathecal and intrathoracic pressure." },
-      { text: "Jendrassik maneuver; to reduce central supraspinal inhibition and facilitate the spinal reflex arc", correct: true, why: "Correct. The Jendrassik maneuver uses remote muscle contraction to reduce central inhibition, facilitating spinal motor pools so deep tendon reflexes can be elicited." },
-      { text: "Spurling maneuver; to compress the cervical neural foramen", correct: false, why: "Incorrect. Spurling test provokes cervical radicular pain." },
-      { text: "Lhermitte test; to provoke posterior column paresthesias", correct: false, why: "Incorrect. Lhermitte sign indicates cervical myelopathy." }
-    ],
-    why: "The Jendrassik maneuver is a reinforcement technique that reduces central supraspinal inhibition to facilitate eliciting deep tendon reflexes."
-  },
-  {
-    topic: "Autonomic Vascular Tone",
-    revealedNerve: "Alpha-1 Adrenergic Receptors",
-    stem: "During autonomic sympathetic activation, norepinephrine is released from terminals in the tunica adventitia and diffuses into the tunica media of arterioles. Which specific adrenergic receptor on vascular smooth muscle does it bind to mediate vasoconstriction?",
-    opts: [
-      { text: "Beta-2 adrenergic receptor", correct: false, why: "Incorrect. Beta-2 receptors mediate vasodilation in skeletal muscle arterioles." },
-      { text: "Alpha-1 adrenergic receptor", correct: true, why: "Correct. Norepinephrine binds to alpha-1 receptors, activating a Gq/PLC/IP3 signaling cascade that releases calcium and induces arteriolar smooth muscle contraction." },
-      { text: "Muscarinic M2 receptor", correct: false, why: "Incorrect. M2 receptors are parasympathetic cardiac receptors that slow heart rate." },
-      { text: "Nicotinic cholinergic receptor", correct: false, why: "Incorrect. Nicotinic receptors mediate neuromuscular transmission and autonomic ganglia." }
-    ],
-    why: "Norepinephrine binds to alpha-1 adrenergic receptors on vascular smooth muscle in the tunica media to trigger vasoconstriction."
-  },
-  {
-    topic: "Autonomic Vascular Exceptions",
-    revealedNerve: "Penile Parasympathetic Vasodilation",
-    stem: "Unlike most systemic arterioles which receive strictly sympathetic vasoconstrictor innervation, which specific regional arterioles receive parasympathetic vasodilator innervation that produces penile erection?",
-    opts: [
-      { text: "Coronary epicardial arteries", correct: false, why: "Incorrect. Coronary blood flow is regulated primarily by local metabolic adenosine and sympathetic tone." },
-      { text: "Arterioles of the external genitalia (penis)", correct: true, why: "Correct. Penile arterioles receive parasympathetic innervation that triggers nitric oxide-mediated vasodilation and erection, whereas sympathetic tone mediates ejaculation." },
-      { text: "Renal glomerular afferent arterioles", correct: false, why: "Incorrect. Glomerular arterioles are regulated by sympathetic tone and local myogenic/tubuloglomerular feedback." },
-      { text: "Cerebral pial arteries", correct: false, why: "Incorrect. Cerebral vessels are regulated primarily by local CO2 and metabolic autoregulation." }
-    ],
-    why: "Penile arterioles receive rare parasympathetic innervation that induces vasodilation and erection, while sympathetic activation mediates ejaculation."
-  },
-  {
-    topic: "Board Synonyms (A.K.A.s)",
-    revealedNerve: "Neurological Level Synonym",
-    stem: "Dr. Gillard emphasizes that board exams frequently swap terminology. Which term is strictly synonymous with 'neurological level'?",
-    opts: [
-      { text: "Spinal cord segment", correct: false, why: "Incorrect. Cord segments give rise to rootlets, but neurological level specifically designates the functional nerve root." },
-      { text: "Spinal nerve root", correct: true, why: "Correct. Lecture notes explicitly equate neurological levels with spinal nerve roots." },
-      { text: "Sympathetic ganglion", correct: false, why: "Incorrect. Sympathetic ganglia are autonomic relay stations." },
-      { text: "Ventral ramus", correct: false, why: "Incorrect. The ventral ramus is only a distal branch of a spinal nerve." }
-    ],
-    why: "Dr. Gillard's lecture notes emphasize that 'neurological level' is synonymous with 'spinal nerve root'."
-  },
-  {
-    topic: "Board Synonyms (A.K.A.s)",
-    revealedNerve: "Muscle Stretch Reflex Terminology",
-    stem: "Which of the following is considered the preferred physiological terminology for what clinicians commonly refer to as a 'deep tendon reflex' (DTR)?",
-    opts: [
-      { text: "Muscle stretch reflex (stretch reflex or myotatic reflex)", correct: true, why: "Correct. Lecture notes stress that 'deep tendon reflex' is anatomically inaccurate because the receptor is inside the muscle spindle, not the tendon." },
-      { text: "Inverse myotatic reflex", correct: false, why: "Incorrect. The inverse myotatic reflex refers to Golgi tendon organ autogenic inhibition." },
-      { text: "Autogenic inhibitory reflex", correct: false, why: "Incorrect. This describes GTO relaxation of agonist muscles." },
-      { text: "Cutaneous flexor withdrawal reflex", correct: false, why: "Incorrect. This is a polysynaptic nociceptive withdrawal response." }
-    ],
-    why: "The preferred physiological term is 'muscle stretch reflex' (or myotatic reflex), as 'deep tendon reflex' is anatomically a misnomer."
+    why: "L3 myotome evaluates knee extension via the quadriceps femoris (L3 also contributes secondarily to the patellar reflex)."
   }
 ];
 
-// FILL-IN: [stem, [accepted answers], answer shown, explanation, revealedNerve]
-const F = [
-  ["CN I is tested with the sense of ____.", ["smell", "olfaction"], "smell", "Olfactory receptor neurons pass through the cribriform plate to transmit odorant signals.", "CN I (Olfactory)"],
-  ["Snellen wall chart is read from ____ feet away.", ["20", "20 feet", "20 ft", "20ft"], "20 feet", "20 feet is the standard optical infinity distance used to test distance visual acuity.", "CN II (Optic)"],
-  ["Snellen pocket chart is read from ____ inches away.", ["14", "14 inches", "14 in", "14in"], "14 inches", "14 inches represents the calibrated reading distance for near-card visual acuity.", "CN II (Optic)"],
-  ["For visual field confrontation, the examiner sits about an ____ length away.", ["arm", "arms", "arm's", "an arm"], "arm", "Sitting an arm's length away allows direct 1-to-1 confrontation of peripheral boundaries.", "CN II (Optic)"],
-  ["The three near-reaction responses are convergence, accommodation, and ____.", ["miosis", "pupil constriction", "constriction"], "miosis", "Parasympathetic activation through CN III constricts the pupil during near viewing.", "CN III (Oculomotor)"],
-  ["Pupil constriction in the SAME eye the light is shone into is the ____ light reflex.", ["direct"], "direct", "Ipsilateral pupillary constriction constitutes the direct light reflex.", "CN II / CN III"],
-  ["Pupil constriction in the OPPOSITE eye is the ____ light reflex.", ["consensual"], "consensual", "Bilateral projection to both Edinger-Westphal nuclei produces contralateral constriction.", "CN II / CN III"],
-  ["Involuntary jerking at the end of a gaze position is called ____.", ["nystagmus"], "nystagmus", "Nystagmus is rhythmic oscillatory ocular tremor typically observed on extreme lateral gaze.", "CN III, IV, VI"],
-  ["Both eyes moving smoothly in the same direction is called ____ gaze.", ["conjugate"], "conjugate", "Conjugate gaze denotes synchronized binocular tracking across all visual fields.", "CN III, IV, VI"],
-  ["Cardinal field of gaze follows what letter pattern?", ["h", "an h", "h pattern"], "H", "The 'H-pattern' methodically isolates all six extraocular muscle vectors.", "CN III, IV, VI"],
-  ["Which cranial nerve (number or name) innervates the lateral rectus?", ["vi", "6", "cn vi", "cn 6", "abducent", "abducens"], "CN VI (Abducent)", "The lateral rectus muscle is exclusively innervated by CN VI (LR6 SO4 remainder 3).", "CN VI (Abducent)"],
-  ["Which cranial nerve (number or name) innervates the superior oblique?", ["iv", "4", "cn iv", "cn 4", "trochlear"], "CN IV (Trochlear)", "The superior oblique muscle is innervated exclusively by CN IV.", "CN IV (Trochlear)"],
-  ["CN III parasympathetics supply the sphincter pupillae and the ____ muscle.", ["ciliary"], "ciliary", "Ciliary muscle contraction relaxes the zonules, rounding the lens for near focus.", "CN III (Oculomotor)"],
-  ["The two muscles palpated while the patient bites down (CN V) are masseter and ____.", ["temporalis"], "temporalis", "Temporalis and masseter muscles are palpable primary elevators of the mandible.", "CN V (Trigeminal)"],
-  ["On mouth opening, the jaw deviates toward the ____ side.", ["weak", "weaker", "affected"], "weak", "Unilateral lateral pterygoid weakness causes the mandible to push toward the lesion.", "CN V (Trigeminal)"],
-  ["Taste for the anterior 2/3 of the tongue is CN ____.", ["vii", "7", "cn vii", "cn 7", "facial"], "CN VII", "Taste fibers travel via the chorda tympani of CN VII.", "CN VII (Facial)"],
-  ["Taste for the posterior 1/3 of the tongue is CN ____.", ["ix", "9", "cn ix", "cn 9", "glossopharyngeal"], "CN IX", "CN IX conveys both taste and general somatic sensation to the posterior third.", "CN IX (Glossopharyngeal)"],
-  ["In Romberg's test the patient closes their ____ and the examiner watches for wobble.", ["eyes", "eye"], "eyes", "Removing visual fixation exposes underlying proprioceptive or vestibular balance defects.", "CN VIII (Vestibulocochlear)"],
-  ["Normally, air conduction is greater than ____ times bone conduction (Rinne).", ["2", "two", "2x", "2 times"], "2", "Normal cochlear acoustic conduction through air lasts at least twice as long as bone conduction.", "CN VIII (Vestibulocochlear)"],
-  ["The sensory limb of the gag reflex is CN ____.", ["ix", "9", "cn ix", "cn 9", "glossopharyngeal"], "CN IX", "Afferent mucosal touch sensation of the oropharynx is mediated by CN IX.", "CN IX (Glossopharyngeal)"],
-  ["The motor limb of the gag reflex is CN ____.", ["x", "10", "cn x", "cn 10", "vagus"], "CN X", "Pharyngeal constrictor contraction is mediated by vagal motor fibers.", "CN X (Vagus)"],
-  ["CN XI innervates the sternocleidomastoid and the ____.", ["trapezius", "trap", "traps"], "trapezius", "Motor fibers from C1-C5 spinal accessory roots innervate the trapezius and SCM.", "CN XI (Spinal Accessory)"],
-  ["The protruded tongue deviates toward the ____ side.", ["weak", "weaker", "affected"], "weak", "The active contralateral genioglossus pushes the tongue toward the paretic side.", "CN XII (Hypoglossal)"],
-  ["How many pairs of spinal nerves are there?", ["31", "thirty one", "thirty-one"], "31", "There are 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, and 1 coccygeal pair.", "Spinal Nerves"],
-  ["Which spinal nerve is sensory only (C1 is motor only)?", ["co1", "co 1", "coccygeal", "coccygeal 1", "coccygeal nerve"], "Co1 (coccygeal)", "C1 typically lacks a dorsal root (motor only); Co1 contains sensory fibers without significant motor roots.", "Spinal Nerves"],
-  ["A dermatome is a region of skin innervated by the sensory endings of one ____.", ["spinal nerve", "spinal nerves", "nerve"], "spinal nerve", "A dermatome is an isolated cutaneous area supplied by a single posterior spinal root.", "Spinal Nerves"],
-  ["A myotome tests an ____ muscle contraction.", ["isometric"], "isometric", "Graded muscle testing applies isometric resistance to evaluate specific spinal cord root levels.", "Spinal Nerves"],
-  ["Myotome grade 5 is described as ____.", ["normal"], "Normal", "Full active range of motion against gravity and strong maximal resistance.", "Spinal Nerves"],
-  ["Myotome grade 3 (Fair): full ROM ____ but cannot resist.", ["against gravity"], "against gravity", "Completes full range against gravity, but yields under examiner resistance.", "Spinal Nerves"],
-  ["Myotome grade 2 (Poor): full ROM with gravity ____.", ["eliminated", "removed"], "eliminated", "Complete range is achievable only in a plane perpendicular to gravitational pull.", "Spinal Nerves"],
-  ["Reflex grade 0 means the reflex is ____.", ["absent"], "absent", "No muscular response or contraction is elicited even with reinforcement.", "Spinal Nerves"],
-  ["Reflex grade 4 is hyperactive with ____.", ["clonus"], "clonus", "Indicates upper motor neuron disinhibition producing repetitive rhythmic oscillations.", "Spinal Nerves"],
-  ["Reflex grade 1 is sluggish and needs ____.", ["reinforcement"], "reinforcement", "Hypoactive reflex requiring isometric recruitment maneuvers to elicit a response.", "Spinal Nerves"],
-  ["Biceps reflex spinal level: C___", ["5", "c5"], "C5", "The C5 nerve root mediates the biceps deep tendon reflex.", "C5 Nerve Root"],
-  ["Brachioradialis reflex spinal level: C___", ["6", "c6"], "C6", "The C6 nerve root mediates the brachioradialis deep tendon reflex.", "C6 Nerve Root"],
-  ["Triceps reflex spinal level: C___", ["7", "c7"], "C7", "The C7 nerve root mediates the triceps deep tendon reflex.", "C7 Nerve Root"],
-  ["Patellar tendon reflex spinal level: L___", ["4", "l4"], "L4", "The L4 nerve root mediates the quadriceps patellar tendon stretch reflex.", "L4 Nerve Root"],
-  ["Achilles reflex spinal level: S___", ["1", "s1"], "S1", "The S1 nerve root mediates the triceps surae calcaneal reflex.", "S1 Nerve Root"],
-  ["Abnormal sensations in a dermatome include hypoesthesia, hyperesthesia, paresthesia, and ____.", ["allodynia"], "allodynia", "Allodynia involves pain perception triggered by non-noxious mechanical stimuli.", "Sensory Evaluation"]
+// 4. SPINAL DERMATOMES (MC)
+const SP_DERM = [
+  {
+    stem: "A patient reports numbness and decreased sensation to light touch along the lateral deltoid area / lateral arm. Which dermatome is compromised?",
+    target: "C5 Dermatome",
+    opts: [
+      { text: "C5", correct: true, why: "Correct. C5 dermatome covers the lateral arm over the deltoid muscle." },
+      { text: "C6", correct: false, why: "Incorrect. C6 covers the lateral forearm, thumb, and index finger." },
+      { text: "C4", correct: false, why: "Incorrect. C4 covers the top of the shoulder / AC joint." },
+      { text: "T1", correct: false, why: "Incorrect. T1 covers the medial arm." }
+    ],
+    why: "The C5 dermatome landmark is the lateral arm overlying the deltoid."
+  },
+  {
+    stem: "Sensory testing with a cotton wisp reveals hypoesthesia isolated to the lateral forearm, the dorsal thumb, and the index finger. Which spinal nerve root supplies this cutaneous territory?",
+    target: "C6 Dermatome",
+    opts: [
+      { text: "C5", correct: false, why: "Incorrect. C5 supplies the lateral upper arm." },
+      { text: "C6", correct: true, why: "Correct. C6 dermatome covers the lateral forearm, the thumb, and the index finger." },
+      { text: "C7", correct: false, why: "Incorrect. C7 isolates the middle finger." },
+      { text: "C8", correct: false, why: "Incorrect. C8 supplies the little and ring fingers and medial hand." }
+    ],
+    why: "The C6 dermatome covers the lateral forearm, thumb, and index finger."
+  },
+  {
+    stem: "A patient presents with isolated sensory loss confined to both the palmar and dorsal surfaces of the middle finger. Which dermatomal level is isolated?",
+    target: "C7 Dermatome",
+    opts: [
+      { text: "C6", correct: false, why: "Incorrect. C6 supplies the thumb and index finger." },
+      { text: "C7", correct: true, why: "Correct. C7 dermatome is the middle finger." },
+      { text: "C8", correct: false, why: "Incorrect. C8 supplies the 4th and 5th digits and medial border of the hand." },
+      { text: "T1", correct: false, why: "Incorrect. T1 supplies the medial forearm and arm." }
+    ],
+    why: "The middle finger is the classic single-digit landmark for the C7 dermatome."
+  },
+  {
+    stem: "Pinprick testing demonstrates reduced sensation along the medial border of the hand, the little finger (5th digit), and the distal medial forearm. Which spinal level is indicated?",
+    target: "C8 Dermatome",
+    opts: [
+      { text: "C7", correct: false, why: "Incorrect. C7 supplies the middle finger." },
+      { text: "C8", correct: true, why: "Correct. C8 dermatome covers the medial hand, ring finger, little finger, and distal medial forearm." },
+      { text: "T1", correct: false, why: "Incorrect. T1 covers the medial arm near the axilla." },
+      { text: "C6", correct: false, why: "Incorrect. C6 supplies the thumb and lateral forearm." }
+    ],
+    why: "C8 dermatome territory includes the medial hand border, 5th digit (little finger), and medial distal forearm."
+  },
+  {
+    stem: "Which thoracic dermatome level is located at the anatomical landmark of the nipple line (4th intercostal space)?",
+    target: "T4 Dermatome",
+    opts: [
+      { text: "T2", correct: false, why: "Incorrect. T2 supplies the sternal angle and axillary fossa." },
+      { text: "T4", correct: true, why: "Correct. T4 corresponds directly to the nipple line." },
+      { text: "T10", correct: false, why: "Incorrect. T10 corresponds to the umbilicus." },
+      { text: "T12", correct: false, why: "Incorrect. T12 corresponds to the inguinal crease." }
+    ],
+    why: "T4 dermatome aligns with the horizontal plane across the nipples."
+  },
+  {
+    stem: "A patient with a thoracic sensory level exhibits sensory loss below the level of the umbilicus (belly button). Which spinal dermatome is located at the umbilicus?",
+    target: "T10 Dermatome",
+    opts: [
+      { text: "T4", correct: false, why: "Incorrect. T4 is at the nipple line." },
+      { text: "T7", correct: false, why: "Incorrect. T7 is at the xiphoid process." },
+      { text: "T10", correct: true, why: "Correct. T10 dermatome landmark is the umbilicus." },
+      { text: "L1", correct: false, why: "Incorrect. L1 is at the inguinal fold." }
+    ],
+    why: "T10 dermatome passes directly through the umbilicus (belly button)."
+  },
+  {
+    stem: "Which spinal nerve root dermatome provides cutaneous sensation across the medial lower leg, over the medial malleolus, and along the medial aspect of the foot?",
+    target: "L4 Dermatome",
+    opts: [
+      { text: "L3", correct: false, why: "Incorrect. L3 supplies the anterior distal thigh and over the patella." },
+      { text: "L4", correct: true, why: "Correct. L4 dermatome travels down the anteromedial lower leg, over the medial malleolus, to the medial foot." },
+      { text: "L5", correct: false, why: "Incorrect. L5 supplies the anterolateral leg, dorsum of the foot, and big toe." },
+      { text: "S1", correct: false, why: "Incorrect. S1 supplies the lateral malleolus, 5th digit, and lateral foot border." }
+    ],
+    why: "The medial lower leg and medial malleolus are innervated by the L4 dermatome."
+  },
+  {
+    stem: "Sensory loss across the anterolateral lower leg, the dorsum of the foot, and the first web space between the big toe and second toe points to a lesion of which dermatome?",
+    target: "L5 Dermatome",
+    opts: [
+      { text: "L4", correct: false, why: "Incorrect. L4 supplies the medial leg and medial malleolus." },
+      { text: "L5", correct: true, why: "Correct. L5 dermatome covers the anterolateral leg, dorsum of the foot, and the web space between digits 1 and 2." },
+      { text: "S1", correct: false, why: "Incorrect. S1 supplies the lateral foot border and 5th toe." },
+      { text: "S2", correct: false, why: "Incorrect. S2 supplies the posterior popliteal fossa." }
+    ],
+    why: "L5 dermatome supplies the dorsum of the foot and the big toe (1st web space)."
+  },
+  {
+    stem: "A patient experiencing radicular numbness reports that the numbness wraps around the back of the heel, across the lateral malleolus, and along the little toe (5th digit). Which dermatome is this?",
+    target: "S1 Dermatome",
+    opts: [
+      { text: "L4", correct: false, why: "Incorrect. L4 supplies the medial foot." },
+      { text: "L5", correct: false, why: "Incorrect. L5 supplies the foot dorsum." },
+      { text: "S1", correct: true, why: "Correct. S1 dermatome supplies the lateral foot, 5th toe, lateral malleolus, and posterior heel/calf." },
+      { text: "S4", correct: false, why: "Incorrect. S4 supplies the perianal area." }
+    ],
+    why: "S1 dermatome is located along the lateral border of the foot, the 5th digit, and the posterior heel."
+  },
+  {
+    stem: "Why does the C1 spinal nerve lack a cutaneous dermatome during standard clinical sensation testing?",
+    target: "C1 Nerve Root Anatomy",
+    opts: [
+      { text: "C1 only innervates smooth muscle in the vertebral artery", correct: false, why: "Incorrect. C1 supplies suboccipital striated skeletal muscles." },
+      { text: "C1 spinal nerve characteristically lacks a dorsal root / GSA (sensory) fibers", correct: true, why: "Correct. C1 often has no sensory dorsal root (lacks GSA fibers); therefore, there is no standard C1 dermatome (sensation begins at C2)." },
+      { text: "The C1 dermatome is completely absorbed by the trigeminal nerve during blastocyst cleavage", correct: false, why: "Incorrect. Embryological blastocysts do not form peripheral nerves." },
+      { text: "C1 sensory fibers terminate in the thyroid gland", correct: false, why: "Incorrect. Thyroid receives autonomic fibers, not C1 somatic afferents." }
+    ],
+    why: "C1 spinal nerve characteristically has no GSA (somatic sensory) fibers, meaning there is no C1 dermatome."
+  },
+  {
+    stem: "A patient suffering from cauda equina syndrome reports total numbness in the buttocks, perineum, and inner thighs ('saddle anesthesia') along with loss of bladder control. Which nerve roots are involved?",
+    target: "S2 - S4 Nerve Roots",
+    opts: [
+      { text: "L1 to L2", correct: false, why: "Incorrect. L1-L2 supply the groin and anterior thigh." },
+      { text: "L4 to L5", correct: false, why: "Incorrect. L4-L5 supply the lower leg and foot." },
+      { text: "S2 to S4", correct: true, why: "Correct. The S2, S3, and S4 nerve roots supply the perineal 'saddle' dermatomes and pelvic parasympathetics controlling bladder and anal sphincters." },
+      { text: "C8 to T1", correct: false, why: "Incorrect. These are upper limb nerve roots." }
+    ],
+    why: "Saddle anesthesia involves the S2–S4 dermatomes, a surgical emergency indicating cauda equina compression."
+  }
 ];
 
+// 5. FILL-IN RECALL QUESTIONS
+const F_ALL = [
+  // Spinal DTRs & Levels
+  ["Biceps reflex evaluates spinal nerve root level: C___.", ["5", "c5"], "C5", "C5 innervates the biceps via the musculocutaneous nerve.", "C5 Nerve Root"],
+  ["Brachioradialis reflex evaluates spinal nerve root level: C___.", ["6", "c6"], "C6", "C6 innervates the brachioradialis via the radial nerve.", "C6 Nerve Root"],
+  ["Triceps tendon reflex evaluates spinal nerve root level: C___.", ["7", "c7"], "C7", "C7 innervates the triceps brachii via the radial nerve.", "C7 Nerve Root"],
+  ["The primary deep tendon reflex testing the L4 nerve root is the ____ reflex.", ["patellar", "knee jerk", "patellar tendon", "patellar reflex", "quadriceps"], "Patellar (knee jerk)", "L4 mediates quadriceps contraction via the femoral nerve.", "L4 Nerve Root"],
+  ["The primary deep tendon reflex testing the S1 nerve root is the ____ reflex.", ["achilles", "achilles tendon", "calcaneal", "ankle jerk"], "Achilles (ankle jerk)", "S1 mediates gastrocnemius/soleus contraction via the tibial nerve.", "S1 Nerve Root"],
+  ["The reflex testing the L5 nerve root is the medial ____ reflex.", ["hamstring", "hamstrings", "semitendinosus"], "hamstring", "L5 mediates the medial hamstring (semitendinosus/membranosus) reflex.", "L5 Nerve Root"],
+
+  // Spinal Myotomes & Actions
+  ["The C5 myotome tests shoulder abduction via the ____ muscle.", ["deltoid"], "deltoid", "Deltoid abduction is the classic C5 myotome test.", "C5 Nerve Root"],
+  ["The C6 myotome tests wrist extension using the extensor carpi radialis longus and ____.", ["brevis", "extensor carpi radialis brevis"], "brevis", "ECRL and ECRB extend the wrist for C6.", "C6 Nerve Root"],
+  ["The C7 myotome tests elbow extension via the ____ muscle.", ["triceps", "triceps brachii"], "triceps", "Triceps brachii provides elbow extension for C7.", "C7 Nerve Root"],
+  ["The C8 myotome is tested clinically by asking the patient to make a tight ____.", ["fist", "finger flexion", "grip"], "fist (finger flexion)", "Finger flexors (FDP/FDS) are evaluated by resisting finger extension from a fist.", "C8 Nerve Root"],
+  ["The T1 myotome evaluates finger abduction and adduction mediated by the ____ muscles.", ["interossei", "interosseus", "dorsal and palmar interossei"], "interossei", "DAB (abduction) and PAD (adduction) are interossei muscles tested by T1.", "T1 Nerve Root"],
+  ["The L4 myotome evaluates ankle dorsiflexion and foot inversion via the tibialis ____ muscle.", ["anterior"], "anterior", "Tibialis anterior is isolated by dorsiflexion and inversion.", "L4 Nerve Root"],
+  ["The L5 myotome evaluates great toe extension via the extensor hallucis ____ muscle.", ["longus"], "longus", "Extensor hallucis longus (EHL) isolates L5.", "L5 Nerve Root"],
+  ["The S1 myotome is clinically screened by having the patient walk on their ____.", ["toes", "tiptoes", "balls of feet"], "toes (tiptoes)", "Plantarflexion weakness prevents toe-walking in S1 lesions.", "S1 Nerve Root"],
+
+  // Spinal Dermatome Landmarks
+  ["The dermatome located at the nipple line is T___.", ["4", "t4"], "T4", "T4 runs through the 4th intercostal space at the nipples.", "T4 Dermatome"],
+  ["The dermatome located at the umbilicus is T___.", ["10", "t10"], "T10", "T10 runs directly across the belly button.", "T10 Dermatome"],
+  ["The dermatome for the middle finger (3rd digit) is C___.", ["7", "c7"], "C7", "C7 encompasses the palmar and dorsal aspects of the middle finger.", "C7 Dermatome"],
+  ["The dermatome for the thumb and lateral forearm is C___.", ["6", "c6"], "C6", "C6 covers the radial forearm and digit 1.", "C6 Dermatome"],
+  ["The dermatome covering the medial malleolus and medial leg is L___.", ["4", "l4"], "L4", "L4 follows the saphenous nerve distribution down the medial leg.", "L4 Dermatome"],
+  ["The dermatome covering the lateral foot border and 5th toe is S___.", ["1", "s1"], "S1", "S1 travels down the posterior leg to the lateral foot.", "S1 Dermatome"],
+  ["There is no standard dermatome for the spinal nerve ____ because it lacks GSA fibers.", ["c1", "c 1"], "C1", "C1 lacks sensory dorsal rootlets in the vast majority of individuals.", "C1 Nerve Root"],
+
+  // Cranial Nerves
+  ["CN I is tested using the special sense of ____.", ["smell", "olfaction"], "smell (olfaction)", "Olfactory receptor cells sense odorants through the cribriform plate.", "CN I (Olfactory)"],
+  ["Distance visual acuity is tested using a ____ eye chart at 20 feet.", ["snellen"], "Snellen", "Snellen wall charts assess CN II visual acuity at 20 ft.", "CN II (Optic)"],
+  ["Pupil constriction in the same eye that receives light is the ____ light reflex.", ["direct"], "direct", "Direct light reflex occurs in the illuminated eye via CN II and CN III.", "CN II / CN III"],
+  ["Pupil constriction in the opposite eye from where light is shone is the ____ light reflex.", ["consensual"], "consensual", "Consensual light reflex occurs contralaterally.", "CN II / CN III"],
+  ["The extraocular motor nerve that innervates the lateral rectus (LR6) is CN ____.", ["vi", "6", "cn vi", "cn 6"], "CN VI (Abducent)", "CN VI abducts the eye laterally.", "CN VI (Abducent)"],
+  ["The extraocular motor nerve that innervates the superior oblique (SO4) is CN ____.", ["iv", "4", "cn iv", "cn 4"], "CN IV (Trochlear)", "CN IV moves the eye down and inward.", "CN IV (Trochlear)"],
+  ["Muscles of facial expression are innervated by cranial nerve CN ____.", ["vii", "7", "cn vii", "cn 7"], "CN VII (Facial)", "CN VII supplies the facial expression muscles.", "CN VII (Facial)"],
+  ["Muscles of mastication are innervated by the motor division of CN ____.", ["v", "5", "cn v", "cn 5"], "CN V (Trigeminal - V3)", "V3 mandibular division innervates masseter, temporalis, and pterygoids.", "CN V (Trigeminal)"],
+  ["The sensory limb of the gag reflex is mediated by CN ____.", ["ix", "9", "cn ix", "cn 9"], "CN IX (Glossopharyngeal)", "CN IX carries afferent visceral touch from the pharynx.", "CN IX (Glossopharyngeal)"],
+  ["The motor limb of the gag reflex is mediated by CN ____.", ["x", "10", "cn x", "cn 10"], "CN X (Vagus)", "CN X contracts the pharyngeal constrictor muscles.", "CN X (Vagus)"],
+  ["The cranial nerve providing motor supply to the tongue (genioglossus) is CN ____.", ["xii", "12", "cn xii", "cn 12"], "CN XII (Hypoglossal)", "CN XII protrudes and moves the tongue.", "CN XII (Hypoglossal)"]
+];
+
+// Master Quiz Database
 const quizData = [];
 
-// Populate Test -> Nerve
-T.forEach(t => {
+// Add Cranial MC
+T_CN.forEach(t => {
   const correctNum = t[1];
-  const wrongNums = t[2];
-  const allNums = [correctNum, ...wrongNums];
-  
-  const options = allNums.map((num, idx) => {
-    const isCorrect = (idx === 0);
-    return {
-      text: N_NUM[num],
-      correct: isCorrect,
-      why: isCorrect 
-        ? `${N_NUM[num]} (${N_NAME[num]}): Correct. ${t[3]}`
-        : `${N_NUM[num]} (${N_NAME[num]}): Incorrect. Primarily responsible for: ${NERVE_TESTS[num]}`
-    };
-  });
-
+  const allNums = [correctNum, ...t[2]];
   quizData.push({
     kind: "mc",
-    tag: "Test → Nerve",
+    tag: "Cranial Tests",
     revealedNerve: `${N_NUM[correctNum]} (${N_NAME[correctNum]})`,
     stem: "Which cranial nerve does this test? " + t[0],
-    opts: options,
+    opts: allNums.map((num, idx) => ({
+      text: N_NUM[num],
+      correct: idx === 0,
+      why: idx === 0
+        ? `${N_NUM[num]} (${N_NAME[num]}): Correct. ${t[3]}`
+        : `${N_NUM[num]} (${N_NAME[num]}): Incorrect. Primarily responsible for: ${CN_ACTIONS[num]}`
+    })),
     why: t[3]
   });
 });
 
-// Populate Nerve -> Result
-R.forEach(r => {
+R_CN.forEach(r => {
   quizData.push({
     kind: "mc",
-    tag: "Nerve → Result",
+    tag: "Cranial Findings",
+    revealedNerve: r[1],
     stem: r[0],
-    opts: r[1],
-    why: r[2]
+    opts: r[2],
+    why: r[3]
   });
 });
 
-// Populate Spinal Nerves & Autonomics
-SP.forEach(s => {
+// Add Spinal Myotomes & DTRs
+SP_MYO_DTR.forEach(s => {
   quizData.push({
     kind: "mc",
-    tag: "Spinal & Autonomics",
+    tag: "Spinal Myotomes & DTRs",
+    revealedNerve: s.target,
     stem: s.stem,
     opts: s.opts,
-    why: s.why,
-    revealedNerve: s.revealedNerve
+    why: s.why
   });
 });
 
-// Populate Fill-in
-F.forEach(f => {
+// Add Spinal Dermatomes
+SP_DERM.forEach(d => {
+  quizData.push({
+    kind: "mc",
+    tag: "Spinal Dermatomes",
+    revealedNerve: d.target,
+    stem: d.stem,
+    opts: d.opts,
+    why: d.why
+  });
+});
+
+// Add Fill-ins
+F_ALL.forEach(f => {
   quizData.push({
     kind: "fill",
-    tag: "Fill-in",
+    tag: "Fill-in Recall",
     stem: f[0],
     acc: f[1],
     ans: f[2],
@@ -816,26 +750,30 @@ F.forEach(f => {
 
 quizData.forEach((q, i) => q.id = i + 1);
 
+// UI Modes
 const MODES = {
-  all: "All Topics",
-  sp: "Spinal & Autonomics",
-  cn: "Cranial Only",
-  t: "Test → Nerve",
-  r: "Nerve → Result",
-  f: "Fill-in"
+  all: "All Modes",
+  sp_myo: "Spinal Myotomes & DTRs",
+  sp_derm: "Spinal Dermatomes",
+  cn: "Cranial Tests & Findings",
+  fill: "Fill-in Recall"
 };
 
-const COUNTS = [25, 50, 80, 118];
+const COUNTS = [25, 50, 75, quizData.length];
 
-let mode = "all", countChoice = 118, round = 1, set = [], answers = {};
+let mode = "all";
+let countChoice = quizData.length;
+let round = 1;
+let currentSet = [];
+let answers = {};
 const L = "ABCD";
 
-const shuf = a => {
-  for (let i = a.length - 1; i > 0; i--) {
+const shuf = arr => {
+  for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return a;
+  return arr;
 };
 
 const norm = s => s.toLowerCase().replace(/[^a-z0-9\s'\/-]/g, "").replace(/\s+/g, " ").trim();
@@ -847,193 +785,257 @@ const isMatch = (inp, acc) => {
   });
 };
 
-function header() {
-  const c = Object.values(answers).filter(v => v).length, t = set.length;
-  document.getElementById("header").textContent = `${round === 1 ? "Score" : "Review " + (round - 1)}: ${c} / ${t} (${t ? Math.round(c / t * 100) : 0}%)`;
+function updateHeader() {
+  const correct = Object.values(answers).filter(v => v).length;
+  const total = currentSet.length;
+  const pct = total ? Math.round((correct / total) * 100) : 0;
+  document.getElementById("scoreDisplay").textContent = `${round === 1 ? "Score" : "Review " + (round - 1)}: ${correct} / ${total} (${pct}%)`;
 }
 
-function pool() {
-  let p = [];
-  if (mode === "t") p = quizData.filter(q => q.tag === "Test → Nerve");
-  else if (mode === "r") p = quizData.filter(q => q.tag === "Nerve → Result");
-  else if (mode === "sp") p = quizData.filter(q => q.tag === "Spinal & Autonomics");
-  else if (mode === "cn") p = quizData.filter(q => q.tag === "Test → Nerve" || (q.tag === "Nerve → Result" && q.stem.startsWith("CN ")));
-  else if (mode === "f") p = quizData.filter(q => q.kind === "fill");
-  else p = [...quizData];
-  
-  const shuffled = shuf([...p]);
+function getFilteredPool() {
+  let pool = [];
+  if (mode === "sp_myo") {
+    pool = quizData.filter(q => q.tag === "Spinal Myotomes & DTRs");
+  } else if (mode === "sp_derm") {
+    pool = quizData.filter(q => q.tag === "Spinal Dermatomes");
+  } else if (mode === "cn") {
+    pool = quizData.filter(q => q.tag === "Cranial Tests" || q.tag === "Cranial Findings");
+  } else if (mode === "fill") {
+    pool = quizData.filter(q => q.kind === "fill");
+  } else {
+    pool = [...quizData];
+  }
+  const shuffled = shuf([...pool]);
   return shuffled.slice(0, Math.min(countChoice, shuffled.length));
 }
 
-function render(custom) {
-  set = custom || pool();
+function renderQuiz(customList) {
+  currentSet = customList || getFilteredPool();
   answers = {};
-  set.forEach(q => { if (q.opts) shuf(q.opts); });
+  currentSet.forEach(q => { if (q.opts) shuf(q.opts); });
+
   document.getElementById("summary").style.display = "none";
-  const quiz = document.getElementById("quiz");
-  quiz.innerHTML = "";
-  
-  set.forEach((q, n) => {
+  const quizContainer = document.getElementById("quiz");
+  quizContainer.innerHTML = "";
+
+  currentSet.forEach((q, idx) => {
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `<span class="badge">Question ${n + 1} of ${set.length}</span><span class="badge tag">${q.tag}</span><p class="stem"></p><div class="body"></div><div class="explain"></div>`;
+    card.innerHTML = `
+      <span class="badge">Question ${idx + 1} of ${currentSet.length}</span>
+      <span class="badge tag">${q.tag}</span>
+      <p class="stem"></p>
+      <div class="body"></div>
+      <div class="explain"></div>
+    `;
     card.querySelector(".stem").textContent = q.stem;
     const body = card.querySelector(".body");
-    
+
     if (q.kind === "mc") {
-      q.opts.forEach((o, i) => {
-        const b = document.createElement("button");
-        b.className = "opt";
-        b.textContent = `${L[i]}. ${o.text}`;
-        b.onclick = () => pickMC(q, i, card);
-        body.appendChild(b);
+      q.opts.forEach((opt, oIdx) => {
+        const btn = document.createElement("button");
+        btn.className = "opt";
+        btn.textContent = `${L[oIdx]}. ${opt.text}`;
+        btn.onclick = () => handleMCPick(q, oIdx, card);
+        body.appendChild(btn);
       });
     } else {
-      body.innerHTML = `<div class="fillrow"><input type="text" placeholder="Type your answer" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn">Check</button></div>`;
-      const inp = body.querySelector("input"), btn = body.querySelector("button");
-      btn.onclick = () => checkFill(q, inp, btn, card);
-      inp.onkeydown = e => { if (e.key === "Enter") checkFill(q, inp, btn, card); };
+      body.innerHTML = `
+        <div class="fillrow">
+          <input type="text" placeholder="Type answer here..." autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button class="btn">Check</button>
+        </div>
+      `;
+      const input = body.querySelector("input");
+      const checkBtn = body.querySelector("button");
+      checkBtn.onclick = () => handleFillCheck(q, input, checkBtn, card);
+      input.onkeydown = e => { if (e.key === "Enter") handleFillCheck(q, input, checkBtn, card); };
     }
-    quiz.appendChild(card);
+    quizContainer.appendChild(card);
   });
-  header();
-  window.scrollTo(0, 0);
+
+  updateHeader();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-function wrongSound() {
-  const a = document.getElementById("wrongAudio");
-  try { a.currentTime = 0; a.play().catch(() => {}); } catch (e) {}
+function playWrongSound() {
+  const audio = document.getElementById("wrongAudio");
+  try {
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
+  } catch (e) {}
 }
 
-function explain(card, ok, q, extra) {
+function showExplanation(card, isCorrect, q, extraHTML) {
   const ex = card.querySelector(".explain");
-  let nerveBanner = q.revealedNerve ? `<div class="target-nerve">Target / Key Structure: ${q.revealedNerve}</div>` : "";
-  
+  let nerveBanner = q.revealedNerve ? `<div class="target-nerve">Target: ${q.revealedNerve}</div>` : "";
+
   let rationaleHTML = "";
   if (q.opts) {
-    rationaleHTML = '<div class="rationale-list"><div class="rationale-title">Option Rationale:</div>';
-    q.opts.forEach((opt, idx) => {
-      rationaleHTML += `<div class="rationale-item"><strong>${L[idx]})</strong> ${opt.why}</div>`;
+    rationaleHTML = '<div class="rationale-list"><div class="rationale-title">Option Breakdown:</div>';
+    q.opts.forEach((opt, oIdx) => {
+      rationaleHTML += `<div class="rationale-item"><strong>${L[oIdx]})</strong> ${opt.why}</div>`;
     });
     rationaleHTML += '</div>';
   }
 
   ex.innerHTML = `
-    <div class="banner ${ok ? "good" : "bad"}">${ok ? "Correct!" : "You didn’t know that?!"}</div>
+    <div class="banner ${isCorrect ? "good" : "bad"}">
+      ${isCorrect ? "&#10004; Correct!" : "&#10008; You didn’t know that?!"}
+    </div>
     ${nerveBanner}
-    ${extra || ""}
-    <div class="ans"><strong>Explanation:</strong> ${q.why}</div>
+    ${extraHTML || ""}
+    <div class="ans"><strong>Rationale:</strong> ${q.why}</div>
     ${rationaleHTML}
   `;
   ex.style.display = "block";
 }
 
-function pickMC(q, i, card) {
+function handleMCPick(q, selectedIdx, card) {
   if (q.id in answers) return;
-  const ok = q.opts[i].correct;
-  answers[q.id] = ok;
-  card.querySelectorAll(".opt").forEach((b, j) => {
-    b.disabled = true;
-    if (q.opts[j].correct) b.classList.add("correct");
-    else if (j === i) b.classList.add("incorrect");
+  const isCorrect = q.opts[selectedIdx].correct;
+  answers[q.id] = isCorrect;
+
+  card.querySelectorAll(".opt").forEach((btn, idx) => {
+    btn.disabled = true;
+    if (q.opts[idx].correct) btn.classList.add("correct");
+    else if (idx === selectedIdx) btn.classList.add("incorrect");
   });
-  if (!ok) wrongSound();
-  explain(card, ok, q);
-  done();
+
+  if (!isCorrect) playWrongSound();
+  showExplanation(card, isCorrect, q);
+  checkRoundCompletion();
 }
 
-function checkFill(q, inp, btn, card) {
-  if (q.id in answers || !inp.value.trim()) return;
-  const ok = isMatch(inp.value, q.acc);
-  answers[q.id] = ok;
-  inp.disabled = true;
+function handleFillCheck(q, input, btn, card) {
+  if (q.id in answers || !input.value.trim()) return;
+  const isCorrect = isMatch(input.value, q.acc);
+  answers[q.id] = isCorrect;
+
+  input.disabled = true;
   btn.disabled = true;
-  inp.classList.add(ok ? "correct" : "incorrect");
-  
-  let extra = "";
-  if (!ok) {
-    wrongSound();
-    extra = `<div class="ans"><strong>Answer:</strong> ${q.ans}</div><button class="btn alt override">I actually knew it</button>`;
+  input.classList.add(isCorrect ? "correct" : "incorrect");
+
+  let extraHTML = "";
+  if (!isCorrect) {
+    playWrongSound();
+    extraHTML = `<div class="ans"><strong>Correct Answer:</strong> ${q.ans}</div><button class="btn alt override" style="margin-top:6px;">I actually knew it</button>`;
   }
-  explain(card, ok, q, extra);
-  
-  const ov = card.querySelector(".override");
-  if (ov) {
-    ov.onclick = () => {
+  showExplanation(card, isCorrect, q, extraHTML);
+
+  const overrideBtn = card.querySelector(".override");
+  if (overrideBtn) {
+    overrideBtn.onclick = () => {
       answers[q.id] = true;
-      ov.remove();
+      overrideBtn.remove();
       const b = card.querySelector(".banner");
       b.className = "banner good";
-      b.textContent = "Counted as correct";
-      header();
-      if (Object.keys(answers).length === set.length) summary();
+      b.innerHTML = "&#10004; Counted as correct";
+      updateHeader();
+      if (Object.keys(answers).length === currentSet.length) showSummary();
     };
   }
-  done();
+  checkRoundCompletion();
 }
 
-function done() {
-  header();
-  if (Object.keys(answers).length === set.length) summary();
+function checkRoundCompletion() {
+  updateHeader();
+  if (Object.keys(answers).length === currentSet.length) {
+    showSummary();
+  }
 }
 
-function summary() {
-  const total = set.length, missed = set.filter(q => !answers[q.id]), pct = Math.round((total - missed.length) / total * 100);
-  const t = document.querySelector(".summary-title"), m = document.getElementById("summaryMsg");
+function showSummary() {
+  const total = currentSet.length;
+  const missed = currentSet.filter(q => !answers[q.id]);
+  const pct = Math.round(((total - missed.length) / total) * 100);
+
+  const title = document.querySelector(".summary-title");
+  const msg = document.getElementById("summaryMsg");
+
   if (round === 1) {
-    t.textContent = "Practicum Complete";
-    m.textContent = pct >= 90 ? "Outstanding mastery! You have locked down cranial nerves, spinal topography, and autonomic wiring." : pct >= 70 ? "Solid run! You're locked in, get in some more reps." : "Keep reviewing the nerve paths, rami communicantes, and reflex arcs. Time for a rematch.";
+    title.textContent = "Practicum Complete";
+    msg.textContent = pct >= 90
+      ? `Absolute Gigachad (${pct}%). You drained that test dry! Your myotomes, dermatomes, and cranial nerves are locked in.`
+      : pct >= 70
+      ? `Solid run (${pct}%)! You're locked in, but get in some more reps on the missed nerve levels.`
+      : `Score: ${pct}%. Time for a rematch! Review the spinal reference matrix and run through your missed questions.`;
   } else {
-    t.textContent = `Review Round ${round - 1} Complete`;
-    m.textContent = missed.length ? `${missed.length} still missed. Go again.` : "Everything cleared. All correct.";
+    title.textContent = `Review Round ${round - 1} Complete`;
+    msg.textContent = missed.length
+      ? `${missed.length} questions still missed. Keep drilling!`
+      : "Everything cleared! 100% correct across all review items.";
   }
-  const rb = document.getElementById("reviewBtn");
+
+  const revBtn = document.getElementById("reviewBtn");
   if (missed.length) {
-    rb.style.display = "inline-block";
-    rb.textContent = `Review Missed (${missed.length})`;
+    revBtn.style.display = "inline-block";
+    revBtn.textContent = `Review Missed (${missed.length})`;
   } else {
-    rb.style.display = "none";
+    revBtn.style.display = "none";
   }
-  const s = document.getElementById("summary");
-  s.style.display = "block";
-  s.scrollIntoView({ behavior: "smooth" });
+
+  const summaryCard = document.getElementById("summary");
+  summaryCard.style.display = "block";
+  summaryCard.scrollIntoView({ behavior: "smooth" });
 }
 
-// Setup Mode buttons
-const modesEl = document.getElementById("modes");
-Object.entries(MODES).forEach(([k, v]) => {
+// Build Mode Selector Buttons
+const modesContainer = document.getElementById("modes");
+Object.entries(MODES).forEach(([key, label]) => {
   const b = document.createElement("button");
-  b.className = "mode-btn" + (k === mode ? " active" : "");
-  b.textContent = v;
-  b.dataset.k = k;
+  b.className = "mode-btn" + (key === mode ? " active" : "");
+  b.textContent = label;
+  b.dataset.key = key;
   b.onclick = () => {
-    mode = k;
+    mode = key;
     round = 1;
-    modesEl.querySelectorAll(".mode-btn").forEach(x => x.classList.toggle("active", x.dataset.k === k));
-    render();
+    modesContainer.querySelectorAll(".mode-btn").forEach(x => x.classList.toggle("active", x.dataset.key === key));
+    renderQuiz();
   };
-  modesEl.appendChild(b);
+  modesContainer.appendChild(b);
 });
 
-// Setup Question Count buttons
-const countsEl = document.getElementById("counts");
-COUNTS.forEach(cnt => {
+// Build Count Selector Buttons
+const countsContainer = document.getElementById("counts");
+COUNTS.forEach(countVal => {
   const b = document.createElement("button");
-  b.className = "count-btn" + (cnt === countChoice ? " active" : "");
-  b.textContent = `${cnt === 118 ? 'All (' + quizData.length + ')' : cnt} Questions`;
-  b.dataset.c = cnt;
+  b.className = "count-btn" + (countVal === countChoice ? " active" : "");
+  b.textContent = `${countVal === quizData.length ? 'All (' + quizData.length + ')' : countVal} Qs`;
+  b.dataset.count = countVal;
   b.onclick = () => {
-    countChoice = cnt;
+    countChoice = countVal;
     round = 1;
-    countsEl.querySelectorAll(".count-btn").forEach(x => x.classList.toggle("active", Number(x.dataset.c) === cnt));
-    render();
+    countsContainer.querySelectorAll(".count-btn").forEach(x => x.classList.toggle("active", Number(x.dataset.count) === countVal));
+    renderQuiz();
   };
-  countsEl.appendChild(b);
+  countsContainer.appendChild(b);
 });
 
-document.getElementById("retakeBtn").onclick = () => { round = 1; render(); };
-document.getElementById("reviewBtn").onclick = () => { round++; render(set.filter(q => !answers[q.id])); };
-render();
+// Retake and Review Handlers
+document.getElementById("retakeBtn").onclick = () => {
+  round = 1;
+  renderQuiz();
+};
+document.getElementById("reviewBtn").onclick = () => {
+  round++;
+  renderQuiz(currentSet.filter(q => !answers[q.id]));
+};
+
+// Modal Handlers
+const matrixModal = document.getElementById("matrixModal");
+document.getElementById("toggleMatrixBtn").onclick = () => {
+  matrixModal.style.display = "block";
+};
+document.getElementById("closeMatrixBtn").onclick = () => {
+  matrixModal.style.display = "none";
+};
+window.onclick = e => {
+  if (e.target === matrixModal) matrixModal.style.display = "none";
+};
+
+// Start
+renderQuiz();
 </script>
 </body>
 </html>
