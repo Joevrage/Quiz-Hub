@@ -60,54 +60,58 @@ h1{font-size:1.4rem;text-align:center;margin:12px 0 4px}
 </main>
 <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
 <script>
-const N=["","CN I Olfactory","CN II Optic","CN III Oculomotor","CN IV Trochlear","CN V Trigeminal","CN VI Abducent","CN VII Facial","CN VIII Vestibulocochlear","CN IX Glossopharyngeal","CN X Vagus","CN XI Spinal Accessory","CN XII Hypoglossal"];
+// Number-only labels for options
+const N_NUM=["","CN I","CN II","CN III","CN IV","CN V","CN VI","CN VII","CN VIII","CN IX","CN X","CN XI","CN XII"];
+
+// Full name lookup table for answer reveal
+const N_FULL=["","CN I (Olfactory)","CN II (Optic)","CN III (Oculomotor)","CN IV (Trochlear)","CN V (Trigeminal)","CN VI (Abducent)","CN VII (Facial)","CN VIII (Vestibulocochlear)","CN IX (Glossopharyngeal)","CN X (Vagus)","CN XI (Spinal Accessory)","CN XII (Hypoglossal)"];
 
 // TEST -> NERVE: [test/finding, correct nerve #, [3 wrong nerve #s], explanation]
 const T=[
-["Eyes closed, one nostril blocked, scent held under the other nostril",1,[2,7,12],"Smell is CN I, tested one nostril at a time."],
-["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)",2,[3,8,11],"Visual acuity is CN II."],
-["Visual field confrontation: wiggling fingers brought into peripheral vision",2,[3,4,6],"Visual fields are CN II (sensory)."],
-["Sensory (afferent) limb of the pupillary light reflex",2,[3,5,7],"CN II carries light information in; CN III carries the response out."],
-["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae",3,[2,4,6],"CN III parasympathetics constrict the pupil."],
-["Near reaction: convergence, accommodation and miosis as a finger approaches the nose",3,[2,4,6],"CN III runs the medial rectus plus sphincter pupillae and ciliary muscle (afferent is CN II)."],
-["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze",6,[3,4,5],"CN VI innervates the lateral rectus."],
-["Weak down-and-in gaze: superior oblique dysfunction",4,[3,6,7],"CN IV innervates the superior oblique."],
-["Ptosis (droopy lid) from levator palpebrae superioris weakness",3,[4,6,7],"CN III innervates levator palpebrae superioris."],
-["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed",5,[7,9,11],"Facial sensation is CN V."],
-["Bite down and palpate masseter and temporalis",5,[7,10,11],"Muscles of mastication are CN V."],
-["Jaw jerk reflex",5,[7,9,12],"Jaw jerk is a CN V reflex."],
-["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing",7,[5,10,12],"Muscles of facial expression are CN VII."],
-["Taste on the anterior 2/3 of the tongue",7,[5,9,12],"CN VII carries anterior 2/3 taste."],
-["Taste on the posterior 1/3 of the tongue",9,[7,10,12],"CN IX carries posterior 1/3 taste."],
-["Questions about dry eye and dry mouth (parasympathetic to lacrimal and salivary glands)",7,[5,9,10],"CN VII parasympathetic fibers supply these glands."],
-["Romberg's test: feet together, eyes closed, observe wobble",8,[2,7,10],"Romberg tests the vestibular portion of CN VIII."],
-["Rinne's test (mastoid vs. in front of the ear)",8,[7,9,11],"Rinne is a cochlear (hearing) test, CN VIII."],
-["Rub / whisper test for auditory acuity",8,[7,9,10],"Hearing is CN VIII."],
-["Sensory limb of the gag reflex",9,[5,10,12],"Gag: sensory CN IX, motor CN X."],
-["Motor limb of the gag reflex",10,[9,7,12],"Gag: sensory CN IX, motor CN X."],
-["Patient says \"Ahhh\"; watch soft palate rise and check the uvula",10,[9,7,12],"Palate elevation is CN X."],
-["Patient swallows; thyroid cartilage should rise symmetrically",10,[9,12,11],"Swallowing check is CN X."],
-["Shrug the shoulders against resistance",11,[10,12,5],"Trapezius is CN XI."],
-["Rotate head against resistance (sternocleidomastoid)",11,[10,12,5],"SCM is CN XI."],
-["Stick tongue out and check for deviation",12,[10,9,7],"Tongue protrusion is CN XII."],
-["Push tongue into the cheek against the examiner's hand",12,[10,9,5],"Tongue strength is CN XII."]
+["Eyes closed, one nostril blocked, scent held under the other nostril",1,[2,7,12],"Smell is CN I (Olfactory), tested one nostril at a time."],
+["Snellen eye chart (wall chart 20 ft or pocket chart 14 in)",2,[3,8,11],"Visual acuity is CN II (Optic)."],
+["Visual field confrontation: wiggling fingers brought into peripheral vision",2,[3,4,6],"Visual fields are CN II (Optic; sensory)."],
+["Sensory (afferent) limb of the pupillary light reflex",2,[3,5,7],"CN II (Optic) carries light information in; CN III (Oculomotor) carries the pupillomotor response out."],
+["Efferent (parasympathetic) limb of the light reflex to the sphincter pupillae",3,[2,4,6],"CN III (Oculomotor) parasympathetics constrict the pupil."],
+["Near reaction: convergence, accommodation and miosis as a finger approaches the nose",3,[2,4,6],"CN III (Oculomotor) innervates medial rectus, sphincter pupillae, and ciliary muscle (afferent limb is CN II)."],
+["Patient cannot abduct the eye (cannot look laterally) on cardinal gaze",6,[3,4,5],"CN VI (Abducent) innervates the lateral rectus muscle."],
+["Weak down-and-in gaze: superior oblique dysfunction",4,[3,6,7],"CN IV (Trochlear) innervates the superior oblique muscle."],
+["Ptosis (droopy lid) from levator palpebrae superioris weakness",3,[4,6,7],"CN III (Oculomotor) innervates levator palpebrae superioris."],
+["Sharp vs. soft touch on forehead, cheek and jaw, eyes closed",5,[7,9,11],"Facial sensation across V1, V2, and V3 is CN V (Trigeminal)."],
+["Bite down and palpate masseter and temporalis",5,[7,10,11],"Muscles of mastication are innervated by the motor division of CN V (Trigeminal)."],
+["Jaw jerk reflex",5,[7,9,12],"Jaw jerk is a monosynaptic reflex mediated by CN V (Trigeminal)."],
+["Raise eyebrows, close eyes tightly, puff cheeks, smile with teeth showing",7,[5,10,12],"Muscles of facial expression are innervated by CN VII (Facial)."],
+["Taste on the anterior 2/3 of the tongue",7,[5,9,12],"CN VII (Facial - chorda tympani) carries taste from the anterior 2/3."],
+["Taste on the posterior 1/3 of the tongue",9,[7,10,12],"CN IX (Glossopharyngeal) carries taste and general sensation from the posterior 1/3."],
+["Questions about dry eye and dry mouth (parasympathetic to lacrimal and salivary glands)",7,[5,9,10],"CN VII (Facial) parasympathetic fibers supply lacrimal, submandibular, and sublingual glands."],
+["Romberg's test: feet together, eyes closed, observe wobble",8,[2,7,10],"Romberg tests the vestibular division of CN VIII (Vestibulocochlear)."],
+["Rinne's test (mastoid vs. in front of the ear)",8,[7,9,11],"Rinne is a cochlear (hearing) test evaluating CN VIII (Vestibulocochlear)."],
+["Rub / whisper test for auditory acuity",8,[7,9,10],"Auditory acuity is CN VIII (Vestibulocochlear)."],
+["Sensory limb of the gag reflex",9,[5,10,12],"Gag reflex: sensory limb is CN IX (Glossopharyngeal); motor limb is CN X (Vagus)."],
+["Motor limb of the gag reflex",10,[9,7,12],"Gag reflex: motor limb is CN X (Vagus); sensory limb is CN IX (Glossopharyngeal)."],
+["Patient says \"Ahhh\"; watch soft palate rise and check the uvula",10,[9,7,12],"Palatal elevation and uvula symmetry are mediated by CN X (Vagus)."],
+["Patient swallows; thyroid cartilage should rise symmetrically",10,[9,12,11],"Swallowing motor innervation of pharyngeal constrictors is primarily CN X (Vagus)."],
+["Shrug the shoulders against resistance",11,[10,12,5],"Trapezius elevation is innervated by CN XI (Spinal Accessory)."],
+["Rotate head against resistance (sternocleidomastoid)",11,[10,12,5],"Sternocleidomastoid rotation is innervated by CN XI (Spinal Accessory)."],
+["Stick tongue out and check for deviation",12,[10,9,7],"Tongue protrusion is driven by genioglossus via CN XII (Hypoglossal)."],
+["Push tongue into the cheek against the examiner's hand",12,[10,9,5],"Tongue muscle strength is CN XII (Hypoglossal)."]
 ];
 
-// NERVE + TEST -> RESULT: [stem, correct, [3 wrong], explanation]
+// NERVE + TEST -> RESULT: [stem, correct, [3 wrong], explanation, optionalRevealedNerve]
 const R=[
-["CN XII: on protrusion the tongue deviates to the right. What does this indicate?","Right-sided tongue weakness","Left-sided tongue weakness|Normal finding|CN X lesion","The tongue deviates toward the weak side."],
-["CN V motor: on opening the mouth the jaw deviates to the left. Which side is weak?","Left","Right|Neither, this is normal|Both equally","The jaw deviates toward the weak side."],
-["CN X: patient says \"Ahhh\". Which is the NORMAL finding?","Soft palate rises equally, uvula stays midline","Uvula deviates to one side|Soft palate stays flat|Tongue deviates","Symmetric elevation with a midline uvula is normal."],
-["CN VIII Rinne: bone conduction is greater than air conduction. What is this?","Conduction hearing loss","Sensorineural (nerve) hearing loss|Normal hearing|Vestibular loss","Normal is air > 2x bone; bone > air means a conduction problem."],
-["CN VIII Rinne: air conduction is greater than bone but less than 2x. What is this?","Nerve (sensorineural) hearing loss","Conduction hearing loss|Normal hearing|Facial nerve palsy","Air still beats bone, but not by the normal 2x."],
-["CN VIII Romberg: patient wobbles much more with eyes closed than with eyes open. How is this read?","Abnormal (positive) Romberg","Normal finding|Light reflex failure|Conjugate gaze","The amount of wobble is compared with eyes open."],
-["CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?","Consensual light reflex","Direct light reflex|Near reaction|Accommodation","Contralateral constriction is consensual."],
-["CN III: light is shone into the right eye and the RIGHT pupil constricts. Which reflex is this?","Direct light reflex","Consensual light reflex|Convergence|Accommodation","Ipsilateral constriction is the direct reflex."],
-["CN III/IV/VI: eyes jerk at the end of an extreme gaze position. What is this called?","Nystagmus","Conjugate gaze|Miosis|Accommodation","Twitching/jerking at the end of gaze is nystagmus."],
-["CN III near reaction: which is NOT an expected response as a finger approaches the nose?","Pupil dilation","Convergence|Accommodation|Miosis","The pupils constrict (miosis) during near reaction."],
-["CN VII: patient cannot raise the right eyebrow or smile symmetrically. Which nerve is affected?","CN VII Facial","CN V Trigeminal|CN XII Hypoglossal|CN X Vagus","Facial expression muscles are CN VII."],
-["CN XI: patient cannot shrug the left shoulder against resistance. Which muscle is weak?","Left trapezius","Left masseter|Left temporalis|Left stylopharyngeus","Trapezius is tested by shrug, CN XI."],
-["CN II: patient cannot read below the 20/40 line with the Snellen chart. This is documented as:","Visual acuity of 20/40","Visual field of 20/40|Convergence of 20/40|Miosis grade 40","Acuity is recorded as the line number next to the chart line."],
+["CN XII: on protrusion the tongue deviates to the right. What does this indicate?","Right-sided tongue weakness","Left-sided tongue weakness|Normal finding|CN X lesion","The tongue deviates toward the weak side (CN XII Hypoglossal).","CN XII (Hypoglossal)"],
+["CN V motor: on opening the mouth the jaw deviates to the left. Which side is weak?","Left","Right|Neither, this is normal|Both equally","The jaw deviates toward the weak side due to pterygoid weakness (CN V Trigeminal).","CN V (Trigeminal)"],
+["CN X: patient says \"Ahhh\". Which is the NORMAL finding?","Soft palate rises equally, uvula stays midline","Uvula deviates to one side|Soft palate stays flat|Tongue deviates","Symmetric elevation with a midline uvula is normal (CN X Vagus).","CN X (Vagus)"],
+["CN VIII Rinne: bone conduction is greater than air conduction. What is this?","Conduction hearing loss","Sensorineural (nerve) hearing loss|Normal hearing|Vestibular loss","Normal is air > 2x bone; bone > air indicates a conduction deficit (CN VIII Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
+["CN VIII Rinne: air conduction is greater than bone but less than 2x. What is this?","Nerve (sensorineural) hearing loss","Conduction hearing loss|Normal hearing|Facial nerve palsy","Air still beats bone, but not by the normal 2x ratio (CN VIII Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
+["CN VIII Romberg: patient wobbles much more with eyes closed than with eyes open. How is this read?","Abnormal (positive) Romberg","Normal finding|Light reflex failure|Conjugate gaze","The amount of wobble is compared with eyes open; tests vestibular portion of CN VIII (Vestibulocochlear).","CN VIII (Vestibulocochlear)"],
+["CN III: light is shone into the right eye and the LEFT pupil constricts. Which reflex is this?","Consensual light reflex","Direct light reflex|Near reaction|Accommodation","Contralateral constriction is consensual (CN III Oculomotor efferent).","CN III (Oculomotor)"],
+["CN III: light is shone into the right eye and the RIGHT pupil constricts. Which reflex is this?","Direct light reflex","Consensual light reflex|Convergence|Accommodation","Ipsilateral constriction is the direct reflex (CN III Oculomotor efferent).","CN III (Oculomotor)"],
+["CN III/IV/VI: eyes jerk at the end of an extreme gaze position. What is this called?","Nystagmus","Conjugate gaze|Miosis|Accommodation","Twitching/jerking at the end of gaze is nystagmus (CN III, IV, VI).","CN III (Oculomotor), CN IV (Trochlear), CN VI (Abducent)"],
+["CN III near reaction: which is NOT an expected response as a finger approaches the nose?","Pupil dilation","Convergence|Accommodation|Miosis","The pupils constrict (miosis) during near reaction (CN III Oculomotor).","CN III (Oculomotor)"],
+["CN VII: patient cannot raise the right eyebrow or smile symmetrically. Which nerve is affected?","CN VII","CN V|CN XII|CN X","Facial expression muscles are CN VII (Facial).","CN VII (Facial)"],
+["CN XI: patient cannot shrug the left shoulder against resistance. Which muscle is weak?","Left trapezius","Left masseter|Left temporalis|Left stylopharyngeus","Trapezius is tested by shrug, CN XI (Spinal Accessory).","CN XI (Spinal Accessory)"],
+["CN II: patient cannot read below the 20/40 line with the Snellen chart. This is documented as:","Visual acuity of 20/40","Visual field of 20/40|Convergence of 20/40|Miosis grade 40","Acuity is recorded as the line number next to the chart line (CN II Optic).","CN II (Optic)"],
 ["Spinal nerve DTR graded 4: what is the finding?","Hyperactive with clonus","Absent reflex|Sluggish, needs reinforcement|Average response","0 absent, 1 sluggish, 2 average, 3 brisk, 4 hyperactive with clonus."],
 ["Myotome graded 3 (Fair): what can the patient do?","Full ROM against gravity but cannot resist","Full ROM with gravity eliminated|Full ROM with some resistance|No contraction","3 = full ROM against gravity without resistance."],
 ["Myotome graded 2 (Poor): what can the patient do?","Full ROM with gravity eliminated","Full ROM against gravity|Slight twitch only|Full ROM with full resistance","2 = full ROM only when gravity is eliminated."],
@@ -119,7 +123,7 @@ const R=[
 
 // FILL-IN: [stem, [accepted answers], answer shown, explanation]
 const F=[
-["CN I is tested with the sense of ____.",["smell","olfaction"],"smell","CN I = olfactory."],
+["CN I is tested with the sense of ____.",["smell","olfaction"],"smell","CN I = Olfactory."],
 ["Snellen wall chart is read from ____ feet away.",["20","20 feet","20 ft","20ft"],"20 feet","Pocket chart is 14 inches."],
 ["Snellen pocket chart is read from ____ inches away.",["14","14 inches","14 in","14in"],"14 inches","Wall chart is 20 feet."],
 ["For visual field confrontation, the examiner sits about an ____ length away.",["arm","arms","arm's","an arm"],"arm","Examiner compares the patient's periphery with their own."],
@@ -131,17 +135,17 @@ const F=[
 ["Cardinal field of gaze follows what letter pattern?",["h","an h","h pattern"],"H","Six cardinal positions."],
 ["Which cranial nerve (number or name) innervates the lateral rectus?",["vi","6","cn vi","cn 6","abducent","abducens"],"CN VI (Abducent)","LR6 SO4 for the rest of CN III."],
 ["Which cranial nerve (number or name) innervates the superior oblique?",["iv","4","cn iv","cn 4","trochlear"],"CN IV (Trochlear)","CN IV = superior oblique."],
-["CN III parasympathetics supply the sphincter pupillae and the ____ muscle.",["ciliary"],"ciliary","Pupil constriction and accommodation."],
-["The two muscles palpated while the patient bites down (CN V) are masseter and ____.",["temporalis"],"temporalis","Muscles of mastication."],
-["On mouth opening, the jaw deviates toward the ____ side.",["weak","weaker","affected"],"weak","Pterygoid weakness pulls the jaw to that side."],
-["Taste for the anterior 2/3 of the tongue is CN ____.",["vii","7","cn vii","cn 7","facial"],"CN VII","Posterior 1/3 is CN IX."],
-["Taste for the posterior 1/3 of the tongue is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX","Anterior 2/3 is CN VII."],
-["In Romberg's test the patient closes their ____ and the examiner watches for wobble.",["eyes","eye"],"eyes","Compare with eyes open."],
-["Normally, air conduction is greater than ____ times bone conduction (Rinne).",["2","two","2x","2 times"],"2","Less than 2x suggests a nerve problem."],
-["The sensory limb of the gag reflex is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX","Motor limb is CN X."],
-["The motor limb of the gag reflex is CN ____.",["x","10","cn x","cn 10","vagus"],"CN X","Sensory limb is CN IX."],
-["CN XI innervates the sternocleidomastoid and the ____.",["trapezius","trap","traps"],"trapezius","Tested with head rotation and shoulder shrug."],
-["The protruded tongue deviates toward the ____ side.",["weak","weaker","affected"],"weak","CN XII."],
+["CN III parasympathetics supply the sphincter pupillae and the ____ muscle.",["ciliary"],"ciliary","Pupil constriction and accommodation (CN III Oculomotor)."],
+["The two muscles palpated while the patient bites down (CN V) are masseter and ____.",["temporalis"],"temporalis","Muscles of mastication (CN V Trigeminal)."],
+["On mouth opening, the jaw deviates toward the ____ side.",["weak","weaker","affected"],"weak","Pterygoid weakness pulls the jaw to that side (CN V Trigeminal)."],
+["Taste for the anterior 2/3 of the tongue is CN ____.",["vii","7","cn vii","cn 7","facial"],"CN VII (Facial)","Posterior 1/3 is CN IX (Glossopharyngeal)."],
+["Taste for the posterior 1/3 of the tongue is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX (Glossopharyngeal)","Anterior 2/3 is CN VII (Facial)."],
+["In Romberg's test the patient closes their ____ and the examiner watches for wobble.",["eyes","eye"],"eyes","Compare with eyes open (CN VIII Vestibulocochlear)."],
+["Normally, air conduction is greater than ____ times bone conduction (Rinne).",["2","two","2x","2 times"],"2","Less than 2x suggests a nerve problem (CN VIII Vestibulocochlear)."],
+["The sensory limb of the gag reflex is CN ____.",["ix","9","cn ix","cn 9","glossopharyngeal"],"CN IX (Glossopharyngeal)","Motor limb is CN X (Vagus)."],
+["The motor limb of the gag reflex is CN ____.",["x","10","cn x","cn 10","vagus"],"CN X (Vagus)","Sensory limb is CN IX (Glossopharyngeal)."],
+["CN XI innervates the sternocleidomastoid and the ____.",["trapezius","trap","traps"],"trapezius","Tested with head rotation and shoulder shrug (CN XI Spinal Accessory)."],
+["The protruded tongue deviates toward the ____ side.",["weak","weaker","affected"],"weak","CN XII (Hypoglossal)."],
 ["How many pairs of spinal nerves are there?",["31","thirty one","thirty-one"],"31","8 C, 12 T, 5 L, 5 S, 1 Co."],
 ["Which spinal nerve is sensory only (C1 is motor only)?",["co1","co 1","coccygeal","coccygeal 1","coccygeal nerve"],"Co1 (coccygeal)","C1 motor only, Co1 sensory only."],
 ["A dermatome is a region of skin innervated by the sensory endings of one ____.",["spinal nerve","spinal nerves","nerve"],"spinal nerve","Dermatome = skin; myotome = muscle."],
@@ -161,9 +165,37 @@ const F=[
 ];
 
 const quizData=[];
-T.forEach((t,i)=>quizData.push({kind:"mc",tag:"Test → Nerve",stem:"Which cranial nerve does this test? "+t[0],opts:[t[1],...t[2]].map((n,j)=>({text:N[n],correct:j===0})),why:t[3]}));
-R.forEach(r=>quizData.push({kind:"mc",tag:"Nerve → Result",stem:r[0],opts:[r[1],...r[2].split("|")].map((x,j)=>({text:x,correct:j===0})),why:r[3]}));
-F.forEach(f=>quizData.push({kind:"fill",tag:"Fill-in",stem:f[0],acc:f[1],ans:f[2],why:f[3]}));
+
+// Build MC items for Test -> Nerve: options show number only (e.g. "CN II"), answer reveals full name
+T.forEach((t,i)=>quizData.push({
+  kind:"mc",
+  tag:"Test → Nerve",
+  stem:"Which cranial nerve does this test? "+t[0],
+  revealedNerve: N_FULL[t[1]],
+  opts:[t[1],...t[2]].map((n,j)=>({text:N_NUM[n],correct:j===0})),
+  why:t[3]
+}));
+
+// Build MC items for Nerve -> Result
+R.forEach(r=>quizData.push({
+  kind:"mc",
+  tag:"Nerve → Result",
+  stem:r[0],
+  opts:[r[1],...r[2].split("|")].map((x,j)=>({text:x,correct:j===0})),
+  why:r[3],
+  revealedNerve:r[4]||null
+}));
+
+// Build Fill-in items
+F.forEach(f=>quizData.push({
+  kind:"fill",
+  tag:"Fill-in",
+  stem:f[0],
+  acc:f[1],
+  ans:f[2],
+  why:f[3]
+}));
+
 quizData.forEach((q,i)=>q.id=i+1);
 
 const MODES={all:"All Modes",t:"Test → Nerve",r:"Nerve → Result",f:"Fill-in"};
@@ -208,8 +240,16 @@ quiz.appendChild(card);});
 header();window.scrollTo(0,0);}
 
 function wrongSound(){const a=document.getElementById("wrongAudio");try{a.currentTime=0;a.play().catch(()=>{});}catch(e){}}
-function explain(card,ok,q,extra){const ex=card.querySelector(".explain");
-ex.innerHTML=`<div class="banner ${ok?"good":"bad"}">${ok?"Correct!":"You didn’t know that?!"}</div>${extra||""}<div class="ans">${q.why}</div>`;ex.style.display="block";}
+
+function explain(card,ok,q,extra){
+  const ex=card.querySelector(".explain");
+  let nerveRevealHtml = "";
+  if(q.revealedNerve){
+    nerveRevealHtml = `<div class="ans" style="color:var(--accent);font-weight:700;margin-bottom:6px;">Target Nerve: ${q.revealedNerve}</div>`;
+  }
+  ex.innerHTML=`<div class="banner ${ok?"good":"bad"}">${ok?"Correct!":"Incorrect"}</div>${nerveRevealHtml}${extra||""}<div class="ans">${q.why}</div>`;
+  ex.style.display="block";
+}
 
 function pickMC(q,i,card){
 if(q.id in answers)return;
@@ -234,7 +274,7 @@ function done(){header();if(Object.keys(answers).length===set.length)summary();}
 function summary(){
 const total=set.length,missed=set.filter(q=>!answers[q.id]),pct=Math.round((total-missed.length)/total*100);
 const t=document.querySelector(".summary-title"),m=document.getElementById("summaryMsg");
-if(round===1){t.textContent="Quiz Complete";m.textContent=pct>=90?"Absolute Gigachad. You drained that test dry.":pct>=70?"Solid run! You're locked in, get in some more reps.":"You lasted less than 30 seconds. Time for a rematch.";}
+if(round===1){t.textContent="Quiz Complete";m.textContent=pct>=90?"Outstanding! You have thoroughly mastered cranial and spinal nerve exams.":pct>=70?"Solid run! Keep drilling to lock in rapid recall.":"Time for a rematch. Review missed questions and run it again.";}
 else{t.textContent=`Review Round ${round-1} Complete`;m.textContent=missed.length?`${missed.length} still missed. Go again.`:"Everything cleared. All correct.";}
 const rb=document.getElementById("reviewBtn");
 if(missed.length){rb.style.display="inline-block";rb.textContent=`Review Missed (${missed.length})`;}else rb.style.display="none";
