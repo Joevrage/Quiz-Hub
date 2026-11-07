@@ -10,8 +10,9 @@ header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px so
 .hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .pill{background:#0f0f0f;border:1px solid #2a2a2a;border-radius:20px;padding:4px 12px;font-size:.8rem}
 .track{width:100%;height:4px;background:#2a2a2a}#progress-bar{height:100%;width:0;background:var(--accent);transition:width .3s}
-.stfu-btn,.menu-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
+.stfu-btn,.menu-btn,.mode-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
 .stfu-btn.muted{background:var(--accent);color:#000}
+.mode-btn.active{background:var(--accent);color:#000}
 main{max-width:820px;margin:0 auto;padding:16px 12px 60px}
 .card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:16px}
 h2,h3{color:var(--accent);margin:0 0 10px}
@@ -43,6 +44,7 @@ h2,h3{color:var(--accent);margin:0 0 10px}
 <div class="brand">Spinal Anatomy II Quiz Hub<small>Midterm Lecture Practice</small></div>
 <div class="hr">
 <button class="menu-btn" id="menuBtn">Menu / Change Subjects</button>
+<button class="mode-btn" id="modeBtn">View: One by One</button>
 <button class="stfu-btn" id="stfuBtn">STFU Erijah</button>
 <span class="pill" id="q-display">Question 0 of 0</span>
 <span class="pill" id="score-display">Score: 0 / 0 (0%)</span>
@@ -55,7 +57,6 @@ h2,h3{color:var(--accent);margin:0 0 10px}
 <script>
 const SUBJECTS=['Layer 1: Trapezius & Latissimus','Layer 2: Scapular Muscles','Layer 3: Splenius & Serratus Posterior','Erector Spinae','Transversospinalis','Deep Segmental Muscles','Suboccipital Group','Meninges & Spinal Cord'];
 function subjOf(s){return s<=4?0:s<=8?1:s<=14?2:s<=25?3:s<=35?4:s<=38?5:s<=43?6:7}
-// Q(id, quarter, slide, difficulty, priority, stem, [[text, why], ...], indexOfCorrect)
 function Q(id,quarter,s,d,p,stem,o,ci){return{id,subjectIndex:subjOf(s),quarter,slideRef:s,difficulty:d,priority:p,stem,
 options:o.map((x,i)=>({text:x[0],correct:i===ci,why:x[1]+' [Slide #'+s+']'}))}}
 const questionBank=[
@@ -217,8 +218,7 @@ Q(47,4,44,'medium',true,'CSF normally occupies which space?',[['Subdural','Incor
 Q(48,4,44,'hard',true,'Spinal vessels lie external to the pia mater because the pia helps maintain the:',[['blood-brain barrier','Correct: the cord is CNS, so the barrier separates blood from tissue.'],['denticulate suspension','Incorrect: that is a ligament function.'],['subdural potential space','Incorrect: that is a different space.'],['cauda equina','Incorrect: that is a nerve-root bundle.']],0),
 Q(49,4,45,'medium',true,'The spinal cord typically ends at the conus medullaris near:',[['T10','Incorrect: that is too high.'],['L1-L2','Correct: the cord ends about L1-L2.'],['S2','Incorrect: that is the dural sac end region.'],['C7','Incorrect: that is far too high.']],1),
 Q(50,4,46,'medium',false,'Which term is NOT a synonym for the denticulate ligaments?',[['Sawtooth ligaments','Incorrect: this is a synonym.'],['Dentate ligaments','Incorrect: this is a synonym.'],['Shark tooth ligaments','Incorrect: this is a synonym.'],['Filum terminale','Correct: the filum terminale is a separate pia extension.']],3),
-Q(51,4,45,'medium',false,'The filum terminale externum is the portion that:',[['lies inside the dural sac','Incorrect: that is the internum.'],['exits the sacral hiatus and attaches to the coccyx','Correct: the externum leaves the sac and anchors on the coccyx.'],['forms the cauda equina roots','Incorrect: it is not a nerve root.'],['suspends the cord laterally','Incorrect: that is the denticulate ligament role.']],1)
-,
+Q(51,4,45,'medium',false,'The filum terminale externum is the portion that:',[['lies inside the dural sac','Incorrect: that is the internum.'],['exits the sacral hiatus and attaches to the coccyx','Correct: the externum leaves the sac and anchors on the coccyx.'],['forms the cauda equina roots','Incorrect: it is not a nerve root.'],['suspends the cord laterally','Incorrect: that is the denticulate ligament role.']],1),
 Q(52,1,3,'medium',true,'Which trapezius fibers primarily elevate the scapula?',[['Superior','Correct: the superior fibers elevate (shoulder shrug).'],['Middle','Incorrect: the middle fibers retract.'],['Inferior','Incorrect: the inferior fibers depress.'],['All equally','Incorrect: each fiber group has a different primary action.']],0),
 Q(53,1,3,'medium',false,'Which trapezius fibers primarily retract the scapula?',[['Superior','Incorrect: superior fibers elevate.'],['Middle','Correct: the middle fibers pinch the scapulae toward the spine.'],['Inferior','Incorrect: inferior fibers depress.'],['None of the fibers','Incorrect: retraction is a listed action.']],1),
 Q(54,1,3,'hard',true,'Superior rotation of the scapula is defined by the inferior angle moving:',[['medially and downward','Incorrect: that is inferior rotation.'],['laterally and upward','Correct: the inferior angle swings laterally and up.'],['straight posteriorly','Incorrect: that is not a rotation.'],['toward the spine only','Incorrect: that is retraction.']],1),
@@ -250,72 +250,280 @@ Q(79,4,44,'medium',false,'The arachnoid mater is named for its:',[['spider-web a
 Q(80,4,44,'medium',true,'The subdural space is a:',[['potential space','Correct: not normally open.'],['CSF-filled space','Incorrect: subarachnoid.'],['space below the pia','Incorrect: none normally.'],['blood vessel','Incorrect: not a vessel.']],0),
 Q(81,4,46,'medium',true,'Denticulate ligaments run between the:',[['anterior and posterior nerve roots','Correct: they pass between ventral and dorsal roots.'],['skull and C1','Incorrect: no.'],['conus and coccyx','Incorrect: that is filum externum.'],['dura and bone','Incorrect: no.']],0)
 ];
+
 let hist={};try{hist=JSON.parse(localStorage.getItem('quiz_missed_history')||'{}')}catch(e){}
 const saveHistory=()=>{try{localStorage.setItem('quiz_missed_history',JSON.stringify(hist))}catch(e){}};
 let selectedSubjects=new Set(SUBJECTS.map((_,i)=>i)),prioritizeMissed=false;
 let quizQuestions=[],userAnswers=[],currentIndex=0,score=0,popupTimeout=null,muted=false;
+let viewMode='single'; // 'single' | 'all'
 try{muted=localStorage.getItem('stfuErijah')==='1'}catch(e){}
+try{viewMode=localStorage.getItem('quizViewMode')||'single'}catch(e){}
+
 const $=id=>document.getElementById(id);
-function updateStfuButton(){const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
-if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}if(popupTimeout)clearTimeout(popupTimeout);$('wrongPopup').classList.add('hidden')}}
+
+function updateStfuButton(){
+  const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
+  if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}if(popupTimeout)clearTimeout(popupTimeout);$('wrongPopup').classList.add('hidden')}
+}
 function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}updateStfuButton()}
+
+function updateModeButton(){
+  const b=$('modeBtn');
+  b.textContent = viewMode==='all' ? 'View: All at Once' : 'View: One by One';
+  b.classList.toggle('active', viewMode==='all');
+}
+function toggleMode(){
+  viewMode = viewMode==='all' ? 'single' : 'all';
+  try{localStorage.setItem('quizViewMode', viewMode)}catch(e){}
+  updateModeButton();
+  if(quizQuestions.length>0){
+    renderActiveQuiz();
+  } else {
+    renderHome();
+  }
+}
+
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 const getFilteredPool=()=>questionBank.filter(q=>selectedSubjects.has(q.subjectIndex));
 const missedCount=()=>questionBank.filter(q=>hist[q.id]>0).length;
+
 function toggleSubject(i){selectedSubjects.has(i)?selectedSubjects.delete(i):selectedSubjects.add(i);renderHome()}
 function selectAllSubjects(all){selectedSubjects=all?new Set(SUBJECTS.map((_,i)=>i)):new Set();renderHome()}
 function togglePrio(){prioritizeMissed=!prioritizeMissed;renderHome()}
-function setHeader(){const n=quizQuestions.length,a=userAnswers.filter(x=>x!==null).length;
-$('q-display').textContent=n?'Question '+Math.min(currentIndex+1,n)+' of '+n:'Question 0 of 0';
-$('score-display').textContent='Score: '+score+' / '+a+' ('+(a?Math.round(score/a*100):0)+'%)';
-$('progress-bar').style.width=(n?a/n*100:0)+'%'}
+
+function setHeader(){
+  const n=quizQuestions.length, a=userAnswers.filter(x=>x!==null).length;
+  if(viewMode==='all'){
+    $('q-display').textContent=n? 'Answered ' + a + ' of ' + n : 'Question 0 of 0';
+  } else {
+    $('q-display').textContent=n? 'Question ' + Math.min(currentIndex+1,n) + ' of ' + n : 'Question 0 of 0';
+  }
+  $('score-display').textContent='Score: '+score+' / '+a+' ('+(a?Math.round(score/a*100):0)+'%)';
+  $('progress-bar').style.width=(n?a/n*100:0)+'%';
+}
+
 function renderHome(){
-quizQuestions=[];userAnswers=[];currentIndex=0;score=0;setHeader();$('wrongPopup').classList.add('hidden');
-const pool=getFilteredPool();
-const chips=SUBJECTS.map((s,i)=>'<span class="chip '+(selectedSubjects.has(i)?'on':'')+'" onclick="toggleSubject('+i+')">'+s+' ('+questionBank.filter(q=>q.subjectIndex===i).length+')</span>').join('');
-$('main').innerHTML='<div class="card"><h2>Select Subjects</h2><div class="chips">'+chips+'</div>'+
-'<button class="btn" onclick="selectAllSubjects(true)">Select All</button><button class="btn" onclick="selectAllSubjects(false)">Clear</button>'+
-'<button class="btn '+(prioritizeMissed?'pri':'')+'" onclick="togglePrio()">Prioritize Missed ('+missedCount()+')</button>'+
-'<div class="counter">'+pool.length+' questions across '+selectedSubjects.size+' subjects selected</div></div>'+
-'<div class="card"><h2>Launch</h2><div class="grid">'+[15,25,35,50].map(n=>'<button class="btn pri" onclick="startQuiz('+n+')">'+(n===50?'Full Exam (50 Qs)':'Quickie ('+n+' Qs)')+'</button>').join('')+
-'<button class="btn pri" onclick="startQuiz(0)">Entire Selected Bank ('+pool.length+')</button></div></div>'}
+  quizQuestions=[];userAnswers=[];currentIndex=0;score=0;setHeader();$('wrongPopup').classList.add('hidden');
+  const pool=getFilteredPool();
+  const chips=SUBJECTS.map((s,i)=>'<span class="chip '+(selectedSubjects.has(i)?'on':'')+'" onclick="toggleSubject('+i+')">'+s+' ('+questionBank.filter(q=>q.subjectIndex===i).length+')</span>').join('');
+  
+  $('main').innerHTML='<div class="card"><h2>Select Subjects</h2><div class="chips">'+chips+'</div>'+
+  '<button class="btn" onclick="selectAllSubjects(true)">Select All</button><button class="btn" onclick="selectAllSubjects(false)">Clear</button>'+
+  '<button class="btn '+(prioritizeMissed?'pri':'')+'" onclick="togglePrio()">Prioritize Missed ('+missedCount()+')</button>'+
+  '<div class="counter">'+pool.length+' questions across '+selectedSubjects.size+' subjects selected</div></div>'+
+  '<div class="card"><h2>Display Mode</h2><div class="chips">'+
+  '<span class="chip '+(viewMode==='single'?'on':'')+'" onclick="setModeOption(\'single\')">One by One (Flashcard/Card View)</span>'+
+  '<span class="chip '+(viewMode==='all'?'on':'')+'" onclick="setModeOption(\'all\')">All at Once (Continuous List)</span>'+
+  '</div></div>'+
+  '<div class="card"><h2>Launch</h2><div class="grid">'+[15,25,35,50].map(n=>'<button class="btn pri" onclick="startQuiz('+n+')">'+(n===50?'Full Exam (50 Qs)':'Quickie ('+n+' Qs)')+'</button>').join('')+
+  '<button class="btn pri" onclick="startQuiz(0)">Entire Selected Bank ('+pool.length+')</button></div></div>';
+}
+
+function setModeOption(m){
+  viewMode = m;
+  try{localStorage.setItem('quizViewMode', viewMode)}catch(e){}
+  updateModeButton();
+  renderHome();
+}
+
 function prep(list){return list.map(q=>{const c=JSON.parse(JSON.stringify(q));shuffle(c.options);return c})}
+
 function startQuiz(count){
-const pool=getFilteredPool();if(!pool.length)return;
-const target=count?Math.min(count,pool.length):pool.length;let drawn=[];
-if(prioritizeMissed){let copy=pool.slice();while(drawn.length<target&&copy.length){const w=copy.map(q=>1+3*(hist[q.id]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;while(r>w[k]&&k<copy.length-1){r-=w[k];k++}drawn.push(copy.splice(k,1)[0])}}
-else drawn=shuffle(pool.slice()).slice(0,target);
-quizQuestions=prep(drawn);userAnswers=new Array(quizQuestions.length).fill(null);currentIndex=0;score=0;renderQuestion()}
+  const pool=getFilteredPool();if(!pool.length)return;
+  const target=count?Math.min(count,pool.length):pool.length;let drawn=[];
+  if(prioritizeMissed){let copy=pool.slice();while(drawn.length<target&&copy.length){const w=copy.map(q=>1+3*(hist[q.id]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;while(r>w[k]&&k<copy.length-1){r-=w[k];k++}drawn.push(copy.splice(k,1)[0])}}
+  else drawn=shuffle(pool.slice()).slice(0,target);
+  quizQuestions=prep(drawn);userAnswers=new Array(quizQuestions.length).fill(null);currentIndex=0;score=0;
+  renderActiveQuiz();
+}
+
+function renderActiveQuiz(){
+  if(viewMode==='all') renderAllQuestions();
+  else renderQuestion();
+}
+
+/* =========================================================
+   SINGLE (ONE BY ONE) MODE
+   ========================================================= */
 function renderQuestion(){
-const q=quizQuestions[currentIndex];setHeader();$('wrongPopup').classList.add('hidden');
-$('main').innerHTML='<div class="card" id="card"><div class="badges"><span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+q.stem+'</div>'+
-q.options.map((o,i)=>'<button class="option-btn" onclick="selectOption('+i+')">'+'ABCD'[i]+'. '+o.text+'</button>').join('')+'</div>';window.scrollTo({top:0})}
-function selectOption(oi){
-const q=quizQuestions[currentIndex];if(userAnswers[currentIndex]!==null)return;
-const ok=q.options[oi].correct;userAnswers[currentIndex]=oi;
-document.querySelectorAll('.option-btn').forEach((b,bi)=>{b.disabled=true;if(q.options[bi].correct)b.classList.add('correct');else if(bi===oi)b.classList.add('incorrect');else b.classList.add('dim')});
-q._ok=ok;
-if(ok){score++;if(hist[q.id]){hist[q.id]--;if(!hist[q.id])delete hist[q.id]}}
-else{hist[q.id]=(hist[q.id]||0)+1;
-if(!muted){const wa=$('wrongAudio');if(wa){wa.currentTime=0;wa.play().catch(e=>console.log('Audio play blocked:',e))}
-const p=$('wrongPopup');p.classList.remove('hidden');clearTimeout(popupTimeout);popupTimeout=setTimeout(()=>p.classList.add('hidden'),2000)}}
-saveHistory();
-const last=currentIndex===quizQuestions.length-1;
-const e=document.createElement('div');e.className='expl';
-e.innerHTML='<div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div><div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
-q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul><button class="btn pri" onclick="next()">'+(last?'Finish':'Next')+'</button>';
-$('card').appendChild(e);setHeader()}
-function next(){if(currentIndex>=quizQuestions.length-1)return showSummary();currentIndex++;renderQuestion()}
+  const q=quizQuestions[currentIndex];setHeader();$('wrongPopup').classList.add('hidden');
+  const answered = userAnswers[currentIndex] !== null;
+  const selectedIdx = userAnswers[currentIndex];
+  
+  let optionsHtml = q.options.map((o,i)=>{
+    let cls = 'option-btn';
+    let dis = '';
+    if(answered){
+      dis = 'disabled';
+      if(o.correct) cls += ' correct';
+      else if(i === selectedIdx) cls += ' incorrect';
+      else cls += ' dim';
+    }
+    return '<button class="'+cls+'" '+dis+' onclick="selectOptionSingle('+i+')">'+'ABCD'[i]+'. '+o.text+'</button>';
+  }).join('');
+
+  let explHtml = '';
+  if(answered){
+    const ok = q._ok;
+    const last = currentIndex === quizQuestions.length-1;
+    explHtml = '<div class="expl"><div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
+    '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
+    q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>'+
+    '<button class="btn pri" onclick="nextSingle()">'+(last?'Finish':'Next')+'</button></div>';
+  }
+
+  $('main').innerHTML='<div class="card" id="card"><div class="badges"><span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+(currentIndex+1)+'. '+q.stem+'</div>'+optionsHtml+explHtml+'</div>';
+  window.scrollTo({top:0});
+}
+
+function selectOptionSingle(oi){
+  if(userAnswers[currentIndex]!==null)return;
+  applyAnswer(currentIndex, oi);
+  renderQuestion();
+}
+
+function nextSingle(){
+  if(currentIndex>=quizQuestions.length-1)return showSummary();
+  currentIndex++;
+  renderQuestion();
+}
+
+/* =========================================================
+   ALL AT ONCE (SCROLLING LIST) MODE
+   ========================================================= */
+function renderAllQuestions(){
+  setHeader();$('wrongPopup').classList.add('hidden');
+  const answeredCount = userAnswers.filter(x=>x!==null).length;
+  const allAnswered = answeredCount === quizQuestions.length;
+
+  let html = quizQuestions.map((q, qIdx)=>{
+    const ans = userAnswers[qIdx];
+    const isAnswered = ans !== null;
+
+    let optHtml = q.options.map((o, optIdx)=>{
+      let cls = 'option-btn';
+      let dis = '';
+      if(isAnswered){
+        dis = 'disabled';
+        if(o.correct) cls += ' correct';
+        else if(optIdx === ans) cls += ' incorrect';
+        else cls += ' dim';
+      }
+      return '<button class="'+cls+'" '+dis+' onclick="selectOptionAll('+qIdx+','+optIdx+')">'+'ABCD'[optIdx]+'. '+o.text+'</button>';
+    }).join('');
+
+    let expHtml = '';
+    if(isAnswered){
+      const ok = q._ok;
+      expHtml = '<div class="expl"><div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
+      '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
+      q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul></div>';
+    }
+
+    return '<div class="card" id="card-q-'+qIdx+'"><div class="badges"><span class="badge">Q'+(qIdx+1)+'</span><span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+q.stem+'</div>'+optHtml+expHtml+'</div>';
+  }).join('');
+
+  if(allAnswered){
+    html += '<div class="card" style="text-align:center;"><button class="btn pri" style="font-size:1.05rem;padding:12px 24px;" onclick="showSummary()">View Final Results Summary</button></div>';
+  }
+
+  $('main').innerHTML = html;
+}
+
+function selectOptionAll(qIdx, optIdx){
+  if(userAnswers[qIdx]!==null)return;
+  applyAnswer(qIdx, optIdx);
+  
+  // Update only this specific card in DOM to preserve scroll position
+  const card = document.getElementById('card-q-'+qIdx);
+  if(card){
+    const q = quizQuestions[qIdx];
+    const ok = q._ok;
+    card.querySelectorAll('.option-btn').forEach((b, bi)=>{
+      b.disabled = true;
+      if(q.options[bi].correct) b.classList.add('correct');
+      else if(bi === optIdx) b.classList.add('incorrect');
+      else b.classList.add('dim');
+    });
+    const exp = document.createElement('div');
+    exp.className = 'expl';
+    exp.innerHTML = '<div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
+      '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
+      q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>';
+    card.appendChild(exp);
+  }
+  
+  const allAnswered = userAnswers.filter(x=>x!==null).length === quizQuestions.length;
+  if(allAnswered && !document.getElementById('finish-summary-btn')){
+    const finishCard = document.createElement('div');
+    finishCard.className = 'card';
+    finishCard.style.textAlign = 'center';
+    finishCard.innerHTML = '<button id="finish-summary-btn" class="btn pri" style="font-size:1.05rem;padding:12px 24px;" onclick="showSummary()">View Final Results Summary</button>';
+    $('main').appendChild(finishCard);
+    finishCard.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+/* =========================================================
+   COMMON ANSWER LOGIC & SUMMARY
+   ========================================================= */
+function applyAnswer(qIdx, optIdx){
+  const q = quizQuestions[qIdx];
+  const ok = q.options[optIdx].correct;
+  userAnswers[qIdx] = optIdx;
+  q._ok = ok;
+
+  if(ok){
+    score++;
+    if(hist[q.id]){hist[q.id]--;if(!hist[q.id])delete hist[q.id]}
+  } else {
+    hist[q.id] = (hist[q.id]||0)+1;
+    if(!muted){
+      const wa = $('wrongAudio');
+      if(wa){wa.currentTime=0;wa.play().catch(e=>console.log('Audio play blocked:',e))}
+      const p = $('wrongPopup');
+      p.classList.remove('hidden');
+      clearTimeout(popupTimeout);
+      popupTimeout = setTimeout(()=>p.classList.add('hidden'), 2000);
+    }
+  }
+  saveHistory();
+  setHeader();
+}
+
 function showSummary(){
-const n=quizQuestions.length,pct=Math.round(score/n*100);
-const msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
-const rows=['easy','medium','hard'].map(d=>{const a=quizQuestions.filter(q=>q.difficulty===d);return a.length?'<tr><td>'+d+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
-const sr=SUBJECTS.map((s,i)=>{const a=quizQuestions.filter(q=>q.subjectIndex===i);return a.length?'<tr><td>'+s+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
-$('progress-bar').style.width='100%';
-$('main').innerHTML='<div class="card sum"><h2>'+pct+'%</h2><p>'+score+' / '+n+' correct</p><p>'+msg+'</p><table><tr><th>Difficulty</th><th>Correct</th></tr>'+rows+'</table><table><tr><th>Subject</th><th>Correct</th></tr>'+sr+'</table>'+
-'<button class="btn pri" onclick="retake()">Retake Quiz</button><button class="btn pri" onclick="reviewMissed()">Review Missed</button><button class="btn" onclick="renderHome()">Back to Menu</button></div>';window.scrollTo({top:0})}
-function retake(){const ids=quizQuestions.map(q=>q.id);quizQuestions=prep(shuffle(questionBank.filter(q=>ids.includes(q.id))));userAnswers=new Array(quizQuestions.length).fill(null);currentIndex=0;score=0;renderQuestion()}
-function reviewMissed(){const ids=quizQuestions.filter(q=>!q._ok).map(q=>q.id);if(!ids.length){alert('Nothing missed. Nice.');return}
-quizQuestions=prep(questionBank.filter(q=>ids.includes(q.id)));userAnswers=new Array(quizQuestions.length).fill(null);currentIndex=0;score=0;renderQuestion()}
-window.onload=()=>{$('stfuBtn').addEventListener('click',toggleStfu);$('menuBtn').addEventListener('click',renderHome);updateStfuButton();renderHome()};
+  const n=quizQuestions.length,pct=Math.round(score/n*100);
+  const msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
+  const rows=['easy','medium','hard'].map(d=>{const a=quizQuestions.filter(q=>q.difficulty===d);return a.length?'<tr><td>'+d+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
+  const sr=SUBJECTS.map((s,i)=>{const a=quizQuestions.filter(q=>q.subjectIndex===i);return a.length?'<tr><td>'+s+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
+  $('progress-bar').style.width='100%';
+  $('main').innerHTML='<div class="card sum"><h2>'+pct+'%</h2><p>'+score+' / '+n+' correct</p><p>'+msg+'</p><table><tr><th>Difficulty</th><th>Correct</th></tr>'+rows+'</table><table><tr><th>Subject</th><th>Correct</th></tr>'+sr+'</table>'+
+  '<button class="btn pri" onclick="retake()">Retake Quiz</button><button class="btn pri" onclick="reviewMissed()">Review Missed</button><button class="btn" onclick="renderHome()">Back to Menu</button></div>';window.scrollTo({top:0});
+}
+
+function retake(){
+  const ids=quizQuestions.map(q=>q.id);
+  quizQuestions=prep(shuffle(questionBank.filter(q=>ids.includes(q.id))));
+  userAnswers=new Array(quizQuestions.length).fill(null);
+  currentIndex=0;score=0;
+  renderActiveQuiz();
+}
+
+function reviewMissed(){
+  const ids=quizQuestions.filter(q=>!q._ok).map(q=>q.id);
+  if(!ids.length){alert('Nothing missed. Nice.');return}
+  quizQuestions=prep(questionBank.filter(q=>ids.includes(q.id)));
+  userAnswers=new Array(quizQuestions.length).fill(null);
+  currentIndex=0;score=0;
+  renderActiveQuiz();
+}
+
+window.onload=()=>{
+  $('stfuBtn').addEventListener('click',toggleStfu);
+  $('menuBtn').addEventListener('click',renderHome);
+  $('modeBtn').addEventListener('click',toggleMode);
+  updateStfuButton();
+  updateModeButton();
+  renderHome();
+};
 </script></body></html>
