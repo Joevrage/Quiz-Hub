@@ -414,7 +414,7 @@ header {
   <div class="header-row">
     <div class="brand">
       <div>Regional Anatomy 1 <span>Midterm Quiz Hub</span></div>
-      <small>Upper Extremity Midterm Review &bull; Source-Bound Board Bank</small>
+      <small>Upper Extremity Midterm Review &bull; <span id="bank-count-header">110</span> Source-Bound Questions</small>
     </div>
     <div class="header-right">
       <button class="btn-ui" id="menuBtn" onclick="renderHome()">Menu / Change Subjects</button>
@@ -433,862 +433,1255 @@ header {
 <div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
 
 <script>
+const STORAGE_KEY = 'reg1_midterm_master_history_v3';
+
 const SUBJECTS = [
-  "Shoulder Girdle & Axio-Appendicular",          // 0
-  "Rotator Cuff & Scapulohumeral",               // 1
-  "Arm (Brachium) & Biceps Pathologies",         // 2
-  "Anterior Forearm (Flexor-Pronator Group)",    // 3
-  "Posterior Forearm (Extensor-Supinator Group)",// 4
-  "Hand Compartments, Intrinsics & Tunnels",     // 5
-  "Brachial Plexus, Spaces, Vessels & Elbow"     // 6
+  "Posterior Axio-Appendicular & Scapular Motions", // 0 (12 Qs)
+  "Scapulohumeral & Rotator Cuff",                 // 1 (14 Qs)
+  "Pectoral Region & Thoracic Wall",                // 2 (12 Qs)
+  "Arm Compartments & Biceps/Triceps",              // 3 (14 Qs)
+  "Anterior Forearm: Flexor-Pronators",             // 4 (14 Qs)
+  "Posterior Forearm: Extensor-Supinators",         // 5 (14 Qs)
+  "Hand Mechanics, Intrinsics & Tunnels",           // 6 (14 Qs)
+  "Brachial Plexus & Peripheral Nerves",            // 7 (8 Qs)
+  "Vasculature, Spaces, Elbow & Entrapments"        // 8 (8 Qs)
 ];
 
-// Balanced: exactly 15 Easy (20%), 45 Medium (60%), 15 Hard (20%) = 75 Questions
+// Exactly 110 questions: 22 Easy (20%), 66 Medium (60%), 22 Hard (20%)
 const questionBank = [
-  /* ================= MODULE 0: SHOULDER GIRDLE & AXIO-APPENDICULAR ================= */
+  /* ================= MODULE 0: POSTERIOR AXIO-APPENDICULAR & SCAPULAR MOTIONS (Q1-12) ================= */
   {
-    id: 1, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
-    stem: "Which two muscles constitute the superficial layer of the posterior axio-appendicular group?",
-    concept: "Trapezius and latissimus dorsi form the superficial posterior extrinsic layer, overlying levator scapulae and the rhomboids.",
+    id: 1, subjectIndex: 0, quarter: 1, slideRef: 3, difficulty: "easy", priority: true,
+    stem: "Which two muscles form the superficial layer of the posterior axio-appendicular group?",
+    concept: "Trapezius and latissimus dorsi form the superficial extrinsic layer, directly overlying levator scapulae and the rhomboids.",
     options: [
-      { text: "Trapezius and latissimus dorsi", correct: true, why: "Both are large superficial extrinsic back muscles connecting the axial skeleton to the pectoral girdle and humerus. [Lec 1: Shoulder]" },
-      { text: "Levator scapulae and rhomboid major", correct: false, why: "These form the deep layer of the posterior axio-appendicular musculature. [Lec 1: Shoulder]" },
-      { text: "Deltoid and teres major", correct: false, why: "Deltoid and teres major are scapulohumeral (intrinsic shoulder) muscles. [Lec 1: Shoulder]" },
-      { text: "Pectoralis major and serratus anterior", correct: false, why: "These belong to the anterior axio-appendicular group. [Lec 1: Shoulder]" }
+      { text: "Trapezius and latissimus dorsi", correct: true, why: "Both are broad superficial extrinsic muscles connecting the trunk to the upper limb. [Slide #3]" },
+      { text: "Levator scapulae and rhomboids", correct: false, why: "These form the deep layer of the posterior axio-appendicular group. [Slide #3]" },
+      { text: "Deltoid and teres major", correct: false, why: "These are scapulohumeral muscles passing between scapula and humerus. [Slide #3]" },
+      { text: "Pectoralis major and subclavius", correct: false, why: "These belong to the anterior axio-appendicular musculature. [Slide #3]" }
     ]
   },
   {
-    id: 2, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
-    stem: "The trapezius muscle receives motor innervation from the _______ nerve.",
-    concept: "Trapezius is innervated motorically by CN XI (spinal accessory nerve), while C3-C4 provide proprioception.",
+    id: 2, subjectIndex: 0, quarter: 1, slideRef: 5, difficulty: "easy", priority: true,
+    stem: "The trapezius muscle receives its motor innervation from the _______ nerve.",
+    concept: "Trapezius is innervated motorically by CN XI (spinal accessory nerve), with C3-C4 providing proprioception.",
     options: [
-      { text: "spinal accessory (CN XI)", correct: true, why: "The spinal accessory nerve provides sole motor innervation to the trapezius. [Lec 1: Shoulder]" },
-      { text: "thoracodorsal", correct: false, why: "Thoracodorsal nerve innervates latissimus dorsi. [Lec 1: Shoulder]" },
-      { text: "dorsal scapular", correct: false, why: "Dorsal scapular nerve innervates levator scapulae and both rhomboids. [Lec 1: Shoulder]" },
-      { text: "long thoracic", correct: false, why: "Long thoracic nerve innervates serratus anterior. [Lec 1: Shoulder]" }
+      { text: "spinal accessory (CN XI)", correct: true, why: "Cranial Nerve XI supplies motor innervation directly to the trapezius. [Slide #5]" },
+      { text: "thoracodorsal nerve", correct: false, why: "Thoracodorsal nerve innervates latissimus dorsi. [Slide #5]" },
+      { text: "dorsal scapular nerve", correct: false, why: "Dorsal scapular nerve innervates levator scapulae and the rhomboids. [Slide #5]" },
+      { text: "long thoracic nerve", correct: false, why: "Long thoracic nerve innervates serratus anterior. [Slide #5]" }
     ]
   },
   {
-    id: 3, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
+    id: 3, subjectIndex: 0, quarter: 1, slideRef: 5, difficulty: "medium", priority: true,
+    stem: "Assuming the vertebral column is fixed and the scapula is the moving segment, contraction of the middle fibers of trapezius produces _______.",
+    concept: "The middle horizontal fibers of the trapezius pull the medial border of the scapula directly toward the spine to produce retraction.",
+    options: [
+      { text: "scapular retraction", correct: true, why: "Middle fibers run horizontally from spinous processes to the scapular spine, pulling it medially. [Slide #5]" },
+      { text: "scapular protraction", correct: false, why: "Protraction is performed by serratus anterior and pectoralis minor. [Slide #5]" },
+      { text: "scapular depression", correct: false, why: "Depression is performed by the ascending fibers of trapezius. [Slide #5]" },
+      { text: "scapular elevation", correct: false, why: "Elevation is performed by the descending fibers of trapezius. [Slide #5]" }
+    ]
+  },
+  {
+    id: 4, subjectIndex: 0, quarter: 1, slideRef: 5, difficulty: "medium", priority: true,
     stem: "What scapular movement occurs upon simultaneous co-contraction of the descending (superior) and ascending (inferior) trapezius fibers?",
-    concept: "Descending and ascending trapezius fibers act as a force couple to produce superior (upward) rotation of the scapula.",
+    concept: "Descending and ascending trapezius fibers act together to produce superior (upward) rotation of the scapular glenoid cavity.",
     options: [
-      { text: "Superior (upward) rotation of the glenoid cavity", correct: true, why: "The superior fibers pull the lateral clavicle/acromion upward while inferior fibers pull the medial spine downward, tilting the glenoid superiorly. [Lec 1: Shoulder]" },
-      { text: "Inferior (downward) rotation of the glenoid cavity", correct: false, why: "Inferior rotation is produced by the rhomboids and levator scapulae. [Lec 1: Shoulder]" },
-      { text: "Scapular protraction", correct: false, why: "Protraction is performed by serratus anterior and pectoralis minor. [Lec 1: Shoulder]" },
-      { text: "Pure depression without rotation", correct: false, why: "Pure depression is performed by the ascending fibers acting alone. [Lec 1: Shoulder]" }
+      { text: "Superior rotation of the glenoid", correct: true, why: "Opposing upward pull on the acromion and downward pull on the root of the spine rotate the glenoid upward. [Slide #5]" },
+      { text: "Inferior rotation of the glenoid", correct: false, why: "Inferior rotation is performed by the rhomboids. [Slide #5]" },
+      { text: "Scapular protraction", correct: false, why: "Protraction is produced by serratus anterior and pectoralis minor. [Slide #5]" },
+      { text: "Direct axial depression", correct: false, why: "Pure depression is produced by ascending fibers acting alone. [Slide #5]" }
     ]
   },
   {
-    id: 4, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
-    stem: "When the arms are fixed in an overhead climbing position, contraction of latissimus dorsi acts to _______.",
-    concept: "When the humerus is stabilized, latissimus dorsi pulls the trunk superiorly toward the fixed upper extremity.",
+    id: 5, subjectIndex: 0, quarter: 1, slideRef: 6, difficulty: "medium", priority: true,
+    stem: "Assuming the trunk is stabilized and the humerus is the moving segment, contraction of latissimus dorsi produces which triad of motions?",
+    concept: "Latissimus dorsi extends, adducts, and medially rotates the humerus at the glenohumeral joint.",
     options: [
-      { text: "raise the trunk toward the fixed arms", correct: true, why: "Reversing origin and insertion allows latissimus dorsi to elevate the trunk during climbing or pull-ups. [Lec 1: Shoulder]" },
-      { text: "protract the scapula along the thoracic wall", correct: false, why: "Protraction is mediated by serratus anterior. [Lec 1: Shoulder]" },
-      { text: "elevate the clavicle directly", correct: false, why: "Latissimus dorsi has no clavicular attachments. [Lec 1: Shoulder]" },
-      { text: "depress and inferiorly rotate the glenoid", correct: false, why: "With the humerus fixed, its torque is directed toward lifting the pelvis and trunk. [Lec 1: Shoulder]" }
+      { text: "Extension, adduction, and medial rotation", correct: true, why: "Contraction pulls the humerus posteriorly, toward the trunk, and rotates it internally. [Slide #6]" },
+      { text: "Flexion, abduction, and lateral rotation", correct: false, why: "These are the exact opposite actions of latissimus dorsi. [Slide #6]" },
+      { text: "Extension, abduction, and medial rotation", correct: false, why: "Latissimus dorsi is a powerful adductor, not an abductor. [Slide #6]" },
+      { text: "Flexion, adduction, and lateral rotation", correct: false, why: "Latissimus dorsi extends and medially rotates the humerus. [Slide #6]" }
     ]
   },
   {
-    id: 5, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: false,
-    stem: "Which vertebral landmarks provide origin for the levator scapulae?",
-    concept: "Levator scapulae originates from the transverse processes of the upper cervical vertebrae C1-C4.",
+    id: 6, subjectIndex: 0, quarter: 1, slideRef: 6, difficulty: "medium", priority: true,
+    stem: "Assuming the upper extremities are stabilized on an overhead bar, contraction of latissimus dorsi produces which action?",
+    concept: "When the humerus is fixed, latissimus dorsi reverses its action to pull the trunk upward toward the arms.",
     options: [
-      { text: "Transverse processes of C1-C4", correct: true, why: "Levator scapulae arises from the transverse processes of C1 to C4 and inserts onto the superior medial scapular border. [Lec 1: Shoulder]" },
-      { text: "Spinous processes of C7-T1", correct: false, why: "C7-T1 spinous processes give rise to rhomboid minor. [Lec 1: Shoulder]" },
-      { text: "Spinous processes of T2-T5", correct: false, why: "T2-T5 spinous processes give rise to rhomboid major. [Lec 1: Shoulder]" },
-      { text: "Spinous processes of T7-L5", correct: false, why: "T7-L5 spinous processes provide aponeurotic origin to latissimus dorsi. [Lec 1: Shoulder]" }
+      { text: "Raising the body toward the arms", correct: true, why: "With the distal humerus fixed, concentric pull lifts the torso toward the bar during climbing. [Slide #6]" },
+      { text: "Lowering the body away from the arms", correct: false, why: "Gravity performs lowering; concentric contraction raises the body. [Slide #6]" },
+      { text: "Superior rotation of the glenoid", correct: false, why: "Upward rotation is performed by trapezius. [Slide #6]" },
+      { text: "Protraction of the shoulder girdle", correct: false, why: "Protraction is mediated by serratus anterior. [Slide #6]" }
     ]
   },
   {
-    id: 6, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
-    stem: "How does the anatomical origin correctly distinguish rhomboid minor from rhomboid major?",
-    concept: "Rhomboid minor arises superiorly from SPs C7-T1, while rhomboid major arises inferiorly from SPs T2-T5.",
+    id: 7, subjectIndex: 0, quarter: 1, slideRef: 6, difficulty: "easy", priority: false,
+    stem: "The latissimus dorsi muscle receives motor innervation from the _______ nerve.",
+    concept: "Latissimus dorsi is innervated by the thoracodorsal nerve (C6, C7, C8) from the posterior cord.",
     options: [
-      { text: "Minor arises superiorly from SPs C7-T1; major arises inferiorly from SPs T2-T5", correct: true, why: "'Minor over major' designates superior vs. inferior vertebral level origins along the medial scapular border. [Lec 1: Shoulder]" },
-      { text: "Minor arises inferiorly from SPs T2-T5; major arises superiorly from SPs C7-T1", correct: false, why: "Inverts the anatomical superior/inferior relationship. [Lec 1: Shoulder]" },
-      { text: "Minor is supplied by the long thoracic nerve; major by dorsal scapular", correct: false, why: "Both rhomboids are supplied by the dorsal scapular nerve (C5). [Lec 1: Shoulder]" },
-      { text: "Minor protracts the scapula; major retracts it", correct: false, why: "Both rhomboid muscles retract and inferiorly rotate the scapula. [Lec 1: Shoulder]" }
+      { text: "thoracodorsal nerve (C6-C8)", correct: true, why: "Thoracodorsal nerve supplies motor innervation to latissimus dorsi. [Slide #6]" },
+      { text: "dorsal scapular nerve (C5)", correct: false, why: "Dorsal scapular nerve innervates levator scapulae and rhomboids. [Slide #6]" },
+      { text: "long thoracic nerve (C5-C7)", correct: false, why: "Long thoracic nerve innervates serratus anterior. [Slide #6]" },
+      { text: "lower subscapular nerve (C5-C7)", correct: false, why: "Lower subscapular nerve innervates teres major and subscapularis. [Slide #6]" }
     ]
   },
   {
-    id: 7, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "hard", priority: true,
-    stem: "Which statement accurately describes the peripheral innervation of Pectoralis Major versus Pectoralis Minor?",
-    concept: "Medial pectoral nerve supplies both pectoralis muscles, whereas the lateral pectoral nerve supplies only pectoralis major.",
+    id: 8, subjectIndex: 0, quarter: 1, slideRef: 8, difficulty: "medium", priority: false,
+    stem: "The levator scapulae originates from which vertebral landmarks?",
+    concept: "Levator scapulae originates from the transverse processes of vertebrae C1 through C4.",
     options: [
-      { text: "Medial pectoral nerve supplies both muscles; lateral pectoral supplies only pectoralis major", correct: true, why: "Lateral pectoral nerve supplies the clavicular head of major; medial pectoral nerve pierces minor to supply minor and the sternocostal head of major. [Lec 1: Shoulder]" },
-      { text: "Lateral pectoral nerve supplies both muscles; medial pectoral supplies only pectoralis major", correct: false, why: "Reverses the piercing and innervation relationship. [Lec 1: Shoulder]" },
-      { text: "Pectoralis minor receives both nerves; pectoralis major receives only the medial", correct: false, why: "Pectoralis minor receives solely the medial pectoral nerve. [Lec 1: Shoulder]" },
-      { text: "Both pectoralis muscles are innervated by the long thoracic nerve", correct: false, why: "The long thoracic nerve supplies serratus anterior. [Lec 1: Shoulder]" }
+      { text: "Transverse processes of C1-C4", correct: true, why: "Levator scapulae arises from the transverse processes of the upper cervical vertebrae C1-C4. [Slide #8]" },
+      { text: "Spinous processes of C7-T1", correct: false, why: "C7-T1 spinous processes give rise to rhomboid minor. [Slide #8]" },
+      { text: "Spinous processes of T2-T5", correct: false, why: "T2-T5 spinous processes give rise to rhomboid major. [Slide #8]" },
+      { text: "Spinous processes of T7-L5", correct: false, why: "T7-L5 spinous processes provide aponeurotic origin to latissimus dorsi. [Slide #8]" }
     ]
   },
   {
-    id: 8, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: false,
-    stem: "The subclavius muscle attaches between the first rib and the clavicle to _______.",
-    concept: "Subclavius anchors and depresses the clavicle, stabilizing the sternoclavicular joint during shoulder movements.",
+    id: 9, subjectIndex: 0, quarter: 1, slideRef: 8, difficulty: "medium", priority: true,
+    stem: "Assuming the cervical spine is stabilized and the scapula is the moving segment, contraction of levator scapulae produces _______.",
+    concept: "With the neck stationary, levator scapulae acts directly to elevate the superior angle and medial border of the scapula.",
     options: [
-      { text: "stabilize and depress the clavicle", correct: true, why: "Subclavius pulls the clavicle medially and inferiorly to steady it in the sternoclavicular joint. [Lec 1: Shoulder]" },
-      { text: "elevate the first rib during passive expiration", correct: false, why: "First rib elevation during inspiration is mediated by scalene muscles. [Lec 1: Shoulder]" },
-      { text: "protract the scapula directly", correct: false, why: "Protraction is executed by serratus anterior and pectoralis minor. [Lec 1: Shoulder]" },
-      { text: "abduct the humerus past the horizontal plane", correct: false, why: "Subclavius has no attachment to the humerus. [Lec 1: Shoulder]" }
+      { text: "elevation of the scapula", correct: true, why: "Contraction lifts the superior angle and medial border of the scapula. [Slide #8]" },
+      { text: "depression of the scapula", correct: false, why: "Depression is executed by ascending trapezius and pectoralis minor. [Slide #8]" },
+      { text: "inferior rotation of the glenoid", correct: false, why: "Inferior rotation of the glenoid is an action of the rhomboids. [Slide #8]" },
+      { text: "abduction of the humerus", correct: false, why: "Levator scapulae does not cross or attach to the glenohumeral joint. [Slide #8]" }
     ]
   },
   {
-    id: 9, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
-    stem: "Serratus anterior is innervated by the _______ nerve.",
-    concept: "Serratus anterior is innervated by the long thoracic nerve arising from nerve roots C5, C6, and C7.",
+    id: 10, subjectIndex: 0, quarter: 1, slideRef: 9, difficulty: "medium", priority: true,
+    stem: "Which origin rule correctly distinguishes rhomboid minor from rhomboid major?",
+    concept: "Rhomboid minor arises superiorly from SPs C7-T1; rhomboid major arises inferiorly from SPs T2-T5.",
     options: [
-      { text: "long thoracic (C5-C7)", correct: true, why: "Long thoracic nerve courses along the lateral thoracic wall to supply serratus anterior. [Lec 1: Shoulder]" },
-      { text: "thoracodorsal (C6-C8)", correct: false, why: "Thoracodorsal nerve supplies latissimus dorsi. [Lec 1: Shoulder]" },
-      { text: "dorsal scapular (C5)", correct: false, why: "Dorsal scapular nerve supplies levator scapulae and the rhomboids. [Lec 1: Shoulder]" },
-      { text: "lateral pectoral (C5-C7)", correct: false, why: "Lateral pectoral nerve supplies pectoralis major. [Lec 1: Shoulder]" }
+      { text: "Minor arises from SPs C7-T1; major arises from SPs T2-T5", correct: true, why: "'Minor over major' designates superior vs. inferior vertebral origins along the medial scapular border. [Slide #9]" },
+      { text: "Minor arises from SPs T2-T5; major arises from SPs C7-T1", correct: false, why: "Inverts the anatomical superior and inferior vertebral attachments. [Slide #9]" },
+      { text: "Minor is innervated by long thoracic; major by dorsal scapular", correct: false, why: "Both rhomboid muscles are innervated by the dorsal scapular nerve. [Slide #9]" },
+      { text: "Minor arises from the ribs; major arises from the vertebrae", correct: false, why: "Both rhomboids arise from vertebral spinous processes. [Slide #9]" }
     ]
   },
   {
-    id: 10, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "hard", priority: true,
-    stem: "In anatomical dissection of the anterolateral chest wall, which muscle forms the intermediate layer between serratus anterior and the bony scapula?",
-    concept: "From anterior to posterior: Serratus anterior -> Subscapularis -> Scapular blade.",
+    id: 11, subjectIndex: 0, quarter: 1, slideRef: 10, difficulty: "medium", priority: false,
+    stem: "In addition to retraction, contraction of the rhomboids rotates the glenoid cavity of the scapula _______.",
+    concept: "The rhomboids retract the scapula and rotate the glenoid cavity inferiorly (downward).",
     options: [
-      { text: "Subscapularis", correct: true, why: "Serratus anterior glides directly over the subscapularis muscle lining the subscapular fossa. [Lec 1: Shoulder]" },
-      { text: "Infraspinatus", correct: false, why: "Infraspinatus lies on the posterior dorsal surface of the scapula. [Lec 1: Shoulder]" },
-      { text: "Pectoralis minor", correct: false, why: "Pectoralis minor lies anterior to the thoracic cage. [Lec 1: Shoulder]" },
-      { text: "Teres major", correct: false, why: "Teres major is along the inferior lateral border. [Lec 1: Shoulder]" }
+      { text: "inferiorly", correct: true, why: "Pulling the medial border superiorly and medially tilts the lateral glenoid downward. [Slide #10]" },
+      { text: "superiorly", correct: false, why: "Superior rotation is produced by trapezius. [Slide #10]" },
+      { text: "anteriorly", correct: false, why: "Anterior translation is protraction, the opposite of retraction. [Slide #10]" },
+      { text: "laterally", correct: false, why: "Rhomboids pull the scapula toward the midline, not laterally. [Slide #10]" }
     ]
   },
   {
-    id: 11, subjectIndex: 0, sourceRef: "Lec 1: Shoulder", difficulty: "hard", priority: true,
-    stem: "Which clinical presentation distinguishes spinal accessory nerve palsy from long thoracic nerve palsy?",
-    concept: "Spinal accessory palsy causes shoulder drooping; long thoracic palsy causes pronounced scapular winging.",
+    id: 12, subjectIndex: 0, quarter: 1, slideRef: 10, difficulty: "hard", priority: true,
+    stem: "Which pair of muscles works in synergy to produce direct elevation of the scapula?",
+    concept: "Scapular elevation is produced by the descending fibers of trapezius acting with levator scapulae.",
     options: [
-      { text: "Spinal accessory causes shoulder drooping; long thoracic causes pronounced scapular winging", correct: true, why: "Loss of trapezius causes the shoulder to droop; loss of serratus anterior causes the medial scapular border to wing off the thoracic wall. [Lec 1: Shoulder]" },
-      { text: "Long thoracic causes shoulder drooping; spinal accessory causes pronounced scapular winging", correct: false, why: "Inverts both clinical presentations. [Lec 1: Shoulder]" },
-      { text: "Spinal accessory causes wrist drop; long thoracic causes ape hand", correct: false, why: "Wrist drop is radial nerve; ape hand is median nerve. [Lec 1: Shoulder]" },
-      { text: "Both nerve palsies produce identical shoulder drooping without scapular winging", correct: false, why: "Long thoracic palsy produces classic medial border winging. [Lec 1: Shoulder]" }
+      { text: "Descending trapezius and levator scapulae", correct: true, why: "Descending trapezius fibers and levator scapulae pull upward to elevate the scapula. [Slide #10]" },
+      { text: "Ascending trapezius and pectoralis minor", correct: false, why: "These muscles pull downward to produce depression. [Slide #10]" },
+      { text: "Middle trapezius and serratus anterior", correct: false, why: "Middle trapezius retracts while serratus anterior protracts. [Slide #10]" },
+      { text: "Rhomboid major and latissimus dorsi", correct: false, why: "This pair does not work together as primary scapular elevators. [Slide #10]" }
     ]
   },
 
-  /* ================= MODULE 1: ROTATOR CUFF & SCAPULOHUMERAL ================= */
+  /* ================= MODULE 1: SCAPULOHUMERAL & ROTATOR CUFF (Q13-26) ================= */
   {
-    id: 12, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
-    stem: "All three portions of the deltoid converge to insert into the _______.",
-    concept: "Anterior, middle, and posterior deltoid heads unite to insert onto the deltoid tuberosity of the humerus.",
+    id: 13, subjectIndex: 1, quarter: 1, slideRef: 12, difficulty: "easy", priority: true,
+    stem: "All three portions of the deltoid converge to insert on the _______ of the humerus.",
+    concept: "Anterior, middle, and posterior deltoid converge on the deltoid tuberosity at the lateral midshaft of the humerus.",
     options: [
-      { text: "deltoid tuberosity of the humerus", correct: true, why: "Deltoid tuberosity at the lateral midshaft receives all three deltoid heads. [Lec 1: Shoulder]" },
-      { text: "greater tubercle of the humerus", correct: false, why: "Greater tubercle receives supraspinatus, infraspinatus, and teres minor. [Lec 1: Shoulder]" },
-      { text: "lesser tubercle of the humerus", correct: false, why: "Lesser tubercle receives subscapularis. [Lec 1: Shoulder]" },
-      { text: "intertubercular groove floor", correct: false, why: "The groove floor receives latissimus dorsi. [Lec 1: Shoulder]" }
+      { text: "deltoid tuberosity", correct: true, why: "Deltoid tuberosity receives the common insertion of all three deltoid parts. [Slide #12]" },
+      { text: "greater tubercle", correct: false, why: "Greater tubercle receives supraspinatus, infraspinatus, and teres minor. [Slide #12]" },
+      { text: "lesser tubercle", correct: false, why: "Lesser tubercle receives subscapularis. [Slide #12]" },
+      { text: "intertubercular sulcus", correct: false, why: "Intertubercular sulcus receives latissimus dorsi, pec major, and teres major. [Slide #12]" }
     ]
   },
   {
-    id: 13, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
-    stem: "Which muscle is NOT a member of the rotator cuff (SITS) group?",
-    concept: "The SITS rotator cuff muscles are Supraspinatus, Infraspinatus, Teres minor, and Subscapularis; Teres major is excluded.",
+    id: 14, subjectIndex: 1, quarter: 1, slideRef: 12, difficulty: "medium", priority: true,
+    stem: "Assuming the pectoral girdle is fixed and the humerus is the moving segment, contraction of the anterior fibers of deltoid produces _______.",
+    concept: "The anterior fibers of the deltoid flex the humerus at the glenohumeral joint.",
     options: [
-      { text: "Teres major", correct: true, why: "Teres major inserts on the anterior humerus and does not reinforce the glenohumeral joint capsule. [Lec 1: Shoulder]" },
-      { text: "Teres minor", correct: false, why: "Teres minor is the 'T' in SITS. [Lec 1: Shoulder]" },
-      { text: "Infraspinatus", correct: false, why: "Infraspinatus is the 'I' in SITS. [Lec 1: Shoulder]" },
-      { text: "Subscapularis", correct: false, why: "Subscapularis is the second 'S' in SITS. [Lec 1: Shoulder]" }
+      { text: "flexion of the humerus", correct: true, why: "Anterior deltoid fibers pass anterior to the joint axis, flexing the arm. [Slide #12]" },
+      { text: "extension of the humerus", correct: false, why: "Extension is produced by the posterior deltoid fibers. [Slide #12]" },
+      { text: "adduction of the humerus", correct: false, why: "Deltoid is an abductor, not an adductor. [Slide #12]" },
+      { text: "retraction of the scapula", correct: false, why: "Deltoid acts on the humerus, not directly on the scapula. [Slide #12]" }
     ]
   },
   {
-    id: 14, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
-    stem: "Teres major arises from the dorsal surface of the inferior angle of the scapula and is innervated by the _______ nerve.",
-    concept: "Teres major is supplied by the lower subscapular nerve (C6-C7) and acts to adduct and medially rotate the humerus.",
+    id: 15, subjectIndex: 1, quarter: 1, slideRef: 12, difficulty: "medium", priority: true,
+    stem: "Assuming the pectoral girdle is fixed and the humerus is the moving segment, contraction of the posterior fibers of deltoid produces _______.",
+    concept: "The posterior fibers of the deltoid extend the humerus at the glenohumeral joint.",
     options: [
-      { text: "lower subscapular", correct: true, why: "Lower subscapular nerve supplies teres major and the inferior part of subscapularis. [Lec 1: Shoulder]" },
-      { text: "axillary", correct: false, why: "Axillary nerve supplies teres minor and deltoid. [Lec 1: Shoulder]" },
-      { text: "suprascapular", correct: false, why: "Suprascapular nerve supplies supraspinatus and infraspinatus. [Lec 1: Shoulder]" },
-      { text: "thoracodorsal", correct: false, why: "Thoracodorsal nerve supplies latissimus dorsi. [Lec 1: Shoulder]" }
+      { text: "extension of the humerus", correct: true, why: "Posterior deltoid fibers cross behind the joint axis to extend the arm. [Slide #12]" },
+      { text: "flexion of the humerus", correct: false, why: "Flexion is produced by the anterior deltoid fibers. [Slide #12]" },
+      { text: "adduction of the humerus", correct: false, why: "Deltoid is an abductor rather than an adductor. [Slide #12]" },
+      { text: "protraction of the scapula", correct: false, why: "Deltoid acts on the humerus, not on the scapula. [Slide #12]" }
     ]
   },
   {
-    id: 15, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "hard", priority: true,
+    id: 16, subjectIndex: 1, quarter: 1, slideRef: 12, difficulty: "easy", priority: false,
+    stem: "The deltoid muscle is innervated by the _______ nerve.",
+    concept: "The deltoid is innervated by the axillary nerve (C5-C6) from the posterior cord.",
+    options: [
+      { text: "axillary nerve (C5-C6)", correct: true, why: "Axillary nerve supplies both deltoid and teres minor. [Slide #12]" },
+      { text: "suprascapular nerve (C5-C6)", correct: false, why: "Suprascapular nerve supplies supraspinatus and infraspinatus. [Slide #12]" },
+      { text: "dorsal scapular nerve (C5)", correct: false, why: "Dorsal scapular nerve supplies levator scapulae and rhomboids. [Slide #12]" },
+      { text: "thoracodorsal nerve (C6-C8)", correct: false, why: "Thoracodorsal nerve supplies latissimus dorsi. [Slide #12]" }
+    ]
+  },
+  {
+    id: 17, subjectIndex: 1, quarter: 1, slideRef: 13, difficulty: "medium", priority: false,
+    stem: "Teres major originates from the dorsal surface of the inferior angle of the scapula and inserts on the _______.",
+    concept: "Teres major inserts on the medial portion of the intertubercular groove of the humerus.",
+    options: [
+      { text: "medial portion of the intertubercular groove", correct: true, why: "Teres major attaches medially in the groove alongside latissimus dorsi. [Slide #13]" },
+      { text: "lateral portion of the intertubercular groove", correct: false, why: "Lateral portion receives pectoralis major. [Slide #13]" },
+      { text: "greater tubercle of the humerus", correct: false, why: "Greater tubercle receives rotator cuff muscles. [Slide #13]" },
+      { text: "lesser tubercle of the humerus", correct: false, why: "Lesser tubercle receives subscapularis. [Slide #13]" }
+    ]
+  },
+  {
+    id: 18, subjectIndex: 1, quarter: 1, slideRef: 14, difficulty: "easy", priority: true,
+    stem: "Which muscle is NOT a member of the intrinsic rotator cuff (SITS) group?",
+    concept: "The rotator cuff (SITS) comprises Supraspinatus, Infraspinatus, Teres minor, and Subscapularis; Teres major is excluded.",
+    options: [
+      { text: "Teres major", correct: true, why: "Teres major inserts lower on the humerus and is not a rotator cuff muscle. [Slide #14]" },
+      { text: "Teres minor", correct: false, why: "Teres minor is the 'T' in SITS. [Slide #14]" },
+      { text: "Infraspinatus", correct: false, why: "Infraspinatus is the 'I' in SITS. [Slide #14]" },
+      { text: "Subscapularis", correct: false, why: "Subscapularis is the second 'S' in SITS. [Slide #14]" }
+    ]
+  },
+  {
+    id: 19, subjectIndex: 1, quarter: 1, slideRef: 15, difficulty: "medium", priority: true,
+    stem: "Which rotator cuff muscle occupies the fossa superior to the scapular spine and abducts the humerus?",
+    concept: "Supraspinatus occupies the supraspinous fossa and acts as an abductor of the glenohumeral joint.",
+    options: [
+      { text: "Supraspinatus", correct: true, why: "Supraspinatus lies in the supraspinous fossa and abducts the humerus. [Slide #15]" },
+      { text: "Infraspinatus", correct: false, why: "Infraspinatus lies below the spine and laterally rotates. [Slide #15]" },
+      { text: "Subscapularis", correct: false, why: "Subscapularis occupies the anterior subscapular fossa. [Slide #15]" },
+      { text: "Teres minor", correct: false, why: "Teres minor originates along the lateral border. [Slide #15]" }
+    ]
+  },
+  {
+    id: 20, subjectIndex: 1, quarter: 1, slideRef: 16, difficulty: "hard", priority: true,
     stem: "Which sequence correctly matches the greater tubercle facets (superior, middle, inferior) to their attaching tendons?",
     concept: "From superior to inferior on the greater tubercle: Supraspinatus (superior), Infraspinatus (middle), Teres minor (inferior).",
     options: [
-      { text: "Supraspinatus, infraspinatus, teres minor", correct: true, why: "Superior facet = supraspinatus; middle facet = infraspinatus; inferior facet = teres minor. [Lec 1: Shoulder]" },
-      { text: "Infraspinatus, supraspinatus, teres minor", correct: false, why: "Supraspinatus occupies the highest (superior) facet. [Lec 1: Shoulder]" },
-      { text: "Supraspinatus, teres minor, infraspinatus", correct: false, why: "Infraspinatus occupies the middle facet; teres minor is inferior. [Lec 1: Shoulder]" },
-      { text: "Subscapularis, infraspinatus, teres minor", correct: false, why: "Subscapularis inserts onto the lesser tubercle, not the greater tubercle. [Lec 1: Shoulder]" }
+      { text: "Supraspinatus, infraspinatus, teres minor", correct: true, why: "Superior facet = supraspinatus; middle facet = infraspinatus; inferior facet = teres minor. [Slide #16]" },
+      { text: "Infraspinatus, supraspinatus, teres minor", correct: false, why: "Supraspinatus occupies the highest facet. [Slide #16]" },
+      { text: "Supraspinatus, teres minor, infraspinatus", correct: false, why: "Infraspinatus occupies the middle facet, not teres minor. [Slide #16]" },
+      { text: "Subscapularis, infraspinatus, teres minor", correct: false, why: "Subscapularis inserts on the lesser tubercle. [Slide #16]" }
     ]
   },
   {
-    id: 16, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: true,
+    id: 21, subjectIndex: 1, quarter: 1, slideRef: 16, difficulty: "medium", priority: false,
+    stem: "Which nerve innervates both the supraspinatus and infraspinatus muscles?",
+    concept: "Both supraspinatus and infraspinatus are innervated by the suprascapular nerve (C5-C6) from the superior trunk.",
+    options: [
+      { text: "Suprascapular nerve (C5-C6)", correct: true, why: "Suprascapular nerve supplies both supraspinatus and infraspinatus. [Slide #16]" },
+      { text: "Axillary nerve (C5-C6)", correct: false, why: "Axillary nerve supplies deltoid and teres minor. [Slide #16]" },
+      { text: "Dorsal scapular nerve (C5)", correct: false, why: "Dorsal scapular nerve supplies levator scapulae and rhomboids. [Slide #16]" },
+      { text: "Upper subscapular nerve (C5-C6)", correct: false, why: "Upper subscapular nerve supplies subscapularis. [Slide #16]" }
+    ]
+  },
+  {
+    id: 22, subjectIndex: 1, quarter: 1, slideRef: 17, difficulty: "medium", priority: true,
     stem: "Which rotator cuff muscle produces lateral rotation and is innervated by the axillary nerve?",
-    concept: "Teres minor produces lateral rotation and is supplied by the axillary nerve (C5-C6).",
+    concept: "Teres minor produces lateral rotation of the humerus and is innervated by the axillary nerve (C5-C6).",
     options: [
-      { text: "Teres minor", correct: true, why: "Teres minor is an external rotator supplied by the axillary nerve. [Lec 1: Shoulder]" },
-      { text: "Infraspinatus", correct: false, why: "Infraspinatus laterally rotates but is supplied by the suprascapular nerve. [Lec 1: Shoulder]" },
-      { text: "Teres major", correct: false, why: "Teres major medially rotates and is supplied by the lower subscapular nerve. [Lec 1: Shoulder]" },
-      { text: "Subscapularis", correct: false, why: "Subscapularis medially rotates and is supplied by subscapular nerves. [Lec 1: Shoulder]" }
+      { text: "Teres minor", correct: true, why: "Teres minor is an external rotator innervated by the axillary nerve. [Slide #17]" },
+      { text: "Infraspinatus", correct: false, why: "Infraspinatus laterally rotates but is supplied by the suprascapular nerve. [Slide #17]" },
+      { text: "Teres major", correct: false, why: "Teres major medially rotates and is supplied by the lower subscapular nerve. [Slide #17]" },
+      { text: "Subscapularis", correct: false, why: "Subscapularis medially rotates and is supplied by subscapular nerves. [Slide #17]" }
     ]
   },
   {
-    id: 17, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
+    id: 23, subjectIndex: 1, quarter: 1, slideRef: 18, difficulty: "easy", priority: true,
     stem: "The subscapularis muscle is unique among the rotator cuff group because it inserts on the:",
-    concept: "Subscapularis is the only rotator cuff muscle inserting onto the lesser tubercle of the humerus.",
+    concept: "Subscapularis is the only rotator cuff muscle inserting on the lesser tubercle of the humerus.",
     options: [
-      { text: "lesser tubercle of the humerus", correct: true, why: "Subscapularis inserts on the lesser tubercle, allowing it to medially rotate the humerus. [Lec 1: Shoulder]" },
-      { text: "superior facet of the greater tubercle", correct: false, why: "Superior facet receives supraspinatus. [Lec 1: Shoulder]" },
-      { text: "inferior facet of the greater tubercle", correct: false, why: "Inferior facet receives teres minor. [Lec 1: Shoulder]" },
-      { text: "medial border of the scapula", correct: false, why: "Medial border receives serratus anterior and rhomboids. [Lec 1: Shoulder]" }
+      { text: "lesser tubercle of the humerus", correct: true, why: "Subscapularis inserts anteriorly on the lesser tubercle to produce internal rotation. [Slide #18]" },
+      { text: "superior facet of the greater tubercle", correct: false, why: "Superior facet receives supraspinatus. [Slide #18]" },
+      { text: "middle facet of the greater tubercle", correct: false, why: "Middle facet receives infraspinatus. [Slide #18]" },
+      { text: "inferior facet of the greater tubercle", correct: false, why: "Inferior facet receives teres minor. [Slide #18]" }
     ]
   },
   {
-    id: 18, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "easy", priority: true,
-    stem: "Which rotator cuff tendon is most frequently ruptured or impinged under the acromion?",
-    concept: "Supraspinatus is the most commonly torn rotator cuff tendon due to its vulnerable position beneath the acromial arch.",
+    id: 24, subjectIndex: 1, quarter: 1, slideRef: 18, difficulty: "medium", priority: false,
+    stem: "The subscapularis muscle receives motor innervation from which nerve combination?",
+    concept: "Subscapularis is innervated by both the upper and lower subscapular nerves (C5-C7).",
     options: [
-      { text: "Supraspinatus", correct: true, why: "Supraspinatus carries high tension and suffers avascular degeneration and impingement under the acromion. [Lec 1: Shoulder]" },
-      { text: "Infraspinatus", correct: false, why: "Infraspinatus is torn far less frequently than supraspinatus. [Lec 1: Shoulder]" },
-      { text: "Teres minor", correct: false, why: "Teres minor is rarely isolated in rotator cuff tears. [Lec 1: Shoulder]" },
-      { text: "Subscapularis", correct: false, why: "Subscapularis tears are less common than supraspinatus tears. [Lec 1: Shoulder]" }
+      { text: "Upper and lower subscapular nerves", correct: true, why: "Both subscapular branches from the posterior cord supply subscapularis. [Slide #18]" },
+      { text: "Suprascapular nerve alone", correct: false, why: "Suprascapular nerve supplies supraspinatus and infraspinatus. [Slide #18]" },
+      { text: "Thoracodorsal and axillary nerves", correct: false, why: "Thoracodorsal supplies lat dorsi; axillary supplies deltoid and teres minor. [Slide #18]" },
+      { text: "Dorsal scapular and long thoracic nerves", correct: false, why: "Dorsal scapular supplies rhomboids; long thoracic supplies serratus. [Slide #18]" }
     ]
   },
   {
-    id: 19, subjectIndex: 1, sourceRef: "Lec 1: Shoulder", difficulty: "medium", priority: false,
+    id: 25, subjectIndex: 1, quarter: 1, slideRef: 19, difficulty: "easy", priority: true,
+    stem: "Which rotator cuff tendon is most commonly ruptured?",
+    concept: "The supraspinatus tendon is the most commonly ruptured tendon of the rotator cuff.",
+    options: [
+      { text: "Supraspinatus tendon", correct: true, why: "Supraspinatus carries high tension and is the most frequently torn tendon. [Slide #19]" },
+      { text: "Infraspinatus tendon", correct: false, why: "Infraspinatus tears occur less frequently than supraspinatus tears. [Slide #19]" },
+      { text: "Teres minor tendon", correct: false, why: "Teres minor tears are rare in clinical presentations. [Slide #19]" },
+      { text: "Subscapularis tendon", correct: false, why: "Subscapularis is torn less often than supraspinatus. [Slide #19]" }
+    ]
+  },
+  {
+    id: 26, subjectIndex: 1, quarter: 1, slideRef: 19, difficulty: "medium", priority: true,
     stem: "Degenerative rotator cuff tendonitis and adhesive capsulitis (frozen shoulder) show an increased clinical incidence in which population?",
-    concept: "Rotator cuff degeneration and adhesive capsulitis correlate strongly with hormonal shifts in perimenopausal and menopausal women.",
+    concept: "Shoulder conditions like frozen shoulder and cuff problems are increasingly reported in women in late 30s to 50s, perimenopause, and menopause.",
     options: [
-      { text: "Perimenopausal and menopausal women", correct: true, why: "Hormonal shifts and connective tissue changes correlate with higher rates of frozen shoulder and cuff pathology in women in their 40s to 60s. [Lec 1: Shoulder]" },
-      { text: "Adolescent male athletes", correct: false, why: "Adolescent athletes present with acute labral tears or Little Leaguer's elbow. [Lec 1: Shoulder]" },
-      { text: "Children under 10 years of age", correct: false, why: "Degenerative cuff disease does not occur in young children. [Lec 1: Shoulder]" },
-      { text: "Sedentary males under 25", correct: false, why: "Degenerative cuff disease is correlated with aging. [Lec 1: Shoulder]" }
+      { text: "Women in perimenopause and menopause", correct: true, why: "Shoulder issues are increasingly reported in women in their late 30s to 50s during peri/menopause. [Slide #19]" },
+      { text: "Adolescent male athletes", correct: false, why: "Degenerative cuff conditions do not typify adolescent athletes. [Slide #19]" },
+      { text: "Children under ten years of age", correct: false, why: "Children do not develop degenerative rotator cuff conditions. [Slide #19]" },
+      { text: "Young adult males under twenty-five", correct: false, why: "Degenerative cuff tendonitis is typical of older populations. [Slide #19]" }
     ]
   },
 
-  /* ================= MODULE 2: BRACHIUM & BICEPS PATHOLOGY ================= */
+  /* ================= MODULE 2: PECTORAL REGION & THORACIC WALL (Q27-38) ================= */
   {
-    id: 20, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "easy", priority: false,
-    stem: "The posterior compartment of the arm contains only the _______ muscle.",
-    concept: "Triceps brachii forms the sole muscle mass of the posterior compartment of the arm.",
+    id: 27, subjectIndex: 2, quarter: 1, slideRef: 20, difficulty: "easy", priority: false,
+    stem: "Which muscle is classified as scapulohumeral rather than an anterior axio-appendicular muscle?",
+    concept: "Deltoid is a scapulohumeral muscle; pectoralis major, minor, subclavius, and serratus anterior are anterior axio-appendicular.",
     options: [
-      { text: "triceps brachii", correct: true, why: "Triceps brachii is the only muscle occupying the posterior arm compartment. [Lec 2: Arm & Forearm]" },
-      { text: "brachialis", correct: false, why: "Brachialis occupies the anterior arm compartment. [Lec 2: Arm & Forearm]" },
-      { text: "coracobrachialis", correct: false, why: "Coracobrachialis occupies the anterior arm compartment. [Lec 2: Arm & Forearm]" },
-      { text: "brachioradialis", correct: false, why: "Brachioradialis is in the lateral forearm compartment. [Lec 2: Arm & Forearm]" }
+      { text: "Deltoid", correct: true, why: "Deltoid connects the scapula and clavicle to the humerus (scapulohumeral). [Slide #20]" },
+      { text: "Pectoralis major", correct: false, why: "Pectoralis major is an anterior axio-appendicular muscle. [Slide #20]" },
+      { text: "Pectoralis minor", correct: false, why: "Pectoralis minor is an anterior axio-appendicular muscle. [Slide #20]" },
+      { text: "Subclavius", correct: false, why: "Subclavius is an anterior axio-appendicular muscle. [Slide #20]" }
     ]
   },
   {
-    id: 21, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "Which nerve pierces directly through the coracobrachialis muscle?",
-    concept: "The musculocutaneous nerve pierces coracobrachialis and supplies all anterior arm muscles.",
+    id: 28, subjectIndex: 2, quarter: 1, slideRef: 21, difficulty: "medium", priority: true,
+    stem: "The pectoralis major muscle attaches distally to which portion of the intertubercular groove?",
+    concept: "Pectoralis major inserts into the lateral portion of the intertubercular groove of the humerus.",
     options: [
-      { text: "Musculocutaneous nerve", correct: true, why: "Musculocutaneous nerve pierces coracobrachialis and runs between biceps and brachialis. [Lec 2: Arm & Forearm]" },
-      { text: "Median nerve", correct: false, why: "Median nerve runs alongside the brachial artery without piercing muscles in the arm. [Lec 2: Arm & Forearm]" },
-      { text: "Radial nerve", correct: false, why: "Radial nerve travels posteriorly in the radial groove. [Lec 2: Arm & Forearm]" },
-      { text: "Axillary nerve", correct: false, why: "Axillary nerve passes through the quadrangular space into the deltoid. [Lec 2: Arm & Forearm]" }
+      { text: "Lateral portion of the intertubercular groove", correct: true, why: "Pectoralis major inserts on the lateral portion of the groove. [Slide #21]" },
+      { text: "Medial portion of the intertubercular groove", correct: false, why: "Medial portion receives latissimus dorsi and teres major. [Slide #21]" },
+      { text: "Lesser tubercle of the humerus", correct: false, why: "Lesser tubercle receives subscapularis. [Slide #21]" },
+      { text: "Deltoid tuberosity of the humerus", correct: false, why: "Deltoid tuberosity receives the deltoid. [Slide #21]" }
     ]
   },
   {
-    id: 22, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "Which anatomical pairing correctly characterizes the proximal attachments of the two biceps brachii heads?",
-    concept: "Long head arises laterally from the supraglenoid tubercle; short head arises medially from the coracoid process.",
+    id: 29, subjectIndex: 2, quarter: 1, slideRef: 21, difficulty: "medium", priority: true,
+    stem: "Assuming the chest wall is fixed, which set of humeral actions is produced by pectoralis major as a whole?",
+    concept: "Pectoralis major adducts, medially rotates, and flexes the humerus at the glenohumeral joint.",
     options: [
-      { text: "Long head: supraglenoid tubercle; Short head: coracoid process", correct: true, why: "The long head arises laterally from the supraglenoid tubercle; the short head arises medially from the coracoid process. [Lec 2: Arm & Forearm]" },
-      { text: "Long head: coracoid process; Short head: supraglenoid tubercle", correct: false, why: "Reverses the proximal attachments. [Lec 2: Arm & Forearm]" },
-      { text: "Long head: infraglenoid tubercle; Short head: coracoid process", correct: false, why: "Infraglenoid tubercle gives origin to the long head of the triceps. [Lec 2: Arm & Forearm]" },
-      { text: "Both heads arise from the coracoid process", correct: false, why: "Only the short head originates from the coracoid process. [Lec 2: Arm & Forearm]" }
+      { text: "Adduction, medial rotation, and flexion", correct: true, why: "Pectoralis major is a powerful adductor, internal rotator, and flexor of the humerus. [Slide #21]" },
+      { text: "Abduction, lateral rotation, and extension", correct: false, why: "These are opposing actions. [Slide #21]" },
+      { text: "Pure lateral rotation and abduction", correct: false, why: "External rotation is performed by infraspinatus and teres minor. [Slide #21]" },
+      { text: "Scapular retraction and elevation", correct: false, why: "Pectoralis major acts on the humerus, not to retract the scapula. [Slide #21]" }
     ]
   },
   {
-    id: 23, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "The brachialis muscle inserts onto the _______, allowing it to flex the elbow regardless of forearm pronation or supination.",
-    concept: "Brachialis inserts on the coronoid process and ulnar tuberosity; because the ulna does not rotate, it is a pure flexor.",
+    id: 30, subjectIndex: 2, quarter: 1, slideRef: 21, difficulty: "hard", priority: true,
+    stem: "Which statement correctly describes the nerve supply to the two heads of pectoralis major?",
+    concept: "The clavicular head is supplied by the lateral pectoral nerve; the sternocostal head is supplied by the medial pectoral nerve.",
     options: [
-      { text: "coronoid process and tuberosity of the ulna", correct: true, why: "Brachialis attaches to the ulna, which does not rotate during pronation/supination. [Lec 2: Arm & Forearm]" },
-      { text: "radial tuberosity", correct: false, why: "Radial tuberosity receives the biceps brachii tendon. [Lec 2: Arm & Forearm]" },
-      { text: "coracoid process of the scapula", correct: false, why: "Coracoid is a scapular landmark, not an elbow insertion. [Lec 2: Arm & Forearm]" },
-      { text: "olecranon process of the ulna", correct: false, why: "Olecranon receives the triceps brachii insertion. [Lec 2: Arm & Forearm]" }
+      { text: "Lateral pectoral nerve supplies clavicular head; medial pectoral supplies sternocostal head", correct: true, why: "Each head receives a distinct pectoral nerve branch. [Slide #21]" },
+      { text: "Medial pectoral nerve supplies clavicular head; lateral pectoral supplies sternocostal head", correct: false, why: "Inverts the nerve supply to the respective heads. [Slide #21]" },
+      { text: "Long thoracic nerve supplies clavicular head; thoracodorsal supplies sternocostal head", correct: false, why: "These nerves supply serratus anterior and latissimus dorsi. [Slide #21]" },
+      { text: "Axillary nerve supplies clavicular head; suprascapular supplies sternocostal head", correct: false, why: "These nerves supply scapulohumeral and cuff muscles. [Slide #21]" }
     ]
   },
   {
-    id: 24, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
-    stem: "Relative to the radial groove of the humerus, where do the lateral and medial heads of the triceps arise?",
-    concept: "Lateral head of triceps arises superior to the radial groove; medial head arises inferior to the radial groove.",
+    id: 31, subjectIndex: 2, quarter: 1, slideRef: 22, difficulty: "easy", priority: true,
+    stem: "Pectoralis minor originates from ribs 3-5 and inserts onto which scapular landmark?",
+    concept: "Pectoralis minor inserts onto the coracoid process of the scapula.",
     options: [
-      { text: "Lateral head arises superior to the groove; medial head arises inferior to the groove", correct: true, why: "Lateral head is superior and lateral to the groove; medial head is inferior and medial to the groove. [Lec 2: Arm & Forearm]" },
-      { text: "Lateral head arises inferior to the groove; medial head arises superior to the groove", correct: false, why: "Inverts the anatomical positions of the humeral triceps heads. [Lec 2: Arm & Forearm]" },
-      { text: "Both heads arise superior to the groove", correct: false, why: "Medial head occupies the broad posterior surface below the groove. [Lec 2: Arm & Forearm]" },
-      { text: "Both heads arise directly from the infraglenoid tubercle", correct: false, why: "Only the long head arises from the infraglenoid tubercle. [Lec 2: Arm & Forearm]" }
+      { text: "Coracoid process of the scapula", correct: true, why: "Pectoralis minor inserts directly on the coracoid process. [Slide #22]" },
+      { text: "Acromion process of the scapula", correct: false, why: "Acromion receives trapezius and gives origin to deltoid. [Slide #22]" },
+      { text: "Spine of the scapula", correct: false, why: "Spine of the scapula receives trapezius. [Slide #22]" },
+      { text: "Greater tubercle of the humerus", correct: false, why: "Greater tubercle receives rotator cuff muscles. [Slide #22]" }
     ]
   },
   {
-    id: 25, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
-    stem: "Which head of the triceps brachii crosses the glenohumeral joint to resist downward displacement of the humeral head?",
-    concept: "The long head of the triceps arises from the infraglenoid tubercle, crossing the shoulder to stabilize the abducted joint.",
+    id: 32, subjectIndex: 2, quarter: 1, slideRef: 22, difficulty: "medium", priority: true,
+    stem: "Assuming the rib cage is fixed, contraction of pectoralis minor moves the scapula in which directions?",
+    concept: "Pectoralis minor pulls the coracoid process anteriorly and inferiorly, producing protraction and depression.",
     options: [
-      { text: "Long head", correct: true, why: "The long head is the only triceps head crossing the shoulder joint. [Lec 2: Arm & Forearm]" },
-      { text: "Lateral head", correct: false, why: "Lateral head arises from the humerus and does not cross the shoulder. [Lec 2: Arm & Forearm]" },
-      { text: "Medial head", correct: false, why: "Medial head arises from the humerus and does not cross the shoulder. [Lec 2: Arm & Forearm]" },
-      { text: "Anconeus head", correct: false, why: "Anconeus is a separate small muscle at the posterolateral elbow. [Lec 2: Arm & Forearm]" }
+      { text: "Protraction and depression", correct: true, why: "Pectoralis minor tilts the coracoid forward and pulls the scapula downward. [Slide #22]" },
+      { text: "Retraction and elevation", correct: false, why: "These actions are produced by trapezius and rhomboids. [Slide #22]" },
+      { text: "Superior rotation", correct: false, why: "Upward rotation is produced by trapezius. [Slide #22]" },
+      { text: "Pure lateral translation", correct: false, why: "The mechanical vector pulls anteriorly and inferiorly. [Slide #22]" }
     ]
   },
   {
-    id: 26, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
+    id: 33, subjectIndex: 2, quarter: 1, slideRef: 22, difficulty: "medium", priority: false,
+    stem: "Which nerve supplies both pectoralis minor and the sternocostal head of pectoralis major?",
+    concept: "The medial pectoral nerve supplies pectoralis minor and continues to the sternocostal head of pectoralis major.",
+    options: [
+      { text: "Medial pectoral nerve", correct: true, why: "Medial pectoral nerve supplies both pectoralis muscles; lateral supplies only major. [Slide #22]" },
+      { text: "Lateral pectoral nerve", correct: false, why: "Lateral pectoral nerve supplies only the major. [Slide #22]" },
+      { text: "Long thoracic nerve", correct: false, why: "Long thoracic supplies serratus anterior. [Slide #22]" },
+      { text: "Thoracodorsal nerve", correct: false, why: "Thoracodorsal supplies latissimus dorsi. [Slide #22]" }
+    ]
+  },
+  {
+    id: 34, subjectIndex: 2, quarter: 1, slideRef: 23, difficulty: "medium", priority: false,
+    stem: "The subclavius muscle originates from rib 1 and inserts onto which part of the clavicle?",
+    concept: "Subclavius inserts into the middle and distal portion of the clavicle to stabilize and depress it.",
+    options: [
+      { text: "Middle and distal portion of the clavicle", correct: true, why: "Subclavius inserts on the middle and distal clavicle to stabilize and depress it. [Slide #23]" },
+      { text: "Medial third of the clavicle near the sternum", correct: false, why: "The clavicular head of pectoralis major arises medially. [Slide #23]" },
+      { text: "Coracoid process of the scapula", correct: false, why: "Coracoid process receives pectoralis minor. [Slide #23]" },
+      { text: "Acromion process of the scapula", correct: false, why: "Acromion receives trapezius. [Slide #23]" }
+    ]
+  },
+  {
+    id: 35, subjectIndex: 2, quarter: 1, slideRef: 24, difficulty: "medium", priority: true,
+    stem: "Serratus anterior originates from ribs 1-8 and inserts along the _______.",
+    concept: "Serratus anterior inserts along the anterior costal surface of the medial border of the scapula.",
+    options: [
+      { text: "medial border of the scapula", correct: true, why: "Serratus anterior wraps around the rib cage to attach to the medial scapular border. [Slide #24]" },
+      { text: "lateral border of the scapula", correct: false, why: "Lateral border gives origin to teres minor. [Slide #24]" },
+      { text: "deltoid tuberosity of the humerus", correct: false, why: "Deltoid tuberosity receives the deltoid. [Slide #24]" },
+      { text: "coracoid process of the scapula", correct: false, why: "Coracoid process receives pectoralis minor. [Slide #24]" }
+    ]
+  },
+  {
+    id: 36, subjectIndex: 2, quarter: 1, slideRef: 24, difficulty: "medium", priority: true,
+    stem: "Assuming the rib cage is fixed, contraction of serratus anterior acts to _______.",
+    concept: "Serratus anterior protracts the scapula and anchors its medial border tightly against the thoracic wall.",
+    options: [
+      { text: "protract the scapula and stabilize it against the ribs", correct: true, why: "Serratus anterior pulls the scapula anteriorly and holds it flat against the thorax. [Slide #24]" },
+      { text: "retract the scapula toward the vertebral column", correct: false, why: "Retraction is performed by middle trapezius and rhomboids. [Slide #24]" },
+      { text: "elevate the clavicle directly", correct: false, why: "Serratus anterior does not attach to the clavicle. [Slide #24]" },
+      { text: "adduct the humerus across the chest", correct: false, why: "Serratus anterior does not attach to the humerus. [Slide #24]" }
+    ]
+  },
+  {
+    id: 37, subjectIndex: 2, quarter: 1, slideRef: 24, difficulty: "medium", priority: true,
+    stem: "Injury to the long thoracic nerve results in paralysis of serratus anterior, clinically presenting as _______.",
+    concept: "Long thoracic nerve palsy paralyzes serratus anterior, resulting in scapular winging away from the thoracic wall.",
+    options: [
+      { text: "pronounced winging of the entire scapula", correct: true, why: "The medial border of the scapula lifts off the thoracic wall, especially when pushing forward. [Slide #24]" },
+      { text: "drooping of the shoulder", correct: false, why: "Drooping of the shoulder is caused by spinal accessory nerve injury. [Slide #24]" },
+      { text: "Popeye deformity in the arm", correct: false, why: "Popeye deformity results from biceps long head rupture. [Slide #24]" },
+      { text: "loss of forearm pronation", correct: false, why: "Pronation loss is caused by median nerve injury. [Slide #24]" }
+    ]
+  },
+  {
+    id: 38, subjectIndex: 2, quarter: 1, slideRef: 24, difficulty: "hard", priority: false,
+    stem: "Which muscle lies directly between the serratus anterior and the costal surface of the scapula?",
+    concept: "Serratus anterior glides directly over the subscapularis muscle lining the costal surface of the scapula.",
+    options: [
+      { text: "Subscapularis", correct: true, why: "Serratus anterior and the scapula surround the subscapularis muscle. [Slide #24]" },
+      { text: "Infraspinatus", correct: false, why: "Infraspinatus lies on the posterior dorsal side of the scapula. [Slide #24]" },
+      { text: "Pectoralis minor", correct: false, why: "Pectoralis minor lies anterior on the chest wall. [Slide #24]" },
+      { text: "Teres major", correct: false, why: "Teres major is along the inferior border of the scapula. [Slide #24]" }
+    ]
+  },
+
+  /* ================= MODULE 3: ARM COMPARTMENTS & BICEPS/TRICEPS (Q39-52) ================= */
+  {
+    id: 39, subjectIndex: 3, quarter: 2, slideRef: 28, difficulty: "easy", priority: false,
+    stem: "The posterior compartment of the arm is occupied solely by which muscle?",
+    concept: "Triceps brachii forms the sole muscle of the posterior compartment of the arm.",
+    options: [
+      { text: "Triceps brachii", correct: true, why: "Triceps brachii is the single muscle filling the posterior arm compartment. [Slide #28]" },
+      { text: "Brachialis", correct: false, why: "Brachialis occupies the anterior arm compartment. [Slide #28]" },
+      { text: "Coracobrachialis", correct: false, why: "Coracobrachialis occupies the anterior arm compartment. [Slide #28]" },
+      { text: "Brachioradialis", correct: false, why: "Brachioradialis is a forearm muscle. [Slide #28]" }
+    ]
+  },
+  {
+    id: 40, subjectIndex: 3, quarter: 2, slideRef: 28, difficulty: "medium", priority: false,
+    stem: "Comparing the muscular strength of the arm compartments, which functional group is stronger?",
+    concept: "The anterior flexors of the arm are stronger than the posterior extensors.",
+    options: [
+      { text: "Anterior flexors are stronger than posterior extensors", correct: true, why: "The flexors dominate in pulling strength compared to extensors. [Slide #28]" },
+      { text: "Posterior extensors are stronger than anterior flexors", correct: false, why: "Extensors are not stronger than the flexors. [Slide #28]" },
+      { text: "Both compartments possess identical strength", correct: false, why: "The flexor mass dominates functional strength. [Slide #28]" },
+      { text: "Extensors are twice as strong as flexors", correct: false, why: "Flexors are the dominant functional group. [Slide #28]" }
+    ]
+  },
+  {
+    id: 41, subjectIndex: 3, quarter: 2, slideRef: 29, difficulty: "medium", priority: true,
+    stem: "Which nerve pierces the coracobrachialis muscle to supply the anterior arm compartment?",
+    concept: "The musculocutaneous nerve pierces coracobrachialis and innervates all three anterior arm muscles.",
+    options: [
+      { text: "Musculocutaneous nerve", correct: true, why: "Musculocutaneous nerve pierces coracobrachialis and runs between biceps and brachialis. [Slide #29]" },
+      { text: "Median nerve", correct: false, why: "Median nerve travels through the arm without innervating arm muscles. [Slide #29]" },
+      { text: "Radial nerve", correct: false, why: "Radial nerve travels posteriorly in the radial groove. [Slide #29]" },
+      { text: "Axillary nerve", correct: false, why: "Axillary nerve terminates in the deltoid and teres minor. [Slide #29]" }
+    ]
+  },
+  {
+    id: 42, subjectIndex: 3, quarter: 2, slideRef: 29, difficulty: "medium", priority: false,
+    stem: "Assuming the coracoid process is fixed, contraction of coracobrachialis acts to _______.",
+    concept: "Coracobrachialis flexes and adducts the humerus at the glenohumeral joint.",
+    options: [
+      { text: "flex and adduct the humerus", correct: true, why: "Coracobrachialis pulls the humerus forward and toward the torso. [Slide #29]" },
+      { text: "extend and abduct the humerus", correct: false, why: "These are opposing movements. [Slide #29]" },
+      { text: "supinate the forearm", correct: false, why: "Coracobrachialis does not cross the elbow joint. [Slide #29]" },
+      { text: "extend the elbow", correct: false, why: "Coracobrachialis does not cross the elbow joint. [Slide #29]" }
+    ]
+  },
+  {
+    id: 43, subjectIndex: 3, quarter: 2, slideRef: 30, difficulty: "medium", priority: true,
+    stem: "Which pairing correctly matches the origins of the two biceps brachii heads?",
+    concept: "Short head arises from the coracoid process; long head arises from the supraglenoid tubercle.",
+    options: [
+      { text: "Short head: coracoid process; Long head: supraglenoid tubercle", correct: true, why: "Short head is medial from coracoid; long head is lateral from supraglenoid tubercle. [Slide #30]" },
+      { text: "Short head: supraglenoid tubercle; Long head: coracoid process", correct: false, why: "Inverts the anatomical origins of the biceps heads. [Slide #30]" },
+      { text: "Short head: infraglenoid tubercle; Long head: coracoid process", correct: false, why: "Infraglenoid tubercle gives origin to the long head of triceps. [Slide #30]" },
+      { text: "Both heads arise from the infraglenoid tubercle", correct: false, why: "Neither biceps head originates from the infraglenoid tubercle. [Slide #30]" }
+    ]
+  },
+  {
+    id: 44, subjectIndex: 3, quarter: 2, slideRef: 30, difficulty: "easy", priority: true,
+    stem: "The biceps brachii inserts distally onto the bicipital aponeurosis and the _______.",
+    concept: "Biceps brachii inserts onto the radial tuberosity and the bicipital aponeurosis.",
+    options: [
+      { text: "radial tuberosity", correct: true, why: "Biceps tendon attaches to the radial tuberosity, allowing supination. [Slide #30]" },
+      { text: "coronoid process of the ulna", correct: false, why: "Coronoid process receives brachialis. [Slide #30]" },
+      { text: "olecranon process of the ulna", correct: false, why: "Olecranon receives triceps brachii. [Slide #30]" },
+      { text: "styloid process of the radius", correct: false, why: "Radial styloid receives brachioradialis. [Slide #30]" }
+    ]
+  },
+  {
+    id: 45, subjectIndex: 3, quarter: 2, slideRef: 30, difficulty: "medium", priority: true,
+    stem: "Assuming the scapula is fixed, contraction of the biceps brachii produces which actions at the elbow and radioulnar joints?",
+    concept: "Biceps brachii flexes the forearm and serves as a powerful supinator.",
+    options: [
+      { text: "Flexion and supination of the forearm", correct: true, why: "Biceps flexes the elbow and supinates by pulling the radial tuberosity. [Slide #30]" },
+      { text: "Flexion and pronation of the forearm", correct: false, why: "Pronation is performed by pronator teres and quadratus. [Slide #30]" },
+      { text: "Extension and supination of the forearm", correct: false, why: "Biceps does not extend the elbow. [Slide #30]" },
+      { text: "Extension and pronation of the forearm", correct: false, why: "Both actions oppose biceps function. [Slide #30]" }
+    ]
+  },
+  {
+    id: 46, subjectIndex: 3, quarter: 2, slideRef: 31, difficulty: "medium", priority: false,
+    stem: "The brachialis muscle originates from the distal half of the anterior humerus and inserts on the _______.",
+    concept: "Brachialis inserts into the coronoid process and tuberosity of the ulna.",
+    options: [
+      { text: "coronoid process and tuberosity of the ulna", correct: true, why: "Brachialis attaches to the ulna, making it an elbow flexor unaffected by pronation/supination. [Slide #31]" },
+      { text: "radial tuberosity", correct: false, why: "Radial tuberosity receives the biceps tendon. [Slide #31]" },
+      { text: "coracoid process of the scapula", correct: false, why: "Coracoid process is a scapular landmark. [Slide #31]" },
+      { text: "olecranon process of the ulna", correct: false, why: "Olecranon receives the triceps tendon. [Slide #31]" }
+    ]
+  },
+  {
+    id: 47, subjectIndex: 3, quarter: 2, slideRef: 32, difficulty: "medium", priority: true,
+    stem: "The long head of triceps brachii originates from which landmark?",
+    concept: "The long head of the triceps arises from the infraglenoid tubercle of the scapula.",
+    options: [
+      { text: "Infraglenoid tubercle of the scapula", correct: true, why: "Long head arises from the infraglenoid tubercle, crossing the glenohumeral joint. [Slide #32]" },
+      { text: "Supraglenoid tubercle of the scapula", correct: false, why: "Supraglenoid tubercle gives origin to biceps long head. [Slide #32]" },
+      { text: "Coracoid process of the scapula", correct: false, why: "Coracoid gives origin to biceps short head and coracobrachialis. [Slide #32]" },
+      { text: "Posterior humerus inferior to the radial groove", correct: false, why: "This is the origin of the medial head of triceps. [Slide #32]" }
+    ]
+  },
+  {
+    id: 48, subjectIndex: 3, quarter: 2, slideRef: 32, difficulty: "hard", priority: true,
+    stem: "Relative to the radial groove of the humerus, where do the lateral and medial heads of the triceps originate?",
+    concept: "Lateral head arises superior to the radial groove; medial head arises inferior to the radial groove.",
+    options: [
+      { text: "Lateral head arises superior to the groove; medial head arises inferior", correct: true, why: "Lateral head is superior; medial head is inferior on the posterior humerus. [Slide #32]" },
+      { text: "Lateral head arises inferior to the groove; medial head arises superior", correct: false, why: "Inverts the positions of the humeral triceps heads. [Slide #32]" },
+      { text: "Both heads arise superior to the groove", correct: false, why: "Medial head occupies the broad posterior surface below the groove. [Slide #32]" },
+      { text: "Both heads arise from the medial epicondyle", correct: false, why: "The epicondyle gives origin to forearm muscles. [Slide #32]" }
+    ]
+  },
+  {
+    id: 49, subjectIndex: 3, quarter: 2, slideRef: 32, difficulty: "hard", priority: true,
+    stem: "Which head of triceps brachii crosses the glenohumeral joint, assisting in humeral extension and adduction while resisting downward dislocation?",
+    concept: "The long head of the triceps is the only head crossing the shoulder joint.",
+    options: [
+      { text: "Long head", correct: true, why: "The long head crosses the shoulder from the infraglenoid tubercle to stabilize the abducted joint. [Slide #32]" },
+      { text: "Lateral head", correct: false, why: "Lateral head originates on the humerus and does not cross the shoulder. [Slide #32]" },
+      { text: "Medial head", correct: false, why: "Medial head originates on the humerus and does not cross the shoulder. [Slide #32]" },
+      { text: "All three heads equally", correct: false, why: "Only the long head has a scapular attachment crossing the shoulder. [Slide #32]" }
+    ]
+  },
+  {
+    id: 50, subjectIndex: 3, quarter: 2, slideRef: 34, difficulty: "medium", priority: true,
     stem: "How does biceps tendinosis differ from biceps tendinitis?",
-    concept: "Tendinosis is collagen degeneration and disorganization without active inflammation, whereas tendinitis involves acute inflammation.",
+    concept: "Tendinosis is collagen degeneration and disorganization without active inflammation, whereas tendinitis involves microtears and inflammation.",
     options: [
-      { text: "Tendinosis represents collagen degeneration without an active inflammatory infiltrate", correct: true, why: "Tendinosis is chronic micro-degeneration and vascular compromise without acute inflammation. [Lec 2: Arm & Forearm]" },
-      { text: "Tendinosis is acute inflammation caused by microtears", correct: false, why: "Acute inflammation defines tendinitis. [Lec 2: Arm & Forearm]" },
-      { text: "Tendinosis describes complete tendon detachment from the supraglenoid tubercle", correct: false, why: "Detachment is tendon rupture. [Lec 2: Arm & Forearm]" },
-      { text: "Tendinosis describes displacement of the tendon out of the groove", correct: false, why: "Displacement is tendon dislocation. [Lec 2: Arm & Forearm]" }
+      { text: "Tendinosis is collagen degeneration without an active inflammatory response", correct: true, why: "Tendinosis represents chronic collagen breakdown without acute inflammation. [Slide #34]" },
+      { text: "Tendinosis is an acute inflammatory response caused by microtears", correct: false, why: "Acute inflammation defines tendinitis. [Slide #34]" },
+      { text: "Tendinosis represents complete detachment of the tendon from bone", correct: false, why: "Complete detachment is tendon rupture. [Slide #34]" },
+      { text: "Tendinosis is displacement of the tendon out of the groove", correct: false, why: "Displacement is tendon dislocation. [Slide #34]" }
     ]
   },
   {
-    id: 27, subjectIndex: 2, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
-    stem: "A distal balling of the anterior arm muscle belly ('Popeye deformity') results from complete rupture of the biceps long head from the _______.",
-    concept: "Rupture of the long head tendon from the supraglenoid tubercle causes the muscle belly to bunch distally.",
+    id: 51, subjectIndex: 3, quarter: 2, slideRef: 34, difficulty: "medium", priority: false,
+    stem: "Biceps tendinitis most commonly results from repetitive microtrauma in which activities?",
+    concept: "Repetitive overhead motions in throwing and racquet sports commonly cause biceps tendinitis.",
     options: [
-      { text: "supraglenoid tubercle", correct: true, why: "Avulsion of the tendon from the supraglenoid tubercle allows the long head belly to retract and ball distally. [Lec 2: Arm & Forearm]" },
-      { text: "coracoid process", correct: false, why: "Coracoid process anchors the short head, which remains attached. [Lec 2: Arm & Forearm]" },
-      { text: "radial tuberosity", correct: false, why: "Distal avulsion at the radial tuberosity causes proximal retraction. [Lec 2: Arm & Forearm]" },
-      { text: "infraglenoid tubercle", correct: false, why: "Infraglenoid tubercle is the triceps long head origin. [Lec 2: Arm & Forearm]" }
+      { text: "Throwing and racquet sports", correct: true, why: "Repetitive overhead sliding of the tendon within the bicipital groove causes irritation. [Slide #34]" },
+      { text: "Distance running and cycling", correct: false, why: "These activities stress lower limb tendons. [Slide #34]" },
+      { text: "Static computer typing", correct: false, why: "Not an overhead repetitive throwing stress. [Slide #34]" },
+      { text: "Seated cervical spine adjustments", correct: false, why: "Racquet and throwing sports are the classic presentations. [Slide #34]" }
+    ]
+  },
+  {
+    id: 52, subjectIndex: 3, quarter: 2, slideRef: 36, difficulty: "medium", priority: true,
+    stem: "Rupture of the long head of the biceps tendon, resulting in a Popeye deformity, most commonly occurs in which demographic?",
+    concept: "Biceps long head rupture typically occurs in individuals over 35 years old involved in repetitive overhead motions.",
+    options: [
+      { text: "Individuals over thirty-five with repetitive overhead activity", correct: true, why: "Wear and tear over time predisposes individuals over 35 to tendon rupture. [Slide #36]" },
+      { text: "Children under twelve years of age", correct: false, why: "Children have open growth plates and rarely rupture the biceps tendon. [Slide #36]" },
+      { text: "Sedentary individuals under twenty-five", correct: false, why: "Rupture requires chronic wear and tear or heavy loading. [Slide #36]" },
+      { text: "Adolescent distance runners", correct: false, why: "Running does not place repetitive overhead loads on the biceps. [Slide #36]" }
     ]
   },
 
-  /* ================= MODULE 3: ANTERIOR FOREARM ================= */
+  /* ================= MODULE 4: ANTERIOR FOREARM: FLEXOR-PRONATORS (Q53-66) ================= */
   {
-    id: 28, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "easy", priority: true,
-    stem: "The anterior forearm flexor-pronator mass has approximately _______ the bulk and strength of the posterior extensor mass.",
-    concept: "Forearm flexors have approximately twice the bulk and strength of extensors because gripping requires greater torque.",
+    id: 53, subjectIndex: 4, quarter: 3, slideRef: 51, difficulty: "easy", priority: false,
+    stem: "Which two functional groups constitute the anterior compartment of the forearm?",
+    concept: "The anterior forearm compartment consists of flexors and pronators.",
     options: [
-      { text: "twice", correct: true, why: "Forearm flexors have about twice the bulk and strength of extensors. [Lec 2: Arm & Forearm]" },
-      { text: "half", correct: false, why: "Reverses the functional muscular ratio. [Lec 2: Arm & Forearm]" },
-      { text: "one-quarter", correct: false, why: "Flexors are significantly larger than extensors. [Lec 2: Arm & Forearm]" },
-      { text: "equal", correct: false, why: "The two compartments are not equal in size or torque. [Lec 2: Arm & Forearm]" }
+      { text: "Flexors and pronators", correct: true, why: "Anterior forearm muscles flex the wrist and digits and pronate the radius. [Slide #51]" },
+      { text: "Extensors and supinators", correct: false, why: "These occupy the posterior forearm compartment. [Slide #51]" },
+      { text: "Extensors and pronators", correct: false, why: "Extensors belong to the posterior compartment. [Slide #51]" },
+      { text: "Abductors and supinators", correct: false, why: "Supinators belong to the posterior compartment. [Slide #51]" }
     ]
   },
   {
-    id: 29, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "Which muscle alone constitutes the intermediate layer of the anterior forearm compartment?",
-    concept: "Flexor digitorum superficialis (FDS) alone occupies the intermediate layer between superficial and deep groups.",
+    id: 54, subjectIndex: 4, quarter: 3, slideRef: 51, difficulty: "easy", priority: true,
+    stem: "The anterior forearm flexors have approximately _______ the bulk and strength of the posterior extensors.",
+    concept: "Forearm flexors have approximately twice the bulk and strength of the posterior extensors.",
     options: [
-      { text: "Flexor digitorum superficialis", correct: true, why: "FDS sits intermediate between the 4 superficial flexors and 3 deep flexors. [Lec 2: Arm & Forearm]" },
-      { text: "Flexor digitorum profundus", correct: false, why: "FDP sits in the deep layer. [Lec 2: Arm & Forearm]" },
-      { text: "Palmaris longus", correct: false, why: "Palmaris longus belongs to the superficial group. [Lec 2: Arm & Forearm]" },
-      { text: "Pronator quadratus", correct: false, why: "Pronator quadratus is in the deep layer. [Lec 2: Arm & Forearm]" }
+      { text: "twice", correct: true, why: "Flexors are roughly twice as strong and bulky as extensors because gripping requires greater torque. [Slide #51]" },
+      { text: "half", correct: false, why: "Reverses the anatomical functional ratio. [Slide #51]" },
+      { text: "one-quarter", correct: false, why: "Flexors are larger, not smaller. [Slide #51]" },
+      { text: "equal", correct: false, why: "The two compartments are not equal in size or torque. [Slide #51]" }
     ]
   },
   {
-    id: 30, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "The pronator teres arises via a humeral head from the medial epicondyle and an ulnar head from the _______.",
+    id: 55, subjectIndex: 4, quarter: 3, slideRef: 52, difficulty: "medium", priority: false,
+    stem: "Which muscle is NOT located in the superficial layer of the anterior forearm?",
+    concept: "Flexor digitorum superficialis forms the intermediate layer; pronator teres, FCR, palmaris longus, and FCU are superficial.",
+    options: [
+      { text: "Flexor digitorum superficialis", correct: true, why: "FDS occupies the intermediate layer between superficial and deep groups. [Slide #52]" },
+      { text: "Pronator teres", correct: false, why: "Pronator teres is in the superficial layer. [Slide #52]" },
+      { text: "Palmaris longus", correct: false, why: "Palmaris longus is in the superficial layer. [Slide #52]" },
+      { text: "Flexor carpi ulnaris", correct: false, why: "Flexor carpi ulnaris is in the superficial layer. [Slide #52]" }
+    ]
+  },
+  {
+    id: 56, subjectIndex: 4, quarter: 3, slideRef: 52, difficulty: "medium", priority: true,
+    stem: "Which group lists all deep-layer muscles of the anterior forearm compartment?",
+    concept: "The deep layer of the anterior forearm consists of FDP, flexor pollicis longus, and pronator quadratus.",
+    options: [
+      { text: "Flexor digitorum profundus, flexor pollicis longus, and pronator quadratus", correct: true, why: "These three muscles form the deepest muscular plane of the anterior forearm. [Slide #52]" },
+      { text: "Pronator teres, flexor carpi radialis, and palmaris longus", correct: false, why: "These belong to the superficial layer. [Slide #52]" },
+      { text: "Flexor digitorum superficialis, flexor carpi ulnaris, and anconeus", correct: false, why: "FDS is intermediate; FCU is superficial; anconeus is posterior. [Slide #52]" },
+      { text: "Supinator, extensor indicis, and abductor pollicis longus", correct: false, why: "These are deep posterior forearm muscles. [Slide #52]" }
+    ]
+  },
+  {
+    id: 57, subjectIndex: 4, quarter: 3, slideRef: 53, difficulty: "medium", priority: true,
+    stem: "Pronator teres arises via two heads: a humeral head from the medial epicondyle and an ulnar head from the _______.",
     concept: "Pronator teres has a humeral head from the medial epicondyle and an ulnar head from the coronoid process.",
     options: [
-      { text: "coronoid process of the ulna", correct: true, why: "The deep ulnar head originates from the coronoid process; the median nerve passes between both heads. [Lec 2: Arm & Forearm]" },
-      { text: "olecranon process of the ulna", correct: false, why: "Olecranon gives origin to FCU, not pronator teres. [Lec 2: Arm & Forearm]" },
-      { text: "styloid process of the ulna", correct: false, why: "Ulnar styloid is a distal wrist landmark. [Lec 2: Arm & Forearm]" },
-      { text: "radial tuberosity", correct: false, why: "Radial tuberosity receives the biceps brachii tendon. [Lec 2: Arm & Forearm]" }
+      { text: "coronoid process of the ulna", correct: true, why: "The deep ulnar head originates from the coronoid process. [Slide #53]" },
+      { text: "olecranon process of the ulna", correct: false, why: "Olecranon gives origin to FCU, not pronator teres. [Slide #53]" },
+      { text: "radial tuberosity", correct: false, why: "Radial tuberosity receives the biceps tendon. [Slide #53]" },
+      { text: "bicipital groove", correct: false, why: "Bicipital groove is on the proximal humerus. [Slide #53]" }
     ]
   },
   {
-    id: 31, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "easy", priority: false,
-    stem: "The palmaris longus muscle is congenitally absent on one or both sides in approximately _______ of the population.",
-    concept: "Palmaris longus is absent in approximately 14% of people without functional deficit.",
+    id: 58, subjectIndex: 4, quarter: 3, slideRef: 53, difficulty: "medium", priority: false,
+    stem: "Pronator teres inserts on the lateral midshaft of the radius and produces which two actions?",
+    concept: "Pronator teres pronates the forearm and assists in elbow flexion.",
     options: [
-      { text: "14%", correct: true, why: "Palmaris longus is absent in about 14% of individuals (most commonly on the left side). [Lec 2: Arm & Forearm]" },
-      { text: "4%", correct: false, why: "4% underestimates its absence. [Lec 2: Arm & Forearm]" },
-      { text: "35%", correct: false, why: "35% is far higher than documented cadaveric frequencies. [Lec 2: Arm & Forearm]" },
-      { text: "50%", correct: false, why: "The vast majority of individuals possess the muscle. [Lec 2: Arm & Forearm]" }
+      { text: "Forearm pronation and elbow flexion", correct: true, why: "Because it crosses the elbow, pronator teres pronates the radius and assists in elbow flexion. [Slide #53]" },
+      { text: "Forearm supination and elbow extension", correct: false, why: "Both actions oppose pronator teres function. [Slide #53]" },
+      { text: "Pure wrist adduction and flexion", correct: false, why: "Pronator teres inserts on the radius, not the carpus. [Slide #53]" },
+      { text: "Forearm supination and wrist abduction", correct: false, why: "Pronator teres is a pronator, not a supinator. [Slide #53]" }
     ]
   },
   {
-    id: 32, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
-    stem: "Which two anterior forearm structures are innervated by the ulnar nerve rather than the median nerve?",
-    concept: "All anterior forearm muscles are median-innervated EXCEPT flexor carpi ulnaris and the medial half of flexor digitorum profundus.",
+    id: 59, subjectIndex: 4, quarter: 3, slideRef: 54, difficulty: "medium", priority: false,
+    stem: "Flexor carpi radialis inserts into the base of the second metacarpal to produce wrist _______.",
+    concept: "Flexor carpi radialis produces wrist flexion and abduction (radial deviation).",
     options: [
-      { text: "Flexor carpi ulnaris and the medial half of flexor digitorum profundus", correct: true, why: "The ulnar nerve supplies FCU and digits 4-5 of FDP; all other anterior forearm muscles are median-supplied. [Lec 2: Arm & Forearm]" },
-      { text: "Flexor carpi ulnaris and flexor digitorum superficialis", correct: false, why: "FDS is supplied by the median nerve. [Lec 2: Arm & Forearm]" },
-      { text: "Pronator teres and pronator quadratus", correct: false, why: "Both pronators are supplied by the median nerve. [Lec 2: Arm & Forearm]" },
-      { text: "Palmaris longus and lateral half of flexor digitorum profundus", correct: false, why: "Both are supplied by the median nerve. [Lec 2: Arm & Forearm]" }
+      { text: "flexion and abduction (radial deviation)", correct: true, why: "FCR pulls the hand into flexion and radial deviation. [Slide #54]" },
+      { text: "flexion and adduction (ulnar deviation)", correct: false, why: "Flexion and adduction is produced by flexor carpi ulnaris. [Slide #54]" },
+      { text: "extension and abduction", correct: false, why: "Extension and abduction is produced by ECRL/ECRB. [Slide #54]" },
+      { text: "extension and adduction", correct: false, why: "Extension and adduction is produced by ECU. [Slide #54]" }
     ]
   },
   {
-    id: 33, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
+    id: 60, subjectIndex: 4, quarter: 3, slideRef: 55, difficulty: "easy", priority: true,
+    stem: "The palmaris longus muscle is absent on one or both sides in approximately _______ of the population.",
+    concept: "Palmaris longus is congenitally absent in approximately 14% of individuals.",
+    options: [
+      { text: "14%", correct: true, why: "Palmaris longus is absent in about 14% of people without functional impairment. [Slide #55]" },
+      { text: "4%", correct: false, why: "4% underestimates its absence frequency. [Slide #55]" },
+      { text: "35%", correct: false, why: "35% is higher than documented rates. [Slide #55]" },
+      { text: "50%", correct: false, why: "The majority of individuals possess the muscle. [Slide #55]" }
+    ]
+  },
+  {
+    id: 61, subjectIndex: 4, quarter: 3, slideRef: 56, difficulty: "medium", priority: false,
+    stem: "Flexor carpi ulnaris inserts on the pisiform, hook of the hamate, and 5th metacarpal to produce wrist _______.",
+    concept: "Flexor carpi ulnaris produces wrist flexion and adduction (ulnar deviation).",
+    options: [
+      { text: "flexion and adduction (ulnar deviation)", correct: true, why: "FCU pulls the wrist into flexion and medial deviation. [Slide #56]" },
+      { text: "flexion and abduction (radial deviation)", correct: false, why: "Flexion and abduction is produced by FCR. [Slide #56]" },
+      { text: "extension and adduction", correct: false, why: "Extension and adduction is produced by ECU. [Slide #56]" },
+      { text: "forearm pronation", correct: false, why: "Pronation is produced by the pronator muscles. [Slide #56]" }
+    ]
+  },
+  {
+    id: 62, subjectIndex: 4, quarter: 3, slideRef: 56, difficulty: "medium", priority: true,
+    stem: "Which anterior forearm muscle is the 'odd one out' by receiving ulnar rather than median innervation?",
+    concept: "Flexor carpi ulnaris (along with the medial half of FDP) is innervated by the ulnar nerve.",
+    options: [
+      { text: "Flexor carpi ulnaris", correct: true, why: "FCU is supplied by the ulnar nerve; all other superficial/intermediate anterior flexors are median. [Slide #56]" },
+      { text: "Flexor carpi radialis", correct: false, why: "FCR is innervated by the median nerve. [Slide #56]" },
+      { text: "Palmaris longus", correct: false, why: "Palmaris longus is innervated by the median nerve. [Slide #56]" },
+      { text: "Pronator teres", correct: false, why: "Pronator teres is innervated by the median nerve. [Slide #56]" }
+    ]
+  },
+  {
+    id: 63, subjectIndex: 4, quarter: 3, slideRef: 57, difficulty: "medium", priority: true,
+    stem: "Flexor digitorum superficialis inserts into the middle phalanges of digits 2-5 and primarily flexes the _______ joints.",
+    concept: "FDS flexes digits 2-5 primarily at the proximal interphalangeal (PIP) joints.",
+    options: [
+      { text: "proximal interphalangeal (PIP)", correct: true, why: "FDS inserts into the middle phalanges to flex the PIP joints. [Slide #57]" },
+      { text: "distal interphalangeal (DIP)", correct: false, why: "DIP flexion is executed exclusively by FDP. [Slide #57]" },
+      { text: "carpometacarpal (CMC)", correct: false, why: "FDS does not isolate CMC joint motions. [Slide #57]" },
+      { text: "thumb interphalangeal", correct: false, why: "Thumb IP flexion is executed by flexor pollicis longus. [Slide #57]" }
+    ]
+  },
+  {
+    id: 64, subjectIndex: 4, quarter: 3, slideRef: 58, difficulty: "medium", priority: true,
     stem: "Which statement correctly contrasts the digital insertions of FDS versus FDP?",
-    concept: "FDS inserts into the middle phalanges (flexing PIPs); FDP inserts into the distal phalanges (flexing DIPs).",
+    concept: "FDS inserts on the middle phalanges (flexing PIPs); FDP inserts on the distal phalanges (flexing DIPs).",
     options: [
-      { text: "FDS inserts on middle phalanges 2-5; FDP inserts on distal phalanges 2-5", correct: true, why: "FDS tendons bifurcate to insert on middle phalanges; FDP tendons pass through the split to reach distal phalanges. [Lec 2: Arm & Forearm]" },
-      { text: "FDS inserts on distal phalanges 2-5; FDP inserts on middle phalanges 2-5", correct: false, why: "Inverts the phalangeal insertion levels. [Lec 2: Arm & Forearm]" },
-      { text: "Both tendons insert onto the proximal phalanges", correct: false, why: "Neither long flexor terminates on the proximal phalanges. [Lec 2: Arm & Forearm]" },
-      { text: "FDS reaches digits 1-5; FDP reaches digits 2-5 only", correct: false, why: "Both muscles reach digits 2-5 only; the thumb has flexor pollicis longus. [Lec 2: Arm & Forearm]" }
+      { text: "FDS inserts on middle phalanges 2-5; FDP inserts on distal phalanges 2-5", correct: true, why: "FDS splits to attach to middle phalanges; FDP passes through the split to distal phalanges. [Slide #58]" },
+      { text: "FDS inserts on distal phalanges 2-5; FDP inserts on middle phalanges 2-5", correct: false, why: "Inverts the anatomical digital insertion levels. [Slide #58]" },
+      { text: "Both tendons insert together into proximal phalanges", correct: false, why: "Neither long digital flexor terminates on proximal phalanges. [Slide #58]" },
+      { text: "FDS reaches digits 1-5; FDP reaches digits 2-5 only", correct: false, why: "The thumb has its own dedicated flexor, flexor pollicis longus. [Slide #58]" }
     ]
   },
   {
-    id: 34, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: false,
-    stem: "Flexor pollicis longus originates from the anterior radius and interosseous membrane and inserts on the _______.",
-    concept: "Flexor pollicis longus inserts onto the base of the distal phalanx of the thumb, flexing the IP joint.",
+    id: 65, subjectIndex: 4, quarter: 3, slideRef: 58, difficulty: "hard", priority: true,
+    stem: "Which statement correctly describes the split innervation of flexor digitorum profundus?",
+    concept: "FDP receives dual innervation: lateral portion (digits 2-3) via the median nerve; medial portion (digits 4-5) via the ulnar nerve.",
     options: [
-      { text: "base of the distal phalanx of the thumb", correct: true, why: "FPL reaches the base of the distal phalanx to flex the thumb interphalangeal joint. [Lec 2: Arm & Forearm]" },
-      { text: "base of the proximal phalanx of the thumb", correct: false, why: "Proximal phalanx receives FPB and APB. [Lec 2: Arm & Forearm]" },
-      { text: "base of the first metacarpal", correct: false, why: "First metacarpal base receives abductor pollicis longus. [Lec 2: Arm & Forearm]" },
-      { text: "lateral shaft of the first metacarpal", correct: false, why: "First metacarpal shaft receives opponens pollicis. [Lec 2: Arm & Forearm]" }
+      { text: "Lateral half (digits 2-3) by median nerve; medial half (digits 4-5) by ulnar nerve", correct: true, why: "FDP has a split supply matching the digits: lateral is median, medial is ulnar. [Slide #58]" },
+      { text: "Lateral half by ulnar nerve; medial half by median nerve", correct: false, why: "Inverts the medial/lateral nerve distribution. [Slide #58]" },
+      { text: "Entire muscle belly by the deep branch of the radial nerve", correct: false, why: "Radial nerve supplies posterior extensor muscles. [Slide #58]" },
+      { text: "Entire muscle belly exclusively by the median nerve", correct: false, why: "The medial half is innervated by the ulnar nerve. [Slide #58]" }
     ]
   },
   {
-    id: 35, subjectIndex: 3, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: false,
-    stem: "Pronator quadratus spans between which two bony landmarks?",
-    concept: "Pronator quadratus runs transversely across the distal fourth of the anterior ulna to the distal fourth of the anterior radius.",
+    id: 66, subjectIndex: 4, quarter: 3, slideRef: 60, difficulty: "hard", priority: false,
+    stem: "Which statement correctly contrasts the actions of the two forearm pronators?",
+    concept: "Pronator teres crosses the elbow to pronate the radius and assist in elbow flexion; pronator quadratus is distal and only pronates.",
     options: [
-      { text: "Distal fourth of anterior ulna to distal fourth of anterior radius", correct: true, why: "Pronator quadratus is a deep transverse quadrate muscle spanning the distal 1/4 of both forearm bones. [Lec 2: Arm & Forearm]" },
-      { text: "Medial epicondyle to lateral midshaft of radius", correct: false, why: "This describes pronator teres. [Lec 2: Arm & Forearm]" },
-      { text: "Lateral epicondyle to proximal third of radius", correct: false, why: "This describes the supinator. [Lec 2: Arm & Forearm]" },
-      { text: "Coronoid process to radial tuberosity", correct: false, why: "Does not describe a functional forearm muscle. [Lec 2: Arm & Forearm]" }
+      { text: "Pronator teres pronates and flexes the elbow; pronator quadratus only pronates", correct: true, why: "Pronator teres crosses the elbow joint; pronator quadratus acts strictly at the distal radioulnar joint. [Slide #60]" },
+      { text: "Pronator quadratus pronates and flexes the elbow; pronator teres only pronates", correct: false, why: "Reverses the anatomical capabilities of the two pronators. [Slide #60]" },
+      { text: "Pronator teres is ulnar-innervated; pronator quadratus is median-innervated", correct: false, why: "Both pronator muscles are innervated by the median nerve. [Slide #60]" },
+      { text: "Both muscles originate directly from the medial epicondyle", correct: false, why: "Pronator quadratus originates from the distal anterior ulna. [Slide #60]" }
     ]
   },
 
-  /* ================= MODULE 4: POSTERIOR FOREARM ================= */
+  /* ================= MODULE 5: POSTERIOR FOREARM: EXTENSOR-SUPINATORS (Q67-80) ================= */
   {
-    id: 36, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "Which posterior compartment muscle is innervated by the radial nerve yet acts primarily as an elbow flexor?",
-    concept: "Brachioradialis is in the posterior/radial compartment but courses anterior to the elbow to act as a flexor.",
+    id: 67, subjectIndex: 5, quarter: 3, slideRef: 61, difficulty: "easy", priority: false,
+    stem: "Which two functional groups constitute the posterior compartment of the forearm?",
+    concept: "The posterior forearm compartment consists of extensors and supinators.",
     options: [
-      { text: "Brachioradialis", correct: true, why: "Brachioradialis sits on the anterolateral forearm, is radial-supplied, and flexes the elbow. [Lec 2: Arm & Forearm]" },
-      { text: "Anconeus", correct: false, why: "Anconeus extends the elbow. [Lec 2: Arm & Forearm]" },
-      { text: "Supinator", correct: false, why: "Supinator supinates the radius. [Lec 2: Arm & Forearm]" },
-      { text: "Extensor carpi radialis longus", correct: false, why: "ECRL extends and abducts the wrist. [Lec 2: Arm & Forearm]" }
+      { text: "Extensors and supinators", correct: true, why: "The posterior compartment muscles extend the wrist and fingers and supinate the radius. [Slide #61]" },
+      { text: "Flexors and pronators", correct: false, why: "These occupy the anterior forearm compartment. [Slide #61]" },
+      { text: "Extensors and pronators", correct: false, why: "Extensors belong to the posterior compartment. [Slide #61]" },
+      { text: "Abductors and supinators", correct: false, why: "Supinators belong to the posterior compartment. [Slide #61]" }
     ]
   },
   {
-    id: 37, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
+    id: 68, subjectIndex: 5, quarter: 3, slideRef: 61, difficulty: "medium", priority: false,
+    stem: "Which muscle is located in the deep layer of the posterior forearm?",
+    concept: "Supinator, extensor indicis, APL, EPL, and EPB belong to the deep layer of the posterior compartment.",
+    options: [
+      { text: "Supinator", correct: true, why: "Supinator is part of the deep posterior group wrapping around the proximal radius. [Slide #61]" },
+      { text: "Anconeus", correct: false, why: "Anconeus is in the superficial posterior layer. [Slide #61]" },
+      { text: "Extensor carpi ulnaris", correct: false, why: "Extensor carpi ulnaris is in the superficial posterior layer. [Slide #61]" },
+      { text: "Extensor digitorum", correct: false, why: "Extensor digitorum is in the superficial posterior layer. [Slide #61]" }
+    ]
+  },
+  {
+    id: 69, subjectIndex: 5, quarter: 3, slideRef: 61, difficulty: "medium", priority: true,
+    stem: "Forearm compartment syndrome from swelling or hemorrhage is relieved by surgical incision of the _______.",
+    concept: "Cutting open the unyielding forearm fascia (fasciotomy) relieves pressure on muscles and vessels.",
+    options: [
+      { text: "fascia (fasciotomy)", correct: true, why: "Incision of the deep antebrachial fascia relieves compartment compression. [Slide #61]" },
+      { text: "interosseous membrane", correct: false, why: "The interosseous membrane connects radius and ulna. [Slide #61]" },
+      { text: "flexor retinaculum", correct: false, why: "Flexor retinaculum release is for carpal tunnel syndrome. [Slide #61]" },
+      { text: "annular ligament", correct: false, why: "The annular ligament stabilizes the radial head. [Slide #61]" }
+    ]
+  },
+  {
+    id: 70, subjectIndex: 5, quarter: 3, slideRef: 62, difficulty: "medium", priority: false,
+    stem: "The anconeus muscle originates from the lateral epicondyle and inserts on the lateral olecranon to _______.",
+    concept: "Anconeus assists the triceps in extending the elbow and stabilizes the joint during pronation.",
+    options: [
+      { text: "assist in elbow extension and stabilize the joint", correct: true, why: "Anconeus assists triceps in extension and stabilizes the ulna. [Slide #62]" },
+      { text: "powerfully supinate the flexed forearm", correct: false, why: "Supination is produced by supinator and biceps brachii. [Slide #62]" },
+      { text: "flex the elbow from a pronated position", correct: false, why: "Anconeus is an extensor, not a flexor. [Slide #62]" },
+      { text: "radially deviate the carpus", correct: false, why: "Anconeus does not cross or act on the wrist joint. [Slide #62]" }
+    ]
+  },
+  {
+    id: 71, subjectIndex: 5, quarter: 3, slideRef: 63, difficulty: "medium", priority: true,
+    stem: "Which radial-nerve muscle in the posterior forearm acts primarily as an elbow flexor?",
+    concept: "Brachioradialis is in the posterior/radial compartment but courses anterior to the elbow axis to act as a flexor.",
+    options: [
+      { text: "Brachioradialis", correct: true, why: "Brachioradialis is radial-innervated but flexes the elbow. [Slide #63]" },
+      { text: "Anconeus", correct: false, why: "Anconeus extends the elbow. [Slide #63]" },
+      { text: "Supinator", correct: false, why: "Supinator supinates the radius. [Slide #63]" },
+      { text: "Extensor carpi radialis longus", correct: false, why: "ECRL extends and abducts the wrist. [Slide #63]" }
+    ]
+  },
+  {
+    id: 72, subjectIndex: 5, quarter: 3, slideRef: 63, difficulty: "easy", priority: true,
+    stem: "Which deep tendon reflex in the upper extremity specifically tests the C6 neurological level?",
+    concept: "The brachioradialis deep tendon reflex evaluates the integrity of the C6 spinal root level.",
+    options: [
+      { text: "Brachioradialis reflex", correct: true, why: "Brachioradialis deep tendon reflex evaluates C6. [Slide #63]" },
+      { text: "Triceps reflex", correct: false, why: "Triceps reflex evaluates C7. [Slide #63]" },
+      { text: "Pronator quadratus reflex", correct: false, why: "Not a standard clinical reflex. [Slide #63]" },
+      { text: "Extensor digitorum reflex", correct: false, why: "Not a standard clinical reflex. [Slide #63]" }
+    ]
+  },
+  {
+    id: 73, subjectIndex: 5, quarter: 3, slideRef: 64, difficulty: "hard", priority: true,
     stem: "Which statement correctly distinguishes the proximal and distal attachments of ECRL versus ECRB?",
-    concept: "ECRL originates from the lateral supracondylar ridge and inserts on MC2; ECRB originates from the lateral epicondyle and inserts on MC3.",
+    concept: "ECRL arises from the lateral supracondylar ridge and inserts on MC2; ECRB arises from the lateral epicondyle and inserts on MC3.",
     options: [
-      { text: "ECRL arises from lateral supracondylar ridge and inserts on 2nd metacarpal; ECRB arises from lateral epicondyle and inserts on 3rd metacarpal", correct: true, why: "ECRL starts higher (supracondylar ridge) and attaches to MC2; ECRB starts at the common extensor origin and attaches to MC3. [Lec 2: Arm & Forearm]" },
-      { text: "ECRL arises from lateral epicondyle and inserts on 3rd metacarpal; ECRB arises from supracondylar ridge and inserts on 2nd metacarpal", correct: false, why: "Inverts both the origins and insertions. [Lec 2: Arm & Forearm]" },
-      { text: "Both muscles arise from the lateral epicondyle and insert on the 5th metacarpal", correct: false, why: "The 5th metacarpal base receives extensor carpi ulnaris. [Lec 2: Arm & Forearm]" },
-      { text: "ECRL is median-innervated; ECRB is radial-innervated", correct: false, why: "Both muscles are radial-innervated. [Lec 2: Arm & Forearm]" }
+      { text: "ECRL: supracondylar ridge to 2nd MC; ECRB: lateral epicondyle to 3rd MC", correct: true, why: "ECRL starts proximal on the supracondylar ridge to MC2; ECRB starts at the lateral epicondyle to MC3. [Slide #64]" },
+      { text: "ECRL: lateral epicondyle to 3rd MC; ECRB: supracondylar ridge to 2nd MC", correct: false, why: "Inverts the origins and insertions of the radial wrist extensors. [Slide #64]" },
+      { text: "Both muscles arise from the epicondyle and insert on the 5th MC", correct: false, why: "The 5th metacarpal base receives extensor carpi ulnaris. [Slide #64]" },
+      { text: "ECRL is median-innervated; ECRB is radial-innervated", correct: false, why: "Both muscles are radial-innervated. [Slide #64]" }
     ]
   },
   {
-    id: 38, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "easy", priority: false,
-    stem: "While the anterior forearm contains two long digital flexors, the posterior forearm contains _______ common digital extensor muscle(s).",
+    id: 74, subjectIndex: 5, quarter: 3, slideRef: 64, difficulty: "medium", priority: false,
+    stem: "Contraction of ECRL or ECRB produces which combined movements at the wrist?",
+    concept: "Both ECRL and ECRB extend and abduct (radially deviate) the wrist.",
+    options: [
+      { text: "Wrist extension and abduction (radial deviation)", correct: true, why: "Both muscles cross the radiocarpal joint dorsolaterally to extend and abduct the hand. [Slide #64]" },
+      { text: "Wrist extension and adduction (ulnar deviation)", correct: false, why: "Extension and adduction is produced by ECU. [Slide #64]" },
+      { text: "Wrist flexion and abduction", correct: false, why: "Flexion and abduction is produced by FCR. [Slide #64]" },
+      { text: "Wrist flexion and adduction", correct: false, why: "Flexion and adduction is produced by FCU. [Slide #64]" }
+    ]
+  },
+  {
+    id: 75, subjectIndex: 5, quarter: 3, slideRef: 66, difficulty: "easy", priority: false,
+    stem: "The anterior forearm contains two digitorum flexors, but the posterior forearm contains _______ common digitorum extensor(s).",
     concept: "There is only one common extensor digitorum muscle on the posterior forearm.",
     options: [
-      { text: "one", correct: true, why: "Only extensor digitorum exists; there is no 'superficial' and 'profundus' split in the extensors. [Lec 2: Arm & Forearm]" },
-      { text: "two", correct: false, why: "Flexors have two (FDS and FDP); extensors have one. [Lec 2: Arm & Forearm]" },
-      { text: "three", correct: false, why: "Only one common extensor digitorum muscle belly is present. [Lec 2: Arm & Forearm]" },
-      { text: "four", correct: false, why: "Four refers to the tendons, not the muscle bellies. [Lec 2: Arm & Forearm]" }
+      { text: "one", correct: true, why: "Only extensor digitorum exists in the posterior compartment for all four fingers. [Slide #66]" },
+      { text: "two", correct: false, why: "Flexors have two (FDS and FDP); extensors have one. [Slide #66]" },
+      { text: "three", correct: false, why: "There is only one common extensor digitorum muscle. [Slide #66]" },
+      { text: "four", correct: false, why: "Four refers to the tendons, not the muscle bellies. [Slide #66]" }
     ]
   },
   {
-    id: 39, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: false,
-    stem: "Extensor carpi ulnaris inserts on the base of the 5th metacarpal to produce wrist _______.",
-    concept: "Extensor carpi ulnaris extends the wrist and adducts (ulnar deviates) the hand.",
+    id: 76, subjectIndex: 5, quarter: 3, slideRef: 67, difficulty: "medium", priority: false,
+    stem: "The extensor digiti minimi muscle inserts onto which phalanx of the fifth digit?",
+    concept: "Extensor digiti minimi inserts into the base of the middle phalanx of the 5th digit.",
     options: [
-      { text: "extension and adduction (ulnar deviation)", correct: true, why: "ECU extends the wrist and pulls it toward the ulnar margin. [Lec 2: Arm & Forearm]" },
-      { text: "extension and abduction (radial deviation)", correct: false, why: "Radial deviation is executed by ECRL and ECRB. [Lec 2: Arm & Forearm]" },
-      { text: "flexion and adduction", correct: false, why: "Flexion and adduction is executed by FCU. [Lec 2: Arm & Forearm]" },
-      { text: "pure forearm pronation", correct: false, why: "ECU does not act as a pronator. [Lec 2: Arm & Forearm]" }
+      { text: "Middle phalanx of the fifth digit", correct: true, why: "EDM inserts on the base of the middle phalanx of the 5th digit. [Slide #67]" },
+      { text: "Proximal phalanx of the fifth digit", correct: false, why: "Abductor digiti minimi inserts on the proximal phalanx. [Slide #67]" },
+      { text: "Fifth metacarpal base", correct: false, why: "Fifth metacarpal base receives ECU. [Slide #67]" },
+      { text: "Distal phalanx of the thumb", correct: false, why: "EPL inserts on the distal phalanx of the thumb. [Slide #67]" }
     ]
   },
   {
-    id: 40, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "hard", priority: true,
-    stem: "The deep branch of the radial nerve passes under which muscle, where it is vulnerable to entrapment?",
+    id: 77, subjectIndex: 5, quarter: 3, slideRef: 68, difficulty: "medium", priority: false,
+    stem: "Extensor carpi ulnaris inserts on the base of the 5th metacarpal to produce wrist _______.",
+    concept: "Extensor carpi ulnaris extends and adducts (ulnar deviates) the wrist.",
+    options: [
+      { text: "extension and adduction (ulnar deviation)", correct: true, why: "ECU extends the wrist and pulls it toward the ulnar margin. [Slide #68]" },
+      { text: "extension and abduction (radial deviation)", correct: false, why: "Radial deviation is produced by ECRL and ECRB. [Slide #68]" },
+      { text: "flexion and adduction", correct: false, why: "Flexion and adduction is produced by FCU. [Slide #68]" },
+      { text: "forearm pronation", correct: false, why: "ECU does not act as a pronator. [Slide #68]" }
+    ]
+  },
+  {
+    id: 78, subjectIndex: 5, quarter: 3, slideRef: 69, difficulty: "hard", priority: true,
+    stem: "Which nerve passes under the supinator muscle into the posterior compartment, where it is vulnerable to entrapment?",
     concept: "The deep branch of the radial nerve passes under the supinator muscle to become the posterior interosseous nerve.",
     options: [
-      { text: "Supinator", correct: true, why: "The deep radial nerve passes under the supinator into the posterior compartment. [Lec 2: Arm & Forearm]" },
-      { text: "Pronator teres", correct: false, why: "The median nerve passes between the heads of pronator teres. [Lec 2: Arm & Forearm]" },
-      { text: "Flexor carpi ulnaris", correct: false, why: "The ulnar nerve passes between the heads of FCU. [Lec 2: Arm & Forearm]" },
-      { text: "Brachioradialis", correct: false, why: "Superficial radial nerve courses deep to brachioradialis. [Lec 2: Arm & Forearm]" }
+      { text: "Deep branch of the radial nerve", correct: true, why: "The deep radial nerve passes under the supinator into the posterior compartment. [Slide #69]" },
+      { text: "Superficial branch of the radial nerve", correct: false, why: "The superficial branch is cutaneous and runs superficial to supinator. [Slide #69]" },
+      { text: "Anterior interosseous nerve", correct: false, why: "AIN is a median nerve branch in the anterior compartment. [Slide #69]" },
+      { text: "Ulnar nerve", correct: false, why: "The ulnar nerve passes behind the medial epicondyle. [Slide #69]" }
     ]
   },
   {
-    id: 41, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: true,
-    stem: "Which three tendons bound the anatomical snuffbox?",
-    concept: "Lateral border: Abductor pollicis longus and Extensor pollicis brevis; Medial border: Extensor pollicis longus.",
+    id: 79, subjectIndex: 5, quarter: 3, slideRef: 71, difficulty: "hard", priority: true,
+    stem: "Which relationship represents the anatomical exception to the standard 'longus before brevis' sequence along the lateral forearm?",
+    concept: "For the outcropping thumb muscles, extensor pollicis brevis is encountered before extensor pollicis longus.",
     options: [
-      { text: "Abductor pollicis longus, extensor pollicis brevis, and extensor pollicis longus", correct: true, why: "Lateral: APL and EPB; Medial: EPL. [Lec 2: Arm & Forearm]" },
-      { text: "FCR, palmaris longus, and FCU", correct: false, why: "These are anterior flexor tendons. [Lec 2: Arm & Forearm]" },
-      { text: "ECRL, ECRB, and ECU", correct: false, why: "These are carpal extensor tendons. [Lec 2: Arm & Forearm]" },
-      { text: "Extensor digitorum, EDM, and extensor indicis", correct: false, why: "These are digital extensor tendons. [Lec 2: Arm & Forearm]" }
+      { text: "Extensor pollicis brevis is encountered before extensor pollicis longus", correct: true, why: "Along the lateral wrist, brevis emerges proximal/lateral to longus. [Slide #71]" },
+      { text: "Extensor carpi radialis brevis is encountered before the longus", correct: false, why: "ECRL comes first, adhering to the normal longus-before-brevis rule. [Slide #71]" },
+      { text: "Abductor pollicis longus is encountered after extensor indicis", correct: false, why: "APL emerges significantly proximal to extensor indicis. [Slide #71]" },
+      { text: "Extensor pollicis longus is encountered before abductor pollicis longus", correct: false, why: "APL is lateral and encountered before EPL. [Slide #71]" }
     ]
   },
   {
-    id: 42, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "easy", priority: true,
-    stem: "Which artery traverses the floor of the anatomical snuffbox where its pulse can be palpated?",
-    concept: "The radial artery crosses the floor of the anatomical snuffbox over the scaphoid and trapezium.",
+    id: 80, subjectIndex: 5, quarter: 3, slideRef: 73, difficulty: "medium", priority: false,
+    stem: "The extensor indicis muscle inserts into the extensor expansion of which digit?",
+    concept: "Extensor indicis inserts into the extensor expansion of digit 2 (index finger).",
     options: [
-      { text: "Radial artery", correct: true, why: "The radial artery winds across the snuffbox floor over the scaphoid. [Lec 2: Arm & Forearm]" },
-      { text: "Ulnar artery", correct: false, why: "The ulnar artery travels medially through Guyon's canal. [Lec 2: Arm & Forearm]" },
-      { text: "Brachial artery", correct: false, why: "The brachial artery ends in the cubital fossa. [Lec 2: Arm & Forearm]" },
-      { text: "Anterior interosseous artery", correct: false, why: "This vessel terminates proximal to the carpus. [Lec 2: Arm & Forearm]" }
-    ]
-  },
-  {
-    id: 43, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: false,
-    stem: "Extensor indicis provides dedicated extension to which digit?",
-    concept: "Extensor indicis inserts into the extensor expansion of the 2nd digit (index finger).",
-    options: [
-      { text: "Digit 2 (index finger)", correct: true, why: "Extensor indicis supplies independent extension to the index finger. [Lec 2: Arm & Forearm]" },
-      { text: "Digit 5 (little finger)", correct: false, why: "Digit 5 receives extensor digiti minimi. [Lec 2: Arm & Forearm]" },
-      { text: "Digit 1 (thumb)", correct: false, why: "The thumb receives EPL and EPB. [Lec 2: Arm & Forearm]" },
-      { text: "Digit 3 (middle finger)", correct: false, why: "Digit 3 has no independent dedicated extensor. [Lec 2: Arm & Forearm]" }
-    ]
-  },
-  {
-    id: 44, subjectIndex: 4, sourceRef: "Lec 2: Arm & Forearm", difficulty: "medium", priority: false,
-    stem: "Emergency relief of acute compartment syndrome in the forearm requires surgical incision of the _______.",
-    concept: "Fasciotomy cuts the tight unyielding deep antebrachial fascia to decompress vessels and nerves.",
-    options: [
-      { text: "fascia (fasciotomy)", correct: true, why: "Incision of the deep antebrachial fascia relieves compartment pressure. [Lec 2: Arm & Forearm]" },
-      { text: "interosseous membrane", correct: false, why: "The interosseous membrane is not divided for compartment syndrome. [Lec 2: Arm & Forearm]" },
-      { text: "flexor retinaculum", correct: false, why: "Flexor retinaculum release is for carpal tunnel syndrome. [Lec 2: Arm & Forearm]" },
-      { text: "palmar aponeurosis", correct: false, why: "Palmar aponeurosis release is for Dupuytren contracture. [Lec 2: Arm & Forearm]" }
+      { text: "Digit 2 (index finger)", correct: true, why: "Extensor indicis extends digit 2 and assists in wrist extension. [Slide #73]" },
+      { text: "Digit 1 (thumb)", correct: false, why: "The thumb is extended by EPL and EPB. [Slide #73]" },
+      { text: "Digit 3 (middle finger)", correct: false, why: "Digit 3 does not have an independent extensor. [Slide #73]" },
+      { text: "Digit 5 (little finger)", correct: false, why: "Digit 5 is extended by extensor digiti minimi. [Slide #73]" }
     ]
   },
 
-  /* ================= MODULE 5: HAND COMPARTMENTS, INTRINSICS & TUNNELS ================= */
+  /* ================= MODULE 6: HAND MECHANICS, INTRINSICS & TUNNELS (Q81-94) ================= */
   {
-    id: 45, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "easy", priority: true,
+    id: 81, subjectIndex: 6, quarter: 4, slideRef: 75, difficulty: "medium", priority: true,
+    stem: "Fine motor manipulation of objects between the thumb and fingertips (such as threading a needle or buttoning a shirt) represents which category of hand motion?",
+    concept: "Fine manipulation between the pads of the digits without palm stabilization is precision handling.",
+    options: [
+      { text: "Precision handling", correct: true, why: "Precision handling involves fine digital manipulation without relying on the palm. [Slide #75]" },
+      { text: "Power palm grasp", correct: false, why: "Power grasp uses the fingers and palm to hold heavy objects. [Slide #75]" },
+      { text: "Hook grip", correct: false, why: "Hook grip uses flexed fingers to carry handles. [Slide #75]" },
+      { text: "Position of rest", correct: false, why: "Position of rest is used for splinting/casting. [Slide #75]" }
+    ]
+  },
+  {
+    id: 82, subjectIndex: 6, quarter: 4, slideRef: 75, difficulty: "medium", priority: false,
+    stem: "A power palm grasp is mechanically strongest with the wrist positioned in _______.",
+    concept: "Power grip strength is strongest when the wrist is positioned in extension.",
+    options: [
+      { text: "extension", correct: true, why: "Wrist extension makes power grasping significantly stronger. [Slide #75]" },
+      { text: "full flexion", correct: false, why: "Wrist flexion slackens long flexors and weakens grip. [Slide #75]" },
+      { text: "extreme pronation", correct: false, why: "Forearm rotation is not the primary wrist position for grip strength. [Slide #75]" },
+      { text: "marked ulnar deviation alone", correct: false, why: "Extension is the primary position required. [Slide #75]" }
+    ]
+  },
+  {
+    id: 83, subjectIndex: 6, quarter: 4, slideRef: 75, difficulty: "easy", priority: false,
+    stem: "Which type of grip consumes the least energy when carrying a suitcase or briefcase?",
+    concept: "The hook grip utilizes flexed digital joints without thumb opposition, consuming minimal energy.",
+    options: [
+      { text: "Hook grip", correct: true, why: "The hook grip consumes less energy because it uses curled fingers without thumb opposition. [Slide #75]" },
+      { text: "Power palm grasp", correct: false, why: "Power grasp requires continuous active muscular effort from all compartments. [Slide #75]" },
+      { text: "Precision handling", correct: false, why: "Precision handling requires continuous motor adjustments. [Slide #75]" },
+      { text: "Pinching grasp", correct: false, why: "Pinching relies on high focal intrinsic muscle activity. [Slide #75]" }
+    ]
+  },
+  {
+    id: 84, subjectIndex: 6, quarter: 4, slideRef: 78, difficulty: "easy", priority: true,
     stem: "Which three muscles constitute the intrinsic thenar compartment?",
-    concept: "Thenar compartment contains Abductor pollicis brevis, Flexor pollicis brevis, and Opponens pollicis.",
+    concept: "The thenar compartment contains Abductor pollicis brevis, Flexor pollicis brevis, and Opponens pollicis.",
     options: [
-      { text: "Abductor pollicis brevis, flexor pollicis brevis, and opponens pollicis", correct: true, why: "These three intrinsic muscles form the thenar eminence. [Lec 3: Hand]" },
-      { text: "APB, FPB, and adductor pollicis", correct: false, why: "Adductor pollicis occupies its own separate compartment. [Lec 3: Hand]" },
-      { text: "ADM, FDMB, and opponens digiti minimi", correct: false, why: "These form the hypothenar compartment. [Lec 3: Hand]" },
-      { text: "APL, EPB, and EPL", correct: false, why: "These are extrinsic forearm muscles. [Lec 3: Hand]" }
+      { text: "Abductor pollicis brevis, flexor pollicis brevis, and opponens pollicis", correct: true, why: "These three intrinsic muscles form the thenar eminence. [Slide #78]" },
+      { text: "Abductor pollicis brevis, flexor pollicis brevis, and adductor pollicis", correct: false, why: "Adductor pollicis occupies its own separate compartment. [Slide #78]" },
+      { text: "Abductor digiti minimi, flexor digiti minimi, and opponens digiti minimi", correct: false, why: "These form the hypothenar compartment. [Slide #78]" },
+      { text: "Abductor pollicis longus, extensor pollicis brevis, and EPL", correct: false, why: "These are extrinsic forearm muscles. [Slide #78]" }
     ]
   },
   {
-    id: 46, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "easy", priority: true,
-    stem: "Motor supply to the thenar eminence muscles is mediated by the _______ branch of the median nerve.",
-    concept: "The recurrent branch of the median nerve provides motor supply to the thenar muscles.",
+    id: 85, subjectIndex: 6, quarter: 4, slideRef: 79, difficulty: "medium", priority: true,
+    stem: "The thenar eminence muscles are innervated by the _______ branch of the median nerve.",
+    concept: "The recurrent branch of the median nerve (C8-T1) provides motor innervation to the thenar muscles.",
     options: [
-      { text: "recurrent", correct: true, why: "The recurrent motor branch of the median nerve (C8-T1) innervates the thenar muscles. [Lec 3: Hand]" },
-      { text: "palmar cutaneous", correct: false, why: "Palmar cutaneous branch provides sensation to the palm. [Lec 3: Hand]" },
-      { text: "anterior interosseous", correct: false, why: "AIN supplies deep anterior forearm flexors. [Lec 3: Hand]" },
-      { text: "deep motor ulnar", correct: false, why: "Deep ulnar nerve supplies hypothenar and interossei. [Lec 3: Hand]" }
+      { text: "recurrent branch", correct: true, why: "The recurrent motor branch supplies the three thenar muscles. [Slide #79]" },
+      { text: "palmar cutaneous branch", correct: false, why: "Palmar cutaneous branch provides cutaneous sensation to the central palm. [Slide #79]" },
+      { text: "anterior interosseous branch", correct: false, why: "AIN supplies deep anterior forearm flexors. [Slide #79]" },
+      { text: "deep motor branch", correct: false, why: "Deep branch is an ulnar nerve branch. [Slide #79]" }
     ]
   },
   {
-    id: 47, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "hard", priority: true,
+    id: 86, subjectIndex: 6, quarter: 4, slideRef: 81, difficulty: "medium", priority: false,
+    stem: "Opponens pollicis inserts on the lateral side of the 1st metacarpal and acts to _______.",
+    concept: "Opponens pollicis draws the 1st metacarpal medially to oppose the thumb across the palm.",
+    options: [
+      { text: "draw the 1st metacarpal medially to oppose the thumb", correct: true, why: "Opponens pollicis draws MC1 medially across the palm. [Slide #81]" },
+      { text: "purely abduct the proximal phalanx", correct: false, why: "Abduction of the proximal phalanx is executed by APB. [Slide #81]" },
+      { text: "purely flex the interphalangeal joint", correct: false, why: "Thumb IP flexion is executed by FPL. [Slide #81]" },
+      { text: "adduct the 1st metacarpal against the 2nd", correct: false, why: "Adduction is executed by adductor pollicis. [Slide #81]" }
+    ]
+  },
+  {
+    id: 87, subjectIndex: 6, quarter: 4, slideRef: 83, difficulty: "hard", priority: true,
+    stem: "Adductor pollicis possesses which two distinct heads of origin?",
+    concept: "Adductor pollicis has an oblique head (bases of MC2-3, capitate) and a transverse head (anterior shaft of MC3).",
+    options: [
+      { text: "Oblique head from MC2-3 bases/capitate; transverse head from MC3 shaft", correct: true, why: "These two heads converge to insert on the medial base of the thumb's proximal phalanx. [Slide #83]" },
+      { text: "Oblique head from MC3 shaft; transverse head from MC2-3 bases/capitate", correct: false, why: "Inverts the origins of the oblique and transverse heads. [Slide #83]" },
+      { text: "Oblique head from pisiform; transverse head from hook of hamate", correct: false, why: "These are hypothenar origin sites. [Slide #83]" },
+      { text: "Oblique head from scaphoid; transverse head from trapezium", correct: false, why: "These are thenar origin sites. [Slide #83]" }
+    ]
+  },
+  {
+    id: 88, subjectIndex: 6, quarter: 4, slideRef: 83, difficulty: "hard", priority: true,
     stem: "Why is adductor pollicis classified separately from the thenar compartment?",
-    concept: "Adductor pollicis occupies its own compartment and is supplied by the deep branch of the ulnar nerve.",
+    concept: "Adductor pollicis occupies its own compartment and is innervated by the deep branch of the ulnar nerve.",
     options: [
-      { text: "It occupies its own adductor compartment and is innervated by the deep branch of the ulnar nerve", correct: true, why: "Adductor pollicis is separated by fascia and is ulnar-supplied, unlike the median-supplied thenar muscles. [Lec 3: Hand]" },
-      { text: "It is an extrinsic forearm muscle supplied by the radial nerve", correct: false, why: "It is an intrinsic hand muscle. [Lec 3: Hand]" },
-      { text: "It is innervated by the musculocutaneous nerve", correct: false, why: "Musculocutaneous does not supply hand muscles. [Lec 3: Hand]" },
-      { text: "It inserts on the radial tuberosity", correct: false, why: "It inserts on the medial base of the proximal phalanx of the thumb. [Lec 3: Hand]" }
+      { text: "It occupies its own adductor compartment and is innervated by the deep ulnar nerve", correct: true, why: "Adductor pollicis is separated by fascia and is ulnar-innervated, unlike the median-supplied thenar group. [Slide #83]" },
+      { text: "It is an extrinsic forearm muscle innervated by the radial nerve", correct: false, why: "It is an intrinsic hand muscle. [Slide #83]" },
+      { text: "It inserts into the radial tuberosity", correct: false, why: "It inserts into the medial proximal phalanx of the thumb. [Slide #83]" },
+      { text: "It is innervated by the musculocutaneous nerve", correct: false, why: "Musculocutaneous nerve does not supply hand muscles. [Slide #83]" }
     ]
   },
   {
-    id: 48, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "easy", priority: false,
-    stem: "The abductor digiti minimi originates from the _______ carpal bone.",
-    concept: "Abductor digiti minimi arises from the pisiform bone on the medial side of the carpus.",
+    id: 89, subjectIndex: 6, quarter: 4, slideRef: 84, difficulty: "medium", priority: false,
+    stem: "Which three muscles constitute the intrinsic hypothenar compartment?",
+    concept: "The hypothenar compartment contains Abductor digiti minimi, Flexor digiti minimi brevis, and Opponens digiti minimi.",
     options: [
-      { text: "pisiform", correct: true, why: "Abductor digiti minimi originates directly from the pisiform bone. [Lec 3: Hand]" },
-      { text: "hook of the hamate", correct: false, why: "Hook of the hamate gives origin to FDMB and opponens digiti minimi. [Lec 3: Hand]" },
-      { text: "scaphoid tubercle", correct: false, why: "Scaphoid tubercle anchors thenar muscles. [Lec 3: Hand]" },
-      { text: "capitate", correct: false, why: "Capitate gives origin to adductor pollicis. [Lec 3: Hand]" }
+      { text: "Abductor digiti minimi, flexor digiti minimi brevis, and opponens digiti minimi", correct: true, why: "These three intrinsic muscles form the hypothenar eminence. [Slide #84]" },
+      { text: "Abductor digiti minimi, palmaris longus, and opponens digiti minimi", correct: false, why: "Palmaris longus is a superficial forearm muscle. [Slide #84]" },
+      { text: "Abductor pollicis brevis, flexor pollicis brevis, and opponens pollicis", correct: false, why: "These form the thenar compartment. [Slide #84]" },
+      { text: "Lumbricals 3 and 4 with adductor pollicis", correct: false, why: "Lumbricals are central; adductor pollicis has its own compartment. [Slide #84]" }
     ]
   },
   {
-    id: 49, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: false,
-    stem: "All three hypothenar muscles are innervated by the _______.",
-    concept: "All hypothenar muscles are supplied by the deep branch of the ulnar nerve (C8-T1).",
+    id: 90, subjectIndex: 6, quarter: 4, slideRef: 89, difficulty: "hard", priority: true,
+    stem: "Which split innervation pattern governs the four lumbrical muscles in the hand?",
+    concept: "Lumbricals 1-2 are supplied by the median nerve; lumbricals 3-4 are supplied by the deep branch of the ulnar nerve.",
     options: [
-      { text: "deep branch of the ulnar nerve", correct: true, why: "The deep branch of the ulnar nerve supplies ADM, FDMB, and opponens digiti minimi. [Lec 3: Hand]" },
-      { text: "recurrent branch of the median nerve", correct: false, why: "Supplies the thenar muscles. [Lec 3: Hand]" },
-      { text: "superficial radial nerve", correct: false, why: "Superficial radial is cutaneous only. [Lec 3: Hand]" },
-      { text: "posterior interosseous nerve", correct: false, why: "Supplies forearm extensors. [Lec 3: Hand]" }
+      { text: "Lumbricals 1-2 by median nerve; lumbricals 3-4 by deep ulnar nerve", correct: true, why: "Lumbrical innervation mirrors the FDP tendons from which they originate (1-2 median, 3-4 ulnar). [Slide #89]" },
+      { text: "Lumbricals 1-2 by deep ulnar nerve; lumbricals 3-4 by median nerve", correct: false, why: "Inverts the lateral/medial innervation split. [Slide #89]" },
+      { text: "All four lumbricals by the recurrent median nerve", correct: false, why: "Medial lumbricals receive ulnar innervation. [Slide #89]" },
+      { text: "All four lumbricals by the deep ulnar nerve", correct: false, why: "Lateral two lumbricals receive median innervation. [Slide #89]" }
     ]
   },
   {
-    id: 50, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: true,
-    stem: "What is the primary action of the lumbrical muscles on digits 2 through 5?",
-    concept: "Lumbricals flex the MCP joints and extend the interphalangeal (PIP and DIP) joints.",
-    options: [
-      { text: "Flex the metacarpophalangeal (MCP) joints and extend the interphalangeal (IP) joints", correct: true, why: "Lumbricals attach to extensor expansions, flexing MCPs and extending PIPs/DIPs. [Lec 3: Hand]" },
-      { text: "Extend the MCP joints and flex the IP joints", correct: false, why: "This describes the claw hand deformity. [Lec 3: Hand]" },
-      { text: "Abduct digits away from the middle finger", correct: false, why: "Abduction is performed by dorsal interossei. [Lec 3: Hand]" },
-      { text: "Adduct digits toward the middle finger", correct: false, why: "Adduction is performed by palmar interossei. [Lec 3: Hand]" }
-    ]
-  },
-  {
-    id: 51, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "hard", priority: true,
-    stem: "Which split innervation pattern governs the four lumbrical muscles?",
-    concept: "Lumbricals 1-2 are supplied by the median nerve; lumbricals 3-4 are supplied by the deep ulnar nerve.",
-    options: [
-      { text: "Lumbricals 1-2 by median nerve; lumbricals 3-4 by deep branch of ulnar nerve", correct: true, why: "Lumbrical innervation mirrors the FDP tendons from which they originate. [Lec 3: Hand]" },
-      { text: "Lumbricals 1-2 by deep ulnar nerve; lumbricals 3-4 by median nerve", correct: false, why: "Reverses the lateral/medial innervation split. [Lec 3: Hand]" },
-      { text: "All four lumbricals by the recurrent median nerve", correct: false, why: "Medial lumbricals receive ulnar innervation. [Lec 3: Hand]" },
-      { text: "All four lumbricals by the deep ulnar nerve", correct: false, why: "Lateral two lumbricals receive median innervation. [Lec 3: Hand]" }
-    ]
-  },
-  {
-    id: 52, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: true,
+    id: 91, subjectIndex: 6, quarter: 4, slideRef: 91, difficulty: "medium", priority: true,
     stem: "The primary action of the dorsal interossei (DAB) is digital _______.",
     concept: "DAB: Dorsal interossei ABduct digits 2-4 from the midline axis of digit 3.",
     options: [
-      { text: "abduction from the midline axis of digit 3", correct: true, why: "DAB: Dorsal interossei abduct digits away from the middle finger. [Lec 3: Hand]" },
-      { text: "adduction toward the midline axis of digit 3", correct: false, why: "PAD: Palmar interossei adduct digits. [Lec 3: Hand]" },
-      { text: "opposition of digit 5", correct: false, why: "Opposition is performed by opponens digiti minimi. [Lec 3: Hand]" },
-      { text: "distal interphalangeal flexion", correct: false, why: "DIP flexion is executed by FDP. [Lec 3: Hand]" }
+      { text: "abduction from the midline axis of digit 3", correct: true, why: "DAB: Dorsal interossei abduct digits away from the middle finger. [Slide #91]" },
+      { text: "adduction toward the midline axis of digit 3", correct: false, why: "PAD: Palmar interossei adduct digits. [Slide #91]" },
+      { text: "opposition of digit 5 toward the thumb", correct: false, why: "Opposition is performed by opponens digiti minimi. [Slide #91]" },
+      { text: "distal interphalangeal joint flexion", correct: false, why: "DIP flexion is executed by FDP. [Slide #91]" }
     ]
   },
   {
-    id: 53, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: true,
+    id: 92, subjectIndex: 6, quarter: 4, slideRef: 92, difficulty: "medium", priority: true,
     stem: "Which digit lacks a palmar interosseous muscle?",
     concept: "Digit 3 (middle finger) defines the midline axis and has no palmar interosseous muscle.",
     options: [
-      { text: "Digit 3 (middle finger)", correct: true, why: "Digit 3 is the reference axis of the hand and cannot adduct toward itself. [Lec 3: Hand]" },
-      { text: "Digit 2 (index finger)", correct: false, why: "Digit 2 possesses the 1st palmar interosseous. [Lec 3: Hand]" },
-      { text: "Digit 4 (ring finger)", correct: false, why: "Digit 4 possesses the 2nd palmar interosseous. [Lec 3: Hand]" },
-      { text: "Digit 5 (little finger)", correct: false, why: "Digit 5 possesses the 3rd palmar interosseous. [Lec 3: Hand]" }
+      { text: "Digit 3", correct: true, why: "The midline of the hand runs through digit 3, so it cannot be adducted toward itself. [Slide #92]" },
+      { text: "Digit 2", correct: false, why: "Digit 2 has a palmar interosseous. [Slide #92]" },
+      { text: "Digit 4", correct: false, why: "Digit 4 has a palmar interosseous. [Slide #92]" },
+      { text: "Digit 5", correct: false, why: "Digit 5 has a palmar interosseous. [Slide #92]" }
     ]
   },
   {
-    id: 54, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: false,
-    stem: "The palmar aponeurosis is the expanded distal continuation of which tendon when present?",
-    concept: "Palmar aponeurosis represents the expanded distal tendon of the palmaris longus.",
+    id: 93, subjectIndex: 6, quarter: 4, slideRef: 92, difficulty: "easy", priority: true,
+    stem: "All dorsal and palmar interossei muscles in the hand are innervated by which nerve?",
+    concept: "Both dorsal and palmar interossei are innervated by the deep branch of the ulnar nerve (C8-T1).",
     options: [
-      { text: "Palmaris longus", correct: true, why: "Palmaris longus passes superficial to the flexor retinaculum into the palmar aponeurosis. [Lec 3: Hand]" },
-      { text: "Flexor carpi radialis", correct: false, why: "FCR inserts into the base of the 2nd metacarpal. [Lec 3: Hand]" },
-      { text: "Flexor digitorum superficialis", correct: false, why: "FDS inserts into middle phalanges. [Lec 3: Hand]" },
-      { text: "Palmaris brevis", correct: false, why: "Palmaris brevis is a small subcutaneous muscle. [Lec 3: Hand]" }
+      { text: "Deep branch of the ulnar nerve", correct: true, why: "All interossei (both dorsal and palmar) are ulnar-supplied. [Slide #92]" },
+      { text: "Recurrent branch of the median nerve", correct: false, why: "Recurrent median supplies the thenar muscles. [Slide #92]" },
+      { text: "Superficial branch of the radial nerve", correct: false, why: "Radial nerve supplies no intrinsic hand muscles. [Slide #92]" },
+      { text: "Anterior interosseous nerve", correct: false, why: "AIN supplies deep anterior forearm flexors. [Slide #92]" }
     ]
   },
   {
-    id: 55, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: false,
-    stem: "Progressive shortening, thickening, and fibrosis of the palmar fascia causing flexion contractures of digits 4 and 5 is known as _______.",
-    concept: "Dupuytren contracture is progressive fibromatosis of the palmar aponeurosis pulling fingers into flexion.",
-    options: [
-      { text: "Dupuytren contracture", correct: true, why: "Dupuytren contracture involves progressive fibrosis of the palmar aponeurosis. [Lec 3: Hand]" },
-      { text: "carpal tunnel syndrome", correct: false, why: "Carpal tunnel syndrome is median nerve compression. [Lec 3: Hand]" },
-      { text: "pronator teres syndrome", correct: false, why: "Pronator syndrome is proximal median nerve compression in the forearm. [Lec 3: Hand]" },
-      { text: "thoracic outlet syndrome", correct: false, why: "TOS is neurovascular compression at the thoracic outlet. [Lec 3: Hand]" }
-    ]
-  },
-  {
-    id: 56, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "hard", priority: true,
-    stem: "Which exact anatomical contents pass through the carpal tunnel deep to the flexor retinaculum?",
+    id: 94, subjectIndex: 6, quarter: 4, slideRef: 93, difficulty: "hard", priority: true,
+    stem: "Which exact contents traverse the carpal tunnel deep to the flexor retinaculum?",
     concept: "Carpal tunnel contains exactly 9 tendons (4 FDS, 4 FDP, 1 FPL) and 1 nerve (median nerve).",
     options: [
-      { text: "Four FDS tendons, four FDP tendons, one FPL tendon, and the median nerve", correct: true, why: "Nine tendons and one nerve traverse the carpal tunnel. [Lec 3: Hand]" },
-      { text: "Four FDS tendons, four FDP tendons, one FCR tendon, and the median nerve", correct: false, why: "FCR travels in its own separate compartment in the retinaculum. [Lec 3: Hand]" },
-      { text: "Four FDS tendons, four FDP tendons, one FPL tendon, and the ulnar nerve", correct: false, why: "The ulnar nerve passes through Guyon's canal superficial to the retinaculum. [Lec 3: Hand]" },
-      { text: "Four FDS tendons, one FPL tendon, palmaris longus, and the median nerve", correct: false, why: "Palmaris longus passes superficial to the flexor retinaculum. [Lec 3: Hand]" }
-    ]
-  },
-  {
-    id: 57, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: true,
-    stem: "The ulnar nerve and ulnar artery enter the hand through which passage?",
-    concept: "The ulnar nerve and artery pass into the hand through the canal of Guyon (ulnar canal).",
-    options: [
-      { text: "Canal of Guyon (ulnar canal)", correct: true, why: "Guyon's canal transmits the ulnar nerve and artery superficial to the flexor retinaculum. [Lec 3: Hand]" },
-      { text: "Carpal tunnel", correct: false, why: "Carpal tunnel transmits the median nerve. [Lec 3: Hand]" },
-      { text: "Anatomical snuffbox", correct: false, why: "Snuffbox transmits the radial artery. [Lec 3: Hand]" },
-      { text: "Quadrangular space", correct: false, why: "Quadrangular space is in the shoulder. [Lec 3: Hand]" }
-    ]
-  },
-  {
-    id: 58, subjectIndex: 5, sourceRef: "Lec 3: Hand", difficulty: "medium", priority: false,
-    stem: "The superficial palmar arterial arch is formed primarily as the direct continuation of the _______.",
-    concept: "The superficial palmar arch is formed primarily by the ulnar artery, while the deep arch is formed by the radial artery.",
-    options: [
-      { text: "ulnar artery", correct: true, why: "The superficial arch is predominantly ulnar; the deep arch is predominantly radial. [Lec 3: Hand]" },
-      { text: "radial artery", correct: false, why: "The radial artery primarily forms the deep palmar arch. [Lec 3: Hand]" },
-      { text: "brachial artery", correct: false, why: "Brachial artery bifurcates in the cubital fossa. [Lec 3: Hand]" },
-      { text: "deep brachial artery", correct: false, why: "Deep brachial artery courses in the posterior arm. [Lec 3: Hand]" }
+      { text: "Four FDS tendons, four FDP tendons, one FPL tendon, and median nerve", correct: true, why: "Exactly nine long flexor tendons and the median nerve pass through the carpal tunnel. [Slide #93]" },
+      { text: "Four FDS tendons, four FDP tendons, one FCR tendon, and median nerve", correct: false, why: "FCR travels in its own separate compartment in the retinaculum. [Slide #93]" },
+      { text: "Four FDS tendons, four FDP tendons, one FPL tendon, and ulnar nerve", correct: false, why: "The ulnar nerve passes through Guyon's canal superficial to the retinaculum. [Slide #93]" },
+      { text: "Four FDS tendons, one FPL tendon, palmaris longus, and median nerve", correct: false, why: "Palmaris longus passes superficial to the flexor retinaculum. [Slide #93]" }
     ]
   },
 
-  /* ================= MODULE 6: BRACHIAL PLEXUS, SPACES, VESSELS & ELBOW ================= */
+  /* ================= MODULE 7: BRACHIAL PLEXUS & PERIPHERAL NERVES (Q95-102) ================= */
   {
-    id: 59, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "easy", priority: true,
-    stem: "The brachial plexus is formed by the anterior rami of which spinal nerve roots?",
-    concept: "The brachial plexus is formed by spinal nerve roots C5, C6, C7, C8, and T1.",
+    id: 95, subjectIndex: 7, quarter: 2, slideRef: 40, difficulty: "easy", priority: true,
+    stem: "The brachial plexus is formed by the anterior rami of which spinal roots?",
+    concept: "The brachial plexus is formed by the ventral rami of spinal nerve roots C5, C6, C7, C8, and T1.",
     options: [
-      { text: "C5-T1", correct: true, why: "The ventral rami of C5 through T1 form the roots of the brachial plexus. [Lec 4: Plexus & Elbow]" },
-      { text: "C1-C4", correct: false, why: "C1-C4 forms the cervical plexus. [Lec 4: Plexus & Elbow]" },
-      { text: "C3-C7", correct: false, why: "Incomplete root range. [Lec 4: Plexus & Elbow]" },
-      { text: "T1-T5", correct: false, why: "Upper thoracic nerves form intercostal nerves. [Lec 4: Plexus & Elbow]" }
+      { text: "C5 through T1", correct: true, why: "The roots of the brachial plexus are the ventral rami of C5-T1. [Slide #40]" },
+      { text: "C1 through C4", correct: false, why: "C1-C4 form the cervical plexus. [Slide #40]" },
+      { text: "C3 through C7", correct: false, why: "Incomplete root range. [Slide #40]" },
+      { text: "T1 through T5", correct: false, why: "Thoracic roots form intercostal nerves. [Slide #40]" }
     ]
   },
   {
-    id: 60, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "The lateral, medial, and posterior cords of the brachial plexus are named based on their relationship to the _______.",
-    concept: "Cords are named for their anatomical position surrounding the axillary artery deep to pectoralis minor.",
+    id: 96, subjectIndex: 7, quarter: 2, slideRef: 42, difficulty: "medium", priority: true,
+    stem: "The cords of the brachial plexus are named for their position relative to which vessel?",
+    concept: "The cords are named for their position surrounding the axillary artery.",
     options: [
-      { text: "axillary artery", correct: true, why: "The cords wrap laterally, medially, and posteriorly around the axillary artery. [Lec 4: Plexus & Elbow]" },
-      { text: "subclavian vein", correct: false, why: "Named relative to the artery, not the vein. [Lec 4: Plexus & Elbow]" },
-      { text: "clavicle", correct: false, why: "Divisions sit beneath the clavicle; cords are named around the artery. [Lec 4: Plexus & Elbow]" },
-      { text: "first rib", correct: false, why: "First rib marks the start of the axillary artery. [Lec 4: Plexus & Elbow]" }
+      { text: "Axillary artery", correct: true, why: "The cords are named lateral, medial, and posterior around the axillary artery. [Slide #42]" },
+      { text: "Subclavian vein", correct: false, why: "Named relative to the artery, not the vein. [Slide #42]" },
+      { text: "Brachial vein", correct: false, why: "Not the reference vessel for plexus cords. [Slide #42]" },
+      { text: "Basilic vein", correct: false, why: "Basilic vein is a superficial medial vein. [Slide #42]" }
     ]
   },
   {
-    id: 61, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
-    stem: "Which terminal nerve is unique in receiving contributions from two separate cords of the brachial plexus?",
-    concept: "The median nerve is formed by the union of the lateral root (lateral cord) and medial root (medial cord).",
+    id: 97, subjectIndex: 7, quarter: 2, slideRef: 43, difficulty: "medium", priority: true,
+    stem: "Which terminal branch arises from the lateral cord to innervate the anterior arm muscles?",
+    concept: "The musculocutaneous nerve (C5-C7) is the major terminal branch of the lateral cord.",
     options: [
-      { text: "Median nerve", correct: true, why: "Median nerve receives a lateral root from the lateral cord and a medial root from the medial cord. [Lec 4: Plexus & Elbow]" },
-      { text: "Ulnar nerve", correct: false, why: "Ulnar nerve is a direct continuation of the medial cord. [Lec 4: Plexus & Elbow]" },
-      { text: "Radial nerve", correct: false, why: "Radial nerve is the direct continuation of the posterior cord. [Lec 4: Plexus & Elbow]" },
-      { text: "Axillary nerve", correct: false, why: "Axillary nerve is a branch of the posterior cord. [Lec 4: Plexus & Elbow]" }
+      { text: "Musculocutaneous nerve", correct: true, why: "Musculocutaneous arises from the lateral cord (along with the lateral root of median). [Slide #43]" },
+      { text: "Axillary nerve", correct: false, why: "Axillary nerve arises from the posterior cord. [Slide #43]" },
+      { text: "Ulnar nerve", correct: false, why: "Ulnar nerve arises from the medial cord. [Slide #43]" },
+      { text: "Radial nerve", correct: false, why: "Radial nerve arises from the posterior cord. [Slide #43]" }
     ]
   },
   {
-    id: 62, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "The musculocutaneous nerve continues distally into the forearm as the _______ nerve.",
-    concept: "After supplying anterior arm muscles, the musculocutaneous nerve continues as the lateral antebrachial cutaneous nerve.",
+    id: 98, subjectIndex: 7, quarter: 2, slideRef: 43, difficulty: "medium", priority: false,
+    stem: "The posterior cord of the brachial plexus gives rise to which two terminal nerves?",
+    concept: "The posterior cord bifurcates into the axillary nerve and the radial nerve.",
     options: [
-      { text: "lateral antebrachial cutaneous", correct: true, why: "Musculocutaneous emerges lateral to biceps to supply skin over the lateral forearm. [Lec 4: Plexus & Elbow]" },
-      { text: "medial antebrachial cutaneous", correct: false, why: "Medial antebrachial cutaneous arises directly from the medial cord. [Lec 4: Plexus & Elbow]" },
-      { text: "posterior antebrachial cutaneous", correct: false, why: "Posterior antebrachial cutaneous arises from the radial nerve. [Lec 4: Plexus & Elbow]" },
-      { text: "superficial radial", correct: false, why: "Superficial radial is the sensory terminal branch of the radial nerve. [Lec 4: Plexus & Elbow]" }
+      { text: "Axillary nerve and radial nerve", correct: true, why: "The posterior cord terminates as the axillary and radial nerves. [Slide #43]" },
+      { text: "Musculocutaneous nerve and median nerve", correct: false, why: "Musculocutaneous arises from the lateral cord. [Slide #43]" },
+      { text: "Ulnar nerve and medial cutaneous nerve", correct: false, why: "These arise from the medial cord. [Slide #43]" },
+      { text: "Suprascapular nerve and dorsal scapular nerve", correct: false, why: "These arise from the upper trunk and roots. [Slide #43]" }
     ]
   },
   {
-    id: 63, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
+    id: 99, subjectIndex: 7, quarter: 2, slideRef: 45, difficulty: "medium", priority: true,
+    stem: "The musculocutaneous nerve continues distally into the forearm as which cutaneous nerve?",
+    concept: "The musculocutaneous nerve continues into the forearm as the lateral antebrachial cutaneous nerve.",
+    options: [
+      { text: "Lateral antebrachial cutaneous nerve", correct: true, why: "Musculocutaneous emerges lateral to biceps as this cutaneous nerve. [Slide #45]" },
+      { text: "Medial antebrachial cutaneous nerve", correct: false, why: "Medial antebrachial cutaneous arises directly from the medial cord. [Slide #45]" },
+      { text: "Posterior antebrachial cutaneous nerve", correct: false, why: "Posterior antebrachial cutaneous arises from the radial nerve. [Slide #45]" },
+      { text: "Superficial radial nerve", correct: false, why: "Superficial radial is the sensory branch of the radial nerve. [Slide #45]" }
+    ]
+  },
+  {
+    id: 100, subjectIndex: 7, quarter: 2, slideRef: 46, difficulty: "medium", priority: true,
     stem: "Cutaneous sensory innervation to the palmar surface of digits 1-3 and the lateral half of digit 4 is supplied by the _______ nerve.",
-    concept: "Median nerve provides cutaneous sensory innervation to the lateral 3.5 palmar digits and their dorsal nail beds.",
+    concept: "Median nerve provides cutaneous sensory innervation to the lateral 3.5 palmar digits and their dorsal tips.",
     options: [
-      { text: "median", correct: true, why: "Median nerve supplies palmar skin of the lateral 3.5 digits and their dorsal tips. [Lec 4: Plexus & Elbow]" },
-      { text: "ulnar", correct: false, why: "Ulnar nerve supplies digit 5 and the medial half of digit 4. [Lec 4: Plexus & Elbow]" },
-      { text: "superficial radial", correct: false, why: "Superficial radial supplies the dorsum of the lateral hand. [Lec 4: Plexus & Elbow]" },
-      { text: "lateral antebrachial cutaneous", correct: false, why: "Supplies lateral forearm skin. [Lec 4: Plexus & Elbow]" }
+      { text: "median nerve", correct: true, why: "Median nerve supplies palmar skin of the lateral 3.5 digits and their dorsal tips. [Slide #46]" },
+      { text: "ulnar nerve", correct: false, why: "Ulnar nerve supplies digit 5 and the medial half of digit 4. [Slide #46]" },
+      { text: "superficial radial nerve", correct: false, why: "Superficial radial supplies the dorsum of the lateral hand. [Slide #46]" },
+      { text: "lateral antebrachial cutaneous nerve", correct: false, why: "Supplies lateral forearm skin. [Slide #46]" }
     ]
   },
   {
-    id: 64, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
-    stem: "Which nerve arises from the superior (upper) trunk of the brachial plexus to supply supraspinatus and infraspinatus?",
-    concept: "Suprascapular nerve arises directly from the upper trunk (C5-C6) of the brachial plexus.",
+    id: 101, subjectIndex: 7, quarter: 2, slideRef: 47, difficulty: "medium", priority: true,
+    stem: "The ulnar nerve carries fibers from which spinal levels?",
+    concept: "The ulnar nerve is derived from spinal roots C8 and T1 via the medial cord.",
     options: [
-      { text: "Suprascapular nerve", correct: true, why: "Suprascapular nerve branches high from the superior trunk to supply both spinati. [Lec 4: Plexus & Elbow]" },
-      { text: "Dorsal scapular nerve", correct: false, why: "Dorsal scapular arises directly from the C5 root. [Lec 4: Plexus & Elbow]" },
-      { text: "Thoracodorsal nerve", correct: false, why: "Thoracodorsal arises from the posterior cord. [Lec 4: Plexus & Elbow]" },
-      { text: "Axillary nerve", correct: false, why: "Axillary arises from the posterior cord. [Lec 4: Plexus & Elbow]" }
+      { text: "C8-T1", correct: true, why: "The ulnar nerve is derived from C8-T1. [Slide #47]" },
+      { text: "C5-C6", correct: false, why: "C5-C6 is axillary and suprascapular. [Slide #47]" },
+      { text: "C5-C7", correct: false, why: "C5-C7 is musculocutaneous. [Slide #47]" },
+      { text: "C6-C8", correct: false, why: "C6-C8 is thoracodorsal. [Slide #47]" }
     ]
   },
   {
-    id: 65, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
-    stem: "Compression or fracture at the spiral (radial) groove of the humerus compromises the radial nerve, classically producing _______.",
-    concept: "Midshaft humeral fractures or spiral groove compression injure the radial nerve, causing wrist drop due to extensor paralysis.",
+    id: 102, subjectIndex: 7, quarter: 4, slideRef: 95, difficulty: "medium", priority: true,
+    stem: "Which clinical presentation is produced by injury to the spinal accessory nerve (CN XI)?",
+    concept: "Loss of trapezius innervation from CN XI injury produces shoulder drooping.",
     options: [
-      { text: "wrist drop", correct: true, why: "Loss of radial innervation to wrist and finger extensors causes wrist drop. [Lec 4: Plexus & Elbow]" },
-      { text: "claw hand deformity", correct: false, why: "Claw hand results from ulnar nerve injury. [Lec 4: Plexus & Elbow]" },
-      { text: "ape hand deformity", correct: false, why: "Ape hand results from median nerve injury. [Lec 4: Plexus & Elbow]" },
-      { text: "scapular winging", correct: false, why: "Scapular winging results from long thoracic nerve injury. [Lec 4: Plexus & Elbow]" }
+      { text: "Drooping of the shoulder", correct: true, why: "Loss of the trapezius causes the shoulder to droop. [Slide #95]" },
+      { text: "Pronounced scapular winging", correct: false, why: "Pronounced winging is produced by long thoracic nerve injury. [Slide #95]" },
+      { text: "Loss of elbow flexion", correct: false, why: "Elbow flexion loss is musculocutaneous injury. [Slide #95]" },
+      { text: "Popeye deformity in the arm", correct: false, why: "Popeye deformity is biceps long head rupture. [Slide #95]" }
+    ]
+  },
+
+  /* ================= MODULE 8: VASCULATURE, SPACES, ELBOW & ENTRAPMENTS (Q103-110) ================= */
+  {
+    id: 103, subjectIndex: 8, quarter: 4, slideRef: 97, difficulty: "easy", priority: true,
+    stem: "What is the correct sequence of the primary arterial trunk from the neck into the forearm?",
+    concept: "The main arterial pathway progresses: Subclavian -> Axillary -> Brachial -> Radial and Ulnar arteries.",
+    options: [
+      { text: "Subclavian -> Axillary -> Brachial -> Radial and Ulnar", correct: true, why: "Subclavian transitions to axillary, then brachial, then radial and ulnar. [Slide #97]" },
+      { text: "Axillary -> Subclavian -> Brachial -> Radial and Ulnar", correct: false, why: "Subclavian precedes axillary artery. [Slide #97]" },
+      { text: "Subclavian -> Brachial -> Axillary -> Radial and Ulnar", correct: false, why: "Axillary precedes brachial artery. [Slide #97]" },
+      { text: "Radial and Ulnar -> Brachial -> Axillary -> Subclavian", correct: false, why: "This is the sequence of venous return, not arterial flow. [Slide #97]" }
     ]
   },
   {
-    id: 66, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
+    id: 104, subjectIndex: 8, quarter: 4, slideRef: 97, difficulty: "medium", priority: true,
     stem: "Which branch of the axillary artery has the greatest diameter but the shortest length?",
-    concept: "The subscapular artery is the largest diameter branch of the axillary, quickly bifurcating into circumflex scapular and thoracodorsal.",
+    concept: "The subscapular artery is the largest diameter branch of the axillary artery, quickly dividing into circumflex scapular and thoracodorsal arteries.",
     options: [
-      { text: "Subscapular artery", correct: true, why: "Subscapular artery has the greatest caliber and shortest length of all axillary branches. [Lec 4: Plexus & Elbow]" },
-      { text: "Posterior circumflex humeral artery", correct: false, why: "Smaller caliber branch passing into the quadrangular space. [Lec 4: Plexus & Elbow]" },
-      { text: "Anterior circumflex humeral artery", correct: false, why: "Smaller branch encircling the humeral neck. [Lec 4: Plexus & Elbow]" },
-      { text: "Deep brachial artery", correct: false, why: "Deep brachial arises from the brachial artery. [Lec 4: Plexus & Elbow]" }
+      { text: "Subscapular artery", correct: true, why: "Subscapular artery has the largest caliber and shortest trunk of the axillary branches. [Slide #97]" },
+      { text: "Posterior circumflex humeral artery", correct: false, why: "Smaller caliber branch passing into the quadrangular space. [Slide #97]" },
+      { text: "Anterior circumflex humeral artery", correct: false, why: "Smaller branch encircling the humeral neck. [Slide #97]" },
+      { text: "Deep brachial artery", correct: false, why: "Deep brachial arises from the brachial artery. [Slide #97]" }
     ]
   },
   {
-    id: 67, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "Which neurovascular structures pass through the quadrangular space?",
-    concept: "Quadrangular space transmits the axillary nerve and posterior circumflex humeral artery.",
+    id: 105, subjectIndex: 8, quarter: 4, slideRef: 98, difficulty: "medium", priority: true,
+    stem: "Which four boundaries define the quadrangular space?",
+    concept: "Quadrangular space: teres minor, teres major, long head of triceps, and humerus.",
     options: [
-      { text: "Axillary nerve and posterior circumflex humeral artery", correct: true, why: "Quadrangular space (teres minor, teres major, triceps long head, humerus) transmits axillary nerve and PCHA. [Lec 4: Plexus & Elbow]" },
-      { text: "Circumflex scapular artery", correct: false, why: "Circumflex scapular traverses the triangular space. [Lec 4: Plexus & Elbow]" },
-      { text: "Radial nerve and deep brachial artery", correct: false, why: "These traverse the radial groove. [Lec 4: Plexus & Elbow]" },
-      { text: "Ulnar nerve and superior ulnar collateral artery", correct: false, why: "These pass behind the medial epicondyle. [Lec 4: Plexus & Elbow]" }
+      { text: "Teres minor, teres major, long head of triceps, and humerus", correct: true, why: "These four boundaries enclose the axillary nerve and posterior circumflex humeral artery. [Slide #98]" },
+      { text: "Teres minor, teres major, lateral head of triceps, and radius", correct: false, why: "The long head of triceps and humerus form the boundaries. [Slide #98]" },
+      { text: "Pectoralis major, latissimus dorsi, biceps, and clavicle", correct: false, why: "These do not form the quadrangular space. [Slide #98]" },
+      { text: "Subscapularis, supraspinatus, deltoid, and acromion", correct: false, why: "These do not form the quadrangular space. [Slide #98]" }
     ]
   },
   {
-    id: 68, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
+    id: 106, subjectIndex: 8, quarter: 4, slideRef: 98, difficulty: "medium", priority: true,
     stem: "Which artery traverses the triangular space bounded by teres minor, teres major, and the long head of the triceps?",
     concept: "The triangular space transmits the circumflex scapular artery.",
     options: [
-      { text: "Circumflex scapular artery", correct: true, why: "Triangular space transmits the circumflex scapular artery to the infraspinous fossa. [Lec 4: Plexus & Elbow]" },
-      { text: "Posterior circumflex humeral artery", correct: false, why: "Traverses the quadrangular space. [Lec 4: Plexus & Elbow]" },
-      { text: "Deep brachial artery", correct: false, why: "Traverses the radial groove. [Lec 4: Plexus & Elbow]" },
-      { text: "Thoracodorsal artery", correct: false, why: "Accompanies thoracodorsal nerve to latissimus dorsi. [Lec 4: Plexus & Elbow]" }
+      { text: "Circumflex scapular artery", correct: true, why: "Circumflex scapular artery traverses the triangular space toward the scapular dorsum. [Slide #98]" },
+      { text: "Posterior circumflex humeral artery", correct: false, why: "Traverses the quadrangular space. [Slide #98]" },
+      { text: "Deep brachial artery", correct: false, why: "Traverses the radial groove. [Slide #98]" },
+      { text: "Thoracodorsal artery", correct: false, why: "Courses with the thoracodorsal nerve to latissimus dorsi. [Slide #98]" }
     ]
   },
   {
-    id: 69, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "The deep brachial artery (profunda brachii) branches from the brachial artery and accompanies which nerve in the radial groove?",
-    concept: "The deep brachial artery and radial nerve travel together directly in the radial (spiral) groove of the humerus.",
+    id: 107, subjectIndex: 8, quarter: 4, slideRef: 100, difficulty: "hard", priority: true,
+    stem: "Which statement correctly contrasts the shapes and locations of the radial and ulnar collateral ligaments of the elbow?",
+    concept: "The radial collateral ligament is fan-shaped on the lateral side; the ulnar collateral ligament is triangular on the medial side.",
     options: [
-      { text: "Radial nerve", correct: true, why: "Deep brachial artery travels with the radial nerve in the spiral groove. [Lec 4: Plexus & Elbow]" },
-      { text: "Ulnar nerve", correct: false, why: "Ulnar nerve passes behind the medial epicondyle. [Lec 4: Plexus & Elbow]" },
-      { text: "Median nerve", correct: false, why: "Median nerve travels anteriorly in the cubital fossa. [Lec 4: Plexus & Elbow]" },
-      { text: "Axillary nerve", correct: false, why: "Axillary nerve travels with PCHA in the quadrangular space. [Lec 4: Plexus & Elbow]" }
+      { text: "Radial collateral is fan-shaped laterally; ulnar collateral is triangular medially", correct: true, why: "RCL is fan-like and blends with the annular ligament; UCL is triangular with three bands. [Slide #100]" },
+      { text: "Radial collateral is triangular laterally; ulnar collateral is fan-shaped medially", correct: false, why: "Inverts the shapes of the collateral ligaments. [Slide #100]" },
+      { text: "Both collateral ligaments are circular bands encircling the radial head", correct: false, why: "Only the annular ligament encircles the radial head. [Slide #100]" },
+      { text: "Radial collateral is medial; ulnar collateral is lateral", correct: false, why: "Radial is lateral; ulnar is medial. [Slide #100]" }
     ]
   },
   {
-    id: 70, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "easy", priority: false,
-    stem: "Which superficial vein courses along the lateral margin of the upper extremity?",
-    concept: "The cephalic vein is the lateral superficial vein, while the basilic vein is the medial superficial vein.",
+    id: 108, subjectIndex: 8, quarter: 4, slideRef: 102, difficulty: "hard", priority: true,
+    stem: "Under repetitive throwing stress, what distinguishes Little Leaguer's elbow from pitcher's elbow in an adult?",
+    concept: "Little Leaguer's elbow involves pulling on an open growth plate; adult pitcher's elbow stresses the collateral ligaments.",
     options: [
-      { text: "Cephalic vein", correct: true, why: "Cephalic vein runs laterally; basilic vein runs medially. [Lec 4: Plexus & Elbow]" },
-      { text: "Basilic vein", correct: false, why: "Basilic vein courses along the medial side. [Lec 4: Plexus & Elbow]" },
-      { text: "Brachial vein", correct: false, why: "Brachial veins are deep paired venae comitantes. [Lec 4: Plexus & Elbow]" },
-      { text: "Axillary vein", correct: false, why: "Axillary vein is a deep vessel receiving superficial trunks. [Lec 4: Plexus & Elbow]" }
+      { text: "Little Leaguer's involves pulling on an open growth plate; pitcher's stresses the collateral ligaments", correct: true, why: "With an open growth plate the pull stresses the plate; in adults without one, the collateral ligaments take the load. [Slide #102]" },
+      { text: "Little Leaguer's involves the collateral ligaments; pitcher's involves an open growth plate", correct: false, why: "Reverses the pediatric and adult structures. [Slide #102]" },
+      { text: "Little Leaguer's involves only the annular ligament; pitcher's involves the biceps tendon", correct: false, why: "Neither is primarily an annular or biceps condition. [Slide #102]" },
+      { text: "Little Leaguer's occurs on the lateral elbow; pitcher's occurs on the posterior elbow", correct: false, why: "Both are medial-sided throwing injuries. [Slide #102]" }
     ]
   },
   {
-    id: 71, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "Which elbow ligament encircles the radial head, holding it against the ulna to permit pronation and supination?",
-    concept: "The annular ligament encircles the radial head, maintaining the proximal radioulnar joint during rotation.",
+    id: 109, subjectIndex: 8, quarter: 4, slideRef: 103, difficulty: "hard", priority: true,
+    stem: "Which clinical examination finding distinguishes pronator teres syndrome from carpal tunnel syndrome?",
+    concept: "Pronator teres syndrome symptoms are reproduced by pronation against resistance with a positive Tinel sign at the forearm.",
     options: [
-      { text: "Annular ligament", correct: true, why: "The annular ligament forms a collar holding the radial head during pronation/supination. [Lec 4: Plexus & Elbow]" },
-      { text: "Radial collateral ligament", correct: false, why: "RCL fans from the lateral epicondyle into the annular ligament. [Lec 4: Plexus & Elbow]" },
-      { text: "Ulnar collateral ligament", correct: false, why: "UCL stabilizes the medial elbow against valgus stress. [Lec 4: Plexus & Elbow]" },
-      { text: "Interosseous membrane", correct: false, why: "Interosseous membrane connects the shafts of the radius and ulna. [Lec 4: Plexus & Elbow]" }
+      { text: "Symptoms reproduced by resisted pronation with forearm Tinel sign", correct: true, why: "Pronator syndrome symptoms are provoked by resisted pronation and forearm percussion. [Slide #103]" },
+      { text: "Positive Phalen sign isolated strictly to the wrist flexion crease", correct: false, why: "Phalen sign at the wrist points to carpal tunnel syndrome. [Slide #103]" },
+      { text: "Complete relief achieved by cutting the flexor retinaculum", correct: false, why: "Flexor retinaculum release treats carpal tunnel, not pronator syndrome. [Slide #103]" },
+      { text: "Sensory deficit isolated strictly to the fifth digit", correct: false, why: "Fifth digit sensory loss involves the ulnar nerve. [Slide #103]" }
     ]
   },
   {
-    id: 72, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
-    stem: "Which band of the triangular ulnar collateral ligament (UCL) is the strongest?",
-    concept: "The cord-like anterior band is the strongest band of the UCL; the posterior band is the weakest.",
+    id: 110, subjectIndex: 8, quarter: 4, slideRef: 104, difficulty: "medium", priority: true,
+    stem: "Which type of thoracic outlet syndrome is clinically the most common, and which is the least common?",
+    concept: "Neurogenic TOS is the most common form; arterial TOS is least common because the tunica media keeps the artery open.",
     options: [
-      { text: "Anterior band", correct: true, why: "The anterior band is the strongest and primary stabilizer of the UCL; the posterior band is the weakest. [Lec 4: Plexus & Elbow]" },
-      { text: "Posterior band", correct: false, why: "The posterior band is the weakest band. [Lec 4: Plexus & Elbow]" },
-      { text: "Oblique band", correct: false, why: "The oblique band deepens the socket for the trochlea. [Lec 4: Plexus & Elbow]" },
-      { text: "Annular band", correct: false, why: "The annular ligament is a separate ligament of the proximal radioulnar joint. [Lec 4: Plexus & Elbow]" }
-    ]
-  },
-  {
-    id: 73, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "Which muscle origin pairing correctly distinguishes lateral from medial epicondylitis?",
-    concept: "Lateral epicondylitis (tennis elbow) involves wrist extensors; medial epicondylitis (golfer's elbow) involves wrist flexors and pronator teres.",
-    options: [
-      { text: "Lateral: common wrist extensors (tennis elbow); Medial: flexor-pronator mass (golfer's elbow)", correct: true, why: "Lateral epicondylitis stresses wrist extensors; medial epicondylitis stresses wrist flexors and pronator teres. [Lec 4: Plexus & Elbow]" },
-      { text: "Lateral: flexor-pronator mass; Medial: common wrist extensors", correct: false, why: "Inverts the epicondylar muscular origins. [Lec 4: Plexus & Elbow]" },
-      { text: "Lateral: triceps insertion; Medial: biceps insertion", correct: false, why: "Triceps inserts on olecranon; biceps inserts on radial tuberosity. [Lec 4: Plexus & Elbow]" },
-      { text: "Lateral: supinator; Medial: anconeus", correct: false, why: "Anconeus originates on the lateral epicondyle. [Lec 4: Plexus & Elbow]" }
-    ]
-  },
-  {
-    id: 74, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "hard", priority: true,
-    stem: "What critical developmental difference distinguishes Little Leaguer's elbow from adult pitcher's elbow?",
-    concept: "Little Leaguer's elbow is traction apophysitis/avulsion of the open medial epicondyle physis; pitcher's elbow is a tear of the UCL.",
-    options: [
-      { text: "Little Leaguer's: traction avulsion of the open medial epicondyle growth plate; Pitcher's: sprain/tear of the ulnar collateral ligament", correct: true, why: "In youth with open physes, throwing stress avulses the growth plate; in mature throwers, the UCL tears. [Lec 4: Plexus & Elbow]" },
-      { text: "Little Leaguer's: UCL tear; Pitcher's: growth plate avulsion", correct: false, why: "Reversed; adults have closed growth plates. [Lec 4: Plexus & Elbow]" },
-      { text: "Little Leaguer's involves the annular ligament; Pitcher's involves the radial collateral ligament", correct: false, why: "Both are medial-sided throwing injuries. [Lec 4: Plexus & Elbow]" },
-      { text: "Little Leaguer's affects the lateral epicondyle; Pitcher's affects the medial", correct: false, why: "Both conditions affect the medial elbow. [Lec 4: Plexus & Elbow]" }
-    ]
-  },
-  {
-    id: 75, subjectIndex: 6, sourceRef: "Lec 4: Plexus & Elbow", difficulty: "medium", priority: true,
-    stem: "Which type of thoracic outlet syndrome (TOS) is clinically the most common?",
-    concept: "Neurogenic TOS (compression of the brachial plexus) accounts for the vast majority of cases.",
-    options: [
-      { text: "Neurogenic TOS", correct: true, why: "Neurogenic compression of the brachial plexus trunks accounts for over 90% of all TOS cases. [Lec 4: Plexus & Elbow]" },
-      { text: "Arterial TOS", correct: false, why: "Arterial TOS is the least common because the muscular arterial wall resists collapse. [Lec 4: Plexus & Elbow]" },
-      { text: "Venous TOS", correct: false, why: "Venous TOS is less common than neurogenic TOS. [Lec 4: Plexus & Elbow]" },
-      { text: "Lymphatic TOS", correct: false, why: "Not a recognized clinical category of TOS. [Lec 4: Plexus & Elbow]" }
+      { text: "Neurogenic is most common; arterial is least common", correct: true, why: "Neurogenic is most common; arterial is least common because the tunica media resists compression. [Slide #104]" },
+      { text: "Arterial is most common; neurogenic is least common", correct: false, why: "Inverts the clinical prevalence of TOS types. [Slide #104]" },
+      { text: "Venous is most common; neurogenic is least common", correct: false, why: "Neurogenic accounts for the vast majority of cases. [Slide #104]" },
+      { text: "All types of thoracic outlet syndrome occur with equal frequency", correct: false, why: "Prevalence differs significantly among types. [Slide #104]" }
     ]
   }
 ];
 
 /* ----------------- State & Storage Engine ----------------- */
 let hist = {};
-try { hist = JSON.parse(localStorage.getItem('quiz_missed_history') || '{}'); } catch (e) {}
-const saveHistory = () => { try { localStorage.setItem('quiz_missed_history', JSON.stringify(hist)); } catch (e) {} };
+try { hist = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) {}
+const saveHistory = () => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(hist)); } catch (e) {} };
 
 let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
 let prioritizeMissed = false;
@@ -1421,10 +1814,12 @@ function renderHome() {
   SUBJECTS.forEach((_, i) => subjectCounts[i] = 0);
   questionBank.forEach(q => subjectCounts[q.subjectIndex]++);
 
+  $('bank-count-header').textContent = questionBank.length;
+
   $('app-container').innerHTML = `
     <div class="dashboard-card">
       <div class="dash-title">Master Practice Dashboard</div>
-      <div class="dash-desc">Filter modules across the upper extremity, target previously missed questions with weighted sampling, and choose your preferred study view.</div>
+      <div class="dash-desc">Select modules, target missed questions with weighted sampling, and choose your preferred study view.</div>
 
       <div class="filter-section">
         <div class="filter-title">
@@ -1447,7 +1842,7 @@ function renderHome() {
         <div class="filter-title">2. Study Targeting</div>
         <div class="selector-row">
           <div class="chip ${totalMissedCount === 0 ? 'disabled' : (prioritizeMissed ? 'active' : '')}" onclick="toggleMissedFilter()">
-            ${totalMissedCount === 0 ? 'No Missed Questions Yet' : `Prioritize Missed (Weighted 3x) [${totalMissedCount} in history]`}
+            ${totalMissedCount === 0 ? 'No Missed Questions in History' : `Prioritize Missed (Weighted 3x) [${totalMissedCount} in history]`}
           </div>
         </div>
       </div>
@@ -1465,7 +1860,7 @@ function renderHome() {
       </div>
 
       <div class="bank-counter">
-        Ready Pool: ${filteredPool.length} questions across ${selectedSubjects.size} selected subjects
+        Active Pool: ${filteredPool.length} questions across ${selectedSubjects.size} selected subjects
       </div>
 
       <div class="filter-title" style="margin-top:20px;">4. Launch Quiz Session</div>
@@ -1490,13 +1885,11 @@ function startQuiz(countParam) {
 
   const targetCount = countParam === 'all' ? pool.length : Math.min(countParam, pool.length);
 
-  // Weighted draw if prioritizeMissed is active
   let chosenPool = [];
   if (prioritizeMissed) {
     let poolCopy = [...pool];
     let selectedSet = new Set();
     while (selectedSet.size < targetCount && poolCopy.length > 0) {
-      // Calculate weights: items missed in history get 3x weight
       let weightedItems = [];
       poolCopy.forEach(q => {
         let weight = (hist[q.id] || 0) > 0 ? 3 : 1;
@@ -1550,7 +1943,7 @@ function renderQuestion() {
         <span class="badge">Question ${currentIndex + 1} of ${quizQuestions.length}</span>
         <span class="badge alt">${SUBJECTS[q.subjectIndex]}</span>
         <span class="badge alt diff-${q.difficulty}">${q.difficulty}</span>
-        <span class="badge alt">${q.sourceRef}</span>
+        <span class="badge alt">Slide #${q.slideRef}</span>
         ${q.priority ? '<span class="badge">High-Yield</span>' : ''}
       </div>
       <div class="stem">${renderedStem}</div>
@@ -1602,7 +1995,7 @@ function renderAllQuestions() {
               <span class="badge">Q${qi + 1}</span>
               <span class="badge alt">${SUBJECTS[q.subjectIndex]}</span>
               <span class="badge alt diff-${q.difficulty}">${q.difficulty}</span>
-              <span class="badge alt">${q.sourceRef}</span>
+              <span class="badge alt">Slide #${q.slideRef}</span>
               ${q.priority ? '<span class="badge">High-Yield</span>' : ''}
             </div>
             <div class="stem">${renderedStem}</div>
@@ -1693,7 +2086,7 @@ function renderExplanationHTML(q) {
   return `
     <div class="explain">
       <div class="banner ${q._isCorrect ? 'ok' : 'bad'}">
-        ${q._isCorrect ? 'Correct!' : 'Incorrect.'}
+        ${q._isCorrect ? 'CORRECT!' : 'INCORRECT.'}
       </div>
       <div class="concept">
         <b>Core Concept:</b> ${esc(q.concept)}
@@ -1738,9 +2131,7 @@ function renderSummary() {
     tier = 'You really didn’t fucking know that.';
   }
 
-  // Module breakdown
   const subjectStats = {};
-  // Difficulty breakdown
   const diffStats = {
     easy: { total: 0, correct: 0 },
     medium: { total: 0, correct: 0 },
@@ -1782,19 +2173,19 @@ function renderSummary() {
             <td>${diffStats.easy.total ? Math.round((diffStats.easy.correct / diffStats.easy.total) * 100) : 0}%</td>
           </tr>
           <tr>
-            <td style="text-align:left;color:#f59e0b;font-weight:700;">Medium (Integration & Relationships)</td>
+            <td style="text-align:left;color:#f59e0b;font-weight:700;">Medium (Application & Relationships)</td>
             <td>${diffStats.medium.correct} / ${diffStats.medium.total}</td>
             <td>${diffStats.medium.total ? Math.round((diffStats.medium.correct / diffStats.medium.total) * 100) : 0}%</td>
           </tr>
           <tr>
-            <td style="text-align:left;color:#ef4444;font-weight:700;">Hard (Multi-Concept Foundations)</td>
+            <td style="text-align:left;color:#ef4444;font-weight:700;">Hard (Multi-Concept Integration)</td>
             <td>${diffStats.hard.correct} / ${diffStats.hard.total}</td>
             <td>${diffStats.hard.total ? Math.round((diffStats.hard.correct / diffStats.hard.total) * 100) : 0}%</td>
           </tr>
         </tbody>
       </table>
 
-      <div class="filter-title" style="margin-top:24px;">Regional Module Breakdown</div>
+      <div class="filter-title" style="margin-top:24px;">Subject Module Breakdown</div>
       <table class="summary-table">
         <thead>
           <tr>
