@@ -10,9 +10,8 @@ header{position:sticky;top:0;z-index:100;background:#1a1a1a;border-bottom:1px so
 .hr{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .pill{background:#0f0f0f;border:1px solid #2a2a2a;border-radius:20px;padding:4px 12px;font-size:.8rem}
 .track{width:100%;height:4px;background:#2a2a2a}#progress-bar{height:100%;width:0;background:var(--accent);transition:width .3s}
-.stfu-btn,.menu-btn,.mode-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
+.stfu-btn,.menu-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;transition:all .2s ease}
 .stfu-btn.muted{background:var(--accent);color:#000}
-.mode-btn.active{background:var(--accent);color:#000}
 main{max-width:820px;margin:0 auto;padding:16px 12px 60px}
 .card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:18px;margin-bottom:16px}
 h2,h3{color:var(--accent);margin:0 0 10px}
@@ -39,7 +38,7 @@ h2,h3{color:var(--accent);margin:0 0 10px}
 .wrong-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none;display:flex;justify-content:center;align-items:center;animation:popIn .15s ease-out}
 .wrong-popup img{max-width:80vw;max-height:55vh;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.9);border:3px solid #ef4444;display:block;object-fit:contain;background:#111}
 @keyframes popIn{from{transform:translate(-50%,-50%) scale(.85);opacity:0}to{transform:translate(-50%,-50%) scale(1);opacity:1}}
-</style></head><body>
+.mode-btn{background:#222;color:#fff;border:1px solid var(--accent);border-radius:6px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:.85rem}.mode-btn.active{background:var(--accent);color:#000}a.btn{text-decoration:none;display:inline-block}</style></head><body>
 <header>
 <div class="brand">Spinal Anatomy II Quiz Hub<small>Midterm Lecture Practice</small></div>
 <div class="hr">
@@ -57,473 +56,127 @@ h2,h3{color:var(--accent);margin:0 0 10px}
 <script>
 const SUBJECTS=['Layer 1: Trapezius & Latissimus','Layer 2: Scapular Muscles','Layer 3: Splenius & Serratus Posterior','Erector Spinae','Transversospinalis','Deep Segmental Muscles','Suboccipital Group','Meninges & Spinal Cord'];
 function subjOf(s){return s<=4?0:s<=8?1:s<=14?2:s<=25?3:s<=35?4:s<=38?5:s<=43?6:7}
-function Q(id,quarter,s,d,p,stem,o,ci){return{id,subjectIndex:subjOf(s),quarter,slideRef:s,difficulty:d,priority:p,stem,
-options:o.map((x,i)=>({text:x[0],correct:i===ci,why:x[1]+' [Slide #'+s+']'}))}}
+function Q(id,s,d,p,stem,o,ci,t){const tag='['+(t||'Slide #'+s)+']';return{id,subjectIndex:subjOf(s),quarter:s<=12?1:s<=24?2:s<=36?3:4,slideRef:s,difficulty:d,priority:p,stem,options:o.map((x,i)=>({text:x[0],correct:i===ci,why:x[1]+' '+tag}))}}
 const questionBank=[
-// ---- Quarter 1 (slides 1-12)
-Q(1,1,3,'easy',true,'The upper trapezius is innervated primarily by the _______ nerve.',[
-['dorsal scapular','Incorrect: the dorsal scapular nerve (C5) feeds levator scapula and the rhomboids, not trapezius.'],
-['thoracodorsal','Incorrect: the thoracodorsal nerve (C6-C8) feeds latissimus dorsi.'],
-['spinal accessory (CN XI)','Correct: trapezius is supplied by the spinal accessory nerve, CN XI.'],
-['suboccipital','Incorrect: the suboccipital nerve (dorsal ramus C1) feeds the suboccipital muscles.']],2),
-Q(2,1,4,'easy',true,'Latissimus dorsi inserts on which structure?',[
-['Spine of the scapula','Incorrect: the spine of the scapula is a trapezius insertion.'],
-['Intertubercular groove of the humerus','Correct: latissimus dorsi inserts on the medial intertubercular groove of the humerus.'],
-['Medial border of the scapula','Incorrect: the medial border is the insertion of levator scapula and the rhomboids.'],
-['Lateral third of the clavicle','Incorrect: the lateral clavicle is a trapezius insertion.']],1),
-Q(3,1,6,'medium',false,'Levator scapula attaches to the transverse processes of which vertebrae?',[
-['C1-C4','Correct: levator scapula arises from TP C1-C4 and inserts on the superior medial scapular border.'],
-['C7-T1','Incorrect: SP C7-T1 is the rhomboid minor attachment (spinous, not transverse, processes).'],
-['T2-T5','Incorrect: SP T2-T5 is the rhomboid major attachment.'],
-['T1-T6','Incorrect: TP T1-T6 relates to the semispinalis muscles, not levator scapula.']],0),
-Q(4,1,8,'medium',true,'The _______ attaches to spinous processes T2-T5 and the medial scapular border below rhomboid minor.',[
-['rhomboid major','Correct: rhomboid major spans SP T2-T5 to the medial border down to the inferior angle.'],
-['rhomboid minor','Incorrect: rhomboid minor attaches SP C7-T1, superior to the major.'],
-['levator scapula','Incorrect: levator scapula originates on TP C1-C4.'],
-['latissimus dorsi','Incorrect: latissimus dorsi originates SP T7-L5 and inserts on the humerus.']],0),
-Q(5,1,10,'medium',false,'Splenius capitis inserts on the:',[
-['transverse processes of C1-C4','Incorrect: that is the splenius cervicis insertion.'],
-['mastoid process and superior nuchal line','Correct: capitis reaches the skull at the mastoid process and superior nuchal line.'],
-['inferior nuchal line','Incorrect: the inferior nuchal line is a suboccipital rectus attachment.'],
-['spinous process of C2','Incorrect: C2 SP is an origin for rectus capitis posterior major and oblique capitis inferior.']],1),
-Q(6,1,7,'hard',true,'Which muscle attaches SP C7-T1, retracts the scapula, and rotates the glenoid cavity inferiorly?',[
-['Trapezius','Incorrect: trapezius rotates the scapula superiorly, the opposite rotation.'],
-['Levator scapula','Incorrect: levator scapula elevates the scapula and originates on TP C1-C4.'],
-['Rhomboid minor','Correct: rhomboid minor (SP C7-T1) retracts and inferiorly rotates the glenoid cavity.'],
-['Latissimus dorsi','Incorrect: latissimus dorsi acts on the humerus and arises from SP T7-L5.']],2),
-// ---- Quarter 2 (slides 13-24)
-Q(7,2,13,'medium',true,'Serratus posterior superior elevates the ribs during:',[
-['quiet expiration','Incorrect: SPS acts in forced inspiration; it does not elevate ribs for expiration.'],
-['forced inspiration','Correct: SPS (SP C7-T3 to ribs 2-5) elevates ribs in forced inspiration.'],
-['forced expiration','Incorrect: stabilizing ribs in forced expiration is serratus posterior inferior.'],
-['cervical extension','Incorrect: it is a respiratory muscle with no cervical extension action.']],1),
-Q(8,2,14,'easy',false,'Serratus posterior inferior inserts on which ribs?',[
-['Ribs 2-5','Incorrect: ribs 2-5 are the superior serratus insertion.'],
-['Ribs 3-12','Incorrect: ribs 3-12 are the longissimus thoracis insertion.'],
-['Ribs 9-12','Correct: SPI arises SP T11-L2 and inserts on ribs 9-12.'],
-['Ribs 1-6','Incorrect: ribs 1-6 describe the iliocostalis thoracis insertion region, not SPI.']],2),
-Q(9,2,16,'medium',false,'Iliocostalis lumborum inserts on the:',[
-['upper 6 ribs','Incorrect: the upper 6 ribs are the iliocostalis thoracis insertion.'],
-['mastoid process','Incorrect: the mastoid is a capitis insertion.'],
-['transverse processes of C4-C6','Incorrect: that is the iliocostalis cervicis insertion.'],
-['lower 6 ribs','Correct: iliocostalis lumborum runs from the iliac crest/sacrum/SP T11-L5 to the lower 6 ribs.']],3),
-Q(10,2,17,'medium',true,'Iliocostalis thoracis originates on the _______ and inserts on the _______.',[
-['lower 6 ribs; upper 6 ribs','Correct: thoracis runs rib to rib, lower 6 up to upper 6.'],
-['upper 6 ribs; lower 6 ribs','Incorrect: the direction is inverted.'],
-['iliac crest; lower 6 ribs','Incorrect: that describes iliocostalis lumborum.'],
-['ribs 3-6; TP C4-C6','Incorrect: that describes iliocostalis cervicis.']],0),
-Q(11,2,20,'medium',false,'Longissimus thoracis inserts on the transverse processes of T1-T12 and:',[
-['ribs 3-12','Correct: longissimus thoracis also inserts on ribs 3-12.'],
-['ribs 9-12','Incorrect: ribs 9-12 are the serratus posterior inferior insertion.'],
-['the mastoid process','Incorrect: the mastoid is the longissimus capitis insertion.'],
-['SP T4-T7','Incorrect: SP T4-T7 is the spinalis insertion.']],0),
-Q(12,2,22,'medium',false,'Longissimus capitis inserts on the:',[
-['inferior nuchal line','Incorrect: the inferior nuchal line is a suboccipital attachment.'],
-['occipital region between the nuchal lines','Incorrect: that is the semispinalis capitis insertion.'],
-['mastoid process','Correct: longissimus capitis (articular processes C4-C7, TP T1-T5) inserts on the mastoid.'],
-['transverse process of C1','Incorrect: TP C1 is the oblique capitis superior origin.']],2),
-Q(13,2,24,'medium',false,'Spinalis thoracis originates on SP T11-L2 and inserts on:',[
-['SP T4-T7','Correct: spinalis thoracis inserts on SP T4-T7.'],
-['ribs 3-12','Incorrect: that is longissimus thoracis.'],
-['the mastoid process','Incorrect: spinalis thoracis does not reach the skull.'],
-['TP C4-C6','Incorrect: that is iliocostalis cervicis.']],0),
-// ---- Quarter 3 (slides 25-36)
-Q(14,3,25,'easy',true,'Which erector spinae muscle may be absent?',[
-['Spinalis cervicis','Correct: spinalis cervicis (SP C7-T2 to SP T4-T7) may be absent.'],
-['Iliocostalis thoracis','Incorrect: iliocostalis thoracis is a consistent muscle.'],
-['Longissimus thoracis','Incorrect: longissimus thoracis is a consistent muscle.'],
-['Iliocostalis lumborum','Incorrect: iliocostalis lumborum is a consistent muscle.']],0),
-Q(15,3,28,'medium',false,'Semispinalis thoracis runs from the transverse processes of T7-T12 to the spinous processes of:',[
-['C2-C5','Incorrect: that is the semispinalis cervicis insertion.'],
-['C6-T4','Correct: thoracis inserts on SP C6-T4.'],
-['C2-L5','Incorrect: that is the multifidus insertion range.'],
-['T4-T7','Incorrect: that is the spinalis insertion.']],1),
-Q(16,3,30,'hard',true,'Contraction of the right semispinalis capitis rotates the head toward which side, and why?',[
-['Right; it acts ipsilaterally','Incorrect: transversospinalis muscles rotate contralaterally, not ipsilaterally.'],
-['Left; it acts contralaterally','Correct: semispinalis capitis extends, laterally flexes, and rotates the head contralaterally.'],
-['Left; it acts ipsilaterally','Incorrect: left rotation from the right muscle is contralateral, not ipsilateral.'],
-['Neither; it only extends','Incorrect: it also laterally flexes and contralaterally rotates.']],1),
-Q(17,3,32,'medium',true,'Multifidus inserts how many segments above its origin?',[
-['1','Incorrect: one segment is rotatores brevis.'],
-['2','Incorrect: two segments is rotatores longus.'],
-['3-4','Correct: multifidus spans 3-4 segments above its origin.'],
-['5-6','Incorrect: no transversospinalis muscle in this set uses 5-6 segments.']],2),
-Q(18,3,34,'hard',true,'Ranked from most to fewest segments spanned above the origin, which order is correct?',[
-['Rotatores brevis, rotatores longus, multifidus','Incorrect: this order is inverted.'],
-['Rotatores longus, multifidus, rotatores brevis','Incorrect: multifidus (3-4) spans more than longus (2).'],
-['Multifidus, rotatores brevis, rotatores longus','Incorrect: brevis (1) spans fewer than longus (2).'],
-['Multifidus, rotatores longus, rotatores brevis','Correct: multifidus 3-4, rotatores longus 2, rotatores brevis 1.']],3),
-Q(19,3,35,'medium',false,'Rotatores brevis produces which actions?',[
-['Extension and contralateral rotation','Correct: rotatores extend and rotate contralaterally.'],
-['Extension and lateral flexion','Incorrect: rotatores do not laterally flex.'],
-['Lateral flexion only','Incorrect: that is intertransversarii.'],
-['Ipsilateral rotation and flexion','Incorrect: rotation is contralateral and there is no flexion.']],0),
-// ---- Quarter 4 (slides 37-47)
-Q(20,4,38,'hard',true,'Intertransversarii are innervated by _______ rami, except the medial lumbar muscles, which receive _______ rami.',[
-['ventral; dorsal','Correct: ventral rami, except medial lumbar (dorsal rami).'],
-['dorsal; ventral','Incorrect: the pattern is inverted.'],
-['dorsal; dorsal','Incorrect: most intertransversarii are ventral-ramus muscles.'],
-['ventral; ventral','Incorrect: the medial lumbar exception is dorsal.']],0),
-Q(21,4,40,'easy',false,'Rectus capitis posterior minor arises from the posterior tubercle of C1 and produces:',[
-['extension of the head','Correct: it extends the head.'],
-['ipsilateral rotation of the head','Incorrect: that is rectus capitis posterior major.'],
-['flexion of the head','Incorrect: it lies posterior, so it cannot flex.'],
-['rotation of C1','Incorrect: that is oblique capitis inferior.']],0),
-Q(22,4,41,'medium',true,'Which suboccipital muscle arises from SP C2, inserts on the inferior nuchal line, and extends and ipsilaterally rotates the head?',[
-['Rectus capitis posterior major','Correct: RCPM (SP C2) extends and ipsilaterally rotates the head.'],
-['Rectus capitis posterior minor','Incorrect: minor arises from C1 and only extends.'],
-['Oblique capitis superior','Incorrect: OCS arises from TP C1 and laterally flexes.'],
-['Oblique capitis inferior','Incorrect: OCI inserts on TP C1, not the skull.']],0),
-Q(23,4,43,'hard',true,'Which suboccipital muscle does NOT attach to the skull?',[
-['Rectus capitis posterior minor','Incorrect: it inserts on the inferior nuchal line.'],
-['Rectus capitis posterior major','Incorrect: it inserts on the inferior nuchal line.'],
-['Oblique capitis superior','Incorrect: it inserts between the nuchal lines.'],
-['Oblique capitis inferior','Correct: OCI runs from SP C2 to TP C1 and rotates C1 ipsilaterally.']],3),
-Q(24,4,44,'medium',false,'Which meningeal layer directly hugs the surface of the spinal cord?',[
-['Dura mater','Incorrect: dura is the tough outer layer.'],
-['Arachnoid mater','Incorrect: arachnoid is the web-like middle layer.'],
-['Pia mater','Correct: pia mater adheres closest to the CNS.'],
-['Denticulate ligament','Incorrect: it is an extension of pia mater, not a layer.']],2),
-Q(25,4,45,'medium',false,'The filum terminale is an extension of which structure that tethers the conus medullaris?',[
-['Dura mater','Incorrect: the filum is not dura.'],
-['Pia mater','Correct: it is a pia mater extension anchoring the cord inferiorly.'],
-['Cauda equina nerve roots','Incorrect: it is not a nerve.'],
-['Arachnoid mater','Incorrect: the filum is not arachnoid.']],1),
-Q(26,4,46,'medium',true,'Denticulate ligaments are extensions of the:',[
-['dura mater','Incorrect: dura attaches to bones and muscles.'],
-['arachnoid mater','Incorrect: arachnoid forms trabecular web-like tissue.'],
-['filum terminale','Incorrect: the filum anchors the cord inferiorly.'],
-['pia mater','Correct: denticulate ligaments suspend the cord as pia extensions.']],3),
-Q(27,1,4,'easy',true,'The thoracolumbar fascia is synonymous with the _______ fascia.',[['lumbodorsal','Correct: thoracolumbar, thoracodorsal, lumbar dorsal and lumbodorsal fascia are the same low-back sheet and the latissimus dorsi origin.'],['palmar','Incorrect: the palmar fascia is in the hand.'],['nuchal','Incorrect: the nuchal ligament lies in the neck.'],['plantar','Incorrect: the plantar fascia is in the foot.']],0),
-Q(28,1,3,'medium',true,'Trapezius arises from the spinous processes of:',[['C7-T12','Correct: trapezius spans SP C7-T12 plus the nuchal ligament and EOP.'],['C7-T6','Incorrect: this stops short of T12.'],['T7-L5','Incorrect: that is latissimus dorsi.'],['T2-T5','Incorrect: that is rhomboid major.']],0),
-Q(29,1,4,'medium',true,'Latissimus dorsi produces which humeral actions?',[['Flexion, lateral rotation, abduction','Incorrect: each action is the opposite of the real one.'],['Extension, medial rotation, adduction','Correct: latissimus dorsi extends, medially rotates and adducts the humerus.'],['Extension, lateral rotation, abduction','Incorrect: rotation is medial and movement is adduction.'],['Flexion, medial rotation, adduction','Incorrect: the muscle extends, not flexes.']],1),
-Q(30,1,6,'hard',true,'Which muscle is NOT primarily supplied by the dorsal scapular nerve (C5)?',[['Levator scapula','Incorrect: levator scapula is a dorsal scapular nerve muscle.'],['Rhomboid minor','Incorrect: rhomboid minor is a dorsal scapular nerve muscle.'],['Rhomboid major','Incorrect: rhomboid major is a dorsal scapular nerve muscle.'],['Trapezius','Correct: trapezius is supplied by CN XI, the spinal accessory nerve.']],3),
-Q(31,1,11,'medium',false,'Splenius cervicis attaches to the spinous processes of T3-T6 and the:',[['transverse processes of C1-C4','Correct: cervicis stops at the cervical vertebrae.'],['mastoid process','Incorrect: that is splenius capitis.'],['superior nuchal line','Incorrect: that is splenius capitis.'],['ribs 2-5','Incorrect: that is serratus posterior superior.']],0),
-Q(32,1,10,'medium',false,'Splenius capitis rotates the head:',[['contralaterally','Incorrect: the splenii are ipsilateral rotators.'],['ipsilaterally','Correct: splenius capitis extends, laterally flexes and ipsilaterally rotates the head.'],['not at all','Incorrect: rotation is a listed action.'],['only with the opposite side','Incorrect: ipsilateral rotation is its own action.']],1),
-Q(33,2,14,'medium',false,'Serratus posterior inferior is innervated by the:',[['dorsal rami of C1','Incorrect: that is the suboccipital nerve.'],['dorsal scapular nerve','Incorrect: that supplies scapular muscles.'],['ventral rami of T9-T12','Correct: SPI is fed by the ventral rami of the lower thoracic nerves.'],['spinal accessory nerve','Incorrect: that supplies trapezius.']],2),
-Q(34,2,16,'easy',true,'Erector spinae muscles are innervated by the _______ rami of spinal nerves.',[['dorsal','Correct: all erector spinae components are fed by dorsal rami.'],['ventral','Incorrect: ventral rami feed the serratus posteriors.'],['anterior primary','Incorrect: that is the ventral ramus.'],['sinuvertebral','Incorrect: that nerve is not an erector spinae supply.']],0),
-Q(35,2,15,'medium',true,'In which order do the erector spinae columns run from lateral to medial?',[['Iliocostalis, longissimus, spinalis','Correct: lateral to medial is iliocostalis, longissimus, spinalis.'],['Spinalis, longissimus, iliocostalis','Incorrect: this is medial to lateral.'],['Longissimus, iliocostalis, spinalis','Incorrect: iliocostalis is the most lateral column.'],['Iliocostalis, spinalis, longissimus','Incorrect: longissimus lies between the other two.']],0),
-Q(36,2,18,'medium',false,'Iliocostalis cervicis arises from ribs 3-6 and inserts on the:',[['TP C4-C6','Correct: cervicis reaches the cervical transverse processes C4-C6.'],['mastoid process','Incorrect: that is longissimus capitis.'],['SP C2-C5','Incorrect: that is semispinalis cervicis.'],['ribs 9-12','Incorrect: that is serratus posterior inferior.']],0),
-Q(37,2,19,'hard',true,'Which erector spinae column has a capitis component but NO lumborum component?',[['Iliocostalis','Incorrect: iliocostalis has lumborum, thoracis and cervicis.'],['Longissimus','Correct: longissimus has thoracis, cervicis and capitis only.'],['Spinalis','Incorrect: spinalis has only thoracis and cervicis.'],['Multifidus','Incorrect: multifidus is not an erector spinae column.']],1),
-Q(38,2,21,'medium',false,'Longissimus cervicis inserts on the transverse processes of:',[['C2-C6','Correct: it runs from TP T1-T5 up to TP C2-C6.'],['C4-C6','Incorrect: that is iliocostalis cervicis.'],['T1-T12','Incorrect: that is longissimus thoracis.'],['C1-C4','Incorrect: that is splenius cervicis.']],0),
-Q(39,3,27,'medium',false,'Semispinalis cervicis resembles an arrowhead pointing at the spinous process of:',[['C1','Incorrect: C1 has no true spinous process.'],['C2','Correct: it inserts on SP C2-C5, converging on C2.'],['C7','Incorrect: C7 is an origin region.'],['T4','Incorrect: that is a thoracis insertion.']],1),
-Q(40,3,30,'medium',false,'Semispinalis capitis inserts on the:',[['mastoid process','Incorrect: that is longissimus capitis.'],['occipital region between the superior and inferior nuchal lines','Correct: it inserts between the two nuchal lines.'],['inferior nuchal line only','Incorrect: that is the rectus capitis posterior insertion.'],['SP C2-C5','Incorrect: that is semispinalis cervicis.']],1),
-Q(41,3,32,'medium',true,'Which transversospinalis muscle is among the most commonly strained in the low back?',[['Multifidus','Correct: short, low-play multifidus strains when lifting with an arched back.'],['Longissimus','Incorrect: longissimus is long, so it is harder to strain.'],['Semispinalis capitis','Incorrect: that is a cervical muscle.'],['Rotatores longus','Incorrect: that was not named as the commonly strained muscle.']],0),
-Q(42,3,36,'easy',false,'Interspinous muscles produce:',[['lateral flexion','Incorrect: that is intertransversarii.'],['extension of the vertebral column','Correct: interspinous muscles extend the column.'],['contralateral rotation','Incorrect: that is rotatores.'],['rib elevation','Incorrect: that is serratus posterior superior.']],1),
-Q(43,4,38,'medium',false,'Intertransversarii primarily produce:',[['lateral flexion','Correct: they laterally flex the spine and act mainly as stabilizers.'],['extension','Incorrect: that is interspinous.'],['contralateral rotation','Incorrect: that is rotatores.'],['head extension','Incorrect: that is the rectus capitis muscles.']],0),
-Q(44,4,42,'medium',false,'Oblique capitis superior arises from the transverse process of C1 and produces:',[['ipsilateral rotation of C1','Incorrect: that is oblique capitis inferior.'],['extension and lateral flexion of the head','Correct: OCS attaches laterally between the nuchal lines.'],['head flexion','Incorrect: it lies posteriorly.'],['extension only','Incorrect: lateral flexion is also listed.']],1),
-Q(45,4,39,'easy',false,'The suboccipital nerve is the dorsal ramus of:',[['C1','Correct: it supplies all four suboccipital muscles.'],['C5','Incorrect: C5 is the dorsal scapular root.'],['C8','Incorrect: C8 is part of the thoracodorsal range.'],['T1','Incorrect: it is not a thoracic nerve.']],0),
-Q(46,4,44,'easy',true,'The outermost meningeal layer is the:',[['dura mater','Correct: dura means tough and forms the outer layer.'],['arachnoid mater','Incorrect: it is the middle web-like layer.'],['pia mater','Incorrect: it is the innermost layer.'],['subarachnoid space','Incorrect: that is a space, not a layer.']],0),
-Q(47,4,44,'medium',true,'CSF normally occupies which space?',[['Subdural','Incorrect: the subdural space is only a potential space.'],['Subarachnoid','Correct: the subarachnoid space between pia and arachnoid contains CSF and trabeculae.'],['Subpial','Incorrect: no normal space lies beneath the pia mater.'],['Epidural','Incorrect: that lies outside the dura.']],1),
-Q(48,4,44,'hard',true,'Spinal vessels lie external to the pia mater because the pia helps maintain the:',[['blood-brain barrier','Correct: the cord is CNS, so the barrier separates blood from tissue.'],['denticulate suspension','Incorrect: that is a ligament function.'],['subdural potential space','Incorrect: that is a different space.'],['cauda equina','Incorrect: that is a nerve-root bundle.']],0),
-Q(49,4,45,'medium',true,'The spinal cord typically ends at the conus medullaris near:',[['T10','Incorrect: that is too high.'],['L1-L2','Correct: the cord ends about L1-L2.'],['S2','Incorrect: that is the dural sac end region.'],['C7','Incorrect: that is far too high.']],1),
-Q(50,4,46,'medium',false,'Which term is NOT a synonym for the denticulate ligaments?',[['Sawtooth ligaments','Incorrect: this is a synonym.'],['Dentate ligaments','Incorrect: this is a synonym.'],['Shark tooth ligaments','Incorrect: this is a synonym.'],['Filum terminale','Correct: the filum terminale is a separate pia extension.']],3),
-Q(51,4,45,'medium',false,'The filum terminale externum is the portion that:',[['lies inside the dural sac','Incorrect: that is the internum.'],['exits the sacral hiatus and attaches to the coccyx','Correct: the externum leaves the sac and anchors on the coccyx.'],['forms the cauda equina roots','Incorrect: it is not a nerve root.'],['suspends the cord laterally','Incorrect: that is the denticulate ligament role.']],1),
-Q(52,1,3,'medium',true,'Which trapezius fibers primarily elevate the scapula?',[['Superior','Correct: the superior fibers elevate (shoulder shrug).'],['Middle','Incorrect: the middle fibers retract.'],['Inferior','Incorrect: the inferior fibers depress.'],['All equally','Incorrect: each fiber group has a different primary action.']],0),
-Q(53,1,3,'medium',false,'Which trapezius fibers primarily retract the scapula?',[['Superior','Incorrect: superior fibers elevate.'],['Middle','Correct: the middle fibers pinch the scapulae toward the spine.'],['Inferior','Incorrect: inferior fibers depress.'],['None of the fibers','Incorrect: retraction is a listed action.']],1),
-Q(54,1,3,'hard',true,'Superior rotation of the scapula is defined by the inferior angle moving:',[['medially and downward','Incorrect: that is inferior rotation.'],['laterally and upward','Correct: the inferior angle swings laterally and up.'],['straight posteriorly','Incorrect: that is not a rotation.'],['toward the spine only','Incorrect: that is retraction.']],1),
-Q(55,1,3,'easy',false,'The _______ is the nuchal attachment of the trapezius, felt as the scruff of the neck.',[['ligamentum nuchae','Correct: it is a trapezius origin site.'],['thoracolumbar fascia','Incorrect: that is the latissimus origin.'],['acromion','Incorrect: that is an insertion.'],['denticulate ligament','Incorrect: that is meningeal.']],0),
-Q(56,1,3,'medium',false,'Trapezius inserts on the spine of the scapula, the lateral third of the clavicle, and the:',[['acromion process','Correct: it also inserts on the acromion.'],['humerus','Incorrect: that is latissimus dorsi.'],['mastoid process','Incorrect: that is splenius capitis.'],['ribs 2-5','Incorrect: that is SPS.']],0),
-Q(57,1,8,'medium',true,'The triangle of auscultation is bounded by trapezius, latissimus dorsi, and:',[['rhomboid major','Correct: the thin area borders rhomboid major.'],['levator scapula','Incorrect: it lies higher.'],['splenius capitis','Incorrect: that is cervical.'],['serratus posterior inferior','Incorrect: that lies lower.']],0),
-Q(58,1,5,'medium',false,'Which rule describes rhomboid minor relative to rhomboid major?',[['Minors lie above majors','Correct: minor is superior to major.'],['Minors lie below majors','Incorrect: the order is inverted.'],['Minors lie lateral to majors','Incorrect: both lie medially.'],['Minors attach to the humerus','Incorrect: both attach to the scapula.']],0),
-Q(59,1,7,'medium',false,'Rhomboid minor inserts on the medial scapular border at the level of the:',[['spine of the scapula','Correct: just inferior to the levator scapula insertion.'],['inferior angle','Incorrect: that is major.'],['acromion','Incorrect: that is a trapezius site.'],['coracoid','Incorrect: not a slide attachment.']],0),
-Q(60,1,6,'medium',false,'Levator scapula inserts on the:',[['superior portion of the medial scapular border','Correct: the superior angle region.'],['inferior angle','Incorrect: that is rhomboid major.'],['spine of the scapula','Incorrect: that is trapezius.'],['clavicle','Incorrect: that is trapezius.']],0),
-Q(61,2,12,'hard',true,'Serratus posterior muscles help the erector spinae by:',[['belting them down','Correct: they hold erector spinae from popping away.'],['rotating the head','Incorrect: not their action.'],['elevating the scapula','Incorrect: that is levator scapula.'],['extending the humerus','Incorrect: that is latissimus.']],0),
-Q(62,2,13,'medium',false,'Serratus posterior superior originates on the spinous processes of:',[['C7-T3','Correct: SP C7-T3.'],['T11-L2','Incorrect: that is SPI.'],['T2-T5','Incorrect: that is rhomboid major.'],['C1-C4','Incorrect: that is levator.']],0),
-Q(63,2,14,'medium',true,'Serratus posterior inferior stabilizes the lower ribs during forced:',[['expiration','Correct: it holds the ribs against diving in too quickly.'],['inspiration','Incorrect: that is SPS.'],['flexion','Incorrect: it is not a flexor.'],['rotation','Incorrect: it is not a rotator.']],0),
-Q(64,2,16,'medium',false,'Iliocostalis lumborum originates on the iliac crest, the lateral and medial sacral crests, and:',[['SP T11-L5','Correct: spinous processes T11-L5.'],['TP C1-C4','Incorrect: that is levator.'],['ribs 3-6','Incorrect: that is cervicis.'],['mastoid','Incorrect: that is capitis.']],0),
-Q(65,2,16,'hard',false,'Compared with iliocostalis lumborum, the cervical iliocostalis has:',[['a stronger lateral flexion component','Correct: more lateral attachments increase lateral flexion.'],['no extension action','Incorrect: extension persists.'],['ventral rami innervation','Incorrect: still dorsal rami.'],['a skull insertion','Incorrect: it ends at C4-C6.']],0),
-Q(66,2,22,'medium',false,'Longissimus capitis fibers are best described as:',[['fan-like','Correct: they spread like a fan to the mastoid.'],['strictly parallel','Incorrect: not parallel.'],['circular','Incorrect: no.'],['single-segment','Incorrect: multi-segment.']],0),
-Q(67,2,24,'medium',false,'Spinalis thoracis is primarily a:',[['postural extensor','Correct: it lies at the spine with little lateral pull.'],['rib elevator','Incorrect: that is SPS.'],['scapular retractor','Incorrect: that is rhomboid.'],['head rotator','Incorrect: that is suboccipital.']],0),
-Q(68,2,25,'medium',false,'Spinalis cervicis originates on the spinous processes of:',[['C7-T2','Correct: SP C7-T2.'],['T11-L2','Incorrect: that is thoracis.'],['C4-C7','Incorrect: that is an articular process origin.'],['T7-T12','Incorrect: that is semispinalis thoracis TP.']],0),
-Q(69,3,26,'medium',false,'Semispinalis muscles are called "semi" because they:',[['attach to the spine at one end only','Correct: they run from transverse processes to spinous processes.'],['span half the spine','Incorrect: not the reason.'],['are half-sized','Incorrect: not the reason.'],['are bilateral only','Incorrect: not the reason.']],0),
-Q(70,3,28,'medium',false,'Semispinalis thoracis produces extension, lateral flexion, and:',[['contralateral rotation','Correct: transversospinalis muscles rotate contralaterally.'],['ipsilateral rotation','Incorrect: contralateral.'],['no rotation','Incorrect: rotation is listed.'],['rib elevation','Incorrect: not an action.']],0),
-Q(71,3,29,'medium',false,'Semispinalis cervicis originates on TP T1-T6 and the:',[['articular processes of C4-C7','Correct: it also takes origin from C4-C7 articular processes.'],['iliac crest','Incorrect: that is ES.'],['mastoid','Incorrect: insertion of other muscles.'],['sacrum','Incorrect: that is multifidus.']],0),
-Q(72,3,32,'medium',false,'Multifidus originates partly from the _______ of L1-L5.',[['mammillary processes','Correct: along with the sacrum, PSIS and TPs.'],['spinous processes','Incorrect: those are insertions.'],['ribs','Incorrect: not an origin.'],['mastoid','Incorrect: not an origin.']],0),
-Q(73,3,34,'medium',false,'Rotatores longus inserts on the spinous process located:',[['two segments above the origin','Correct: skipping one vertebra.'],['one segment above','Incorrect: that is brevis.'],['3-4 segments above','Incorrect: that is multifidus.'],['at the same level','Incorrect: no.']],0),
-Q(74,3,35,'hard',false,'Rotatores brevis can reach C3 because:',[['it inserts on spinous processes, which exist at C3','Correct: no spinous process exists on the occiput.'],['it attaches to the skull','Incorrect: it does not.'],['it crosses the midline','Incorrect: it does not.'],['it is ventral rami fed','Incorrect: dorsal rami.']],0),
-Q(75,4,37,'medium',false,'Interspinous muscles lie:',[['between adjacent spinous processes','Correct: no skipping segments.'],['between transverse processes','Incorrect: that is intertransversarii.'],['over the ribs','Incorrect: no.'],['at the occiput only','Incorrect: no.']],0),
-Q(76,4,38,'medium',true,'In the cervical spine, intertransversarii are:',[['paired, anterior and posterior','Correct: due to anteriorly angled transverse processes.'],['single','Incorrect: that is thoracic.'],['medial and lateral','Incorrect: that is lumbar.'],['absent','Incorrect: present C3-T1.']],0),
-Q(77,4,38,'medium',false,'In the thoracic spine, intertransversarii are:',[['single muscles','Correct: ribs provide lateral stability.'],['paired anterior and posterior','Incorrect: that is cervical.'],['paired medial and lateral','Incorrect: that is lumbar.'],['absent','Incorrect: present.']],0),
-Q(78,4,44,'medium',false,'The dura mater means:',[['tough mother','Correct: dura = tough.'],['spider mother','Incorrect: that is arachnoid.'],['tender mother','Incorrect: that is pia.'],['outer mother','Incorrect: not the meaning.']],0),
-Q(79,4,44,'medium',false,'The arachnoid mater is named for its:',[['spider-web appearance','Correct: arachnoid means spider.'],['toughness','Incorrect: that is dura.'],['softness','Incorrect: that is pia.'],['bony attachments','Incorrect: dura.']],0),
-Q(80,4,44,'medium',true,'The subdural space is a:',[['potential space','Correct: not normally open.'],['CSF-filled space','Incorrect: subarachnoid.'],['space below the pia','Incorrect: none normally.'],['blood vessel','Incorrect: not a vessel.']],0),
-Q(81,4,46,'medium',true,'Denticulate ligaments run between the:',[['anterior and posterior nerve roots','Correct: they pass between ventral and dorsal roots.'],['skull and C1','Incorrect: no.'],['conus and coccyx','Incorrect: that is filum externum.'],['dura and bone','Incorrect: no.']],0)
+Q(1,3,'easy',true,'The primary nerve of the trapezius is the _______ nerve (CN XI).',[['dorsal scapular','Feeds levator scapula and the rhomboids, not trapezius.'],['thoracodorsal','Feeds latissimus dorsi.'],['spinal accessory','Correct: trapezius is fed primarily by cranial nerve XI.'],['suboccipital','Feeds the suboccipital muscles (C1 dorsal ramus).']],2),
+Q(2,3,'medium',true,'Which structure serves as an attachment site for the trapezius?',[['Intertubercular groove','Attachment site for latissimus dorsi.'],['Medial scapular border','Attachment site for levator scapula and the rhomboids.'],['Mastoid process','Attachment site for splenius capitis and longissimus capitis.'],['Spine of the scapula','Correct: trapezius also attaches to the acromion and lateral third of the clavicle.']],3),
+Q(3,4,'medium',true,'Latissimus dorsi attaches between the thoracolumbar fascia and which landmark?',[['Spine of the scapula','Trapezius attachment site.'],['Intertubercular groove','Correct: the humeral attachment is the medial intertubercular groove.'],['Medial scapular border','Levator and rhomboid attachment site.'],['Lateral clavicle','Trapezius attachment site.']],1),
+Q(4,4,'easy',true,'The thoracolumbar fascia is also called the _______ fascia.',[['palmar','Hand fascia, unrelated to the back.'],['plantar','Foot fascia, unrelated to the back.'],['nuchal','Neck ligament region, not the low-back sheet.'],['lumbodorsal','Correct: thoracolumbar, thoracodorsal, lumbar dorsal and lumbodorsal fascia are the same structure.']],3,'Transcript Wk 1'),
+Q(5,4,'medium',true,'Assuming the trunk is fixed and the humerus is the moving segment, latissimus dorsi produces:',[['Flexion, lateral rotation, abduction','Each movement is opposite to the real action.'],['Extension, medial rotation, adduction','Correct: extension, medial rotation and adduction of the humerus.'],['Flexion, medial rotation, adduction','Latissimus extends, not flexes.'],['Extension, lateral rotation, abduction','Rotation is medial and movement is adduction.']],1),
+Q(6,4,'easy',false,'Latissimus dorsi is innervated by which nerve?',[['Thoracodorsal nerve (C6–C8)','Correct: thoracodorsal nerve, C6–C8.'],['Dorsal scapular nerve (C5)','Feeds levator scapula and the rhomboids.'],['Spinal accessory nerve (CN XI)','Feeds trapezius.'],['Suboccipital nerve (C1)','Feeds suboccipital muscles.']],0),
+Q(7,6,'medium',false,'Levator scapula attaches between which vertebral processes and scapular landmark?',[['SP C7–T1 and medial border at the scapular spine','Rhomboid minor attachments.'],['SP T2–T5 and medial border to the inferior angle','Rhomboid major attachments.'],['TP C1–C4 and superior medial scapular border','Correct: levator scapula attaches TP C1–C4 to the superior medial border.'],['SP T7–L5 and intertubercular groove','Latissimus dorsi attachments.']],2),
+Q(8,7,'medium',true,'Assuming SP C7–T1 is fixed and the scapula is the moving segment, rhomboid minor produces:',[['Retraction and inferior rotation','Correct: it retracts and rotates the glenoid cavity inferiorly.'],['Protraction and superior rotation','Opposite of its actions; superior rotation is trapezius.'],['Elevation and superior rotation','Elevation belongs to levator scapula and upper trapezius.'],['Depression and protraction','Neither is a rhomboid minor action.']],0),
+Q(9,8,'hard',true,'From superior to inferior along the medial scapular border, which sequence of attachments is correct?',[['Rhomboid minor, levator scapula, rhomboid major','Levator scapula is the most superior.'],['Levator scapula, rhomboid minor, rhomboid major','Correct: levator, then rhomboid minor, then rhomboid major (minors above majors).'],['Rhomboid major, rhomboid minor, levator scapula','Inverted order.'],['Levator scapula, rhomboid major, rhomboid minor','Minor lies above major.']],1),
+Q(10,6,'hard',true,'Which muscle is NOT primarily innervated by the dorsal scapular nerve?',[['Levator scapula','Dorsal scapular nerve muscle (C5).'],['Rhomboid minor','Dorsal scapular nerve muscle (C5).'],['Trapezius','Correct: trapezius is fed by CN XI.'],['Rhomboid major','Dorsal scapular nerve muscle (C5).']],2),
+Q(11,10,'medium',false,'Splenius capitis attaches between the ligamentum nuchae/SP C7–T4 and which landmark?',[['TP C1–C4','Splenius cervicis attachment.'],['Inferior nuchal line only','Suboccipital attachment, not splenius.'],['Spinous process of C2','Attachment of two suboccipital muscles.'],['Mastoid process and superior nuchal line','Correct: capitis reaches the skull at both landmarks.']],3),
+Q(12,10,'hard',true,'Assuming the upper thoracic spine is fixed and the head is the moving segment, unilateral splenius capitis produces:',[['Extension, lateral flexion, ipsilateral rotation','Correct: the splenii rotate the head to the same side.'],['Extension, lateral flexion, contralateral rotation','Contralateral rotation belongs to transversospinalis muscles.'],['Flexion, lateral flexion, ipsilateral rotation','Posterior muscles extend, not flex.'],['Flexion, rotation, contralateral lateral flexion','Not a splenius action.']],0),
+Q(13,13,'medium',true,'Assuming SP C7–T3 are fixed and ribs 2–5 are moving, serratus posterior superior produces:',[['Rib depression in quiet expiration','Rib depression in forced expiration is the inferior muscle.'],['Rib elevation in forced inspiration','Correct: it elevates the ribs during forced inspiration.'],['Scapular elevation','Levator scapula elevates the scapula.'],['Head extension','No cranial attachment.']],1),
+Q(14,14,'medium',false,'Serratus posterior inferior is innervated by:',[['Dorsal rami of C1','Suboccipital nerve.'],['Dorsal rami of T9–T12','Erector spinae pattern, not the serratus posteriors.'],['Ventral rami of T9–T12','Correct: serratus posteriors receive ventral rami of thoracic nerves.'],['Ventral rami of C5','Not a thoracic supply.']],2),
+Q(15,15,'easy',true,'Lateral to medial, the erector spinae columns are iliocostalis, _______, and spinalis.',[['longissimus','Correct: iliocostalis, longissimus, spinalis ("I love spaghetti").'],['multifidus','Transversospinalis, not an erector spinae column.'],['semispinalis','Transversospinalis, not an erector spinae column.'],['rotatores','Transversospinalis, not an erector spinae column.']],0,'Transcript Wk 2'),
+Q(16,16,'medium',true,'Erector spinae muscles are innervated by:',[['Ventral rami of spinal nerves','Serratus posterior pattern.'],['The spinal accessory nerve','Feeds trapezius.'],['The dorsal scapular nerve','Feeds levator scapula and rhomboids.'],['Dorsal rami of spinal nerves','Correct: all erector spinae divisions use dorsal rami.']],3),
+Q(17,17,'medium',false,'Iliocostalis thoracis attaches between the lower 6 ribs and the _______.',[['iliac crest','Iliocostalis lumborum attachment.'],['mastoid process','Capitis attachment.'],['upper 6 ribs','Correct: iliocostalis thoracis runs rib to rib.'],['TP C4–C6','Iliocostalis cervicis attachment.']],2),
+Q(18,20,'medium',false,'Longissimus thoracis attaches to TP T1–T12 and which ribs?',[['Ribs 2–5','Serratus posterior superior.'],['Ribs 3–12','Correct: ribs 3–12.'],['Ribs 9–12','Serratus posterior inferior.'],['Ribs 1–6','Not its rib attachment.']],1),
+Q(19,19,'hard',true,'Which erector spinae column has a capitis division but no lumborum division?',[['Longissimus','Correct: thoracis, cervicis, capitis only.'],['Iliocostalis','Has lumborum and no capitis.'],['Spinalis','Has no lumborum and no capitis division.'],['Semispinalis','Transversospinalis, not an erector spinae column.']],0),
+Q(20,15,'hard',true,'Which erector spinae column has lumborum, thoracis and cervicis divisions but no capitis division?',[['Longissimus','Has a capitis division and no lumborum.'],['Spinalis','Has only thoracis and cervicis.'],['Multifidus','Not an erector spinae column.'],['Iliocostalis','Correct: lumborum, thoracis and cervicis.']],3),
+Q(21,25,'easy',true,'Which erector spinae division is frequently absent?',[['Iliocostalis thoracis','Constant.'],['Spinalis cervicis','Correct: it may be absent.'],['Longissimus capitis','Constant.'],['Iliocostalis lumborum','Constant.']],1),
+Q(22,22,'medium',false,'Longissimus capitis attaches superiorly to the _______.',[['inferior nuchal line','Suboccipital attachment.'],['transverse process of C1','Oblique capitis attachment.'],['mastoid process','Correct: longissimus capitis attaches to the mastoid process.'],['spinous process of C2','Suboccipital origin site.']],2),
+Q(23,28,'medium',true,'Assuming TP T7–T12 are fixed and SP C6–T4 are moving, unilateral semispinalis thoracis produces extension, lateral flexion, and:',[['contralateral rotation','Correct: transversospinalis muscles rotate contralaterally.'],['ipsilateral rotation','Ipsilateral rotation is a splenius action.'],['no rotation','Rotation is a listed action.'],['rib elevation','No rib attachment.']],0),
+Q(24,32,'medium',true,'Multifidus bundles span how many segments above their attachment?',[['1 segment','Rotatores brevis.'],['2 segments','Rotatores longus.'],['5–6 segments','Exceeds the multifidus span.'],['3–4 segments','Correct: 3–4 segments.']],3),
+Q(25,34,'hard',true,'Which sequence ranks segments spanned from most to fewest?',[['Rotatores longus, multifidus, rotatores brevis','Multifidus (3–4) spans more than longus (2).'],['Multifidus, rotatores longus, rotatores brevis','Correct: 3–4, then 2, then 1.'],['Rotatores brevis, rotatores longus, multifidus','Inverted.'],['Multifidus, rotatores brevis, rotatores longus','Brevis (1) spans fewer than longus (2).']],1),
+Q(26,38,'hard',true,'Intertransversarii are innervated by _______ rami, except the medial lumbar muscles, which are innervated by _______ rami.',[['dorsal; ventral','Inverted.'],['dorsal; dorsal','The exception would not exist.'],['ventral; dorsal','Correct: ventral rami, with medial lumbar dorsal rami.'],['ventral; ventral','The medial lumbar group is the exception.']],2),
+Q(27,38,'medium',false,'Cervical intertransversarii are arranged as:',[['Paired anterior and posterior slips','Correct: paired anterior and posterior at C3–T1.'],['Single slips','Thoracic pattern.'],['Paired medial and lateral slips','Lumbar pattern.'],['Absent slips','Present at C3–T1.']],0),
+Q(28,40,'medium',false,'Assuming C1 is fixed and the occiput is moving, rectus capitis posterior minor produces:',[['Head flexion','Posterior muscles extend.'],['Ipsilateral head rotation','Rectus capitis posterior major.'],['Head lateral flexion','Oblique capitis superior.'],['Head extension','Correct: extension of the head.']],3),
+Q(29,43,'hard',true,'Which suboccipital muscle has no cranial attachment?',[['Oblique capitis superior','Attaches between the nuchal lines.'],['Oblique capitis inferior','Correct: SP C2 to TP C1 only.'],['Rectus capitis posterior major','Attaches to the inferior nuchal line.'],['Rectus capitis posterior minor','Attaches to the inferior nuchal line.']],1),
+Q(30,44,'medium',true,'Cerebrospinal fluid normally occupies which space?',[['Subdural space','Only a potential space.'],['Epidural space','Outside the dura.'],['Subarachnoid space','Correct: between pia and arachnoid, with trabeculae.'],['Subpial space','No space exists beneath the pia.']],2,'Transcript Wk 4'),
+Q(31,45,'easy',false,'The spinal cord typically ends at the conus medullaris near:',[['T10','Too high.'],['S2','Too low.'],['C7','Too high.'],['L1–L2','Correct: L1–L2.']],3,'Transcript Wk 4'),
+Q(32,46,'medium',false,'Which term is NOT a synonym for the denticulate ligaments?',[['Filum terminale','Correct: a separate pia extension that ties down the conus.'],['Sawtooth ligaments','Synonym.'],['Dentate ligaments','Synonym.'],['Shark tooth ligaments','Synonym.']],0,'Transcript Wk 4'),
+Q(33,45,'easy',false,'The cauda equina consists of:',[['Denticulate ligaments','Pia extensions.'],['Nerve roots below the conus medullaris','Correct: a tail of nerve roots.'],['An extension of the pia mater','That is the filum terminale.'],['The dura mater sac','Not a nerve bundle.']],1)
+,
+Q(34,11,'medium',false,'Splenius cervicis attaches between SP T3–T6 and which landmark?',[['Mastoid process','Splenius capitis attachment.'],['TP C1–C4','Correct: cervicis stops at the cervical vertebrae.'],['Superior nuchal line','Splenius capitis attachment.'],['TP C4–C6','Iliocostalis cervicis attachment.']],1),
+Q(35,18,'medium',false,'Iliocostalis cervicis attaches between ribs 3–6 and which landmark?',[['TP C4–C6','Correct: transverse processes of C4–C6.'],['TP C2–C6','Longissimus cervicis attachment.'],['Mastoid process','Capitis muscle attachment.'],['SP C2–C5','Semispinalis cervicis attachment.']],0),
+Q(36,21,'medium',false,'Longissimus cervicis attaches between TP T1–T5 and which landmark?',[['TP C1–C4','Splenius cervicis attachment.'],['TP C4–C6','Iliocostalis cervicis attachment.'],['TP C2–C6','Correct: transverse processes of C2–C6.'],['Mastoid process','Longissimus capitis attachment.']],2),
+Q(37,16,'medium',false,'Iliocostalis lumborum attaches between the iliac crest/sacrum/SP T11–L5 and which ribs?',[['Upper 6 ribs','Iliocostalis thoracis attachment.'],['Lower 6 ribs','Correct: the lower 6 ribs.'],['Ribs 3–12','Longissimus thoracis attachment.'],['Ribs 2–5','Serratus posterior superior attachment.']],1),
+Q(38,24,'medium',false,'Spinalis thoracis attaches between SP T11–L2 and SP _______.',[['C2–C5','Semispinalis cervicis attachment.'],['C6–T4','Semispinalis thoracis attachment.'],['C7–T2','Spinalis cervicis attachment.'],['T4–T7','Correct: SP T4–T7.']],3),
+Q(39,13,'medium',false,'Serratus posterior superior attaches between SP C7–T3 and which ribs?',[['Ribs 2–5','Correct: ribs 2–5.'],['Ribs 9–12','Serratus posterior inferior attachment.'],['Ribs 3–12','Longissimus thoracis attachment.'],['Ribs 1–6','Not its rib attachment.']],0),
+Q(40,14,'medium',true,'Assuming SP T11–L2 are fixed and ribs 9–12 are moving, serratus posterior inferior produces:',[['Rib elevation in forced inspiration','Serratus posterior superior action.'],['Rib stabilization in forced expiration','Correct: it holds the lower ribs like a belt during forced expiration.'],['Scapular depression','No scapular attachment.'],['Trunk rotation','Not its action.']],1),
+Q(41,32,'medium',false,'Multifidus attaches to which lumbar landmark?',[['Ribs 3–12','Longissimus thoracis attachment.'],['Lower 6 ribs','Iliocostalis lumborum attachment.'],['Mammillary processes of L1–L5','Correct: along with the posterior sacrum and PSIS.'],['Mastoid process','Capitis muscle attachment.']],2),
+Q(42,29,'medium',false,'Semispinalis cervicis attaches superiorly to SP _______.',[['C6–T4','Semispinalis thoracis attachment.'],['C2–C5','Correct: spinous processes C2–C5.'],['C7–T2','Spinalis cervicis attachment.'],['T4–T7','Spinalis attachment.']],1),
+Q(43,30,'medium',false,'Semispinalis capitis attaches to which cranial landmark?',[['Mastoid process','Longissimus capitis attachment.'],['Inferior nuchal line only','Suboccipital attachment.'],['Area between the superior and inferior nuchal lines','Correct: between the two nuchal lines.'],['Transverse process of C1','Not a cranial landmark.']],2),
+Q(44,35,'medium',true,'Assuming TP are fixed and the SP one segment above is moving, unilateral rotatores brevis produces:',[['Ipsilateral rotation and flexion','Not a rotatores action.'],['Extension and contralateral rotation','Correct: extension and contralateral rotation.'],['Lateral flexion only','Intertransversarii action.'],['Ipsilateral rotation only','Rotation is contralateral.']],1),
+Q(45,34,'easy',true,'Rotatores longus attaches to the spinous process _______ segments above its origin.',[['one','Rotatores brevis.'],['two','Correct: two segments.'],['three to four','Multifidus.'],['five','Exceeds its span.']],1),
+Q(46,37,'easy',false,'Interspinous muscles attach between adjacent _______ and extend the vertebral column.',[['transverse processes','Intertransversarii.'],['ribs','Not an interspinous attachment.'],['articular processes','Not an interspinous attachment.'],['spinous processes','Correct: adjacent spinous processes.']],3),
+Q(47,38,'medium',false,'Lumbar intertransversarii are arranged as:',[['Single slips','Thoracic pattern.'],['Paired anterior and posterior slips','Cervical pattern.'],['Paired medial and lateral slips','Correct: paired medial and lateral at L1–L5.'],['Absent slips','Present at L1–L5.']],2),
+Q(48,38,'medium',false,'Thoracic intertransversarii are arranged as:',[['Paired anterior and posterior slips','Cervical pattern.'],['Single slips','Correct: single slips at T1–T12.'],['Paired medial and lateral slips','Lumbar pattern.'],['Absent slips','Present at T1–T12.']],1),
+Q(49,38,'easy',false,'Intertransversarii primarily produce which spinal action?',[['Extension','Interspinous action.'],['Lateral flexion','Correct: lateral flexion of the spine.'],['Rotation','Rotatores action.'],['Flexion','Not an action of these muscles.']],1),
+Q(50,41,'medium',true,'Assuming SP C2 is fixed and the occiput is moving, rectus capitis posterior major produces:',[['Extension and ipsilateral rotation of the head','Correct: extension and ipsilateral rotation.'],['Extension and contralateral rotation of the head','Rotation is ipsilateral.'],['Flexion and ipsilateral rotation of the head','Posterior muscles extend.'],['Extension only','Rectus capitis posterior minor.']],0),
+Q(51,42,'medium',false,'Oblique capitis superior attaches between TP C1 and which cranial landmark?',[['Inferior nuchal line only','Rectus capitis posterior attachment.'],['Between the superior and inferior nuchal lines','Correct: between the two nuchal lines.'],['Mastoid process','Splenius and longissimus capitis attachment.'],['Spinous process of C2','Not a cranial landmark.']],1),
+Q(52,42,'medium',false,'Assuming TP C1 is fixed and the occiput is moving, oblique capitis superior produces:',[['Extension and ipsilateral rotation of the head','Rectus capitis posterior major.'],['Ipsilateral rotation of C1','Oblique capitis inferior.'],['Extension and lateral flexion of the head','Correct: extension and lateral flexion.'],['Extension only','Rectus capitis posterior minor.']],2),
+Q(53,43,'medium',true,'Assuming SP C2 is fixed and C1 is the moving segment, oblique capitis inferior produces:',[['Head extension','Rectus capitis posterior muscles.'],['Ipsilateral rotation of C1','Correct: ipsilateral rotation of C1.'],['Head lateral flexion','Oblique capitis superior.'],['Contralateral rotation of C1','Rotation is ipsilateral.']],1),
+Q(54,40,'easy',true,'The suboccipital nerve is the dorsal ramus of _______.',[['C2','Not the suboccipital nerve.'],['C3','Not the suboccipital nerve.'],['T1','Not the suboccipital nerve.'],['C1','Correct: the dorsal ramus of C1.']],3),
+Q(55,44,'easy',true,'From superficial to deep, the meningeal layers are:',[['Pia, arachnoid, dura','Inverted.'],['Dura, arachnoid, pia','Correct: dura outermost, pia innermost.'],['Arachnoid, dura, pia','Dura is outermost.'],['Dura, pia, arachnoid','Arachnoid lies between dura and pia.']],1),
+Q(56,44,'medium',false,'Which meningeal layer connects out to bones and muscles?',[['Pia mater','Hugs the CNS.'],['Arachnoid mater','Fills space with web-like tissue.'],['Dura mater','Correct: the tough outer layer.'],['Denticulate ligament','Pia extension.']],2,'Transcript Wk 4'),
+Q(57,44,'hard',true,'Which meningeal layer separates blood vessels from the spinal cord, maintaining the blood-brain barrier?',[['Dura mater','Outer layer.'],['Arachnoid mater','Middle layer.'],['Pia mater','Correct: vessels sit on top of the pia.'],['Subdural space','A potential space, not a layer.']],2,'Transcript Wk 4'),
+Q(58,44,'medium',true,'The subdural space is best described as a:',[['CSF-filled space','Subarachnoid space.'],['Fat-filled space','Not a subdural description.'],['Space beneath the pia','No space is normally there.'],['Potential space','Correct: it is not supposed to be open.']],3,'Transcript Wk 4'),
+Q(59,45,'medium',true,'The filum terminale is an extension of the _______ that ties down the conus medullaris.',[['dura mater','Not its source.'],['arachnoid mater','Not its source.'],['pia mater','Correct: a pia extension.'],['denticulate ligament','Separate structure.']],2,'Transcript Wk 4'),
+Q(60,45,'hard',false,'Which portion of the filum terminale lies within the dural sac?',[['Externum','Leaves the sac and attaches to the coccyx.'],['Internum','Correct: internum is inside the sac.'],['Both portions equally','Externum lies outside.'],['Neither portion','Internum lies inside.']],1,'Transcript Wk 4'),
+Q(61,46,'medium',true,'Denticulate ligaments are extensions of the:',[['dura mater','Not their source.'],['arachnoid mater','Not their source.'],['pia mater','Correct: pia extensions.'],['filum terminale','Separate structure.']],2,'Transcript Wk 4'),
+Q(62,46,'hard',false,'Denticulate ligaments pass between the:',[['Conus medullaris and coccyx','Filum terminale externum.'],['Anterior and posterior nerve roots','Correct: they split the ventral and dorsal roots.'],['Skull and atlas','Not a denticulate attachment.'],['Dura and vertebral bone','Not a denticulate attachment.']],1,'Transcript Wk 4'),
+Q(63,6,'medium',false,'Levator scapula is named for its:',[['appearance','Rhomboids are named for appearance.'],['location','Not the naming basis.'],['action','Correct: it lifts the scapula.'],['innervation','Muscles are not named for nerves.']],2,'Transcript Wk 1'),
+Q(64,8,'medium',false,'Rhomboid major attaches between SP T2–T5 and which scapular landmark?',[['Superior angle','Levator scapula attachment.'],['Medial border down to the inferior angle','Correct: below rhomboid minor.'],['Spine of the scapula','Trapezius attachment.'],['Acromion','Trapezius attachment.']],1),
+Q(65,3,'hard',true,'Which trapezius fibers primarily depress the scapula?',[['Superior fibers','Elevate.'],['Middle fibers','Retract.'],['Inferior fibers','Correct: inferior fibers depress.'],['All fibers equally','Each group has a primary action.']],2,'Transcript Wk 1'),
+Q(66,3,'hard',true,'Superior rotation of the scapula is defined by the inferior angle moving:',[['Medially and downward','Inferior rotation.'],['Laterally and upward','Correct: laterally and upward.'],['Straight posteriorly','Not a rotation.'],['Medially and upward','Not the definition.']],1,'Transcript Wk 1')
 ];
-
 let hist={};try{hist=JSON.parse(localStorage.getItem('quiz_missed_history')||'{}')}catch(e){}
-const saveHistory=()=>{try{localStorage.setItem('quiz_missed_history',JSON.stringify(hist))}catch(e){}};
-let selectedSubjects=new Set(SUBJECTS.map((_,i)=>i)),prioritizeMissed=false;
-let quizQuestions=[],userAnswers=[],currentIndex=0,score=0,popupTimeout=null,muted=false;
-let viewMode='single'; // 'single' | 'all'
+const saveHist=()=>{try{localStorage.setItem('quiz_missed_history',JSON.stringify(hist))}catch(e){}};
+let sel=new Set(SUBJECTS.map((_,i)=>i)),prio=false,view='single',muted=false,QS=[],UA=[],cur=0,score=0,pt=null;
 try{muted=localStorage.getItem('stfuErijah')==='1'}catch(e){}
-try{viewMode=localStorage.getItem('quizViewMode')||'single'}catch(e){}
-
-const $=id=>document.getElementById(id);
-
-function updateStfuButton(){
-  const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
-  if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}if(popupTimeout)clearTimeout(popupTimeout);$('wrongPopup').classList.add('hidden')}
-}
-function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}updateStfuButton()}
-
-function updateModeButton(){
-  const b=$('modeBtn');
-  b.textContent = viewMode==='all' ? 'View: All at Once' : 'View: One by One';
-  b.classList.toggle('active', viewMode==='all');
-}
-function toggleMode(){
-  viewMode = viewMode==='all' ? 'single' : 'all';
-  try{localStorage.setItem('quizViewMode', viewMode)}catch(e){}
-  updateModeButton();
-  if(quizQuestions.length>0){
-    renderActiveQuiz();
-  } else {
-    renderHome();
-  }
-}
-
+try{view=localStorage.getItem('quizViewMode')||'single'}catch(e){}
+const $=id=>document.getElementById(id),L='ABCD';
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
-const getFilteredPool=()=>questionBank.filter(q=>selectedSubjects.has(q.subjectIndex));
-const missedCount=()=>questionBank.filter(q=>hist[q.id]>0).length;
-
-function toggleSubject(i){selectedSubjects.has(i)?selectedSubjects.delete(i):selectedSubjects.add(i);renderHome()}
-function selectAllSubjects(all){selectedSubjects=all?new Set(SUBJECTS.map((_,i)=>i)):new Set();renderHome()}
-function togglePrio(){prioritizeMissed=!prioritizeMissed;renderHome()}
-
-function setHeader(){
-  const n=quizQuestions.length, a=userAnswers.filter(x=>x!==null).length;
-  if(viewMode==='all'){
-    $('q-display').textContent=n? 'Answered ' + a + ' of ' + n : 'Question 0 of 0';
-  } else {
-    $('q-display').textContent=n? 'Question ' + Math.min(currentIndex+1,n) + ' of ' + n : 'Question 0 of 0';
-  }
-  $('score-display').textContent='Score: '+score+' / '+a+' ('+(a?Math.round(score/a*100):0)+'%)';
-  $('progress-bar').style.width=(n?a/n*100:0)+'%';
-}
-
-function renderHome(){
-  quizQuestions=[];userAnswers=[];currentIndex=0;score=0;setHeader();$('wrongPopup').classList.add('hidden');
-  const pool=getFilteredPool();
-  const chips=SUBJECTS.map((s,i)=>'<span class="chip '+(selectedSubjects.has(i)?'on':'')+'" onclick="toggleSubject('+i+')">'+s+' ('+questionBank.filter(q=>q.subjectIndex===i).length+')</span>').join('');
-  
-  $('main').innerHTML='<div class="card"><h2>Select Subjects</h2><div class="chips">'+chips+'</div>'+
-  '<button class="btn" onclick="selectAllSubjects(true)">Select All</button><button class="btn" onclick="selectAllSubjects(false)">Clear</button>'+
-  '<button class="btn '+(prioritizeMissed?'pri':'')+'" onclick="togglePrio()">Prioritize Missed ('+missedCount()+')</button>'+
-  '<div class="counter">'+pool.length+' questions across '+selectedSubjects.size+' subjects selected</div></div>'+
-  '<div class="card"><h2>Display Mode</h2><div class="chips">'+
-  '<span class="chip '+(viewMode==='single'?'on':'')+'" onclick="setModeOption(\'single\')">One by One (Flashcard/Card View)</span>'+
-  '<span class="chip '+(viewMode==='all'?'on':'')+'" onclick="setModeOption(\'all\')">All at Once (Continuous List)</span>'+
-  '</div></div>'+
-  '<div class="card"><h2>Launch</h2><div class="grid">'+[15,25,35,50].map(n=>'<button class="btn pri" onclick="startQuiz('+n+')">'+(n===50?'Full Exam (50 Qs)':'Quickie ('+n+' Qs)')+'</button>').join('')+
-  '<button class="btn pri" onclick="startQuiz(0)">Entire Selected Bank ('+pool.length+')</button></div></div>';
-}
-
-function setModeOption(m){
-  viewMode = m;
-  try{localStorage.setItem('quizViewMode', viewMode)}catch(e){}
-  updateModeButton();
-  renderHome();
-}
-
-function prep(list){return list.map(q=>{const c=JSON.parse(JSON.stringify(q));shuffle(c.options);return c})}
-
-function startQuiz(count){
-  const pool=getFilteredPool();if(!pool.length)return;
-  const target=count?Math.min(count,pool.length):pool.length;let drawn=[];
-  if(prioritizeMissed){let copy=pool.slice();while(drawn.length<target&&copy.length){const w=copy.map(q=>1+3*(hist[q.id]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;while(r>w[k]&&k<copy.length-1){r-=w[k];k++}drawn.push(copy.splice(k,1)[0])}}
-  else drawn=shuffle(pool.slice()).slice(0,target);
-  quizQuestions=prep(drawn);userAnswers=new Array(quizQuestions.length).fill(null);currentIndex=0;score=0;
-  renderActiveQuiz();
-}
-
-function renderActiveQuiz(){
-  if(viewMode==='all') renderAllQuestions();
-  else renderQuestion();
-}
-
-/* =========================================================
-   SINGLE (ONE BY ONE) MODE
-   ========================================================= */
-function renderQuestion(){
-  const q=quizQuestions[currentIndex];setHeader();$('wrongPopup').classList.add('hidden');
-  const answered = userAnswers[currentIndex] !== null;
-  const selectedIdx = userAnswers[currentIndex];
-  
-  let optionsHtml = q.options.map((o,i)=>{
-    let cls = 'option-btn';
-    let dis = '';
-    if(answered){
-      dis = 'disabled';
-      if(o.correct) cls += ' correct';
-      else if(i === selectedIdx) cls += ' incorrect';
-      else cls += ' dim';
-    }
-    return '<button class="'+cls+'" '+dis+' onclick="selectOptionSingle('+i+')">'+'ABCD'[i]+'. '+o.text+'</button>';
-  }).join('');
-
-  let explHtml = '';
-  if(answered){
-    const ok = q._ok;
-    const last = currentIndex === quizQuestions.length-1;
-    explHtml = '<div class="expl"><div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
-    '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
-    q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>'+
-    '<button class="btn pri" onclick="nextSingle()">'+(last?'Finish':'Next')+'</button></div>';
-  }
-
-  $('main').innerHTML='<div class="card" id="card"><div class="badges"><span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+(currentIndex+1)+'. '+q.stem+'</div>'+optionsHtml+explHtml+'</div>';
-  window.scrollTo({top:0});
-}
-
-function selectOptionSingle(oi){
-  if(userAnswers[currentIndex]!==null)return;
-  applyAnswer(currentIndex, oi);
-  renderQuestion();
-}
-
-function nextSingle(){
-  if(currentIndex>=quizQuestions.length-1)return showSummary();
-  currentIndex++;
-  renderQuestion();
-}
-
-/* =========================================================
-   ALL AT ONCE (SCROLLING LIST) MODE
-   ========================================================= */
-function renderAllQuestions(){
-  setHeader();$('wrongPopup').classList.add('hidden');
-  const answeredCount = userAnswers.filter(x=>x!==null).length;
-  const allAnswered = answeredCount === quizQuestions.length;
-
-  let html = quizQuestions.map((q, qIdx)=>{
-    const ans = userAnswers[qIdx];
-    const isAnswered = ans !== null;
-
-    let optHtml = q.options.map((o, optIdx)=>{
-      let cls = 'option-btn';
-      let dis = '';
-      if(isAnswered){
-        dis = 'disabled';
-        if(o.correct) cls += ' correct';
-        else if(optIdx === ans) cls += ' incorrect';
-        else cls += ' dim';
-      }
-      return '<button class="'+cls+'" '+dis+' onclick="selectOptionAll('+qIdx+','+optIdx+')">'+'ABCD'[optIdx]+'. '+o.text+'</button>';
-    }).join('');
-
-    let expHtml = '';
-    if(isAnswered){
-      const ok = q._ok;
-      expHtml = '<div class="expl"><div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
-      '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
-      q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul></div>';
-    }
-
-    return '<div class="card" id="card-q-'+qIdx+'"><div class="badges"><span class="badge">Q'+(qIdx+1)+'</span><span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+q.stem+'</div>'+optHtml+expHtml+'</div>';
-  }).join('');
-
-  if(allAnswered){
-    html += '<div class="card" style="text-align:center;"><button class="btn pri" style="font-size:1.05rem;padding:12px 24px;" onclick="showSummary()">View Final Results Summary</button></div>';
-  }
-
-  $('main').innerHTML = html;
-}
-
-function selectOptionAll(qIdx, optIdx){
-  if(userAnswers[qIdx]!==null)return;
-  applyAnswer(qIdx, optIdx);
-  
-  // Update only this specific card in DOM to preserve scroll position
-  const card = document.getElementById('card-q-'+qIdx);
-  if(card){
-    const q = quizQuestions[qIdx];
-    const ok = q._ok;
-    card.querySelectorAll('.option-btn').forEach((b, bi)=>{
-      b.disabled = true;
-      if(q.options[bi].correct) b.classList.add('correct');
-      else if(bi === optIdx) b.classList.add('incorrect');
-      else b.classList.add('dim');
-    });
-    const exp = document.createElement('div');
-    exp.className = 'expl';
-    exp.innerHTML = '<div class="status '+(ok?'ok':'bad')+'">'+(ok?'Correct!':'Incorrect.')+'</div>'+
-      '<div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+
-      q.options.map((o,i)=>'<li><b>'+'ABCD'[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>';
-    card.appendChild(exp);
-  }
-  
-  const allAnswered = userAnswers.filter(x=>x!==null).length === quizQuestions.length;
-  if(allAnswered && !document.getElementById('finish-summary-btn')){
-    const finishCard = document.createElement('div');
-    finishCard.className = 'card';
-    finishCard.style.textAlign = 'center';
-    finishCard.innerHTML = '<button id="finish-summary-btn" class="btn pri" style="font-size:1.05rem;padding:12px 24px;" onclick="showSummary()">View Final Results Summary</button>';
-    $('main').appendChild(finishCard);
-    finishCard.scrollIntoView({behavior:'smooth'});
-  }
-}
-
-/* =========================================================
-   COMMON ANSWER LOGIC & SUMMARY
-   ========================================================= */
-function applyAnswer(qIdx, optIdx){
-  const q = quizQuestions[qIdx];
-  const ok = q.options[optIdx].correct;
-  userAnswers[qIdx] = optIdx;
-  q._ok = ok;
-
-  if(ok){
-    score++;
-    if(hist[q.id]){hist[q.id]--;if(!hist[q.id])delete hist[q.id]}
-  } else {
-    hist[q.id] = (hist[q.id]||0)+1;
-    if(!muted){
-      const wa = $('wrongAudio');
-      if(wa){wa.currentTime=0;wa.play().catch(e=>console.log('Audio play blocked:',e))}
-      const p = $('wrongPopup');
-      p.classList.remove('hidden');
-      clearTimeout(popupTimeout);
-      popupTimeout = setTimeout(()=>p.classList.add('hidden'), 2000);
-    }
-  }
-  saveHistory();
-  setHeader();
-}
-
-function showSummary(){
-  const n=quizQuestions.length,pct=Math.round(score/n*100);
-  const msg=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
-  const rows=['easy','medium','hard'].map(d=>{const a=quizQuestions.filter(q=>q.difficulty===d);return a.length?'<tr><td>'+d+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
-  const sr=SUBJECTS.map((s,i)=>{const a=quizQuestions.filter(q=>q.subjectIndex===i);return a.length?'<tr><td>'+s+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''}).join('');
-  $('progress-bar').style.width='100%';
-  $('main').innerHTML='<div class="card sum"><h2>'+pct+'%</h2><p>'+score+' / '+n+' correct</p><p>'+msg+'</p><table><tr><th>Difficulty</th><th>Correct</th></tr>'+rows+'</table><table><tr><th>Subject</th><th>Correct</th></tr>'+sr+'</table>'+
-  '<button class="btn pri" onclick="retake()">Retake Quiz</button><button class="btn pri" onclick="reviewMissed()">Review Missed</button><button class="btn" onclick="renderHome()">Back to Menu</button></div>';window.scrollTo({top:0});
-}
-
-function retake(){
-  const ids=quizQuestions.map(q=>q.id);
-  quizQuestions=prep(shuffle(questionBank.filter(q=>ids.includes(q.id))));
-  userAnswers=new Array(quizQuestions.length).fill(null);
-  currentIndex=0;score=0;
-  renderActiveQuiz();
-}
-
-function reviewMissed(){
-  const ids=quizQuestions.filter(q=>!q._ok).map(q=>q.id);
-  if(!ids.length){alert('Nothing missed. Nice.');return}
-  quizQuestions=prep(questionBank.filter(q=>ids.includes(q.id)));
-  userAnswers=new Array(quizQuestions.length).fill(null);
-  currentIndex=0;score=0;
-  renderActiveQuiz();
-}
-
-window.onload=()=>{
-  $('stfuBtn').addEventListener('click',toggleStfu);
-  $('menuBtn').addEventListener('click',renderHome);
-  $('modeBtn').addEventListener('click',toggleMode);
-  updateStfuButton();
-  updateModeButton();
-  renderHome();
-};
+const pool=()=>questionBank.filter(q=>sel.has(q.subjectIndex));
+const missed=()=>questionBank.filter(q=>hist[q.id]>0).length;
+function stfuUI(){const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('muted',muted);
+if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}clearTimeout(pt);$('wrongPopup').classList.add('hidden')}}
+function toggleStfu(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}stfuUI()}
+function modeUI(){const b=$('modeBtn');b.textContent=view==='all'?'View: All at Once':'View: One by One';b.classList.toggle('active',view==='all')}
+function setView(v){view=v;try{localStorage.setItem('quizViewMode',v)}catch(e){}modeUI();QS.length?go():home()}
+function hdr(){const n=QS.length,a=UA.filter(x=>x!==null).length;
+$('q-display').textContent=!n?'Question 0 of 0':view==='all'?'Answered '+a+' of '+n:'Question '+Math.min(cur+1,n)+' of '+n;
+$('score-display').textContent='Score: '+score+' / '+a+' ('+(a?Math.round(score/a*100):0)+'%)';
+$('progress-bar').style.width=(n?a/n*100:0)+'%'}
+function home(){QS=[];UA=[];cur=0;score=0;hdr();$('wrongPopup').classList.add('hidden');
+const p=pool(),chips=SUBJECTS.map((s,i)=>'<span class="chip '+(sel.has(i)?'on':'')+'" onclick="tg('+i+')">'+s+' ('+questionBank.filter(q=>q.subjectIndex===i).length+')</span>').join('');
+$('main').innerHTML='<div class="card"><h2>Select Subjects</h2><div class="chips">'+chips+'</div><button class="btn" onclick="sa(true)">Select All</button><button class="btn" onclick="sa(false)">Clear</button><button class="btn '+(prio?'pri':'')+'" onclick="prio=!prio;home()">Prioritize Missed ('+missed()+')</button><div class="counter">'+p.length+' questions across '+sel.size+' subjects selected</div></div>'+
+'<div class="card"><h2>Display Mode</h2><div class="chips"><span class="chip '+(view==='single'?'on':'')+'" onclick="setView(\'single\')">One by One (Flashcard/Card View)</span><span class="chip '+(view==='all'?'on':'')+'" onclick="setView(\'all\')">All at Once (Continuous List)</span></div></div>'+
+'<div class="card"><h2>Launch</h2><div class="grid">'+[15,25,35,50].map(n=>'<button class="btn pri" onclick="start('+n+')">'+(n===50?'Full Exam (50 Qs)':'Quickie ('+n+' Qs)')+'</button>').join('')+'<button class="btn pri" onclick="start(0)">Entire Selected Bank ('+p.length+')</button></div></div>'}
+function tg(i){sel.has(i)?sel.delete(i):sel.add(i);home()}
+function sa(a){sel=a?new Set(SUBJECTS.map((_,i)=>i)):new Set();home()}
+function prep(l){return l.map(q=>{const c=JSON.parse(JSON.stringify(q));shuffle(c.options);return c})}
+function begin(list){QS=prep(list);UA=new Array(QS.length).fill(null);cur=0;score=0;go()}
+function start(n){const p=pool();if(!p.length)return;const t=n?Math.min(n,p.length):p.length;let d=[];
+if(prio){const c=p.slice();while(d.length<t&&c.length){const w=c.map(q=>1+3*(hist[q.id]||0));let r=Math.random()*w.reduce((a,b)=>a+b,0),k=0;while(r>w[k]&&k<c.length-1){r-=w[k];k++}d.push(c.splice(k,1)[0])}}
+else d=shuffle(p.slice()).slice(0,t);begin(d)}
+function expl(q,nx){const ok=q._ok;return '<div class="expl"><div class="status '+(ok?'ok':'bad')+'">'+(ok?'CORRECT!':'INCORRECT.')+'</div><div class="core"><b>Core Concept:</b> '+q.options.find(o=>o.correct).why+'</div><ul>'+q.options.map((o,i)=>'<li><b>'+L[i]+'.</b> '+o.text+' &mdash; '+o.why+'</li>').join('')+'</ul>'+(nx?'<button class="btn pri" onclick="nxt()">'+(cur===QS.length-1?'Finish':'Next')+'</button>':'')+'</div>'}
+function card(i,single){const q=QS[i],a=UA[i],done=a!==null;
+return '<div class="card" id="c'+i+'"><div class="badges">'+(single?'':'<span class="badge">Q'+(i+1)+'</span>')+'<span class="badge">'+SUBJECTS[q.subjectIndex]+'</span><span class="badge g">'+q.difficulty+'</span>'+(q.priority?'<span class="badge">High-yield</span>':'')+'</div><div class="stem">'+(single?(i+1)+'. ':'')+q.stem+'</div>'+
+q.options.map((o,k)=>'<button class="option-btn '+(done?(o.correct?'correct':k===a?'incorrect':'dim'):'')+'" '+(done?'disabled':'')+' onclick="pick('+i+','+k+')">'+L[k]+'. '+o.text+'</button>').join('')+(done?expl(q,single):'')+'</div>'}
+function go(){hdr();$('wrongPopup').classList.add('hidden');
+if(view==='all'){$('main').innerHTML=QS.map((_,i)=>card(i,false)).join('')+(UA.every(x=>x!==null)?fin():'')}
+else{$('main').innerHTML=card(cur,true);window.scrollTo({top:0})}}
+const fin=()=>'<div class="card" id="fin" style="text-align:center"><button class="btn pri" onclick="summary()">View Final Results Summary</button></div>';
+function pick(i,k){if(UA[i]!==null)return;const q=QS[i];q._ok=q.options[k].correct;UA[i]=k;
+if(q._ok){score++;if(hist[q.id]){hist[q.id]--;if(!hist[q.id])delete hist[q.id]}}
+else{hist[q.id]=(hist[q.id]||0)+1;if(!muted){const w=$('wrongAudio');if(w){w.currentTime=0;w.play().catch(e=>console.log('Audio play blocked:',e))}const p=$('wrongPopup');p.classList.remove('hidden');clearTimeout(pt);pt=setTimeout(()=>p.classList.add('hidden'),2000)}}
+saveHist();hdr();
+if(view==='all'){$('c'+i).outerHTML=card(i,false);if(UA.every(x=>x!==null)&&!$('fin')){$('main').insertAdjacentHTML('beforeend',fin())}}
+else $('main').innerHTML=card(i,true)}
+function nxt(){if(cur>=QS.length-1)return summary();cur++;go()}
+function summary(){const n=QS.length,pct=Math.round(score/n*100);
+const m=pct>=90?'Absolute Gigachad. You drained that test dry.':pct>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
+const row=(l,f)=>{const a=QS.filter(f);return a.length?'<tr><td>'+l+'</td><td>'+a.filter(q=>q._ok).length+' / '+a.length+'</td></tr>':''};
+$('progress-bar').style.width='100%';
+$('main').innerHTML='<div class="card sum"><h2>'+pct+'%</h2><p>'+score+' / '+n+' correct</p><p>'+m+'</p><table><tr><th>Difficulty</th><th>Correct</th></tr>'+['easy','medium','hard'].map(d=>row(d,q=>q.difficulty===d)).join('')+'</table><table><tr><th>Subject</th><th>Correct</th></tr>'+SUBJECTS.map((s,i)=>row(s,q=>q.subjectIndex===i)).join('')+'</table><button class="btn pri" onclick="retake()">Retake Quiz</button><button class="btn pri" onclick="review()">Review Missed</button><button class="btn" onclick="home()">Back to Menu</button><a href="index.html" class="btn hub-btn">Back to Main Page</a></div>';window.scrollTo({top:0})}
+function retake(){const ids=QS.map(q=>q.id);begin(shuffle(questionBank.filter(q=>ids.includes(q.id))))}
+function review(){const ids=QS.filter(q=>!q._ok).map(q=>q.id);if(!ids.length){alert('Nothing missed. Nice.');return}begin(questionBank.filter(q=>ids.includes(q.id)))}
+window.onload=()=>{$('stfuBtn').addEventListener('click',toggleStfu);$('menuBtn').addEventListener('click',home);$('modeBtn').addEventListener('click',()=>setView(view==='all'?'single':'all'));stfuUI();modeUI();home()};
 </script></body></html>
