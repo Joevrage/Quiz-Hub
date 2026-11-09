@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sys Phys Midterm 2 Comprehensive Exam Hub</title>
+  <style>
+    :root {
+      --bg-base: #0f0f0f;
+      --bg-card: #1a1a1a;
+      --bg-card-hover: #222222;
+      --border-color: #2a2a2a;
+      --accent: #ff9900;
+      --accent-hover: #e68a00;
+      --text-main: #ffffff;
+      --text-muted: #a0a0a0;
+      --correct-bg: #14532d;
+      --correct-border: #22c55e;
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #ef4444;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      padding-bottom: 60px;
+    }
+
+    /* Sticky Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background-color: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 12px 20px;
+    }
+    .header-content {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+    .header-title p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+    .btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--accent);
+    }
+    .btn-accent {
+      background-color: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+    .btn-accent:hover {
+      background-color: var(--accent-hover);
+    }
+    .btn.active {
+      background-color: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .pill {
+      background-color: #262626;
+      border: 1px solid #333;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #e5e5e5;
+    }
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background-color: #262626;
+      border-radius: 2px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 900px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
+
+    /* Dashboard / Filter View */
+    .dashboard-panel {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .panel-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .filter-chip {
+      background-color: #222;
+      border: 1px solid #333;
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.825rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      user-select: none;
+    }
+    .filter-chip:hover {
+      border-color: var(--accent);
+    }
+    .filter-chip.active {
+      background-color: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+    .filter-chip .chip-count {
+      opacity: 0.8;
+      font-size: 0.75rem;
+    }
+
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .launcher-btn {
+      background-color: #222;
+      border: 1px solid #333;
+      color: var(--text-main);
+      padding: 14px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+    .launcher-btn:hover {
+      border-color: var(--accent);
+      background-color: #282828;
+      transform: translateY(-2px);
+    }
+
+    /* Question Cards */
+    .question-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 24px;
+      margin-bottom: 20px;
+      transition: border-color 0.2s ease;
+    }
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .meta-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .tag {
+      background: #252525;
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid #333;
+    }
+    .tag-week {
+      color: var(--accent);
+      border-color: rgba(255,153,0,0.3);
+      font-weight: 700;
+    }
+    .tag-priority {
+      color: #38bdf8;
+      border-color: rgba(56,189,248,0.3);
+    }
+    .stem-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .option-btn {
+      background-color: #222;
+      border: 1px solid #333;
+      color: #e5e5e5;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.15s ease;
+    }
+    .option-btn:hover:not(:disabled) {
+      background-color: #2a2a2a;
+      border-color: var(--accent);
+    }
+    .option-btn:disabled {
+      cursor: default;
+    }
+    .opt-key {
+      font-weight: 700;
+      color: var(--accent);
+      background-color: #151515;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .option-btn.selected-correct {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: #fff !important;
+    }
+    .option-btn.selected-incorrect {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: #fff !important;
+    }
+    .option-btn.show-correct {
+      border-color: var(--correct-border) !important;
+      background-color: rgba(20,83,45,0.4) !important;
+    }
+
+    /* Feedback / Rationale Drawer */
+    .rationale-panel {
+      margin-top: 16px;
+      padding: 16px;
+      background-color: #171717;
+      border: 1px solid #2d2d2d;
+      border-radius: 8px;
+    }
+    .status-banner {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+    .status-banner.correct { color: #4ade80; }
+    .status-banner.incorrect { color: #f87171; }
+    .rationale-item {
+      font-size: 0.85rem;
+      color: #d4d4d4;
+      margin-bottom: 8px;
+      padding-left: 8px;
+      border-left: 2px solid #333;
+    }
+    .rationale-item strong {
+      color: #ffb74d;
+    }
+
+    /* Visual Wrong Popup */
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(1);
+      z-index: 1000;
+      pointer-events: none;
+      transition: all 0.2s ease-out;
+    }
+    .wrong-popup.hidden {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    .wrong-popup img {
+      width: 240px;
+      height: auto;
+      border-radius: 12px;
+      border: 3px solid #ef4444;
+      box-shadow: 0 10px 40px rgba(239,68,68,0.5);
+    }
+
+    /* Utility */
+    .hidden { display: none !important; }
+    .card-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Element for Wrong Answers -->
+  <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+
+  <!-- Visual Erijah Popup -->
+  <div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Incorrect Feedback">
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="header-content">
+      <div class="header-title">
+        <h1 id="appHeaderTitle">Sys Phys Midterm 2 Mastery Hub</h1>
+        <p id="appHeaderSubtitle">Exhaustive Exam Engine &bull; Weeks 4 &amp; 5 Only</p>
+      </div>
+      <div class="header-controls">
+        <span class="pill" id="scorePill">Score: 0 / 0 (0%)</span>
+        <span class="pill" id="progressPill">Q 0 of 0</span>
+        <button class="btn" id="modeBtn" onclick="toggleMode()">View: One by One</button>
+        <button class="btn" id="stfuBtn" onclick="toggleStfu()">STFU Erijah</button>
+        <button class="btn btn-accent" id="menuBtn" onclick="renderHome()">Menu / Filter</button>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressBar"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Display Area -->
+  <main id="appRoot">
+    <!-- Populated via JavaScript -->
+  </main>
+
+  <script>
+    /* ==========================================================================
+       SECTION 1 & 2: MASTER TAXONOMY & RIGOROUS QUESTION BANK (WEEKS 4 & 5 ONLY)
+       ========================================================================== */
+    const SUBJECTS = [
+      { title: "Spinal Nerves, Topography & IVF Anatomy", week: "Wk 4" },
+      { title: "Reflex Arcs, Neuro Exam & Sinuvertebral Pain", week: "Wk 4" },
+      { title: "Autonomics, GVA Visceral Pain & Thoracoabdominal Vascular", week: "Wk 4" },
+      { title: "Peritoneal Cavity, Retroperitoneal Spaces & Renal Morphology", week: "Wk 5" },
+      { title: "Nephron Hemodynamics, Filtration & Endocrine Functions", week: "Wk 5" }
+    ];
+
+    const questionBank = [
+      // ==========================================
+      // MODULE 0: Spinal Nerves, Topography & IVF Anatomy (Wk 4)
+      // ==========================================
+      {
+        id: 0,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Spinal-Nerves-1",
+        difficulty: "easy",
+        priority: true,
+        stem: "The adult human spinal cord gives rise to precisely _______ pairs of mixed spinal nerves.",
+        options: [
+          { text: "12", correct: false, why: "Twelve designates the number of cranial nerve pairs. [Slide #Spinal-Nerves-1]" },
+          { text: "31", correct: true, why: "There are exactly 31 pairs of spinal nerves: 8 cervical, 12 thoracic, 5 lumbar, 5 sacral, and 1 coccygeal. [Slide #Spinal-Nerves-1]" },
+          { text: "33", correct: false, why: "Thirty-three represents the total number of embryonic vertebrae before sacral and coccygeal fusion. [Slide #Spinal-Nerves-1]" },
+          { text: "24", correct: false, why: "Twenty-four represents the number of articulating presacral vertebrae. [Slide #Spinal-Nerves-1]" }
+        ]
+      },
+      {
+        id: 1,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Conus-Level",
+        difficulty: "easy",
+        priority: true,
+        stem: "The tapered inferior termination of the spinal cord proper, termed the conus medullaris, typically ends at which vertebral level in adults?",
+        options: [
+          { text: "T10-T11", correct: false, why: "T10-T11 is too high along the thoracic cord. [Slide #Conus-Medullaris]" },
+          { text: "L1-L2", correct: true, why: "The conus medullaris marks the termination of the spinal cord proper and typically tapers to an end at the L1-L2 intervertebral disc space. [Slide #Conus-Medullaris]" },
+          { text: "L4-L5", correct: false, why: "The spinal cord ends well above this level; L4-L5 contains only traversing cauda equina roots. [Slide #Conus-Medullaris]" },
+          { text: "S2", correct: false, why: "S2 marks the inferior termination of the thecal (dural) sac, not the neural conus medullaris. [Slide #Conus-Medullaris]" }
+        ]
+      },
+      {
+        id: 2,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Dural-Sac-Level",
+        difficulty: "medium",
+        priority: true,
+        stem: "The thecal sac (dural sac) containing cerebrospinal fluid and traversing nerve roots extends inferiorly to terminate at which vertebral level?",
+        options: [
+          { text: "L1", correct: false, why: "L1 is the approximate termination of the conus medullaris, whereas the dural sleeve extends much lower into the sacrum. [Lecture Transcript]" },
+          { text: "L3", correct: false, why: "The thecal sac continues caudally past the mid-lumbar spine. [Lecture Transcript]" },
+          { text: "S2", correct: true, why: "The thecal (dural) sac extends from the foramen magnum down to the S2 vertebral level, where it tapers and transitions into the investing sheath of the filum terminale. [Lecture Transcript]" },
+          { text: "Coccyx apex", correct: false, why: "The fibrous filum terminale externum inserts on the coccyx, but the patent dural sac ends at S2. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 3,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "IVF-Roof-Floor",
+        difficulty: "medium",
+        priority: true,
+        stem: "In the lumbar spine, the anatomical roof (superior border) and floor (inferior border) of the intervertebral foramen (IVF) are formed by the _______.",
+        options: [
+          { text: "Superior and inferior articular facets", correct: false, why: "Articular facets and the zygapophyseal capsule form the posterior boundary of the IVF. [Slide #IVF-Boundaries]" },
+          { text: "Pedicles of adjacent vertebrae", correct: true, why: "The superior and inferior pedicles form the bony roof and floor (incisures) of the intervertebral foramen. [Slide #IVF-Boundaries]" },
+          { text: "Posterior longitudinal ligament and disc", correct: false, why: "The posterior vertebral body and intervertebral disc form the anterior wall of the IVF. [Slide #IVF-Boundaries]" },
+          { text: "Ligamentum flavum and lamina", correct: false, why: "These form posteromedial relations to the neural canal. [Slide #IVF-Boundaries]" }
+        ]
+      },
+      {
+        id: 4,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Spinal-Nerve-Topography",
+        difficulty: "hard",
+        priority: true,
+        stem: "The true mixed spinal nerve trunk is anatomically situated immediately _______.",
+        options: [
+          { text: "Medial to the emergence of the anterior and posterior rootlets", correct: false, why: "Rootlets emerge intraspinally from the cord itself. [Slide #Spinal-Nerve-Anatomy]" },
+          { text: "Lateral to the dorsal root ganglion and proximal to the bifurcation of the ventral and dorsal rami", correct: true, why: "The true spinal nerve trunk is extremely short (~1 cm) and exists only between the lateral border of the DRG and the division into anterior and posterior primary rami. [Slide #Spinal-Nerve-Anatomy]" },
+          { text: "Within the subarachnoid space proximal to the dural sleeve reflection", correct: false, why: "Intradural structures consist of separate dorsal and ventral nerve roots, not a mixed spinal nerve. [Slide #Spinal-Nerve-Anatomy]" },
+          { text: "Distal to the bifurcation of the medial and lateral branches of the posterior ramus", correct: false, why: "These branches arise deep in the posterior paraspinal musculature. [Slide #Spinal-Nerve-Anatomy]" }
+        ]
+      },
+      {
+        id: 5,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Embryology-Somites",
+        difficulty: "medium",
+        priority: true,
+        stem: "During week 3 of embryonic development, the paraxial mesoderm differentiates into paired somites that subsequently segregate into which three functional units?",
+        options: [
+          { text: "Ectoderm, mesoderm, and endoderm", correct: false, why: "These are the primary trilaminar germ layers. [Slide #Mesoderm-Differentiation]" },
+          { text: "Dermatome, myotome, and sclerotome", correct: true, why: "Each somite derived from paraxial mesoderm subdivides into a sclerotome (vertebrae/ribs), myotome (skeletal muscle), and dermatome (dermis). [Slide #Mesoderm-Differentiation]" },
+          { text: "Epimysium, perimysium, and endomysium", correct: false, why: "These are adult histological connective tissue sheaths of skeletal muscle. [Slide #Mesoderm-Differentiation]" },
+          { text: "Intermediate cord, nephrogenic cord, and lateral plate", correct: false, why: "Intermediate mesoderm forms the nephrogenic cord; it is separate from paraxial somites. [Slide #Mesoderm-Differentiation]" }
+        ]
+      },
+      {
+        id: 6,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Disc-Embryology",
+        difficulty: "hard",
+        priority: true,
+        stem: "Which developmental statement correctly identifies the distinct embryonic origins of the intervertebral disc components?",
+        options: [
+          { text: "Both the annulus fibrosus and nucleus pulposus derive from the notochord.", correct: false, why: "Only the nucleus pulposus derives from notochord remnants. [Slide #Mesoderm-Differentiation]" },
+          { text: "The annulus fibrosus derives from paraxial mesoderm sclerotomes, whereas the nucleus pulposus derives from the notochord.", correct: true, why: "The entire vertebral column and outer annulus fibrosus arise from sclerotomal paraxial mesoderm; the central gelatinous nucleus pulposus is the sole remnant of the embryonic notochord. [Slide #Mesoderm-Differentiation]" },
+          { text: "The annulus fibrosus derives from intermediate mesoderm, whereas the nucleus pulposus derives from neural crest cells.", correct: false, why: "Intermediate mesoderm forms the urogenital tract. [Slide #Mesoderm-Differentiation]" },
+          { text: "Both components derive exclusively from lateral plate somatic mesoderm.", correct: false, why: "Lateral plate mesoderm forms appendicular bones and parietal serosa. [Slide #Mesoderm-Differentiation]" }
+        ]
+      },
+      {
+        id: 7,
+        subjectIndex: 0,
+        week: "Wk 4",
+        slideRef: "Traversing-Roots",
+        difficulty: "hard",
+        priority: false,
+        stem: "Lumbosacral nerve roots traveling within the thecal sac to reach their respective exit intervertebral foramina are known on MRI as _______.",
+        options: [
+          { text: "Exiting nerve roots", correct: false, why: "Exiting nerve roots turn acutely laterally beneath the pedicle of the superior vertebra in the IVF. [Slide #Traversing-Roots]" },
+          { text: "Traversing nerve roots", correct: true, why: "Traversing nerve roots descend vertically inside the dural/thecal sac past the disc space before turning out at the next inferior IVF. [Slide #Traversing-Roots]" },
+          { text: "Sinuvertebral trunks", correct: false, why: "Sinuvertebral nerves are recurrent peripheral branches outside the thecal sac. [Slide #Traversing-Roots]" },
+          { text: "Rami communicantes", correct: false, why: "Rami communicantes connect spinal nerves to the sympathetic trunk. [Slide #Traversing-Roots]" }
+        ]
+      },
+
+      // ==========================================
+      // MODULE 1: Reflex Arcs, Neuro Exam & Sinuvertebral Pain (Wk 4)
+      // ==========================================
+      {
+        id: 8,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "CES-Surgical-Emergency",
+        difficulty: "medium",
+        priority: true,
+        stem: "Massive disc herniation compressing the S2, S3, and S4 cauda equina roots causes neurogenic bladder dysfunction, representing an absolute surgical emergency that must be decompressed within _______ to prevent permanent paralysis.",
+        options: [
+          { text: "6 hours", correct: false, why: "While emergency intervention is immediate, the literature and lecture standard benchmark is 48 hours. [Slide #Conus-Medullaris]" },
+          { text: "48 hours", correct: true, why: "Acute cauda equina syndrome with saddle anesthesia and bowel/bladder retention requires emergency surgical decompression within 48 hours to preserve sphincter and sexual function. [Slide #Conus-Medullaris]" },
+          { text: "7 days", correct: false, why: "Seven days results in irreversible lower motor neuron sacral denervation. [Slide #Conus-Medullaris]" },
+          { text: "2 weeks", correct: false, why: "A two-week delay produces permanent fecal and urinary incontinence. [Slide #Conus-Medullaris]" }
+        ]
+      },
+      {
+        id: 9,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Sinuvertebral-Innervation",
+        difficulty: "easy",
+        priority: true,
+        stem: "Nociceptive discogenic pain resulting from an annular tear in the outer third of a lumbar disc is transmitted to the central nervous system via the _______.",
+        options: [
+          { text: "Medial branch of the dorsal ramus", correct: false, why: "The medial branch innervates the zygapophyseal (facet) joints and multifidus muscles. [Slide #Sinuvertebral-Nerve]" },
+          { text: "Lateral branch of the dorsal ramus", correct: false, why: "The lateral branch innervates the iliocostalis muscle and overlying skin. [Slide #Sinuvertebral-Nerve]" },
+          { text: "Sinuvertebral nerve (recurrent meningeal nerve)", correct: true, why: "The sinuvertebral nerve of Luschka provides sensory innervation to the outer third of the annulus fibrosus, posterior longitudinal ligament, and anterior dura mater; it is the sole mediator of discogenic pain. [Slide #Sinuvertebral-Nerve]" },
+          { text: "Lateral cutaneous femoral nerve", correct: false, why: "This is a ventral ramus derivative innervating the lateral thigh. [Slide #Sinuvertebral-Nerve]" }
+        ]
+      },
+      {
+        id: 10,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Sinuvertebral-Overlap",
+        difficulty: "hard",
+        priority: true,
+        stem: "According to Nikolai Bogduk's classic research on spinal innervation, the L3 intervertebral disc receives sensory innervation from _______.",
+        options: [
+          { text: "The L3 sinuvertebral nerve exclusively", correct: false, why: "Disc innervation displays multi-level overlapping pathways. [Slide #Sinuvertebral-Nerve]" },
+          { text: "Both the L3 sinuvertebral nerve and branches from the L2 sinuvertebral nerve", correct: true, why: "As explicitly emphasized by Dr. Gillard citing Bogduk, discs exhibit multi-segmental overlap: the L3 disc is innervated by sinuvertebral fibers from L3 as well as descending fibers from L2. [Slide #Sinuvertebral-Nerve]" },
+          { text: "The femoral nerve and obturator nerve", correct: false, why: "These are peripheral lower limb nerves formed by the lumbar plexus. [Slide #Sinuvertebral-Nerve]" },
+          { text: "Dorsal root ganglia of S1-S3 only", correct: false, why: "This is too far inferior to innervate mid-lumbar discs. [Slide #Sinuvertebral-Nerve]" }
+        ]
+      },
+      {
+        id: 11,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Z-Joint-Innervation",
+        difficulty: "medium",
+        priority: true,
+        stem: "Each lumbar zygapophyseal (facet) joint receives sensory innervation from the medial branch of the dorsal primary ramus of _______.",
+        options: [
+          { text: "The same spinal level only", correct: false, why: "Each facet joint receives dual innervation from two adjacent segmental levels. [Slide #Sinuvertebral-Nerve]" },
+          { text: "The level below only", correct: false, why: "The innervation pattern involves the same level and the level above. [Slide #Sinuvertebral-Nerve]" },
+          { text: "The same level and the level above", correct: true, why: "Every facet joint is dually innervated by the medial branch of the posterior primary ramus originating at the same spinal level AND the level immediately above. [Slide #Sinuvertebral-Nerve]" },
+          { text: "The sinuvertebral nerve directly", correct: false, why: "The sinuvertebral nerve innervates anterior canal structures (PLL, disc, dura), not posterior facet joints. [Slide #Sinuvertebral-Nerve]" }
+        ]
+      },
+      {
+        id: 12,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Monosynaptic-Arc",
+        difficulty: "medium",
+        priority: false,
+        stem: "The deep tendon muscle stretch reflex (e.g., patellar reflex) is physiologically categorized as a _______ reflex arc.",
+        options: [
+          { text: "Polysynaptic flexor withdrawal", correct: false, why: "Withdrawal reflexes require multiple interneurons across multiple spinal segments. [Slide #Reflex-Arc]" },
+          { text: "Monosynaptic myotatic", correct: true, why: "The stretch reflex involves exactly one central synapse between the primary Ia spindle afferent and the homonymous alpha motor neuron. [Slide #Reflex-Arc]" },
+          { text: "Autogenic disynaptic inhibitory", correct: false, why: "Autogenic inhibition is mediated by Golgi tendon organs via Ib afferents. [Slide #Reflex-Arc]" },
+          { text: "Nociceptive crossed extensor", correct: false, why: "Crossed extensor reflexes are complex polysynaptic pathways coordinating contralateral limb extension. [Slide #Reflex-Arc]" }
+        ]
+      },
+      {
+        id: 13,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Spindle-vs-GTO-Receptors",
+        difficulty: "hard",
+        priority: true,
+        stem: "Intrafusal muscle spindles monitor _______, whereas Golgi tendon organs monitor _______.",
+        options: [
+          { text: "Active contractile tension; passive tendon pressure", correct: false, why: "This completely reverses the sensory modalities of these mechanoreceptors. [Lecture Transcript]" },
+          { text: "Changes in muscle length and stretch velocity; contractile muscle tension", correct: true, why: "Muscle spindles lie in parallel with extrafusal fibers to detect changes in muscle length; GTOs lie in series at the myotendinous junction to detect tension. [Lecture Transcript]" },
+          { text: "Joint angle acceleration; deep vibration", correct: false, why: "Pacinian corpuscles and Ruffini endings sense vibration and joint position. [Lecture Transcript]" },
+          { text: "Pain and ischemia; rapid thermal shifts", correct: false, why: "Group IV free nerve endings detect nociception and temperature. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 14,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Reciprocal-Inhibition",
+        difficulty: "medium",
+        priority: false,
+        stem: "When the patellar tendon is tapped, primary Ia spindle afferents excite quadriceps motor neurons while simultaneously relaxing the antagonist hamstrings via _______.",
+        options: [
+          { text: "Reciprocal inhibition", correct: true, why: "Ia spindle afferents send collateral branches to inhibitory interneurons in the spinal cord, which hyperpolarize and relax antagonist motor pools. [Slide #Reflex-Arc]" },
+          { text: "Recurrent facilitation", correct: false, why: "Renshaw cells provide recurrent inhibition, not facilitation. [Slide #Reflex-Arc]" },
+          { text: "Autogenic excitation", correct: false, why: "This is a non-existent physiological term; GTOs mediate autogenic inhibition. [Slide #Reflex-Arc]" },
+          { text: "The gamma loop bypass", correct: false, why: "The gamma loop regulates intrafusal sensitivity, not antagonist reciprocal relaxation. [Slide #Reflex-Arc]" }
+        ]
+      },
+      {
+        id: 15,
+        subjectIndex: 1,
+        week: "Wk 4",
+        slideRef: "Radicular-Pain-vs-Radiculopathy",
+        difficulty: "hard",
+        priority: true,
+        stem: "A patient presents with sharp, stabbing pain radiating down the posterior thigh to the lateral foot. Neurological examination reveals an absent Achilles reflex, S1 dermatomal numbness, and gastrocnemius weakness. How are these findings categorized?",
+        options: [
+          { text: "The radiating pain is radiculopathy; the physical exam deficits are radicular pain.", correct: false, why: "This reverses the clinical definitions. [Slide #Neuro-Exam-Defs]" },
+          { text: "The radiating pain is radicular pain; the objective loss of reflex, sensation, and motor power constitutes radiculopathy.", correct: true, why: "Radicular pain is a subjective sensory symptom (lancinating nerve root pain); radiculopathy is an objective clinical diagnosis defined by conducting block deficits (hypoesthesia, weakness, hyporeflexia). [Slide #Neuro-Exam-Defs]" },
+          { text: "Both the radiating pain and the physical exam findings represent non-organic conversion disorder.", correct: false, why: "Objective reflex loss and focal motor weakness prove true organic nerve root pathology. [Slide #Neuro-Exam-Defs]" },
+          { text: "Both findings are classified strictly as central discogenic myelopathy.", correct: false, why: "Myelopathy indicates upper motor neuron cord compression; root lesions are lower motor neuron radiculopathies. [Slide #Neuro-Exam-Defs]" }
+        ]
+      },
+
+      // ==========================================
+      // MODULE 2: Autonomics, GVA Visceral Pain & Thoracoabdominal Vascular (Wk 4)
+      // ==========================================
+      {
+        id: 16,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "Gray-Rami-50-50",
+        difficulty: "medium",
+        priority: true,
+        stem: "Postganglionic sympathetic fibers (GVE) traversing the gray ramus communicans into a spinal nerve undergo which peripheral distribution?",
+        options: [
+          { text: "90% enter the ventral ramus, while 10% enter the dorsal ramus.", correct: false, why: "This greatly underestimates dorsal ramus autonomic supply. [Slide #Gray-Rami-Communicans]" },
+          { text: "Approximately 50% enter the ventral ramus and 50% enter the dorsal ramus.", correct: true, why: "As stressed by Dr. Gillard, postganglionic sympathetic fibers split roughly 50/50 between the ventral and dorsal primary rami to supply blood vessels, sweat glands, and muscle spindles. [Slide #Gray-Rami-Communicans]" },
+          { text: "100% travel exclusively through the sinuvertebral nerve.", correct: false, why: "Gray rami join the primary rami to reach the anterior and posterior body wall. [Slide #Gray-Rami-Communicans]" },
+          { text: "80% enter the dorsal ramus, while 20% enter the ventral ramus.", correct: false, why: "The division is approximately equal (50/50). [Slide #Gray-Rami-Communicans]" }
+        ]
+      },
+      {
+        id: 17,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "GVA-Stretch-Pain",
+        difficulty: "medium",
+        priority: true,
+        stem: "General Visceral Afferent (GVA) pain fibers hitchhiking along sympathetic splanchnic pathways from abdominal viscera are primarily excited by _______.",
+        options: [
+          { text: "Surgical scalpel incision", correct: false, why: "Viscera can be cut without provoking pain. [Slide #GVA-Pain-Fibers]" },
+          { text: "Direct electrical cautery", correct: false, why: "Burning visceral tissue does not stimulate GVA pain fibers. [Slide #GVA-Pain-Fibers]" },
+          { text: "Mechanical distension, capsule stretch, or sustained ischemia", correct: true, why: "Visceral hollow organs and capsules are insensitive to thermal or mechanical cutting, but produce severe agonizing pain when walls undergo rapid stretch, distension, or ischemic spasm. [Slide #GVA-Pain-Fibers]" },
+          { text: "Histamine application to the mucosal lining", correct: false, why: "Chemical irritation of mucosa does not typically trigger visceral stretch afferents. [Slide #GVA-Pain-Fibers]" }
+        ]
+      },
+      {
+        id: 18,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "Alpha-1-Adrenergic",
+        difficulty: "hard",
+        priority: true,
+        stem: "When sympathetic postganglionic terminals release norepinephrine onto vascular smooth muscle alpha-1 receptors, vasoconstriction occurs through which intracellular signaling cascade?",
+        options: [
+          { text: "Gs protein activation -> adenylate cyclase -> increased cAMP", correct: false, why: "This is the beta-adrenergic pathway. [Slide #Arteriole-Vasoconstriction]" },
+          { text: "Gq protein activation -> phospholipase C -> IP3/DAG -> cytosolic calcium release", correct: true, why: "Alpha-1 adrenergic receptors couple to Gq proteins, activating phospholipase C to generate IP3 and DAG, which releases stored endoplasmic reticulum calcium to stimulate actin-myosin cross-bridging and vasoconstriction. [Slide #Arteriole-Vasoconstriction]" },
+          { text: "Gi protein activation -> opening of inward rectifying potassium channels", correct: false, why: "This pathway produces hyperpolarization and inhibition. [Slide #Arteriole-Vasoconstriction]" },
+          { text: "Direct opening of ligand-gated chloride channels", correct: false, why: "This describes GABA-A receptor mechanics. [Slide #Arteriole-Vasoconstriction]" }
+        ]
+      },
+      {
+        id: 19,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "Vascular-Starling-Forces",
+        difficulty: "hard",
+        priority: true,
+        stem: "In a systemic capillary bed, fluid exits into the interstitium at the arteriolar end because _______, whereas fluid returns at the venular end because _______.",
+        options: [
+          { text: "Capillary oncotic pressure exceeds hydrostatic pressure; lymphatic valves open", correct: false, why: "Hydrostatic pressure drives fluid filtration at the arterial end. [Slide #Starling-Capillary-Forces]" },
+          { text: "Capillary hydrostatic pressure exceeds colloid osmotic pressure; colloid osmotic pressure exceeds hydrostatic pressure", correct: true, why: "At the proximal capillary, cardiac hydrostatic pressure (~35 mmHg) dominates oncotic pressure (~25 mmHg) to push fluid out; at the distal capillary, hydrostatic pressure falls (~15 mmHg) while albumin oncotic pressure draws fluid back in. [Slide #Starling-Capillary-Forces]" },
+          { text: "Active sodium pumps push fluid out; gravity draws fluid back in", correct: false, why: "Fluid exchange is governed passively by Starling forces, not cellular active transport. [Slide #Starling-Capillary-Forces]" },
+          { text: "Interstitial oncotic pressure is zero; precapillary sphincters contract", correct: false, why: "Sphincter contraction controls perfusion rate, not local Starling equilibria. [Slide #Starling-Capillary-Forces]" }
+        ]
+      },
+      {
+        id: 20,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "Hypoalbuminemia-Edema",
+        difficulty: "medium",
+        priority: true,
+        stem: "Why does severe glomerulonephritis resulting in heavy urinary albumin loss (nephrotic syndrome) cause widespread generalized tissue edema?",
+        options: [
+          { text: "Cardiac output doubles, increasing capillary hydrostatic pressure.", correct: false, why: "Cardiac output does not double in nephrotic syndrome. [Lecture Transcript]" },
+          { text: "Loss of circulating albumin collapses plasma oncotic pressure, preventing distal capillary fluid reabsorption.", correct: true, why: "Albumin generates the plasma colloid osmotic (oncotic) pressure necessary to suck interstitial fluid back into venous capillaries; without albumin, fluid accumulates in the interstitium, causing massive edema. [Lecture Transcript]" },
+          { text: "Lymphatic capillaries are permanently clogged by filtered glucose.", correct: false, why: "Glucose does not occlude lymphatics. [Lecture Transcript]" },
+          { text: "Renal sympathetic tone completely abolishes arteriole vasoconstriction.", correct: false, why: "Sympathetic tone is typically activated secondarily, not abolished. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 21,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "Mediastinum-Subdivisions",
+        difficulty: "easy",
+        priority: false,
+        stem: "The pericardial sac, the phrenic nerves, and the heart reside specifically within the _______ subdivision of the mediastinum.",
+        options: [
+          { text: "Superior mediastinum", correct: false, why: "The superior mediastinum contains the aortic arch, trachea, and esophagus. [Lecture Transcript]" },
+          { text: "Anterior mediastinum", correct: false, why: "The anterior mediastinum lies between the sternum and pericardium, containing thymus tissue and fat. [Lecture Transcript]" },
+          { text: "Middle mediastinum", correct: true, why: "The middle mediastinum contains the pericardium, heart, phrenic nerves, and proximal great vessels. [Lecture Transcript]" },
+          { text: "Posterior mediastinum", correct: false, why: "The posterior mediastinum contains the descending thoracic aorta, azygos vein, and thoracic duct. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 22,
+        subjectIndex: 2,
+        week: "Wk 4",
+        slideRef: "AAA-Tamponade",
+        difficulty: "hard",
+        priority: true,
+        stem: "When an abdominal aortic aneurysm (AAA) ruptures, a posterior blowout into the retroperitoneal space carries a significantly better survival rate than an anterior blowout because _______.",
+        options: [
+          { text: "Blood drains harmlessly into the inferior vena cava through a fistula.", correct: false, why: "Aortocaval fistulas are rare and hemodynamic disasters. [Lecture Transcript]" },
+          { text: "The dense retroperitoneal connective tissue compartment creates a natural pressure tamponade that slows blood loss.", correct: true, why: "Posterior rupture is contained by the rigid retroperitoneal fascial envelope and spine, tamponading the hemorrhage long enough for emergency surgery; anterior rupture into the open peritoneal cavity results in rapid exsanguination. [Lecture Transcript]" },
+          { text: "The celiac trunk instantly vasospasms to halt all aortic inflow.", correct: false, why: "Aortic inflow cannot be halted by local celiac vasospasm. [Lecture Transcript]" },
+          { text: "The renal arterioles dilate to absorb the massive extravasated volume.", correct: false, why: "Renal arterioles cannot absorb systemic aortic hemorrhage. [Lecture Transcript]" }
+        ]
+      },
+
+      // ==========================================
+      // MODULE 3: Peritoneal Cavity, Retroperitoneal Spaces & Renal Morphology (Wk 5)
+      // ==========================================
+      {
+        id: 23,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Kidneys-Retroperitoneal",
+        difficulty: "easy",
+        priority: true,
+        stem: "Because the kidneys are positioned against the posterior abdominal wall behind the parietal peritoneum, they are anatomically designated as _______.",
+        options: [
+          { text: "Intraperitoneal", correct: false, why: "Intraperitoneal organs are completely enveloped by visceral peritoneum. [Slide #Kidney-Peritoneal]" },
+          { text: "Retroperitoneal (extraperitoneal)", correct: true, why: "The kidneys lie outside the peritoneal sac along the posterior abdominal wall, behind the parietal peritoneum. [Slide #Kidney-Peritoneal]" },
+          { text: "Subperitoneal", correct: false, why: "The lower third of the rectum and urinary bladder are subperitoneal. [Slide #Kidney-Peritoneal]" },
+          { text: "Transperitoneal", correct: false, why: "Transperitoneal refers to a surgical pathway across the peritoneal cavity. [Slide #Kidney-Peritoneal]" }
+        ]
+      },
+      {
+        id: 24,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Kidney-Vertebral-Levels",
+        difficulty: "easy",
+        priority: false,
+        stem: "The adult kidneys extend along the posterior abdominal wall between which vertebral levels?",
+        options: [
+          { text: "T8 to T11", correct: false, why: "This is too superior within the thorax. [Slide #Kidney-Peritoneal]" },
+          { text: "T12 to L3", correct: true, why: "The kidneys span from T12 to L3, with the right kidney positioned slightly lower than the left due to the liver. [Slide #Kidney-Peritoneal]" },
+          { text: "L2 to L5", correct: false, why: "This is too inferior along the lumbar lordosis. [Slide #Kidney-Peritoneal]" },
+          { text: "C7 to T4", correct: false, why: "This corresponds to the cervical and upper thoracic spine. [Slide #Kidney-Peritoneal]" }
+        ]
+      },
+      {
+        id: 25,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Renal-Embryology",
+        difficulty: "medium",
+        priority: true,
+        stem: "Embryologically, the permanent kidneys, ureters, and internal gonads originate from the _______.",
+        options: [
+          { text: "Paraxial mesoderm", correct: false, why: "Paraxial mesoderm gives rise to somites, vertebrae, and skeletal muscle. [Slide #Mesoderm-Differentiation]" },
+          { text: "Lateral plate splanchnic mesoderm", correct: false, why: "This forms gut smooth muscle and visceral peritoneum. [Slide #Mesoderm-Differentiation]" },
+          { text: "Intermediate mesoderm (nephrogenic cord)", correct: true, why: "The urogenital tract (kidneys, ureters, gonads) develops directly from intermediate mesoderm, specifically the nephrogenic cord. [Slide #Mesoderm-Differentiation]" },
+          { text: "Neural crest ectoderm", correct: false, why: "Neural crest cells form autonomic ganglia, adrenal medulla, and Schwann cells. [Slide #Mesoderm-Differentiation]" }
+        ]
+      },
+      {
+        id: 26,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Winslow-Roof",
+        difficulty: "hard",
+        priority: true,
+        stem: "The superior boundary (roof) of the Foramen of Winslow (epiploic foramen) is formed by the _______.",
+        options: [
+          { text: "First part of the duodenum", correct: false, why: "Part 1 of the duodenum forms the inferior boundary (floor). [Slide #Winslow-Borders]" },
+          { text: "Hepatoduodenal ligament", correct: false, why: "The hepatoduodenal ligament forms the anterior boundary. [Slide #Winslow-Borders]" },
+          { text: "Caudate lobe of the liver", correct: true, why: "The roof of the epiploic foramen is formed by the caudate lobe of the liver. [Slide #Winslow-Borders]" },
+          { text: "Inferior vena cava", correct: false, why: "The IVC covered by peritoneum forms the posterior boundary. [Slide #Winslow-Borders]" }
+        ]
+      },
+      {
+        id: 27,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Winslow-Floor",
+        difficulty: "hard",
+        priority: false,
+        stem: "The inferior boundary (floor) of the Foramen of Winslow is formed by which anatomical structure?",
+        options: [
+          { text: "Pancreatic tail", correct: false, why: "The tail of the pancreas points toward the splenic hilum. [Slide #Winslow-Borders]" },
+          { text: "Superior (first) part of the duodenum", correct: true, why: "The inferior boundary of the foramen of Winslow is formed by the superior horizontal (first) part of the duodenum. [Slide #Winslow-Borders]" },
+          { text: "Quadrate lobe of the liver", correct: false, why: "The quadrate lobe lies anteriorly near the gallbladder fossa. [Slide #Winslow-Borders]" },
+          { text: "Right kidney anterior surface", correct: false, why: "The right kidney lies retroperitoneally further lateral. [Slide #Winslow-Borders]" }
+        ]
+      },
+      {
+        id: 28,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "SAD-PUCKER-Pancreas",
+        difficulty: "medium",
+        priority: true,
+        stem: "Under the SAD PUCKER classification of retroperitoneal viscera, the pancreas is entirely retroperitoneal EXCEPT for which intraperitoneal component?",
+        options: [
+          { text: "Pancreatic head", correct: false, why: "The head lies nestled retroperitoneally in the C-loop of the duodenum. [Slide #SAD-PUCKER]" },
+          { text: "Uncinate process", correct: false, why: "The uncinate process is retroperitoneal behind mesenteric vessels. [Slide #SAD-PUCKER]" },
+          { text: "Pancreatic tail", correct: true, why: "The head, neck, and body of the pancreas are secondary retroperitoneal; only the tail enters the splenorenal ligament as an intraperitoneal structure. [Slide #SAD-PUCKER]" },
+          { text: "Pancreatic neck", correct: false, why: "The neck is retroperitoneal overlying the portal vein confluence. [Slide #SAD-PUCKER]" }
+        ]
+      },
+      {
+        id: 29,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "SAD-PUCKER-Duodenum",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which portion of the duodenum is intraperitoneal, while all subsequent parts are retroperitoneal?",
+        options: [
+          { text: "Major duodenal papilla", correct: false, why: "The major papilla is in the descending second part, which is retroperitoneal. [Slide #SAD-PUCKER]" },
+          { text: "Duodenal cap (proximal part 1)", correct: true, why: "Only the proximal 2 cm of the first part (the duodenal cap/bulb) is intraperitoneal and mobile; parts 2, 3, and 4 are retroperitoneal. [Slide #SAD-PUCKER]" },
+          { text: "Horizontal (third) part", correct: false, why: "The third part is retroperitoneal, crossing anterior to the IVC and aorta. [Slide #SAD-PUCKER]" },
+          { text: "Ascending (fourth) part", correct: false, why: "The fourth part is retroperitoneal until the duodenojejunal flexure. [Slide #SAD-PUCKER]" }
+        ]
+      },
+      {
+        id: 30,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Renal-Columns-Bertin",
+        difficulty: "medium",
+        priority: true,
+        stem: "The renal columns (of Bertin) that divide the medulla into distinct renal pyramids are histologically composed of _______.",
+        options: [
+          { text: "Fibrous capsule tissue", correct: false, why: "The capsule is the outer protective collagenous layer. [Slide #Renal-Anatomy]" },
+          { text: "Renal cortex", correct: true, why: "A classic board question: although dipping deeply into the medulla, renal columns are extensions of cortical tissue containing glomeruli and convoluted tubules. [Slide #Renal-Anatomy]" },
+          { text: "Collecting duct bundles", correct: false, why: "Collecting ducts and loops of Henle comprise the renal pyramids. [Slide #Renal-Anatomy]" },
+          { text: "Transitional epithelium of minor calyces", correct: false, why: "Calyces are macroscopic collecting conduits, not parenchymal columns. [Slide #Renal-Anatomy]" }
+        ]
+      },
+      {
+        id: 31,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Renal-Papilla-Renaming",
+        difficulty: "easy",
+        priority: true,
+        stem: "Pre-urine (tubular fluid) is officially renamed urine immediately after it passes through the _______.",
+        options: [
+          { text: "Distal convoluted tubule", correct: false, why: "Fluid in the DCT is still tubular fluid subject to hormonal transport. [Slide #Renal-Anatomy]" },
+          { text: "Connecting tubule", correct: false, why: "Connecting tubules still modify tubular fluid. [Slide #Renal-Anatomy]" },
+          { text: "Renal papilla (duct of Bellini)", correct: true, why: "Once tubular fluid emerges through the cribriform openings of the renal papilla into the minor calyx, no further reabsorption or secretion occurs; it is officially urine. [Slide #Renal-Anatomy]" },
+          { text: "Loop of Henle", correct: false, why: "The loop of Henle concentrates pre-urine. [Slide #Renal-Anatomy]" }
+        ]
+      },
+      {
+        id: 32,
+        subjectIndex: 3,
+        week: "Wk 5",
+        slideRef: "Renal-Pelvis-Feeders",
+        difficulty: "easy",
+        priority: false,
+        stem: "Which anatomical structures empty urine directly into the renal pelvis?",
+        options: [
+          { text: "Minor calyces", correct: false, why: "Minor calyces coalesce to form major calyces first. [Slide #Renal-Anatomy]" },
+          { text: "Major calyces", correct: true, why: "Two to three major calyces converge directly to form the funnel-shaped renal pelvis, which then narrows into the ureter. [Slide #Renal-Anatomy]" },
+          { text: "Renal papillae", correct: false, why: "Papillae project directly into minor calyces. [Slide #Renal-Anatomy]" },
+          { text: "Ducts of Bellini", correct: false, why: "Ducts of Bellini terminate at the apex of the renal papilla. [Slide #Renal-Anatomy]" }
+        ]
+      },
+
+      // ==========================================
+      // MODULE 4: Nephron Hemodynamics, Filtration & Endocrine Functions (Wk 5)
+      // ==========================================
+      {
+        id: 33,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Nephron-Components",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which tubular segment is embryologically and functionally considered OUTSIDE of (NOT part of) the nephron proper?",
+        options: [
+          { text: "Proximal convoluted tubule", correct: false, why: "The PCT is a core nephron segment. [Slide #Nephron-Components]" },
+          { text: "Loop of Henle", correct: false, why: "The thin and thick limbs of Henle belong to the nephron. [Slide #Nephron-Components]" },
+          { text: "Collecting duct", correct: true, why: "The nephron includes the Bowman's capsule, PCT, loop of Henle, DCT, and connecting tubule; collecting ducts derive from the ureteric bud and are not part of the nephron proper. [Slide #Nephron-Components]" },
+          { text: "Bowman's space", correct: false, why: "Bowman's capsule and space form the renal corpuscle of the nephron. [Slide #Nephron-Components]" }
+        ]
+      },
+      {
+        id: 34,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Renal-Perfusion-Fraction",
+        difficulty: "easy",
+        priority: false,
+        stem: "Although the kidneys comprise only ~0.5% of total body mass, they receive approximately what percentage of resting cardiac output?",
+        options: [
+          { text: "5%", correct: false, why: "This is far too low. [Slide #Renal-Hemodynamics]" },
+          { text: "20%", correct: true, why: "Pound-for-pound, the kidneys demand the highest perfusion in the body, receiving ~20-25% of resting cardiac output (~1.2 L/min) to filter metabolic toxins. [Slide #Renal-Hemodynamics]" },
+          { text: "45%", correct: false, why: "Forty-five percent would compromise coronary and cerebral perfusion. [Slide #Renal-Hemodynamics]" },
+          { text: "35%", correct: false, why: "Normal renal blood flow fraction is 20-25%. [Slide #Renal-Hemodynamics]" }
+        ]
+      },
+      {
+        id: 35,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Daily-GFR-Volume",
+        difficulty: "medium",
+        priority: false,
+        stem: "Normal human glomerular filtration rate (GFR) generates approximately _______ of filtrate per day, of which greater than 99% is reabsorbed.",
+        options: [
+          { text: "15 Liters (4 gallons)", correct: false, why: "This is far below daily filtration. [Lecture Transcript]" },
+          { text: "180 Liters (47 gallons)", correct: true, why: "The glomeruli filter ~125 mL/min, totaling ~180 Liters (47 gallons) of plasma filtrate daily; 99.2% of water and solutes are reabsorbed by the tubules. [Lecture Transcript]" },
+          { text: "500 Liters (130 gallons)", correct: false, why: "This exceeds total body fluid flux. [Lecture Transcript]" },
+          { text: "50 Liters (13 gallons)", correct: false, why: "Normal daily GFR is 180 Liters. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 36,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Efferent-Oncotic-Pressure",
+        difficulty: "hard",
+        priority: true,
+        stem: "Blood exiting the glomerular tuft into the efferent arteriole displays a dramatic increase in _______ pressure due to the filtration of protein-free plasma into Bowman's space.",
+        options: [
+          { text: "Hydrostatic", correct: false, why: "Hydrostatic pressure drops across the glomerular capillary bed. [Slide #Renal-Hemodynamics]" },
+          { text: "Colloid osmotic (oncotic)", correct: true, why: "Because ~20% of water filters into Bowman's space while large, negatively charged plasma proteins (albumin) are retained, protein concentration rises sharply, creating high efferent oncotic pressure that drives reabsorption in downstream peritubular capillaries. [Slide #Renal-Hemodynamics]" },
+          { text: "Atmospheric", correct: false, why: "Vascular pressures are independent of atmospheric fluctuations. [Slide #Renal-Hemodynamics]" },
+          { text: "Intrarenal capsule", correct: false, why: "Capsular hydrostatic pressure exists outside the vascular lumen. [Slide #Renal-Hemodynamics]" }
+        ]
+      },
+      {
+        id: 37,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Filtration-Charge-Barrier",
+        difficulty: "medium",
+        priority: true,
+        stem: "Serum albumin (molecular weight ~68 kDa) is prevented from filtering across the glomerular filtration barrier into Bowman's space primarily because _______.",
+        options: [
+          { text: "It is smaller than the slit diaphragms and passes freely into urine.", correct: false, why: "Albumin is actively retained in healthy glomeruli. [Slide #Filtration-Barrier]" },
+          { text: "It carries a strong negative charge that is electrostatically repelled by the negative charges of podocyte pedicels and the basement membrane.", correct: true, why: "The glomerular filtration barrier possesses strong negative polyanionic charges (heparan sulfate, sialoglycoproteins); because albumin is negatively charged at physiological pH, it is electrostatically repelled. [Slide #Filtration-Barrier]" },
+          { text: "It is actively destroyed by juxtaglomerular cells in the afferent arteriole.", correct: false, why: "JG cells do not destroy plasma proteins. [Slide #Filtration-Barrier]" },
+          { text: "It binds irreversibly to lipid-soluble vitamins in the efferent arteriole.", correct: false, why: "Albumin carries many ligands, but repulsion is due to negative charge barrier mechanics. [Slide #Filtration-Barrier]" }
+        ]
+      },
+      {
+        id: 38,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Creatinine-GFR-Marker",
+        difficulty: "medium",
+        priority: false,
+        stem: "Serum creatinine is universally utilized in clinical laboratories to estimate GFR because it is freely filtered by the glomerulus, not significantly reabsorbed, and derived from the skeletal muscle breakdown of _______.",
+        options: [
+          { text: "Lactate dehydrogenase", correct: false, why: "LDH is an enzyme, not a creatinine precursor. [Slide #GFR-Creatinine]" },
+          { text: "Creatine phosphate", correct: true, why: "Creatinine is a steady metabolic waste product formed from the non-enzymatic breakdown of muscle creatine phosphate during energy regeneration. [Slide #GFR-Creatinine]" },
+          { text: "Myoglobin", correct: false, why: "Myoglobin is an oxygen-binding heme protein. [Slide #GFR-Creatinine]" },
+          { text: "Glycogen phosphorylase", correct: false, why: "Glycogen phosphorylase mobilizes glycogen into glucose-1-phosphate. [Slide #GFR-Creatinine]" }
+        ]
+      },
+      {
+        id: 39,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Cortical-vs-Juxta-Proportions",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which statement accurately describes the anatomical and functional differences between cortical and juxtamedullary nephrons?",
+        options: [
+          { text: "Cortical nephrons constitute 20% and have long loops with vasa recta.", correct: false, why: "Cortical nephrons constitute 80% and have short loops without vasa recta. [Slide #Nephron-Flavors]" },
+          { text: "Cortical nephrons (~80%) perform bulk solute reabsorption with short loops; juxtamedullary nephrons (~20%) have long loops and vasa recta to maintain the hyperosmolar medullary gradient.", correct: true, why: "Cortical nephrons are the bulk transport workhorses whose short loops barely enter the medulla; juxtamedullary nephrons originate near the corticomedullary junction, possess deep medullary loops of Henle, and have specialized vasa recta for countercurrent concentration. [Slide #Nephron-Flavors]" },
+          { text: "Juxtamedullary nephrons lack glomeruli entirely.", correct: false, why: "All functional nephrons contain glomeruli. [Slide #Nephron-Flavors]" },
+          { text: "Cortical nephrons are the exclusive site of renin secretion.", correct: false, why: "Renin is secreted by afferent arteriolar JG cells in both types. [Slide #Nephron-Flavors]" }
+        ]
+      },
+      {
+        id: 40,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Renin-Site-Secretion",
+        difficulty: "easy",
+        priority: true,
+        stem: "Renin, the rate-limiting enzyme of the renin-angiotensin-aldosterone system (RAAS), is synthesized, stored, and secreted by juxtaglomerular (granular) cells located in the _______.",
+        options: [
+          { text: "Efferent arteriole wall", correct: false, why: "Granular cells reside primarily in the afferent arteriole. [Slide #Renal-Endocrine]" },
+          { text: "Afferent arteriole wall", correct: true, why: "Juxtaglomerular (granular) cells are modified vascular smooth muscle cells in the tunica media of the afferent arteriole that release renin in response to decreased perfusion pressure or sympathetic activation. [Slide #Renal-Endocrine]" },
+          { text: "Proximal convoluted tubule brush border", correct: false, why: "PCT cells express 1-alpha-hydroxylase for calcitriol activation. [Slide #Renal-Endocrine]" },
+          { text: "Loop of Henle hairpin turn", correct: false, why: "The hairpin turn consists of thin epithelial cells involved in countercurrent multiplication. [Slide #Renal-Endocrine]" }
+        ]
+      },
+      {
+        id: 41,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Macula-Densa-PGE2-Trigger",
+        difficulty: "hard",
+        priority: true,
+        stem: "When renal disease or severe hypotension slows GFR, macula densa cells at the end of the thick ascending limb detect low tubular NaCl and stimulate juxtaglomerular renin release by releasing _______.",
+        options: [
+          { text: "Adenosine", correct: false, why: "Adenosine is released when tubular flow/NaCl is high to constrict the afferent arteriole via tubuloglomerular feedback. [Slide #Renal-Endocrine]" },
+          { text: "Prostaglandin E2 (PGE2)", correct: true, why: "Low NaCl delivery stimulates macula densa COX-2 activity, releasing mass prostaglandin E2 (PGE2) signals across the interstitium to trigger renin secretion from granular cells. [Slide #Renal-Endocrine]" },
+          { text: "Atrial natriuretic peptide (ANP)", correct: false, why: "ANP is secreted by atrial myocytes during volume overload to inhibit renin. [Slide #Renal-Endocrine]" },
+          { text: "Erythropoietin (EPO)", correct: false, why: "EPO stimulates bone marrow red blood cell production. [Slide #Renal-Endocrine]" }
+        ]
+      },
+      {
+        id: 42,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "EPO-Interstitium-Hypoxia",
+        difficulty: "medium",
+        priority: true,
+        stem: "Erythropoietin (EPO) is synthesized by renal cortical interstitial endocrine cells that 'taste' tissue oxygen tension and secrete EPO specifically in response to _______.",
+        options: [
+          { text: "Hypokalemia", correct: false, why: "Potassium levels regulate aldosterone, not EPO. [Slide #Renal-Endocrine]" },
+          { text: "Tissue hypoxia (low pO2)", correct: true, why: "Peritubular cortical fibroblasts sense a drop in oxygen delivery; tissue hypoxia stabilizes hypoxia-inducible factor (HIF), triggering rapid EPO secretion into the bloodstream to stimulate erythropoiesis in bone marrow. [Slide #Renal-Endocrine]" },
+          { text: "Hypercalcemia", correct: false, why: "Calcium homeostasis is regulated by calcitriol, calcitonin, and PTH. [Slide #Renal-Endocrine]" },
+          { text: "High tubular sodium delivery", correct: false, why: "High tubular sodium activates macula densa adenosine release. [Slide #Renal-Endocrine]" }
+        ]
+      },
+      {
+        id: 43,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Calcitriol-PCT-Activation",
+        difficulty: "medium",
+        priority: true,
+        stem: "The active form of vitamin D, calcitriol (1,25-dihydroxycholecalciferol), is synthesized exclusively in the _______ by 1-alpha-hydroxylase.",
+        options: [
+          { text: "Adrenal cortex", correct: false, why: "The adrenal cortex synthesizes aldosterone, cortisol, and androgens. [Slide #Renal-Endocrine]" },
+          { text: "Proximal convoluted tubule of the kidney", correct: true, why: "The kidney is the sole anatomical site possessing 1-alpha-hydroxylase (located in PCT tubular cells), which adds a hydroxyl group to liver-derived 25-hydroxyvitamin D3 to produce active calcitriol. [Slide #Renal-Endocrine]" },
+          { text: "Hepatic Kupffer cells", correct: false, why: "Hepatocytes perform 25-hydroxylation to create calcidiol. [Slide #Renal-Endocrine]" },
+          { text: "Collecting duct intercalated cells", correct: false, why: "Intercalated cells regulate acid-base balance via H+ and HCO3- transport. [Slide #Renal-Endocrine]" }
+        ]
+      },
+      {
+        id: 44,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Transport-Definitions-Secretion",
+        difficulty: "hard",
+        priority: true,
+        stem: "Transporting an ion from the peritubular capillaries across the interstitium and tubular epithelial cell into the tubular fluid is physiologically defined as _______.",
+        options: [
+          { text: "Excretion", correct: false, why: "Excretion refers strictly to voiding urine out of the body into the toilet. [Slide #Transport-Definitions]" },
+          { text: "Reabsorption", correct: false, why: "Reabsorption describes movement in the opposite direction: from tubular fluid back into peritubular blood. [Slide #Transport-Definitions]" },
+          { text: "Secretion", correct: true, why: "Secretion describes moving particles from peritubular capillary blood through the interstitium and across the tubular epithelial cell into the tubular lumen. [Slide #Transport-Definitions]" },
+          { text: "Filtration", correct: false, why: "Filtration occurs non-specifically across the glomerular capillary wall into Bowman's space. [Slide #Transport-Definitions]" }
+        ]
+      },
+      {
+        id: 45,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Potassium-V-Fib-Lethality",
+        difficulty: "medium",
+        priority: true,
+        stem: "If renal excretory function ceases, the acute accumulation of which circulating ion is most rapidly lethal by depolarizing cardiac myocytes and inducing ventricular fibrillation?",
+        options: [
+          { text: "Sodium", correct: false, why: "Hypernatremia alters cellular volume and sensorium, but does not cause acute ventricular fibrillation. [Lecture Transcript]" },
+          { text: "Potassium (K+)", correct: true, why: "Hyperkalemia is the wickedest, most rapidly lethal toxin that accumulates in renal failure; high extracellular potassium depolarizes cardiac resting membrane potentials, inactivates fast sodium channels, and causes fatal ventricular fibrillation. [Lecture Transcript]" },
+          { text: "Bicarbonate", correct: false, why: "Excess bicarbonate causes metabolic alkalosis. [Lecture Transcript]" },
+          { text: "Chloride", correct: false, why: "Hyperchloremia induces non-gap acidosis without immediate fatal arrhythmia. [Lecture Transcript]" }
+        ]
+      },
+      {
+        id: 46,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Principal-Cells-ROMK",
+        difficulty: "hard",
+        priority: false,
+        stem: "Principal cells of the late distal convoluted tubule and collecting duct reabsorb sodium through apical _______ channels while secreting potassium through apical _______ channels.",
+        options: [
+          { text: "SGLT2; GLUT4", correct: false, why: "These are glucose transporters in the PCT and skeletal muscle, respectively. [Slide #Transport-Definitions]" },
+          { text: "ENaC (epithelial sodium); ROMK (renal outer medullary potassium)", correct: true, why: "Under aldosterone stimulation, principal cells take up luminal sodium through ENaC channels (driven by basolateral Na+/K+ ATPases) and secrete potassium into the tubular lumen through ROMK channels. [Slide #Transport-Definitions]" },
+          { text: "NKCC2; Aquaporin-1", correct: false, why: "NKCC2 is the thick ascending limb co-transporter; AQP1 is in the PCT and descending thin limb. [Slide #Transport-Definitions]" },
+          { text: "NCX; SERCA", correct: false, why: "These are cardiac/skeletal myocyte calcium regulatory pumps. [Slide #Transport-Definitions]" }
+        ]
+      },
+      {
+        id: 47,
+        subjectIndex: 4,
+        week: "Wk 5",
+        slideRef: "Beaver-Dam-Concept",
+        difficulty: "medium",
+        priority: true,
+        stem: "A renal artery stenosis or compressing tumor acts like a 'beaver dam,' creating downstream hypotension in the afferent arteriole that inappropriately activates which systemic cascade?",
+        options: [
+          { text: "Kallikrein-kinin system", correct: false, why: "Bradykinin causes vasodilation, not renal hypertension. [Lecture Transcript]" },
+          { text: "Renin-angiotensin-aldosterone system (RAAS), causing severe secondary hypertension", correct: true, why: "Afferent arteriolar granular cells are baroreceptors; if a stenosis or tumor drops perfusion pressure locally, JG cells secrete mass renin, producing systemic angiotensin II and aldosterone that trigger severe secondary renovascular hypertension. [Lecture Transcript]" },
+          { text: "Erythropoietin gene suppression, causing severe aplastic anemia", correct: false, why: "Renal ischemia upregulates EPO, sometimes causing secondary polycythemia. [Lecture Transcript]" },
+          { text: "Atrial natriuretic peptide release, inducing profound hyponatremia", correct: false, why: "ANP is released by the heart in response to atrial stretch, not renal ischemia. [Lecture Transcript]" }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       SECTION 3: APPLICATION STATE & CORE CONTROLLERS
+       ========================================================================== */
+    let hist = {};
+    try { hist = JSON.parse(localStorage.getItem('quiz_missed_history') || '{}'); } catch (e) {}
+    const saveHistory = () => { try { localStorage.setItem('quiz_missed_history', JSON.stringify(hist)); } catch (e) {} };
+
+    let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
+    let prioritizeMissed = false;
+    let quizQuestions = [];
+    let userAnswers = {};
+    let currentIndex = 0;
+    let score = 0;
+    let popupTimeout = null;
+    let muted = false;
+    let viewMode = 'single';
+
+    try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+    try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
+
+    const $ = id => document.getElementById(id);
+
+    function updateModeButton() {
+      const b = $('modeBtn');
+      if (!b) return;
+      b.textContent = viewMode === 'all' ? 'View: All at Once' : 'View: One by One';
+      b.classList.toggle('active', viewMode === 'all');
+    }
+
+    function updateStfuButton() {
+      const b = $('stfuBtn');
+      if (!b) return;
+      b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+      b.classList.toggle('btn-accent', muted);
+    }
+
+    function toggleMode() {
+      viewMode = viewMode === 'all' ? 'single' : 'all';
+      try { localStorage.setItem('quizViewMode', viewMode); } catch (e) {}
+      updateModeButton();
+      if (quizQuestions.length > 0) renderActiveQuiz();
+      else renderHome();
+    }
+
+    function toggleStfu() {
+      muted = !muted;
+      try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+      updateStfuButton();
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /* ==========================================================================
+       DASHBOARD / HOME MENU CONTROLLER
+       ========================================================================== */
+    function renderHome() {
+      quizQuestions = [];
+      userAnswers = {};
+      currentIndex = 0;
+      score = 0;
+      updateHeader();
+
+      const missedCount = Object.keys(hist).filter(k => hist[k] > 0).length;
+      const totalFiltered = questionBank.filter(q => selectedSubjects.has(q.subjectIndex)).length;
+
+      let html = `
+        <div class="dashboard-panel">
+          <div class="panel-heading">
+            <span>Subject Modules (Week Breakdown)</span>
+            <div>
+              <button class="btn" onclick="selectAllSubjects(true)">Select All</button>
+              <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
+            </div>
+          </div>
+          <div class="chip-grid">
+      `;
+
+      SUBJECTS.forEach((sub, idx) => {
+        const count = questionBank.filter(q => q.subjectIndex === idx).length;
+        const isActive = selectedSubjects.has(idx);
+        html += `
+          <div class="filter-chip ${isActive ? 'active' : ''}" onclick="toggleSubjectFilter(${idx})">
+            <span>[${sub.week}] ${sub.title}</span>
+            <span class="chip-count">(${count})</span>
+          </div>
+        `;
+      });
+
+      html += `
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
+            <div style="font-size:0.85rem; color:var(--text-muted)">
+              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> high-yield questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
+            </div>
+            <button class="btn ${prioritizeMissed ? 'btn-accent' : ''}" onclick="togglePrioritizeMissed()">
+              Prioritize Missed (${missedCount})
+            </button>
+          </div>
+
+          <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px;">
+            <div class="panel-heading" style="margin-bottom:10px;">Select Exam Length & Launch</div>
+            <div class="launcher-grid">
+              <button class="launcher-btn" onclick="launchQuiz(15)">Quickie (15 Qs)</button>
+              <button class="launcher-btn" onclick="launchQuiz(25)">Standard (25 Qs)</button>
+              <button class="launcher-btn" onclick="launchQuiz(35)">Intense (35 Qs)</button>
+              <button class="launcher-btn" onclick="launchQuiz(50)">Full Exam (50 Qs)</button>
+              <button class="launcher-btn" style="border-color:var(--accent);" onclick="launchQuiz(${totalFiltered})">All Selected (${totalFiltered})</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      $('appRoot').innerHTML = html;
+      updateModeButton();
+      updateStfuButton();
+    }
+
+    function toggleSubjectFilter(idx) {
+      if (selectedSubjects.has(idx)) {
+        if (selectedSubjects.size > 1) selectedSubjects.delete(idx);
+      } else {
+        selectedSubjects.add(idx);
+      }
+      renderHome();
+    }
+
+    function selectAllSubjects(all) {
+      if (all) {
+        selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
+      } else {
+        selectedSubjects = new Set([0]);
+      }
+      renderHome();
+    }
+
+    function togglePrioritizeMissed() {
+      prioritizeMissed = !prioritizeMissed;
+      renderHome();
+    }
+
+    /* ==========================================================================
+       QUIZ LAUNCHER & CONTROLLERS
+       ========================================================================== */
+    function launchQuiz(count) {
+      let pool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
+      if (pool.length === 0) return;
+
+      if (prioritizeMissed) {
+        pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
+      } else {
+        pool = shuffleArray(pool);
+      }
+
+      const takeCount = Math.min(count, pool.length);
+      quizQuestions = pool.slice(0, takeCount).map(q => {
+        return {
+          ...q,
+          shuffledOptions: shuffleArray(q.options)
+        };
+      });
+
+      userAnswers = {};
+      currentIndex = 0;
+      score = 0;
+      renderActiveQuiz();
+    }
+
+    function renderActiveQuiz() {
+      updateHeader();
+      if (viewMode === 'all') {
+        renderAllQuestions();
+      } else {
+        renderSingleQuestion();
+      }
+    }
+
+    function updateHeader() {
+      const total = quizQuestions.length;
+      const answeredCount = Object.keys(userAnswers).length;
+      const pct = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
+
+      $('scorePill').textContent = `Score: ${score} / ${answeredCount} (${pct}%)`;
+      if (viewMode === 'single') {
+        $('progressPill').textContent = total > 0 ? `Q ${currentIndex + 1} of ${total}` : 'Q 0 of 0';
+      } else {
+        $('progressPill').textContent = total > 0 ? `Answered ${answeredCount} of ${total}` : 'Answered 0 of 0';
+      }
+
+      const barPct = total > 0 ? (answeredCount / total) * 100 : 0;
+      $('progressBar').style.width = `${barPct}%`;
+    }
+
+    /* ==========================================================================
+       MODE A: ONE BY ONE
+       ========================================================================== */
+    function renderSingleQuestion() {
+      if (quizQuestions.length === 0) return;
+      const q = quizQuestions[currentIndex];
+      const hasAnswered = userAnswers[currentIndex] !== undefined;
+      const chosenIdx = userAnswers[currentIndex];
+      const sub = SUBJECTS[q.subjectIndex];
+
+      let html = `
+        <div class="question-card">
+          <div class="card-meta">
+            <div class="meta-tags">
+              <span class="tag tag-week">[${sub.week}] ${sub.title}</span>
+              <span class="tag">Ref: ${q.slideRef}</span>
+              <span class="tag">${q.difficulty.toUpperCase()}</span>
+              ${q.priority ? '<span class="tag tag-priority">&#9733; HIGH YIELD</span>' : ''}
+            </div>
+            <span>Question ${currentIndex + 1} of ${quizQuestions.length}</span>
+          </div>
+
+          <div class="stem-text">${q.stem}</div>
+
+          <div class="options-grid">
+      `;
+
+      const keys = ["A", "B", "C", "D"];
+      q.shuffledOptions.forEach((opt, idx) => {
+        let btnClass = "option-btn";
+        if (hasAnswered) {
+          if (idx === chosenIdx) {
+            btnClass += opt.correct ? " selected-correct" : " selected-incorrect";
+          } else if (opt.correct) {
+            btnClass += " show-correct";
+          }
+        }
+
+        html += `
+          <button class="${btnClass}" ${hasAnswered ? 'disabled' : ''} onclick="handleAnswer(${currentIndex}, ${idx})">
+            <span class="opt-key">${keys[idx]}</span>
+            <span>${opt.text}</span>
+          </button>
+        `;
+      });
+
+      html += `</div>`;
+
+      if (hasAnswered) {
+        const isCorrect = q.shuffledOptions[chosenIdx].correct;
+        html += `
+          <div class="rationale-panel">
+            <div class="status-banner ${isCorrect ? 'correct' : 'incorrect'}">
+              ${isCorrect ? '&#10004; Correct!' : '&#10008; Incorrect.'}
+            </div>
+        `;
+        q.shuffledOptions.forEach((opt, idx) => {
+          html += `
+            <div class="rationale-item">
+              <strong>${keys[idx]}) ${opt.correct ? '[CORRECT]' : '[INCORRECT]'}:</strong> ${opt.why}
+            </div>
+          `;
+        });
+        html += `</div>`;
+      }
+
+      html += `
+        <div class="card-footer">
+          ${currentIndex > 0 ? `<button class="btn" style="margin-right:auto;" onclick="prevQuestion()">Previous</button>` : ''}
+          ${hasAnswered ? (
+            currentIndex < quizQuestions.length - 1
+              ? `<button class="btn btn-accent" onclick="nextQuestion()">Next Question &rarr;</button>`
+              : `<button class="btn btn-accent" onclick="showSummary()">Finish &amp; Results</button>`
+          ) : ''}
+        </div>
+      </div>`;
+
+      $('appRoot').innerHTML = html;
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderSingleQuestion();
+        updateHeader();
+      }
+    }
+
+    function nextQuestion() {
+      if (currentIndex < quizQuestions.length - 1) {
+        currentIndex++;
+        renderSingleQuestion();
+        updateHeader();
+      }
+    }
+
+    /* ==========================================================================
+       MODE B: ALL AT ONCE
+       ========================================================================== */
+    function renderAllQuestions() {
+      if (quizQuestions.length === 0) return;
+      const keys = ["A", "B", "C", "D"];
+      let html = "";
+
+      quizQuestions.forEach((q, qIdx) => {
+        const hasAnswered = userAnswers[qIdx] !== undefined;
+        const chosenIdx = userAnswers[qIdx];
+        const sub = SUBJECTS[q.subjectIndex];
+
+        html += `
+          <div class="question-card" id="qcard-${qIdx}">
+            <div class="card-meta">
+              <div class="meta-tags">
+                <span class="tag" style="background:var(--accent); color:#000; font-weight:700;">Q${qIdx + 1}</span>
+                <span class="tag tag-week">[${sub.week}] ${sub.title}</span>
+                <span class="tag">Ref: ${q.slideRef}</span>
+                <span class="tag">${q.difficulty.toUpperCase()}</span>
+                ${q.priority ? '<span class="tag tag-priority">&#9733; HIGH YIELD</span>' : ''}
+              </div>
+            </div>
+
+            <div class="stem-text">${q.stem}</div>
+
+            <div class="options-grid">
+        `;
+
+        q.shuffledOptions.forEach((opt, optIdx) => {
+          let btnClass = "option-btn";
+          if (hasAnswered) {
+            if (optIdx === chosenIdx) {
+              btnClass += opt.correct ? " selected-correct" : " selected-incorrect";
+            } else if (opt.correct) {
+              btnClass += " show-correct";
+            }
+          }
+
+          html += `
+            <button class="${btnClass}" ${hasAnswered ? 'disabled' : ''} onclick="handleAnswer(${qIdx}, ${optIdx})">
+              <span class="opt-key">${keys[optIdx]}</span>
+              <span>${opt.text}</span>
+            </button>
+          `;
+        });
+
+        html += `</div>`;
+
+        if (hasAnswered) {
+          const isCorrect = q.shuffledOptions[chosenIdx].correct;
+          html += `
+            <div class="rationale-panel">
+              <div class="status-banner ${isCorrect ? 'correct' : 'incorrect'}">
+                ${isCorrect ? '&#10004; Correct!' : '&#10008; Incorrect.'}
+              </div>
+          `;
+          q.shuffledOptions.forEach((opt, optIdx) => {
+            html += `
+              <div class="rationale-item">
+                <strong>${keys[optIdx]}) ${opt.correct ? '[CORRECT]' : '[INCORRECT]'}:</strong> ${opt.why}
+              </div>
+            `;
+          });
+          html += `</div>`;
+        }
+
+        html += `</div>`;
+      });
+
+      const answeredCount = Object.keys(userAnswers).length;
+      if (answeredCount === quizQuestions.length) {
+        html += `
+          <div style="text-align:center; margin:32px 0;">
+            <button class="btn btn-accent" style="padding:14px 28px; font-size:1rem;" onclick="showSummary()">
+              View Complete Performance Analysis &rarr;
+            </button>
+          </div>
+        `;
+      }
+
+      $('appRoot').innerHTML = html;
+    }
+
+    /* ==========================================================================
+       ANSWER LOGIC & FEEDBACK
+       ========================================================================== */
+    function handleAnswer(qIdx, optIdx) {
+      if (userAnswers[qIdx] !== undefined) return;
+
+      userAnswers[qIdx] = optIdx;
+      const q = quizQuestions[qIdx];
+      const opt = q.shuffledOptions[optIdx];
+
+      if (opt.correct) {
+        score++;
+        if (hist[q.id]) {
+          hist[q.id] = Math.max(0, hist[q.id] - 1);
+          saveHistory();
+        }
+      } else {
+        hist[q.id] = (hist[q.id] || 0) + 1;
+        saveHistory();
+        triggerWrongFeedback();
+      }
+
+      updateHeader();
+
+      if (viewMode === 'all') {
+        const scrollY = window.scrollY;
+        renderAllQuestions();
+        window.scrollTo(0, scrollY);
+      } else {
+        renderSingleQuestion();
+      }
+    }
+
+    function triggerWrongFeedback() {
+      if (muted) return;
+
+      const audio = $('wrongAudio');
+      if (audio) {
+        audio.currentTime = 0;
+        audio.play().catch(() => {});
+      }
+
+      const popup = $('wrongPopup');
+      if (popup) {
+        popup.classList.remove('hidden');
+        if (popupTimeout) clearTimeout(popupTimeout);
+        popupTimeout = setTimeout(() => {
+          popup.classList.add('hidden');
+        }, 1200);
+      }
+    }
+
+    /* ==========================================================================
+       RESULTS SUMMARY
+       ========================================================================== */
+    function showSummary() {
+      const total = quizQuestions.length;
+      const answeredCount = Object.keys(userAnswers).length;
+      const pct = answeredCount > 0 ? Math.round((score / total) * 100) : 0;
+
+      let html = `
+        <div class="dashboard-panel" style="text-align:center; padding:36px 20px;">
+          <h2 style="font-size:1.6rem; color:var(--accent); margin-bottom:8px;">Exam Completed</h2>
+          <p style="color:var(--text-muted); margin-bottom:24px;">Sys Phys Midterm 2 Mastery Assessment</p>
+
+          <div style="font-size:3rem; font-weight:800; color:#fff; margin-bottom:12px;">
+            ${score} / ${total}
+          </div>
+          <div class="pill" style="font-size:1rem; padding:6px 16px; margin-bottom:24px; display:inline-block;">
+            Overall Accuracy: ${pct}%
+          </div>
+
+          <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-accent" onclick="launchQuiz(${total})">Retake Same Exam</button>
+            <button class="btn" onclick="renderHome()">Return to Dashboard</button>
+          </div>
+        </div>
+      `;
+
+      $('appRoot').innerHTML = html;
+      window.scrollTo(0, 0);
+    }
+
+    window.onload = () => {
+      renderHome();
+    };
+  </script>
+</body>
+</html>
