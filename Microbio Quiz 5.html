@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Microbiology Quiz 5 - Fungi & Clinical Mycology Mastery</title>
+  <style>
+    :root {
+      --bg-color: #0f0f0f;
+      --card-bg: #1a1a1a;
+      --card-border: #282828;
+      --accent-orange: #ff9900;
+      --accent-orange-hover: #e68a00;
+      --text-main: #ffffff;
+      --text-secondary: #a3a3a3;
+      --correct-bg: #14532d;
+      --correct-border: #22c55e;
+      --correct-text: #e2fbe8;
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #ef4444;
+      --incorrect-text: #fde8e8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding-top: 90px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Fixed Sticky Header */
+    header.sticky-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(26, 26, 26, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--card-border);
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      background: #252525;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: #ddd;
+      border: 1px solid #333;
+    }
+
+    .btn {
+      background: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #383838;
+      border-color: #666;
+    }
+
+    .btn.active, .btn.hub-btn {
+      background: var(--accent-orange);
+      color: #000;
+      border-color: var(--accent-orange);
+    }
+
+    .btn.active:hover, .btn.hub-btn:hover {
+      background: var(--accent-orange-hover);
+    }
+
+    .stfu-btn.muted {
+      background: #451a03;
+      border-color: #f97316;
+      color: #fdba74;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 4px;
+      background: #222;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent-orange);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Main Container */
+    main.container {
+      width: 100%;
+      max-width: 860px;
+      padding: 20px;
+      margin-bottom: 50px;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Card styling */
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Launcher / Subject Dashboard */
+    .launcher-title {
+      font-size: 1.6rem;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .launcher-subtitle {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .chip-group-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 0;
+    }
+
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 20px;
+      padding: 7px 16px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+
+    .chip.selected {
+      background: var(--accent-orange);
+      color: #000;
+      font-weight: 600;
+      border-color: var(--accent-orange);
+    }
+
+    .pool-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .quick-launch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    /* Question Card Styling */
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .q-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-easy { background: #1e3a8a; color: #93c5fd; }
+    .badge-medium { background: #78350f; color: #fde68a; }
+    .badge-hard { background: #4c1d95; color: #e9d5ff; }
+    .badge-subject { background: #262626; color: #d4d4d4; }
+    .badge-priority { background: #831843; color: #fbcfe8; }
+
+    .q-stem {
+      font-size: 1.15rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .opt-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: #242424;
+      border: 1px solid #383838;
+      border-radius: 6px;
+      padding: 12px 16px;
+      color: #eee;
+      font-size: 0.95rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.4;
+      width: 100%;
+    }
+
+    .opt-btn:hover:not(:disabled) {
+      background: #303030;
+      border-color: #555;
+    }
+
+    .opt-idx {
+      background: #333;
+      color: #ccc;
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .opt-btn.correct-choice {
+      background-color: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+    }
+
+    .opt-btn.correct-choice .opt-idx {
+      background: var(--correct-border);
+      color: #000;
+    }
+
+    .opt-btn.wrong-choice {
+      background-color: var(--incorrect-bg) !important;
+      border-color: var(--incorrect-border) !important;
+      color: var(--incorrect-text) !important;
+    }
+
+    .opt-btn.wrong-choice .opt-idx {
+      background: var(--incorrect-border);
+      color: #000;
+    }
+
+    .opt-btn:disabled {
+      cursor: default;
+      opacity: 0.95;
+    }
+
+    /* Explanation Container */
+    .expl {
+      background: #151515;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 18px;
+      margin-top: 16px;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .expl-banner {
+      font-size: 0.95rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .expl-banner.correct { color: #4ade80; }
+    .expl-banner.incorrect { color: #f87171; }
+
+    .expl-core {
+      font-size: 0.96rem;
+      line-height: 1.5;
+      color: #eee;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #282828;
+    }
+
+    .expl-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .expl-list li {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: #bbb;
+    }
+
+    .expl-list strong {
+      color: #fff;
+    }
+
+    .q-footer {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    /* Result Summary Screen */
+    .score-summary-header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .score-large {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--accent-orange);
+      margin: 10px 0;
+    }
+
+    .tier-message {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f5f5f5;
+      margin-bottom: 10px;
+    }
+
+    .breakdown-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    .breakdown-table th, .breakdown-table td {
+      border: 1px solid #333;
+      padding: 10px 14px;
+      text-align: left;
+    }
+
+    .breakdown-table th {
+      background: #252525;
+      color: var(--accent-orange);
+    }
+
+    .breakdown-table tr:nth-child(even) {
+      background: #181818;
+    }
+
+    .summary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 24px;
+    }
+
+    /* Popup Erijah */
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      pointer-events: none;
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .wrong-popup img {
+      max-width: 280px;
+      max-height: 280px;
+      border: 4px solid #ef4444;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(239, 68, 68, 0.8);
+      background: #000;
+    }
+
+    @keyframes popIn {
+      from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+
+    @media (max-width: 600px) {
+      header.sticky-header {
+        position: relative;
+      }
+      body {
+        padding-top: 0;
+      }
+      .brand {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Top Header -->
+  <header class="sticky-header">
+    <div class="header-top">
+      <div class="brand">
+        <span>🍄</span> Microbio Quiz 5: Fungi Mastery
+      </div>
+      <div class="header-controls">
+        <button id="menuBtn" class="btn">Menu / Subjects</button>
+        <button id="modeToggleBtn" class="btn">View: One by One</button>
+        <button id="stfuBtn" class="btn stfu-btn">STFU Erijah</button>
+        <div id="progressPill" class="pill">Ready</div>
+        <div id="scorePill" class="pill">Score: 0 / 0 (0%)</div>
+      </div>
+    </div>
+    <div class="progress-bar-track">
+      <div id="progressBarFill" class="progress-bar-fill"></div>
+    </div>
+  </header>
+
+  <!-- Audio & Image Popup Elements -->
+  <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+  <div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer Meme">
+  </div>
+
+  <main class="container">
+    
+    <!-- DASHBOARD VIEW -->
+    <section id="dashboardView" class="card">
+      <h1 class="launcher-title">Microbiology Quiz 5 - Fungi Mastery</h1>
+      <p class="launcher-subtitle">
+        100% source-bound interactive test preparation covering fungal morphology, reproduction, asexual & sexual spores, superficial/cutaneous tineas, subcutaneous mycoses, primary systemic pathogens, and opportunistic clinical manifestations.
+      </p>
+
+      <div class="chip-group-label">Filter Regional Fungal Modules</div>
+      <div id="subjectChips" class="chip-container"></div>
+
+      <div class="pool-actions">
+        <button id="selectAllBtn" class="btn">Select All</button>
+        <button id="clearAllBtn" class="btn">Clear</button>
+        <button id="prioritizeMissedBtn" class="btn">Prioritize Missed (0)</button>
+      </div>
+
+      <div class="chip-group-label">Presentation Mode</div>
+      <div class="chip-container">
+        <div id="modeCardChip" class="chip selected" data-mode="card">One by One (Card View)</div>
+        <div id="modeListChip" class="chip" data-mode="list">All at Once (Continuous List)</div>
+      </div>
+
+      <div class="chip-group-label">Launch Practice Session (<span id="totalAvailableCount">0</span> Available)</div>
+      <div class="quick-launch-grid">
+        <button class="btn hub-btn" onclick="startQuiz(15)">Quickie (15 Qs)</button>
+        <button class="btn hub-btn" onclick="startQuiz(25)">Quickie (25 Qs)</button>
+        <button class="btn hub-btn" onclick="startQuiz(35)">Quickie (35 Qs)</button>
+        <button class="btn hub-btn" onclick="startQuiz(50)">Full Exam (50 Qs)</button>
+        <button class="btn hub-btn" onclick="startQuiz(999)">Entire Bank (<span id="bankTotalCount">0</span>)</button>
+      </div>
+    </section>
+
+    <!-- CARD VIEW (ONE BY ONE) -->
+    <section id="cardView" class="hidden">
+      <div id="activeCardContainer"></div>
+    </section>
+
+    <!-- LIST VIEW (ALL AT ONCE) -->
+    <section id="listView" class="hidden">
+      <div id="activeListContainer"></div>
+      <div id="listFinishContainer" class="card hidden" style="text-align: center;">
+        <h3>All Questions Answered</h3>
+        <p style="color: #aaa; margin: 10px 0 20px;">Review your answers or view the full breakdown.</p>
+        <button id="listSummaryBtn" class="btn hub-btn" style="padding: 10px 24px; font-size: 1rem;">View Final Results Summary</button>
+      </div>
+    </section>
+
+    <!-- RESULTS SUMMARY VIEW -->
+    <section id="summaryView" class="card hidden">
+      <div class="score-summary-header">
+        <h2>Quiz Session Complete</h2>
+        <div id="summaryScoreLarge" class="score-large">0%</div>
+        <p id="summaryScoreFraction" style="color: #ccc; font-size: 1.1rem; margin-bottom: 12px;">0 / 0 correct</p>
+        <div id="summaryTierMessage" class="tier-message">Tier text</div>
+      </div>
+
+      <h3 style="color: var(--accent-orange); margin-top: 24px;">Breakdown by Difficulty</h3>
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Difficulty</th>
+            <th>Correct</th>
+            <th>Total</th>
+            <th>Accuracy</th>
+          </tr>
+        </thead>
+        <tbody id="diffBreakdownBody"></tbody>
+      </table>
+
+      <h3 style="color: var(--accent-orange); margin-top: 24px;">Breakdown by Module</h3>
+      <table class="breakdown-table">
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Correct</th>
+            <th>Total</th>
+            <th>Accuracy</th>
+          </tr>
+        </thead>
+        <tbody id="subjectBreakdownBody"></tbody>
+      </table>
+
+      <div class="summary-actions">
+        <button id="retakeBtn" class="btn hub-btn">Retake Quiz</button>
+        <button id="reviewMissedBtn" class="btn">Review Missed</button>
+        <button id="backToMenuBtn" class="btn">Back to Menu</button>
+        <a href="index.html" class="btn hub-btn">Back to Main Page</a>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* SUBJECT MODULES */
+    const SUBJECTS = [
+      "Fungal Cell Biology & Morphology",
+      "Reproduction & Mold Spores",
+      "Superficial & Cutaneous Mycoses",
+      "Subcutaneous Mycoses",
+      "Primary Systemic Mycoses",
+      "Opportunistic Mycoses & Toxins"
+    ];
+
+    /* QUESTION BANK (Exhaustive & Source-Bound) */
+    const questionBank = [
+      /* Verbatim Practice Quiz Questions */
+      {
+        id: 1,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "Which of the following is a primary systemic mycosis that is prevalent in the Mississippi / Ohio Valley?",
+        options: [
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis is endemic to the Great Lakes and eastern seaboard, not predominantly the Mississippi/Ohio Valley. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis (Histoplasma capsulatum) is the classic primary systemic fungal mycosis endemic to the Ohio and Mississippi River valleys, associated with bird and bat droppings. [Practice Quiz / Week 6]" },
+          { text: "Coccidiomycosis", correct: false, why: "Coccidiomycosis is endemic to the arid Southwest region of the US (San Joaquin Valley). [Practice Quiz / Week 6]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic systemic fungal infection seen predominantly in immunocompromised hosts, not a true primary endemic pathogen. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 2,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "What form of Tinea cause infection of the groin area (jock itch)?",
+        options: [
+          { text: "Tinea Corporis", correct: false, why: "Tinea corporis causes ringworm on the smooth trunk and limbs. [Practice Quiz / Week 6]" },
+          { text: "Tinea Unguium", correct: false, why: "Tinea unguium refers to ringworm of the nails (onychomycosis). [Practice Quiz / Week 6]" },
+          { text: "Tinea Pedis", correct: false, why: "Tinea pedis refers to ringworm of the foot (athlete's foot). [Practice Quiz / Week 6]" },
+          { text: "Tinea Cruris", correct: true, why: "Tinea cruris specifically designates dermatophyte ringworm infection localized to the groin region (jock itch). [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 3,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "All of the following fungal diseases are only seen in the immune-compromised, EXCEPT?",
+        options: [
+          { text: "Aspergillosis", correct: false, why: "Aspergillosis is an opportunistic mycosis seen in immunocompromised individuals. [Practice Quiz / Week 6]" },
+          { text: "Candidiasis", correct: false, why: "Systemic/invasive candidiasis is typically an opportunistic condition developing when host defenses or flora balance are disrupted. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis is classified as a true/primary systemic mycosis capable of causing infection in immunocompetent individuals following spore inhalation. [Practice Quiz / Week 6]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic fungal pathogen strongly associated with severe immunosuppression/AIDS. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 4,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: false,
+        stem: "Which of the following result from the inhalation of aerosolized molds and results in rhinitis, bronchial asthma, alveolitis and/or generalized pneumonitis?",
+        options: [
+          { text: "Systemic Mycoses", correct: false, why: "Systemic mycoses represent true tissue invasion rather than pure hypersensitivity. [Practice Quiz / Week 6]" },
+          { text: "Mycotoxicosis", correct: false, why: "Mycotoxicosis is disease produced by ingesting or contacting fungal metabolic toxins (e.g., aflatoxin), not an airborne IgE-mediated response. [Practice Quiz / Week 6]" },
+          { text: "Superficial Mycoses", correct: false, why: "Superficial mycoses are confined to the outer stratum corneum and keratanized tissue. [Practice Quiz / Week 6]" },
+          { text: "Allergies", correct: true, why: "Inhalation of airborne fungal spores and vegetative fragments causes type I and type III respiratory fungal allergies manifesting as asthma, rhinitis, and alveolitis. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 5,
+        subjectIndex: 3,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is a subcutaneous mycosis that looks superficially like a tumor and is of the foot or hand?",
+        options: [
+          { text: "Mycetoma", correct: true, why: "Mycetoma (Madura foot) is a chronic subcutaneous fungal/actinomycotic infection characterized by tumor-like swelling, sinus tracts, and sulfur-like granules. [Practice Quiz / Week 6]" },
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis presents as linear nodular lesions along lymphatic channels ('rose gardener's disease'). [Practice Quiz / Week 6]" },
+          { text: "Coccidiomycosis", correct: false, why: "Coccidioidomycosis is a primary systemic respiratory mycosis. [Practice Quiz / Week 6]" },
+          { text: "Chromomycosis", correct: false, why: "Chromomycosis produces warty, verrucous cauliflower-like cutaneous lesions, not distinct pseudotumorous swellings with drainage tracts. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 6,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "What form of Tinea causes infection of the nails?",
+        options: [
+          { text: "Tinea Corporis", correct: false, why: "Tinea corporis affects the non-hairy trunk and extremities. [Practice Quiz / Week 6]" },
+          { text: "Tinea Cruris", correct: false, why: "Tinea cruris affects the groin. [Practice Quiz / Week 6]" },
+          { text: "Tinea Unguium", correct: true, why: "Tinea unguium (onychomycosis) is dermatophyte invasion of fingernails or toenails resulting in brittle, discolored, thickened nails. [Practice Quiz / Week 6]" },
+          { text: "Tinea Pedis", correct: false, why: "Tinea pedis affects the plantar skin and web spaces of the feet. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 7,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "What causes the most common opportunistic superficial Mycoses?",
+        options: [
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis is an environmental subcutaneous inoculative mycosis. [Practice Quiz / Week 6]" },
+          { text: "Dermatophytes", correct: false, why: "Dermatophytes are primary superficial skin invaders, not typical opportunistic overgrowth flora. [Practice Quiz / Week 6]" },
+          { text: "Candida Albicans", correct: true, why: "Candida albicans is a resident commensal yeast and represents the single most common cause of opportunistic superficial cutaneous/mucocutaneous infections. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is a primary systemic dimorphic pathogen. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 8,
+        subjectIndex: 3,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "Gardeners have an increased risk of contracting which of the following?",
+        options: [
+          { text: "Sporotrichosis", correct: true, why: "Sporothrix schenckii resides on plants, rose thorns, and sphagnum moss; puncture injuries inoculate spores causing sporotrichosis. [Practice Quiz / Week 6]" },
+          { text: "Mycetoma", correct: false, why: "Mycetoma is acquired through direct soil penetration in barefoot agricultural laborers in tropical regions. [Practice Quiz / Week 6]" },
+          { text: "Chromomycosis", correct: false, why: "Chromomycosis is contracted from direct traumatic splinter inoculation in tropical scrub, not classic rose gardening. [Practice Quiz / Week 6]" },
+          { text: "Pneumocystis", correct: false, why: "Pneumocystis jirovecii is inhaled and manifests exclusively in severely immunocompromised hosts. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 9,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following Mycotoxicosis is only produced by aspergillus?",
+        options: [
+          { text: "Candida Albicans", correct: false, why: "Candida is a yeast genus, not a fungal mycotoxin. [Practice Quiz / Week 6]" },
+          { text: "Aflatoxin", correct: true, why: "Aflatoxin is an intensely carcinogenic and hepatotoxic metabolite synthesized specifically by Aspergillus flavus and Aspergillus parasiticus on stored grains and nuts. [Practice Quiz / Week 6]" },
+          { text: "Mycetoma", correct: false, why: "Mycetoma is a subcutaneous clinical syndrome, not a mycotoxin. [Practice Quiz / Week 6]" },
+          { text: "Amatoxin", correct: false, why: "Amatoxin is a fatal mushroom toxin synthesized by Amanita phalloides (death cap mushroom). [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 10,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which following Mycotoxicosis acts as a carcinogen and is hepatotoxic?",
+        options: [
+          { text: "Mycetoma", correct: false, why: "Mycetoma is a chronic infection of subcutaneous tissue. [Practice Quiz / Week 6]" },
+          { text: "Candida Albicans", correct: false, why: "Candida is an opportunistic yeast organism. [Practice Quiz / Week 6]" },
+          { text: "Aflatoxin", correct: true, why: "Aflatoxins are potent liver toxins and carcinogenic agents directly linked to hepatocellular carcinoma. [Practice Quiz / Week 6]" },
+          { text: "Amatoxin", correct: false, why: "Amatoxins cause rapid acute liver and kidney cellular necrosis rather than chronic carcinogenesis. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 11,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which condition has a higher incidence in the southwest of the US?",
+        options: [
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis occurs predominantly in the Ohio-Mississippi River valleys and Great Lakes. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is concentrated in the central Midwestern river valleys. [Practice Quiz / Week 6]" },
+          { text: "Coccidiomycosis", correct: true, why: "Coccidioidomycosis (Valley Fever) is endemic to alkaline, semiarid soils of the American Southwest (California, Arizona, New Mexico). [Practice Quiz / Week 6]" },
+          { text: "Pneumocystis carinii", correct: false, why: "Pneumocystis pneumonia occurs globally without regional geographical clustering. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 12,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "All of the following are sexual spores, except?",
+        options: [
+          { text: "Ascospores", correct: false, why: "Ascospores are sexual fungal spores formed within an ascus. [Practice Quiz / Week 6]" },
+          { text: "Basidiospores", correct: false, why: "Basidiospores are sexual spores produced externally on a basidium. [Practice Quiz / Week 6]" },
+          { text: "Conidia", correct: true, why: "Conidia (conidiospores) are strictly asexual spores that pinch off or segment from hyphal tips without nuclear fusion. [Practice Quiz / Week 6]" },
+          { text: "Zygospores", correct: false, why: "Zygospores are thick-walled diploid sexual spores formed by the fusion of compatible hyphae. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 13,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is a primary systemic mycosis that is prevalent in the eastern seaboard?",
+        options: [
+          { text: "Blastomycosis", correct: true, why: "Blastomycosis (Blastomyces dermatitidis) is classically endemic to the southeastern US, eastern seaboard, and areas bordering the Great Lakes and St. Lawrence river. [Practice Quiz / Week 6]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic pathogen found worldwide in pigeon excreta. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is centered predominantly in the Midwest river valleys. [Practice Quiz / Week 6]" },
+          { text: "Coccidiomycosis", correct: false, why: "Coccidioidomycosis is strictly restricted to the arid Southwestern desert basin. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 14,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "What form of Tinea infection appears on the trunk of the body?",
+        options: [
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris affects the groin folds. [Practice Quiz / Week 6]" },
+          { text: "Tinea pedis", correct: false, why: "Tinea pedis affects the feet. [Practice Quiz / Week 6]" },
+          { text: "Tinea corporis", correct: true, why: "Tinea corporis ('body ringworm') appears on the glabrous skin of the trunk, abdomen, and limbs as circular expanding erythematous rings. [Practice Quiz / Week 6]" },
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium involves the nails. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 15,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is an asexual mold spore that is formed by successive cleavages within a sac like head?",
+        options: [
+          { text: "Zygospore", correct: false, why: "Zygospores are sexual spores produced by hyphal fusion. [Practice Quiz / Week 6]" },
+          { text: "Conidia", correct: false, why: "Conidia are free naked spores never enclosed within a sac. [Practice Quiz / Week 6]" },
+          { text: "Sporangiospore", correct: true, why: "Sporangiospores are asexual spores produced through progressive cleavages inside an enclosed sac-like head called a sporangium atop a sporangiophore. [Practice Quiz / Week 6]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are sexual fungal spores resulting from meiosis inside an ascus. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 16,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which fungal infection causes a decrease in pigment of the color on the skin?",
+        options: [
+          { text: "Tinea versicolor", correct: true, why: "Tinea versicolor (Pityriasis versicolor, caused by Malassezia furfur) disrupts normal melanin production, causing hypopigmented or hyperpigmented macules. [Practice Quiz / Week 6]" },
+          { text: "Tinea pedis", correct: false, why: "Tinea pedis causes scaling, fissures, and erythema between toes. [Practice Quiz / Week 6]" },
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium causes yellow, brittle nails. [Practice Quiz / Week 6]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis presents as annular red plaques with active advancing borders. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 17,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "Which of the following is a woven intertwining mass of hyphae that makes up the body or colony of mold?",
+        options: [
+          { text: "Mycelium", correct: true, why: "The mycelium represents the massed, woven collective body composed of branching hyphae that constitutes a mold colony. [Practice Quiz / Week 6]" },
+          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae are individual reproductive filaments projecting above the substrate. [Practice Quiz / Week 6]" },
+          { text: "Tophocyte", correct: false, why: "Tophocyte is an unrelated cellular term not describing fungal colonies. [Practice Quiz / Week 6]" },
+          { text: "Vegetative hyphae", correct: false, why: "Vegetative hyphae refer specifically to nutrient-absorbing filaments growing below the surface. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 18,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "What form of tinea causes hair shafts to glow green under a Wood's lamp?",
+        options: [
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium infects the nails, not scalp hair follicles. [Practice Quiz / Week 6]" },
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris involves groin skin and does not display green hair shaft fluorescence. [Practice Quiz / Week 6]" },
+          { text: "Tinea capitis", correct: true, why: "Tinea capitis (ringworm of the scalp, particularly when caused by Microsporum species) invades hair shafts that fluoresce brilliant green under ultraviolet Wood's lamp illumination. [Practice Quiz / Week 6]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis involves glabrous body skin rather than localized fluorescent scalp hairs. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 19,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is a systemic fungal infection associated with AIDS?",
+        options: [
+          { text: "Cryptosporidiosis", correct: false, why: "Cryptosporidiosis is caused by an apicomplexan protozoan, not a fungus. [Practice Quiz / Week 6]" },
+          { text: "Pneumocystis carinii", correct: true, why: "Pneumocystis carinii (jirovecii) is an opportunistic fungal pathogen classically responsible for severe interstitial pneumonia in AIDS patients with CD4 counts below 200. [Practice Quiz / Week 6]" },
+          { text: "Histoplasmosis", correct: false, why: "While Histoplasma can disseminate in AIDS, Pneumocystis is the classic, diagnostic AIDS-defining opportunistic fungal pneumonia highlighted on boards. [Practice Quiz / Week 6]" },
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis is a true primary pathogen that infects immunocompetent hosts rather than serving as a hallmark AIDS-defining fungal infection. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 20,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "Which of the following is an asexual mold spore that is formed by pinching off the tip of hyphae or by segmentation of hyphae?",
+        options: [
+          { text: "Sporangiospore", correct: false, why: "Sporangiospores develop via cleavages within an enclosing sac-like sporangium. [Practice Quiz / Week 6]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are sexual spores formed inside an ascus following meiosis. [Practice Quiz / Week 6]" },
+          { text: "Zygospore", correct: false, why: "Zygospores are diploid sexual resting spores created by hyphal conjugation. [Practice Quiz / Week 6]" },
+          { text: "Conidia", correct: true, why: "Conidia (conidiospores) are free asexual spores formed directly by pinching off the tips of specialized hyphae or by segmentation of vegetative hyphae. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 21,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: false,
+        stem: "Which type of mold filament grows below the surface?",
+        options: [
+          { text: "Vegetative Hyphae", correct: true, why: "Vegetative hyphae penetrate below the surface into the nutrient substrate to absorb nourishment and anchor the fungal colony. [Practice Quiz / Week 6]" },
+          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae project upward into the air and bear reproductive spores. [Practice Quiz / Week 6]" },
+          { text: "None of these", correct: false, why: "Vegetative hyphae specifically fit this morphological definition. [Practice Quiz / Week 6]" },
+          { text: "Both of these", correct: false, why: "Only vegetative hyphae grow embedded beneath the surface. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 22,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is a component of fungi cell membrane that is lacking in bacteria?",
+        options: [
+          { text: "Sterols", correct: true, why: "Fungal cell membranes contain sterols (specifically ergosterol) which provide structural fluidity, whereas bacterial cell membranes lack sterols (with rare exceptions like Mycoplasma). [Practice Quiz / Week 6]" },
+          { text: "Phospholipid", correct: false, why: "Both fungal and bacterial cell membranes possess lipid bilayers containing phospholipids. [Practice Quiz / Week 6]" },
+          { text: "None of these", correct: false, why: "Sterols specifically differentiate fungal eukaryotic membranes from bacterial membranes. [Practice Quiz / Week 6]" },
+          { text: "Proteins", correct: false, why: "Both fungal and bacterial cell membranes contain abundant membrane-spanning proteins. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 23,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which of the following is a sexual mold spore that is diploid and formed from fusion?",
+        options: [
+          { text: "Zygospore", correct: true, why: "Zygospores are thick-walled diploid resting sexual spores produced by the direct fusion and conjugation of two opposite mating hyphae. [Practice Quiz / Week 6]" },
+          { text: "Conidia", correct: false, why: "Conidia are haploid asexual spores. [Practice Quiz / Week 6]" },
+          { text: "Sporangiospore", correct: false, why: "Sporangiospores are haploid asexual spores produced in a sporangium. [Practice Quiz / Week 6]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are haploid sexual spores formed inside a sac-like ascus following meiosis. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 24,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: false,
+        stem: "Fungal associations with humans are primarily _______________.",
+        options: [
+          { text: "Parasitic or Antagonistic", correct: false, why: "Antagonistic is not an official ecological association category for human-fungal flora. [Practice Quiz / Week 6]" },
+          { text: "Commensal or Parasitic", correct: true, why: "Fungi have no known mutualistic associations with humans; they exist strictly as commensals (deriving benefit without harm) or parasites (causing mycoses). [Practice Quiz / Week 6]" },
+          { text: "Mutualistic or Parasitic", correct: false, why: "Humans lack mutualistic associations with fungi. [Practice Quiz / Week 6]" },
+          { text: "Mutualistic or Commensal", correct: false, why: "Mutualistic relationships are absent between humans and fungi. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 25,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "hard",
+        priority: true,
+        stem: "What Phylum of Fungi has no sexual form of reproduction?",
+        options: [
+          { text: "Basidiomycota", correct: false, why: "Basidiomycota reproduce sexually via basidiospores on club-like basidia. [Practice Quiz / Week 6]" },
+          { text: "Ascomycota", correct: false, why: "Ascomycota reproduce sexually via ascospores within an ascus. [Practice Quiz / Week 6]" },
+          { text: "Deuteromycota", correct: true, why: "Deuteromycota (Fungi Imperfecti) is the artificial phylum designated for fungi that have no observed sexual reproductive cycle. [Practice Quiz / Week 6]" },
+          { text: "Zygomycota", correct: false, why: "Zygomycota reproduce sexually via diploid zygospores. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 26,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "easy",
+        priority: true,
+        stem: "Yeast is only capable of performing which form of reproduction?",
+        options: [
+          { text: "Asexual", correct: true, why: "In the lecture scope, yeast reproduction occurs via asexual budding (binary fission). [Practice Quiz / Week 6]" },
+          { text: "Sexual", correct: false, why: "Yeast cells primarily proliferate via asexual budding. [Practice Quiz / Week 6]" },
+          { text: "They do not reproduce", correct: false, why: "Yeasts reproduce actively by asexual budding. [Practice Quiz / Week 6]" },
+          { text: "They can do both", correct: false, why: "Per the course slides and practice exam key, yeast reproduction is categorized strictly as asexual budding. [Practice Quiz / Week 6]" }
+        ]
+      },
+      {
+        id: 27,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Week 6 Verbatim",
+        difficulty: "medium",
+        priority: true,
+        stem: "Yeast (candida) infections can fall under what category or categories of fungal infections?",
+        options: [
+          { text: "Both superficial and systemic", correct: true, why: "Candida causes both superficial mucocutaneous infections (thrush, vaginitis, intertrigo) and severe systemic candidiasis in immunocompromised patients. [Practice Quiz / Week 6]" },
+          { text: "Allergies", correct: false, why: "Allergies result from hypersensitivity to aerosolized mold spores. [Practice Quiz / Week 6]" },
+          { text: "Systemic", correct: false, why: "Candida is also widely recognized for its common superficial infections. [Practice Quiz / Week 6]" },
+          { text: "Superficial cutaneous infection", correct: false, why: "Candida is not solely superficial; it can invade deep organs and the bloodstream. [Practice Quiz / Week 6]" }
+        ]
+      },
+      /* Exhaustive Coverage Across All Lecture Concepts */
+      {
+        id: 28,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 5",
+        difficulty: "medium",
+        priority: true,
+        stem: "Thermal dimorphism in pathogenic fungi is governed by temperature. At what temperature do dimorphic fungi transition into their parasitic yeast phase?",
+        options: [
+          { text: "25°C", correct: false, why: "At 25°C (room/ambient environmental temperature), dimorphic fungi grow in their filamentous mold form. [Slide #5]" },
+          { text: "30°C", correct: false, why: "30°C is an intermediate temperature where mold morphology still predominates. [Slide #5]" },
+          { text: "37°C", correct: true, why: "At 37°C (human body temperature), dimorphic fungi convert into the pathogenic round-to-oval yeast phase. [Slide #5]" },
+          { text: "42°C", correct: false, why: "42°C exceeds normal human core physiological body temperature. [Slide #5]" }
+        ]
+      },
+      {
+        id: 29,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 2",
+        difficulty: "medium",
+        priority: false,
+        stem: "When budding yeast cells fail to detach completely and form an elongated chain resembling mold hyphae, this cellular arrangement is termed:",
+        options: [
+          { text: "A Septate Hypha", correct: false, why: "True septate hyphae are continuous filamentous mold structures divided by internal cross-walls. [Slide #2]" },
+          { text: "A Pseudohypha", correct: true, why: "A pseudohypha consists of a chain of newly budded yeast cells that remain attached end-to-end, mimicking true mold filaments. [Slide #2]" },
+          { text: "A Mycelium", correct: false, why: "A mycelium is the interwoven macroscopic mass formed by genuine mold hyphae. [Slide #2]" },
+          { text: "A Sporangiophore", correct: false, why: "A sporangiophore is an upright reproductive aerial stalk bearing a sporangium. [Slide #2]" }
+        ]
+      },
+      {
+        id: 30,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 3",
+        difficulty: "medium",
+        priority: false,
+        stem: "Hyphae that lack cross-wall septa and contain multiple uninterrupted nuclei flowing through a continuous cytoplasmic channel are classified as:",
+        options: [
+          { text: "Septate hyphae", correct: false, why: "Septate hyphae possess cross-walls separating individual cellular compartments. [Slide #3]" },
+          { text: "Non-septate hyphae", correct: true, why: "Non-septate (coenocytic) hyphae lack cross-walls, permitting continuous cytoplasmic and multi-nuclear flow (analogous to boba in a straw). [Slide #3]" },
+          { text: "Aerial hyphae", correct: false, why: "Aerial describes orientation above the surface, not the presence or absence of cross-walls. [Slide #3]" },
+          { text: "Vegetative hyphae", correct: false, why: "Vegetative describes nutrient absorption below the substrate, not cross-wall architecture. [Slide #3]" }
+        ]
+      },
+      {
+        id: 31,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 1",
+        difficulty: "easy",
+        priority: false,
+        stem: "Regarding fungal oxygen requirements, which physiological category does NOT exist among fungi?",
+        options: [
+          { text: "Obligate aerobes", correct: false, why: "Many fungi are obligate aerobes requiring oxygen for respiration. [Slide #1]" },
+          { text: "Facultative anaerobes", correct: false, why: "Many yeasts are facultative anaerobes capable of fermenting sugars without oxygen. [Slide #1]" },
+          { text: "Obligate anaerobes", correct: true, why: "There are no obligate anaerobic fungi; fungi are either aerobic or facultative organisms. [Slide #1]" },
+          { text: "Microaerophilic organisms", correct: false, why: "Fungi can survive across varied low oxygen levels, but none are strictly poisoned by oxygen (obligate anaerobes). [Slide #1]" }
+        ]
+      },
+      {
+        id: 32,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 1",
+        difficulty: "easy",
+        priority: true,
+        stem: "Fungi obtain their organic nutrients exclusively by absorbing dissolved dead and decaying matter. This nutritional classification is termed:",
+        options: [
+          { text: "Autotrophs", correct: false, why: "Autotrophs produce their own organic nutrients via photosynthesis or chemosynthesis. [Slide #1]" },
+          { text: "Saprobes", correct: true, why: "Saprobes (saprophytes) are heterotrophic organisms that feed directly upon dead, decaying organic matter. [Slide #1]" },
+          { text: "Chemolithotrophs", correct: false, why: "Chemolithotrophs utilize inorganic mineral compounds for energy. [Slide #1]" },
+          { text: "Obligate intracellular parasites", correct: false, why: "Fungi are free-living extracellular absorbers rather than obligate intracellular invaders. [Slide #1]" }
+        ]
+      },
+      {
+        id: 33,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 7",
+        difficulty: "medium",
+        priority: true,
+        stem: "How do bacterial endospores differ functionally from fungal spores?",
+        options: [
+          { text: "Bacterial endospores are reproductive; fungal spores are for survival only.", correct: false, why: "This is completely inverted; bacterial endospores are strictly for survival, whereas fungal spores are reproductive. [Slide #7]" },
+          { text: "Fungal spores are reproductive and increase cell numbers; bacterial endospores are strictly for survival.", correct: true, why: "Bacterial endospores do not increase cell count (one bacterium makes one endospore), whereas fungi generate numerous reproductive spores to propagate. [Slide #7]" },
+          { text: "Bacterial endospores confer genetic diversification; fungal spores do not.", correct: false, why: "Sexual fungal spores generate genetic diversification, whereas bacterial endospores are clonal. [Slide #7]" },
+          { text: "Bacterial endospores are diploid; fungal spores are always polyploid.", correct: false, why: "Bacterial endospores contain single haploid copies of the bacterial chromosome. [Slide #7]" }
+        ]
+      },
+      {
+        id: 34,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 6",
+        difficulty: "easy",
+        priority: false,
+        stem: "When a fragment breaks off an established mold colony and independently develops into an identical full-sized colony, this asexual process is termed:",
+        options: [
+          { text: "Apical germination", correct: false, why: "Apical germination refers to directional hyphal tip extension. [Slide #6]" },
+          { text: "Fragmentation", correct: true, why: "Fragmentation is an asexual mold multiplication process where any severed piece of hypha continues independent vegetative growth. [Slide #6]" },
+          { text: "Schizogony", correct: false, why: "Schizogony is multiple fission seen in protozoans, not molds. [Slide #6]" },
+          { text: "Conjugation", correct: false, why: "Conjugation is a sexual process involving nuclear exchange or fusion. [Slide #6]" }
+        ]
+      },
+      {
+        id: 35,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 9",
+        difficulty: "hard",
+        priority: true,
+        stem: "Which of the following is classified as a subtype of conidia produced by the fragmentation of septate hyphae into rectangular or barrel-shaped cells?",
+        options: [
+          { text: "Arthrospores", correct: true, why: "Arthrospores (arthroconidia) are rectangular, thick-walled spores formed by the disarticulation and fragmentation of septate hyphae. [Slide #9]" },
+          { text: "Sporangiospores", correct: false, why: "Sporangiospores are enclosed within a sporangial sac. [Slide #9]" },
+          { text: "Zygospores", correct: false, why: "Zygospores are diploid sexual resting spores. [Slide #9]" },
+          { text: "Ascospores", correct: false, why: "Ascospores are sexual spores produced inside an ascus. [Slide #9]" }
+        ]
+      },
+      {
+        id: 36,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 9",
+        difficulty: "hard",
+        priority: false,
+        stem: "Thick-walled, spherical survival spores that develop either intercalary within or terminally on hyphae during adverse conditions are termed:",
+        options: [
+          { text: "Blastoconidia", correct: false, why: "Blastoconidia are produced by active budding off yeast or hyphal tips. [Slide #9]" },
+          { text: "Chlamydospores", correct: true, why: "Chlamydospores (chlamydoconidia) are enlarged, heavy-walled resting asexual spores formed within hyphal segments. [Slide #9]" },
+          { text: "Phialospores", correct: false, why: "Phialospores are conidia extruded from specialized flask-shaped vase cells called phialides. [Slide #9]" },
+          { text: "Basidiospores", correct: false, why: "Basidiospores are external sexual spores of mushrooms. [Slide #9]" }
+        ]
+      },
+      {
+        id: 37,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 10",
+        difficulty: "medium",
+        priority: true,
+        stem: "Sexual spore reproduction in fungi requires which sequence of nuclear events?",
+        options: [
+          { text: "Mitotic cloning followed by budding", correct: false, why: "Mitotic cloning produces asexual spores without genetic variation. [Slide #10]" },
+          { text: "Fusion of two parental nuclei from different strains followed by meiosis", correct: true, why: "Sexual reproduction requires plasmogamy and karyogamy (nuclear fusion) between compatible strains followed by meiotic reduction division. [Slide #10]" },
+          { text: "Successive cleavages within an enclosed sporangium", correct: false, why: "Internal cleavage within a sporangium describes asexual sporangiospore formation. [Slide #10]" },
+          { text: "Apical hyphal fragmentation", correct: false, why: "Fragmentation is strictly an asexual vegetative process. [Slide #10]" }
+        ]
+      },
+      {
+        id: 38,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 12",
+        difficulty: "medium",
+        priority: true,
+        stem: "Dermatophytic fungi that naturally inhabit domestic and farm animals and occasionally transfer ringworm to humans are classified ecologically as:",
+        options: [
+          { text: "Anthropophilic", correct: false, why: "Anthropophilic dermatophytes reside primarily on human skin and transmit person-to-person. [Slide #12]" },
+          { text: "Zoophilic", correct: true, why: "Zoophilic dermatophytes normally parasitize animal hosts and can cause intense inflammatory lesions when transmitted to humans. [Slide #12]" },
+          { text: "Geophilic", correct: false, why: "Geophilic dermatophytes normally inhabit soil and decompose keratin in the environment. [Slide #12]" },
+          { text: "Hydrophilic", correct: false, why: "Hydrophilic is not an epidemiological classification for dermatophytes. [Slide #12]" }
+        ]
+      },
+      {
+        id: 39,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 12",
+        difficulty: "easy",
+        priority: false,
+        stem: "Dermatophytes flourish on non-living superficial body surfaces primarily because they secrete enzymes capable of digesting which structural protein?",
+        options: [
+          { text: "Collagen", correct: false, why: "Collagen is located deeper in the dermis and subcutaneous tissues. [Slide #12]" },
+          { text: "Keratin", correct: true, why: "Dermatophytes are keratinophilic; they produce keratinase to digest stratum corneum, hair, and nails. [Slide #12]" },
+          { text: "Elastin", correct: false, why: "Elastin is an elastic dermal fiber, not the superficial target of dermatophytes. [Slide #12]" },
+          { text: "Hyaluronic acid", correct: false, why: "Hyaluronic acid is an extracellular matrix glycosaminoglycan. [Slide #12]" }
+        ]
+      },
+      {
+        id: 40,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 13",
+        difficulty: "easy",
+        priority: true,
+        stem: "A patient presents with scaling, itching fissures in the interdigital spaces between the 4th and 5th toes. What is the clinical diagnosis?",
+        options: [
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris is ringworm of the groin. [Slide #13]" },
+          { text: "Tinea pedis", correct: true, why: "Tinea pedis (athlete's foot) classically presents with erythema, maceration, and fissures localized between the toes. [Slide #13]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis presents as annular lesions on the trunk or limbs. [Slide #13]" },
+          { text: "Tinea barbae", correct: false, why: "Tinea barbae is ringworm involving facial hair and beard follicles. [Slide #13]" }
+        ]
+      },
+      {
+        id: 41,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 14",
+        difficulty: "medium",
+        priority: false,
+        stem: "Why does successful pharmacological eradication of tinea unguium (onychomycosis) require continuous treatment for 3 to 4 months or longer?",
+        options: [
+          { text: "The fungal spores are completely resistant to all azole antifungals.", correct: false, why: "The fungi are susceptible; however, penetration and nail turnover limit immediate clearance. [Slide #14]" },
+          { text: "Treatment must continue until all infected nail plate tissue grows out and is completely replaced.", correct: true, why: "Because dermatophytes embed deep within the keratinized nail bed, therapy must persist until healthy new nail grows out completely. [Slide #14]" },
+          { text: "The fungi undergo rapid thermal dimorphic phase shift inside the nail.", correct: false, why: "Dermatophytes are not dimorphic fungi; they remain molds. [Slide #14]" },
+          { text: "Nails contain high concentrations of aflatoxins that neutralize systemic medications.", correct: false, why: "Aflatoxins are toxins made by Aspergillus on grains, not present in human nails. [Slide #14]" }
+        ]
+      },
+      {
+        id: 42,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 12",
+        difficulty: "medium",
+        priority: false,
+        stem: "Fungal erythema and maceration developing in moist areas where two skin surfaces rub together (such as under breasts, axillae, or skin folds) is designated as:",
+        options: [
+          { text: "An intertriginous infection", correct: true, why: "Intertriginous candidiasis or ringworm occurs in opposing skin friction folds where moisture, sweat, and warmth accumulate. [Slide #12]" },
+          { text: "Chromoblastomycosis", correct: false, why: "Chromoblastomycosis is a deep warty subcutaneous infection of the lower limbs. [Slide #12]" },
+          { text: "Mycetoma", correct: false, why: "Mycetoma is a chronic localized sinus-tract draining pseudotumor. [Slide #12]" },
+          { text: "Tinea barbae", correct: false, why: "Tinea barbae is localized to the beard area of men. [Slide #12]" }
+        ]
+      },
+      {
+        id: 43,
+        subjectIndex: 3,
+        quarter: 1,
+        slideRef: "Slide 15",
+        difficulty: "medium",
+        priority: true,
+        stem: "A patient presents with nodular, ulcerating lesions ascending along the lymphatic drainage of the forearm following a puncture injury from a rose thorn. The causative organism is:",
+        options: [
+          { text: "Sporothrix schenckii", correct: true, why: "Sporothrix schenckii causes sporotrichosis, classic for subcutaneous lymphatic spread after rose thorn or vegetation puncture. [Slide #15]" },
+          { text: "Madurella mycetomatis", correct: false, why: "Madurella causes mycetoma (tumor-like draining sinuses of the foot). [Slide #15]" },
+          { text: "Fonsecaea pedrosoi", correct: false, why: "Fonsecaea causes chromoblastomycosis (verrucous cauliflower-like lesions). [Slide #15]" },
+          { text: "Coccidioides immitis", correct: false, why: "Coccidioides is an inhaled respiratory pathogen causing Valley Fever. [Slide #15]" }
+        ]
+      },
+      {
+        id: 44,
+        subjectIndex: 3,
+        quarter: 1,
+        slideRef: "Slide 15",
+        difficulty: "hard",
+        priority: false,
+        stem: "Which feature distinguishes subcutaneous mycoses from superficial cutaneous dermatophytoses?",
+        options: [
+          { text: "Subcutaneous mycoses are acquired through inhalation of aerosolized spores.", correct: false, why: "Subcutaneous mycoses require direct traumatic puncture/inoculation through the dermis, not inhalation. [Slide #15]" },
+          { text: "Subcutaneous mycoses require traumatic epidermal inoculation to enter deeper connective tissue and lymphatics.", correct: true, why: "Subcutaneous mycoses breach the stratum corneum barrier via puncture wounds (thorns, splinters), invading dermis, subcutaneous tissue, and regional lymphatics. [Slide #15]" },
+          { text: "Subcutaneous mycoses are strictly contagious from person to person.", correct: false, why: "Subcutaneous fungi are environmental saprobes acquired from soil/plants; they do not spread person-to-person. [Slide #15]" },
+          { text: "Subcutaneous mycoses are strictly caused by non-pathogenic normal flora.", correct: false, why: "Subcutaneous mycoses are caused by exogenous environmental fungi, not human normal flora. [Slide #15]" }
+        ]
+      },
+      {
+        id: 45,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 17",
+        difficulty: "medium",
+        priority: true,
+        stem: "All four true (primary) systemic fungal pathogens share which primary route of host entry?",
+        options: [
+          { text: "Direct traumatic inoculation into deep fascia", correct: false, why: "Traumatic puncture inoculates subcutaneous mycoses. [Slide #17]" },
+          { text: "Inhalation of airborne environmental conidia/spores into the lungs", correct: true, why: "All primary systemic mycoses (Histoplasma, Coccidioides, Blastomyces, Paracoccidioides) are contracted by inhaling spores into pulmonary alveoli. [Slide #17]" },
+          { text: "Ingestion of contaminated food products containing fungal vegetative hyphae", correct: false, why: "Ingestion of contaminated grains causes mycotoxicosis, not primary systemic mycosis. [Slide #17]" },
+          { text: "Sexual transmission across intact urogenital mucous membranes", correct: false, why: "Primary systemic fungi are not venereal pathogens. [Slide #17]" }
+        ]
+      },
+      {
+        id: 46,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 17",
+        difficulty: "easy",
+        priority: true,
+        stem: "A healthy field archaeologist working in an arid desert basin in Arizona develops fever, chest pain, and cough after a dust storm. Sputum reveals endospore-filled spherules. What is the diagnosis?",
+        options: [
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis forms intracellular yeast inside macrophages and is endemic to the central river valleys. [Slide #17]" },
+          { text: "Coccidioidomycosis", correct: true, why: "Coccidioidomycosis (Valley Fever, Coccidioides immitis) is contracted by inhaling dust in the American Southwest and produces thick-walled spherules containing endospores in tissue. [Slide #17]" },
+          { text: "Blastomycosis", correct: false, why: "Blastomyces forms broad-based budding yeasts and is found in the Southeast and Great Lakes. [Slide #17]" },
+          { text: "Paracoccidioidomycosis", correct: false, why: "Paracoccidioidomycosis is endemic to Central and South America. [Slide #17]" }
+        ]
+      },
+      {
+        id: 47,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 17",
+        difficulty: "hard",
+        priority: true,
+        stem: "Which primary systemic fungal infection is endemic to Central and South America and microscopically displays large yeast with multiple peripheral buds resembling a 'mariner's pilot wheel'?",
+        options: [
+          { text: "Coccidioides immitis", correct: false, why: "Coccidioides forms spherules containing endospores. [Slide #17]" },
+          { text: "Histoplasma capsulatum", correct: false, why: "Histoplasma forms small intracellular oval yeasts within macrophages. [Slide #17]" },
+          { text: "Paracoccidioides brasiliensis", correct: true, why: "Paracoccidioides brasiliensis is endemic to Central/South America and characteristically forms a large mother yeast cell surrounded by multiple daughter buds ('mariner's wheel'). [Slide #17]" },
+          { text: "Blastomyces dermatitidis", correct: false, why: "Blastomyces forms broad-based solitary buds. [Slide #17]" }
+        ]
+      },
+      {
+        id: 48,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 17",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which environmental reservoir is strongly associated with contracting Histoplasma capsulatum?",
+        options: [
+          { text: "Stagnant warm freshwater and neti pots", correct: false, why: "Freshwater neti pots harbor Naegleria fowleri amebas. [Slide #17]" },
+          { text: "Soil enriched with bird and bat guano (caves, chicken coops, roosts)", correct: true, why: "Histoplasma capsulatum proliferates in nitrogen-rich soil contaminated with avian or chiropteran (bat) droppings. [Slide #17]" },
+          { text: "Sphagnum moss and decaying rose thorns", correct: false, why: "Moss and rose thorns harbor Sporothrix schenckii. [Slide #17]" },
+          { text: "Contact lens storage containers cleaned with tap water", correct: false, why: "Contact lens tap water contamination harbors Acanthamoeba. [Slide #17]" }
+        ]
+      },
+      {
+        id: 49,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Slide 19",
+        difficulty: "easy",
+        priority: true,
+        stem: "An AIDS patient develops an adherent white curd-like pseudomembrane over the tongue and oral pharynx that bleeds when scraped. This presentation defines:",
+        options: [
+          { text: "Oral leukoplakia", correct: false, why: "Oral leukoplakia is a non-scrapable premalignant keratosis linked to tobacco. [Slide #19]" },
+          { text: "Oral candidiasis (Thrush)", correct: true, why: "Thrush represents mucosal Candida albicans overgrowth forming thick white curd-like plaques that bleed when scraped off. [Slide #19]" },
+          { text: "Tinea faciei", correct: false, why: "Tinea faciei causes red scaly rings on the exterior skin of the face. [Slide #19]" },
+          { text: "Aspergilloma", correct: false, why: "An aspergilloma is a fungal ball growing inside pre-existing pulmonary cavities. [Slide #19]" }
+        ]
+      },
+      {
+        id: 50,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Slide 20",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which encapsulated yeast organism is acquired by inhaling dried pigeon droppings and is a leading cause of fungal meningitis in immunocompromised patients?",
+        options: [
+          { text: "Cryptococcus neoformans", correct: true, why: "Cryptococcus neoformans is an opportunistic encapsulated yeast ubiquitous in pigeon droppings that causes subacute meningitis in immunocompromised patients. [Slide #20]" },
+          { text: "Candida tropicalis", correct: false, why: "Candida tropicalis is an unencapsulated normal commensal yeast. [Slide #20]" },
+          { text: "Pneumocystis jirovecii", correct: false, why: "Pneumocystis causes diffuse alveolar pneumonia, not primary cryptococcal meningitis. [Slide #20]" },
+          { text: "Aspergillus fumigatus", correct: false, why: "Aspergillus is a filamentous mold producing fruiting heads and aspergillomas. [Slide #20]" }
+        ]
+      },
+      {
+        id: 51,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Slide 21",
+        difficulty: "hard",
+        priority: false,
+        stem: "A patient with pre-existing cavitary tuberculosis lesions develops hemoptysis. Chest X-ray demonstrates a solid, mobile mass inside an upper-lobe cavity. This 'fungus ball' is caused by:",
+        options: [
+          { text: "Histoplasma capsulatum", correct: false, why: "Histoplasma causes granulomatous pulmonary disease rather than cavitary fungus balls. [Slide #21]" },
+          { text: "Aspergillus fumigatus", correct: true, why: "Aspergillus colonizes pre-existing lung cavities (e.g., from old tuberculosis), forming an aspergilloma composed of intertwined hyphae and fibrin. [Slide #21]" },
+          { text: "Blastomyces dermatitidis", correct: false, why: "Blastomyces causes suppurative and granulomatous primary pulmonary consolidations. [Slide #21]" },
+          { text: "Sporothrix schenckii", correct: false, why: "Sporothrix is an inoculative subcutaneous fungus. [Slide #21]" }
+        ]
+      },
+      {
+        id: 52,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Slide 22",
+        difficulty: "hard",
+        priority: true,
+        stem: "Which fungal toxin is synthesized by Amanita phalloides (death cap mushroom) and causes fatal poisoning by inhibiting RNA polymerase II in hepatocytes?",
+        options: [
+          { text: "Aflatoxin", correct: false, why: "Aflatoxin is produced by Aspergillus flavus on stored nuts and grains. [Slide #22]" },
+          { text: "Amatoxin", correct: true, why: "Amatoxin is produced by Amanita phalloides; it irreversibly inhibits RNA polymerase II, causing severe acute liver and renal failure. [Slide #22]" },
+          { text: "Ochratoxin", correct: false, why: "Ochratoxin is a nephrotoxic mycotoxin produced by Penicillium and Aspergillus on crops. [Slide #22]" },
+          { text: "Ergot alkaloid", correct: false, why: "Ergot alkaloids are produced by Claviceps purpurea on rye. [Slide #22]" }
+        ]
+      },
+      {
+        id: 53,
+        subjectIndex: 2,
+        quarter: 1,
+        slideRef: "Slide 12",
+        difficulty: "easy",
+        priority: false,
+        stem: "Dermatophyte infections confined to the scalp and hair shafts are designated clinically as:",
+        options: [
+          { text: "Tinea capitis", correct: true, why: "Tinea capitis is dermatophytosis of the scalp hair and skin. [Slide #12]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis is ringworm of glabrous body skin. [Slide #12]" },
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris is ringworm of the groin. [Slide #12]" },
+          { text: "Tinea manuum", correct: false, why: "Tinea manuum is ringworm of the hand. [Slide #12]" }
+        ]
+      },
+      {
+        id: 54,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 17",
+        difficulty: "medium",
+        priority: true,
+        stem: "Which primary systemic mycosis is characterized microscopically in tissue biopsy by large yeasts with broad-based budding?",
+        options: [
+          { text: "Blastomycosis", correct: true, why: "Blastomyces dermatitidis forms distinctive broad-based budding yeasts with thick refractory double walls in tissue at 37°C. [Slide #17]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasma forms small, narrow-based budding intracellular yeasts. [Slide #17]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioides forms spherules packed with endospores, not budding yeast cells. [Slide #17]" },
+          { text: "Paracoccidioidomycosis", correct: false, why: "Paracoccidioides forms multiple narrow-based daughter buds around a central parent cell. [Slide #17]" }
+        ]
+      },
+      {
+        id: 55,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 4",
+        difficulty: "easy",
+        priority: false,
+        stem: "What principal structural carbohydrate constitutes the rigid cell wall of fungi?",
+        options: [
+          { text: "Peptidoglycan", correct: false, why: "Peptidoglycan is the defining cell wall polymer of bacteria. [Slide #4]" },
+          { text: "Chitin", correct: true, why: "Fungal cell walls are composed of chitin, glucans, and mannans, which provide rigid structural support. [Slide #4]" },
+          { text: "Cellulose", correct: false, why: "Cellulose is the primary cell wall polymer of plants and green algae. [Slide #4]" },
+          { text: "Pseudomurein", correct: false, why: "Pseudomurein is found in cell walls of archaea. [Slide #4]" }
+        ]
+      },
+      {
+        id: 56,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 8",
+        difficulty: "medium",
+        priority: false,
+        stem: "In sporangiospore-forming molds, what is the specific morphological name of the stalk that supports the terminal spore sac?",
+        options: [
+          { text: "Conidiophore", correct: false, why: "A conidiophore bears naked, unsheathed conidia. [Slide #8]" },
+          { text: "Sporangiophore", correct: true, why: "The sporangiophore is the specialized upright aerial hyphal stalk that terminates in the sporangium sac. [Slide #8]" },
+          { text: "Rhizoid", correct: false, why: "Rhizoids are root-like anchoring hyphae that secure molds to the substrate. [Slide #8]" },
+          { text: "Stolon", correct: false, why: "A stolon is a horizontal hypha that connects clusters of rhizoids and sporangiophores. [Slide #8]" }
+        ]
+      },
+      {
+        id: 57,
+        subjectIndex: 5,
+        quarter: 1,
+        slideRef: "Slide 23",
+        difficulty: "medium",
+        priority: false,
+        stem: "To minimize public health exposure to carcinogenic dietary aflatoxins, what measure is recommended for stored agricultural grains and nuts?",
+        options: [
+          { text: "Store grains in humid, warm conditions to promote rapid fermentation.", correct: false, why: "Warmth and humidity stimulate Aspergillus mold growth and toxin synthesis. [Slide #23]" },
+          { text: "Inspect grains for discoloration or mold, store them dry and cool, and discard damaged crops.", correct: true, why: "Moisture prevention, pest control, prompt drying, and removing discolored/shriveled kernels prevent fungal aflatoxin accumulation. [Slide #23]" },
+          { text: "Boil nuts for 5 minutes to completely destroy the heat-stable aflatoxin molecules.", correct: false, why: "Aflatoxins are heat-stable and are not destroyed by routine boiling or cooking. [Slide #23]" },
+          { text: "Inoculate raw crops with opportunistic Candida strains to outcompete molds.", correct: false, why: "Candida is a human pathogen and not an agricultural bio-preservative. [Slide #23]" }
+        ]
+      },
+      {
+        id: 58,
+        subjectIndex: 1,
+        quarter: 1,
+        slideRef: "Slide 10",
+        difficulty: "hard",
+        priority: true,
+        stem: "Which sexual spore structure develops as an enclosed sac-like 'fruiting body' containing exactly 4 to 8 haploid sexual spores?",
+        options: [
+          { text: "Basidium", correct: false, why: "A basidium bears 4 basidiospores externally on club-shaped projections. [Slide #10]" },
+          { text: "Ascus", correct: true, why: "An ascus is a microscopic sac produced by Ascomycota in which karyogamy and meiosis produce 4 to 8 ascospores. [Slide #10]" },
+          { text: "Sporangium", correct: false, why: "A sporangium produces numerous asexual spores by internal cleavage. [Slide #10]" },
+          { text: "Zygospore", correct: false, why: "A zygospore is a single large thick-walled diploid spore resulting from hyphal fusion. [Slide #10]" }
+        ]
+      },
+      {
+        id: 59,
+        subjectIndex: 0,
+        quarter: 1,
+        slideRef: "Slide 1",
+        difficulty: "easy",
+        priority: true,
+        stem: "What is the general medical and biological term used to designate any pathological disease or infection caused by a fungus?",
+        options: [
+          { text: "Zoonosis", correct: false, why: "A zoonosis is an infection transmitted from animals to humans. [Slide #1]" },
+          { text: "Mycosis", correct: true, why: "A mycosis (plural: mycoses) designates any fungal disease or tissue infection. [Slide #1]" },
+          { text: "Helminthiasis", correct: false, why: "Helminthiasis is an infection caused by parasitic worms. [Slide #1]" },
+          { text: "Protozoiasis", correct: false, why: "Protozoiasis refers to diseases caused by protozoan parasites. [Slide #1]" }
+        ]
+      },
+      {
+        id: 60,
+        subjectIndex: 4,
+        quarter: 1,
+        slideRef: "Slide 16",
+        difficulty: "medium",
+        priority: true,
+        stem: "True (primary) fungal pathogens differ fundamentally from opportunistic fungal pathogens in that primary pathogens:",
+        options: [
+          { text: "Can infect healthy, immunocompetent human hosts with intact immune defenses.", correct: true, why: "True (primary) pathogens possess virulence factors that allow them to cause systemic infection in healthy individuals; opportunists require compromised host defenses. [Slide #16]" },
+          { text: "Require preexisting immune deficiency or severe neutropenia to establish infection.", correct: false, why: "This defines opportunistic pathogens. [Slide #16]" },
+          { text: "Are normal resident commensals of the human mucosal microflora.", correct: false, why: "Primary fungal pathogens are free-living soil/environmental saprobes, not normal human flora. [Slide #16]" },
+          { text: "Are completely non-immunogenic and produce zero host inflammatory response.", correct: false, why: "Primary systemic pathogens evoke robust cell-mediated immune responses and granuloma formation. [Slide #16]" }
+        ]
+      }
+    ];
+
+    /* APP STATE */
+    let currentPool = [];
+    let activeQuestions = [];
+    let currentIndex = 0;
+    let userAnswers = {}; // { qIndex: { choiceIndex: X, correct: bool } }
+    let selectedSubjects = [0, 1, 2, 3, 4, 5];
+    let viewMode = 'card'; // 'card' or 'list'
+    let muted = false;
+
+    // Local Storage Recovery
+    try {
+      muted = localStorage.getItem('stfuErijah') === '1';
+      const savedMode = localStorage.getItem('quizViewMode');
+      if (savedMode === 'card' || savedMode === 'list') viewMode = savedMode;
+    } catch(e) {}
+
+    /* FISHER-YATES SHUFFLE */
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function getMissedHistory() {
+      try {
+        const h = localStorage.getItem('quiz_missed_history');
+        return h ? JSON.parse(h) : [];
+      } catch(e) { return []; }
+    }
+
+    function saveMissedHistory(id) {
+      try {
+        let h = getMissedHistory();
+        if (!h.includes(id)) {
+          h.push(id);
+          localStorage.setItem('quiz_missed_history', JSON.stringify(h));
+        }
+      } catch(e) {}
+    }
+
+    function clearMissedItem(id) {
+      try {
+        let h = getMissedHistory();
+        h = h.filter(x => x !== id);
+        localStorage.setItem('quiz_missed_history', JSON.stringify(h));
+      } catch(e) {}
+    }
+
+    /* DOM REFS */
+    const dashboardView = document.getElementById('dashboardView');
+    const cardView = document.getElementById('cardView');
+    const listView = document.getElementById('listView');
+    const summaryView = document.getElementById('summaryView');
+
+    const subjectChipsContainer = document.getElementById('subjectChips');
+    const totalAvailableCountEl = document.getElementById('totalAvailableCount');
+    const bankTotalCountEl = document.getElementById('bankTotalCount');
+    const prioritizeMissedBtn = document.getElementById('prioritizeMissedBtn');
+    const selectAllBtn = document.getElementById('selectAllBtn');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+
+    const menuBtn = document.getElementById('menuBtn');
+    const modeToggleBtn = document.getElementById('modeToggleBtn');
+    const stfuBtn = document.getElementById('stfuBtn');
+    const progressPill = document.getElementById('progressPill');
+    const scorePill = document.getElementById('scorePill');
+    const progressBarFill = document.getElementById('progressBarFill');
+
+    const modeCardChip = document.getElementById('modeCardChip');
+    const modeListChip = document.getElementById('modeListChip');
+
+    const wrongAudio = document.getElementById('wrongAudio');
+    const wrongPopup = document.getElementById('wrongPopup');
+
+    /* INITIALIZATION */
+    window.onload = function() {
+      renderSubjectChips();
+      updateDashboardCounts();
+      updateMuteButtonUI();
+      updateModeUI();
+
+      // Event Listeners
+      selectAllBtn.onclick = () => {
+        selectedSubjects = SUBJECTS.map((_, i) => i);
+        renderSubjectChips();
+        updateDashboardCounts();
+      };
+
+      clearAllBtn.onclick = () => {
+        selectedSubjects = [];
+        renderSubjectChips();
+        updateDashboardCounts();
+      };
+
+      prioritizeMissedBtn.onclick = launchMissedSession;
+
+      modeCardChip.onclick = () => setViewMode('card');
+      modeListChip.onclick = () => setViewMode('list');
+
+      menuBtn.onclick = returnToMenu;
+      modeToggleBtn.onclick = () => setViewMode(viewMode === 'card' ? 'list' : 'card');
+
+      stfuBtn.onclick = toggleMute;
+
+      document.getElementById('listSummaryBtn').onclick = finishQuiz;
+      document.getElementById('retakeBtn').onclick = () => startQuiz(activeQuestions.length);
+      document.getElementById('reviewMissedBtn').onclick = reviewCurrentSessionMissed;
+      document.getElementById('backToMenuBtn').onclick = returnToMenu;
+    };
+
+    function setViewMode(mode) {
+      viewMode = mode;
+      try { localStorage.setItem('quizViewMode', mode); } catch(e) {}
+      updateModeUI();
+      if (!dashboardView.classList.contains('hidden') || !summaryView.classList.contains('hidden')) return;
+
+      if (viewMode === 'card') {
+        listView.classList.add('hidden');
+        cardView.classList.remove('hidden');
+        renderActiveCard();
+      } else {
+        cardView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        renderActiveList();
+      }
+      updateHeaderProgress();
+    }
+
+    function updateModeUI() {
+      modeToggleBtn.textContent = viewMode === 'card' ? 'View: One by One' : 'View: All at Once';
+      if (viewMode === 'card') {
+        modeCardChip.classList.add('selected');
+        modeListChip.classList.remove('selected');
+      } else {
+        modeListChip.classList.add('selected');
+        modeCardChip.classList.remove('selected');
+      }
+    }
+
+    function toggleMute() {
+      muted = !muted;
+      try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch(e) {}
+      if (muted) {
+        wrongAudio.pause();
+        wrongAudio.currentTime = 0;
+        wrongPopup.classList.add('hidden');
+      }
+      updateMuteButtonUI();
+    }
+
+    function updateMuteButtonUI() {
+      if (muted) {
+        stfuBtn.textContent = "Bring Back Erijah";
+        stfuBtn.classList.add('muted');
+      } else {
+        stfuBtn.textContent = "STFU Erijah";
+        stfuBtn.classList.remove('muted');
+      }
+    }
+
+    function renderSubjectChips() {
+      subjectChipsContainer.innerHTML = '';
+      SUBJECTS.forEach((name, idx) => {
+        const count = questionBank.filter(q => q.subjectIndex === idx).length;
+        const chip = document.createElement('div');
+        chip.className = `chip ${selectedSubjects.includes(idx) ? 'selected' : ''}`;
+        chip.textContent = `${name} (${count})`;
+        chip.onclick = () => {
+          if (selectedSubjects.includes(idx)) {
+            selectedSubjects = selectedSubjects.filter(i => i !== idx);
+          } else {
+            selectedSubjects.push(idx);
+          }
+          renderSubjectChips();
+          updateDashboardCounts();
+        };
+        subjectChipsContainer.appendChild(chip);
+      });
+    }
+
+    function updateDashboardCounts() {
+      const eligible = questionBank.filter(q => selectedSubjects.includes(q.subjectIndex));
+      totalAvailableCountEl.textContent = eligible.length;
+      bankTotalCountEl.textContent = questionBank.length;
+
+      const missed = getMissedHistory();
+      prioritizeMissedBtn.textContent = `Prioritize Missed (${missed.length})`;
+      prioritizeMissedBtn.disabled = missed.length === 0;
+    }
+
+    function returnToMenu() {
+      cardView.classList.add('hidden');
+      listView.classList.add('hidden');
+      summaryView.classList.add('hidden');
+      dashboardView.classList.remove('hidden');
+      updateDashboardCounts();
+      progressPill.textContent = "Ready";
+      scorePill.textContent = "Score: 0 / 0 (0%)";
+      progressBarFill.style.width = '0%';
+    }
+
+    /* QUIZ LAUNCHERS */
+    function startQuiz(count) {
+      let pool = questionBank.filter(q => selectedSubjects.includes(q.subjectIndex));
+      if (pool.length === 0) {
+        alert("Please select at least one module chip.");
+        return;
+      }
+
+      // Deep clone and scramble options
+      pool = pool.map(q => {
+        const cloned = JSON.parse(JSON.stringify(q));
+        cloned.options = shuffle(cloned.options);
+        return cloned;
+      });
+
+      pool = shuffle(pool);
+      if (count < pool.length) {
+        activeQuestions = pool.slice(0, count);
+      } else {
+        activeQuestions = pool;
+      }
+
+      userAnswers = {};
+      currentIndex = 0;
+
+      dashboardView.classList.add('hidden');
+      summaryView.classList.add('hidden');
+
+      if (viewMode === 'card') {
+        listView.classList.add('hidden');
+        cardView.classList.remove('hidden');
+        renderActiveCard();
+      } else {
+        cardView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        renderActiveList();
+      }
+      updateHeaderProgress();
+    }
+
+    function launchMissedSession() {
+      const missedIds = getMissedHistory();
+      if (missedIds.length === 0) return;
+
+      let pool = questionBank.filter(q => missedIds.includes(q.id));
+      pool = pool.map(q => {
+        const cloned = JSON.parse(JSON.stringify(q));
+        cloned.options = shuffle(cloned.options);
+        return cloned;
+      });
+
+      activeQuestions = shuffle(pool);
+      userAnswers = {};
+      currentIndex = 0;
+
+      dashboardView.classList.add('hidden');
+      summaryView.classList.add('hidden');
+
+      if (viewMode === 'card') {
+        listView.classList.add('hidden');
+        cardView.classList.remove('hidden');
+        renderActiveCard();
+      } else {
+        cardView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        renderActiveList();
+      }
+      updateHeaderProgress();
+    }
+
+    function reviewCurrentSessionMissed() {
+      const missedIndices = Object.keys(userAnswers).filter(idx => !userAnswers[idx].correct);
+      if (missedIndices.length === 0) {
+        alert("You answered all questions correctly in this round!");
+        return;
+      }
+
+      activeQuestions = missedIndices.map(idx => {
+        const cloned = JSON.parse(JSON.stringify(activeQuestions[idx]));
+        cloned.options = shuffle(cloned.options);
+        return cloned;
+      });
+
+      userAnswers = {};
+      currentIndex = 0;
+
+      summaryView.classList.add('hidden');
+      if (viewMode === 'card') {
+        cardView.classList.remove('hidden');
+        renderActiveCard();
+      } else {
+        listView.classList.remove('hidden');
+        renderActiveList();
+      }
+      updateHeaderProgress();
+    }
+
+    /* HEADER PROGRESS & LIVE SCORE */
+    function updateHeaderProgress() {
+      const total = activeQuestions.length;
+      const answeredCount = Object.keys(userAnswers).length;
+      let correctCount = 0;
+      Object.values(userAnswers).forEach(a => { if (a.correct) correctCount++; });
+
+      const pct = answeredCount > 0 ? Math.round((correctCount / answeredCount) * 100) : 0;
+      scorePill.textContent = `Score: ${correctCount} / ${answeredCount} (${pct}%)`;
+
+      if (viewMode === 'card') {
+        progressPill.textContent = `Question ${currentIndex + 1} of ${total}`;
+        progressBarFill.style.width = `${((currentIndex + 1) / total) * 100}%`;
+      } else {
+        progressPill.textContent = `Answered ${answeredCount} of ${total}`;
+        progressBarFill.style.width = `${(answeredCount / total) * 100}%`;
+      }
+    }
+
+    /* USER INTERACTION & SELECTION */
+    function handleOptionSelection(qIdx, optIdx, containerEl) {
+      if (userAnswers[qIdx] !== undefined) return; // Locked
+
+      const q = activeQuestions[qIdx];
+      const selectedOpt = q.options[optIdx];
+      const isCorrect = selectedOpt.correct;
+
+      userAnswers[qIdx] = { choiceIndex: optIdx, correct: isCorrect };
+
+      if (!isCorrect) {
+        saveMissedHistory(q.id);
+        triggerWrongFeedback();
+      } else {
+        clearMissedItem(q.id);
+      }
+
+      // Lock buttons & apply visual styles
+      const buttons = containerEl.querySelectorAll('.opt-btn');
+      buttons.forEach((btn, idx) => {
+        btn.disabled = true;
+        if (q.options[idx].correct) {
+          btn.classList.add('correct-choice');
+        } else if (idx === optIdx && !isCorrect) {
+          btn.classList.add('wrong-choice');
+        }
+      });
+
+      // Append Explanation
+      const explDiv = createExplanationBox(q, selectedOpt, isCorrect);
+      containerEl.querySelector('.options-grid').after(explDiv);
+
+      updateHeaderProgress();
+
+      // Check if List View is fully answered
+      if (viewMode === 'list') {
+        if (Object.keys(userAnswers).length === activeQuestions.length) {
+          document.getElementById('listFinishContainer').classList.remove('hidden');
+        }
+      } else {
+        // Show Next / Finish button in Card View
+        const footer = containerEl.querySelector('.q-footer');
+        footer.innerHTML = '';
+        if (currentIndex < activeQuestions.length - 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn hub-btn';
+          nextBtn.textContent = 'Next Question →';
+          nextBtn.onclick = () => {
+            currentIndex++;
+            renderActiveCard();
+            updateHeaderProgress();
+          };
+          footer.appendChild(nextBtn);
+        } else {
+          const finishBtn = document.createElement('button');
+          finishBtn.className = 'btn hub-btn';
+          finishBtn.textContent = 'Finish Quiz & View Summary';
+          finishBtn.onclick = finishQuiz;
+          footer.appendChild(finishBtn);
+        }
+      }
+    }
+
+    function triggerWrongFeedback() {
+      if (muted) return;
+      try {
+        wrongAudio.currentTime = 0;
+        wrongAudio.play().catch(e => console.log(e));
+      } catch(e) {}
+
+      wrongPopup.classList.remove('hidden');
+      setTimeout(() => {
+        wrongPopup.classList.add('hidden');
+      }, 1200);
+    }
+
+    function createExplanationBox(question, chosenOption, isCorrect) {
+      const expl = document.createElement('div');
+      expl.className = 'expl';
+
+      const banner = document.createElement('div');
+      banner.className = `expl-banner ${isCorrect ? 'correct' : 'incorrect'}`;
+      banner.textContent = isCorrect ? '✓ CORRECT!' : '✗ INCORRECT';
+
+      const core = document.createElement('div');
+      core.className = 'expl-core';
+      core.innerHTML = `<strong>High-Yield Concept:</strong> ${question.options.find(o => o.correct).why}`;
+
+      const list = document.createElement('ul');
+      list.className = 'expl-list';
+      question.options.forEach((opt, idx) => {
+        const li = document.createElement('li');
+        const letter = String.fromCharCode(65 + idx);
+        li.innerHTML = `<strong>${letter}) ${opt.text}:</strong> ${opt.why}`;
+        list.appendChild(li);
+      });
+
+      expl.appendChild(banner);
+      expl.appendChild(core);
+      expl.appendChild(list);
+      return expl;
+    }
+
+    /* RENDER CARD VIEW */
+    function renderActiveCard() {
+      const container = document.getElementById('activeCardContainer');
+      container.innerHTML = '';
+
+      const q = activeQuestions[currentIndex];
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const letters = ['A', 'B', 'C', 'D'];
+      const qHeader = `
+        <div class="q-header">
+          <div class="q-badges">
+            <span class="badge badge-subject">${SUBJECTS[q.subjectIndex]}</span>
+            <span class="badge badge-${q.difficulty}">${q.difficulty}</span>
+            ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
+          </div>
+          <div style="font-size: 0.85rem; color: #888;">Q${currentIndex + 1} / ${activeQuestions.length}</div>
+        </div>
+      `;
+
+      card.innerHTML = qHeader;
+
+      const stem = document.createElement('div');
+      stem.className = 'q-stem';
+      stem.textContent = q.stem;
+      card.appendChild(stem);
+
+      const optionsGrid = document.createElement('div');
+      optionsGrid.className = 'options-grid';
+
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'opt-btn';
+        btn.innerHTML = `<span class="opt-idx">${letters[idx]}</span><span>${opt.text}</span>`;
+        btn.onclick = () => handleOptionSelection(currentIndex, idx, card);
+        optionsGrid.appendChild(btn);
+      });
+
+      card.appendChild(optionsGrid);
+
+      const footer = document.createElement('div');
+      footer.className = 'q-footer';
+      card.appendChild(footer);
+
+      container.appendChild(card);
+
+      // Re-hydrate if already answered
+      if (userAnswers[currentIndex] !== undefined) {
+        const ans = userAnswers[currentIndex];
+        const buttons = optionsGrid.querySelectorAll('.opt-btn');
+        buttons.forEach((btn, idx) => {
+          btn.disabled = true;
+          if (q.options[idx].correct) btn.classList.add('correct-choice');
+          else if (idx === ans.choiceIndex && !ans.correct) btn.classList.add('wrong-choice');
+        });
+        const explDiv = createExplanationBox(q, q.options[ans.choiceIndex], ans.correct);
+        optionsGrid.after(explDiv);
+
+        if (currentIndex < activeQuestions.length - 1) {
+          const nextBtn = document.createElement('button');
+          nextBtn.className = 'btn hub-btn';
+          nextBtn.textContent = 'Next Question →';
+          nextBtn.onclick = () => {
+            currentIndex++;
+            renderActiveCard();
+            updateHeaderProgress();
+          };
+          footer.appendChild(nextBtn);
+        } else {
+          const finishBtn = document.createElement('button');
+          finishBtn.className = 'btn hub-btn';
+          finishBtn.textContent = 'Finish Quiz & View Summary';
+          finishBtn.onclick = finishQuiz;
+          footer.appendChild(finishBtn);
+        }
+      }
+    }
+
+    /* RENDER LIST VIEW */
+    function renderActiveList() {
+      const container = document.getElementById('activeListContainer');
+      container.innerHTML = '';
+      const finishContainer = document.getElementById('listFinishContainer');
+      finishContainer.classList.add('hidden');
+
+      const letters = ['A', 'B', 'C', 'D'];
+
+      activeQuestions.forEach((q, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.id = `q-card-${qIdx}`;
+
+        const qHeader = `
+          <div class="q-header">
+            <div class="q-badges">
+              <span class="badge" style="background: var(--accent-orange); color: #000;">Q${qIdx + 1}</span>
+              <span class="badge badge-subject">${SUBJECTS[q.subjectIndex]}</span>
+              <span class="badge badge-${q.difficulty}">${q.difficulty}</span>
+              ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
+            </div>
+            <div style="font-size: 0.85rem; color: #888;">Ref: ${q.slideRef}</div>
+          </div>
+        `;
+        card.innerHTML = qHeader;
+
+        const stem = document.createElement('div');
+        stem.className = 'q-stem';
+        stem.textContent = q.stem;
+        card.appendChild(stem);
+
+        const optionsGrid = document.createElement('div');
+        optionsGrid.className = 'options-grid';
+
+        q.options.forEach((opt, optIdx) => {
+          const btn = document.createElement('button');
+          btn.className = 'opt-btn';
+          btn.innerHTML = `<span class="opt-idx">${letters[optIdx]}</span><span>${opt.text}</span>`;
+          btn.onclick = () => handleOptionSelection(qIdx, optIdx, card);
+          optionsGrid.appendChild(btn);
+        });
+
+        card.appendChild(optionsGrid);
+        container.appendChild(card);
+
+        // Rehydrate if previously answered
+        if (userAnswers[qIdx] !== undefined) {
+          const ans = userAnswers[qIdx];
+          const buttons = optionsGrid.querySelectorAll('.opt-btn');
+          buttons.forEach((btn, idx) => {
+            btn.disabled = true;
+            if (q.options[idx].correct) btn.classList.add('correct-choice');
+            else if (idx === ans.choiceIndex && !ans.correct) btn.classList.add('wrong-choice');
+          });
+          const explDiv = createExplanationBox(q, q.options[ans.choiceIndex], ans.correct);
+          optionsGrid.after(explDiv);
+        }
+      });
+
+      if (Object.keys(userAnswers).length === activeQuestions.length) {
+        finishContainer.classList.remove('hidden');
+      }
+    }
+
+    /* SUMMARY AND COMPLETION TIERS */
+    function finishQuiz() {
+      cardView.classList.add('hidden');
+      listView.classList.add('hidden');
+      summaryView.classList.remove('hidden');
+
+      const total = activeQuestions.length;
+      let correct = 0;
+      Object.values(userAnswers).forEach(a => { if (a.correct) correct++; });
+      const pct = Math.round((correct / total) * 100);
+
+      document.getElementById('summaryScoreLarge').textContent = `${pct}%`;
+      document.getElementById('summaryScoreFraction').textContent = `${correct} / ${total} correct`;
+
+      const tierMsgEl = document.getElementById('summaryTierMessage');
+      if (pct >= 90) {
+        tierMsgEl.textContent = "Absolute Gigachad. You drained that test dry.";
+        tierMsgEl.style.color = "#4ade80";
+      } else if (pct >= 70) {
+        tierMsgEl.textContent = "You lasted less than 30 seconds. Time for a rematch.";
+        tierMsgEl.style.color = "#fbbf24";
+      } else {
+        tierMsgEl.textContent = "You really didn’t fucking know that.";
+        tierMsgEl.style.color = "#f87171";
+      }
+
+      // Breakdown by difficulty
+      const diffCounts = { easy: { c: 0, t: 0 }, medium: { c: 0, t: 0 }, hard: { c: 0, t: 0 } };
+      activeQuestions.forEach((q, idx) => {
+        diffCounts[q.difficulty].t++;
+        if (userAnswers[idx] && userAnswers[idx].correct) diffCounts[q.difficulty].c++;
+      });
+
+      const diffBody = document.getElementById('diffBreakdownBody');
+      diffBody.innerHTML = '';
+      ['easy', 'medium', 'hard'].forEach(d => {
+        if (diffCounts[d].t > 0) {
+          const tr = document.createElement('tr');
+          const dPct = Math.round((diffCounts[d].c / diffCounts[d].t) * 100);
+          tr.innerHTML = `
+            <td style="text-transform: capitalize;"><strong>${d}</strong></td>
+            <td>${diffCounts[d].c}</td>
+            <td>${diffCounts[d].t}</td>
+            <td>${dPct}%</td>
+          `;
+          diffBody.appendChild(tr);
+        }
+      });
+
+      // Breakdown by subject module
+      const subCounts = {};
+      activeQuestions.forEach((q, idx) => {
+        if (!subCounts[q.subjectIndex]) subCounts[q.subjectIndex] = { c: 0, t: 0 };
+        subCounts[q.subjectIndex].t++;
+        if (userAnswers[idx] && userAnswers[idx].correct) subCounts[q.subjectIndex].c++;
+      });
+
+      const subBody = document.getElementById('subjectBreakdownBody');
+      subBody.innerHTML = '';
+      Object.keys(subCounts).forEach(sIdx => {
+        const tr = document.createElement('tr');
+        const s = subCounts[sIdx];
+        const sPct = Math.round((s.c / s.t) * 100);
+        tr.innerHTML = `
+          <td><strong>${SUBJECTS[sIdx]}</strong></td>
+          <td>${s.c}</td>
+          <td>${s.t}</td>
+          <td>${sPct}%</td>
+        `;
+        subBody.appendChild(tr);
+      });
+    }
+  </script>
+</body>
+</html>
