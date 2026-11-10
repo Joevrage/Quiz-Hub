@@ -127,9 +127,15 @@
       transition: all 0.2s ease;
     }
 
-    .btn:hover {
+    .btn:hover:not(:disabled) {
       background: #383838;
       border-color: #666;
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      border-color: #333;
     }
 
     .btn.active, .btn.hub-btn {
@@ -174,7 +180,6 @@
       display: none !important;
     }
 
-    /* Card styling */
     .card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -184,7 +189,6 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
-    /* Launcher / Subject Dashboard */
     .launcher-title {
       font-size: 1.6rem;
       margin-bottom: 8px;
@@ -246,7 +250,7 @@
       margin-top: 15px;
     }
 
-    /* Question Card Styling */
+    /* Question Cards */
     .q-header {
       display: flex;
       justify-content: space-between;
@@ -357,7 +361,7 @@
     }
 
     .opt-btn.dimmed {
-      opacity: 0.45;
+      opacity: 0.42;
     }
 
     /* Explanation Container */
@@ -429,7 +433,7 @@
       margin-top: 16px;
     }
 
-    /* Result Summary Screen */
+    /* Summary Card */
     .score-summary-header {
       text-align: center;
       margin-bottom: 24px;
@@ -546,7 +550,7 @@
 </head>
 <body>
 
-  <!-- Sticky Top Header -->
+  <!-- Sticky Top Navigation -->
   <header class="sticky-header">
     <div class="header-top">
       <div class="brand-group">
@@ -554,7 +558,7 @@
         <div class="brand">🍄 Microbio Quiz 5: Fungi Mastery</div>
       </div>
       <div class="header-controls">
-        <button id="menuBtn" class="btn">Menu / Subjects</button>
+        <button id="menuBtn" class="btn">Menu / Modules</button>
         <button id="modeToggleBtn" class="btn">View: One by One</button>
         <button id="stfuBtn" class="btn stfu-btn">STFU Erijah</button>
         <div id="progressPill" class="pill">Ready</div>
@@ -566,7 +570,7 @@
     </div>
   </header>
 
-  <!-- Audio Source Fallbacks -->
+  <!-- Audio Source Elements -->
   <audio id="wrongAudio" preload="auto">
     <source src="Wrong-answer.m4a" type="audio/mp4">
     <source src="Wrong-answer.mp3" type="audio/mpeg">
@@ -586,7 +590,7 @@
     <section id="dashboardView" class="card">
       <h1 class="launcher-title">Microbiology Quiz 5 - Fungi Mastery</h1>
       <p class="launcher-subtitle">
-        100% source-bound interactive test preparation covering fungal morphology, reproduction, asexual & sexual spores, superficial/cutaneous tineas, subcutaneous mycoses, primary systemic pathogens, and opportunistic clinical manifestations.
+        Rigorous review covering fungal cell biology, yeast vs. mold morphology, spores & reproduction, superficial/cutaneous tineas, subcutaneous mycoses, primary systemic pathogens, opportunistic infections, and mycotoxins.
       </p>
 
       <div class="chip-group-label">Filter Regional Fungal Modules</div>
@@ -595,7 +599,7 @@
       <div class="pool-actions">
         <button id="selectAllBtn" class="btn">Select All</button>
         <button id="clearAllBtn" class="btn">Clear</button>
-        <button id="prioritizeMissedBtn" class="btn">Prioritize Missed (0)</button>
+        <button id="prioritizeMissedBtn" class="btn" disabled>Prioritize Missed (0)</button>
       </div>
 
       <div class="chip-group-label">Presentation Mode</div>
@@ -624,7 +628,7 @@
       <div id="activeListContainer"></div>
       <div id="listFinishContainer" class="card hidden" style="text-align: center;">
         <h3>All Questions Answered</h3>
-        <p style="color: #aaa; margin: 10px 0 20px;">Review your answers or view the full breakdown.</p>
+        <p style="color: #aaa; margin: 10px 0 20px;">Review your answers or inspect your complete score breakdown.</p>
         <button id="listSummaryBtn" class="btn hub-btn" style="padding: 10px 24px; font-size: 1rem;">View Final Results Summary</button>
       </div>
     </section>
@@ -665,7 +669,7 @@
       </table>
 
       <div class="summary-actions">
-        <button id="retakeBtn" class="btn hub-btn">Retake Quiz</button>
+        <button id="retakeBtn" class="btn hub-btn">Retake Current Set</button>
         <button id="reviewMissedBtn" class="btn">Review Missed</button>
         <button id="backToMenuBtn" class="btn">Back to Menu</button>
         <a href="index.html" class="btn hub-btn">Back to Main Page</a>
@@ -675,7 +679,7 @@
   </main>
 
   <script>
-    /* SUBJECT MODULES */
+    /* MODULE TAXONOMY */
     const SUBJECTS = [
       "Fungal Cell Biology & Morphology",
       "Reproduction & Mold Spores",
@@ -685,906 +689,757 @@
       "Opportunistic Mycoses & Toxins"
     ];
 
-    /* QUESTION BANK (Exhaustive & Source-Bound) */
+    /* COMPREHENSIVE QUESTION BANK */
     const questionBank = [
+      // --- VERBATIM PRACTICE QUIZ QUESTIONS (WEEK 5 & WEEK 6 SOURCES) ---
       {
         id: 1,
         subjectIndex: 4,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
         stem: "Which of the following is a primary systemic mycosis that is prevalent in the Mississippi / Ohio Valley?",
         options: [
-          { text: "Blastomycosis", correct: false, why: "Blastomycosis is endemic to the Great Lakes and eastern seaboard, not predominantly the Mississippi/Ohio Valley. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis (Histoplasma capsulatum) is the classic primary systemic fungal mycosis endemic to the Ohio and Mississippi River valleys, associated with bird and bat droppings. [Practice Quiz / Week 6]" },
-          { text: "Coccidiomycosis", correct: false, why: "Coccidiomycosis is endemic to the arid Southwest region of the US (San Joaquin Valley). [Practice Quiz / Week 6]" },
-          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic systemic fungal infection seen predominantly in immunocompromised hosts, not a true primary endemic pathogen. [Practice Quiz / Week 6]" }
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis is classically associated with the eastern seaboard and Great Lakes regions. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis (Histoplasma capsulatum) is the classic primary systemic mycosis endemic to the Ohio and Mississippi River Valleys, enriched by bird and bat droppings. [Week 6 Quiz]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioidomycosis is endemic to the arid Southwestern United States (San Joaquin Valley). [Week 6 Quiz]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic fungal infection primarily causing meningitis in immunocompromised patients, not an endemic primary mycosis. [Week 6 Quiz]" }
         ]
       },
       {
         id: 2,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "What form of Tinea cause infection of the groin area (jock itch)?",
+        stem: "What form of Tinea causes infection of the groin area (jock itch)?",
         options: [
-          { text: "Tinea Corporis", correct: false, why: "Tinea corporis causes ringworm on the smooth trunk and limbs. [Practice Quiz / Week 6]" },
-          { text: "Tinea Unguium", correct: false, why: "Tinea unguium refers to ringworm of the nails (onychomycosis). [Practice Quiz / Week 6]" },
-          { text: "Tinea Pedis", correct: false, why: "Tinea pedis refers to ringworm of the foot (athlete's foot). [Practice Quiz / Week 6]" },
-          { text: "Tinea Cruris", correct: true, why: "Tinea cruris specifically designates dermatophyte ringworm infection localized to the groin region (jock itch). [Practice Quiz / Week 6]" }
+          { text: "Tinea Corporis", correct: false, why: "Tinea corporis causes ringworm on the smooth glabrous skin of the body trunk and limbs. [Week 6 Quiz]" },
+          { text: "Tinea Unguium", correct: false, why: "Tinea unguium refers to ringworm of the nails (onychomycosis). [Week 6 Quiz]" },
+          { text: "Tinea Pedis", correct: false, why: "Tinea pedis refers to ringworm of the foot (athlete's foot). [Week 6 Quiz]" },
+          { text: "Tinea Cruris", correct: true, why: "Tinea cruris specifically designates dermatophyte ringworm infection localized to the crural groin folds (jock itch). [Week 6 Quiz]" }
         ]
       },
       {
         id: 3,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
         stem: "All of the following fungal diseases are only seen in the immune-compromised, EXCEPT?",
         options: [
-          { text: "Aspergillosis", correct: false, why: "Aspergillosis is an opportunistic mycosis seen in immunocompromised individuals. [Practice Quiz / Week 6]" },
-          { text: "Candidiasis", correct: false, why: "Systemic/invasive candidiasis is typically an opportunistic condition developing when host defenses or flora balance are disrupted. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis is classified as a true/primary systemic mycosis capable of causing infection in immunocompetent individuals following spore inhalation. [Practice Quiz / Week 6]" },
-          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic fungal pathogen strongly associated with severe immunosuppression/AIDS. [Practice Quiz / Week 6]" }
+          { text: "Aspergillosis", correct: false, why: "Aspergillosis is an opportunistic mycosis developing in immunosuppressed or neutropenic patients. [Week 6 Quiz]" },
+          { text: "Candidiasis", correct: false, why: "Invasive systemic candidiasis is an opportunistic condition developing when natural host defenses or flora balance fail. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: true, why: "Histoplasmosis is a true primary systemic pathogen capable of establishing pulmonary infection in completely healthy, immunocompetent hosts. [Week 6 Quiz]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic encapsulated yeast that primarily disseminates in immunocompromised hosts. [Week 6 Quiz]" }
         ]
       },
       {
         id: 4,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: false,
-        stem: "Which of the following result from the inhalation of aerosolized molds and results in rhinitis, bronchial asthma, alveolitis and/or generalized pneumonitis?",
+        stem: "Which of the following results from the inhalation of aerosolized molds and produces rhinitis, bronchial asthma, alveolitis, and/or generalized pneumonitis?",
         options: [
-          { text: "Systemic Mycoses", correct: false, why: "Systemic mycoses represent true tissue invasion rather than pure hypersensitivity. [Practice Quiz / Week 6]" },
-          { text: "Mycotoxicosis", correct: false, why: "Mycotoxicosis is disease produced by ingesting or contacting fungal metabolic toxins (e.g., aflatoxin), not an airborne IgE-mediated response. [Practice Quiz / Week 6]" },
-          { text: "Superficial Mycoses", correct: false, why: "Superficial mycoses are confined to the outer stratum corneum and keratinized tissue. [Practice Quiz / Week 6]" },
-          { text: "Allergies", correct: true, why: "Inhalation of airborne fungal spores and vegetative fragments causes type I and type III respiratory fungal allergies manifesting as asthma, rhinitis, and alveolitis. [Practice Quiz / Week 6]" }
+          { text: "Systemic Mycoses", correct: false, why: "Systemic mycoses represent true progressive tissue invasion rather than pure hypersensitivity reactions. [Week 6 Quiz]" },
+          { text: "Mycotoxicosis", correct: false, why: "Mycotoxicosis results from ingesting or contacting preformed chemical toxins (e.g., aflatoxin), not airborne hypersensitivity. [Week 6 Quiz]" },
+          { text: "Superficial Mycoses", correct: false, why: "Superficial mycoses are confined non-invasive infections of the stratum corneum. [Week 6 Quiz]" },
+          { text: "Allergies", correct: true, why: "Inhalation of airborne mold spores triggers IgE- and immune complex-mediated respiratory allergies manifesting as asthma, rhinitis, and hypersensitivity pneumonitis. [Week 6 Quiz]" }
         ]
       },
       {
         id: 5,
         subjectIndex: 3,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is a subcutaneous mycosis that looks superficially like a tumor and is of the foot or hand?",
+        stem: "Which of the following is a subcutaneous mycosis that looks superficially like a tumor and typically affects the foot or hand?",
         options: [
-          { text: "Mycetoma", correct: true, why: "Mycetoma (Madura foot) is a chronic subcutaneous fungal/actinomycotic infection characterized by tumor-like swelling, sinus tracts, and sulfur-like granules. [Practice Quiz / Week 6]" },
-          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis presents as linear nodular lesions along lymphatic channels ('rose gardener's disease'). [Practice Quiz / Week 6]" },
-          { text: "Coccidiomycosis", correct: false, why: "Coccidioidomycosis is a primary systemic respiratory mycosis. [Practice Quiz / Week 6]" },
-          { text: "Chromomycosis", correct: false, why: "Chromomycosis produces warty, verrucous cauliflower-like cutaneous lesions, not distinct pseudotumorous swellings with drainage tracts. [Practice Quiz / Week 6]" }
+          { text: "Mycetoma", correct: true, why: "Mycetoma (Madura foot) presents as chronic granulomatous pseudo-tumorous swelling accompanied by draining sinus tracts and sulfur granules. [Week 6 Quiz]" },
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis presents as linear nodular ulcerations tracking along regional lymphatic channels. [Week 6 Quiz]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioidomycosis is an inhaled primary respiratory mycosis, not a localized subcutaneous tumor. [Week 6 Quiz]" },
+          { text: "Chromomycosis", correct: false, why: "Chromomycosis produces crusted, verrucous cauliflower-like cutaneous plaques, not tumor-like draining swellings. [Week 6 Quiz]" }
         ]
       },
       {
         id: 6,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
         stem: "What form of Tinea causes infection of the nails?",
         options: [
-          { text: "Tinea Corporis", correct: false, why: "Tinea corporis affects the non-hairy trunk and extremities. [Practice Quiz / Week 6]" },
-          { text: "Tinea Cruris", correct: false, why: "Tinea cruris affects the groin. [Practice Quiz / Week 6]" },
-          { text: "Tinea Unguium", correct: true, why: "Tinea unguium (onychomycosis) is dermatophyte invasion of fingernails or toenails resulting in brittle, discolored, thickened nails. [Practice Quiz / Week 6]" },
-          { text: "Tinea Pedis", correct: false, why: "Tinea pedis affects the plantar skin and web spaces of the feet. [Practice Quiz / Week 6]" }
+          { text: "Tinea Corporis", correct: false, why: "Tinea corporis affects glabrous body skin. [Week 6 Quiz]" },
+          { text: "Tinea Cruris", correct: false, why: "Tinea cruris involves the groin folds. [Week 6 Quiz]" },
+          { text: "Tinea Unguium", correct: true, why: "Tinea unguium (onychomycosis) is dermatophyte fungal invasion of the fingernails or toenails. [Week 6 Quiz]" },
+          { text: "Tinea Pedis", correct: false, why: "Tinea pedis involves the plantar surface and web spaces of the feet. [Week 6 Quiz]" }
         ]
       },
       {
         id: 7,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
         stem: "What causes the most common opportunistic superficial Mycoses?",
         options: [
-          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis is an environmental subcutaneous inoculative mycosis. [Practice Quiz / Week 6]" },
-          { text: "Dermatophytes", correct: false, why: "Dermatophytes are primary superficial skin invaders, not typical opportunistic overgrowth flora. [Practice Quiz / Week 6]" },
-          { text: "Candida Albicans", correct: true, why: "Candida albicans is a resident commensal yeast and represents the single most common cause of opportunistic superficial cutaneous/mucocutaneous infections. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is a primary systemic dimorphic pathogen. [Practice Quiz / Week 6]" }
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis is an environmental subcutaneous mycosis acquired via thorn puncture. [Week 6 Quiz]" },
+          { text: "Dermatophytes", correct: false, why: "Dermatophytes cause primary superficial ringworm infections, rather than opportunistic endogenous overgrowths. [Week 6 Quiz]" },
+          { text: "Candida Albicans", correct: true, why: "Candida albicans is a normal human commensal that represents the most frequent cause of opportunistic superficial mucocutaneous infections. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is an inhaled primary systemic pathogen. [Week 6 Quiz]" }
         ]
       },
       {
         id: 8,
         subjectIndex: 3,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "Gardeners have an increased risk of contracting which of the following?",
+        stem: "Gardeners handling thorny plants and sphagnum moss have an increased risk of contracting which subcutaneous infection?",
         options: [
-          { text: "Sporotrichosis", correct: true, why: "Sporothrix schenckii resides on plants, rose thorns, and sphagnum moss; puncture injuries inoculate spores causing sporotrichosis. [Practice Quiz / Week 6]" },
-          { text: "Mycetoma", correct: false, why: "Mycetoma is acquired through direct soil penetration in barefoot agricultural laborers in tropical regions. [Practice Quiz / Week 6]" },
-          { text: "Chromomycosis", correct: false, why: "Chromomycosis is contracted from direct traumatic splinter inoculation in tropical scrub, not classic rose gardening. [Practice Quiz / Week 6]" },
-          { text: "Pneumocystis", correct: false, why: "Pneumocystis jirovecii is inhaled and manifests exclusively in severely immunocompromised hosts. [Practice Quiz / Week 6]" }
+          { text: "Sporotrichosis", correct: true, why: "Sporothrix schenckii resides on rose thorns and vegetation; traumatic puncture inoculates the fungus, causing 'rose gardener's disease.' [Week 6 Quiz]" },
+          { text: "Mycetoma", correct: false, why: "Mycetoma typically occurs in barefoot agricultural laborers in tropical regions through soil puncture. [Week 6 Quiz]" },
+          { text: "Chromomycosis", correct: false, why: "Chromomycosis is acquired through wood splinter punctures in tropical scrub. [Week 6 Quiz]" },
+          { text: "Pneumocystis", correct: false, why: "Pneumocystis is an airborne opportunistic pulmonary infection in immunocompromised hosts. [Week 6 Quiz]" }
         ]
       },
       {
         id: 9,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following Mycotoxicosis is only produced by aspergillus?",
+        stem: "Which of the following mycotoxins is produced specifically by Aspergillus species?",
         options: [
-          { text: "Candida Albicans", correct: false, why: "Candida is a yeast genus, not a fungal mycotoxin. [Practice Quiz / Week 6]" },
-          { text: "Aflatoxin", correct: true, why: "Aflatoxin is an intensely carcinogenic and hepatotoxic metabolite synthesized specifically by Aspergillus flavus and Aspergillus parasiticus on stored grains and nuts. [Practice Quiz / Week 6]" },
-          { text: "Mycetoma", correct: false, why: "Mycetoma is a subcutaneous clinical syndrome, not a mycotoxin. [Practice Quiz / Week 6]" },
-          { text: "Amatoxin", correct: false, why: "Amatoxin is a fatal mushroom toxin synthesized by Amanita phalloides (death cap mushroom). [Practice Quiz / Week 6]" }
+          { text: "Candida Albicans", correct: false, why: "Candida is a yeast genus, not a toxic metabolite. [Week 6 Quiz]" },
+          { text: "Aflatoxin", correct: true, why: "Aflatoxins are synthesized specifically by Aspergillus flavus and Aspergillus parasiticus on stored grains and nuts. [Week 6 Quiz]" },
+          { text: "Mycetoma", correct: false, why: "Mycetoma is a chronic subcutaneous clinical syndrome. [Week 6 Quiz]" },
+          { text: "Amatoxin", correct: false, why: "Amatoxins are fatal cyclopeptides produced by the poisonous mushroom Amanita phalloides. [Week 6 Quiz]" }
         ]
       },
       {
         id: 10,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which following Mycotoxicosis acts as a carcinogen and is hepatotoxic?",
+        stem: "Which fungal toxin acts as a potent liver carcinogen and is hepatotoxic?",
         options: [
-          { text: "Mycetoma", correct: false, why: "Mycetoma is a chronic infection of subcutaneous tissue. [Practice Quiz / Week 6]" },
-          { text: "Candida Albicans", correct: false, why: "Candida is an opportunistic yeast organism. [Practice Quiz / Week 6]" },
-          { text: "Aflatoxin", correct: true, why: "Aflatoxins are potent liver toxins and carcinogenic agents directly linked to hepatocellular carcinoma. [Practice Quiz / Week 6]" },
-          { text: "Amatoxin", correct: false, why: "Amatoxins cause rapid acute liver and kidney cellular necrosis rather than chronic carcinogenesis. [Practice Quiz / Week 6]" }
+          { text: "Mycetoma", correct: false, why: "Mycetoma is a subcutaneous tissue infection. [Week 6 Quiz]" },
+          { text: "Candida Albicans", correct: false, why: "Candida albicans is an opportunistic yeast. [Week 6 Quiz]" },
+          { text: "Aflatoxin", correct: true, why: "Aflatoxin B1 is a powerful hepatotoxin and liver carcinogen strongly linked to hepatocellular carcinoma. [Week 6 Quiz]" },
+          { text: "Amatoxin", correct: false, why: "Amatoxin causes acute massive hepatorenal necrosis rather than chronic hepatic carcinogenesis. [Week 6 Quiz]" }
         ]
       },
       {
         id: 11,
         subjectIndex: 4,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which condition has a higher incidence in the southwest of the US?",
+        stem: "Which primary systemic mycosis has a higher incidence in the Southwestern United States?",
         options: [
-          { text: "Blastomycosis", correct: false, why: "Blastomycosis occurs predominantly in the Ohio-Mississippi River valleys and Great Lakes. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is concentrated in the central Midwestern river valleys. [Practice Quiz / Week 6]" },
-          { text: "Coccidiomycosis", correct: true, why: "Coccidioidomycosis (Valley Fever) is endemic to alkaline, semiarid soils of the American Southwest (California, Arizona, New Mexico). [Practice Quiz / Week 6]" },
-          { text: "Pneumocystis carinii", correct: false, why: "Pneumocystis pneumonia occurs globally without regional geographical clustering. [Practice Quiz / Week 6]" }
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis is endemic to the central river valleys and eastern North America. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is concentrated in the Ohio and Mississippi river basins. [Week 6 Quiz]" },
+          { text: "Coccidioidomycosis", correct: true, why: "Coccidioidomycosis (Valley Fever, Coccidioides immitis) is endemic to alkaline desert soils of the American Southwest. [Week 6 Quiz]" },
+          { text: "Pneumocystis carinii", correct: false, why: "Pneumocystis is ubiquitous globally and not geographically restricted. [Week 6 Quiz]" }
         ]
       },
       {
         id: 12,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "All of the following are sexual spores, except?",
+        stem: "All of the following are sexual fungal spores, EXCEPT?",
         options: [
-          { text: "Ascospores", correct: false, why: "Ascospores are sexual fungal spores formed within an ascus. [Practice Quiz / Week 6]" },
-          { text: "Basidiospores", correct: false, why: "Basidiospores are sexual spores produced externally on a basidium. [Practice Quiz / Week 6]" },
-          { text: "Conidia", correct: true, why: "Conidia (conidiospores) are strictly asexual spores that pinch off or segment from hyphal tips without nuclear fusion. [Practice Quiz / Week 6]" },
-          { text: "Zygospores", correct: false, why: "Zygospores are thick-walled diploid sexual spores formed by the fusion of compatible hyphae. [Practice Quiz / Week 6]" }
+          { text: "Ascospores", correct: false, why: "Ascospores are sexual spores produced inside a sac-like ascus. [Week 6 Quiz]" },
+          { text: "Basidiospores", correct: false, why: "Basidiospores are sexual spores produced on club-like basidia. [Week 6 Quiz]" },
+          { text: "Conidia", correct: true, why: "Conidia are free, naked asexual spores formed without nuclear fusion. [Week 6 Quiz]" },
+          { text: "Zygospores", correct: false, why: "Zygospores are thick-walled diploid sexual spores formed by hyphal conjugation. [Week 6 Quiz]" }
         ]
       },
       {
         id: 13,
         subjectIndex: 4,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is a primary systemic mycosis that is prevalent in the eastern seaboard?",
+        stem: "Which primary systemic mycosis is prevalent along the eastern seaboard and Great Lakes regions?",
         options: [
-          { text: "Blastomycosis", correct: true, why: "Blastomycosis (Blastomyces dermatitidis) is classically endemic to the southeastern US, eastern seaboard, and areas bordering the Great Lakes and St. Lawrence river. [Practice Quiz / Week 6]" },
-          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic pathogen found worldwide in pigeon excreta. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is centered predominantly in the Midwest river valleys. [Practice Quiz / Week 6]" },
-          { text: "Coccidiomycosis", correct: false, why: "Coccidioidomycosis is strictly restricted to the arid Southwestern desert basin. [Practice Quiz / Week 6]" }
+          { text: "Blastomycosis", correct: true, why: "Blastomycosis (Blastomyces dermatitidis) is endemic along the eastern seaboard, southeastern US, and Great Lakes basin. [Week 6 Quiz]" },
+          { text: "Cryptococcosis", correct: false, why: "Cryptococcosis is an opportunistic yeast found worldwide in pigeon droppings. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is centered in the Midwestern river valleys. [Week 6 Quiz]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioidomycosis is restricted to the Southwestern desert. [Week 6 Quiz]" }
         ]
       },
       {
         id: 14,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "What form of Tinea infection appears on the trunk of the body?",
+        stem: "What form of Tinea infection appears as annular erythematous rings on the trunk of the body?",
         options: [
-          { text: "Tinea cruris", correct: false, why: "Tinea cruris affects the groin folds. [Practice Quiz / Week 6]" },
-          { text: "Tinea pedis", correct: false, why: "Tinea pedis affects the feet. [Practice Quiz / Week 6]" },
-          { text: "Tinea corporis", correct: true, why: "Tinea corporis ('body ringworm') appears on the glabrous skin of the trunk, abdomen, and limbs as circular expanding erythematous rings. [Practice Quiz / Week 6]" },
-          { text: "Tinea unguium", correct: false, why: "Tinea unguium involves the nails. [Practice Quiz / Week 6]" }
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris involves the groin. [Week 6 Quiz]" },
+          { text: "Tinea pedis", correct: false, why: "Tinea pedis involves the feet. [Week 6 Quiz]" },
+          { text: "Tinea corporis", correct: true, why: "Tinea corporis ('body ringworm') appears on the glabrous skin of the trunk and extremities. [Week 6 Quiz]" },
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium involves the nail plate. [Week 6 Quiz]" }
         ]
       },
       {
         id: 15,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is an asexual mold spore that is formed by successive cleavages within a sac like head?",
+        stem: "Which asexual mold spore is formed by successive cleavages within an enclosed sac-like head?",
         options: [
-          { text: "Zygospore", correct: false, why: "Zygospores are sexual spores produced by hyphal fusion. [Practice Quiz / Week 6]" },
-          { text: "Conidia", correct: false, why: "Conidia are free naked spores never enclosed within a sac. [Practice Quiz / Week 6]" },
-          { text: "Sporangiospore", correct: true, why: "Sporangiospores are asexual spores produced through progressive cleavages inside an enclosed sac-like head called a sporangium atop a sporangiophore. [Practice Quiz / Week 6]" },
-          { text: "Ascospore", correct: false, why: "Ascospores are sexual fungal spores resulting from meiosis inside an ascus. [Practice Quiz / Week 6]" }
+          { text: "Zygospore", correct: false, why: "Zygospores are diploid sexual spores resulting from hyphal fusion. [Week 6 Quiz]" },
+          { text: "Conidia", correct: false, why: "Conidia are unsheathed naked spores never enclosed within a sac. [Week 6 Quiz]" },
+          { text: "Sporangiospore", correct: true, why: "Sporangiospores develop by internal cleavages inside a terminal sac-like sporangium. [Week 6 Quiz]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are sexual spores produced within an ascus. [Week 6 Quiz]" }
         ]
       },
       {
         id: 16,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which fungal infection causes a decrease in pigment of the color on the skin?",
+        stem: "Which fungal infection causes hypopigmented or hyperpigmented macules on the skin of the trunk?",
         options: [
-          { text: "Tinea versicolor", correct: true, why: "Tinea versicolor (Pityriasis versicolor, caused by Malassezia furfur) disrupts normal melanin production, causing hypopigmented or hyperpigmented macules. [Practice Quiz / Week 6]" },
-          { text: "Tinea pedis", correct: false, why: "Tinea pedis causes scaling, fissures, and erythema between toes. [Practice Quiz / Week 6]" },
-          { text: "Tinea unguium", correct: false, why: "Tinea unguium causes yellow, brittle nails. [Practice Quiz / Week 6]" },
-          { text: "Tinea corporis", correct: false, why: "Tinea corporis presents as annular red plaques with active advancing borders. [Practice Quiz / Week 6]" }
+          { text: "Tinea versicolor", correct: true, why: "Tinea versicolor (caused by Malassezia furfur) disrupts normal melanin production, producing mottled patches on the trunk. [Week 6 Quiz]" },
+          { text: "Tinea pedis", correct: false, why: "Tinea pedis causes itching fissures between toes. [Week 6 Quiz]" },
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium results in brittle, yellow nails. [Week 6 Quiz]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis presents as annular red rings with active advancing borders. [Week 6 Quiz]" }
         ]
       },
       {
         id: 17,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "Which of the following is a woven intertwining mass of hyphae that makes up the body or colony of mold?",
+        stem: "Which of the following is an interwoven, intertwining mass of hyphae that makes up the body or colony of a mold?",
         options: [
-          { text: "Mycelium", correct: true, why: "The mycelium represents the massed, woven collective body composed of branching hyphae that constitutes a mold colony. [Practice Quiz / Week 6]" },
-          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae are individual reproductive filaments projecting above the substrate. [Practice Quiz / Week 6]" },
-          { text: "Tophocyte", correct: false, why: "Tophocyte is an unrelated cellular term not describing fungal colonies. [Practice Quiz / Week 6]" },
-          { text: "Vegetative hyphae", correct: false, why: "Vegetative hyphae refer specifically to nutrient-absorbing filaments growing below the surface. [Practice Quiz / Week 6]" }
+          { text: "Mycelium", correct: true, why: "The mycelium represents the massed, woven collective body composed of branching hyphae. [Week 6 Quiz]" },
+          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae are individual reproductive filaments projecting above the surface. [Week 6 Quiz]" },
+          { text: "Trophozoite", correct: false, why: "A trophozoite is the active feeding motile stage of protozoans. [Week 6 Quiz]" },
+          { text: "Vegetative hyphae", correct: false, why: "Vegetative hyphae are the specific individual filaments growing below the surface to absorb nutrients. [Week 6 Quiz]" }
         ]
       },
       {
         id: 18,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "What form of tinea causes hair shafts to glow green under a Wood's lamp?",
+        stem: "What form of tinea causes infected hair shafts to fluoresce bright green under a Wood's lamp?",
         options: [
-          { text: "Tinea unguium", correct: false, why: "Tinea unguium infects the nails, not scalp hair follicles. [Practice Quiz / Week 6]" },
-          { text: "Tinea cruris", correct: false, why: "Tinea cruris involves groin skin and does not display green hair shaft fluorescence. [Practice Quiz / Week 6]" },
-          { text: "Tinea capitis", correct: true, why: "Tinea capitis (ringworm of the scalp, particularly when caused by Microsporum species) invades hair shafts that fluoresce brilliant green under ultraviolet Wood's lamp illumination. [Practice Quiz / Week 6]" },
-          { text: "Tinea corporis", correct: false, why: "Tinea corporis involves glabrous body skin rather than localized fluorescent scalp hairs. [Practice Quiz / Week 6]" }
+          { text: "Tinea unguium", correct: false, why: "Tinea unguium infects nails, not scalp hair follicles. [Week 6 Quiz]" },
+          { text: "Tinea cruris", correct: false, why: "Tinea cruris involves groin skin and does not display green hair fluorescence. [Week 6 Quiz]" },
+          { text: "Tinea capitis", correct: true, why: "Tinea capitis (scalp ringworm, especially from Microsporum species) invades hairs that fluoresce brilliant green under UV light. [Week 6 Quiz]" },
+          { text: "Tinea corporis", correct: false, why: "Tinea corporis involves body skin rather than localized fluorescent scalp hairs. [Week 6 Quiz]" }
         ]
       },
       {
         id: 19,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is a systemic fungal infection associated with AIDS?",
+        stem: "Which opportunistic fungal infection is a classic AIDS-defining disease that produces diffuse interstitial pneumonia?",
         options: [
-          { text: "Cryptosporidiosis", correct: false, why: "Cryptosporidiosis is caused by an apicomplexan protozoan, not a fungus. [Practice Quiz / Week 6]" },
-          { text: "Pneumocystis carinii", correct: true, why: "Pneumocystis carinii (jirovecii) is an opportunistic fungal pathogen classically responsible for severe interstitial pneumonia in AIDS patients with CD4 counts below 200. [Practice Quiz / Week 6]" },
-          { text: "Histoplasmosis", correct: false, why: "While Histoplasma can disseminate in AIDS, Pneumocystis is the classic, diagnostic AIDS-defining opportunistic fungal pneumonia highlighted on boards. [Practice Quiz / Week 6]" },
-          { text: "Blastomycosis", correct: false, why: "Blastomycosis is a true primary pathogen that infects immunocompetent hosts rather than serving as a hallmark AIDS-defining fungal infection. [Practice Quiz / Week 6]" }
+          { text: "Cryptosporidiosis", correct: false, why: "Cryptosporidiosis is caused by an apicomplexan protozoan, not a fungus. [Week 6 Quiz]" },
+          { text: "Pneumocystis carinii (jirovecii)", correct: true, why: "Pneumocystis jirovecii causes severe opportunistic PCP pneumonia in AIDS patients with CD4 counts below 200. [Week 6 Quiz]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis is an endemic primary systemic pathogen, not the classic AIDS pneumonia marker. [Week 6 Quiz]" },
+          { text: "Blastomycosis", correct: false, why: "Blastomycosis is a true primary pathogen that infects immunocompetent hosts. [Week 6 Quiz]" }
         ]
       },
       {
         id: 20,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "Which of the following is an asexual mold spore that is formed by pinching off the tip of hyphae or by segmentation of hyphae?",
+        stem: "Which asexual mold spore is formed directly by pinching off the tip of specialized hyphae or by segmentation?",
         options: [
-          { text: "Sporangiospore", correct: false, why: "Sporangiospores develop via cleavages within an enclosing sac-like sporangium. [Practice Quiz / Week 6]" },
-          { text: "Ascospore", correct: false, why: "Ascospores are sexual spores formed inside an ascus following meiosis. [Practice Quiz / Week 6]" },
-          { text: "Zygospore", correct: false, why: "Zygospores are diploid sexual resting spores created by hyphal conjugation. [Practice Quiz / Week 6]" },
-          { text: "Conidia", correct: true, why: "Conidia (conidiospores) are free asexual spores formed directly by pinching off the tips of specialized hyphae or by segmentation of vegetative hyphae. [Practice Quiz / Week 6]" }
+          { text: "Sporangiospore", correct: false, why: "Sporangiospores develop inside an enclosed sporangium sac. [Week 6 Quiz]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are sexual spores produced inside an ascus. [Week 6 Quiz]" },
+          { text: "Zygospore", correct: false, why: "Zygospores are diploid sexual resting spores created by hyphal fusion. [Week 6 Quiz]" },
+          { text: "Conidia", correct: true, why: "Conidia are free asexual spores formed by pinching off hyphal tips or segmentation. [Week 6 Quiz]" }
         ]
       },
       {
         id: 21,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: false,
-        stem: "Which type of mold filament grows below the surface?",
+        stem: "Which specific portion of a mold colony penetrates into the substrate to absorb nourishment?",
         options: [
-          { text: "Vegetative Hyphae", correct: true, why: "Vegetative hyphae penetrate below the surface into the nutrient substrate to absorb nourishment and anchor the fungal colony. [Practice Quiz / Week 6]" },
-          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae project upward into the air and bear reproductive spores. [Practice Quiz / Week 6]" },
-          { text: "None of these", correct: false, why: "Vegetative hyphae specifically fit this morphological definition. [Practice Quiz / Week 6]" },
-          { text: "Both of these", correct: false, why: "Only vegetative hyphae grow embedded beneath the surface. [Practice Quiz / Week 6]" }
+          { text: "Vegetative Hyphae", correct: true, why: "Vegetative hyphae grow submerged into the nutrient medium to absorb food. [Week 6 Quiz]" },
+          { text: "Aerial Hyphae", correct: false, why: "Aerial hyphae project upward into the air to bear reproductive spores. [Week 6 Quiz]" },
+          { text: "Pseudohyphae", correct: false, why: "Pseudohyphae are chains of budding yeast cells, not specialized mold absorbing roots. [Week 6 Quiz]" },
+          { text: "Arthrospores", correct: false, why: "Arthrospores are fragmented reproductive units, not vegetative absorbing filaments. [Week 6 Quiz]" }
         ]
       },
       {
         id: 22,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is a component of fungi cell membrane that is lacking in bacteria?",
+        stem: "Which component of the fungal cell membrane is absent in bacterial cell membranes, providing a target for antifungals?",
         options: [
-          { text: "Sterols", correct: true, why: "Fungal cell membranes contain sterols (specifically ergosterol) which provide structural fluidity, whereas bacterial cell membranes lack sterols (with rare exceptions like Mycoplasma). [Practice Quiz / Week 6]" },
-          { text: "Phospholipid", correct: false, why: "Both fungal and bacterial cell membranes possess lipid bilayers containing phospholipids. [Practice Quiz / Week 6]" },
-          { text: "None of these", correct: false, why: "Sterols specifically differentiate fungal eukaryotic membranes from bacterial membranes. [Practice Quiz / Week 6]" },
-          { text: "Proteins", correct: false, why: "Both fungal and bacterial cell membranes contain abundant membrane-spanning proteins. [Practice Quiz / Week 6]" }
+          { text: "Sterols (e.g., ergosterol)", correct: true, why: "Fungal membranes contain sterols (specifically ergosterol and zymosterol) for structural stability, which are absent in true bacteria. [Week 6 Quiz]" },
+          { text: "Phospholipids", correct: false, why: "Both fungal and bacterial cell membranes contain phospholipid bilayers. [Week 6 Quiz]" },
+          { text: "Peptidoglycan", correct: false, why: "Peptidoglycan is a cell wall carbohydrate polymer of bacteria, not a membrane lipid. [Week 6 Quiz]" },
+          { text: "Integral proteins", correct: false, why: "Both fungal and bacterial membranes contain membrane transport proteins. [Week 6 Quiz]" }
         ]
       },
       {
         id: 23,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Which of the following is a sexual mold spore that is diploid and formed from fusion?",
+        stem: "Which sexual mold spore is diploid and formed directly from the fusion of two opposite hyphal mating strains?",
         options: [
-          { text: "Zygospore", correct: true, why: "Zygospores are thick-walled diploid resting sexual spores produced by the direct fusion and conjugation of two opposite mating hyphae. [Practice Quiz / Week 6]" },
-          { text: "Conidia", correct: false, why: "Conidia are haploid asexual spores. [Practice Quiz / Week 6]" },
-          { text: "Sporangiospore", correct: false, why: "Sporangiospores are haploid asexual spores produced in a sporangium. [Practice Quiz / Week 6]" },
-          { text: "Ascospore", correct: false, why: "Ascospores are haploid sexual spores formed inside a sac-like ascus following meiosis. [Practice Quiz / Week 6]" }
+          { text: "Zygospore", correct: true, why: "Zygospores are thick-walled diploid resting sexual spores produced by hyphal conjugation. [Week 6 Quiz]" },
+          { text: "Conidia", correct: false, why: "Conidia are haploid asexual spores. [Week 6 Quiz]" },
+          { text: "Sporangiospore", correct: false, why: "Sporangiospores are haploid asexual spores inside a sporangium. [Week 6 Quiz]" },
+          { text: "Ascospore", correct: false, why: "Ascospores are haploid sexual spores formed inside a sac-like ascus following meiosis. [Week 6 Quiz]" }
         ]
       },
       {
         id: 24,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
-        difficulty: "easy",
+        slideRef: "Week 6 Practice Quiz",
+        difficulty: "medium",
         priority: false,
-        stem: "Fungal associations with humans are primarily _______________.",
+        stem: "Regarding ecological associations with human hosts, fungal relationships are classified primarily as:",
         options: [
-          { text: "Parasitic or Antagonistic", correct: false, why: "Antagonistic is not an official ecological association category for human-fungal flora. [Practice Quiz / Week 6]" },
-          { text: "Commensal or Parasitic", correct: true, why: "Fungi have no known mutualistic associations with humans; they exist strictly as commensals (deriving benefit without harm) or parasites (causing mycoses). [Practice Quiz / Week 6]" },
-          { text: "Mutualistic or Parasitic", correct: false, why: "Humans lack mutualistic associations with fungi. [Practice Quiz / Week 6]" },
-          { text: "Mutualistic or Commensal", correct: false, why: "Mutualistic relationships are absent between humans and fungi. [Practice Quiz / Week 6]" }
+          { text: "Antagonistic or Mutualistic", correct: false, why: "Humans do not maintain mutualistic partnerships with fungi. [Lecture 3 & Week 6]" },
+          { text: "Commensal or Parasitic", correct: true, why: "Fungi colonize humans either harmlessly as commensal normal flora or as parasites causing clinical mycoses. [Lecture 3 & Week 6]" },
+          { text: "Strictly Mutualistic", correct: false, why: "Fungi provide no indispensable reciprocal metabolic benefits to human hosts. [Lecture 3 & Week 6]" },
+          { text: "Strictly Antagonistic", correct: false, why: "Many resident fungi live in equilibrium without causing active disease. [Lecture 3 & Week 6]" }
         ]
       },
       {
         id: 25,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "hard",
         priority: true,
-        stem: "What Phylum of Fungi has no sexual form of reproduction?",
+        stem: "Which artificial taxonomic phylum consists of fungi with no known or observed sexual reproductive phase?",
         options: [
-          { text: "Basidiomycota", correct: false, why: "Basidiomycota reproduce sexually via basidiospores on club-like basidia. [Practice Quiz / Week 6]" },
-          { text: "Ascomycota", correct: false, why: "Ascomycota reproduce sexually via ascospores within an ascus. [Practice Quiz / Week 6]" },
-          { text: "Deuteromycota", correct: true, why: "Deuteromycota (Fungi Imperfecti) is the artificial phylum designated for fungi that have no observed sexual reproductive cycle. [Practice Quiz / Week 6]" },
-          { text: "Zygomycota", correct: false, why: "Zygomycota reproduce sexually via diploid zygospores. [Practice Quiz / Week 6]" }
+          { text: "Basidiomycota", correct: false, why: "Basidiomycota produce sexual basidiospores on club-like basidia. [Week 6 Quiz]" },
+          { text: "Ascomycota", correct: false, why: "Ascomycota reproduce sexually via ascospores within an ascus. [Week 6 Quiz]" },
+          { text: "Deuteromycota", correct: true, why: "Deuteromycota (Fungi Imperfecti) is the grouping for fungi with no observed sexual reproduction. [Week 6 Quiz]" },
+          { text: "Zygomycota", correct: false, why: "Zygomycota reproduce sexually via diploid zygospores. [Week 6 Quiz]" }
         ]
       },
       {
         id: 26,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "easy",
         priority: true,
-        stem: "Yeast is only capable of performing which form of reproduction?",
+        stem: "Under standard single-celled conditions, yeasts reproduce primarily through which asexual process?",
         options: [
-          { text: "Asexual", correct: true, why: "In the lecture scope, yeast reproduction occurs via asexual budding (binary fission). [Practice Quiz / Week 6]" },
-          { text: "Sexual", correct: false, why: "Yeast cells primarily proliferate via asexual budding. [Practice Quiz / Week 6]" },
-          { text: "They do not reproduce", correct: false, why: "Yeasts reproduce actively by asexual budding. [Practice Quiz / Week 6]" },
-          { text: "They can do both", correct: false, why: "Per the course slides and practice exam key, yeast reproduction is categorized strictly as asexual budding. [Practice Quiz / Week 6]" }
+          { text: "Asexual budding", correct: true, why: "Yeasts proliferate as single cells predominantly via asexual budding or transverse fission. [Week 6 Quiz]" },
+          { text: "Meiotic conjugation", correct: false, why: "Yeasts primarily divide clonally through mitotic budding. [Week 6 Quiz]" },
+          { text: "Endospore cleavage", correct: false, why: "Endospores are survival structures of certain bacteria, not reproductive modes of yeast. [Week 6 Quiz]" },
+          { text: "Apical hyphal fragmentation", correct: false, why: "Hyphal fragmentation is the asexual division of filamentous molds. [Week 6 Quiz]" }
         ]
       },
       {
         id: 27,
         subjectIndex: 5,
         quarter: 1,
-        slideRef: "Week 6 Verbatim",
+        slideRef: "Week 6 Practice Quiz",
         difficulty: "medium",
         priority: true,
-        stem: "Yeast (candida) infections can fall under what category or categories of fungal infections?",
+        stem: "Candida albicans infections can be categorized under which clinical classifications?",
         options: [
-          { text: "Both superficial and systemic", correct: true, why: "Candida causes both superficial mucocutaneous infections (thrush, vaginitis, intertrigo) and severe systemic candidiasis in immunocompromised patients. [Practice Quiz / Week 6]" },
-          { text: "Allergies", correct: false, why: "Allergies result from hypersensitivity to aerosolized mold spores. [Practice Quiz / Week 6]" },
-          { text: "Systemic", correct: false, why: "Candida is also widely recognized for its common superficial infections. [Practice Quiz / Week 6]" },
-          { text: "Superficial cutaneous infection", correct: false, why: "Candida is not solely superficial; it can invade deep organs and the bloodstream. [Practice Quiz / Week 6]" }
+          { text: "Both superficial and systemic", correct: true, why: "Candida can manifest as superficial mucocutaneous infections (thrush, vulvovaginitis) and severe deep systemic fungemia in compromised hosts. [Week 6 Quiz]" },
+          { text: "Respiratory allergies only", correct: false, why: "Candida causes active infectious tissue disease rather than pure inhalant allergies. [Week 6 Quiz]" },
+          { text: "Exclusively subcutaneous mycoses", correct: false, why: "Candida does not cause localized inoculative puncture syndromes like sporotrichosis. [Week 6 Quiz]" },
+          { text: "Primary systemic endemic mycoses", correct: false, why: "Candida is an opportunistic normal flora commensal, not an environmentally acquired endemic primary mycosis. [Week 6 Quiz]" }
         ]
       },
+
+      // --- HIGH-YIELD TOPICS, TRAPS & INSTRUCTOR EMPHASES ---
       {
         id: 28,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Slide 5",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
         priority: true,
-        stem: "Thermal dimorphism in pathogenic fungi is governed by temperature. At what temperature do dimorphic fungi transition into their parasitic yeast phase?",
+        stem: "True or False: Pathogenic dimorphic fungi grow as filamentous molds at normal core body temperature (37°C) and convert to single-celled yeasts at lower environmental room temperatures (25°C).",
         options: [
-          { text: "25°C", correct: false, why: "At 25°C (room/ambient environmental temperature), dimorphic fungi grow in their filamentous mold form. [Slide #5]" },
-          { text: "30°C", correct: false, why: "30°C is an intermediate temperature where mold morphology still predominates. [Slide #5]" },
-          { text: "37°C", correct: true, why: "At 37°C (human body temperature), dimorphic fungi convert into the pathogenic round-to-oval yeast phase. [Slide #5]" },
-          { text: "42°C", correct: false, why: "42°C exceeds normal human core physiological body temperature. [Slide #5]" }
+          { text: "True", correct: false, why: "This is the classic inverted exam trap! Dimorphic fungi are molds at 25°C and yeasts at 37°C ('mold in the cold, yeast in the beast'). [Fungi Lecture Core]" },
+          { text: "False", correct: true, why: "False! At 25°C (ambient/environmental temperature), they grow as molds; at 37°C (human body temperature), they transition into pathogenic yeasts. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 29,
-        subjectIndex: 0,
+        subjectIndex: 1,
         quarter: 1,
-        slideRef: "Slide 2",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
-        priority: false,
-        stem: "When budding yeast cells fail to detach completely and form an elongated chain resembling mold hyphae, this cellular arrangement is termed:",
+        priority: true,
+        stem: "How do fungal spores fundamentally differ in biological purpose from bacterial endospores?",
         options: [
-          { text: "A Septate Hypha", correct: false, why: "True septate hyphae are continuous filamentous mold structures divided by internal cross-walls. [Slide #2]" },
-          { text: "A Pseudohypha", correct: true, why: "A pseudohypha consists of a chain of newly budded yeast cells that remain attached end-to-end, mimicking true mold filaments. [Slide #2]" },
-          { text: "A Mycelium", correct: false, why: "A mycelium is the interwoven macroscopic mass formed by genuine mold hyphae. [Slide #2]" },
-          { text: "A Sporangiophore", correct: false, why: "A sporangiophore is an upright reproductive aerial stalk bearing a sporangium. [Slide #2]" }
+          { text: "Bacterial endospores are for population multiplication; fungal spores are for survival only.", correct: false, why: "This reverses their roles; bacterial endospores do not multiply population numbers. [Fungi Lecture Core]" },
+          { text: "Fungal spores are reproductive structures that multiply organism count; bacterial endospores are strictly for survival.", correct: true, why: "One bacterium forms one endospore (zero population increase), whereas a single fungus generates thousands of reproductive spores to multiply and disperse. [Fungi Lecture Core]" },
+          { text: "Bacterial endospores are diploid; fungal spores are always polyploid.", correct: false, why: "Bacterial endospores contain single haploid copies of the bacterial genome. [Fungi Lecture Core]" },
+          { text: "Fungal spores are destroyed by boiling water; bacterial endospores are destroyed by gentle warmth.", correct: false, why: "Bacterial endospores are far more heat-resistant than fungal spores. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 30,
-        subjectIndex: 0,
+        subjectIndex: 1,
         quarter: 1,
-        slideRef: "Slide 3",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
-        priority: false,
-        stem: "Hyphae that lack cross-wall septa and contain multiple uninterrupted nuclei flowing through a continuous cytoplasmic channel are classified as:",
+        priority: true,
+        stem: "The vast majority of free-living saprobes and human fungal pathogens fall under which taxonomic phylum?",
         options: [
-          { text: "Septate hyphae", correct: false, why: "Septate hyphae possess cross-walls separating individual cellular compartments. [Slide #3]" },
-          { text: "Non-septate hyphae", correct: true, why: "Non-septate (coenocytic) hyphae lack cross-walls, permitting continuous cytoplasmic and multi-nuclear flow (analogous to boba in a straw). [Slide #3]" },
-          { text: "Aerial hyphae", correct: false, why: "Aerial describes orientation above the surface, not the presence or absence of cross-walls. [Slide #3]" },
-          { text: "Vegetative hyphae", correct: false, why: "Vegetative describes nutrient absorption below the substrate, not cross-wall architecture. [Slide #3]" }
+          { text: "Zygomycota", correct: false, why: "Zygomycota is a smaller group consisting of common bread molds like Rhizopus. [Fungi Lecture Core]" },
+          { text: "Ascomycota", correct: true, why: "Ascomycota (sac fungi) is the largest fungal phylum, containing the majority of free-living saprobes and clinical pathogens. [Fungi Lecture Core]" },
+          { text: "Basidiomycota", correct: false, why: "Basidiomycota includes macroscopic mushrooms and bracket fungi. [Fungi Lecture Core]" },
+          { text: "Chytridiomycota", correct: false, why: "Chytrids are primitive aquatic fungi that infect amphibians. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 31,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Slide 1",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
         priority: false,
-        stem: "Regarding fungal oxygen requirements, which physiological category does NOT exist among fungi?",
+        stem: "Regarding physiological oxygen requirements, which respiratory category is NOT found among fungi?",
         options: [
-          { text: "Obligate aerobes", correct: false, why: "Many fungi are obligate aerobes requiring oxygen for respiration. [Slide #1]" },
-          { text: "Facultative anaerobes", correct: false, why: "Many yeasts are facultative anaerobes capable of fermenting sugars without oxygen. [Slide #1]" },
-          { text: "Obligate anaerobes", correct: true, why: "There are no obligate anaerobic fungi; fungi are either aerobic or facultative organisms. [Slide #1]" },
-          { text: "Microaerophilic organisms", correct: false, why: "Fungi can survive across varied low oxygen levels, but none are strictly poisoned by oxygen (obligate anaerobes). [Slide #1]" }
+          { text: "Obligate aerobes", correct: false, why: "Most molds are obligate aerobes requiring oxygen. [Fungi Lecture Core]" },
+          { text: "Facultative anaerobes", correct: false, why: "Yeasts are facultative anaerobes capable of fermenting sugars in the absence of oxygen. [Fungi Lecture Core]" },
+          { text: "Obligate anaerobes", correct: true, why: "There are no obligate anaerobic fungi; all fungi can tolerate oxygen, and none are strictly poisoned by it. [Fungi Lecture Core]" },
+          { text: "Aerotolerant organisms", correct: false, why: "Yeasts and molds tolerate ambient atmospheric conditions. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 32,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Slide 1",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
-        priority: true,
-        stem: "Fungi obtain their organic nutrients exclusively by absorbing dissolved dead and decaying matter. This nutritional classification is termed:",
+        priority: false,
+        stem: "How do most fungi obtain their organic nutrition?",
         options: [
-          { text: "Autotrophs", correct: false, why: "Autotrophs produce their own organic nutrients via photosynthesis or chemosynthesis. [Slide #1]" },
-          { text: "Saprobes", correct: true, why: "Saprobes (saprophytes) are heterotrophic organisms that feed directly upon dead, decaying organic matter. [Slide #1]" },
-          { text: "Chemolithotrophs", correct: false, why: "Chemolithotrophs utilize inorganic mineral compounds for energy. [Slide #1]" },
-          { text: "Obligate intracellular parasites", correct: false, why: "Fungi are free-living extracellular absorbers rather than obligate intracellular invaders. [Slide #1]" }
+          { text: "By photosynthesizing carbon dioxide into glucose", correct: false, why: "Fungi lack chlorophyll and cannot perform photosynthesis. [Fungi Lecture Core]" },
+          { text: "As heterotrophic saprobes that absorb dissolved organic matter from decaying substrates", correct: true, why: "Most fungi are free-living saprobes that secrete extracellular enzymes to digest and absorb decaying organic matter (some act as parasites). [Fungi Lecture Core]" },
+          { text: "By fixing atmospheric nitrogen via root nodules", correct: false, why: "Nitrogen fixation is carried out by specialized bacteria like Rhizobium. [Fungi Lecture Core]" },
+          { text: "As autotrophic chemolithotrophs oxidizing sulfur", correct: false, why: "Fungi are chemoheterotrophs requiring organic carbon sources. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 33,
-        subjectIndex: 1,
+        subjectIndex: 3,
         quarter: 1,
-        slideRef: "Slide 7",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
         priority: true,
-        stem: "How do bacterial endospores differ functionally from fungal spores?",
+        stem: "What shared feature characterizes the primary route of entry for ALL three subcutaneous mycoses (Sporotrichosis, Mycetoma, and Chromoblastomycosis)?",
         options: [
-          { text: "Bacterial endospores are reproductive; fungal spores are for survival only.", correct: false, why: "This is completely inverted; bacterial endospores are strictly for survival, whereas fungal spores are reproductive. [Slide #7]" },
-          { text: "Fungal spores are reproductive and increase cell numbers; bacterial endospores are strictly for survival.", correct: true, why: "Bacterial endospores do not increase cell count (one bacterium makes one endospore), whereas fungi generate numerous reproductive spores to propagate. [Slide #7]" },
-          { text: "Bacterial endospores confer genetic diversification; fungal spores do not.", correct: false, why: "Sexual fungal spores generate genetic diversification, whereas bacterial endospores are clonal. [Slide #7]" },
-          { text: "Bacterial endospores are diploid; fungal spores are always polyploid.", correct: false, why: "Bacterial endospores contain single haploid copies of the bacterial chromosome. [Slide #7]" }
+          { text: "Inhalation of airborne dust during windstorms", correct: false, why: "Inhalation is the primary route for systemic respiratory mycoses. [Fungi Lecture Core]" },
+          { text: "Traumatic puncture wound inoculating environmental soil or plant debris beneath the epidermis", correct: true, why: "All three subcutaneous mycoses require traumatic inoculation (thorns, splinters, soil punctures) directly breaching the dermal barrier. [Fungi Lecture Core]" },
+          { text: "Ingestion of food contaminated with fungal mycelia", correct: false, why: "Ingestion of fungal products leads to mycotoxicosis, not localized subcutaneous lesions. [Fungi Lecture Core]" },
+          { text: "Person-to-person transmission through direct physical touch", correct: false, why: "Subcutaneous mycoses are environmental saprobes and are not contagious between humans. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 34,
-        subjectIndex: 1,
+        subjectIndex: 3,
         quarter: 1,
-        slideRef: "Slide 6",
-        difficulty: "easy",
-        priority: false,
-        stem: "When a fragment breaks off an established mold colony and independently develops into an identical full-sized colony, this asexual process is termed:",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "hard",
+        priority: true,
+        stem: "A patient presents with rough, dark, crusted, cauliflower-like warty cutaneous nodules along the lower leg following a puncture injury. This presentation is characteristic of:",
         options: [
-          { text: "Apical germination", correct: false, why: "Apical germination refers to directional hyphal tip extension. [Slide #6]" },
-          { text: "Fragmentation", correct: true, why: "Fragmentation is an asexual mold multiplication process where any severed piece of hypha continues independent vegetative growth. [Slide #6]" },
-          { text: "Schizogony", correct: false, why: "Schizogony is multiple fission seen in protozoans, not molds. [Slide #6]" },
-          { text: "Conjugation", correct: false, why: "Conjugation is a sexual process involving nuclear exchange or fusion. [Slide #6]" }
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis presents as ascending linear lymphatic nodules. [Fungi Lecture Core]" },
+          { text: "Chromoblastomycosis", correct: true, why: "Chromoblastomycosis produces chronic, dark, verrucous warty lesions that can be clinically confused with yaws. [Fungi Lecture Core]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioidomycosis is a primary respiratory systemic mycosis. [Fungi Lecture Core]" },
+          { text: "Tinea versicolor", correct: false, why: "Tinea versicolor produces smooth, non-verrucous macular pigment changes on the chest/back. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 35,
         subjectIndex: 1,
         quarter: 1,
-        slideRef: "Slide 9",
-        difficulty: "hard",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "medium",
         priority: true,
-        stem: "Which of the following is classified as a subtype of conidia produced by the fragmentation of septate hyphae into rectangular or barrel-shaped cells?",
+        stem: "Match the sexual fungal spore structure to its classic physical description: Club-like cell, Microscopic sac, and Hyphal fusion.",
         options: [
-          { text: "Arthrospores", correct: true, why: "Arthrospores (arthroconidia) are rectangular, thick-walled spores formed by the disarticulation and fragmentation of septate hyphae. [Slide #9]" },
-          { text: "Sporangiospores", correct: false, why: "Sporangiospores are enclosed within a sporangial sac. [Slide #9]" },
-          { text: "Zygospores", correct: false, why: "Zygospores are diploid sexual resting spores. [Slide #9]" },
-          { text: "Ascospores", correct: false, why: "Ascospores are sexual spores produced inside an ascus. [Slide #9]" }
+          { text: "Club = Basidiospore; Sac = Ascospore; Fusion = Zygospore", correct: true, why: "Basidiospores develop externally on club-shaped basidia; ascospores inside a microscopic sac (ascus); and zygospores from the fusion of opposite hyphae. [Fungi Lecture Core]" },
+          { text: "Club = Ascospore; Sac = Zygospore; Fusion = Basidiospore", correct: false, why: "Ascospores develop in sacs, not on club cells. [Fungi Lecture Core]" },
+          { text: "Club = Zygospore; Sac = Basidiospore; Fusion = Ascospore", correct: false, why: "Zygospores are produced by conjugation/fusion, not clubs. [Fungi Lecture Core]" },
+          { text: "Club = Sporangiospore; Sac = Conidia; Fusion = Arthrospore", correct: false, why: "Sporangiospores and conidia are asexual spores. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 36,
-        subjectIndex: 1,
+        subjectIndex: 4,
         quarter: 1,
-        slideRef: "Slide 9",
-        difficulty: "hard",
-        priority: false,
-        stem: "Thick-walled, spherical survival spores that develop either intercalary within or terminally on hyphae during adverse conditions are termed:",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "medium",
+        priority: true,
+        stem: "According to environmental reservoir associations, which primary systemic pathogen is classically associated with wet autumn leaves and rotting wood in eastern North America?",
         options: [
-          { text: "Blastoconidia", correct: false, why: "Blastoconidia are produced by active budding off yeast or hyphal tips. [Slide #9]" },
-          { text: "Chlamydospores", correct: true, why: "Chlamydospores (chlamydoconidia) are enlarged, heavy-walled resting asexual spores formed within hyphal segments. [Slide #9]" },
-          { text: "Phialospores", correct: false, why: "Phialospores are conidia extruded from specialized flask-shaped vase cells called phialides. [Slide #9]" },
-          { text: "Basidiospores", correct: false, why: "Basidiospores are external sexual spores of mushrooms. [Slide #9]" }
+          { text: "Coccidioides immitis", correct: false, why: "Coccidioides is associated with arid desert sand and alkaline dust storms. [Fungi Lecture Core]" },
+          { text: "Blastomyces dermatitidis", correct: true, why: "Blastomycosis is classically associated with rich soil, decomposing organic debris, wet leaves, and rotting wood near waterways. [Fungi Lecture Core]" },
+          { text: "Histoplasma capsulatum", correct: false, why: "Histoplasmosis is strongly associated with nitrogen-rich bird and bat guano. [Fungi Lecture Core]" },
+          { text: "Paracoccidioides brasiliensis", correct: false, why: "Paracoccidioides is associated with agricultural soil and coffee plantations in Central/South America. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 37,
-        subjectIndex: 1,
+        subjectIndex: 4,
         quarter: 1,
-        slideRef: "Slide 10",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
         priority: true,
-        stem: "Sexual spore reproduction in fungi requires which sequence of nuclear events?",
+        stem: "Which primary systemic mycosis is endemic to agricultural soil in Central and South America and displays large yeasts with multiple peripheral buds resembling a 'mariner's pilot wheel'?",
         options: [
-          { text: "Mitotic cloning followed by budding", correct: false, why: "Mitotic cloning produces asexual spores without genetic variation. [Slide #10]" },
-          { text: "Fusion of two parental nuclei from different strains followed by meiosis", correct: true, why: "Sexual reproduction requires plasmogamy and karyogamy (nuclear fusion) between compatible strains followed by meiotic reduction division. [Slide #10]" },
-          { text: "Successive cleavages within an enclosed sporangium", correct: false, why: "Internal cleavage within a sporangium describes asexual sporangiospore formation. [Slide #10]" },
-          { text: "Apical hyphal fragmentation", correct: false, why: "Fragmentation is strictly an asexual vegetative process. [Slide #10]" }
+          { text: "Paracoccidioidomycosis", correct: true, why: "Paracoccidioides brasiliensis is endemic to Central/South America and presents with a mother yeast surrounded by narrow-necked daughter buds. [Fungi Lecture Core]" },
+          { text: "Blastomycosis", correct: false, why: "Blastomyces forms broad-based solitary buds. [Fungi Lecture Core]" },
+          { text: "Coccidioidomycosis", correct: false, why: "Coccidioides forms large spherules containing endospores. [Fungi Lecture Core]" },
+          { text: "Sporotrichosis", correct: false, why: "Sporothrix forms cigar-shaped budding yeasts in subcutaneous tissues. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 38,
-        subjectIndex: 2,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 12",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
         priority: true,
-        stem: "Dermatophytic fungi that naturally inhabit domestic and farm animals and occasionally transfer ringworm to humans are classified ecologically as:",
+        stem: "How does the pathophysiology of dietary aflatoxicosis fundamentally differ from pulmonary aspergillosis?",
         options: [
-          { text: "Anthropophilic", correct: false, why: "Anthropophilic dermatophytes reside primarily on human skin and transmit person-to-person. [Slide #12]" },
-          { text: "Zoophilic", correct: true, why: "Zoophilic dermatophytes normally parasitize animal hosts and can cause intense inflammatory lesions when transmitted to humans. [Slide #12]" },
-          { text: "Geophilic", correct: false, why: "Geophilic dermatophytes normally inhabit soil and decompose keratin in the environment. [Slide #12]" },
-          { text: "Hydrophilic", correct: false, why: "Hydrophilic is not an epidemiological classification for dermatophytes. [Slide #12]" }
+          { text: "Aflatoxicosis is caused by ingesting preformed metabolic toxins on crops; Aspergillosis is caused by inhaling live fungal spores that germinate into invasive hyphae.", correct: true, why: "Aflatoxicosis is chemical intoxication from ingested fungal poisons; Aspergillosis is active tissue colonization or allergy from inhaled viable spores. [Fungi Lecture Core]" },
+          { text: "Aflatoxicosis is an acute allergic asthma attack; Aspergillosis is a chronic dietary liver cancer.", correct: false, why: "This reverses their mechanisms; aflatoxins cause liver toxicity and cancer. [Fungi Lecture Core]" },
+          { text: "Both are non-toxic bacterial conditions caused by Staphylococcus species.", correct: false, why: "Both are associated with the filamentous fungal genus Aspergillus. [Fungi Lecture Core]" },
+          { text: "Aflatoxicosis requires direct intravenous drug needle injection.", correct: false, why: "Aflatoxicosis occurs via dietary ingestion of contaminated grains and legumes. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 39,
-        subjectIndex: 2,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 12",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
         priority: false,
-        stem: "Dermatophytes flourish on non-living superficial body surfaces primarily because they secrete enzymes capable of digesting which structural protein?",
+        stem: "Ingestion of ergot alkaloids synthesized by Claviceps purpurea on contaminated rye grain causes vasoconstriction and hallucinations, historically associated with:",
         options: [
-          { text: "Collagen", correct: false, why: "Collagen is located deeper in the dermis and subcutaneous tissues. [Slide #12]" },
-          { text: "Keratin", correct: true, why: "Dermatophytes are keratinophilic; they produce keratinase to digest stratum corneum, hair, and nails. [Slide #12]" },
-          { text: "Elastin", correct: false, why: "Elastin is an elastic dermal fiber, not the superficial target of dermatophytes. [Slide #12]" },
-          { text: "Hyaluronic acid", correct: false, why: "Hyaluronic acid is an extracellular matrix glycosaminoglycan. [Slide #12]" }
+          { text: "The Salem witch trials", correct: true, why: "Ergotism (Saint Anthony's Fire) causes hallucinations, convulsions, and gangrene, and is historically linked to the Salem witch trial hysterias. [Fungi Lecture Core]" },
+          { text: "The London cholera broad street pump outbreak", correct: false, why: "The Broad Street pump outbreak was caused by the bacterium Vibrio cholerae. [Fungi Lecture Core]" },
+          { text: "The discovery of penicillin by Fleming", correct: false, why: "Penicillin was discovered from Penicillium chrysogenum mold contaminating a bacterial plate. [Fungi Lecture Core]" },
+          { text: "The Great Plague of Marseille", correct: false, why: "The plague is caused by the bacterium Yersinia pestis transmitted by flea vectors. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 40,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Slide 13",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
         priority: true,
-        stem: "A patient presents with scaling, itching fissures in the interdigital spaces between the 4th and 5th toes. What is the clinical diagnosis?",
+        stem: "A patient presents with a circular, spreading, itchy rash with raised red edges. Why is the clinical condition termed 'ringworm' technically a misnomer?",
         options: [
-          { text: "Tinea cruris", correct: false, why: "Tinea cruris is ringworm of the groin. [Slide #13]" },
-          { text: "Tinea pedis", correct: true, why: "Tinea pedis (athlete's foot) classically presents with erythema, maceration, and fissures localized between the toes. [Slide #13]" },
-          { text: "Tinea corporis", correct: false, why: "Tinea corporis presents as annular lesions on the trunk or limbs. [Slide #13]" },
-          { text: "Tinea barbae", correct: false, why: "Tinea barbae is ringworm involving facial hair and beard follicles. [Slide #13]" }
+          { text: "Because it is caused by microscopic dermatophytic fungi, not a parasitic helminth worm.", correct: true, why: "Ringworm is an ancient descriptive term for dermatophyte fungal infections of keratinized tissue, not a worm infection. [Fungi Lecture Core]" },
+          { text: "Because it is caused exclusively by roundworms that form circular burrows under the skin.", correct: false, why: "It has no relationship to roundworms, flatworms, or any animal parasites. [Fungi Lecture Core]" },
+          { text: "Because it is caused by spirochete bacteria that curl into circular rings.", correct: false, why: "It is caused by filamentous fungi (Trichophyton, Microsporum, Epidermophyton). [Fungi Lecture Core]" },
+          { text: "Because the rash only affects children who play in circular rings.", correct: false, why: "The term reflects the expanding circular appearance of the advancing erythematous border. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 41,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Slide 14",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
-        priority: false,
-        stem: "Why does successful pharmacological eradication of tinea unguium (onychomycosis) require continuous treatment for 3 to 4 months or longer?",
+        priority: true,
+        stem: "What significant clinical complication can arise if severe interdigital tinea pedis (athlete's foot) creates deep skin fissures?",
         options: [
-          { text: "The fungal spores are completely resistant to all azole antifungals.", correct: false, why: "The fungi are susceptible; however, penetration and nail turnover limit immediate clearance. [Slide #14]" },
-          { text: "Treatment must continue until all infected nail plate tissue grows out and is completely replaced.", correct: true, why: "Because dermatophytes embed deep within the keratinized nail bed, therapy must persist until healthy new nail grows out completely. [Slide #14]" },
-          { text: "The fungi undergo rapid thermal dimorphic phase shift inside the nail.", correct: false, why: "Dermatophytes are not dimorphic fungi; they remain molds. [Slide #14]" },
-          { text: "Nails contain high concentrations of aflatoxins that neutralize systemic medications.", correct: false, why: "Aflatoxins are toxins made by Aspergillus on grains, not present in human nails. [Slide #14]" }
+          { text: "Secondary bacterial infection (such as staphylococcal or streptococcal cellulitis)", correct: true, why: "Macerated, broken skin from tinea pedis provides an entry portal for normal skin bacteria, potentially leading to bacterial cellulitis. [Fungi Lecture Core]" },
+          { text: "Systemic transformation into dimorphic blastomycosis", correct: false, why: "Dermatophytes are monomorphic molds that cannot convert into systemic dimorphic pathogens. [Fungi Lecture Core]" },
+          { text: "Spontaneous autoimmune vitiligo affecting the whole body", correct: false, why: "Vitiligo is an autoimmune destruction of melanocytes, unrelated to tinea pedis complications. [Fungi Lecture Core]" },
+          { text: "Acute development of pulmonary fungal balls", correct: false, why: "Fungus balls in lungs are caused by inhaled Aspergillus, not dermatophytes from the feet. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 42,
         subjectIndex: 2,
         quarter: 1,
-        slideRef: "Slide 12",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
-        priority: false,
-        stem: "Fungal erythema and maceration developing in moist areas where two skin surfaces rub together (such as under breasts, axillae, or skin folds) is designated as:",
+        priority: true,
+        stem: "How does tinea versicolor (Pityriasis versicolor) differ fundamentally from autoimmune vitiligo?",
         options: [
-          { text: "An intertriginous infection", correct: true, why: "Intertriginous candidiasis or ringworm occurs in opposing skin friction folds where moisture, sweat, and warmth accumulate. [Slide #12]" },
-          { text: "Chromoblastomycosis", correct: false, why: "Chromoblastomycosis is a deep warty subcutaneous infection of the lower limbs. [Slide #12]" },
-          { text: "Mycetoma", correct: false, why: "Mycetoma is a chronic localized sinus-tract draining pseudotumor. [Slide #12]" },
-          { text: "Tinea barbae", correct: false, why: "Tinea barbae is localized to the beard area of men. [Slide #12]" }
+          { text: "Tinea versicolor is caused by fungal overgrowth (Malassezia furfur) disrupting melanin and is not permanent, whereas vitiligo is an autoimmune destruction of melanocytes.", correct: true, why: "Malassezia furfur produces azelaic acid that reversibly inhibits melanocytes on the trunk; it is non-contagious and resolves with antifungals, unlike autoimmune vitiligo. [Fungi Lecture Core]" },
+          { text: "Tinea versicolor is a highly contagious helminthic parasite that invades bones.", correct: false, why: "Tinea versicolor is caused by normal skin yeast and is not contagious. [Fungi Lecture Core]" },
+          { text: "Tinea versicolor causes permanent destruction of hair follicles across the scalp.", correct: false, why: "Tinea capitis affects scalp hair, while versicolor predominantly affects trunk skin pigmentation. [Fungi Lecture Core]" },
+          { text: "Tinea versicolor is contracted strictly from contact with swimming pool water.", correct: false, why: "Malassezia is part of normal lipid-dependent skin microflora. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 43,
-        subjectIndex: 3,
+        subjectIndex: 2,
         quarter: 1,
-        slideRef: "Slide 15",
-        difficulty: "medium",
-        priority: true,
-        stem: "A patient presents with nodular, ulcerating lesions ascending along the lymphatic drainage of the forearm following a puncture injury from a rose thorn. The causative organism is:",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "easy",
+        priority: false,
+        stem: "Dermatophytosis localized specifically to the beard and facial hair areas of adult males is designated as:",
         options: [
-          { text: "Sporothrix schenckii", correct: true, why: "Sporothrix schenckii causes sporotrichosis, classic for subcutaneous lymphatic spread after rose thorn or vegetation puncture. [Slide #15]" },
-          { text: "Madurella mycetomatis", correct: false, why: "Madurella causes mycetoma (tumor-like draining sinuses of the foot). [Slide #15]" },
-          { text: "Fonsecaea pedrosoi", correct: false, why: "Fonsecaea causes chromoblastomycosis (verrucous cauliflower-like lesions). [Slide #15]" },
-          { text: "Coccidioides immitis", correct: false, why: "Coccidioides is an inhaled respiratory pathogen causing Valley Fever. [Slide #15]" }
+          { text: "Tinea barbae", correct: true, why: "Tinea barbae ('barber's itch') involves the beard and mustache areas, distinguished from tinea faciei which involves non-bearded facial skin. [Fungi Lecture Core]" },
+          { text: "Tinea faciei", correct: false, why: "Tinea faciei occurs on smooth, glabrous facial skin outside the bearded distribution. [Fungi Lecture Core]" },
+          { text: "Tinea capitis", correct: false, why: "Tinea capitis involves the scalp and eyebrows. [Fungi Lecture Core]" },
+          { text: "Tinea manuum", correct: false, why: "Tinea manuum involves the palms and interdigital folds of the hand. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 44,
-        subjectIndex: 3,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 15",
-        difficulty: "hard",
-        priority: false,
-        stem: "Which feature distinguishes subcutaneous mycoses from superficial cutaneous dermatophytoses?",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "medium",
+        priority: true,
+        stem: "A patient with advanced HIV infection presents with severe painful swallowing (odynophagia) and retrosternal pain. Endoscopy reveals extensive white plaques lining the esophagus. This is:",
         options: [
-          { text: "Subcutaneous mycoses are acquired through inhalation of aerosolized spores.", correct: false, why: "Subcutaneous mycoses require direct traumatic puncture/inoculation through the dermis, not inhalation. [Slide #15]" },
-          { text: "Subcutaneous mycoses require traumatic epidermal inoculation to enter deeper connective tissue and lymphatics.", correct: true, why: "Subcutaneous mycoses breach the stratum corneum barrier via puncture wounds (thorns, splinters), invading dermis, subcutaneous tissue, and regional lymphatics. [Slide #15]" },
-          { text: "Subcutaneous mycoses are strictly contagious from person to person.", correct: false, why: "Subcutaneous fungi are environmental saprobes acquired from soil/plants; they do not spread person-to-person. [Slide #15]" },
-          { text: "Subcutaneous mycoses are strictly caused by non-pathogenic normal flora.", correct: false, why: "Subcutaneous mycoses are caused by exogenous environmental fungi, not human normal flora. [Slide #15]" }
+          { text: "Esophageal candidiasis (an AIDS-defining illness)", correct: true, why: "Candida overgrowth extending down into the esophagus causes painful swallowing and is classified as an AIDS-defining opportunistic condition. [Fungi Lecture Core]" },
+          { text: "Gastroesophageal reflux erosion without microbes", correct: false, why: "Curd-like scrapable pseudomembranes on endoscopy indicate fungal candida colonization. [Fungi Lecture Core]" },
+          { text: "Tinea corporis of the thoracic cavity", correct: false, why: "Tinea is restricted to external keratinized surfaces like skin, hair, and nails. [Fungi Lecture Core]" },
+          { text: "Acute gastrointestinal aflatoxicosis", correct: false, why: "Aflatoxins target the liver, not mucosal esophageal epithelium. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 45,
-        subjectIndex: 4,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 17",
-        difficulty: "medium",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "hard",
         priority: true,
-        stem: "All four true (primary) systemic fungal pathogens share which primary route of host entry?",
+        stem: "An uncontrolled diabetic in ketoacidosis develops acute facial pain, black necrotic eschars on the hard palate and nasal turbinates, and proptosis. Biopsy demonstrates broad, non-septate hyphae branching at 90-degree right angles. What is the diagnosis?",
         options: [
-          { text: "Direct traumatic inoculation into deep fascia", correct: false, why: "Traumatic puncture inoculates subcutaneous mycoses. [Slide #17]" },
-          { text: "Inhalation of airborne environmental conidia/spores into the lungs", correct: true, why: "All primary systemic mycoses (Histoplasma, Coccidioides, Blastomyces, Paracoccidioides) are contracted by inhaling spores into pulmonary alveoli. [Slide #17]" },
-          { text: "Ingestion of contaminated food products containing fungal vegetative hyphae", correct: false, why: "Ingestion of contaminated grains causes mycotoxicosis, not primary systemic mycosis. [Slide #17]" },
-          { text: "Sexual transmission across intact urogenital mucous membranes", correct: false, why: "Primary systemic fungi are not venereal pathogens. [Slide #17]" }
+          { text: "Rhinocerebral Mucormycosis (Zygomycosis)", correct: true, why: "Mucor and Rhizopus species rapidly invade blood vessels in ketoacidotic diabetics, producing acute black necrosis and angioinvasive tissue destruction. [Fungi Lecture Core]" },
+          { text: "Oral Candidiasis (Thrush)", correct: false, why: "Thrush forms superficial white curd-like plaques that bleed, without aggressive black necrotic angioinvasion. [Fungi Lecture Core]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis forms small intracellular oval yeasts within macrophages, not broad right-angle non-septate hyphae. [Fungi Lecture Core]" },
+          { text: "Sporotrichosis", correct: false, why: "Sporotrichosis causes ascending subcutaneous lymphatic nodules, not acute rhinocerebral infarction. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 46,
-        subjectIndex: 4,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 17",
-        difficulty: "easy",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "medium",
         priority: true,
-        stem: "A healthy field archaeologist working in an arid desert basin in Arizona develops fever, chest pain, and cough after a dust storm. Sputum reveals endospore-filled spherules. What is the diagnosis?",
+        stem: "Regarding the opportunistic pneumonia common in AIDS patients, what is the relationship between the clinical acronym 'PCP' and the causative organism's taxonomic name?",
         options: [
-          { text: "Histoplasmosis", correct: false, why: "Histoplasmosis forms intracellular yeast inside macrophages and is endemic to the central river valleys. [Slide #17]" },
-          { text: "Coccidioidomycosis", correct: true, why: "Coccidioidomycosis (Valley Fever, Coccidioides immitis) is contracted by inhaling dust in the American Southwest and produces thick-walled spherules containing endospores in tissue. [Slide #17]" },
-          { text: "Blastomycosis", correct: false, why: "Blastomyces forms broad-based budding yeasts and is found in the Southeast and Great Lakes. [Slide #17]" },
-          { text: "Paracoccidioidomycosis", correct: false, why: "Paracoccidioidomycosis is endemic to Central and South America. [Slide #17]" }
+          { text: "The organism was renamed Pneumocystis jirovecii, but the disease continues to be abbreviated as PCP (Pneumocystis pneumonia).", correct: true, why: "Formerly classified as Pneumocystis carinii, the human-specific species was renamed P. jirovecii, while keeping the historic clinical acronym PCP. [Fungi Lecture Core]" },
+          { text: "PCP stands for Penicillium capsulatum pneumonia, which is completely distinct from Pneumocystis.", correct: false, why: "Penicillium does not cause PCP. [Fungi Lecture Core]" },
+          { text: "The organism is a bacterium, but the disease is treated with antifungal azoles.", correct: false, why: "Pneumocystis is biologically a fungus, though treated with trimethoprim-sulfamethoxazole. [Fungi Lecture Core]" },
+          { text: "The name PCP was abandoned and is no longer recognized in clinical medicine.", correct: false, why: "PCP remains the standard clinical shorthand worldwide. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 47,
-        subjectIndex: 4,
+        subjectIndex: 0,
         quarter: 1,
-        slideRef: "Slide 17",
-        difficulty: "hard",
+        slideRef: "Fungi Lecture Core",
+        difficulty: "medium",
         priority: true,
-        stem: "Which primary systemic fungal infection is endemic to Central and South America and microscopically displays large yeast with multiple peripheral buds resembling a 'mariner's pilot wheel'?",
+        stem: "Why are human fungal infections generally more difficult to treat pharmacologically than bacterial infections?",
         options: [
-          { text: "Coccidioides immitis", correct: false, why: "Coccidioides forms spherules containing endospores. [Slide #17]" },
-          { text: "Histoplasma capsulatum", correct: false, why: "Histoplasma forms small intracellular oval yeasts within macrophages. [Slide #17]" },
-          { text: "Paracoccidioides brasiliensis", correct: true, why: "Paracoccidioides brasiliensis is endemic to Central/South America and characteristically forms a large mother yeast cell surrounded by multiple daughter buds ('mariner's wheel'). [Slide #17]" },
-          { text: "Blastomyces dermatitidis", correct: false, why: "Blastomyces forms broad-based solitary buds. [Slide #17]" }
+          { text: "Because fungi are eukaryotic organisms sharing similar cellular machinery, protein synthesis, and ribosomes with human host cells.", correct: true, why: "Fungi are eukaryotes; finding selective targets without causing host cytotoxicity is challenging, making fungal sterols (ergosterol) key therapeutic targets. [Fungi Lecture Core]" },
+          { text: "Because fungi possess thick peptidoglycan walls that repel all antibiotic molecules.", correct: false, why: "Fungal cell walls are composed of chitin and glucans, completely lacking peptidoglycan. [Fungi Lecture Core]" },
+          { text: "Because fungi only reproduce inside human host cell nuclei.", correct: false, why: "Most pathogenic fungi proliferate extracellularly in tissues. [Fungi Lecture Core]" },
+          { text: "Because fungal membranes are completely impermeable to all chemical solutions.", correct: false, why: "Fungal membranes are standard phospholipid bilayers with sterols and are permeable to many compounds. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 48,
-        subjectIndex: 4,
+        subjectIndex: 5,
         quarter: 1,
-        slideRef: "Slide 17",
+        slideRef: "Fungi Lecture Core",
         difficulty: "medium",
         priority: true,
-        stem: "Which environmental reservoir is strongly associated with contracting Histoplasma capsulatum?",
+        stem: "What is the medical definition of a 'Mycotoxicosis'?",
         options: [
-          { text: "Stagnant warm freshwater and neti pots", correct: false, why: "Freshwater neti pots harbor Naegleria fowleri amebas. [Slide #17]" },
-          { text: "Soil enriched with bird and bat guano (caves, chicken coops, roosts)", correct: true, why: "Histoplasma capsulatum proliferates in nitrogen-rich soil contaminated with avian or chiropteran (bat) droppings. [Slide #17]" },
-          { text: "Sphagnum moss and decaying rose thorns", correct: false, why: "Moss and rose thorns harbor Sporothrix schenckii. [Slide #17]" },
-          { text: "Contact lens storage containers cleaned with tap water", correct: false, why: "Contact lens tap water contamination harbors Acanthamoeba. [Slide #17]" }
+          { text: "An intoxicating disease produced by ingesting or contacting toxic fungal metabolic products, independent of tissue invasion.", correct: true, why: "Mycotoxicosis refers to poisoning from preformed fungal chemical metabolites (such as aflatoxins or amatoxins), rather than active hyphal tissue invasion. [Fungi Lecture Core]" },
+          { text: "A severe systemic tissue invasion where hyphae actively digest host bone.", correct: false, why: "Tissue invasion is defined as an invasive mycosis. [Fungi Lecture Core]" },
+          { text: "An airborne IgE-mediated type I allergic rhinitis response.", correct: false, why: "Allergic rhinitis is a fungal hypersensitivity, not a toxicosis. [Fungi Lecture Core]" },
+          { text: "An opportunistic commensal overgrowth of normal intestinal flora.", correct: false, why: "Flora overgrowth is dysbiosis or opportunistic infection, not mycotoxicosis. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 49,
-        subjectIndex: 5,
+        subjectIndex: 4,
         quarter: 1,
-        slideRef: "Slide 19",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
         priority: true,
-        stem: "An AIDS patient develops an adherent white curd-like pseudomembrane over the tongue and oral pharynx that bleeds when scraped. This presentation defines:",
+        stem: "Which primary systemic mycosis is contracted by inhaling aerosolized arthrospores contained in alkaline desert dust storms?",
         options: [
-          { text: "Oral leukoplakia", correct: false, why: "Oral leukoplakia is a non-scrapable premalignant keratosis linked to tobacco. [Slide #19]" },
-          { text: "Oral candidiasis (Thrush)", correct: true, why: "Thrush represents mucosal Candida albicans overgrowth forming thick white curd-like plaques that bleed when scraped off. [Slide #19]" },
-          { text: "Tinea faciei", correct: false, why: "Tinea faciei causes red scaly rings on the exterior skin of the face. [Slide #19]" },
-          { text: "Aspergilloma", correct: false, why: "An aspergilloma is a fungal ball growing inside pre-existing pulmonary cavities. [Slide #19]" }
+          { text: "Coccidioidomycosis (Valley Fever)", correct: true, why: "Coccidioides immitis arthrospores are inhaled with desert dust in the American Southwest and germinate into endospore-filled spherules. [Fungi Lecture Core]" },
+          { text: "Histoplasmosis", correct: false, why: "Histoplasma microconidia are inhaled from bird and bat guano in central river valleys. [Fungi Lecture Core]" },
+          { text: "Blastomycosis", correct: false, why: "Blastomyces conidia are associated with decaying wood and wet leaves. [Fungi Lecture Core]" },
+          { text: "Sporotrichosis", correct: false, why: "Sporothrix is inoculated through puncture wounds into subcutaneous tissues. [Fungi Lecture Core]" }
         ]
       },
       {
         id: 50,
-        subjectIndex: 5,
-        quarter: 1,
-        slideRef: "Slide 20",
-        difficulty: "medium",
-        priority: true,
-        stem: "Which encapsulated yeast organism is acquired by inhaling dried pigeon droppings and is a leading cause of fungal meningitis in immunocompromised patients?",
-        options: [
-          { text: "Cryptococcus neoformans", correct: true, why: "Cryptococcus neoformans is an opportunistic encapsulated yeast ubiquitous in pigeon droppings that causes subacute meningitis in immunocompromised patients. [Slide #20]" },
-          { text: "Candida tropicalis", correct: false, why: "Candida tropicalis is an unencapsulated normal commensal yeast. [Slide #20]" },
-          { text: "Pneumocystis jirovecii", correct: false, why: "Pneumocystis causes diffuse alveolar pneumonia, not primary cryptococcal meningitis. [Slide #20]" },
-          { text: "Aspergillus fumigatus", correct: false, why: "Aspergillus is a filamentous mold producing fruiting heads and aspergillomas. [Slide #20]" }
-        ]
-      },
-      {
-        id: 51,
-        subjectIndex: 5,
-        quarter: 1,
-        slideRef: "Slide 21",
-        difficulty: "hard",
-        priority: false,
-        stem: "A patient with pre-existing cavitary tuberculosis lesions develops hemoptysis. Chest X-ray demonstrates a solid, mobile mass inside an upper-lobe cavity. This 'fungus ball' is caused by:",
-        options: [
-          { text: "Histoplasma capsulatum", correct: false, why: "Histoplasma causes granulomatous pulmonary disease rather than cavitary fungus balls. [Slide #21]" },
-          { text: "Aspergillus fumigatus", correct: true, why: "Aspergillus colonizes pre-existing lung cavities (e.g., from old tuberculosis), forming an aspergilloma composed of intertwined hyphae and fibrin. [Slide #21]" },
-          { text: "Blastomyces dermatitidis", correct: false, why: "Blastomyces causes suppurative and granulomatous primary pulmonary consolidations. [Slide #21]" },
-          { text: "Sporothrix schenckii", correct: false, why: "Sporothrix is an inoculative subcutaneous fungus. [Slide #21]" }
-        ]
-      },
-      {
-        id: 52,
-        subjectIndex: 5,
-        quarter: 1,
-        slideRef: "Slide 22",
-        difficulty: "hard",
-        priority: true,
-        stem: "Which fungal toxin is synthesized by Amanita phalloides (death cap mushroom) and causes fatal poisoning by inhibiting RNA polymerase II in hepatocytes?",
-        options: [
-          { text: "Aflatoxin", correct: false, why: "Aflatoxin is produced by Aspergillus flavus on stored nuts and grains. [Slide #22]" },
-          { text: "Amatoxin", correct: true, why: "Amatoxin is produced by Amanita phalloides; it irreversibly inhibits RNA polymerase II, causing severe acute liver and renal failure. [Slide #22]" },
-          { text: "Ochratoxin", correct: false, why: "Ochratoxin is a nephrotoxic mycotoxin produced by Penicillium and Aspergillus on crops. [Slide #22]" },
-          { text: "Ergot alkaloid", correct: false, why: "Ergot alkaloids are produced by Claviceps purpurea on rye. [Slide #22]" }
-        ]
-      },
-      {
-        id: 53,
-        subjectIndex: 2,
-        quarter: 1,
-        slideRef: "Slide 12",
-        difficulty: "easy",
-        priority: false,
-        stem: "Dermatophyte infections confined to the scalp and hair shafts are designated clinically as:",
-        options: [
-          { text: "Tinea capitis", correct: true, why: "Tinea capitis is dermatophytosis of the scalp hair and skin. [Slide #12]" },
-          { text: "Tinea corporis", correct: false, why: "Tinea corporis is ringworm of glabrous body skin. [Slide #12]" },
-          { text: "Tinea cruris", correct: false, why: "Tinea cruris is ringworm of the groin. [Slide #12]" },
-          { text: "Tinea manuum", correct: false, why: "Tinea manuum is ringworm of the hand. [Slide #12]" }
-        ]
-      },
-      {
-        id: 54,
-        subjectIndex: 4,
-        quarter: 1,
-        slideRef: "Slide 17",
-        difficulty: "medium",
-        priority: true,
-        stem: "Which primary systemic mycosis is characterized microscopically in tissue biopsy by large yeasts with broad-based budding?",
-        options: [
-          { text: "Blastomycosis", correct: true, why: "Blastomyces dermatitidis forms distinctive broad-based budding yeasts with thick refractory double walls in tissue at 37°C. [Slide #17]" },
-          { text: "Histoplasmosis", correct: false, why: "Histoplasma forms small, narrow-based budding intracellular yeasts. [Slide #17]" },
-          { text: "Coccidioidomycosis", correct: false, why: "Coccidioides forms spherules packed with endospores, not budding yeast cells. [Slide #17]" },
-          { text: "Paracoccidioidomycosis", correct: false, why: "Paracoccidioides forms multiple narrow-based daughter buds around a central parent cell. [Slide #17]" }
-        ]
-      },
-      {
-        id: 55,
         subjectIndex: 0,
         quarter: 1,
-        slideRef: "Slide 4",
+        slideRef: "Fungi Lecture Core",
         difficulty: "easy",
         priority: false,
-        stem: "What principal structural carbohydrate constitutes the rigid cell wall of fungi?",
+        stem: "What principal structural polymer provides mechanical strength to the fungal cell wall?",
         options: [
-          { text: "Peptidoglycan", correct: false, why: "Peptidoglycan is the defining cell wall polymer of bacteria. [Slide #4]" },
-          { text: "Chitin", correct: true, why: "Fungal cell walls are composed of chitin, glucans, and mannans, which provide rigid structural support. [Slide #4]" },
-          { text: "Cellulose", correct: false, why: "Cellulose is the primary cell wall polymer of plants and green algae. [Slide #4]" },
-          { text: "Pseudomurein", correct: false, why: "Pseudomurein is found in cell walls of archaea. [Slide #4]" }
-        ]
-      },
-      {
-        id: 56,
-        subjectIndex: 1,
-        quarter: 1,
-        slideRef: "Slide 8",
-        difficulty: "medium",
-        priority: false,
-        stem: "In sporangiospore-forming molds, what is the specific morphological name of the stalk that supports the terminal spore sac?",
-        options: [
-          { text: "Conidiophore", correct: false, why: "A conidiophore bears naked, unsheathed conidia. [Slide #8]" },
-          { text: "Sporangiophore", correct: true, why: "The sporangiophore is the specialized upright aerial hyphal stalk that terminates in the sporangium sac. [Slide #8]" },
-          { text: "Rhizoid", correct: false, why: "Rhizoids are root-like anchoring hyphae that secure molds to the substrate. [Slide #8]" },
-          { text: "Stolon", correct: false, why: "A stolon is a horizontal hypha that connects clusters of rhizoids and sporangiophores. [Slide #8]" }
-        ]
-      },
-      {
-        id: 57,
-        subjectIndex: 5,
-        quarter: 1,
-        slideRef: "Slide 23",
-        difficulty: "medium",
-        priority: false,
-        stem: "To minimize public health exposure to carcinogenic dietary aflatoxins, what measure is recommended for stored agricultural grains and nuts?",
-        options: [
-          { text: "Store grains in humid, warm conditions to promote rapid fermentation.", correct: false, why: "Warmth and humidity stimulate Aspergillus mold growth and toxin synthesis. [Slide #23]" },
-          { text: "Inspect grains for discoloration or mold, store them dry and cool, and discard damaged crops.", correct: true, why: "Moisture prevention, pest control, prompt drying, and removing discolored/shriveled kernels prevent fungal aflatoxin accumulation. [Slide #23]" },
-          { text: "Boil nuts for 5 minutes to completely destroy the heat-stable aflatoxin molecules.", correct: false, why: "Aflatoxins are heat-stable and are not destroyed by routine boiling or cooking. [Slide #23]" },
-          { text: "Inoculate raw crops with opportunistic Candida strains to outcompete molds.", correct: false, why: "Candida is a human pathogen and not an agricultural bio-preservative. [Slide #23]" }
-        ]
-      },
-      {
-        id: 58,
-        subjectIndex: 1,
-        quarter: 1,
-        slideRef: "Slide 10",
-        difficulty: "hard",
-        priority: true,
-        stem: "Which sexual spore structure develops as an enclosed sac-like 'fruiting body' containing exactly 4 to 8 haploid sexual spores?",
-        options: [
-          { text: "Basidium", correct: false, why: "A basidium bears 4 basidiospores externally on club-shaped projections. [Slide #10]" },
-          { text: "Ascus", correct: true, why: "An ascus is a microscopic sac produced by Ascomycota in which karyogamy and meiosis produce 4 to 8 ascospores. [Slide #10]" },
-          { text: "Sporangium", correct: false, why: "A sporangium produces numerous asexual spores by internal cleavage. [Slide #10]" },
-          { text: "Zygospore", correct: false, why: "A zygospore is a single large thick-walled diploid spore resulting from hyphal fusion. [Slide #10]" }
-        ]
-      },
-      {
-        id: 59,
-        subjectIndex: 0,
-        quarter: 1,
-        slideRef: "Slide 1",
-        difficulty: "easy",
-        priority: true,
-        stem: "What is the general medical and biological term used to designate any pathological disease or infection caused by a fungus?",
-        options: [
-          { text: "Zoonosis", correct: false, why: "A zoonosis is an infection transmitted from animals to humans. [Slide #1]" },
-          { text: "Mycosis", correct: true, why: "A mycosis (plural: mycoses) designates any fungal disease or tissue infection. [Slide #1]" },
-          { text: "Helminthiasis", correct: false, why: "Helminthiasis is an infection caused by parasitic worms. [Slide #1]" },
-          { text: "Protozoiasis", correct: false, why: "Protozoiasis refers to diseases caused by protozoan parasites. [Slide #1]" }
-        ]
-      },
-      {
-        id: 60,
-        subjectIndex: 4,
-        quarter: 1,
-        slideRef: "Slide 16",
-        difficulty: "medium",
-        priority: true,
-        stem: "True (primary) fungal pathogens differ fundamentally from opportunistic fungal pathogens in that primary pathogens:",
-        options: [
-          { text: "Can infect healthy, immunocompetent human hosts with intact immune defenses.", correct: true, why: "True (primary) pathogens possess virulence factors that allow them to cause systemic infection in healthy individuals; opportunists require compromised host defenses. [Slide #16]" },
-          { text: "Require preexisting immune deficiency or severe neutropenia to establish infection.", correct: false, why: "This defines opportunistic pathogens. [Slide #16]" },
-          { text: "Are normal resident commensals of the human mucosal microflora.", correct: false, why: "Primary fungal pathogens are free-living soil/environmental saprobes, not normal human flora. [Slide #16]" },
-          { text: "Are completely non-immunogenic and produce zero host inflammatory response.", correct: false, why: "Primary systemic pathogens evoke robust cell-mediated immune responses and granuloma formation. [Slide #16]" }
+          { text: "Chitin", correct: true, why: "Fungal cell walls are composed of rigid polysaccharides, predominantly chitin (N-acetylglucosamine polymer), glucans, and mannans. [Fungi Lecture Core]" },
+          { text: "Peptidoglycan", correct: false, why: "Peptidoglycan is found exclusively in eubacterial cell walls. [Fungi Lecture Core]" },
+          { text: "Cellulose", correct: false, why: "Cellulose is the primary polymer of plant cell walls. [Fungi Lecture Core]" },
+          { text: "Cholesterol", correct: false, why: "Cholesterol is a lipid sterol found in animal cell membranes, not a fungal wall carbohydrate. [Fungi Lecture Core]" }
         ]
       }
     ];
@@ -1594,8 +1449,10 @@
     let currentIndex = 0;
     let userAnswers = {}; // { qIndex: { choiceIndex: X, correct: bool } }
     let selectedSubjects = [0, 1, 2, 3, 4, 5];
-    let viewMode = 'card'; // 'card' or 'list'
+    let viewMode = 'card';
     let muted = false;
+    let isReviewingMissed = false;
+    let currentMissedWorkingSet = [];
 
     // Local Storage Recovery
     try {
@@ -1604,7 +1461,7 @@
       if (savedMode === 'card' || savedMode === 'list') viewMode = savedMode;
     } catch(e) {}
 
-    /* TWO-WAY FISHER-YATES SHUFFLE */
+    /* TWO-WAY SHUFFLE */
     function shuffleArray(array) {
       const arr = [...array];
       for (let i = arr.length - 1; i > 0; i--) {
@@ -1616,7 +1473,7 @@
 
     function getMissedHistory() {
       try {
-        const h = localStorage.getItem('quiz_missed_history');
+        const h = localStorage.getItem('quiz5_missed_history');
         return h ? JSON.parse(h) : [];
       } catch(e) { return []; }
     }
@@ -1626,7 +1483,7 @@
         let h = getMissedHistory();
         if (!h.includes(id)) {
           h.push(id);
-          localStorage.setItem('quiz_missed_history', JSON.stringify(h));
+          localStorage.setItem('quiz5_missed_history', JSON.stringify(h));
         }
       } catch(e) {}
     }
@@ -1635,7 +1492,7 @@
       try {
         let h = getMissedHistory();
         h = h.filter(x => x !== id);
-        localStorage.setItem('quiz_missed_history', JSON.stringify(h));
+        localStorage.setItem('quiz5_missed_history', JSON.stringify(h));
       } catch(e) {}
     }
 
@@ -1695,7 +1552,7 @@
       stfuBtn.onclick = toggleMute;
 
       document.getElementById('listSummaryBtn').onclick = finishQuiz;
-      document.getElementById('retakeBtn').onclick = () => startQuiz(activeQuestions.length);
+      document.getElementById('retakeBtn').onclick = handleRetakeCurrent;
       document.getElementById('reviewMissedBtn').onclick = reviewCurrentSessionMissed;
       document.getElementById('backToMenuBtn').onclick = returnToMenu;
     };
@@ -1777,10 +1634,11 @@
 
       const missed = getMissedHistory();
       prioritizeMissedBtn.textContent = `Prioritize Missed (${missed.length})`;
-      prioritizeMissedBtn.disabled = missed.length === 0;
+      prioritizeMissedBtn.disabled = (missed.length === 0);
     }
 
     function returnToMenu() {
+      isReviewingMissed = false;
       cardView.classList.add('hidden');
       listView.classList.add('hidden');
       summaryView.classList.add('hidden');
@@ -1791,27 +1649,22 @@
       progressBarFill.style.width = '0%';
     }
 
-    /* QUIZ LAUNCHERS WITH TWO-WAY SHUFFLE */
+    /* QUIZ LAUNCHERS */
     function startQuiz(count) {
+      isReviewingMissed = false;
       let pool = questionBank.filter(q => selectedSubjects.includes(q.subjectIndex));
       if (pool.length === 0) {
         alert("Please select at least one module chip.");
         return;
       }
 
-      // Shuffle question order and independently shuffle options for each question
       let shuffled = shuffleArray(pool).map(q => {
         const cloned = JSON.parse(JSON.stringify(q));
         cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
 
-      if (count < shuffled.length) {
-        activeQuestions = shuffled.slice(0, count);
-      } else {
-        activeQuestions = shuffled;
-      }
-
+      activeQuestions = count < shuffled.length ? shuffled.slice(0, count) : shuffled;
       userAnswers = {};
       currentIndex = 0;
 
@@ -1835,12 +1688,14 @@
       const missedIds = getMissedHistory();
       if (missedIds.length === 0) return;
 
+      isReviewingMissed = true;
       let pool = questionBank.filter(q => missedIds.includes(q.id));
       activeQuestions = shuffleArray(pool).map(q => {
         const cloned = JSON.parse(JSON.stringify(q));
         cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
+      currentMissedWorkingSet = [...activeQuestions];
 
       userAnswers = {};
       currentIndex = 0;
@@ -1864,20 +1719,52 @@
     function reviewCurrentSessionMissed() {
       const missedIndices = Object.keys(userAnswers).filter(idx => !userAnswers[idx].correct);
       if (missedIndices.length === 0) {
-        alert("You answered all questions correctly in this round!");
+        alert("Great job! You answered all questions correctly in this round.");
         return;
       }
 
+      isReviewingMissed = true;
       activeQuestions = missedIndices.map(idx => {
         const cloned = JSON.parse(JSON.stringify(activeQuestions[idx]));
         cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
+      currentMissedWorkingSet = [...activeQuestions];
 
       userAnswers = {};
       currentIndex = 0;
 
       summaryView.classList.add('hidden');
+      if (viewMode === 'card') {
+        cardView.classList.remove('hidden');
+        renderActiveCard();
+      } else {
+        listView.classList.remove('hidden');
+        renderActiveList();
+      }
+      updateHeaderProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function handleRetakeCurrent() {
+      if (isReviewingMissed && currentMissedWorkingSet.length > 0) {
+        activeQuestions = currentMissedWorkingSet.map(q => {
+          const cloned = JSON.parse(JSON.stringify(q));
+          cloned.options = shuffleArray(cloned.options);
+          return cloned;
+        });
+      } else {
+        activeQuestions = shuffleArray(activeQuestions).map(q => {
+          const cloned = JSON.parse(JSON.stringify(q));
+          cloned.options = shuffleArray(cloned.options);
+          return cloned;
+        });
+      }
+
+      userAnswers = {};
+      currentIndex = 0;
+      summaryView.classList.add('hidden');
+
       if (viewMode === 'card') {
         cardView.classList.remove('hidden');
         renderActiveCard();
@@ -1925,7 +1812,7 @@
         clearMissedItem(q.id);
       }
 
-      // Lock buttons & apply visual styles
+      // Lock buttons & apply visual classes
       const buttons = containerEl.querySelectorAll('.opt-btn');
       buttons.forEach((btn, idx) => {
         btn.disabled = true;
@@ -1938,7 +1825,7 @@
         }
       });
 
-      // Append Explanation
+      // Append Explanation Box
       const explDiv = createExplanationBox(q, selectedOpt, isCorrect);
       containerEl.querySelector('.options-grid').after(explDiv);
 
@@ -2017,7 +1904,7 @@
       return expl;
     }
 
-    /* CARD VIEW */
+    /* CARD VIEW RENDERING */
     function renderActiveCard() {
       const container = document.getElementById('activeCardContainer');
       container.innerHTML = '';
@@ -2096,7 +1983,7 @@
       }
     }
 
-    /* LIST VIEW */
+    /* LIST VIEW RENDERING */
     function renderActiveList() {
       const container = document.getElementById('activeListContainer');
       container.innerHTML = '';
@@ -2161,7 +2048,7 @@
       }
     }
 
-    /* SUMMARY AND SCORE TIERS */
+    /* SUMMARY VIEW */
     function finishQuiz() {
       cardView.classList.add('hidden');
       listView.classList.add('hidden');
@@ -2187,7 +2074,7 @@
         tierMsgEl.style.color = "#ef4444";
       }
 
-      // Breakdown by difficulty
+      // Difficulty Breakdown
       const diffCounts = { easy: { c: 0, t: 0 }, medium: { c: 0, t: 0 }, hard: { c: 0, t: 0 } };
       activeQuestions.forEach((q, idx) => {
         diffCounts[q.difficulty].t++;
@@ -2210,7 +2097,7 @@
         }
       });
 
-      // Breakdown by subject module
+      // Module Breakdown
       const subCounts = {};
       activeQuestions.forEach((q, idx) => {
         if (!subCounts[q.subjectIndex]) subCounts[q.subjectIndex] = { c: 0, t: 0 };
