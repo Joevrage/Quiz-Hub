@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Microbiology Quiz 5 - Fungi & Clinical Mycology Mastery</title>
   <style>
     :root {
@@ -13,10 +13,10 @@
       --accent-orange-hover: #e68a00;
       --text-main: #ffffff;
       --text-secondary: #a3a3a3;
-      --correct-bg: #14532d;
-      --correct-border: #22c55e;
+      --correct-bg: rgba(16, 185, 129, 0.18);
+      --correct-border: #10b981;
       --correct-text: #e2fbe8;
-      --incorrect-bg: #7f1d1d;
+      --incorrect-bg: rgba(239, 68, 68, 0.2);
       --incorrect-border: #ef4444;
       --incorrect-text: #fde8e8;
     }
@@ -26,6 +26,7 @@
       margin: 0;
       padding: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
@@ -46,7 +47,7 @@
       right: 0;
       background: rgba(26, 26, 26, 0.95);
       backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--card-border);
+      border-bottom: 2px solid var(--accent-orange);
       z-index: 1000;
       display: flex;
       flex-direction: column;
@@ -61,10 +62,36 @@
       gap: 10px;
     }
 
-    .brand {
-      font-size: 1.15rem;
-      font-weight: 700;
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-hub-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #252525;
       color: var(--accent-orange);
+      text-decoration: none;
+      padding: 5px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border: 1px solid #383838;
+      transition: all 0.2s ease;
+    }
+
+    .nav-hub-btn:hover {
+      background: #333;
+      border-color: var(--accent-orange);
+    }
+
+    .brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
       display: flex;
       align-items: center;
       gap: 8px;
@@ -79,11 +106,13 @@
 
     .pill {
       background: #252525;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-size: 0.85rem;
-      color: #ddd;
-      border: 1px solid #333;
+      font-weight: 700;
+      color: var(--accent-orange);
+      border: 1px solid #383838;
+      white-space: nowrap;
     }
 
     .btn {
@@ -107,6 +136,7 @@
       background: var(--accent-orange);
       color: #000;
       border-color: var(--accent-orange);
+      font-weight: 700;
     }
 
     .btn.active:hover, .btn.hub-btn:hover {
@@ -136,7 +166,7 @@
     main.container {
       width: 100%;
       max-width: 860px;
-      padding: 20px;
+      padding: 20px 16px;
       margin-bottom: 50px;
     }
 
@@ -148,9 +178,9 @@
     .card {
       background-color: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 24px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
@@ -165,16 +195,16 @@
       color: var(--text-secondary);
       font-size: 0.95rem;
       margin-bottom: 20px;
-      line-height: 1.4;
+      line-height: 1.45;
     }
 
     .chip-group-label {
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 0.88rem;
+      font-weight: 700;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      margin: 16px 0 8px 0;
+      margin: 18px 0 8px 0;
     }
 
     .chip-container {
@@ -198,7 +228,7 @@
     .chip.selected {
       background: var(--accent-orange);
       color: #000;
-      font-weight: 600;
+      font-weight: 700;
       border-color: var(--accent-orange);
     }
 
@@ -229,6 +259,7 @@
     .q-badges {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .badge {
@@ -266,8 +297,8 @@
       align-items: flex-start;
       gap: 12px;
       background: #242424;
-      border: 1px solid #383838;
-      border-radius: 6px;
+      border: 1.5px solid #383838;
+      border-radius: 8px;
       padding: 12px 16px;
       color: #eee;
       font-size: 0.95rem;
@@ -279,8 +310,8 @@
     }
 
     .opt-btn:hover:not(:disabled) {
-      background: #303030;
-      border-color: #555;
+      background: #2e2e2e;
+      border-color: var(--accent-orange);
     }
 
     .opt-idx {
@@ -300,7 +331,8 @@
     .opt-btn.correct-choice {
       background-color: var(--correct-bg) !important;
       border-color: var(--correct-border) !important;
-      color: var(--correct-text) !important;
+      color: #ffffff !important;
+      font-weight: 600;
     }
 
     .opt-btn.correct-choice .opt-idx {
@@ -311,7 +343,8 @@
     .opt-btn.wrong-choice {
       background-color: var(--incorrect-bg) !important;
       border-color: var(--incorrect-border) !important;
-      color: var(--incorrect-text) !important;
+      color: #ffffff !important;
+      font-weight: 600;
     }
 
     .opt-btn.wrong-choice .opt-idx {
@@ -321,17 +354,20 @@
 
     .opt-btn:disabled {
       cursor: default;
-      opacity: 0.95;
+    }
+
+    .opt-btn.dimmed {
+      opacity: 0.45;
     }
 
     /* Explanation Container */
     .expl {
-      background: #151515;
+      background: #181818;
       border: 1px solid #333;
-      border-radius: 6px;
+      border-radius: 8px;
       padding: 18px;
       margin-top: 16px;
-      animation: fadeIn 0.2s ease-in-out;
+      animation: fadeIn 0.25s ease-in-out;
     }
 
     @keyframes fadeIn {
@@ -350,16 +386,24 @@
       gap: 6px;
     }
 
-    .expl-banner.correct { color: #4ade80; }
-    .expl-banner.incorrect { color: #f87171; }
+    .expl-banner.correct { color: #10b981; }
+    .expl-banner.incorrect { color: #ef4444; }
 
     .expl-core {
-      font-size: 0.96rem;
+      font-size: 0.94rem;
       line-height: 1.5;
-      color: #eee;
+      color: #e5e5e5;
       margin-bottom: 14px;
       padding-bottom: 12px;
       border-bottom: 1px solid #282828;
+    }
+
+    .expl-list-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-orange);
+      text-transform: uppercase;
+      margin-bottom: 8px;
     }
 
     .expl-list {
@@ -392,14 +436,14 @@
     }
 
     .score-large {
-      font-size: 3.5rem;
-      font-weight: 800;
+      font-size: 3.2rem;
+      font-weight: 900;
       color: var(--accent-orange);
       margin: 10px 0;
     }
 
     .tier-message {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #f5f5f5;
       margin-bottom: 10px;
@@ -424,7 +468,7 @@
     }
 
     .breakdown-table tr:nth-child(even) {
-      background: #181818;
+      background: #161616;
     }
 
     .summary-actions {
@@ -435,41 +479,68 @@
       margin-top: 24px;
     }
 
-    /* Popup Erijah */
-    .wrong-popup {
+    /* Popup Modal */
+    .wrong-popup-overlay {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
       pointer-events: none;
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
-    .wrong-popup img {
-      max-width: 280px;
-      max-height: 280px;
-      border: 4px solid #ef4444;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(239, 68, 68, 0.8);
-      background: #000;
+    .wrong-popup-overlay.show {
+      opacity: 1;
+      visibility: visible;
     }
 
-    @keyframes popIn {
-      from { transform: translate(-50%, -50%) scale(0.4); opacity: 0; }
-      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    .wrong-popup-card {
+      background-color: var(--card-bg);
+      border: 2px solid var(--incorrect-border);
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+      transform: scale(0.85);
+      transition: transform 0.2s ease;
+      max-width: 320px;
+      width: 90%;
+    }
+
+    .wrong-popup-overlay.show .wrong-popup-card {
+      transform: scale(1);
+    }
+
+    .wrong-popup-img {
+      max-width: 100%;
+      max-height: 220px;
+      border-radius: 8px;
+      display: block;
+      margin: 0 auto 12px;
+      object-fit: cover;
+    }
+
+    .wrong-popup-caption {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--incorrect-border);
+      letter-spacing: 0.5px;
     }
 
     @media (max-width: 600px) {
-      header.sticky-header {
-        position: relative;
-      }
-      body {
-        padding-top: 0;
-      }
-      .brand {
-        font-size: 1rem;
-      }
+      header.sticky-header { position: relative; }
+      body { padding-top: 0; }
+      .brand { font-size: 0.95rem; }
+      .pill { font-size: 0.8rem; padding: 5px 10px; }
+      .opt-btn { font-size: 0.9rem; padding: 10px 14px; }
     }
   </style>
 </head>
@@ -478,8 +549,9 @@
   <!-- Sticky Top Header -->
   <header class="sticky-header">
     <div class="header-top">
-      <div class="brand">
-        <span>🍄</span> Microbio Quiz 5: Fungi Mastery
+      <div class="brand-group">
+        <a href="index.html" class="nav-hub-btn">← Hub</a>
+        <div class="brand">🍄 Microbio Quiz 5: Fungi Mastery</div>
       </div>
       <div class="header-controls">
         <button id="menuBtn" class="btn">Menu / Subjects</button>
@@ -494,10 +566,18 @@
     </div>
   </header>
 
-  <!-- Audio & Image Popup Elements -->
-  <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
-  <div id="wrongPopup" class="wrong-popup hidden">
-    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer Meme">
+  <!-- Audio Source Fallbacks -->
+  <audio id="wrongAudio" preload="auto">
+    <source src="Wrong-answer.m4a" type="audio/mp4">
+    <source src="Wrong-answer.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- 2-Second Wrong Answer Modal -->
+  <div class="wrong-popup-overlay" id="wrongPopup">
+    <div class="wrong-popup-card">
+      <img id="wrongImage" src="Erijah.png" alt="Incorrect Feedback" class="wrong-popup-img" onerror="this.onerror=null; this.src='wrong-answer.png';">
+      <div class="wrong-popup-caption">INCORRECT</div>
+    </div>
   </div>
 
   <main class="container">
@@ -607,7 +687,6 @@
 
     /* QUESTION BANK (Exhaustive & Source-Bound) */
     const questionBank = [
-      /* Verbatim Practice Quiz Questions */
       {
         id: 1,
         subjectIndex: 4,
@@ -664,7 +743,7 @@
         options: [
           { text: "Systemic Mycoses", correct: false, why: "Systemic mycoses represent true tissue invasion rather than pure hypersensitivity. [Practice Quiz / Week 6]" },
           { text: "Mycotoxicosis", correct: false, why: "Mycotoxicosis is disease produced by ingesting or contacting fungal metabolic toxins (e.g., aflatoxin), not an airborne IgE-mediated response. [Practice Quiz / Week 6]" },
-          { text: "Superficial Mycoses", correct: false, why: "Superficial mycoses are confined to the outer stratum corneum and keratanized tissue. [Practice Quiz / Week 6]" },
+          { text: "Superficial Mycoses", correct: false, why: "Superficial mycoses are confined to the outer stratum corneum and keratinized tissue. [Practice Quiz / Week 6]" },
           { text: "Allergies", correct: true, why: "Inhalation of airborne fungal spores and vegetative fragments causes type I and type III respiratory fungal allergies manifesting as asthma, rhinitis, and alveolitis. [Practice Quiz / Week 6]" }
         ]
       },
@@ -1013,7 +1092,6 @@
           { text: "Superficial cutaneous infection", correct: false, why: "Candida is not solely superficial; it can invade deep organs and the bloodstream. [Practice Quiz / Week 6]" }
         ]
       },
-      /* Exhaustive Coverage Across All Lecture Concepts */
       {
         id: 28,
         subjectIndex: 0,
@@ -1512,7 +1590,6 @@
     ];
 
     /* APP STATE */
-    let currentPool = [];
     let activeQuestions = [];
     let currentIndex = 0;
     let userAnswers = {}; // { qIndex: { choiceIndex: X, correct: bool } }
@@ -1527,14 +1604,14 @@
       if (savedMode === 'card' || savedMode === 'list') viewMode = savedMode;
     } catch(e) {}
 
-    /* FISHER-YATES SHUFFLE */
-    function shuffle(arr) {
-      const a = [...arr];
-      for (let i = a.length - 1; i > 0; i--) {
+    /* TWO-WAY FISHER-YATES SHUFFLE */
+    function shuffleArray(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
+        [arr[i], arr[j]] = [arr[j], arr[i]];
       }
-      return a;
+      return arr;
     }
 
     function getMissedHistory() {
@@ -1595,7 +1672,6 @@
       updateMuteButtonUI();
       updateModeUI();
 
-      // Event Listeners
       selectAllBtn.onclick = () => {
         selectedSubjects = SUBJECTS.map((_, i) => i);
         renderSubjectChips();
@@ -1659,7 +1735,7 @@
       if (muted) {
         wrongAudio.pause();
         wrongAudio.currentTime = 0;
-        wrongPopup.classList.add('hidden');
+        wrongPopup.classList.remove('show');
       }
       updateMuteButtonUI();
     }
@@ -1715,7 +1791,7 @@
       progressBarFill.style.width = '0%';
     }
 
-    /* QUIZ LAUNCHERS */
+    /* QUIZ LAUNCHERS WITH TWO-WAY SHUFFLE */
     function startQuiz(count) {
       let pool = questionBank.filter(q => selectedSubjects.includes(q.subjectIndex));
       if (pool.length === 0) {
@@ -1723,18 +1799,17 @@
         return;
       }
 
-      // Deep clone and scramble options
-      pool = pool.map(q => {
+      // Shuffle question order and independently shuffle options for each question
+      let shuffled = shuffleArray(pool).map(q => {
         const cloned = JSON.parse(JSON.stringify(q));
-        cloned.options = shuffle(cloned.options);
+        cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
 
-      pool = shuffle(pool);
-      if (count < pool.length) {
-        activeQuestions = pool.slice(0, count);
+      if (count < shuffled.length) {
+        activeQuestions = shuffled.slice(0, count);
       } else {
-        activeQuestions = pool;
+        activeQuestions = shuffled;
       }
 
       userAnswers = {};
@@ -1753,6 +1828,7 @@
         renderActiveList();
       }
       updateHeaderProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function launchMissedSession() {
@@ -1760,13 +1836,12 @@
       if (missedIds.length === 0) return;
 
       let pool = questionBank.filter(q => missedIds.includes(q.id));
-      pool = pool.map(q => {
+      activeQuestions = shuffleArray(pool).map(q => {
         const cloned = JSON.parse(JSON.stringify(q));
-        cloned.options = shuffle(cloned.options);
+        cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
 
-      activeQuestions = shuffle(pool);
       userAnswers = {};
       currentIndex = 0;
 
@@ -1783,6 +1858,7 @@
         renderActiveList();
       }
       updateHeaderProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function reviewCurrentSessionMissed() {
@@ -1794,7 +1870,7 @@
 
       activeQuestions = missedIndices.map(idx => {
         const cloned = JSON.parse(JSON.stringify(activeQuestions[idx]));
-        cloned.options = shuffle(cloned.options);
+        cloned.options = shuffleArray(cloned.options);
         return cloned;
       });
 
@@ -1810,6 +1886,7 @@
         renderActiveList();
       }
       updateHeaderProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     /* HEADER PROGRESS & LIVE SCORE */
@@ -1831,7 +1908,7 @@
       }
     }
 
-    /* USER INTERACTION & SELECTION */
+    /* INTERACTION & FEEDBACK */
     function handleOptionSelection(qIdx, optIdx, containerEl) {
       if (userAnswers[qIdx] !== undefined) return; // Locked
 
@@ -1856,6 +1933,8 @@
           btn.classList.add('correct-choice');
         } else if (idx === optIdx && !isCorrect) {
           btn.classList.add('wrong-choice');
+        } else {
+          btn.classList.add('dimmed');
         }
       });
 
@@ -1865,13 +1944,11 @@
 
       updateHeaderProgress();
 
-      // Check if List View is fully answered
       if (viewMode === 'list') {
         if (Object.keys(userAnswers).length === activeQuestions.length) {
           document.getElementById('listFinishContainer').classList.remove('hidden');
         }
       } else {
-        // Show Next / Finish button in Card View
         const footer = containerEl.querySelector('.q-footer');
         footer.innerHTML = '';
         if (currentIndex < activeQuestions.length - 1) {
@@ -1898,13 +1975,13 @@
       if (muted) return;
       try {
         wrongAudio.currentTime = 0;
-        wrongAudio.play().catch(e => console.log(e));
+        wrongAudio.play().catch(e => console.log('Audio playback notice:', e));
       } catch(e) {}
 
-      wrongPopup.classList.remove('hidden');
+      wrongPopup.classList.add('show');
       setTimeout(() => {
-        wrongPopup.classList.add('hidden');
-      }, 1200);
+        wrongPopup.classList.remove('show');
+      }, 2000);
     }
 
     function createExplanationBox(question, chosenOption, isCorrect) {
@@ -1913,11 +1990,16 @@
 
       const banner = document.createElement('div');
       banner.className = `expl-banner ${isCorrect ? 'correct' : 'incorrect'}`;
-      banner.textContent = isCorrect ? '✓ CORRECT!' : '✗ INCORRECT';
+      banner.textContent = isCorrect ? '✓ CORRECT' : '✗ INCORRECT';
 
+      const coreWhy = question.options.find(o => o.correct).why;
       const core = document.createElement('div');
       core.className = 'expl-core';
-      core.innerHTML = `<strong>High-Yield Concept:</strong> ${question.options.find(o => o.correct).why}`;
+      core.innerHTML = `<strong>High-Yield Concept:</strong> ${coreWhy}`;
+
+      const listTitle = document.createElement('div');
+      listTitle.className = 'expl-list-title';
+      listTitle.textContent = 'Option Analysis:';
 
       const list = document.createElement('ul');
       list.className = 'expl-list';
@@ -1930,11 +2012,12 @@
 
       expl.appendChild(banner);
       expl.appendChild(core);
+      expl.appendChild(listTitle);
       expl.appendChild(list);
       return expl;
     }
 
-    /* RENDER CARD VIEW */
+    /* CARD VIEW */
     function renderActiveCard() {
       const container = document.getElementById('activeCardContainer');
       container.innerHTML = '';
@@ -1981,7 +2064,6 @@
 
       container.appendChild(card);
 
-      // Re-hydrate if already answered
       if (userAnswers[currentIndex] !== undefined) {
         const ans = userAnswers[currentIndex];
         const buttons = optionsGrid.querySelectorAll('.opt-btn');
@@ -1989,6 +2071,7 @@
           btn.disabled = true;
           if (q.options[idx].correct) btn.classList.add('correct-choice');
           else if (idx === ans.choiceIndex && !ans.correct) btn.classList.add('wrong-choice');
+          else btn.classList.add('dimmed');
         });
         const explDiv = createExplanationBox(q, q.options[ans.choiceIndex], ans.correct);
         optionsGrid.after(explDiv);
@@ -2013,7 +2096,7 @@
       }
     }
 
-    /* RENDER LIST VIEW */
+    /* LIST VIEW */
     function renderActiveList() {
       const container = document.getElementById('activeListContainer');
       container.innerHTML = '';
@@ -2059,7 +2142,6 @@
         card.appendChild(optionsGrid);
         container.appendChild(card);
 
-        // Rehydrate if previously answered
         if (userAnswers[qIdx] !== undefined) {
           const ans = userAnswers[qIdx];
           const buttons = optionsGrid.querySelectorAll('.opt-btn');
@@ -2067,6 +2149,7 @@
             btn.disabled = true;
             if (q.options[idx].correct) btn.classList.add('correct-choice');
             else if (idx === ans.choiceIndex && !ans.correct) btn.classList.add('wrong-choice');
+            else btn.classList.add('dimmed');
           });
           const explDiv = createExplanationBox(q, q.options[ans.choiceIndex], ans.correct);
           optionsGrid.after(explDiv);
@@ -2078,7 +2161,7 @@
       }
     }
 
-    /* SUMMARY AND COMPLETION TIERS */
+    /* SUMMARY AND SCORE TIERS */
     function finishQuiz() {
       cardView.classList.add('hidden');
       listView.classList.add('hidden');
@@ -2095,13 +2178,13 @@
       const tierMsgEl = document.getElementById('summaryTierMessage');
       if (pct >= 90) {
         tierMsgEl.textContent = "Absolute Gigachad. You drained that test dry.";
-        tierMsgEl.style.color = "#4ade80";
+        tierMsgEl.style.color = "#10b981";
       } else if (pct >= 70) {
         tierMsgEl.textContent = "You lasted less than 30 seconds. Time for a rematch.";
         tierMsgEl.style.color = "#fbbf24";
       } else {
         tierMsgEl.textContent = "You really didn’t fucking know that.";
-        tierMsgEl.style.color = "#f87171";
+        tierMsgEl.style.color = "#ef4444";
       }
 
       // Breakdown by difficulty
@@ -2149,6 +2232,8 @@
         `;
         subBody.appendChild(tr);
       });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   </script>
 </body>
