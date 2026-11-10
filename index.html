@@ -1,1007 +1,1064 @@
-<!DOCTYPE html>
+v<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Hub - CIL II Clinical Instrumentation & Exam Tech</title>
+    <title>Quiz Hub - Alpha Chiro Edition</title>
     <style>
+        /* =========================================================
+            1. GYM GAINZ THEME (DEFAULT)
+            ========================================================= */
         :root {
-            --bg-color: #0f0f0f;
-            --surface-color: #1a1a1a;
-            --surface-border: #2a2a2a;
-            --accent-color: #ff9900;
-            --accent-hover: #e68a00;
-            --text-main: #ffffff;
-            --text-muted: #a0a0a0;
-            --correct-bg: #14532d;
-            --correct-border: #22c55e;
-            --incorrect-bg: #7f1d1d;
-            --incorrect-border: #ef4444;
+            --bg-color: #121212;
+            --bg-pattern: #1e1e1e;
+            --header-bg: rgba(20, 20, 20, 0.9);
+            --header-border: #ff9900;
+            --logo-color: #ffffff;
+            --logo-box-bg: #ff9900;
+            --logo-box-text: #000000;
+            --card-bg: #1a1a1a;
+            --card-border: #333333;
+            --card-shadow: rgba(0, 0, 0, 0.5);
+            --title-color: #ffffff;
+            --btn-bg-top: #ff9900;
+            --btn-bg-bottom: #e68a00;
+            --btn-border: #ffffff;
+            --btn-shadow: #b36b00;
+            --btn-text: #ffffff;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; user-select: none; }
-
-        /* Sticky Top Header */
-        header {
-            position: sticky; top: 0; z-index: 100;
-            background: rgba(20, 20, 20, 0.95);
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid var(--accent-color);
-            padding: 12px 20px;
-            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
+        /* =========================================================
+            2. VIP LOUNGE THEME (TOGGLED)
+            ========================================================= */
+        body.hub-mode {
+            --bg-color: #0b0b0f;
+            --bg-pattern: #13131a;
+            --header-bg: #13131a;
+            --header-border: #d4af37;
+            --logo-color: #d4af37;
+            --logo-box-bg: #ffffff;
+            --logo-box-text: #0b0b0f;
+            --card-bg: #16161f;
+            --card-border: #2a2a3b;
+            --card-shadow: transparent;
+            --title-color: #f3f3f3;
+            --btn-bg-top: #d4af37;
+            --btn-bg-bottom: #aa8c2c;
+            --btn-border: #f3f3f3;
+            --btn-shadow: #66541a;
+            --btn-text: #0b0b0f;
         }
-        .header-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-        .header-badge { background: var(--accent-color); color: #000; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         
-        .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-        .btn {
-            background: #252525; color: #fff; border: 1px solid #444; border-radius: 6px;
-            padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: var(--bg-color);
+            background-image: 
+                radial-gradient(var(--bg-pattern) 15%, transparent 16%),
+                radial-gradient(var(--bg-pattern) 15%, transparent 16%);
+            background-size: 40px 40px;
+            color: var(--title-color); 
+            padding: 20px; 
+            user-select: none;
+            transition: background 0.2s, color 0.2s;
         }
-        .btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
-        .btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
 
-        .progress-container { width: 100%; height: 4px; background: #222; position: absolute; bottom: 0; left: 0; }
-        .progress-bar { height: 100%; width: 0%; background: var(--accent-color); transition: width 0.3s ease; }
-
-        /* Layout Container */
-        .main-container { max-width: 900px; margin: 24px auto; padding: 0 16px; }
-
-        /* Home / Selection Interface */
-        .dashboard-card {
-            background: var(--surface-color); border: 1px solid var(--surface-border);
-            border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        /* Top Navigation Bar */
+        .header-bar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            max-width: 1050px; 
+            margin: 0 auto 25px auto; 
+            background: var(--header-bg); 
+            padding: 14px 20px; 
+            border-radius: 10px; 
+            border: 2px solid var(--header-border);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            position: relative;
         }
-        .section-heading { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 14px; }
+
+        .logo-container {
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: var(--logo-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -1px;
+            position: relative;
+        }
+
+        /* Tooltip for Logo Toggle */
+        .logo-container::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: -36px;
+            left: 0;
+            background: #222;
+            color: #ff9900;
+            padding: 4px 8px;
+            font-size: 11px;
+            border-radius: 4px;
+            border: 1px solid #444;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
+            font-weight: bold;
+        }
+
+        .logo-container:hover::after {
+            opacity: 1;
+        }
+
+        .logo-box {
+            background-color: var(--logo-box-bg);
+            color: var(--logo-box-text);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .builder-stats {
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .stat-badge {
+            background: #222;
+            padding: 6px 12px;
+            border-radius: 16px;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        .main-container {
+            max-width: 1050px;
+            margin: 0 auto;
+        }
+
+        /* =========================================================
+            LAYOUT 1: GYM GAINZ RACK GRID
+            ========================================================= */
+        .clash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        body.hub-mode .clash-grid {
+            display: none;
+        }
+
+        .building-card {
+            background: var(--card-bg);
+            border: 2px solid var(--card-border);
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 6px 12px var(--card-shadow);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .building-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .building-icon {
+            font-size: 30px;
+            background: rgba(255, 153, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ff9900;
+        }
+
+        .building-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffffff;
+        }
+
+        .level-badge {
+            font-size: 11px;
+            color: #ff9900;
+            margin-top: 2px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .attack-btn {
+            background: linear-gradient(to bottom, var(--btn-bg-top), var(--btn-bg-bottom));
+            border: 1px solid var(--btn-border);
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            font-weight: 900;
+            font-size: 13px;
+            text-transform: uppercase;
+            box-shadow: 0 3px 0 var(--btn-shadow);
+            color: var(--btn-text);
+            margin-top: 10px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            text-decoration: none;
+            display: block;
+        }
+
+        /* Standout Green Button for Practice Exams & Practicums */
+        .attack-btn.practice-btn-highlight {
+            background: linear-gradient(to bottom, #22c55e, #16a34a);
+            border-color: #ffffff;
+            box-shadow: 0 3px 0 #14532d;
+            color: #ffffff;
+        }
+
+        .attack-btn:hover {
+            opacity: 0.9;
+        }
+
+        .multi-btn-group {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .multi-btn-group a {
+            text-decoration: none;
+            flex: 1 1 calc(50% - 8px);
+            min-width: 60px;
+        }
+
+        .multi-btn-group a.full-width {
+            flex: 1 1 100%;
+        }
+
+        .multi-btn-group .attack-btn {
+            margin-top: 0;
+            width: 100%;
+        }
+
+        /* =========================================================
+            LAYOUT 2: VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
+            ========================================================= */
+        .hub-grid-layout {
+            display: none;
+        }
+
+        body.hub-mode .hub-grid-layout {
+            display: block;
+        }
+
+        .course-section { margin-bottom: 30px; }
+        .course-title { color: #d4af37; font-size: 16px; border-bottom: 1px solid #2a2a3b; padding-bottom: 6px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         
-        .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-        .subject-chip {
-            background: #222; border: 1px solid #333; color: #ccc;
-            padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
-        }
-        .subject-chip.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: 800; }
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
         
-        .control-row { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-        .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 16px; }
-        .launch-btn {
-            background: linear-gradient(135deg, #2a2a2a, #1f1f1f); border: 1px solid #333;
-            color: #fff; padding: 14px 10px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.2s;
+        .hub-card { background-color: #16161f; border-radius: 8px; overflow: hidden; border: 1px solid #2a2a3b; transition: transform 0.2s, border-color 0.2s; text-decoration: none; color: white; display: block; }
+        .hub-card:hover { transform: translateY(-3px); border-color: #d4af37; }
+        
+        /* Standout Green Styling for Practice Exam Hub Cards */
+        .hub-card.practice-hub-highlight {
+            border: 2px solid #22c55e;
         }
-        .launch-btn:hover { border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 153, 0, 0.2); }
-        .launch-btn.primary { background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; }
-
-        /* Quiz Card Styling */
-        .quiz-card {
-            background: var(--surface-color); border: 1px solid var(--surface-border);
-            border-radius: 12px; padding: 24px; margin-bottom: 20px; position: relative;
+        .hub-card.practice-hub-highlight:hover {
+            border-color: #16a34a;
         }
-        .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .meta-tags { display: flex; gap: 6px; align-items: center; }
-        .pill-tag { background: #252525; color: #aaa; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid #333; }
-        .pill-tag.priority { border-color: #ef4444; color: #ef4444; }
 
-        .stem-text { font-size: 16px; font-weight: 600; line-height: 1.5; margin-bottom: 20px; color: #f0f0f0; }
-
-        .options-list { display: flex; flex-direction: column; gap: 10px; }
-        .option-item {
-            background: #202020; border: 1px solid #303030; border-radius: 8px;
-            padding: 12px 16px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; display: flex; align-items: flex-start; gap: 10px;
+        .card-thumbnail { background-color: #1e1e2b; height: 120px; display: flex; align-items: center; justify-content: center; position: relative; border-bottom: 1px solid #2a2a3b; }
+        .thumbnail-icon { font-size: 38px; }
+        
+        .duration-badge { position: absolute; bottom: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.85); color: #d4af37; font-size: 11px; font-weight: bold; padding: 2px 6px; border-radius: 3px; border: 1px solid #d4af37; }
+        .duration-badge.practice-badge {
+            color: #22c55e;
+            border-color: #22c55e;
         }
-        .option-item:hover:not(.locked) { background: #262626; border-color: #555; }
-        .option-prefix { font-weight: 800; color: var(--accent-color); min-width: 18px; }
-
-        /* Feedback Styles */
-        .option-item.correct { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: #fff; font-weight: 700; }
-        .option-item.incorrect { background: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: #fff; }
-        .option-item.locked { cursor: default; }
-
-        .explanation-card {
-            background: #151515; border: 1px solid #282828; border-radius: 8px;
-            padding: 16px; margin-top: 18px; display: none;
-        }
-        .explanation-card.show { display: block; }
-        .explanation-card h4 { font-size: 13px; text-transform: uppercase; color: var(--accent-color); margin-bottom: 10px; letter-spacing: 0.5px; }
-        .rationale-row { font-size: 13px; line-height: 1.4; margin-bottom: 8px; padding-left: 8px; border-left: 2px solid #333; }
-        .rationale-row.correct-ref { border-left-color: var(--correct-border); color: #dcfce7; }
-        .rationale-row.incorrect-ref { border-left-color: var(--incorrect-border); color: #fca5a5; }
-
-        /* Meme popup */
-        .wrong-popup {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            z-index: 1000; pointer-events: none; transition: opacity 0.2s ease;
-        }
-        .wrong-popup.hidden { display: none; opacity: 0; }
-        .wrong-popup img { max-width: 280px; max-height: 280px; border-radius: 12px; border: 3px solid var(--incorrect-border); box-shadow: 0 0 30px rgba(239,68,68,0.5); }
-
-        /* Bottom Controls */
-        .bottom-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .nav-btn { background: var(--accent-color); color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 800; font-size: 13px; cursor: pointer; text-transform: uppercase; }
-        .nav-btn:hover { background: var(--accent-hover); }
-
-        /* Summary View */
-        .summary-card { background: var(--surface-color); border-radius: 12px; border: 1px solid var(--surface-border); padding: 32px; text-align: center; }
-        .score-circle { width: 140px; height: 140px; border-radius: 50%; border: 6px solid var(--accent-color); margin: 0 auto 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 32px; font-weight: 900; }
-        .score-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+        
+        .card-info { padding: 12px; }
+        .quiz-card-title { font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
+        .quiz-card-meta { font-size: 11px; color: #888888; display: flex; justify-content: space-between; }
+        .rating { color: #22c55e; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
-    <div id="wrongPopup" class="wrong-popup hidden">
-        <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+    <!-- Top Navigation Bar -->
+    <div class="header-bar">
+        <div class="logo-container" id="logoToggle" data-tooltip="Safe for Work? Absolutely Not.">
+            <span>Quiz</span>
+            <span class="logo-box">Hub</span>
+        </div>
+        <div class="builder-stats">
+            <div class="stat-badge">🏋️‍♂️ PRs Smashed: 420</div>
+            <div class="stat-badge">💀 Subluxations: 0</div>
+        </div>
     </div>
 
-    <!-- Header Navigation -->
-    <header>
-        <div class="header-title">
-            <span class="header-badge">NBCE Drill</span>
-            <span>CIL II Instrumentation Tech</span>
-        </div>
-        <div class="header-controls">
-            <button id="menuBtn" class="btn" onclick="renderHome()">Menu / Filter</button>
-            <button id="modeBtn" class="btn" onclick="toggleMode()">View: One by One</button>
-            <button id="erijahBtn" class="btn" onclick="toggleErijah()">STFU Erijah</button>
-            <div id="progressPill" class="btn" style="background:#111; cursor:default;">Score: 0 / 0 (0%)</div>
-        </div>
-        <div class="progress-container">
-            <div id="progressBar" class="progress-bar"></div>
-        </div>
-    </header>
+    <div class="main-container">
 
-    <div class="main-container" id="appRoot"></div>
+        <!-- =========================================================
+             1. GYM GAINZ RACK GRID (DEFAULT VIEW)
+             ========================================================= -->
+        <div class="clash-grid">
+
+            <!-- DEDICATED LAB PRACTICUMS CARD (TOP PRIORITY) -->
+            <div class="building-card" style="border-color: #22c55e; box-shadow: 0 6px 12px rgba(34, 197, 94, 0.2);">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon" style="border-color: #22c55e; background: rgba(34, 197, 94, 0.15);">🔬</div>
+                        <div>
+                            <div class="building-title">Lab Practicums</div>
+                            <div class="level-badge" style="color: #22c55e;">Station & Pin Tests</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Reg%201%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Reg 1 Lab Practice Exam</div></a>
+                    <a href="Spinal%202%20Lab%20Exam%201.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Spinal 2 Lab Practice Exam</div></a>
+                    <a href="Cranial%20Nerve%20Practicum.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Sys Phys Lab Practice</div></a>
+                </div>
+            </div>
+
+            <!-- Biochem Card -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🧪</div>
+                        <div>
+                            <div class="building-title">Biochem</div>
+                            <div class="level-badge">Rack Level 7</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Biochem%201%20Midterm%201%20Practice%20Exam.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Midterm 1 Practice Exam</div></a>
+                    <a href="Biochem%20Week%201.html"><div class="attack-btn">Thermo</div></a>
+                    <a href="Biochem%20Acid%20Base.html"><div class="attack-btn">Acid-Base</div></a>
+                    <a href="Biochem%20Ochem.html"><div class="attack-btn">O-Chem</div></a>
+                    <a href="Biochem%20Amino%20Acids.html"><div class="attack-btn">Amino Acids</div></a>
+                    <a href="Biochem%20Week%202.html"><div class="attack-btn">Protein Synth</div></a>
+                    <a href="Biochem%20Specialized%20Products.html"><div class="attack-btn">Spec Products</div></a>
+                </div>
+            </div>
+
+            <!-- GenPath Card -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🔬</div>
+                        <div>
+                            <div class="building-title">GenPath</div>
+                            <div class="level-badge">Rack Level 5</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Midterm 1 Practice Exam</div></a>
+                    <a href="Gen%20Path%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Gen%20Path%20Week%202.html"><div class="attack-btn">Week 2</div></a>
+                    <a href="Gen%20Path%20Week%203.html"><div class="attack-btn">Week 3</div></a>
+                    <a href="Gen%20Path%20Week%204.html"><div class="attack-btn">Week 4</div></a>
+                </div>
+            </div>
+
+            <!-- Microbio Card -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🧫</div>
+                        <div>
+                            <div class="building-title">Microbio</div>
+                            <div class="level-badge">Rack Level 5</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Microbio%20Midterm%20Review.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Daddy's Review</div></a>
+                    <a href="Microbio%20Quiz%201.html"><div class="attack-btn">Quiz 1</div></a>
+                    <a href="Microbio%20Quiz%202.html"><div class="attack-btn">Quiz 2</div></a>
+                    <a href="Microbio%20Quiz%203.html"><div class="attack-btn">Quiz 3</div></a>
+                    <a href="Microbio%20Quiz%204.html"><div class="attack-btn">Quiz 4</div></a>
+                    <a href="Microbio%20Quiz%205.html"><div class="attack-btn">Quiz 5</div></a>
+                </div>
+            </div>
+
+            <!-- Reg 1 Card (Lecture Modules & Midterm) -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🦴</div>
+                        <div>
+                            <div class="building-title">Reg 1</div>
+                            <div class="level-badge">Rack Level 5</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Reg%201%20Midterm.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Reg 1 Midterm Exam</div></a>
+                    <a href="Reg%201%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Reg%201%20Week%202.html"><div class="attack-btn">Week 2</div></a>
+                    <a href="Reg%201%20Week%203.html"><div class="attack-btn">Week 3</div></a>
+                    <a href="Reg%201%20Week%204.html"><div class="attack-btn">Week 4</div></a>
+                </div>
+            </div>
+
+            <!-- Spinal 2 Card (Lecture Modules & Midterm) -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🩺</div>
+                        <div>
+                            <div class="building-title">Spinal 2</div>
+                            <div class="level-badge">Rack Level 5</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Spinal%202%20Midterm.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Spinal 2 Midterm 1</div></a>
+                    <a href="Spinal%202%20Week%201.html"><div class="attack-btn">Week 1</div></a>
+                    <a href="Spinal%202%20Week%202.html"><div class="attack-btn">Week 2</div></a>
+                    <a href="Spinal%202%20Week%203.html" class="full-width"><div class="attack-btn">Week 3</div></a>
+                </div>
+            </div>
+
+            <!-- Sys Phys Card (Lecture Modules, Reflex, & Midterm 2) -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">🫀</div>
+                        <div>
+                            <div class="building-title">Sys Phys</div>
+                            <div class="level-badge">Rack Level 6</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Sys%20Phys%20Midterm%202.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Sys Phys Midterm 2</div></a>
+                    <a href="Sys%20Phys%20Cell%20Basics.html"><div class="attack-btn">Cell Basics</div></a>
+                    <a href="Sys%20Phys%20Osmoregulation.html"><div class="attack-btn">Osmoreg</div></a>
+                    <a href="Sys%20Phys%20Biochem.html"><div class="attack-btn">Biochem</div></a>
+                    <a href="Sys%20Phys%20Circulatory.html"><div class="attack-btn">Circulatory</div></a>
+                    <a href="Sys%20Phys%20Neurology.html"><div class="attack-btn">Neurology</div></a>
+                    <a href="Sys%20Phys%20Reflex.html"><div class="attack-btn">Reflexes</div></a>
+                </div>
+            </div>
+
+            <!-- Subluxation Analysis Card -->
+            <div class="building-card">
+                <div>
+                    <div class="building-header">
+                        <div class="building-icon">⚡</div>
+                        <div>
+                            <div class="building-title">Sublux Analysis</div>
+                            <div class="level-badge">Rack Level 2</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="multi-btn-group">
+                    <a href="Sublux%20Terms.html"><div class="attack-btn">Terms</div></a>
+                    <a href="Sublux%20Listings.html"><div class="attack-btn">Listings</div></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- =========================================================
+             2. VIP LOUNGE GRID (CLICKBAIT PARODY VIEW)
+             ========================================================= -->
+        <div class="hub-grid-layout">
+            
+            <!-- DEDICATED HANDS-ON LAB PRACTICUMS SECTION -->
+            <div class="course-section">
+                <h2 class="course-title" style="color: #22c55e; border-color: #14532d;">🔬 Hands-On Lab Practicals & Timed Pin Drills</h2>
+                <div class="quiz-grid">
+                    <a href="Reg%201%20Lab%20Exam%201.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge practice-badge">Reg Lab 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Island Fever Meltdown: Eddie Pins Upper Extremity Lines While Missing Hawaii</div>
+                            <div class="quiz-card-meta">
+                                <span>By Down-Bad Eddie</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="Spinal%202%20Lab%20Exam%201.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge practice-badge">Spinal Lab 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Long-Distance Pine Overload: Eddie Sweats Over Bony Landmarks</div>
+                            <div class="quiz-card-meta">
+                                <span>By Down-Bad Eddie</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="Cranial%20Nerve%20Practicum.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧠</span>
+                            <span class="duration-badge practice-badge">Sys Phys Lab</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Sys Phys Lab Practice: Extraocular Gaze Trapped In Broad Daylight (POV)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Microbiology -->
+            <div class="course-section">
+                <h2 class="course-title">Microbiology</h2>
+                <div class="quiz-grid">
+                    <a href="Microbio%20Midterm%20Review.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Midterm Review</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Daddy's Review: High-Yield Microbio Midterm Blitz Drained Dry</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Microbio%20Quiz%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Quiz 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Tiny Microbes Caught Swimming Up the Gradient (Taxis Gone Wild)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Microbio%20Quiz%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Quiz 2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Naked Mycoplasma Shows Off Zero Cell Wall (Not Clickbait)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Microbio%20Quiz%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Quiz 3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hot Bacterial Genetics & Wild Metabolism Pathways That Will F*** Your GPA (POV)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Microbio%20Quiz%204.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Quiz 4</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Violent Viral Replication: Naked Capsid Penetrates Host Genome Raw (Uncensored)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Microbio%20Quiz%205.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧫</span>
+                            <span class="duration-badge">Quiz 5</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Fungal Spores & Dirty Protozoan Cysts Invade Deep Systemic Cavities (POV)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Biochemistry -->
+            <div class="course-section">
+                <h2 class="course-title">Biochemistry</h2>
+                <div class="quiz-grid">
+                    <a href="Biochem%201%20Midterm%201%20Practice%20Exam.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Practice</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Biochem 1 Midterm 1 Practice Exam: Master High-Yield Board Breakdown</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Thermo</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Steamy Gibbs Free Energy & Raw Mitochondrial Gradient Action (100% Uncoupled)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Acid%20Base.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚗️</span>
+                            <span class="duration-badge">Acid-Base</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Henderson-Hasselbalch Climax: Buffers Take Deep Proton Influx In Cytosol</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Ochem.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧪</span>
+                            <span class="duration-badge">O-Chem</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Rigid Peptide Bond Refuses To Rotate: Pi-Orbital Delocalization Caught On Cam</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Amino%20Acids.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🥩</span>
+                            <span class="duration-badge">Amino Acids</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Zwitterion Gets Double Charged At pH 7.4 (Raw Side-Chain Action)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🧬</span>
+                            <span class="duration-badge">Protein Synth</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Ribosomal Polysome Threesome: tRNA Thrusts Straight Into The Naked A-Site</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Biochem%20Specialized%20Products.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">💥</span>
+                            <span class="duration-badge">Metabolism</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Toxic Ammonia Choked Out In Hepatic Threesome (Urea Cycle Finale)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- General Pathology -->
+            <div class="course-section">
+                <h2 class="course-title">General Pathology</h2>
+                <div class="quiz-grid">
+                    <a href="Gen%20Path%20Midterm%201%20Practice.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Practice</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Gen Path Midterm 1 Practice Exam: Ultimate Prep Step-By-Step Breakdown</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Irreversible Cell Injury: Mitochondria Blows Its Entire Membrane Load</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Dirty Neutrophils Extravasate Straight Into Inflamed Tissue Pockets</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Chronic Granuloma Threesome: Macrophages & Giant Cells Lock It Down</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">95% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Gen%20Path%20Week%204.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔬</span>
+                            <span class="duration-badge">W4</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Tissue Repair & Hemodynamic Shock: Capillaries Leak All Night Long (Uncensored)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Regional Anatomy 1 (Lecture & Midterm) -->
+            <div class="course-section">
+                <h2 class="course-title">Regional Anatomy 1</h2>
+                <div class="quiz-grid">
+                    <a href="Reg%201%20Midterm.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Midterm</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Reg 1 Midterm Written Exam: Comprehensive Upper Limb Anatomy Mastery</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Reg%201%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Brachial Plexus Gets Completely Tangled By Step-Bro (Gone Wrong)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Daelin</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Reg%201%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Axillary Sheath Exposed: Nerves Penetrate Cords In Broad Daylight</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Reg%201%20Week%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Upper Extremity Stripped Down: Subclavian Pathway Action</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">96% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Reg%201%20Week%204.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🦴</span>
+                            <span class="duration-badge">W4</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Forearm Deep Flexor Compartments Pinned Down In Tight Fascial Tunnel</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Spinal Anatomy 2 (Lecture & Midterm) -->
+            <div class="course-section">
+                <h2 class="course-title">Spinal & Regional Adjusting</h2>
+                <div class="quiz-grid">
+                    <a href="Spinal%202%20Midterm%201.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Midterm 1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Spinal 2 Midterm 1 Exam: Biomechanics, Ligaments & Spinal Motion Breakdown</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%201.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">W1</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hot, Steamy Vertebral Adjustments in Your Area</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%202.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">W2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Facet Joint Capsule Rubdown: Meniscoid Fringes Trapped Tight</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Spinal%202%20Week%203.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🩺</span>
+                            <span class="duration-badge">W3</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Ligamentum Flavum Stretched To Its Limits While Dura Watches</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">95% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Systemic Physiology (Lecture, Reflex & Midterm 2) -->
+            <div class="course-section">
+                <h2 class="course-title">Systemic Physiology</h2>
+                <div class="quiz-grid">
+                    <a href="Sys%20Phys%20Midterm%202.html" class="hub-card practice-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge practice-badge">Midterm 2</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Sys Phys Midterm 2 Exam: High-Yield Cardiovascular & Renal Board Prep</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Cell%20Basics.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Basics</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hardcore Ion Gradients & Membrane Depolarization (Viewer Discretion Advised)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Osmoregulation.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Osmoreg</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Gushing Renal Filtrate: Loop of Henle Dries Out Every Single Drop</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">96% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Biochem.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Biochem</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Allosteric Binding Frenzy: Substrates Jam Themselves Into Active Sites</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Circulatory.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Circ</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Massive Afterload Backpressure Pounds Left Ventricle All Night</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">97% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Neurology.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🫀</span>
+                            <span class="duration-badge">Neuro</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Action Potential Squirts Neurotransmitter Straight Across Synapse</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">98% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sys%20Phys%20Reflex.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Reflex</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Deep Tendon Reflexes Fired Instantly: Monosynaptic Arcs Caught Twitching</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">99% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Subluxation Analysis -->
+            <div class="course-section">
+                <h2 class="course-title">Subluxation Analysis</h2>
+                <div class="quiz-grid">
+                    <a href="Sublux%20Terms.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Terms</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Step-Bro, I'm Stuck... In a Bilateral Sacral Fixation</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="Sublux%20Listings.html" class="hub-card">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">⚡</span>
+                            <span class="duration-badge">Listings</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Hard Posterior-Superior Thrust Snaps Fixation In Wide Open View</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
     <script>
-        const SUBJECTS = [
-            { title: "Myovision Range of Motion (ROM)", week: "CIL II" },
-            { title: "Kinetisense Posture Analysis", week: "CIL II" },
-            { title: "Insight Subluxation Station (Rolling Thermal, sEMG, HRV)", week: "CIL II" }
-        ];
-
-        /* EXHAUSTIVE QUESTION BANK COMPILED FROM LECTURE NOTES */
-        const questionBank = [
-            /* =========================================================================
-               SUBJECT 0: MYOVISION RANGE OF MOTION (ROM)
-               ========================================================================= */
-            {
-                id: 0,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "easy",
-                priority: true,
-                stem: "What physical mechanism governs the measurement functionality of the Myovision ROM inclinometers?",
-                options: [
-                    { text: "Gravity [Page 1]", correct: true, why: "Myovision inclinometers function via gravitational pendulums/mechanisms. [Page 1]" },
-                    { text: "Magnetic field flux [Page 1]", correct: false, why: "Does not rely on active magnetometers or flux. [Page 1]" },
-                    { text: "Infrared thermal sensors [Page 1]", correct: false, why: "Thermal sensors are utilized in rolling thermography, not ROM inclinometers. [Page 1]" },
-                    { text: "Surface plethysmography [Page 1]", correct: false, why: "Plethysmography measures vascular pulse, not inclinometry. [Page 1]" }
-                ]
-            },
-            {
-                id: 1,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: true,
-                stem: "When entering patient demographic credentials into Myovision, which parameters are strictly required?",
-                options: [
-                    { text: "Two letters of first name, two letters of last name, and gender [Page 1]", correct: true, why: "Notes state explicitly: '2 letters first, last name; Gender no ID#'. [Page 1]" },
-                    { text: "Full legal first name, full legal last name, and social security number [Page 1]", correct: false, why: "Only 2 letters each are documented; full legal names are not used. [Page 1]" },
-                    { text: "Six-digit clinic patient ID and biological sex [Page 1]", correct: false, why: "Notes explicitly state 'no ID#'. [Page 1]" },
-                    { text: "Date of birth, full surname, and clinic ID number [Page 1]", correct: false, why: "Clinical ID numbers are expressly omitted. [Page 1]" }
-                ]
-            },
-            {
-                id: 2,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "easy",
-                priority: true,
-                stem: "According to Myovision protocol, how many degrees of ROM are evaluated between cervical and lumbar regions combined?",
-                options: [
-                    { text: "36 [Page 1]", correct: true, why: "Notes state: '36 ROM cerv / lumb'. [Page 1]" },
-                    { text: "12 [Page 1]", correct: false, why: "12 reflects single-region planes, not total test points. [Page 1]" },
-                    { text: "24 [Page 1]", correct: false, why: "Incorrect numerical count. [Page 1]" },
-                    { text: "48 [Page 1]", correct: false, why: "Exceeds standard 36 ROM testing parameters. [Page 1]" }
-                ]
-            },
-            {
-                id: 3,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: true,
-                stem: "What is the acceptable range of repeatability variance for Myovision ROM trials?",
-                options: [
-                    { text: "+/- 10° acceptable (+/- 5° ideal) [Page 1]", correct: true, why: "Notes state: '+/- 5° ideal, +/- 10° acceptable'. [Page 1]" },
-                    { text: "+/- 2° acceptable (+/- 1° ideal) [Page 1]", correct: false, why: "Overly restrictive threshold not matching the clinical notes. [Page 1]" },
-                    { text: "+/- 15° acceptable (+/- 8° ideal) [Page 1]", correct: false, why: "Exceeds clinical tolerance guidelines. [Page 1]" },
-                    { text: "+/- 20° acceptable (+/- 12° ideal) [Page 1]", correct: false, why: "Excessive variance exceeding clinical standards. [Page 1]" }
-                ]
-            },
-            {
-                id: 4,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "easy",
-                priority: false,
-                stem: "What is the ideal target variance between consecutive Myovision ROM trials?",
-                options: [
-                    { text: "+/- 5° [Page 1]", correct: true, why: "Documented as '+/- 5° ideal'. [Page 1]" },
-                    { text: "+/- 10° [Page 1]", correct: false, why: "+/- 10° is acceptable, but not ideal. [Page 1]" },
-                    { text: "+/- 0° [Page 1]", correct: false, why: "Zero variance is biologically unrealistic. [Page 1]" },
-                    { text: "+/- 15° [Page 1]", correct: false, why: "Exceeds allowable target thresholds. [Page 1]" }
-                ]
-            },
-            {
-                id: 5,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: true,
-                stem: "During cervical flexion and extension testing, how must the inclinometers be positioned?",
-                options: [
-                    { text: "One on the head and one on T1 in a staggered orientation [Page 1]", correct: true, why: "Notes: 'flex/extension (one on head, one on T1 - staggered)'. [Page 1]" },
-                    { text: "One on C2 and one on C7 in parallel alignment [Page 1]", correct: false, why: "Head and T1 are the designated sensor locations. [Page 1]" },
-                    { text: "One on the occiput and one on S1 [Page 1]", correct: false, why: "S1 is the landmark for lumbar analysis. [Page 1]" },
-                    { text: "Both mounted across the scapular spine [Page 1]", correct: false, why: "Incorrect anatomical placement for cervical ROM. [Page 1]" }
-                ]
-            },
-            {
-                id: 6,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "easy",
-                priority: false,
-                stem: "Cervical flexion and extension occur in the _______ plane.",
-                options: [
-                    { text: "Sagittal [Page 1]", correct: true, why: "Flexion/extension movements occur in the sagittal plane. [Page 1]" },
-                    { text: "Coronal [Page 1]", correct: false, why: "Lateral flexion occurs in the coronal plane. [Page 1]" },
-                    { text: "Transverse [Page 1]", correct: false, why: "Axial rotation occurs in the transverse plane. [Page 1]" },
-                    { text: "Horizontal [Page 1]", correct: false, why: "Transverse/horizontal plane governs axial rotation. [Page 1]" }
-                ]
-            },
-            {
-                id: 7,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: false,
-                stem: "Cervical lateral flexion testing is performed within the _______ plane.",
-                options: [
-                    { text: "Coronal [Page 1]", correct: true, why: "Notes state cervical lateral flexion occurs in the coronal plane. [Page 1]" },
-                    { text: "Sagittal [Page 1]", correct: false, why: "Sagittal plane governs flexion and extension. [Page 1]" },
-                    { text: "Transverse [Page 1]", correct: false, why: "Transverse plane governs rotation. [Page 1]" },
-                    { text: "Oblique [Page 1]", correct: false, why: "Standard ROM isolates cardinal orthogonal planes. [Page 1]" }
-                ]
-            },
-            {
-                id: 8,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "hard",
-                priority: true,
-                stem: "During cervical rotation evaluation on Myovision, where should the patient place their hands?",
-                options: [
-                    { text: "Resting on their knees [Page 1]", correct: true, why: "Notes state: 'rotation (hands on knees; coronal; look to left/right)'. [Page 1]" },
-                    { text: "Crossed tightly over the anterior chest wall [Page 1]", correct: false, why: "Hands must be supported on knees to stabilize the thoracic cage. [Page 1]" },
-                    { text: "Grip the edges of the examination table [Page 1]", correct: false, why: "Table-gripping is not the standard protocol. [Page 1]" },
-                    { text: "Hanging loosely at the patient's sides [Page 1]", correct: false, why: "Hands resting on knees prevents upper body sway. [Page 1]" }
-                ]
-            },
-            {
-                id: 9,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: true,
-                stem: "Which anatomical landmarks isolate lumbar flexion and extension using Myovision?",
-                options: [
-                    { text: "T12 and S1 staggered [Page 1]", correct: true, why: "Notes state: 'flexion/extension (T12, S1 staggered, sagittal)'. [Page 1]" },
-                    { text: "T1 and T12 parallel [Page 1]", correct: false, why: "Isolates the thoracic cage rather than lumbar spine. [Page 1]" },
-                    { text: "L1 and L5 in a straight vertical line [Page 1]", correct: false, why: "T12 and S1 represent the true lumbar mobile segment boundaries. [Page 1]" },
-                    { text: "Head and T12 [Page 1]", correct: false, why: "Combines cervical and thoracic boundaries. [Page 1]" }
-                ]
-            },
-            {
-                id: 10,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "hard",
-                priority: true,
-                stem: "For lumbar flexion and extension, how must the sensor prongs be oriented relative to the patient's body?",
-                options: [
-                    { text: "Prongs directed straight into the body [Page 1]", correct: true, why: "Notes indicate with margin diagram: 'prongs into body' for lumbar flexion/extension. [Page 1]" },
-                    { text: "Prongs directed downward toward the floor [Page 1]", correct: false, why: "Prongs face downward toward the floor during lumbar lateral flexion. [Page 1]" },
-                    { text: "Prongs oriented superiorly toward the ceiling [Page 1]", correct: false, why: "Incorrect directional orientation. [Page 1]" },
-                    { text: "Prongs angled 45 degrees laterally away from the spine [Page 1]", correct: false, why: "Sensors must seat perpendicularly into spinal landmarks. [Page 1]" }
-                ]
-            },
-            {
-                id: 11,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "hard",
-                priority: true,
-                stem: "During lumbar lateral flexion testing, what is the required sensor prong orientation?",
-                options: [
-                    { text: "Prongs face down toward the floor with T12 flat against the spine [Page 1]", correct: true, why: "Notes state: 'T12 flat against, coronal; prongs face down to floor'. [Page 1]" },
-                    { text: "Prongs face upward toward the patient's head [Page 1]", correct: false, why: "Prongs must orient inferiorly toward the floor. [Page 1]" },
-                    { text: "Prongs pointed directly into the abdominal cavity [Page 1]", correct: false, why: "Prongs point into the body during sagittal flexion/extension, not lateral flexion. [Page 1]" },
-                    { text: "Prongs angled diagonally along the iliac crest [Page 1]", correct: false, why: "Sensors align along spinal landmarks with prongs down. [Page 1]" }
-                ]
-            },
-            {
-                id: 12,
-                subjectIndex: 0,
-                week: "CIL II",
-                slideRef: "Notes Page 1",
-                difficulty: "medium",
-                priority: false,
-                stem: "To maintain valid test kinematics during Myovision ROM, the inclinometers must operate within the _______ plane.",
-                options: [
-                    { text: "Same plane [Page 1]", correct: true, why: "Notes state explicitly: 'same plane'. [Page 1]" },
-                    { text: "Perpendicular plane [Page 1]", correct: false, why: "Dual inclinometers cannot measure accurately across orthogonal offsets. [Page 1]" },
-                    { text: "Alternating plane [Page 1]", correct: false, why: "Planar consistency is mandatory for dual inclinometry. [Page 1]" },
-                    { text: "Opposite plane [Page 1]", correct: false, why: "Both sensors must share the identical plane of motion. [Page 1]" }
-                ]
-            },
-
-            /* =========================================================================
-               SUBJECT 1: KINETISENSE POSTURE ANALYSIS
-               ========================================================================= */
-            {
-                id: 13,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "easy",
-                priority: true,
-                stem: "What hardware platform and passcode are required to access the Kinetisense posture application?",
-                options: [
-                    { text: "iPad with passcode 333333 [Page 2]", correct: true, why: "Notes state: 'iPad - posture analysis; code 333333'. [Page 2]" },
-                    { text: "Android tablet with passcode 123456 [Page 2]", correct: false, why: "Hardware is an iPad and code is 333333. [Page 2]" },
-                    { text: "Desktop terminal with passcode 1234 [Page 2]", correct: false, why: "1234 is the instructor code for Insight HRV, not Kinetisense. [Page 2, 3]" },
-                    { text: "Surface Pro with passcode 000000 [Page 2]", correct: false, why: "Incorrect hardware and login credentials. [Page 2]" }
-                ]
-            },
-            {
-                id: 14,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "easy",
-                priority: true,
-                stem: "Which two standard radiographic/postural views are captured during Kinetisense analysis?",
-                options: [
-                    { text: "Anteroposterior (AP) and lateral [Page 2]", correct: true, why: "Notes state: 'AP and lateral'. [Page 2]" },
-                    { text: "Posteroanterior (PA) and oblique [Page 2]", correct: false, why: "AP and lateral views are standard protocol. [Page 2]" },
-                    { text: "Bilateral obliques only [Page 2]", correct: false, why: "Oblique views are not part of basic 2-view Kinetisense screen. [Page 2]" },
-                    { text: "Axial vertex and lateral [Page 2]", correct: false, why: "Axial views are not used in Kinetisense posture capture. [Page 2]" }
-                ]
-            },
-            {
-                id: 15,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "medium",
-                priority: true,
-                stem: "Which clinical displacement anomaly is primary evaluated on the Kinetisense lateral posture capture?",
-                options: [
-                    { text: "Anterior head carriage [Page 2]", correct: true, why: "Notes list 'anterior head carriage' and 'hyper/hypo kyphosis/lordosis'. [Page 2]" },
-                    { text: "Lateral pelvic tilt [Page 2]", correct: false, why: "Lateral pelvic unleveling is assessed on the AP view. [Page 2]" },
-                    { text: "Scapular winging asymmetry [Page 2]", correct: false, why: "Coronal plane finding assessed on AP/PA views. [Page 2]" },
-                    { text: "Rotational thoracic scoliosis [Page 2]", correct: false, why: "Assessed in the coronal/transverse plane, not purely sagittal. [Page 2]" }
-                ]
-            },
-            {
-                id: 16,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "medium",
-                priority: false,
-                stem: "In addition to anterior head carriage, sagittal Kinetisense posture analysis screens for _______.",
-                options: [
-                    { text: "Hyper/hypo kyphosis and lordosis [Page 2]", correct: true, why: "Notes state: 'hyper/hypo kyphosis/Lordosis'. [Page 2]" },
-                    { text: "Scoliotic cobb angles [Page 2]", correct: false, why: "Requires diagnostic x-ray measurement, not photographic software screening. [Page 2]" },
-                    { text: "Rib cage structural gibbus [Page 2]", correct: false, why: "Detected via Adams forward bend test. [Page 2]" },
-                    { text: "Pronation and supination foot angles [Page 2]", correct: false, why: "Not listed in the primary core spinal metrics. [Page 2]" }
-                ]
-            },
-            {
-                id: 17,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "easy",
-                priority: false,
-                stem: "What patient demographic field must be entered prior to initiating Kinetisense posture capture?",
-                options: [
-                    { text: "Date of birth (DOB) [Page 2]", correct: true, why: "Notes state: 'enter DOB'. [Page 2]" },
-                    { text: "Social security number [Page 2]", correct: false, why: "Never entered into clinical functional screens. [Page 2]" },
-                    { text: "Driver's license number [Page 2]", correct: false, why: "Irrelevant for clinical posture normative data. [Page 2]" },
-                    { text: "Insurance policy group code [Page 2]", correct: false, why: "Administrative billing info not entered into the exam engine. [Page 2]" }
-                ]
-            },
-            {
-                id: 18,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "medium",
-                priority: true,
-                stem: "What visual on-screen alignment queue confirms the patient is properly positioned for Kinetisense calibration?",
-                options: [
-                    { text: "Fitting the patient's body inside the green squares [Page 2]", correct: true, why: "Notes state: 'fit body inside green squares'. [Page 2]" },
-                    { text: "Aligning the crown of the head with a red crosshair [Page 2]", correct: false, why: "The system utilizes green bounding squares. [Page 2]" },
-                    { text: "Illumination of blue vertical laser guides [Page 2]", correct: false, why: "Kinetisense relies on tablet camera computer vision, not lasers. [Page 2]" },
-                    { text: "Auditory chime confirming proximity [Page 2]", correct: false, why: "The visual indicator is green squares. [Page 2]" }
-                ]
-            },
-            {
-                id: 19,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "hard",
-                priority: true,
-                stem: "What is the exact 4-step execution sequence required for the Kinetisense AP view?",
-                options: [
-                    { text: "Calibrate -> Start -> Capture -> Stop [Page 2]", correct: true, why: "Notes state explicitly: 'AP calibrate, start, capture, stop'. [Page 2]" },
-                    { text: "Start -> Capture -> Calibrate -> Stop [Page 2]", correct: false, why: "Calibration must occur before starting data capture. [Page 2]" },
-                    { text: "Start -> Calibrate -> Stop -> Save [Page 2]", correct: false, why: "Violates the documented 4-step protocol sequence. [Page 2]" },
-                    { text: "Calibrate -> Capture -> Re-calibrate -> Finalize [Page 2]", correct: false, why: "Sequence does not match the clinical operational procedure. [Page 2]" }
-                ]
-            },
-            {
-                id: 20,
-                subjectIndex: 1,
-                week: "CIL II",
-                slideRef: "Notes Page 2",
-                difficulty: "medium",
-                priority: true,
-                stem: "What is the exact operational sequence required for the Kinetisense lateral posture view?",
-                options: [
-                    { text: "Start -> Capture -> Stop [Page 2]", correct: true, why: "Notes state: 'Lateral - start, capture, stop' (calibration is only performed on the AP view). [Page 2]" },
-                    { text: "Calibrate -> Start -> Capture -> Stop [Page 2]", correct: false, why: "Calibration is performed during the initial AP setup, not repeated on lateral. [Page 2]" },
-                    { text: "Capture -> Calibrate -> Stop [Page 2]", correct: false, why: "Cannot capture before initiating the acquisition run. [Page 2]" },
-                    { text: "Start -> Calibrate -> Capture [Page 2]", correct: false, why: "Lateral view does not include a separate calibrate step. [Page 2]" }
-                ]
-            },
-
-            /* =========================================================================
-               SUBJECT 2: INSIGHT SUBLUXATION STATION (THERMAL, sEMG, HRV)
-               ========================================================================= */
-            {
-                id: 21,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "easy",
-                priority: true,
-                stem: "What is the user login passcode for the Insight Subluxation Station?",
-                options: [
-                    { text: "333333 [Page 3]", correct: true, why: "Notes state: 'passcode: 333333'. [Page 3]" },
-                    { text: "1234 [Page 3]", correct: false, why: "1234 is designated exclusively as the instructor code for HRV. [Page 3]" },
-                    { text: "000000 [Page 3]", correct: false, why: "Incorrect default code. [Page 3]" },
-                    { text: "999999 [Page 3]", correct: false, why: "Passcode is documented as 333333. [Page 3]" }
-                ]
-            },
-            {
-                id: 22,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "easy",
-                priority: false,
-                stem: "The functional modalities of the Insight Subluxation Station are identified in the interface via _______.",
-                options: [
-                    { text: "Color-coded stations [Page 3]", correct: true, why: "Notes state: 'color-coded stations'. [Page 3]" },
-                    { text: "Alphabetical dropdown lists [Page 3]", correct: false, why: "Stations are color-coded for quick clinical navigation. [Page 3]" },
-                    { text: "Numeric IP addresses [Page 3]", correct: false, why: "Hardware displays graphical color-coded buttons. [Page 3]" },
-                    { text: "Biometric voice recognition [Page 3]", correct: false, why: "Modalities are selected manually via color-coded tiles. [Page 3]" }
-                ]
-            },
-            {
-                id: 23,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "medium",
-                priority: true,
-                stem: "What physiological parameter is directly measured by the Insight rolling thermography wheel?",
-                options: [
-                    { text: "Temperature of paraspinal muscles/tissues [Page 3]", correct: true, why: "Notes state: 'Thermography wheel... temperature of paraspinal muscles'. [Page 3]" },
-                    { text: "Active neuroelectrical firing frequency [Page 3]", correct: false, why: "Neuroelectrical activity is measured by surface EMG. [Page 3]" },
-                    { text: "Microvascular pulse wave velocity [Page 3]", correct: false, why: "Pulse dynamics are captured via HRV finger plethysmography. [Page 3]" },
-                    { text: "Sudomotor sweat gland galvanic impedance [Page 3]", correct: false, why: "Rolling thermography tracks infrared temperature differentials. [Page 3]" }
-                ]
-            },
-            {
-                id: 24,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "medium",
-                priority: true,
-                stem: "What is the maximum allowable distance between the thermography sensor wheel and the skin surface during a scan?",
-                options: [
-                    { text: "1 cm max from skin [Page 3]", correct: true, why: "Notes state: '1cm max from skin'. [Page 3]" },
-                    { text: "3 cm max from skin [Page 3]", correct: false, why: "3 cm is too far away to read infrared differentials accurately. [Page 3]" },
-                    { text: "5 cm max from skin [Page 3]", correct: false, why: "Exceeds thermal pickup threshold. [Page 3]" },
-                    { text: "Direct firm pressure of at least 5 lbs [Page 3]", correct: false, why: "Wheel glides gently; excessive pressure produces artifact. [Page 3]" }
-                ]
-            },
-            {
-                id: 25,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "medium",
-                priority: true,
-                stem: "Insight surface electromyography (sEMG) evaluates which physiological variable?",
-                options: [
-                    { text: "Neuroelectrical activity of paraspinal muscles [Page 3]", correct: true, why: "Notes state: 'EMG - neuroelectrical activity of muscles'. [Page 3]" },
-                    { text: "Mechanical tensile contraction strength [Page 3]", correct: false, why: "Notes state EMG measures neuroelectrical activity, NOT physical mechanical force. [Page 3]" },
-                    { text: "Passive ligamentous collagen elasticity [Page 3]", correct: false, why: "EMG does not evaluate passive connective tissue elasticity. [Page 3]" },
-                    { text: "Paraspinal lactic acid accumulation [Page 3]", correct: false, why: "EMG cannot detect chemical metabolic substrates. [Page 3]" }
-                ]
-            },
-            {
-                id: 26,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "hard",
-                priority: true,
-                stem: "What visual confirmation must the operator verify before interpreting Insight sEMG sensor data?",
-                options: [
-                    { text: "Wait for 2 green bars; black lines represent readings [Page 3]", correct: true, why: "Notes state: 'Wait for 2 green bars; black lines = reading'. [Page 3]" },
-                    { text: "Wait for solid yellow flashing icons; white bars represent readings [Page 3]", correct: false, why: "The interface requires two green bars before acquisition. [Page 3]" },
-                    { text: "Wait for red baseline stabilization curves [Page 3]", correct: false, why: "Green bars confirm sensor contact and skin impedance readiness. [Page 3]" },
-                    { text: "Wait for blue tone auditory chime [Page 3]", correct: false, why: "Visual indicator is 2 green bars with black recording lines. [Page 3]" }
-                ]
-            },
-            {
-                id: 27,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "easy",
-                priority: false,
-                stem: "What does the clinical abbreviation HRV represent on the Insight station?",
-                options: [
-                    { text: "Heart Rate Variability [Page 3]", correct: true, why: "Notes state: 'HRV - heart rate variability'. [Page 3]" },
-                    { text: "High Resonant Velocity [Page 3]", correct: false, why: "Incorrect medical terminology. [Page 3]" },
-                    { text: "Hepatorenal Volume [Page 3]", correct: false, why: "Incorrect anatomical system. [Page 3]" },
-                    { text: "Hemodynamic Resistance Vector [Page 3]", correct: false, why: "HRV stands for Heart Rate Variability. [Page 3]" }
-                ]
-            },
-            {
-                id: 28,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "hard",
-                priority: true,
-                stem: "Which three physiological parameters are simultaneously acquired by the Insight HRV sensor?",
-                options: [
-                    { text: "Heart rate, body temperature, and electrical impulses [Page 3]", correct: true, why: "Notes state HRV measures: 'heart rate, body temp, electrical impulses between digits 2:4'. [Page 3]" },
-                    { text: "Respiratory rate, pulse pressure, and galvanic skin resistance [Page 3]", correct: false, why: "Core trio is heart rate, body temp, and digit electrical impulses. [Page 3]" },
-                    { text: "Blood pressure, arterial stiffness, and muscle voltage [Page 3]", correct: false, why: "Blood pressure is not recorded by the finger sensor. [Page 3]" },
-                    { text: "SpO2 saturation, core temperature, and EEG alpha waves [Page 3]", correct: false, why: "EEG and SpO2 are not tracked by this station. [Page 3]" }
-                ]
-            },
-            {
-                id: 29,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "hard",
-                priority: true,
-                stem: "Which specific digits are placed into the Insight HRV finger sensor harness?",
-                options: [
-                    { text: "Digits 2, 3, and 4 [Page 3]", correct: true, why: "Notes emphasize: 'electrical impulses between digits 2:4' and 'uses digits 2, 3, AND 4'. [Page 3]" },
-                    { text: "Digits 1, 2, and 3 [Page 3]", correct: false, why: "Thumb (digit 1) is never inserted into the sensor. [Page 3]" },
-                    { text: "Digits 3, 4, and 5 [Page 3]", correct: false, why: "Digit 5 (pinky) is not used. [Page 3]" },
-                    { text: "Digits 1 and 5 only [Page 3]", correct: false, why: "Sensor specifically harnesses digits 2, 3, and 4 (index, middle, ring). [Page 3]" }
-                ]
-            },
-            {
-                id: 30,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "easy",
-                priority: true,
-                stem: "What is the specialized instructor security code for the Insight HRV module?",
-                options: [
-                    { text: "1234 [Page 3]", correct: true, why: "Notes state: 'instructor code: 1234'. [Page 3]" },
-                    { text: "333333 [Page 3]", correct: false, why: "333333 is the main general user passcode. [Page 3]" },
-                    { text: "0000 [Page 3]", correct: false, why: "Incorrect security pin. [Page 3]" },
-                    { text: "4321 [Page 3]", correct: false, why: "Documented instructor code is 1234. [Page 3]" }
-                ]
-            },
-            {
-                id: 31,
-                subjectIndex: 2,
-                week: "CIL II",
-                slideRef: "Notes Page 3",
-                difficulty: "easy",
-                priority: false,
-                stem: "What is the highest possible composite score obtainable on the Insight HRV assessment?",
-                options: [
-                    { text: "100 [Page 3]", correct: true, why: "Notes state: 'highest score: 100'. [Page 3]" },
-                    { text: "10 [Page 3]", correct: false, why: "Scale is calibrated out of 100. [Page 3]" },
-                    { text: "80 [Page 3]", correct: false, why: "100 represents the theoretical optimal score. [Page 3]" },
-                    { text: "120 [Page 3]", correct: false, why: "The maximum score cap is 100. [Page 3]" }
-                ]
-            }
-        ];
-
-        /* APPLICATION STATE & PERSISTENCE */
-        let hist = {};
-        try { hist = JSON.parse(localStorage.getItem('quiz_missed_history') || '{}'); } catch (e) {}
-        const saveHistory = () => { try { localStorage.setItem('quiz_missed_history', JSON.stringify(hist)); } catch (e) {} };
-
-        let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
-        let prioritizeMissed = false;
-        let quizQuestions = [], userAnswers = [], currentIndex = 0, score = 0, popupTimeout = null, muted = false;
-        let viewMode = 'single'; // 'single' | 'all'
-
-        try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
-        try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
-
-        const $ = id => document.getElementById(id);
-
-        function updateModeButton() {
-            const b = $('modeBtn');
-            if (!b) return;
-            b.textContent = viewMode === 'all' ? 'View: All at Once' : 'View: One by One';
-            b.classList.toggle('active', viewMode === 'all');
+        const logo = document.getElementById('logoToggle');
+        
+        if (localStorage.getItem('quizHubTheme') === 'vip') {
+            document.body.classList.add('hub-mode');
         }
 
-        function toggleMode() {
-            viewMode = viewMode === 'all' ? 'single' : 'all';
-            try { localStorage.setItem('quizViewMode', viewMode); } catch (e) {}
-            updateModeButton();
-            if (quizQuestions.length > 0) renderActiveQuiz();
-            else renderHome();
-        }
-
-        function toggleErijah() {
-            muted = !muted;
-            try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
-            const b = $('erijahBtn');
-            if (b) {
-                b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
-                b.classList.toggle('active', muted);
-            }
-        }
-
-        /* HOME / LAUNCHER VIEW */
-        function renderHome() {
-            quizQuestions = [];
-            userAnswers = [];
-            currentIndex = 0;
-            score = 0;
-            $('progressPill').textContent = 'Score: 0 / 0 (0%)';
-            $('progressBar').style.width = '0%';
-            updateModeButton();
-
-            const missedCount = Object.keys(hist).filter(id => hist[id] > 0).length;
-
-            const html = `
-                <div class="dashboard-card">
-                    <div class="section-heading">Module Selection</div>
-                    <div class="chip-grid">
-                        ${SUBJECTS.map((sub, i) => {
-                            const count = questionBank.filter(q => q.subjectIndex === i).length;
-                            const active = selectedSubjects.has(i) ? 'active' : '';
-                            return `<div class="subject-chip ${active}" onclick="toggleSubject(${i})">[${sub.week}] ${sub.title} (${count})</div>`;
-                        }).join('')}
-                    </div>
-
-                    <div class="control-row">
-                        <button class="btn" onclick="selectAllSubjects(true)">Select All</button>
-                        <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
-                        <button class="btn ${prioritizeMissed ? 'active' : ''}" onclick="togglePrioritizeMissed()">Prioritize Missed (${missedCount})</button>
-                    </div>
-
-                    <div class="section-heading">Display Presentation</div>
-                    <div class="control-row">
-                        <button class="btn ${viewMode === 'single' ? 'active' : ''}" onclick="setDisplayMode('single')">One by One (Card View)</button>
-                        <button class="btn ${viewMode === 'all' ? 'active' : ''}" onclick="setDisplayMode('all')">All at Once (Continuous List)</button>
-                    </div>
-
-                    <div class="section-heading" style="margin-top:20px;">Launch Exam Mode</div>
-                    <div class="launcher-grid">
-                        <div class="launch-btn" onclick="startQuiz(10)">Quick 10 Qs</div>
-                        <div class="launch-btn" onclick="startQuiz(20)">Standard 20 Qs</div>
-                        <div class="launch-btn primary" onclick="startQuiz(questionBank.length)">Master Pool (All Qs)</div>
-                    </div>
-                </div>
-            `;
-            $('appRoot').innerHTML = html;
-        }
-
-        function toggleSubject(idx) {
-            if (selectedSubjects.has(idx)) {
-                if (selectedSubjects.size > 1) selectedSubjects.delete(idx);
+        logo.addEventListener('click', () => {
+            document.body.classList.toggle('hub-mode');
+            if (document.body.classList.contains('hub-mode')) {
+                localStorage.setItem('quizHubTheme', 'vip');
             } else {
-                selectedSubjects.add(idx);
-            }
-            renderHome();
-        }
-
-        function selectAllSubjects(all) {
-            if (all) selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
-            else selectedSubjects = new Set([0]);
-            renderHome();
-        }
-
-        function togglePrioritizeMissed() {
-            prioritizeMissed = !prioritizeMissed;
-            renderHome();
-        }
-
-        function setDisplayMode(mode) {
-            viewMode = mode;
-            try { localStorage.setItem('quizViewMode', mode); } catch (e) {}
-            renderHome();
-        }
-
-        /* QUIZ ENGINE */
-        function startQuiz(count) {
-            let pool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
-            if (pool.length === 0) pool = [...questionBank];
-
-            if (prioritizeMissed) {
-                pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
-            } else {
-                pool.sort(() => Math.random() - 0.5);
-            }
-
-            quizQuestions = pool.slice(0, count);
-            userAnswers = new Array(quizQuestions.length).fill(null);
-            currentIndex = 0;
-            score = 0;
-            renderActiveQuiz();
-        }
-
-        function renderActiveQuiz() {
-            if (viewMode === 'all') renderAllQuestions();
-            else renderQuestion();
-        }
-
-        /* MODE 1: ONE BY ONE */
-        function renderQuestion() {
-            const q = quizQuestions[currentIndex];
-            const answered = userAnswers[currentIndex] !== null;
-            const sub = SUBJECTS[q.subjectIndex];
-
-            const answeredCount = userAnswers.filter(a => a !== null).length;
-            const pct = Math.round((answeredCount / quizQuestions.length) * 100);
-            $('progressBar').style.width = `${pct}%`;
-            $('progressPill').textContent = `Question ${currentIndex + 1} of ${quizQuestions.length} | Score: ${score} (${Math.round((score / Math.max(1, answeredCount)) * 100)}%)`;
-
-            let optionsHtml = q.options.map((opt, i) => {
-                let cls = 'option-item';
-                if (answered) {
-                    cls += ' locked';
-                    if (opt.correct) cls += ' correct';
-                    else if (userAnswers[currentIndex] === i) cls += ' incorrect';
-                }
-                const prefix = String.fromCharCode(65 + i);
-                return `<div class="${cls}" onclick="handleOptionSelect(${i})">
-                    <span class="option-prefix">${prefix}.</span>
-                    <span>${opt.text}</span>
-                </div>`;
-            }).join('');
-
-            let rationalesHtml = q.options.map((opt, i) => {
-                const prefix = String.fromCharCode(65 + i);
-                const rClass = opt.correct ? 'correct-ref' : 'incorrect-ref';
-                return `<div class="rationale-row ${rClass}"><strong>${prefix}:</strong> ${opt.why}</div>`;
-            }).join('');
-
-            const html = `
-                <div class="quiz-card">
-                    <div class="card-meta">
-                        <div class="meta-tags">
-                            <span class="pill-tag">${sub.week}</span>
-                            <span class="pill-tag">${sub.title}</span>
-                            ${q.priority ? '<span class="pill-tag priority">HIGH YIELD</span>' : ''}
-                        </div>
-                        <span class="pill-tag">${q.difficulty.toUpperCase()}</span>
-                    </div>
-                    <div class="stem-text">${q.stem}</div>
-                    <div class="options-list">${optionsHtml}</div>
-                    
-                    <div class="explanation-card ${answered ? 'show' : ''}">
-                        <h4>Option Explanations & Lecture Audit:</h4>
-                        ${rationalesHtml}
-                    </div>
-
-                    <div class="bottom-nav">
-                        <button class="btn" onclick="navigateStep(-1)" ${currentIndex === 0 ? 'disabled style="opacity:0.4;"' : ''}>Previous</button>
-                        ${answered ? 
-                            (currentIndex === quizQuestions.length - 1 ? 
-                                `<button class="nav-btn" onclick="renderSummary()">Finish & View Score</button>` : 
-                                `<button class="nav-btn" onclick="navigateStep(1)">Next Question</button>`) : 
-                            `<div></div>`
-                        }
-                    </div>
-                </div>
-            `;
-            $('appRoot').innerHTML = html;
-        }
-
-        /* MODE 2: ALL AT ONCE */
-        function renderAllQuestions() {
-            const answeredCount = userAnswers.filter(a => a !== null).length;
-            const pct = Math.round((answeredCount / quizQuestions.length) * 100);
-            $('progressBar').style.width = `${pct}%`;
-            $('progressPill').textContent = `Answered: ${answeredCount} of ${quizQuestions.length} | Score: ${score} (${Math.round((score / Math.max(1, answeredCount)) * 100)}%)`;
-
-            let html = quizQuestions.map((q, qIndex) => {
-                const answered = userAnswers[qIndex] !== null;
-                const sub = SUBJECTS[q.subjectIndex];
-
-                let optionsHtml = q.options.map((opt, i) => {
-                    let cls = 'option-item';
-                    if (answered) {
-                        cls += ' locked';
-                        if (opt.correct) cls += ' correct';
-                        else if (userAnswers[qIndex] === i) cls += ' incorrect';
-                    }
-                    const prefix = String.fromCharCode(65 + i);
-                    return `<div class="${cls}" onclick="handleOptionSelectAllMode(${qIndex}, ${i})">
-                        <span class="option-prefix">${prefix}.</span>
-                        <span>${opt.text}</span>
-                    </div>`;
-                }).join('');
-
-                let rationalesHtml = q.options.map((opt, i) => {
-                    const prefix = String.fromCharCode(65 + i);
-                    const rClass = opt.correct ? 'correct-ref' : 'incorrect-ref';
-                    return `<div class="rationale-row ${rClass}"><strong>${prefix}:</strong> ${opt.why}</div>`;
-                }).join('');
-
-                return `
-                    <div class="quiz-card" id="card-${qIndex}">
-                        <div class="card-meta">
-                            <div class="meta-tags">
-                                <span class="pill-tag" style="background:var(--accent-color); color:#000;">Q${qIndex + 1}</span>
-                                <span class="pill-tag">${sub.title}</span>
-                                ${q.priority ? '<span class="pill-tag priority">HIGH YIELD</span>' : ''}
-                            </div>
-                            <span class="pill-tag">${q.difficulty.toUpperCase()}</span>
-                        </div>
-                        <div class="stem-text">${q.stem}</div>
-                        <div class="options-list">${optionsHtml}</div>
-                        
-                        <div class="explanation-card ${answered ? 'show' : ''}">
-                            <h4>Option Explanations & Lecture Audit:</h4>
-                            ${rationalesHtml}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-
-            if (answeredCount === quizQuestions.length) {
-                html += `
-                    <div style="text-align:center; margin:30px 0;">
-                        <button class="nav-btn" style="font-size:16px; padding:14px 32px;" onclick="renderSummary()">View Final Exam Breakdown</button>
-                    </div>
-                `;
-            }
-
-            $('appRoot').innerHTML = html;
-        }
-
-        /* ANSWER SELECTION HANDLERS */
-        function handleOptionSelect(optIdx) {
-            if (userAnswers[currentIndex] !== null) return;
-            evaluateSelection(currentIndex, optIdx);
-            renderQuestion();
-        }
-
-        function handleOptionSelectAllMode(qIdx, optIdx) {
-            if (userAnswers[qIdx] !== null) return;
-            evaluateSelection(qIdx, optIdx);
-            renderAllQuestions();
-        }
-
-        function evaluateSelection(qIdx, optIdx) {
-            userAnswers[qIdx] = optIdx;
-            const q = quizQuestions[qIdx];
-            const isCorrect = q.options[optIdx].correct;
-
-            if (isCorrect) {
-                score++;
-                if (hist[q.id]) {
-                    hist[q.id] = Math.max(0, hist[q.id] - 1);
-                    if (hist[q.id] === 0) delete hist[q.id];
-                }
-            } else {
-                hist[q.id] = (hist[q.id] || 0) + 1;
-                triggerWrongFeedback();
-            }
-            saveHistory();
-        }
-
-        function triggerWrongFeedback() {
-            if (muted) return;
-            const audio = $('wrongAudio');
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play().catch(() => {});
-            }
-            const popup = $('wrongPopup');
-            if (popup) {
-                popup.classList.remove('hidden');
-                if (popupTimeout) clearTimeout(popupTimeout);
-                popupTimeout = setTimeout(() => {
-                    popup.classList.add('hidden');
-                }, 1200);
-            }
-        }
-
-        function navigateStep(delta) {
-            const nextIdx = currentIndex + delta;
-            if (nextIdx >= 0 && nextIdx < quizQuestions.length) {
-                currentIndex = nextIdx;
-                renderQuestion();
-            }
-        }
-
-        /* RESULTS BREAKDOWN */
-        function renderSummary() {
-            const pct = Math.round((score / quizQuestions.length) * 100);
-            $('progressBar').style.width = '100%';
-
-            let gradeComment = "Keep drilling to solidify clinical reflexes.";
-            if (pct >= 90) gradeComment = "Outstanding mastery. You are fully board ready on this technical instrumentation.";
-            else if (pct >= 75) gradeComment = "Solid passing performance. Review missed kinematic setups.";
-
-            const html = `
-                <div class="summary-card">
-                    <div class="score-circle">
-                        <span>${pct}%</span>
-                        <span class="score-label">${score} / ${quizQuestions.length} Correct</span>
-                    </div>
-                    <h2 style="margin-bottom:10px;">${gradeComment}</h2>
-                    <p style="color:var(--text-muted); margin-bottom:24px;">Performance records updated in local browser cache.</p>
-                    <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-                        <button class="btn" style="padding:10px 20px; font-weight:800;" onclick="renderHome()">Return to Dashboard</button>
-                        <button class="nav-btn" onclick="startQuiz(quizQuestions.length)">Retake Exam</button>
-                    </div>
-                </div>
-            `;
-            $('appRoot').innerHTML = html;
-        }
-
-        // Initialize App on load
-        window.addEventListener('DOMContentLoaded', () => {
-            renderHome();
-            if (muted) {
-                const b = $('erijahBtn');
-                if (b) { b.textContent = 'Bring Back Erijah'; b.classList.add('active'); }
+                localStorage.setItem('quizHubTheme', 'gainz');
             }
         });
     </script>
