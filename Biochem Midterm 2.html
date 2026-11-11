@@ -1284,3 +1284,106 @@ function renderAllQuestions() {
           ${rationales}
         </div>
       `;
+    }
+
+    return `
+      <div class="question-card" id="card-${qIndex}">
+        <div class="card-badges">
+          <span class="badge badge-num">Q${qIndex + 1}</span>
+          <span class="badge badge-subject">[${sub.week}] ${sub.title}</span>
+          <span class="badge badge-diff ${q.difficulty}">${q.difficulty}</span>
+          ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
+          <span class="badge badge-diff">${q.slideRef}</span>
+        </div>
+        <div class="stem">${q.stem}</div>
+        <div class="options-list">${optionsHtml}</div>
+        ${feedbackHtml}
+      </div>
+    `;
+  }).join('');
+
+  let finishBtn = answeredCount === total
+    ? `<div style="text-align: center; margin: 30px 0;"><button class="btn active" style="padding: 12px 28px; font-size: 1rem;" onclick="renderScorecard()">View Final Results Summary</button></div>`
+    : '';
+
+  $('mainContainer').innerHTML = cardsHtml + finishBtn;
+}
+
+function handleAllModeSelect(qIndex, optIndex) {
+  if (userAnswers[qIndex] !== null) return;
+  const q = quizQuestions[qIndex];
+  userAnswers[qIndex] = optIndex;
+  const isCorrect = q.options[optIndex].correct;
+
+  if (isCorrect) {
+    score++;
+    if (hist[q.id]) {
+      hist[q.id] = Math.max(0, hist[q.id] - 1);
+      saveHistory();
+    }
+  } else {
+    hist[q.id] = (hist[q.id] || 0) + 1;
+    saveHistory();
+    triggerWrongFeedback();
+  }
+  renderAllQuestions();
+}
+
+/* -------------------------------------------------------------
+   SCORECARD & RESULTS
+   ------------------------------------------------------------- */
+function renderScorecard() {
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+
+  let subBreakdown = {};
+  quizQuestions.forEach((q, idx) => {
+    if (!subBreakdown[q.subjectIndex]) subBreakdown[q.subjectIndex] = { total: 0, correct: 0 };
+    subBreakdown[q.subjectIndex].total++;
+    if (userAnswers[idx] !== null && q.options[userAnswers[idx]].correct) {
+      subBreakdown[q.subjectIndex].correct++;
+    }
+  });
+
+  let breakdownHtml = Object.keys(subBreakdown).map(sIdx => {
+    const s = SUBJECTS[sIdx];
+    const item = subBreakdown[sIdx];
+    const sPct = Math.round((item.correct / item.total) * 100);
+    return `<div><strong>[${s.week}] ${s.title}:</strong> ${item.correct}/${item.total} (${sPct}%)</div>`;
+  }).join('');
+
+  let feedbackMsg = '';
+  if (pct >= 90) {
+    feedbackMsg = 'Absolute Gigachad. You drained that test dry.';
+  } else if (pct >= 75) {
+    feedbackMsg = 'Solid passing score! Ready for Midterm 2 boards.';
+  } else {
+    feedbackMsg = 'Needs remediation. Review connective tissue diseases, GAG structures, and globin genetics.';
+  }
+
+  $('mainContainer').innerHTML = `
+    <div class="scorecard">
+      <div class="dash-title">Exam Complete!</div>
+      <div class="score-num">${score} / ${total}</div>
+      <div class="score-grade" style="color: ${pct >= 75 ? '#4ade80' : '#ef4444'};">
+        ${pct}% &middot; ${pct >= 75 ? 'Passing Grade (Board Ready)' : 'Needs Remediation'}
+      </div>
+      <p style="color: var(--text-muted); margin-bottom: 20px;">${feedbackMsg}</p>
+      <div class="score-breakdown">
+        <div style="font-weight: 800; margin-bottom: 12px; color: var(--hub-orange);">Subject Performance:</div>
+        ${breakdownHtml}
+      </div>
+      <button class="btn active" style="padding: 10px 24px;" onclick="renderHome()">Return to Topic Dashboard</button>
+    </div>
+  `;
+}
+
+// Initial Boot
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', renderHome);
+} else {
+  renderHome();
+}
+</script>
+</body>
+</html>
