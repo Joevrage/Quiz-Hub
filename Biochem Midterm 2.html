@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>CHEM 121: Biochemistry Midterm 2 Board Review</title>
 <style>
   :root {
     --bg-color: #0f0f0f;
     --card-bg: #1a1a1a;
-    --card-border: #2a2a2a;
+    --card-border: #282828;
     --hub-orange: #ff9900;
+    --hub-orange-hover: #ffad33;
     --text-primary: #ffffff;
     --text-muted: #a0a0a0;
     --correct-bg: #14532d;
@@ -18,110 +19,145 @@
     --wrong-border: #ef4444;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 60px; }
-  
+  body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 60px; line-height: 1.5; }
+
   /* Sticky Header */
   header {
-    position: sticky; top: 0; z-index: 100;
-    background-color: rgba(26, 26, 26, 0.95);
+    position: sticky; top: 0; z-index: 1000;
+    background-color: rgba(26, 26, 26, 0.96);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--card-border);
-    padding: 12px 20px;
+    padding: 10px 18px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
   }
   .header-content {
     max-width: 900px; margin: 0 auto;
     display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
   }
-  .header-title h1 { font-size: 1.1rem; color: var(--hub-orange); }
-  .header-title p { font-size: 0.8rem; color: var(--text-muted); }
-  .header-nav { display: flex; gap: 8px; align-items: center; }
+  .header-title h1 { font-size: 1.05rem; color: var(--hub-orange); font-weight: 800; }
+  .header-title p { font-size: 0.78rem; color: var(--text-muted); }
+  .header-nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
   .btn {
-    background: #2a2a2a; color: var(--text-primary); border: 1px solid #444;
-    padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; transition: 0.2s;
+    background: #242424; color: var(--text-primary); border: 1px solid #3d3d3d;
+    padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s ease;
+    white-space: nowrap;
   }
-  .btn:hover { background: #3a3a3a; border-color: var(--hub-orange); }
-  .btn.active { background: var(--hub-orange); color: #000; font-weight: bold; }
-  .pills { display: flex; gap: 8px; font-size: 0.8rem; }
-  .pill { background: #111; padding: 4px 10px; border-radius: 12px; border: 1px solid #333; color: var(--text-muted); }
-  .pill span { color: var(--hub-orange); font-weight: bold; }
+  .btn:hover { background: #333333; border-color: var(--hub-orange); }
+  .btn.active { background: var(--hub-orange); color: #000000; border-color: var(--hub-orange); font-weight: 800; }
+  .btn.muted-active { background: var(--hub-orange); color: #000000; border-color: var(--hub-orange); }
+
+  .pills { display: flex; gap: 8px; font-size: 0.8rem; align-items: center; }
+  .pill { background: #141414; padding: 4px 11px; border-radius: 999px; border: 1px solid #333; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
+  .pill span { color: var(--hub-orange); font-weight: 800; }
+  .pill.score-pill span { color: #ffffff; }
+  .pill.score-pill { background: #222; border-color: var(--card-border); }
+
   .progress-bar-container { width: 100%; height: 4px; background: #222; border-radius: 2px; margin-top: 8px; overflow: hidden; }
-  .progress-fill { height: 100%; width: 0%; background: var(--hub-orange); transition: width 0.3s ease; }
+  .progress-fill { height: 100%; width: 0%; background: var(--hub-orange); transition: width 0.25s ease; }
 
   /* Main Container */
-  .container { max-width: 900px; margin: 20px auto; padding: 0 15px; }
-  
+  .container { max-width: 900px; margin: 20px auto; padding: 0 16px; }
+
   /* Dashboard / Home View */
-  .dashboard { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 24px; }
-  .dash-title { font-size: 1.4rem; color: var(--hub-orange); margin-bottom: 8px; }
-  .dash-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
-  .section-label { font-size: 0.9rem; font-weight: 600; color: #fff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-  .chip {
-    background: #222; border: 1px solid #333; color: var(--text-muted);
-    padding: 8px 14px; border-radius: 20px; font-size: 0.85rem; cursor: pointer; transition: 0.2s;
+  .dashboard {
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
+    padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.4);
   }
-  .chip.active { background: var(--hub-orange); color: #000; font-weight: 600; border-color: var(--hub-orange); }
-  .controls-row { display: flex; gap: 8px; margin-bottom: 24px; }
-  .bank-counter { font-size: 0.95rem; color: var(--hub-orange); margin: 15px 0; font-weight: 600; }
-  .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 20px; }
+  .dash-title { font-size: 1.45rem; font-weight: 800; color: var(--hub-orange); margin-bottom: 6px; }
+  .dash-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 22px; }
+  .section-label { font-size: 0.86rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+
+  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .chip {
+    background: #202020; border: 1px solid #333; color: var(--text-muted);
+    padding: 7px 14px; border-radius: 20px; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: 0.2s;
+  }
+  .chip:hover { border-color: var(--hub-orange); color: #fff; }
+  .chip.active { background: var(--hub-orange); color: #000; font-weight: 700; border-color: var(--hub-orange); }
+
+  .controls-row { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; align-items: center; }
+  .bank-counter { font-size: 0.95rem; color: var(--hub-orange); margin: 16px 0 12px; font-weight: 700; }
+
+  .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
   .launch-btn {
-    background: #252525; border: 1px solid #3a3a3a; color: #fff; padding: 14px;
-    border-radius: 8px; font-weight: 600; cursor: pointer; text-align: center; transition: 0.2s;
+    background: #242424; border: 1px solid #3a3a3a; color: #fff; padding: 13px 10px;
+    border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; text-align: center; transition: 0.2s;
   }
   .launch-btn:hover { background: var(--hub-orange); color: #000; border-color: var(--hub-orange); transform: translateY(-2px); }
 
   /* Question Card */
   .question-card {
-    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
-    padding: 24px; margin-bottom: 20px; transition: 0.2s;
+    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px;
+    padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
   }
-  .card-badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
-  .badge { font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase; }
-  .badge-subject { background: #262626; color: var(--hub-orange); border: 1px solid #3a3a3a; }
-  .badge-diff { background: #333; color: #ccc; }
+  .card-badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+  .badge { font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
+  .badge-subject { background: #262626; color: var(--hub-orange); border: 1px solid #3d3d3d; }
+  .badge-diff { background: #262626; color: #bbb; border: 1px solid #333; }
   .badge-diff.easy { color: #4ade80; }
   .badge-diff.medium { color: #facc15; }
   .badge-diff.hard { color: #f87171; }
   .badge-priority { background: #7c2d12; color: #fdba74; }
-  .stem { font-size: 1.05rem; line-height: 1.5; margin-bottom: 18px; font-weight: 500; }
-  
+  .badge-num { background: var(--hub-orange); color: #000; }
+
+  .stem { font-size: 1.05rem; font-weight: 600; line-height: 1.48; margin-bottom: 16px; color: var(--text-primary); }
+
   /* Options */
-  .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+  .options-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
   .option-item {
-    background: #222; border: 1px solid #333; border-radius: 8px; padding: 12px 16px;
-    font-size: 0.95rem; cursor: pointer; transition: 0.2s; display: flex; align-items: flex-start; gap: 12px;
+    background: #222222; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px 15px;
+    font-size: 0.95rem; cursor: pointer; transition: 0.15s ease; display: flex; align-items: flex-start; gap: 10px;
+    color: var(--text-primary);
   }
-  .option-item:hover:not(.locked) { background: #2c2c2c; border-color: #555; }
+  .option-item:hover:not(.locked) { background: #2a2a2a; border-color: var(--hub-orange); }
   .option-item.selected-correct { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: #fff; }
   .option-item.selected-wrong { background: var(--wrong-bg) !important; border-color: var(--wrong-border) !important; color: #fff; }
   .option-item.reveal-correct { border-color: var(--correct-border); background: #064e3b; }
-  .opt-letter { font-weight: bold; min-width: 20px; color: var(--hub-orange); }
+  .option-item.dim { opacity: 0.45; }
+  .opt-letter { font-weight: 800; min-width: 22px; color: var(--hub-orange); }
+  .option-item.selected-correct .opt-letter, .option-item.selected-wrong .opt-letter { color: #fff; }
 
   /* Feedback & Rationales */
-  .feedback-box { margin-top: 18px; padding: 16px; border-radius: 8px; background: #141414; border: 1px solid #333; }
-  .status-banner { font-size: 1rem; font-weight: bold; margin-bottom: 8px; }
+  .feedback-box {
+    margin-top: 16px; padding: 14px 16px; border-radius: 8px; background: #141414;
+    border: 1px solid var(--card-border); animation: fadeIn 0.2s ease-out;
+  }
+  .status-banner { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
   .status-banner.correct { color: #4ade80; }
   .status-banner.wrong { color: #ef4444; }
-  .rationale-title { font-size: 0.85rem; font-weight: 700; color: var(--hub-orange); margin: 12px 0 6px; text-transform: uppercase; }
-  .rationale-item { font-size: 0.85rem; color: #bbb; line-height: 1.4; margin-bottom: 6px; padding-left: 10px; border-left: 2px solid #333; }
+  .ref-line { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; }
+  .rationale-title { font-size: 0.82rem; font-weight: 700; color: var(--hub-orange); margin: 10px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .rationale-item { font-size: 0.88rem; color: #bbb; line-height: 1.42; margin-bottom: 7px; padding-left: 10px; border-left: 3px solid #333; }
   .rationale-item.correct-rat { border-left-color: var(--correct-border); color: #dcfce7; }
+  .rationale-item strong { color: #fff; }
 
   /* Navigation Footer for Single Mode */
-  .quiz-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+  .quiz-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
 
   /* Popup */
   .wrong-popup {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    z-index: 1000; pointer-events: none; opacity: 1; transition: opacity 0.4s ease;
+    z-index: 2000; pointer-events: none; opacity: 1; transition: opacity 0.3s ease;
+    display: flex; justify-content: center; align-items: center;
   }
-  .wrong-popup.hidden { opacity: 0; }
-  .wrong-popup img { max-width: 320px; border-radius: 12px; border: 3px solid var(--wrong-border); box-shadow: 0 0 30px rgba(239, 68, 68, 0.6); }
+  .wrong-popup.hidden { opacity: 0; pointer-events: none; }
+  .wrong-popup img {
+    max-width: 80vw; max-height: 55vh; border-radius: 12px;
+    border: 3px solid var(--wrong-border); box-shadow: 0 10px 40px rgba(0,0,0,0.9);
+    background: #111; object-fit: contain;
+  }
 
   /* Scorecard */
-  .scorecard { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 30px; text-align: center; }
-  .score-num { font-size: 3rem; color: var(--hub-orange); font-weight: 800; margin: 15px 0; }
-  .score-breakdown { text-align: left; margin: 20px 0; font-size: 0.95rem; }
-  .score-breakdown div { margin-bottom: 8px; border-bottom: 1px solid #2a2a2a; padding-bottom: 6px; }
+  .scorecard { background: var(--card-bg); border: 1px solid var(--hub-orange); border-radius: 12px; padding: 32px 24px; text-align: center; }
+  .score-num { font-size: 2.8rem; color: var(--hub-orange); font-weight: 800; margin: 12px 0 6px; }
+  .score-grade { font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
+  .score-breakdown { text-align: left; margin: 24px 0; font-size: 0.92rem; }
+  .score-breakdown div { margin-bottom: 8px; border-bottom: 1px solid #282828; padding-bottom: 6px; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 </style>
 </head>
 <body>
@@ -129,17 +165,17 @@
 <header id="quizHeader">
   <div class="header-content">
     <div class="header-title">
-      <h1>CHEM 121: Midterm 2 Mastery Quiz</h1>
-      <p>NBCE Part 1 Board Spec • Globular/Fibrous Proteins, Carbs & Review</p>
+      <h1>CHEM 121: Biochemistry Midterm 2 Mastery Quiz</h1>
+      <p>NBCE Part 1 Spec &middot; Hemoglobin, Fibrous Proteins, Carbs &amp; Review</p>
     </div>
     <div class="header-nav">
-      <button class="btn" onclick="renderHome()">Menu / Change Topics</button>
+      <button class="btn" onclick="renderHome()">Menu / Topics</button>
       <button class="btn" id="modeBtn" onclick="toggleMode()">View: One by One</button>
       <button class="btn" id="stfuBtn" onclick="toggleErijah()">STFU Erijah</button>
     </div>
     <div class="pills">
       <div class="pill" id="progressPill">Q: <span>0/0</span></div>
-      <div class="pill" id="scorePill">Score: <span>0/0 (0%)</span></div>
+      <div class="pill score-pill" id="scorePill">Score: <span>0/0 (0%)</span></div>
     </div>
     <div class="progress-bar-container">
       <div class="progress-fill" id="progressFill"></div>
@@ -154,7 +190,7 @@
 <!-- Audio and Visual Feedback -->
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 <div id="wrongPopup" class="wrong-popup hidden">
-  <img id="wrongImage" src="Erijah.png" alt="Wrong Answer Alert">
+  <img id="wrongImage" src="Erijah.png" alt="Wrong Answer Alert" onerror="console.warn('Erijah.png not found.');">
 </div>
 
 <script>
@@ -233,6 +269,51 @@ const questionBank = [
     id: 4,
     subjectIndex: 0,
     week: "Week 5",
+    slideRef: "Lecture 4.1",
+    difficulty: "medium",
+    priority: true,
+    stem: "Within each αβ dimer of hemoglobin, the two subunits are held together mainly by _______ interactions.",
+    options: [
+      { text: "hydrophobic", correct: true, why: "The alpha and beta subunits present complementary nonpolar domains that fit like a hand in a glove. Strong hydrophobic interactions glue the intra-dimer interface together. [Lecture 4.1]" },
+      { text: "ionic bridge", correct: false, why: "Ionic bridges join one αβ dimer to the other across the interface gap (the inter-dimer interface), not α to β within a dimer. [Lecture 4.1]" },
+      { text: "disulfide", correct: false, why: "No covalent disulfide bonds link hemoglobin globin subunits. The interface is strictly non-covalent. [Lecture 4.1]" },
+      { text: "water-mediated hydrogen bond", correct: false, why: "The dimer interface excludes water to maintain tight hydrophobic packaging. [Lecture 4.1]" }
+    ]
+  },
+  {
+    id: 5,
+    subjectIndex: 0,
+    week: "Week 5",
+    slideRef: "Lecture 4.1",
+    difficulty: "medium",
+    priority: true,
+    stem: "The two αβ dimers of hemoglobin are joined to each other to form the quaternary tetramer mainly by:",
+    options: [
+      { text: "ionic bridges between oppositely charged side chains", correct: true, why: "Across the gap between dimers, positively charged Lys/Arg pair with negatively charged Asp/Glu. These inter-dimer ionic bridges allow flexible conformational shifts between T and R states. [Lecture 4.1]" },
+      { text: "hydrophobic stacking of phenylalanine rings", correct: false, why: "Hydrophobic stacking holds α to β within each dimer, whereas the dimer-to-dimer contact relies on ionic bridges. [Lecture 4.1]" },
+      { text: "covalent disulfide bridges between subunits", correct: false, why: "Hemoglobin contains no interchain disulfide bonds. [Lecture 4.1]" },
+      { text: "peptide bonds linking the two dimers", correct: false, why: "Peptide bonds are intramolecular within individual polypeptide chains, not between separate subunits. [Lecture 4.1]" }
+    ]
+  },
+  {
+    id: 6,
+    subjectIndex: 0,
+    week: "Week 5",
+    slideRef: "Lecture 4.3",
+    difficulty: "hard",
+    priority: true,
+    stem: "In sickle-cell hemoglobin, valine replacing glutamate on β-globin promotes aggregation of deoxygenated Hb because valine side chains:",
+    options: [
+      { text: "interlock hydrophobically with nonpolar patches on neighboring β chains", correct: true, why: "Nonpolar valine side chains interdigitate with hydrophobic acceptor pockets on adjacent deoxygenated beta globin chains, driving fibrous polymer assembly. [Lecture 4.3]" },
+      { text: "repel one another through concentrated negative charges", correct: false, why: "Valine is nonpolar and uncharged; the wild-type glutamate is the negatively charged residue. [Lecture 4.3]" },
+      { text: "form abnormal ionic bridges with lysine and arginine", correct: false, why: "Valine cannot form ionic bridges because it lacks a charge. [Lecture 4.3]" },
+      { text: "hydrogen bond excessively with the surrounding aqueous hydration shell", correct: false, why: "Valine is hydrophobic and avoids contact with water. [Lecture 4.3]" }
+    ]
+  },
+  {
+    id: 7,
+    subjectIndex: 0,
+    week: "Week 5",
     slideRef: "Transcript Oct 20 & Nov 3",
     difficulty: "medium",
     priority: false,
@@ -245,7 +326,7 @@ const questionBank = [
     ]
   },
   {
-    id: 5,
+    id: 8,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -260,7 +341,7 @@ const questionBank = [
     ]
   },
   {
-    id: 6,
+    id: 9,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -275,7 +356,7 @@ const questionBank = [
     ]
   },
   {
-    id: 7,
+    id: 10,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -290,7 +371,7 @@ const questionBank = [
     ]
   },
   {
-    id: 8,
+    id: 11,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -305,7 +386,7 @@ const questionBank = [
     ]
   },
   {
-    id: 9,
+    id: 12,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -320,7 +401,7 @@ const questionBank = [
     ]
   },
   {
-    id: 10,
+    id: 13,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -335,7 +416,7 @@ const questionBank = [
     ]
   },
   {
-    id: 11,
+    id: 14,
     subjectIndex: 0,
     week: "Week 5",
     slideRef: "Transcript Nov 3",
@@ -354,7 +435,7 @@ const questionBank = [
      MODULE 1: FIBROUS PROTEINS & CONNECTIVE TISSUE (Wk 6)
      ============================================================== */
   {
-    id: 12,
+    id: 15,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -369,7 +450,7 @@ const questionBank = [
     ]
   },
   {
-    id: 13,
+    id: 16,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -384,7 +465,7 @@ const questionBank = [
     ]
   },
   {
-    id: 14,
+    id: 17,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -399,7 +480,7 @@ const questionBank = [
     ]
   },
   {
-    id: 15,
+    id: 18,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -414,7 +495,7 @@ const questionBank = [
     ]
   },
   {
-    id: 16,
+    id: 19,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -429,7 +510,7 @@ const questionBank = [
     ]
   },
   {
-    id: 17,
+    id: 20,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -444,7 +525,7 @@ const questionBank = [
     ]
   },
   {
-    id: 18,
+    id: 21,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -459,7 +540,7 @@ const questionBank = [
     ]
   },
   {
-    id: 19,
+    id: 22,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -474,7 +555,7 @@ const questionBank = [
     ]
   },
   {
-    id: 20,
+    id: 23,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -489,7 +570,7 @@ const questionBank = [
     ]
   },
   {
-    id: 21,
+    id: 24,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -504,7 +585,7 @@ const questionBank = [
     ]
   },
   {
-    id: 22,
+    id: 25,
     subjectIndex: 1,
     week: "Week 6",
     slideRef: "Transcript Nov 5",
@@ -523,7 +604,7 @@ const questionBank = [
      MODULE 2: CARBOHYDRATE CHEMISTRY & GLYCOSIDIC BONDS (Wk 6-7)
      ============================================================== */
   {
-    id: 23,
+    id: 26,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5 & Lecture Notes",
@@ -538,7 +619,7 @@ const questionBank = [
     ]
   },
   {
-    id: 24,
+    id: 27,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -553,7 +634,7 @@ const questionBank = [
     ]
   },
   {
-    id: 25,
+    id: 28,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -568,7 +649,7 @@ const questionBank = [
     ]
   },
   {
-    id: 26,
+    id: 29,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -583,7 +664,7 @@ const questionBank = [
     ]
   },
   {
-    id: 27,
+    id: 30,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -598,7 +679,7 @@ const questionBank = [
     ]
   },
   {
-    id: 28,
+    id: 31,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -613,7 +694,7 @@ const questionBank = [
     ]
   },
   {
-    id: 29,
+    id: 32,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -628,7 +709,7 @@ const questionBank = [
     ]
   },
   {
-    id: 30,
+    id: 33,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -643,7 +724,7 @@ const questionBank = [
     ]
   },
   {
-    id: 31,
+    id: 34,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -658,7 +739,7 @@ const questionBank = [
     ]
   },
   {
-    id: 32,
+    id: 35,
     subjectIndex: 2,
     week: "Week 6-7",
     slideRef: "Transcript Nov 5",
@@ -677,7 +758,7 @@ const questionBank = [
      MODULE 3: CARRYOVER HIGH-YIELD PRODUCTS & AMINO ACIDS
      ============================================================== */
   {
-    id: 33,
+    id: 36,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3 & Class Notes 2",
@@ -692,7 +773,7 @@ const questionBank = [
     ]
   },
   {
-    id: 34,
+    id: 37,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -707,7 +788,7 @@ const questionBank = [
     ]
   },
   {
-    id: 35,
+    id: 38,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -722,7 +803,7 @@ const questionBank = [
     ]
   },
   {
-    id: 36,
+    id: 39,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -737,7 +818,7 @@ const questionBank = [
     ]
   },
   {
-    id: 37,
+    id: 40,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -752,7 +833,7 @@ const questionBank = [
     ]
   },
   {
-    id: 38,
+    id: 41,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -767,7 +848,7 @@ const questionBank = [
     ]
   },
   {
-    id: 39,
+    id: 42,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -782,7 +863,7 @@ const questionBank = [
     ]
   },
   {
-    id: 40,
+    id: 43,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -797,7 +878,7 @@ const questionBank = [
     ]
   },
   {
-    id: 41,
+    id: 44,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -812,7 +893,7 @@ const questionBank = [
     ]
   },
   {
-    id: 42,
+    id: 45,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Nov 3",
@@ -827,7 +908,7 @@ const questionBank = [
     ]
   },
   {
-    id: 43,
+    id: 46,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Oct 15",
@@ -842,7 +923,7 @@ const questionBank = [
     ]
   },
   {
-    id: 44,
+    id: 47,
     subjectIndex: 3,
     week: "Carryover",
     slideRef: "Transcript Oct 15",
@@ -880,7 +961,14 @@ function updateErijahButton() {
   const b = $('stfuBtn');
   if (!b) return;
   b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
-  b.classList.toggle('active', muted);
+  b.classList.toggle('muted-active', muted);
+  if (muted) {
+    const a = $('wrongAudio');
+    if (a) { a.pause(); a.currentTime = 0; }
+    if (popupTimeout) clearTimeout(popupTimeout);
+    const p = $('wrongPopup');
+    if (p) p.classList.add('hidden');
+  }
 }
 
 function toggleErijah() {
@@ -933,7 +1021,7 @@ function renderHome() {
   $('mainContainer').innerHTML = `
     <div class="dashboard">
       <div class="dash-title">Biochemistry Midterm 2 Preparation Hub</div>
-      <div class="dash-subtitle">NBCE Part 1 Board Spec • Exhaustive Slide & Transcript Coverage</div>
+      <div class="dash-subtitle">NBCE Part 1 Board Spec &middot; Exhaustive Slide, Hemoglobin &amp; Transcript Coverage</div>
       
       <div class="section-label">Select Topics for Review</div>
       <div class="chip-grid">${chipsHtml}</div>
@@ -942,6 +1030,7 @@ function renderHome() {
         <button class="btn" onclick="selectAllSubjects(true)">Select All</button>
         <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
         <button class="btn ${prioritizeMissed ? 'active' : ''}" onclick="togglePrioritizeMissed()">Prioritize Missed (${totalMissedCount})</button>
+        <button class="btn ${viewMode === 'all' ? 'active' : ''}" onclick="toggleModeFromDash()">${viewMode === 'all' ? 'Mode: All at Once' : 'Mode: One by One'}</button>
       </div>
 
       <div class="bank-counter">
@@ -957,6 +1046,11 @@ function renderHome() {
       </div>
     </div>
   `;
+}
+
+function toggleModeFromDash() {
+  toggleMode();
+  renderHome();
 }
 
 function toggleSubject(idx) {
@@ -1027,7 +1121,7 @@ function triggerWrongFeedback() {
     if (popupTimeout) clearTimeout(popupTimeout);
     popupTimeout = setTimeout(() => {
       popup.classList.add('hidden');
-    }, 1100);
+    }, 1200);
   }
 }
 
@@ -1043,7 +1137,6 @@ function renderQuestion() {
   const answered = userAnswers[currentIndex] !== null;
   const sub = SUBJECTS[q.subjectIndex];
 
-  // Header update
   $('progressPill').innerHTML = `Question: <span>${currentIndex + 1} of ${quizQuestions.length}</span>`;
   const answeredCount = userAnswers.filter(a => a !== null).length;
   const pct = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
@@ -1058,6 +1151,8 @@ function renderQuestion() {
       if (opt.correct) classes.push('reveal-correct');
       if (userAnswers[currentIndex] === i) {
         classes.push(opt.correct ? 'selected-correct' : 'selected-wrong');
+      } else {
+        classes.push('dim');
       }
     }
     const clickHandler = !answered ? `onclick="handleOptionClick(${i})"` : '';
@@ -1083,7 +1178,8 @@ function renderQuestion() {
         <div class="status-banner ${isCorrect ? 'correct' : 'wrong'}">
           ${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}
         </div>
-        <div class="rationale-title">Option Breakdown & Slide References</div>
+        <div class="ref-line">Reference: [${sub.week}], ${q.slideRef}</div>
+        <div class="rationale-title">Option Breakdown</div>
         ${rationales}
       </div>
     `;
@@ -1095,6 +1191,7 @@ function renderQuestion() {
   $('mainContainer').innerHTML = `
     <div class="question-card">
       <div class="card-badges">
+        <span class="badge badge-num">Q${currentIndex + 1}</span>
         <span class="badge badge-subject">[${sub.week}] ${sub.title}</span>
         <span class="badge badge-diff ${q.difficulty}">${q.difficulty}</span>
         ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
@@ -1156,6 +1253,8 @@ function renderAllQuestions() {
         if (opt.correct) classes.push('reveal-correct');
         if (userAnswers[qIndex] === i) {
           classes.push(opt.correct ? 'selected-correct' : 'selected-wrong');
+        } else {
+          classes.push('dim');
         }
       }
       const clickHandler = !answered ? `onclick="handleAllModeSelect(${qIndex}, ${i})"` : '';
@@ -1180,96 +1279,8 @@ function renderAllQuestions() {
           <div class="status-banner ${isCorrect ? 'correct' : 'wrong'}">
             ${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}
           </div>
+          <div class="ref-line">Reference: [${sub.week}], ${q.slideRef}</div>
           <div class="rationale-title">Option Breakdown</div>
           ${rationales}
         </div>
       `;
-    }
-
-    return `
-      <div class="question-card" id="card-${qIndex}">
-        <div class="card-badges">
-          <span class="badge badge-diff">Q${qIndex + 1}</span>
-          <span class="badge badge-subject">[${sub.week}] ${sub.title}</span>
-          <span class="badge badge-diff ${q.difficulty}">${q.difficulty}</span>
-          ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
-          <span class="badge badge-diff">${q.slideRef}</span>
-        </div>
-        <div class="stem">${q.stem}</div>
-        <div class="options-list">${optionsHtml}</div>
-        ${feedbackHtml}
-      </div>
-    `;
-  }).join('');
-
-  let finishBtn = answeredCount === total
-    ? `<div style="text-align: center; margin: 30px 0;"><button class="btn active" style="padding: 12px 24px; font-size: 1rem;" onclick="renderScorecard()">View Final Results Summary</button></div>`
-    : '';
-
-  $('mainContainer').innerHTML = cardsHtml + finishBtn;
-}
-
-function handleAllModeSelect(qIndex, optIndex) {
-  if (userAnswers[qIndex] !== null) return;
-  const q = quizQuestions[qIndex];
-  userAnswers[qIndex] = optIndex;
-  const isCorrect = q.options[optIndex].correct;
-
-  if (isCorrect) {
-    score++;
-    if (hist[q.id]) {
-      hist[q.id] = Math.max(0, hist[q.id] - 1);
-      saveHistory();
-    }
-  } else {
-    hist[q.id] = (hist[q.id] || 0) + 1;
-    saveHistory();
-    triggerWrongFeedback();
-  }
-  renderAllQuestions();
-}
-
-/* -------------------------------------------------------------
-   SCORECARD & RESULTS
-   ------------------------------------------------------------- */
-function renderScorecard() {
-  const total = quizQuestions.length;
-  const pct = Math.round((score / total) * 100);
-
-  let subBreakdown = {};
-  quizQuestions.forEach((q, idx) => {
-    if (!subBreakdown[q.subjectIndex]) subBreakdown[q.subjectIndex] = { total: 0, correct: 0 };
-    subBreakdown[q.subjectIndex].total++;
-    if (userAnswers[idx] !== null && q.options[userAnswers[idx]].correct) {
-      subBreakdown[q.subjectIndex].correct++;
-    }
-  });
-
-  let breakdownHtml = Object.keys(subBreakdown).map(sIdx => {
-    const s = SUBJECTS[sIdx];
-    const item = subBreakdown[sIdx];
-    const sPct = Math.round((item.correct / item.total) * 100);
-    return `<div><strong>[${s.week}] ${s.title}:</strong> ${item.correct}/${item.total} (${sPct}%)</div>`;
-  }).join('');
-
-  $('mainContainer').innerHTML = `
-    <div class="scorecard">
-      <div class="dash-title">Exam Complete!</div>
-      <div class="score-num">${score} / ${total}</div>
-      <div style="font-size: 1.2rem; margin-bottom: 20px; color: ${pct >= 75 ? '#4ade80' : '#ef4444'};">
-        ${pct}% • ${pct >= 75 ? 'Passing Grade (Board Ready)' : 'Needs Remediation'}
-      </div>
-      <div class="score-breakdown">
-        <div style="font-weight: bold; margin-bottom: 12px; color: var(--hub-orange);">Subject Performance:</div>
-        ${breakdownHtml}
-      </div>
-      <button class="btn active" style="padding: 10px 20px;" onclick="renderHome()">Return to Topic Dashboard</button>
-    </div>
-  `;
-}
-
-// Initial Boot
-window.onload = () => { renderHome(); };
-</script>
-</body>
-</html>
