@@ -31,7 +31,9 @@
             padding: 12px 20px;
             display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
         }
+        .header-brand { display: flex; flex-direction: column; gap: 2px; }
         .header-title { font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .header-subtitle { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.3px; }
         .header-badge { background: var(--accent-color); color: #000; font-size: 11px; font-weight: 900; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
         
         .header-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -39,8 +41,13 @@
             background: #252525; color: #fff; border: 1px solid #444; border-radius: 6px;
             padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s ease;
         }
-        .btn:hover { border-color: var(--accent-color); color: var(--accent-color); }
+        .btn:hover:not(:disabled) { border-color: var(--accent-color); color: var(--accent-color); }
         .btn.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        .stat-pill {
+            background: #111; color: #fff; border: 1px solid #333; border-radius: 6px;
+            padding: 6px 10px; font-size: 12px; font-weight: 700; cursor: default;
+        }
 
         .progress-container { width: 100%; height: 4px; background: #222; position: absolute; bottom: 0; left: 0; }
         .progress-bar { height: 100%; width: 0%; background: var(--accent-color); transition: width 0.3s ease; }
@@ -53,31 +60,38 @@
             background: var(--surface-color); border: 1px solid var(--surface-border);
             border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
-        .section-heading { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 14px; }
+        .section-heading { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 12px; }
         
         .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
         .subject-chip {
             background: #222; border: 1px solid #333; color: #ccc;
             padding: 8px 14px; border-radius: 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;
         }
+        .subject-chip:hover { border-color: #555; }
         .subject-chip.active { background: var(--accent-color); color: #000; border-color: var(--accent-color); font-weight: 800; }
         
-        .control-row { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
-        .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 16px; }
+        .control-row { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+        .pool-counter {
+            background: #141414; border: 1px solid #2b2b2b; border-left: 3px solid var(--accent-color);
+            padding: 10px 14px; border-radius: 6px; font-size: 13px; color: #ddd; margin-bottom: 22px; font-weight: 600;
+        }
+        .pool-counter span { color: var(--accent-color); font-weight: 800; }
+
+        .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
         .launch-btn {
             background: linear-gradient(135deg, #2a2a2a, #1f1f1f); border: 1px solid #333;
             color: #fff; padding: 14px 10px; border-radius: 8px; font-size: 13px; font-weight: 800; text-align: center; cursor: pointer; transition: all 0.2s;
         }
         .launch-btn:hover { border-color: var(--accent-color); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 153, 0, 0.2); }
-        .launch-btn.primary { background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; }
+        .launch-btn.primary { background: linear-gradient(135deg, var(--accent-color), var(--accent-hover)); color: #000; border-color: var(--accent-color); }
 
         /* Quiz Card Styling */
         .quiz-card {
             background: var(--surface-color); border: 1px solid var(--surface-border);
             border-radius: 12px; padding: 24px; margin-bottom: 20px; position: relative;
         }
-        .card-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-        .meta-tags { display: flex; gap: 6px; align-items: center; }
+        .card-meta { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+        .meta-tags { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
         .pill-tag { background: #252525; color: #aaa; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; border: 1px solid #333; }
         .pill-tag.priority { border-color: #ef4444; color: #ef4444; }
 
@@ -101,8 +115,15 @@
             padding: 16px; margin-top: 18px; display: none;
         }
         .explanation-card.show { display: block; }
-        .explanation-card h4 { font-size: 13px; text-transform: uppercase; color: var(--accent-color); margin-bottom: 10px; letter-spacing: 0.5px; }
-        .rationale-row { font-size: 13px; line-height: 1.4; margin-bottom: 8px; padding-left: 8px; border-left: 2px solid #333; }
+        .status-banner {
+            font-size: 14px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px;
+            padding: 8px 12px; border-radius: 6px; margin-bottom: 12px;
+        }
+        .status-banner.correct { background: var(--correct-bg); border: 1px solid var(--correct-border); color: #dcfce7; }
+        .status-banner.incorrect { background: var(--incorrect-bg); border: 1px solid var(--incorrect-border); color: #fee2e2; }
+
+        .rationale-row { font-size: 13px; line-height: 1.45; margin-bottom: 8px; padding-left: 10px; border-left: 3px solid #333; }
+        .rationale-row:last-child { margin-bottom: 0; }
         .rationale-row.correct-ref { border-left-color: var(--correct-border); color: #dcfce7; }
         .rationale-row.incorrect-ref { border-left-color: var(--incorrect-border); color: #fca5a5; }
 
@@ -116,7 +137,7 @@
 
         /* Bottom Controls */
         .bottom-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; }
-        .nav-btn { background: var(--accent-color); color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 800; font-size: 13px; cursor: pointer; text-transform: uppercase; }
+        .nav-btn { background: var(--accent-color); color: #000; border: none; padding: 10px 24px; border-radius: 6px; font-weight: 800; font-size: 13px; cursor: pointer; text-transform: uppercase; transition: background 0.2s; }
         .nav-btn:hover { background: var(--accent-hover); }
 
         /* Summary View */
@@ -129,20 +150,24 @@
 
     <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
     <div id="wrongPopup" class="wrong-popup hidden">
-        <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+        <img id="wrongImage" src="Erijah.png" alt="Incorrect Feedback">
     </div>
 
     <!-- Header Navigation -->
     <header>
-        <div class="header-title">
-            <span class="header-badge">NBCE Drill</span>
-            <span>CIL II Instrumentation Tech</span>
+        <div class="header-brand">
+            <div class="header-title">
+                <span class="header-badge">NBCE Drill</span>
+                <span>CIL II Instrumentation Tech</span>
+            </div>
+            <div class="header-subtitle">Myovision ROM • Kinetisense Posture • Insight Subluxation Station</div>
         </div>
         <div class="header-controls">
             <button id="menuBtn" class="btn" onclick="renderHome()">Menu / Filter</button>
             <button id="modeBtn" class="btn" onclick="toggleMode()">View: One by One</button>
-            <button id="erijahBtn" class="btn" onclick="toggleErijah()">STFU Erijah</button>
-            <div id="progressPill" class="btn" style="background:#111; cursor:default;">Score: 0 / 0 (0%)</div>
+            <button id="stfuBtn" class="btn" onclick="toggleErijah()">STFU Erijah</button>
+            <div id="progressPill" class="stat-pill">Q 0 of 0</div>
+            <div id="scorePill" class="stat-pill">Score: 0 / 0 (0%)</div>
         </div>
         <div class="progress-container">
             <div id="progressBar" class="progress-bar"></div>
@@ -653,6 +678,23 @@
             }
         ];
 
+        /* TRUE FISHER-YATES RANDOMIZATION ENGINE */
+        function fisherYatesShuffle(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+
+        function cloneAndShuffleQuestion(q) {
+            return {
+                ...q,
+                options: fisherYatesShuffle(q.options.map(opt => ({ ...opt })))
+            };
+        }
+
         /* APPLICATION STATE & PERSISTENCE */
         let hist = {};
         try { hist = JSON.parse(localStorage.getItem('quiz_missed_history') || '{}'); } catch (e) {}
@@ -660,13 +702,37 @@
 
         let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
         let prioritizeMissed = false;
-        let quizQuestions = [], userAnswers = [], currentIndex = 0, score = 0, popupTimeout = null, muted = false;
+        let quizQuestions = [];
+        let activeBasePool = [];
+        let userAnswers = [];
+        let currentIndex = 0;
+        let score = 0;
+        let popupTimeout = null;
+        let muted = false;
         let viewMode = 'single'; // 'single' | 'all'
 
         try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
         try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
 
         const $ = id => document.getElementById(id);
+
+        function updateHeaderStats() {
+            const total = quizQuestions.length;
+            const answeredCount = userAnswers.filter(a => a !== null).length;
+            const pct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+            const acc = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
+
+            $('progressBar').style.width = `${pct}%`;
+            $('scorePill').textContent = `Score: ${score} / ${answeredCount} (${acc}%)`;
+
+            if (total === 0) {
+                $('progressPill').textContent = 'Q 0 of 0';
+            } else if (viewMode === 'all') {
+                $('progressPill').textContent = `Answered ${answeredCount} of ${total}`;
+            } else {
+                $('progressPill').textContent = `Q ${currentIndex + 1} of ${total}`;
+            }
+        }
 
         function updateModeButton() {
             const b = $('modeBtn');
@@ -676,17 +742,22 @@
         }
 
         function toggleMode() {
+            const prevScroll = window.scrollY;
             viewMode = viewMode === 'all' ? 'single' : 'all';
             try { localStorage.setItem('quizViewMode', viewMode); } catch (e) {}
             updateModeButton();
-            if (quizQuestions.length > 0) renderActiveQuiz();
-            else renderHome();
+            if (quizQuestions.length > 0) {
+                renderActiveQuiz();
+                window.scrollTo(0, prevScroll);
+            } else {
+                renderHome();
+            }
         }
 
         function toggleErijah() {
             muted = !muted;
             try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
-            const b = $('erijahBtn');
+            const b = $('stfuBtn');
             if (b) {
                 b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
                 b.classList.toggle('active', muted);
@@ -696,14 +767,16 @@
         /* HOME / LAUNCHER VIEW */
         function renderHome() {
             quizQuestions = [];
+            activeBasePool = [];
             userAnswers = [];
             currentIndex = 0;
             score = 0;
-            $('progressPill').textContent = 'Score: 0 / 0 (0%)';
-            $('progressBar').style.width = '0%';
+            updateHeaderStats();
             updateModeButton();
 
             const missedCount = Object.keys(hist).filter(id => hist[id] > 0).length;
+            const filteredPool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
+            const highYieldCount = filteredPool.filter(q => q.priority).length;
 
             const html = `
                 <div class="dashboard-card">
@@ -722,6 +795,10 @@
                         <button class="btn ${prioritizeMissed ? 'active' : ''}" onclick="togglePrioritizeMissed()">Prioritize Missed (${missedCount})</button>
                     </div>
 
+                    <div class="pool-counter">
+                        Active Pool: <span>${filteredPool.length}</span> total questions (<span>${highYieldCount}</span> high-yield) across <span>${selectedSubjects.size}</span> module${selectedSubjects.size === 1 ? '' : 's'} selected.
+                    </div>
+
                     <div class="section-heading">Display Presentation</div>
                     <div class="control-row">
                         <button class="btn ${viewMode === 'single' ? 'active' : ''}" onclick="setDisplayMode('single')">One by One (Card View)</button>
@@ -730,9 +807,9 @@
 
                     <div class="section-heading" style="margin-top:20px;">Launch Exam Mode</div>
                     <div class="launcher-grid">
-                        <div class="launch-btn" onclick="startQuiz(10)">Quick 10 Qs</div>
-                        <div class="launch-btn" onclick="startQuiz(20)">Standard 20 Qs</div>
-                        <div class="launch-btn primary" onclick="startQuiz(questionBank.length)">Master Pool (All Qs)</div>
+                        <div class="launch-btn" onclick="startQuiz(10)">Quickie (10 Qs)</div>
+                        <div class="launch-btn" onclick="startQuiz(20)">Standard (20 Qs)</div>
+                        <div class="launch-btn primary" onclick="startQuiz(${filteredPool.length})">All Selected (${filteredPool.length} Qs)</div>
                     </div>
                 </div>
             `;
@@ -765,58 +842,93 @@
             renderHome();
         }
 
-        /* QUIZ ENGINE */
+        /* QUIZ ENGINE WITH TWO-WAY FISHER-YATES SHUFFLE */
+        function buildShuffledQuiz(pool, count) {
+            let orderedPool;
+            if (prioritizeMissed) {
+                // Shuffle first so ties in miss count are randomly ordered, then sort highest missed first
+                orderedPool = fisherYatesShuffle(pool).sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
+            } else {
+                orderedPool = fisherYatesShuffle(pool);
+            }
+
+            const sliced = orderedPool.slice(0, Math.min(count, orderedPool.length));
+            // Shuffle both question order and each question's 4 answer choices
+            return fisherYatesShuffle(sliced).map(q => cloneAndShuffleQuestion(q));
+        }
+
         function startQuiz(count) {
             let pool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
             if (pool.length === 0) pool = [...questionBank];
 
-            if (prioritizeMissed) {
-                pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
-            } else {
-                pool.sort(() => Math.random() - 0.5);
-            }
-
-            quizQuestions = pool.slice(0, count);
+            activeBasePool = pool;
+            quizQuestions = buildShuffledQuiz(pool, count);
             userAnswers = new Array(quizQuestions.length).fill(null);
             currentIndex = 0;
             score = 0;
+            window.scrollTo(0, 0);
+            renderActiveQuiz();
+        }
+
+        function retakeSameExam() {
+            const count = quizQuestions.length;
+            const pool = activeBasePool.length > 0 ? activeBasePool : [...questionBank];
+            quizQuestions = buildShuffledQuiz(pool, count);
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            currentIndex = 0;
+            score = 0;
+            window.scrollTo(0, 0);
             renderActiveQuiz();
         }
 
         function renderActiveQuiz() {
+            updateHeaderStats();
             if (viewMode === 'all') renderAllQuestions();
             else renderQuestion();
+        }
+
+        function buildExplanationHtml(q, chosenIdx) {
+            if (chosenIdx === null) return '';
+            const wasCorrect = q.options[chosenIdx].correct;
+            const bannerClass = wasCorrect ? 'correct' : 'incorrect';
+            const bannerText = wasCorrect ? 'Correct!' : 'Incorrect.';
+
+            const rows = q.options.map((opt, i) => {
+                const prefix = String.fromCharCode(65 + i);
+                const rClass = opt.correct ? 'correct-ref' : 'incorrect-ref';
+                const tag = opt.correct ? '[CORRECT]' : '[INCORRECT]';
+                return `<div class="rationale-row ${rClass}"><strong>${prefix}) ${tag}:</strong> ${opt.why}</div>`;
+            }).join('');
+
+            return `
+                <div class="explanation-card show">
+                    <div class="status-banner ${bannerClass}">${bannerText}</div>
+                    ${rows}
+                </div>
+            `;
         }
 
         /* MODE 1: ONE BY ONE */
         function renderQuestion() {
             const q = quizQuestions[currentIndex];
-            const answered = userAnswers[currentIndex] !== null;
+            const chosenIdx = userAnswers[currentIndex];
+            const answered = chosenIdx !== null;
             const sub = SUBJECTS[q.subjectIndex];
 
-            const answeredCount = userAnswers.filter(a => a !== null).length;
-            const pct = Math.round((answeredCount / quizQuestions.length) * 100);
-            $('progressBar').style.width = `${pct}%`;
-            $('progressPill').textContent = `Question ${currentIndex + 1} of ${quizQuestions.length} | Score: ${score} (${Math.round((score / Math.max(1, answeredCount)) * 100)}%)`;
+            updateHeaderStats();
 
-            let optionsHtml = q.options.map((opt, i) => {
+            const optionsHtml = q.options.map((opt, i) => {
                 let cls = 'option-item';
                 if (answered) {
                     cls += ' locked';
                     if (opt.correct) cls += ' correct';
-                    else if (userAnswers[currentIndex] === i) cls += ' incorrect';
+                    else if (chosenIdx === i) cls += ' incorrect';
                 }
                 const prefix = String.fromCharCode(65 + i);
                 return `<div class="${cls}" onclick="handleOptionSelect(${i})">
                     <span class="option-prefix">${prefix}.</span>
                     <span>${opt.text}</span>
                 </div>`;
-            }).join('');
-
-            let rationalesHtml = q.options.map((opt, i) => {
-                const prefix = String.fromCharCode(65 + i);
-                const rClass = opt.correct ? 'correct-ref' : 'incorrect-ref';
-                return `<div class="rationale-row ${rClass}"><strong>${prefix}:</strong> ${opt.why}</div>`;
             }).join('');
 
             const html = `
@@ -831,17 +943,12 @@
                     </div>
                     <div class="stem-text">${q.stem}</div>
                     <div class="options-list">${optionsHtml}</div>
-                    
-                    <div class="explanation-card ${answered ? 'show' : ''}">
-                        <h4>Option Explanations & Lecture Audit:</h4>
-                        ${rationalesHtml}
-                    </div>
-
+                    ${buildExplanationHtml(q, chosenIdx)}
                     <div class="bottom-nav">
-                        <button class="btn" onclick="navigateStep(-1)" ${currentIndex === 0 ? 'disabled style="opacity:0.4;"' : ''}>Previous</button>
+                        <button class="btn" onclick="navigateStep(-1)" ${currentIndex === 0 ? 'disabled' : ''}>Previous</button>
                         ${answered ? 
                             (currentIndex === quizQuestions.length - 1 ? 
-                                `<button class="nav-btn" onclick="renderSummary()">Finish & View Score</button>` : 
+                                `<button class="nav-btn" onclick="showSummary()">Finish & View Score</button>` : 
                                 `<button class="nav-btn" onclick="navigateStep(1)">Next Question</button>`) : 
                             `<div></div>`
                         }
@@ -854,32 +961,25 @@
         /* MODE 2: ALL AT ONCE */
         function renderAllQuestions() {
             const answeredCount = userAnswers.filter(a => a !== null).length;
-            const pct = Math.round((answeredCount / quizQuestions.length) * 100);
-            $('progressBar').style.width = `${pct}%`;
-            $('progressPill').textContent = `Answered: ${answeredCount} of ${quizQuestions.length} | Score: ${score} (${Math.round((score / Math.max(1, answeredCount)) * 100)}%)`;
+            updateHeaderStats();
 
             let html = quizQuestions.map((q, qIndex) => {
-                const answered = userAnswers[qIndex] !== null;
+                const chosenIdx = userAnswers[qIndex];
+                const answered = chosenIdx !== null;
                 const sub = SUBJECTS[q.subjectIndex];
 
-                let optionsHtml = q.options.map((opt, i) => {
+                const optionsHtml = q.options.map((opt, i) => {
                     let cls = 'option-item';
                     if (answered) {
                         cls += ' locked';
                         if (opt.correct) cls += ' correct';
-                        else if (userAnswers[qIndex] === i) cls += ' incorrect';
+                        else if (chosenIdx === i) cls += ' incorrect';
                     }
                     const prefix = String.fromCharCode(65 + i);
                     return `<div class="${cls}" onclick="handleOptionSelectAllMode(${qIndex}, ${i})">
                         <span class="option-prefix">${prefix}.</span>
                         <span>${opt.text}</span>
                     </div>`;
-                }).join('');
-
-                let rationalesHtml = q.options.map((opt, i) => {
-                    const prefix = String.fromCharCode(65 + i);
-                    const rClass = opt.correct ? 'correct-ref' : 'incorrect-ref';
-                    return `<div class="rationale-row ${rClass}"><strong>${prefix}:</strong> ${opt.why}</div>`;
                 }).join('');
 
                 return `
@@ -894,11 +994,7 @@
                         </div>
                         <div class="stem-text">${q.stem}</div>
                         <div class="options-list">${optionsHtml}</div>
-                        
-                        <div class="explanation-card ${answered ? 'show' : ''}">
-                            <h4>Option Explanations & Lecture Audit:</h4>
-                            ${rationalesHtml}
-                        </div>
+                        ${buildExplanationHtml(q, chosenIdx)}
                     </div>
                 `;
             }).join('');
@@ -906,7 +1002,7 @@
             if (answeredCount === quizQuestions.length) {
                 html += `
                     <div style="text-align:center; margin:30px 0;">
-                        <button class="nav-btn" style="font-size:16px; padding:14px 32px;" onclick="renderSummary()">View Final Exam Breakdown</button>
+                        <button class="nav-btn" style="font-size:16px; padding:14px 32px;" onclick="showSummary()">View Final Exam Breakdown</button>
                     </div>
                 `;
             }
@@ -923,8 +1019,10 @@
 
         function handleOptionSelectAllMode(qIdx, optIdx) {
             if (userAnswers[qIdx] !== null) return;
+            const prevScroll = window.scrollY;
             evaluateSelection(qIdx, optIdx);
             renderAllQuestions();
+            window.scrollTo(0, prevScroll);
         }
 
         function evaluateSelection(qIdx, optIdx) {
@@ -971,7 +1069,7 @@
         }
 
         /* RESULTS BREAKDOWN */
-        function renderSummary() {
+        function showSummary() {
             const pct = Math.round((score / quizQuestions.length) * 100);
             $('progressBar').style.width = '100%';
 
@@ -989,7 +1087,7 @@
                     <p style="color:var(--text-muted); margin-bottom:24px;">Performance records updated in local browser cache.</p>
                     <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
                         <button class="btn" style="padding:10px 20px; font-weight:800;" onclick="renderHome()">Return to Dashboard</button>
-                        <button class="nav-btn" onclick="startQuiz(quizQuestions.length)">Retake Exam</button>
+                        <button class="nav-btn" onclick="retakeSameExam()">Retake Same Exam</button>
                     </div>
                 </div>
             `;
@@ -1000,7 +1098,7 @@
         window.addEventListener('DOMContentLoaded', () => {
             renderHome();
             if (muted) {
-                const b = $('erijahBtn');
+                const b = $('stfuBtn');
                 if (b) { b.textContent = 'Bring Back Erijah'; b.classList.add('active'); }
             }
         });
