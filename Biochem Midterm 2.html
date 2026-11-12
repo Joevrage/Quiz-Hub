@@ -1,1389 +1,367 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CHEM 121: Biochemistry Midterm 2 Board Review</title>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHEM 121: Biochemistry Midterm 2 Mastery Quiz</title>
 <style>
-  :root {
-    --bg-color: #0f0f0f;
-    --card-bg: #1a1a1a;
-    --card-border: #282828;
-    --hub-orange: #ff9900;
-    --hub-orange-hover: #ffad33;
-    --text-primary: #ffffff;
-    --text-muted: #a0a0a0;
-    --correct-bg: #14532d;
-    --correct-border: #22c55e;
-    --wrong-bg: #7f1d1d;
-    --wrong-border: #ef4444;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-  body { background-color: var(--bg-color); color: var(--text-primary); padding-bottom: 60px; line-height: 1.5; }
-
-  /* Sticky Header */
-  header {
-    position: sticky; top: 0; z-index: 1000;
-    background-color: rgba(26, 26, 26, 0.96);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--card-border);
-    padding: 10px 18px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.6);
-  }
-  .header-content {
-    max-width: 900px; margin: 0 auto;
-    display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px;
-  }
-  .header-title h1 { font-size: 1.05rem; color: var(--hub-orange); font-weight: 800; }
-  .header-title p { font-size: 0.78rem; color: var(--text-muted); }
-  .header-nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .btn {
-    background: #242424; color: var(--text-primary); border: 1px solid #3d3d3d;
-    padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: 0.2s ease;
-    white-space: nowrap;
-  }
-  .btn:hover { background: #333333; border-color: var(--hub-orange); }
-  .btn.active { background: var(--hub-orange); color: #000000; border-color: var(--hub-orange); font-weight: 800; }
-  .btn.muted-active { background: var(--hub-orange); color: #000000; border-color: var(--hub-orange); }
-
-  .pills { display: flex; gap: 8px; font-size: 0.8rem; align-items: center; }
-  .pill { background: #141414; padding: 4px 11px; border-radius: 999px; border: 1px solid #333; color: var(--text-muted); font-weight: 600; white-space: nowrap; }
-  .pill span { color: var(--hub-orange); font-weight: 800; }
-  .pill.score-pill span { color: #ffffff; }
-  .pill.score-pill { background: #222; border-color: var(--card-border); }
-
-  .progress-bar-container { width: 100%; height: 4px; background: #222; border-radius: 2px; margin-top: 8px; overflow: hidden; }
-  .progress-fill { height: 100%; width: 0%; background: var(--hub-orange); transition: width 0.25s ease; }
-
-  /* Main Container */
-  .container { max-width: 900px; margin: 20px auto; padding: 0 16px; }
-
-  /* Dashboard / Home View */
-  .dashboard {
-    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px;
-    padding: 24px; box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
-  .dash-title { font-size: 1.45rem; font-weight: 800; color: var(--hub-orange); margin-bottom: 6px; }
-  .dash-subtitle { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 22px; }
-  .section-label { font-size: 0.86rem; font-weight: 700; color: #ffffff; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
-
-  .chip-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
-  .chip {
-    background: #202020; border: 1px solid #333; color: var(--text-muted);
-    padding: 7px 14px; border-radius: 20px; font-size: 0.84rem; font-weight: 600; cursor: pointer; transition: 0.2s;
-  }
-  .chip:hover { border-color: var(--hub-orange); color: #fff; }
-  .chip.active { background: var(--hub-orange); color: #000; font-weight: 700; border-color: var(--hub-orange); }
-
-  .controls-row { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; align-items: center; }
-  .bank-counter { font-size: 0.95rem; color: var(--hub-orange); margin: 16px 0 12px; font-weight: 700; }
-
-  .launcher-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-top: 14px; }
-  .launch-btn {
-    background: #242424; border: 1px solid #3a3a3a; color: #fff; padding: 13px 10px;
-    border-radius: 8px; font-weight: 700; font-size: 0.88rem; cursor: pointer; text-align: center; transition: 0.2s;
-  }
-  .launch-btn:hover { background: var(--hub-orange); color: #000; border-color: var(--hub-orange); transform: translateY(-2px); }
-
-  /* Question Card */
-  .question-card {
-    background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 10px;
-    padding: 22px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(0,0,0,0.3);
-  }
-  .card-badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
-  .badge { font-size: 0.74rem; padding: 3px 8px; border-radius: 4px; font-weight: 700; text-transform: uppercase; }
-  .badge-subject { background: #262626; color: var(--hub-orange); border: 1px solid #3d3d3d; }
-  .badge-diff { background: #262626; color: #bbb; border: 1px solid #333; }
-  .badge-diff.easy { color: #4ade80; }
-  .badge-diff.medium { color: #facc15; }
-  .badge-diff.hard { color: #f87171; }
-  .badge-priority { background: #7c2d12; color: #fdba74; }
-  .badge-num { background: var(--hub-orange); color: #000; }
-
-  .stem { font-size: 1.05rem; font-weight: 600; line-height: 1.48; margin-bottom: 16px; color: var(--text-primary); }
-
-  /* Options */
-  .options-list { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
-  .option-item {
-    background: #222222; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px 15px;
-    font-size: 0.95rem; cursor: pointer; transition: 0.15s ease; display: flex; align-items: flex-start; gap: 10px;
-    color: var(--text-primary);
-  }
-  .option-item:hover:not(.locked) { background: #2a2a2a; border-color: var(--hub-orange); }
-  .option-item.selected-correct { background: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: #fff; }
-  .option-item.selected-wrong { background: var(--wrong-bg) !important; border-color: var(--wrong-border) !important; color: #fff; }
-  .option-item.reveal-correct { border-color: var(--correct-border); background: #064e3b; }
-  .option-item.dim { opacity: 0.45; }
-  .opt-letter { font-weight: 800; min-width: 22px; color: var(--hub-orange); }
-  .option-item.selected-correct .opt-letter, .option-item.selected-wrong .opt-letter { color: #fff; }
-
-  /* Feedback & Rationales */
-  .feedback-box {
-    margin-top: 16px; padding: 14px 16px; border-radius: 8px; background: #141414;
-    border: 1px solid var(--card-border); animation: fadeIn 0.2s ease-out;
-  }
-  .status-banner { font-size: 1.05rem; font-weight: 800; margin-bottom: 6px; }
-  .status-banner.correct { color: #4ade80; }
-  .status-banner.wrong { color: #ef4444; }
-  .ref-line { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 10px; }
-  .rationale-title { font-size: 0.82rem; font-weight: 700; color: var(--hub-orange); margin: 10px 0 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .rationale-item { font-size: 0.88rem; color: #bbb; line-height: 1.42; margin-bottom: 7px; padding-left: 10px; border-left: 3px solid #333; }
-  .rationale-item.correct-rat { border-left-color: var(--correct-border); color: #dcfce7; }
-  .rationale-item strong { color: #fff; }
-
-  /* Navigation Footer for Single Mode */
-  .quiz-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
-
-  /* Popup */
-  .wrong-popup {
-    position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-    z-index: 2000; pointer-events: none; opacity: 1; transition: opacity 0.3s ease;
-    display: flex; justify-content: center; align-items: center;
-  }
-  .wrong-popup.hidden { opacity: 0; pointer-events: none; }
-  .wrong-popup img {
-    max-width: 80vw; max-height: 55vh; border-radius: 12px;
-    border: 3px solid var(--wrong-border); box-shadow: 0 10px 40px rgba(0,0,0,0.9);
-    background: #111; object-fit: contain;
-  }
-
-  /* Scorecard */
-  .scorecard { background: var(--card-bg); border: 1px solid var(--hub-orange); border-radius: 12px; padding: 32px 24px; text-align: center; }
-  .score-num { font-size: 2.8rem; color: var(--hub-orange); font-weight: 800; margin: 12px 0 6px; }
-  .score-grade { font-size: 1.15rem; font-weight: 700; margin-bottom: 20px; }
-  .score-breakdown { text-align: left; margin: 24px 0; font-size: 0.92rem; }
-  .score-breakdown div { margin-bottom: 8px; border-bottom: 1px solid #282828; padding-bottom: 6px; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-</style>
-</head>
-<body>
-
-<header id="quizHeader">
-  <div class="header-content">
-    <div class="header-title">
-      <h1>CHEM 121: Biochemistry Midterm 2 Mastery Quiz</h1>
-      <p>NBCE Part 1 Spec &middot; Hemoglobin, Fibrous Proteins, Carbs &amp; Review</p>
-    </div>
-    <div class="header-nav">
-      <button class="btn" onclick="renderHome()">Menu / Topics</button>
-      <button class="btn" id="modeBtn" onclick="toggleMode()">View: One by One</button>
-      <button class="btn" id="stfuBtn" onclick="toggleErijah()">STFU Erijah</button>
-    </div>
-    <div class="pills">
-      <div class="pill" id="progressPill">Q: <span>0/0</span></div>
-      <div class="pill score-pill" id="scorePill">Score: <span>0/0 (0%)</span></div>
-    </div>
-    <div class="progress-bar-container">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-  </div>
-</header>
-
-<div class="container" id="mainContainer">
-  <!-- Content injected dynamically via JS -->
-</div>
-
-<!-- Audio and Visual Feedback -->
+:root{--bg:#0f0f0f;--card:#1a1a1a;--bd:#282828;--or:#ff9900;--mut:#a0a0a0}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+body{background:var(--bg);color:#fff;padding-bottom:60px;line-height:1.5}
+header{position:sticky;top:0;z-index:1000;background:rgba(26,26,26,.96);border-bottom:1px solid var(--bd);padding:10px 16px}
+.hc{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px}
+.hc h1{font-size:1rem;color:var(--or)}.hc p{font-size:.75rem;color:var(--mut)}
+.btn{background:#242424;color:#fff;border:1px solid #3d3d3d;padding:6px 12px;border-radius:6px;font-size:.8rem;font-weight:700;cursor:pointer}
+.btn:hover{border-color:var(--or)}.btn.active{background:var(--or);color:#000;border-color:var(--or)}
+.pill{background:#141414;padding:4px 11px;border-radius:999px;border:1px solid #333;color:var(--mut);font-size:.8rem;font-weight:600}
+.pill span{color:var(--or);font-weight:800}
+.pb{width:100%;height:4px;background:#222;margin-top:6px}.pf{height:100%;width:0;background:var(--or);transition:width .25s}
+.container{max-width:900px;margin:20px auto;padding:0 14px}
+.dash,.qc,.sc{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:22px;margin-bottom:18px}
+.dt{font-size:1.4rem;font-weight:800;color:var(--or);margin-bottom:6px}.lab{font-size:.85rem;font-weight:700;text-transform:uppercase;margin:14px 0 8px}
+.chips,.row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.chip{background:#202020;border:1px solid #333;color:var(--mut);padding:7px 14px;border-radius:20px;font-size:.84rem;font-weight:600;cursor:pointer}
+.chip.active{background:var(--or);color:#000;border-color:var(--or)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.lb{background:#242424;border:1px solid #3a3a3a;color:#fff;padding:13px;border-radius:8px;font-weight:700;cursor:pointer}.lb:hover{background:var(--or);color:#000}
+.bdg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.b{font-size:.72rem;padding:3px 8px;border-radius:4px;font-weight:700;background:#262626;color:#bbb;border:1px solid #333}
+.b.n{background:var(--or);color:#000}.b.s{color:var(--or)}.b.easy{color:#4ade80}.b.medium{color:#facc15}.b.hard{color:#f87171}.b.p{background:#7c2d12;color:#fdba74}
+.stem{font-size:1.05rem;font-weight:600;margin-bottom:14px}
+.opt{background:#222;border:1px solid var(--bd);border-radius:6px;padding:12px 15px;margin-bottom:9px;cursor:pointer;display:flex;gap:10px}
+.opt:hover:not(.lk){border-color:var(--or)}.opt.lk{cursor:default}.l{font-weight:800;color:var(--or);min-width:22px}
+.opt.rc{border-color:#22c55e;background:#064e3b}.opt.sc2{background:#14532d!important;border-color:#22c55e!important}.opt.sw{background:#7f1d1d!important;border-color:#ef4444!important}.opt.dim{opacity:.5}
+.fb{margin-top:14px;padding:14px;border-radius:8px;background:#141414;border:1px solid var(--bd)}
+.ok{color:#4ade80;font-weight:800}.no{color:#ef4444;font-weight:800}.ref{font-size:.8rem;color:var(--mut);margin:4px 0 8px}
+.ri{font-size:.88rem;color:#bbb;margin-bottom:6px;padding-left:10px;border-left:3px solid #333}.ri.c{border-color:#22c55e;color:#dcfce7}
+.wp{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none}.wp.hidden{display:none}
+.wp img{max-width:80vw;max-height:55vh;border:3px solid #ef4444;border-radius:12px}
+.sc{text-align:center;border-color:var(--or)}.sn{font-size:2.6rem;color:var(--or);font-weight:800}.bk{text-align:left;margin:20px 0;font-size:.92rem}.bk div{border-bottom:1px solid #282828;padding:6px 0}
+</style></head><body>
+<header><div class="hc"><div><h1>CHEM 121: Biochemistry Midterm 2 Mastery Quiz</h1><p>Hemoglobin &middot; Fibrous Proteins &middot; Carbohydrates</p></div>
+<div class="row" style="margin:0"><button class="btn" onclick="renderHome()">Menu / Topics</button><button class="btn" id="modeBtn" onclick="toggleMode()"></button><button class="btn" id="stfuBtn" onclick="toggleErijah()"></button></div>
+<div class="row" style="margin:0"><div class="pill" id="pp"></div><div class="pill" id="sp"></div></div></div><div class="pb"><div class="pf" id="pf"></div></div></header>
+<div class="container" id="main"></div>
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
-<div id="wrongPopup" class="wrong-popup hidden">
-  <img id="wrongImage" src="Erijah.png" alt="Wrong Answer Alert" onerror="console.warn('Erijah.png not found.');">
-</div>
-
+<div id="wrongPopup" class="wp hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer Alert"></div>
 <script>
-const SUBJECTS = [
-  { title: "Hemoglobin & Oxygen Transport Pathophysiology", week: "Wk 5" },
-  { title: "Fibrous Proteins & Connective Tissue Pathology", week: "Wk 6" },
-  { title: "Carbohydrate Chemistry & Glycosidic Linkages", week: "Wk 6-7" },
-  { title: "High-Yield Specialized Products & Amino Acid Met", week: "Carryover" }
-];
-
-const questionBank = [
-  /* ==============================================================
-     MODULE 0: HEMOGLOBIN & OXYGEN TRANSPORT (Wk 5)
-     ============================================================== */
-  {
-    id: 0,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3 & Nov 5",
-    difficulty: "easy",
-    priority: true,
-    stem: "Adult hemoglobin A (HbA) is composed of which combination of globin polypeptide chains?",
-    options: [
-      { text: "Two alpha and two beta chains (α2β2)", correct: true, why: "HbA is the predominant adult tetramer containing two alpha-globin and two beta-globin subunits. [Lecture Transcript]" },
-      { text: "Two alpha and two gamma chains (α2γ2)", correct: false, why: "This configuration designates fetal hemoglobin (HbF), which is replaced postnatally by HbA. [Slide #12]" },
-      { text: "Two alpha and two delta chains (α2δ2)", correct: false, why: "This represents minor adult hemoglobin (HbA2), which constitutes less than 3% of total adult hemoglobin. [Slide #12]" },
-      { text: "Four identical beta chains (β4)", correct: false, why: "A homotetramer of beta chains is Hemoglobin H (HbH), seen pathologically in alpha-thalassemia. [Slide #15]" }
-    ]
-  },
-  {
-    id: 1,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "In a normal diploid human genome, how many functional alpha-globin and beta-globin gene alleles are present?",
-    options: [
-      { text: "Four alpha alleles on chromosome 16 and two beta alleles on chromosome 11", correct: true, why: "Alpha globin is encoded by two duplicated genes per chromosome 16 (4 total), while beta globin has one gene per chromosome 11 (2 total). [Lecture Transcript]" },
-      { text: "Two alpha alleles on chromosome 16 and four beta alleles on chromosome 11", correct: false, why: "Inverts the genomic copy number between the alpha and beta loci. [Slide #13]" },
-      { text: "Two alpha alleles on chromosome 11 and two beta alleles on chromosome 16", correct: false, why: "Reverses the chromosomal assignments for alpha (16) and beta (11). [Slide #13]" },
-      { text: "Four alpha alleles on chromosome 11 and four beta alleles on chromosome 16", correct: false, why: "Beta globin has only 2 alleles across diploid chromosome 11. [Slide #13]" }
-    ]
-  },
-  {
-    id: 2,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Sickle cell anemia results from a point mutation in the beta-globin chain substituting _______ for _______ at position 6.",
-    options: [
-      { text: "valine; glutamic acid", correct: true, why: "A point mutation (GAG to GTG) substitutes hydrophobic nonpolar valine for charged, hydrophilic glutamic acid at codon 6. [Lecture Transcript]" },
-      { text: "glutamic acid; valine", correct: false, why: "Inverts the wild-type and mutated residues. [Slide #16]" },
-      { text: "lysine; glutamic acid", correct: false, why: "Substitution of lysine at position 6 produces Hemoglobin C (HbC), not HbS. [Slide #16]" },
-      { text: "alanine; glycine", correct: false, why: "Alanine and glycine are not involved in the classic sickle cell beta-chain mutation. [Slide #16]" }
-    ]
-  },
-  {
-    id: 3,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: true,
-    stem: "Pathologic polymerization of Hemoglobin S (HbS) occurs predominantly under which physiological condition?",
-    options: [
-      { text: "Deoxygenated state (T tense conformation) exposing the nonpolar valine patch", correct: true, why: "In the deoxygenated T-state, a complementary hydrophobic acceptor pocket on an adjacent beta chain opens, allowing valine-6 to fit and polymerize into insoluble fibrils. [Lecture Transcript]" },
-      { text: "Fully oxygenated state (R relaxed conformation) in high-pH arterial blood", correct: false, why: "Oxygenation locks HbS in the R state, shielding the hydrophobic valine patch and inhibiting polymerization. [Slide #18]" },
-      { text: "High arterial oxygen tension coupled with hypocarbia", correct: false, why: "Elevated PO2 and low CO2 favor the soluble R conformation. [Slide #18]" },
-      { text: "Rapid binding of 2,3-BPG to fetal gamma chains", correct: false, why: "Gamma chains lack the charged histidine residues necessary for 2,3-BPG binding and do not undergo sickling. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 4,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Lecture 4.1",
-    difficulty: "medium",
-    priority: true,
-    stem: "Within each αβ dimer of hemoglobin, the two subunits are held together mainly by _______ interactions.",
-    options: [
-      { text: "hydrophobic", correct: true, why: "The alpha and beta subunits present complementary nonpolar domains that fit like a hand in a glove. Strong hydrophobic interactions glue the intra-dimer interface together. [Lecture 4.1]" },
-      { text: "ionic bridge", correct: false, why: "Ionic bridges join one αβ dimer to the other across the interface gap (the inter-dimer interface), not α to β within a dimer. [Lecture 4.1]" },
-      { text: "disulfide", correct: false, why: "No covalent disulfide bonds link hemoglobin globin subunits. The interface is strictly non-covalent. [Lecture 4.1]" },
-      { text: "water-mediated hydrogen bond", correct: false, why: "The dimer interface excludes water to maintain tight hydrophobic packaging. [Lecture 4.1]" }
-    ]
-  },
-  {
-    id: 5,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Lecture 4.1",
-    difficulty: "medium",
-    priority: true,
-    stem: "The two αβ dimers of hemoglobin are joined to each other to form the quaternary tetramer mainly by:",
-    options: [
-      { text: "ionic bridges between oppositely charged side chains", correct: true, why: "Across the gap between dimers, positively charged Lys/Arg pair with negatively charged Asp/Glu. These inter-dimer ionic bridges allow flexible conformational shifts between T and R states. [Lecture 4.1]" },
-      { text: "hydrophobic stacking of phenylalanine rings", correct: false, why: "Hydrophobic stacking holds α to β within each dimer, whereas the dimer-to-dimer contact relies on ionic bridges. [Lecture 4.1]" },
-      { text: "covalent disulfide bridges between subunits", correct: false, why: "Hemoglobin contains no interchain disulfide bonds. [Lecture 4.1]" },
-      { text: "peptide bonds linking the two dimers", correct: false, why: "Peptide bonds are intramolecular within individual polypeptide chains, not between separate subunits. [Lecture 4.1]" }
-    ]
-  },
-  {
-    id: 6,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Lecture 4.3",
-    difficulty: "hard",
-    priority: true,
-    stem: "In sickle-cell hemoglobin, valine replacing glutamate on β-globin promotes aggregation of deoxygenated Hb because valine side chains:",
-    options: [
-      { text: "interlock hydrophobically with nonpolar patches on neighboring β chains", correct: true, why: "Nonpolar valine side chains interdigitate with hydrophobic acceptor pockets on adjacent deoxygenated beta globin chains, driving fibrous polymer assembly. [Lecture 4.3]" },
-      { text: "repel one another through concentrated negative charges", correct: false, why: "Valine is nonpolar and uncharged; the wild-type glutamate is the negatively charged residue. [Lecture 4.3]" },
-      { text: "form abnormal ionic bridges with lysine and arginine", correct: false, why: "Valine cannot form ionic bridges because it lacks a charge. [Lecture 4.3]" },
-      { text: "hydrogen bond excessively with the surrounding aqueous hydration shell", correct: false, why: "Valine is hydrophobic and avoids contact with water. [Lecture 4.3]" }
-    ]
-  },
-  {
-    id: 7,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Oct 20 & Nov 3",
-    difficulty: "medium",
-    priority: false,
-    stem: "How does an actively metabolizing tissue bed displaying elevated CO2 and decreased pH affect hemoglobin oxygen binding?",
-    options: [
-      { text: "Shifts the binding curve rightward, promoting oxygen release (Bohr effect)", correct: true, why: "High H+ and CO2 stabilize the low-affinity T (taut) state via salt bridges, shifting the saturation curve right and unloading O2. [Lecture Transcript]" },
-      { text: "Shifts the binding curve leftward, increasing oxygen retention", correct: false, why: "Leftward shifts occur with low H+, low CO2, low temperature, or low 2,3-BPG. [Slide #19]" },
-      { text: "Locks the heme iron irreversibly into the oxidized ferric (Fe3+) state", correct: false, why: "This describes methemoglobin formation, not the reversible Bohr effect. [Slide #20]" },
-      { text: "Disrupts the proximal histidine F8 covalent bond to heme", correct: false, why: "Histidine F8 binds directly to iron; protonation does not break this coordinate bond. [Slide #19]" }
-    ]
-  },
-  {
-    id: 8,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Fetal hemoglobin (HbF) exhibits a higher oxygen affinity than adult hemoglobin (HbA) because HbF:",
-    options: [
-      { text: "binds 2,3-bisphosphoglycerate (2,3-BPG) with significantly lower affinity", correct: true, why: "Gamma chains have a neutral serine instead of a positively charged histidine (His143) present in beta chains, reducing 2,3-BPG binding. [Lecture Transcript]" },
-      { text: "binds 2,3-bisphosphoglycerate with significantly higher affinity", correct: false, why: "Higher 2,3-BPG binding would decrease O2 affinity, starving the fetus of maternal oxygen. [Slide #21]" },
-      { text: "consists of four identical gamma subunits lacking quaternary structure", correct: false, why: "HbF is an α2γ2 heterotetramer with full quaternary cooperative allostery. [Slide #21]" },
-      { text: "contains an oxidized ferric (Fe3+) iron core resistant to protonation", correct: false, why: "Both HbA and HbF maintain functional ferrous (Fe2+) iron cores. [Slide #21]" }
-    ]
-  },
-  {
-    id: 9,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: true,
-    stem: "A patient with complete deletion of three of their four alpha-globin alleles develops which specific hemoglobinopathy?",
-    options: [
-      { text: "Hemoglobin H (HbH) disease with excess beta-tetramers (β4)", correct: true, why: "Deletion of 3 alpha genes leaves severe alpha-chain deficiency; excess beta chains form β4 tetramers (HbH), causing moderate-to-severe hemolytic anemia. [Lecture Transcript]" },
-      { text: "Hydrops fetalis with Hb Barts (γ4 tetramers)", correct: false, why: "Hb Barts hydrops fetalis occurs only when all four alpha genes are deleted. [Slide #22]" },
-      { text: "Beta-thalassemia major (Cooley anemia)", correct: false, why: "Cooley anemia is caused by homozygous mutations in the beta-globin genes on chromosome 11. [Slide #23]" },
-      { text: "Silent carrier status with microcytosis only", correct: false, why: "Silent carriers have a deletion of only 1 alpha gene. [Slide #22]" }
-    ]
-  },
-  {
-    id: 10,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "easy",
-    priority: false,
-    stem: "The evolutionary retention of the sickle-cell trait (heterozygous HbAS) in equatorial regions is driven by resistance against _______.",
-    options: [
-      { text: "Plasmodium falciparum malaria", correct: true, why: "Heterozygous HbAS erythrocytes prematurely sickle and are cleared by the spleen when infected, providing a selective survival advantage against falciparum malaria. [Lecture Transcript]" },
-      { text: "Mycobacterium tuberculosis", correct: false, why: "Sickle-cell trait does not confer protection against mycobacterial infection. [Slide #25]" },
-      { text: "Vibrio cholerae enterotoxin", correct: false, why: "Cystic fibrosis heterozygosity is hypothesized to protect against secretory diarrhea, not sickle trait. [Slide #25]" },
-      { text: "Dengue hemorrhagic fever", correct: false, why: "No known genetic protection against dengue is linked to the HbS allele. [Slide #25]" }
-    ]
-  },
-  {
-    id: 11,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which structural feature in hemoglobin coordinates directly with the iron atom on the axial position opposite to oxygen binding?",
-    options: [
-      { text: "Proximal histidine (His F8)", correct: true, why: "The proximal histidine residue (His F8) coordinates directly to the 5th coordination site of the ferrous iron atom. [Lecture Transcript]" },
-      { text: "Distal histidine (His E7)", correct: false, why: "The distal histidine does not bond directly to iron; it stabilizes the bound oxygen on the opposite face. [Slide #26]" },
-      { text: "Hydrophobic pocket valine-6", correct: false, why: "Valine-6 is an abnormal surface mutation on the exterior of mutated beta chains. [Slide #26]" },
-      { text: "Central cavity lysine salt bridge", correct: false, why: "Cavity basic residues coordinate 2,3-BPG, not the heme iron atom. [Slide #26]" }
-    ]
-  },
-  {
-    id: 12,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: false,
-    stem: "Carbon monoxide (CO) poisoning produces severe tissue hypoxia primarily because CO:",
-    options: [
-      { text: "binds heme with 200x affinity and traps neighboring subunits in the high-affinity R state", correct: true, why: "CO binds tightly and locks the tetramer in the R state, preventing the remaining oxygen from unloading at peripheral tissues (hyperbolic left shift). [Lecture Transcript]" },
-      { text: "rapidly oxidizes ferrous iron (Fe2+) to insoluble ferric iron (Fe3+)", correct: false, why: "Oxidation to Fe3+ is the mechanism of methemoglobinemia (nitrates/dapsone), not CO toxicity. [Slide #27]" },
-      { text: "competes directly with 2,3-BPG at the central positively charged cavity", correct: false, why: "CO binds directly to the heme iron, not the 2,3-BPG central cavity. [Slide #27]" },
-      { text: "induces rapid denaturation and proteolytic degradation of alpha chains", correct: false, why: "CO does not denature globin polypeptides; it alters allosteric oxygen offloading. [Slide #27]" }
-    ]
-  },
-  {
-    id: 13,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Beta-thalassemia major (Cooley anemia) results in severe microcytic hypochromic anemia primarily due to:",
-    options: [
-      { text: "precipitation of excess, unmatched alpha-globin chains that damage red-cell membranes", correct: true, why: "Without beta chains, free alpha chains cannot form stable tetramers; they precipitate inside erythroblasts, causing membrane damage and ineffective erythropoiesis. [Lecture Transcript]" },
-      { text: "point mutation substituting valine at position 6 of the beta-globin chain", correct: false, why: "This describes sickle cell disease, not the quantitative globin deficit of thalassemia. [Slide #28]" },
-      { text: "loss of all four alpha genes on chromosome 16", correct: false, why: "Loss of 4 alpha genes produces Hb Barts hydrops fetalis. [Slide #28]" },
-      { text: "deficiency of ferrochelatase preventing iron insertion into protoporphyrin IX", correct: false, why: "This defines erythropoietic protoporphyria or lead toxicity. [Slide #28]" }
-    ]
-  },
-  {
-    id: 14,
-    subjectIndex: 0,
-    week: "Week 5",
-    slideRef: "Transcript Nov 3",
-    difficulty: "easy",
-    priority: false,
-    stem: "The primary allosteric effector that stabilizes the deoxygenated T-state in venous blood is _______.",
-    options: [
-      { text: "2,3-bisphosphoglycerate (2,3-BPG)", correct: true, why: "2,3-BPG lodges in the central cavity between beta chains of the T-state, cross-linking them and lowering oxygen affinity. [Lecture Transcript]" },
-      { text: "inorganic phosphate (Pi)", correct: false, why: "Inorganic phosphate is not the primary physiologic allosteric regulator of globin subunits. [Slide #29]" },
-      { text: "ferric protoporphyrin IX", correct: false, why: "This is hemin, not a physiological allosteric regulator. [Slide #29]" },
-      { text: "carbon monoxide (CO)", correct: false, why: "CO stabilizes the high-affinity R state, not the T state. [Slide #29]" }
-    ]
-  },
-
-  /* ==============================================================
-     MODULE 1: FIBROUS PROTEINS & CONNECTIVE TISSUE (Wk 6)
-     ============================================================== */
-  {
-    id: 15,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "easy",
-    priority: true,
-    stem: "In the primary structure of a standard collagen alpha chain, every third amino acid residue is _______.",
-    options: [
-      { text: "glycine", correct: true, why: "Glycine is the smallest amino acid (-H side chain), required every 3rd residue to fit into the restricted steric core of the triple helix. [Lecture Transcript]" },
-      { text: "proline", correct: false, why: "Proline frequently occupies the X position, but is not present every third residue. [Slide #4]" },
-      { text: "hydroxylysine", correct: false, why: "Hydroxylysine is a modified residue involved in cross-linking and carbohydrate attachment, not the core repeating residue. [Slide #4]" },
-      { text: "alanine", correct: false, why: "Alanine possesses a methyl group that is sterically too bulky for the tight internal triple-helix axis. [Slide #4]" }
-    ]
-  },
-  {
-    id: 16,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "Post-translational hydroxylation of proline and lysine residues inside the rough endoplasmic reticulum requires which essential cofactor?",
-    options: [
-      { text: "Ascorbic acid (Vitamin C)", correct: true, why: "Prolyl and lysyl hydroxylases require ascorbic acid to keep iron in its active ferrous (Fe2+) catalytic state. [Lecture Transcript]" },
-      { text: "Pyridoxal phosphate (Vitamin B6)", correct: false, why: "PLP is the cofactor for transaminases and decarboxylases, not hydroxylases. [Slide #6]" },
-      { text: "Tetrahydrobiopterin (BH4)", correct: false, why: "BH4 powers aromatic amino acid hydroxylases (Phe, Tyr, Trp), not prolyl hydroxylase. [Slide #6]" },
-      { text: "Thiamine pyrophosphate (TPP)", correct: false, why: "TPP is the cofactor for oxidative decarboxylations in carbohydrate metabolism. [Slide #6]" }
-    ]
-  },
-  {
-    id: 17,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: true,
-    stem: "What is the primary biochemical role of hydroxyproline residues in mature collagen fibrils?",
-    options: [
-      { text: "Forming interchain hydrogen bonds that thermally stabilize the triple helix", correct: true, why: "The -OH groups of hydroxyproline provide essential interchain hydrogen bonding; without them, the triple helix unwinds below body temperature (37°C). [Lecture Transcript]" },
-      { text: "Providing aldehyde precursors for covalent cross-linking via lysyl oxidase", correct: false, why: "Cross-linking aldehydes are formed exclusively from lysine and hydroxylysine, not hydroxyproline. [Slide #7]" },
-      { text: "Attaching branched carbohydrate moieties like glucose and galactose", correct: false, why: "Carbohydrates attach specifically to the hydroxyl group of hydroxylysine residues. [Slide #7]" },
-      { text: "Cleaving N- and C-terminal registration peptides in the extracellular space", correct: false, why: "Terminal propeptides are cleaved by extracellular procollagen peptidase enzymes. [Slide #7]" }
-    ]
-  },
-  {
-    id: 18,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "The extracellular formation of covalent cross-links in collagen and elastin is catalyzed by the copper-dependent enzyme _______.",
-    options: [
-      { text: "lysyl oxidase", correct: true, why: "Lysyl oxidase is an extracellular, copper-dependent enzyme that oxidatively deaminates lysine and hydroxylysine to reactive allysine aldehydes. [Lecture Transcript]" },
-      { text: "procollagen peptidase", correct: false, why: "Procollagen peptidase cleaves the terminal extension propeptides, but does not form cross-links. [Slide #8]" },
-      { text: "prolyl hydroxylase", correct: false, why: "Prolyl hydroxylase is an intracellular enzyme in the ER lumen requiring Fe2+ and Vitamin C. [Slide #8]" },
-      { text: "matrix metalloproteinase-1", correct: false, why: "MMP-1 (collagenase) degrades collagen; it does not form stabilizing cross-links. [Slide #8]" }
-    ]
-  },
-  {
-    id: 19,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: true,
-    stem: "Osteogenesis Imperfecta Type II differs clinically from Type I primarily because Type II:",
-    options: [
-      { text: "is lethal in the perinatal period due to severe bone fragility and thoracic hypoplasia", correct: true, why: "Type II OI involves severe missense mutations in glycine that disrupt the triple helix, causing fatal pulmonary hypoplasia and fractures in utero. [Lecture Transcript]" },
-      { text: "is characterized by mild bone fragility, blue sclerae, and normal adult life expectancy", correct: false, why: "This describes Osteogenesis Imperfecta Type I (null allele/decreased synthesis of normal collagen). [Slide #10]" },
-      { text: "results from a defect in fibrillin-1 causing progressive aortic dissection", correct: false, why: "This describes Marfan syndrome, which affects elastic fibers, not type I collagen. [Slide #11]" },
-      { text: "is completely reversed by therapeutic administration of high-dose ascorbic acid", correct: false, why: "OI is a genetic structural collagen defect, not a nutritional ascorbic acid deficiency (scurvy). [Slide #10]" }
-    ]
-  },
-  {
-    id: 20,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "A patient presenting with hypermobile joints, hyperextensible skin, and severe vascular rupture risk most likely has a defect in _______.",
-    options: [
-      { text: "collagen processing or structure (Ehlers-Danlos syndrome)", correct: true, why: "Ehlers-Danlos comprises a group of generalized connective tissue disorders caused by defects in collagen synthesis, processing, or structure (e.g., Type III collagen in vascular EDS). [Lecture Transcript]" },
-      { text: "elastin degradation by neutrophil elastase", correct: false, why: "Excess elastase activity due to alpha-1 antitrypsin deficiency causes emphysema, not EDS. [Slide #11]" },
-      { text: "type IV collagen in the glomerular basement membrane", correct: false, why: "Type IV collagen defects cause Alport syndrome, presenting with glomerulonephritis and sensorineural deafness. [Slide #12]" },
-      { text: "branched-chain alpha-keto acid dehydrogenase", correct: false, why: "This metabolic enzymopathy causes Maple Syrup Urine Disease. [Slide #12]" }
-    ]
-  },
-  {
-    id: 21,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: true,
-    stem: "Marfan syndrome results from a heterozygous mutation in the gene encoding _______, leading to dysregulated TGF-beta signaling.",
-    options: [
-      { text: "fibrillin-1", correct: true, why: "Marfan syndrome is caused by mutations in FBN1 (encoding fibrillin-1), a glycoprotein that forms the structural microfibrillar scaffold for elastin deposition. [Lecture Transcript]" },
-      { text: "type I collagen alpha-1", correct: false, why: "COL1A1 mutations cause osteogenesis imperfecta or classic EDS. [Slide #13]" },
-      { text: "alpha-1 antitrypsin", correct: false, why: "AAT mutations cause unopposed elastase destruction of lung parenchyma. [Slide #14]" },
-      { text: "tropoelastin", correct: false, why: "Mutations in tropoelastin itself cause supravalvular aortic stenosis, not classical Marfan syndrome. [Slide #13]" }
-    ]
-  },
-  {
-    id: 22,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "Alpha-1 antitrypsin (AAT) deficiency leads to early-onset panacinar emphysema because:",
-    options: [
-      { text: "uninhibited neutrophil elastase hydrolyzes alveolar elastin in the lower lung lobes", correct: true, why: "AAT normally neutralizes neutrophil elastase; when deficient, elastase destroys the elastic alveolar walls, leading to emphysema. [Lecture Transcript]" },
-      { text: "lysyl oxidase fails to cross-link alveolar desmosine rings", correct: false, why: "Lysyl oxidase cross-linking is intact; the pre-formed elastin is enzymatically destroyed by elastase. [Slide #14]" },
-      { text: "collagen triple helices cannot be hydroxylated in bronchial cartilage", correct: false, why: "AAT deficiency does not impair intracellular prolyl/lysyl hydroxylation. [Slide #14]" },
-      { text: "mutant fibrillin-1 triggers alveolar hypoplasia in utero", correct: false, why: "Fibrillin-1 is the defective protein in Marfan syndrome, not AAT deficiency. [Slide #14]" }
-    ]
-  },
-  {
-    id: 23,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "easy",
-    priority: false,
-    stem: "The primary cross-linking amino acid structures unique to mature elastin polymers are _______.",
-    options: [
-      { text: "desmosine and isodesmosine", correct: true, why: "Desmosine and isodesmosine cross-links are formed from four lysine residues (three oxidized to allysine, one intact), giving elastin its rubber-like resilience. [Lecture Transcript]" },
-      { text: "hydroxylysine-5-glucoside", correct: false, why: "Glycosylated hydroxylysine is unique to collagen fibrils, not elastin. [Slide #15]" },
-      { text: "interchain disulfide bonds between cysteines", correct: false, why: "Elastin lacks the cysteine-rich registration propeptides found in procollagen. [Slide #15]" },
-      { text: "histidinohydroxylysinonorleucine bridges", correct: false, why: "This is a specialized collagen cross-link, not the hallmark tetrameric desmosine ring of elastin. [Slide #15]" }
-    ]
-  },
-  {
-    id: 24,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: false,
-    stem: "Why does ascorbic acid (Vitamin C) deficiency present clinically with bleeding gums, petechiae, and poor wound healing?",
-    options: [
-      { text: "Inability to hydroxylate procollagen chains causes thermal instability and rapid degradation", correct: true, why: "Without ascorbate, Fe3+ is not reduced to Fe2+, stopping prolyl/lysyl hydroxylases. Unhydroxylated procollagen fails to fold stably and degrades. [Lecture Transcript]" },
-      { text: "Impaired synthesis of blood clotting factor VII and prothrombin", correct: false, why: "Clotting factor carboxylation requires Vitamin K, not Vitamin C. [Slide #16]" },
-      { text: "Excessive elastase secretion by circulating monocytes", correct: false, why: "Vitamin C deficiency does not increase elastase secretion. [Slide #16]" },
-      { text: "Defective cleavage of procollagen amino- and carboxy-terminal propeptides", correct: false, why: "Propeptide cleavage requires procollagen peptidases, which do not depend on vitamin C. [Slide #16]" }
-    ]
-  },
-  {
-    id: 25,
-    subjectIndex: 1,
-    week: "Week 6",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: false,
-    stem: "Where does the enzymatic cleavage of procollagen registration peptides to form insoluble tropocollagen take place?",
-    options: [
-      { text: "Extracellular matrix space following procollagen exocytosis", correct: true, why: "Procollagen is secreted with bulky terminal propeptides that prevent premature intracellular fibril assembly. Extracellular peptidases cleave them to form tropocollagen. [Lecture Transcript]" },
-      { text: "Rough endoplasmic reticulum lumen immediately after translation", correct: false, why: "Inside the RER, signal peptides are cleaved, but registration peptides remain intact to maintain solubility. [Slide #17]" },
-      { text: "Golgi cisternae during addition of carbohydrate residues", correct: false, why: "The Golgi completes glycosylation; it does not cleave the terminal propeptides. [Slide #17]" },
-      { text: "Nuclear matrix during transcription of COL1A1 and COL1A2", correct: false, why: "Peptide cleavage is a post-translational protein event occurring outside the cell. [Slide #17]" }
-    ]
-  },
-
-  /* ==============================================================
-     MODULE 2: CARBOHYDRATE CHEMISTRY & GLYCOSIDIC BONDS (Wk 6-7)
-     ============================================================== */
-  {
-    id: 26,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5 & Lecture Notes",
-    difficulty: "easy",
-    priority: true,
-    stem: "D-glucose and D-galactose represent classic examples of which stereochemical relationship?",
-    options: [
-      { text: "C-4 epimers", correct: true, why: "D-glucose and D-galactose differ in configuration around only one specific asymmetric carbon atom: carbon-4. [Lecture Transcript]" },
-      { text: "C-2 epimers", correct: false, why: "D-mannose is the C-2 epimer of D-glucose. [Slide #5]" },
-      { text: "Enantiomers", correct: false, why: "Enantiomers are non-superimposable mirror images that differ at all chiral centers (e.g., D-glucose vs L-glucose). [Slide #5]" },
-      { text: "Structural aldose-ketose isomers", correct: false, why: "Both glucose and galactose are aldohexoses; fructose is the ketose isomer. [Slide #5]" }
-    ]
-  },
-  {
-    id: 27,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "D-glucose and D-mannose differ in stereochemical configuration at which specific chiral carbon?",
-    options: [
-      { text: "Carbon-2", correct: true, why: "D-mannose is the C-2 epimer of D-glucose. [Lecture Transcript]" },
-      { text: "Carbon-3", correct: false, why: "Both glucose and mannose share the same left-oriented (in Fischer) hydroxyl group at C-3. [Slide #6]" },
-      { text: "Carbon-4", correct: false, why: "C-4 configuration distinguishes glucose from galactose. [Slide #6]" },
-      { text: "Carbon-5", correct: false, why: "Carbon-5 is the reference carbon that determines D versus L designation. [Slide #6]" }
-    ]
-  },
-  {
-    id: 28,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "easy",
-    priority: false,
-    stem: "The designation of a monosaccharide as D- or L- is determined by the spatial orientation of the hydroxyl group on the _______.",
-    options: [
-      { text: "asymmetric carbon farthest from the carbonyl group (penultimate carbon)", correct: true, why: "By convention, D/L designation is based on the chiral center furthest from the carbonyl carbon (C-5 in aldohexoses). [Lecture Transcript]" },
-      { text: "anomeric carbon upon ring cyclization", correct: false, why: "Orientation at the anomeric carbon (C-1) defines alpha vs beta anomers. [Slide #7]" },
-      { text: "carbon bearing the aldehyde or ketone functional group", correct: false, why: "The carbonyl carbon (C-1 or C-2) is not chiral in the open-chain form. [Slide #7]" },
-      { text: "terminal primary alcohol carbon (C-6 in hexoses)", correct: false, why: "Carbon-6 has two hydrogens and is therefore not a chiral center. [Slide #7]" }
-    ]
-  },
-  {
-    id: 29,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "Upon spontaneous ring closure of D-glucose in aqueous solution, which carbon atom becomes the new asymmetric anomeric center?",
-    options: [
-      { text: "Carbon-1", correct: true, why: "The C-1 aldehyde carbon is attacked by the C-5 hydroxyl group, forming a cyclic hemiacetal and creating a new chiral center at C-1. [Lecture Transcript]" },
-      { text: "Carbon-2", correct: false, why: "Carbon-2 is the anomeric carbon for ketohexoses like fructose, not aldohexoses like glucose. [Slide #8]" },
-      { text: "Carbon-4", correct: false, why: "Carbon-4 is involved in epimerization (galactose) and glycosidic bonds, not hemiacetal ring closure. [Slide #8]" },
-      { text: "Carbon-6", correct: false, why: "Carbon-6 remains an exocyclic primary alcohol group (-CH2OH). [Slide #8]" }
-    ]
-  },
-  {
-    id: 30,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: true,
-    stem: "Sucrose is classified as a non-reducing disaccharide because:",
-    options: [
-      { text: "both anomeric carbons (C-1 of glucose and C-2 of fructose) are linked in the glycosidic bond", correct: true, why: "Sucrose links glucose-alpha-1 to fructose-beta-2; because both anomeric carbons participate in the glycosidic bond, neither ring can open to reduce Benedict's reagent. [Lecture Transcript]" },
-      { text: "it contains only beta-1,4-glycosidic bonds that resist Benedict's reagent", correct: false, why: "Lactose contains a beta-1,4 bond but is a reducing sugar because glucose's anomeric C-1 is free. [Slide #10]" },
-      { text: "the fructose subunit is oxidized into an unreactive lactone ring", correct: false, why: "Fructose is not oxidized to a lactone in sucrose; it is simply locked in a glycosidic bond. [Slide #10]" },
-      { text: "it lacks chiral hydroxyl groups capable of forming pyranose rings", correct: false, why: "Sucrose has multiple chiral hydroxyl groups on both rings. [Slide #10]" }
-    ]
-  },
-  {
-    id: 31,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "easy",
-    priority: true,
-    stem: "Lactose is a disaccharide composed of _______ joined by a _______ glycosidic bond.",
-    options: [
-      { text: "galactose and glucose; beta-1,4", correct: true, why: "Lactose consists of D-galactopyranose and D-glucopyranose joined by a beta-1,4-glycosidic bond. [Lecture Transcript]" },
-      { text: "glucose and glucose; alpha-1,4", correct: false, why: "Glucose + glucose linked alpha-1,4 is maltose. [Slide #11]" },
-      { text: "glucose and fructose; alpha-1,2", correct: false, why: "Glucose + fructose linked alpha-1,2 is sucrose. [Slide #11]" },
-      { text: "galactose and fructose; beta-1,2", correct: false, why: "This is not a naturally occurring dietary disaccharide. [Slide #11]" }
-    ]
-  },
-  {
-    id: 32,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: false,
-    stem: "Maltose is produced during the enzymatic digestion of dietary starch and consists of two glucose molecules joined by an _______ bond.",
-    options: [
-      { text: "alpha-1,4-glycosidic", correct: true, why: "Maltose is an alpha-amylase breakdown product of glycogen/amylose consisting of two glucose units in an alpha-1,4 linkage. [Lecture Transcript]" },
-      { text: "alpha-1,6-glycosidic", correct: false, why: "An alpha-1,6 linkage between two glucose units defines isomaltose (branch point). [Slide #12]" },
-      { text: "beta-1,4-glycosidic", correct: false, why: "Two glucose units in a beta-1,4 linkage form cellobiose (from cellulose). [Slide #12]" },
-      { text: "beta-1,1-glycosidic", correct: false, why: "Trehalose is linked alpha-1,1, not beta-1,1. [Slide #12]" }
-    ]
-  },
-  {
-    id: 33,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: true,
-    stem: "Which defining biochemical property gives glycosaminoglycans (GAGs) their high viscosity and shock-absorbing resilience?",
-    options: [
-      { text: "High negative charge density from sulfate and carboxyl groups attracting water hydration shells", correct: true, why: "GAGs carry repeating carboxyl and sulfate groups. Mutual negative electrostatic repulsion causes them to extend and trap huge volumes of water. [Lecture Transcript]" },
-      { text: "Hydrophobic association of nonpolar methyl groups in the extracellular matrix", correct: false, why: "GAGs are intensely hydrophilic polyanions, not hydrophobic molecules. [Slide #14]" },
-      { text: "Extensive covalent cross-linking via copper-dependent lysyl oxidases", correct: false, why: "Lysyl oxidase cross-links collagen and elastin, not glycosaminoglycan chains. [Slide #14]" },
-      { text: "Triple-helical folding around a central repeating glycine core", correct: false, why: "Triple-helical folding is unique to collagen; GAGs are unbranched carbohydrate chains. [Slide #14]" }
-    ]
-  },
-  {
-    id: 34,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "hard",
-    priority: true,
-    stem: "Hurler syndrome and Hunter syndrome are mucopolysaccharidoses characterized by the pathological accumulation of _______.",
-    options: [
-      { text: "heparan sulfate and dermatan sulfate", correct: true, why: "Deficiency of alpha-L-iduronidase (Hurler) or iduronate sulfatase (Hunter) blocks lysosomal degradation of heparan and dermatan sulfates. [Lecture Transcript]" },
-      { text: "glycogen particles in lysosomal vacuoles", correct: false, why: "Lysosomal accumulation of glycogen characterizes Pompe disease (Type II GSD). [Slide #15]" },
-      { text: "sphingomyelin in reticuloendothelial macrophages", correct: false, why: "Sphingomyelin accumulation defines Niemann-Pick disease. [Slide #15]" },
-      { text: "glucocerebrosides in bone marrow sinusoids", correct: false, why: "Glucocerebroside accumulation defines Gaucher disease. [Slide #15]" }
-    ]
-  },
-  {
-    id: 35,
-    subjectIndex: 2,
-    week: "Week 6-7",
-    slideRef: "Transcript Nov 5",
-    difficulty: "medium",
-    priority: false,
-    stem: "Which of the following glycosaminoglycans is uniquely non-sulfated and not covalently attached to a core protein?",
-    options: [
-      { text: "Hyaluronic acid (hyaluronan)", correct: true, why: "Hyaluronic acid is exceptionally large, non-sulfated, and synthesized at the plasma membrane without a covalent core protein. [Lecture Transcript]" },
-      { text: "Chondroitin sulfate", correct: false, why: "Chondroitin sulfate is sulfated and covalently linked to proteoglycan core proteins in the Golgi. [Slide #16]" },
-      { text: "Keratan sulfate", correct: false, why: "Keratan sulfate contains ester sulfates and attaches to core proteins in cartilage and cornea. [Slide #16]" },
-      { text: "Heparan sulfate", correct: false, why: "Heparan sulfate is sulfated and linked to core syndecans or glypicans. [Slide #16]" }
-    ]
-  },
-
-  /* ==============================================================
-     MODULE 3: CARRYOVER HIGH-YIELD PRODUCTS & AMINO ACIDS
-     ============================================================== */
-  {
-    id: 36,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3 & Class Notes 2",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which pair of amino acids is classified as purely ketogenic?",
-    options: [
-      { text: "Leucine and lysine", correct: true, why: "Leucine and lysine degrade exclusively into acetoacetate or acetyl-CoA and cannot yield net glucose via gluconeogenesis. [Lecture Transcript]" },
-      { text: "Phenylalanine and tyrosine", correct: false, why: "Phenylalanine and tyrosine are both glucogenic and ketogenic (yield fumarate and acetoacetate). [Slide #3]" },
-      { text: "Alanine and glutamine", correct: false, why: "Alanine and glutamine are purely glucogenic amino acids. [Slide #3]" },
-      { text: "Isoleucine and tryptophan", correct: false, why: "Isoleucine and tryptophan are both glucogenic and ketogenic. [Slide #3]" }
-    ]
-  },
-  {
-    id: 37,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "The rate-limiting enzymatic step in the catecholamine biosynthesis pathway converts _______ into _______.",
-    options: [
-      { text: "tyrosine; L-DOPA via tyrosine hydroxylase", correct: true, why: "Tyrosine hydroxylase requires tetrahydrobiopterin (BH4) and molecular O2; it is the committed rate-limiting step of catecholamine synthesis. [Lecture Transcript]" },
-      { text: "phenylalanine; tyrosine via phenylalanine hydroxylase", correct: false, why: "While this reaction uses BH4, it is part of phenylalanine disposal; tyrosine hydroxylase is the specific rate-limiting step for catecholamines. [Slide #4]" },
-      { text: "L-DOPA; dopamine via DOPA decarboxylase", correct: false, why: "DOPA decarboxylase uses PLP but is rapid and non-rate-limiting. [Slide #4]" },
-      { text: "dopamine; norepinephrine via dopamine beta-hydroxylase", correct: false, why: "This step occurs within vesicles requiring Vitamin C and copper, but is downstream of the rate-limiting step. [Slide #4]" }
-    ]
-  },
-  {
-    id: 38,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "The decarboxylation of L-DOPA to produce dopamine requires which essential vitamin coenzyme?",
-    options: [
-      { text: "Pyridoxal phosphate (Vitamin B6)", correct: true, why: "DOPA decarboxylase (aromatic L-amino acid decarboxylase) requires PLP (Vitamin B6) to remove the alpha-carboxyl group. [Lecture Transcript]" },
-      { text: "Tetrahydrobiopterin (BH4)", correct: false, why: "BH4 is used in hydroxylations, not decarboxylation reactions. [Slide #5]" },
-      { text: "S-adenosylmethionine (SAM)", correct: false, why: "SAM is the methyl donor for converting norepinephrine to epinephrine. [Slide #5]" },
-      { text: "Ascorbic acid (Vitamin C)", correct: false, why: "Ascorbic acid is required by dopamine beta-hydroxylase, not DOPA decarboxylase. [Slide #5]" }
-    ]
-  },
-  {
-    id: 39,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: true,
-    stem: "Why must Parkinson's disease patients receiving exogenous L-DOPA therapy be co-administered carbidopa?",
-    options: [
-      { text: "Carbidopa inhibits peripheral DOPA decarboxylase, preventing systemic side effects and sparing L-DOPA for the brain", correct: true, why: "Dopamine cannot cross the blood-brain barrier. Carbidopa cannot enter the brain, so it blocks peripheral conversion to dopamine while allowing L-DOPA to cross the BBB. [Lecture Transcript]" },
-      { text: "Carbidopa actively transports L-DOPA across the tight junctions of the blood-brain barrier", correct: false, why: "L-DOPA crosses via the large neutral amino acid transporter (LAT1); carbidopa is an enzyme inhibitor, not a carrier. [Slide #6]" },
-      { text: "Carbidopa stimulates dopamine beta-hydroxylase to prevent orthostatic hypotension", correct: false, why: "Carbidopa does not stimulate dopamine beta-hydroxylase. [Slide #6]" },
-      { text: "Carbidopa directly binds dopamine D2 receptors in the striatum", correct: false, why: "Carbidopa has no direct dopamine receptor agonist activity. [Slide #6]" }
-    ]
-  },
-  {
-    id: 40,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "The terminal step in epinephrine synthesis—converting norepinephrine to epinephrine—requires the methyl donor _______.",
-    options: [
-      { text: "S-adenosylmethionine (SAM)", correct: true, why: "Phenylethanolamine N-methyltransferase (PNMT) in the adrenal medulla transfers a methyl group from SAM onto norepinephrine. [Lecture Transcript]" },
-      { text: "N5-methyl-tetrahydrofolate", correct: false, why: "N5-methyl-THF transfers a methyl group to B12 to regenerate methionine; SAM is the direct donor for PNMT. [Slide #7]" },
-      { text: "tetrahydrobiopterin (BH4)", correct: false, why: "BH4 is an electron donor for hydroxylases, not a methyl donor. [Slide #7]" },
-      { text: "pyridoxal phosphate (PLP)", correct: false, why: "PLP participates in decarboxylations and transaminations, not methylation. [Slide #7]" }
-    ]
-  },
-  {
-    id: 41,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Serotonin (5-hydroxytryptamine) is synthesized from the amino acid tryptophan via a two-step sequence requiring _______ followed by _______.",
-    options: [
-      { text: "BH4-dependent hydroxylation; PLP-dependent decarboxylation", correct: true, why: "Tryptophan hydroxylase uses BH4 to make 5-HTP, which is then decarboxylated by aromatic L-amino acid decarboxylase using PLP to yield serotonin. [Lecture Transcript]" },
-      { text: "PLP-dependent transamination; SAM-dependent methylation", correct: false, why: "Serotonin synthesis does not involve transamination or SAM methylation. [Slide #8]" },
-      { text: "Vitamin C-dependent hydroxylation; B12-dependent rearrangement", correct: false, why: "Tryptophan hydroxylase uses BH4, not Vitamin C. [Slide #8]" },
-      { text: "NADPH-dependent reduction; CoA-dependent thiolation", correct: false, why: "These are fatty acid synthesis steps, not neurotransmitter synthesis. [Slide #8]" }
-    ]
-  },
-  {
-    id: 42,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "easy",
-    priority: false,
-    stem: "Histamine is synthesized from the basic amino acid histidine in a single enzymatic step catalyzed by a _______-dependent decarboxylase.",
-    options: [
-      { text: "Vitamin B6 (PLP)", correct: true, why: "Histidine decarboxylase removes the alpha-carboxyl group of histidine to yield histamine, requiring pyridoxal phosphate (PLP). [Lecture Transcript]" },
-      { text: "Vitamin B12 (cobalamin)", correct: false, why: "Vitamin B12 is involved in methionine synthase and methylmalonyl-CoA mutase, not histidine decarboxylation. [Slide #9]" },
-      { text: "Vitamin C (ascorbate)", correct: false, why: "Ascorbate is an electron donor for copper- and iron-containing hydroxylases. [Slide #9]" },
-      { text: "Tetrahydrobiopterin (BH4)", correct: false, why: "Histidine is decarboxylated directly without requiring ring hydroxylation. [Slide #9]" }
-    ]
-  },
-  {
-    id: 43,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: true,
-    stem: "The first committed step of heme biosynthesis occurs in the mitochondria and condenses _______ and _______ using pyridoxal phosphate (PLP).",
-    options: [
-      { text: "glycine; succinyl-CoA", correct: true, why: "ALA synthase condenses glycine and succinyl-CoA in the mitochondrial matrix to form delta-aminolevulinic acid (ALA), requiring PLP. [Lecture Transcript]" },
-      { text: "alanine; acetyl-CoA", correct: false, why: "Alanine and acetyl-CoA do not initiate porphyrin synthesis. [Slide #11]" },
-      { text: "arginine; alpha-ketoglutarate", correct: false, why: "Arginine and alpha-ketoglutarate participate in the urea and glutamate cycles, not heme synthesis. [Slide #11]" },
-      { text: "glutamate; oxaloacetate", correct: false, why: "These are substrates for aspartate aminotransferase (AST). [Slide #11]" }
-    ]
-  },
-  {
-    id: 44,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "medium",
-    priority: true,
-    stem: "Creatine synthesis begins in the kidneys with the condensation of which two amino acids?",
-    options: [
-      { text: "Glycine and arginine", correct: true, why: "In the kidneys, arginine:glycine amidinotransferase transfers an amidino group from arginine to glycine, forming guanidinoacetate. [Lecture Transcript]" },
-      { text: "Glutamine and alanine", correct: false, why: "Glutamine and alanine are inter-organ nitrogen transporters, not creatine precursors. [Slide #12]" },
-      { text: "Lysine and methionine", correct: false, why: "Lysine and methionine generate carnitine (fatty acid shuttle), not creatine. [Slide #12]" },
-      { text: "Histidine and cysteine", correct: false, why: "These amino acids do not form the guanidino scaffold of creatine. [Slide #12]" }
-    ]
-  },
-  {
-    id: 45,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Nov 3",
-    difficulty: "hard",
-    priority: false,
-    stem: "Lead poisoning inhibits heme biosynthesis primarily by inactivating which two enzymes?",
-    options: [
-      { text: "ALA dehydratase and ferrochelatase", correct: true, why: "Lead binds to sulfhydryl groups and displaces zinc, inactivating both cytosolic ALA dehydratase and mitochondrial ferrochelatase. [Lecture Transcript]" },
-      { text: "ALA synthase and heme oxygenase", correct: false, why: "ALA synthase is regulated by heme feedback repression; heme oxygenase degrades heme to biliverdin. [Slide #13]" },
-      { text: "Uroporphyrinogen decarboxylase and biliverdin reductase", correct: false, why: "Uroporphyrinogen decarboxylase is deficient in Porphyria Cutanea Tarda, not classic acute lead poisoning. [Slide #13]" },
-      { text: "Dopamine beta-hydroxylase and lysyl oxidase", correct: false, why: "These are copper-dependent enzymes, not the classic zinc/sulfhydryl targets of lead. [Slide #13]" }
-    ]
-  },
-  {
-    id: 46,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Oct 15",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which basic amino acid side chain contains an imidazole ring that functions as a physiological buffer near pH 7.4?",
-    options: [
-      { text: "Histidine", correct: true, why: "Histidine's imidazole side chain has a pKa of approximately 6.0–6.5, allowing it to rapidly switch between protonated and deprotonated states at blood pH. [Lecture Transcript]" },
-      { text: "Arginine", correct: false, why: "Arginine has a strongly basic guanidino group (pKa ~12.5) that remains completely protonated at pH 7.4. [Slide #2]" },
-      { text: "Lysine", correct: false, why: "Lysine has an epsilon-amino group (pKa ~10.5) that remains fully protonated at pH 7.4. [Slide #2]" },
-      { text: "Proline", correct: false, why: "Proline has a rigid secondary imino ring and does not buffer at physiologic pH. [Slide #2]" }
-    ]
-  },
-  {
-    id: 47,
-    subjectIndex: 3,
-    week: "Carryover",
-    slideRef: "Transcript Oct 15",
-    difficulty: "easy",
-    priority: false,
-    stem: "Which group of amino acids possesses nonpolar, branched hydrocarbon side chains?",
-    options: [
-      { text: "Valine, leucine, and isoleucine", correct: true, why: "Valine, leucine, and isoleucine are the three branched-chain amino acids (BCAAs) that accumulate in maple syrup urine disease. [Lecture Transcript]" },
-      { text: "Phenylalanine, tyrosine, and tryptophan", correct: false, why: "These are aromatic amino acids, not branched-chain aliphatics. [Slide #1]" },
-      { text: "Aspartate, glutamate, and asparagine", correct: false, why: "Aspartate and glutamate are acidic amino acids; asparagine is polar uncharged. [Slide #1]" },
-      { text: "Methionine, cysteine, and cystine", correct: false, why: "These are sulfur-containing amino acids. [Slide #1]" }
-    ]
-  }
-];
-
-/* -------------------------------------------------------------
-   STATE & PERSISTENCE
-   ------------------------------------------------------------- */
-let hist = {};
-try { hist = JSON.parse(localStorage.getItem('quiz_missed_history') || '{}'); } catch (e) {}
-const saveHistory = () => { try { localStorage.setItem('quiz_missed_history', JSON.stringify(hist)); } catch (e) {} };
-
-let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
-let prioritizeMissed = false;
-let quizQuestions = [], userAnswers = [], currentIndex = 0, score = 0, popupTimeout = null;
-let viewMode = 'single'; // 'single' | 'all'
-let muted = false;
-
-try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
-try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
-
-const $ = id => document.getElementById(id);
-
-function updateErijahButton() {
-  const b = $('stfuBtn');
-  if (!b) return;
-  b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
-  b.classList.toggle('muted-active', muted);
-  if (muted) {
-    const a = $('wrongAudio');
-    if (a) { a.pause(); a.currentTime = 0; }
-    if (popupTimeout) clearTimeout(popupTimeout);
-    const p = $('wrongPopup');
-    if (p) p.classList.add('hidden');
-  }
-}
-
-function toggleErijah() {
-  muted = !muted;
-  try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
-  updateErijahButton();
-}
-
-function updateModeButton() {
-  const b = $('modeBtn');
-  if (!b) return;
-  b.textContent = viewMode === 'all' ? 'View: All at Once' : 'View: One by One';
-  b.classList.toggle('active', viewMode === 'all');
-}
-
-function toggleMode() {
-  viewMode = viewMode === 'all' ? 'single' : 'all';
-  try { localStorage.setItem('quizViewMode', viewMode); } catch (e) {}
-  updateModeButton();
-  if (quizQuestions.length > 0) renderActiveQuiz();
-  else renderHome();
-}
-
-function renderActiveQuiz() {
-  if (viewMode === 'all') renderAllQuestions();
-  else renderQuestion();
-}
-
-/* -------------------------------------------------------------
-   HOME DASHBOARD & FILTERING
-   ------------------------------------------------------------- */
-function renderHome() {
-  $('quizHeader').style.display = 'block';
-  updateModeButton();
-  updateErijahButton();
-  $('progressPill').innerHTML = `Q: <span>0/0</span>`;
-  $('scorePill').innerHTML = `Score: <span>0/0 (0%)</span>`;
-  $('progressFill').style.width = '0%';
-
-  const totalMissedCount = Object.keys(hist).filter(id => hist[id] > 0).length;
-
-  let chipsHtml = SUBJECTS.map((sub, idx) => {
-    const count = questionBank.filter(q => q.subjectIndex === idx).length;
-    const isActive = selectedSubjects.has(idx) ? 'active' : '';
-    return `<div class="chip ${isActive}" onclick="toggleSubject(${idx})">[${sub.week}] ${sub.title} (${count})</div>`;
-  }).join('');
-
-  let filteredPool = getFilteredQuestions();
-
-  $('mainContainer').innerHTML = `
-    <div class="dashboard">
-      <div class="dash-title">Biochemistry Midterm 2 Preparation Hub</div>
-      <div class="dash-subtitle">NBCE Part 1 Board Spec &middot; Exhaustive Slide, Hemoglobin &amp; Transcript Coverage</div>
-      
-      <div class="section-label">Select Topics for Review</div>
-      <div class="chip-grid">${chipsHtml}</div>
-      
-      <div class="controls-row">
-        <button class="btn" onclick="selectAllSubjects(true)">Select All</button>
-        <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
-        <button class="btn ${prioritizeMissed ? 'active' : ''}" onclick="togglePrioritizeMissed()">Prioritize Missed (${totalMissedCount})</button>
-        <button class="btn ${viewMode === 'all' ? 'active' : ''}" onclick="toggleModeFromDash()">${viewMode === 'all' ? 'Mode: All at Once' : 'Mode: One by One'}</button>
-      </div>
-
-      <div class="bank-counter">
-        Active Pool: ${filteredPool.length} questions available across ${selectedSubjects.size} topics
-      </div>
-
-      <div class="section-label">Launch Practice Exam</div>
-      <div class="launcher-grid">
-        <button class="launch-btn" onclick="startQuiz(15)">Quickie (15 Qs)</button>
-        <button class="launch-btn" onclick="startQuiz(25)">Standard (25 Qs)</button>
-        <button class="launch-btn" onclick="startQuiz(35)">Midterm Target (35 Qs)</button>
-        <button class="launch-btn" onclick="startQuiz(filteredPool.length)">Entire Bank (${filteredPool.length} Qs)</button>
-      </div>
-    </div>
-  `;
-}
-
-function toggleModeFromDash() {
-  toggleMode();
-  renderHome();
-}
-
-function toggleSubject(idx) {
-  if (selectedSubjects.has(idx)) {
-    if (selectedSubjects.size > 1) selectedSubjects.delete(idx);
-  } else {
-    selectedSubjects.add(idx);
-  }
-  renderHome();
-}
-
-function selectAllSubjects(all) {
-  if (all) selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
-  else selectedSubjects = new Set([0]);
-  renderHome();
-}
-
-function togglePrioritizeMissed() {
-  prioritizeMissed = !prioritizeMissed;
-  renderHome();
-}
-
-function getFilteredQuestions() {
-  let pool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
-  if (prioritizeMissed) {
-    const missed = pool.filter(q => (hist[q.id] || 0) > 0);
-    if (missed.length > 0) return missed;
-  }
-  return pool;
-}
-
-function shuffle(array) {
-  let arr = [...array];
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
-}
-
-function startQuiz(limit) {
-  let pool = getFilteredQuestions();
-  if (pool.length === 0) {
-    alert("Please select at least one topic with available questions.");
-    return;
-  }
-  pool = shuffle(pool);
-  quizQuestions = pool.slice(0, Math.min(limit, pool.length));
-  userAnswers = new Array(quizQuestions.length).fill(null);
-  currentIndex = 0;
-  score = 0;
-  renderActiveQuiz();
-}
-
-/* -------------------------------------------------------------
-   FEEDBACK POPUP & SOUND
-   ------------------------------------------------------------- */
-function triggerWrongFeedback() {
-  if (muted) return;
-  const audio = $('wrongAudio');
-  if (audio) {
-    audio.currentTime = 0;
-    audio.play().catch(() => {});
-  }
-  const popup = $('wrongPopup');
-  if (popup) {
-    popup.classList.remove('hidden');
-    if (popupTimeout) clearTimeout(popupTimeout);
-    popupTimeout = setTimeout(() => {
-      popup.classList.add('hidden');
-    }, 1200);
-  }
-}
-
-/* -------------------------------------------------------------
-   MODE A: ONE BY ONE (Flashcard / Card View)
-   ------------------------------------------------------------- */
-function renderQuestion() {
-  if (currentIndex >= quizQuestions.length) {
-    renderScorecard();
-    return;
-  }
-  const q = quizQuestions[currentIndex];
-  const answered = userAnswers[currentIndex] !== null;
-  const sub = SUBJECTS[q.subjectIndex];
-
-  $('progressPill').innerHTML = `Question: <span>${currentIndex + 1} of ${quizQuestions.length}</span>`;
-  const answeredCount = userAnswers.filter(a => a !== null).length;
-  const pct = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
-  $('scorePill').innerHTML = `Score: <span>${score}/${answeredCount} (${pct}%)</span>`;
-  $('progressFill').style.width = `${((currentIndex) / quizQuestions.length) * 100}%`;
-
-  let optionsHtml = q.options.map((opt, i) => {
-    let classes = ['option-item'];
-    let letter = String.fromCharCode(65 + i);
-    if (answered) {
-      classes.push('locked');
-      if (opt.correct) classes.push('reveal-correct');
-      if (userAnswers[currentIndex] === i) {
-        classes.push(opt.correct ? 'selected-correct' : 'selected-wrong');
-      } else {
-        classes.push('dim');
-      }
-    }
-    const clickHandler = !answered ? `onclick="handleOptionClick(${i})"` : '';
-    return `
-      <div class="${classes.join(' ')}" ${clickHandler}>
-        <span class="opt-letter">${letter}.</span>
-        <span>${opt.text}</span>
-      </div>
-    `;
-  }).join('');
-
-  let feedbackHtml = '';
-  if (answered) {
-    const isCorrect = q.options[userAnswers[currentIndex]].correct;
-    const rationales = q.options.map((opt, i) => {
-      const letter = String.fromCharCode(65 + i);
-      const isCor = opt.correct;
-      return `<div class="rationale-item ${isCor ? 'correct-rat' : ''}"><strong>${letter}:</strong> ${opt.why}</div>`;
-    }).join('');
-
-    feedbackHtml = `
-      <div class="feedback-box">
-        <div class="status-banner ${isCorrect ? 'correct' : 'wrong'}">
-          ${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}
-        </div>
-        <div class="ref-line">Reference: [${sub.week}], ${q.slideRef}</div>
-        <div class="rationale-title">Option Breakdown</div>
-        ${rationales}
-      </div>
-    `;
-  }
-
-  let nextBtnText = currentIndex === quizQuestions.length - 1 ? 'Finish Exam' : 'Next Question';
-  let nextBtnHtml = answered ? `<button class="btn active" onclick="nextQuestion()">${nextBtnText}</button>` : '';
-
-  $('mainContainer').innerHTML = `
-    <div class="question-card">
-      <div class="card-badges">
-        <span class="badge badge-num">Q${currentIndex + 1}</span>
-        <span class="badge badge-subject">[${sub.week}] ${sub.title}</span>
-        <span class="badge badge-diff ${q.difficulty}">${q.difficulty}</span>
-        ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
-        <span class="badge badge-diff">${q.slideRef}</span>
-      </div>
-      <div class="stem">${q.stem}</div>
-      <div class="options-list">${optionsHtml}</div>
-      ${feedbackHtml}
-      <div class="quiz-footer">${nextBtnHtml}</div>
-    </div>
-  `;
-}
-
-function handleOptionClick(optionIdx) {
-  if (userAnswers[currentIndex] !== null) return;
-  const q = quizQuestions[currentIndex];
-  userAnswers[currentIndex] = optionIdx;
-  const isCorrect = q.options[optionIdx].correct;
-
-  if (isCorrect) {
-    score++;
-    if (hist[q.id]) {
-      hist[q.id] = Math.max(0, hist[q.id] - 1);
-      saveHistory();
-    }
-  } else {
-    hist[q.id] = (hist[q.id] || 0) + 1;
-    saveHistory();
-    triggerWrongFeedback();
-  }
-  renderQuestion();
-}
-
-function nextQuestion() {
-  currentIndex++;
-  renderQuestion();
-}
-
-/* -------------------------------------------------------------
-   MODE B: ALL AT ONCE (Continuous Scrolling View)
-   ------------------------------------------------------------- */
-function renderAllQuestions() {
-  const total = quizQuestions.length;
-  const answeredCount = userAnswers.filter(a => a !== null).length;
-  const pct = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
-  $('progressPill').innerHTML = `Answered: <span>${answeredCount} of ${total}</span>`;
-  $('scorePill').innerHTML = `Score: <span>${score}/${answeredCount} (${pct}%)</span>`;
-  $('progressFill').style.width = `${(answeredCount / total) * 100}%`;
-
-  let cardsHtml = quizQuestions.map((q, qIndex) => {
-    const answered = userAnswers[qIndex] !== null;
-    const sub = SUBJECTS[q.subjectIndex];
-
-    let optionsHtml = q.options.map((opt, i) => {
-      let classes = ['option-item'];
-      let letter = String.fromCharCode(65 + i);
-      if (answered) {
-        classes.push('locked');
-        if (opt.correct) classes.push('reveal-correct');
-        if (userAnswers[qIndex] === i) {
-          classes.push(opt.correct ? 'selected-correct' : 'selected-wrong');
-        } else {
-          classes.push('dim');
-        }
-      }
-      const clickHandler = !answered ? `onclick="handleAllModeSelect(${qIndex}, ${i})"` : '';
-      return `
-        <div class="${classes.join(' ')}" ${clickHandler}>
-          <span class="opt-letter">${letter}.</span>
-          <span>${opt.text}</span>
-        </div>
-      `;
-    }).join('');
-
-    let feedbackHtml = '';
-    if (answered) {
-      const isCorrect = q.options[userAnswers[qIndex]].correct;
-      const rationales = q.options.map((opt, i) => {
-        const letter = String.fromCharCode(65 + i);
-        return `<div class="rationale-item ${opt.correct ? 'correct-rat' : ''}"><strong>${letter}:</strong> ${opt.why}</div>`;
-      }).join('');
-
-      feedbackHtml = `
-        <div class="feedback-box">
-          <div class="status-banner ${isCorrect ? 'correct' : 'wrong'}">
-            ${isCorrect ? '✓ Correct!' : '✗ Incorrect.'}
-          </div>
-          <div class="ref-line">Reference: [${sub.week}], ${q.slideRef}</div>
-          <div class="rationale-title">Option Breakdown</div>
-          ${rationales}
-        </div>
-      `;
-    }
-
-    return `
-      <div class="question-card" id="card-${qIndex}">
-        <div class="card-badges">
-          <span class="badge badge-num">Q${qIndex + 1}</span>
-          <span class="badge badge-subject">[${sub.week}] ${sub.title}</span>
-          <span class="badge badge-diff ${q.difficulty}">${q.difficulty}</span>
-          ${q.priority ? '<span class="badge badge-priority">High Yield</span>' : ''}
-          <span class="badge badge-diff">${q.slideRef}</span>
-        </div>
-        <div class="stem">${q.stem}</div>
-        <div class="options-list">${optionsHtml}</div>
-        ${feedbackHtml}
-      </div>
-    `;
-  }).join('');
-
-  let finishBtn = answeredCount === total
-    ? `<div style="text-align: center; margin: 30px 0;"><button class="btn active" style="padding: 12px 28px; font-size: 1rem;" onclick="renderScorecard()">View Final Results Summary</button></div>`
-    : '';
-
-  $('mainContainer').innerHTML = cardsHtml + finishBtn;
-}
-
-function handleAllModeSelect(qIndex, optIndex) {
-  if (userAnswers[qIndex] !== null) return;
-  const q = quizQuestions[qIndex];
-  userAnswers[qIndex] = optIndex;
-  const isCorrect = q.options[optIndex].correct;
-
-  if (isCorrect) {
-    score++;
-    if (hist[q.id]) {
-      hist[q.id] = Math.max(0, hist[q.id] - 1);
-      saveHistory();
-    }
-  } else {
-    hist[q.id] = (hist[q.id] || 0) + 1;
-    saveHistory();
-    triggerWrongFeedback();
-  }
-  renderAllQuestions();
-}
-
-/* -------------------------------------------------------------
-   SCORECARD & RESULTS
-   ------------------------------------------------------------- */
-function renderScorecard() {
-  const total = quizQuestions.length;
-  const pct = Math.round((score / total) * 100);
-
-  let subBreakdown = {};
-  quizQuestions.forEach((q, idx) => {
-    if (!subBreakdown[q.subjectIndex]) subBreakdown[q.subjectIndex] = { total: 0, correct: 0 };
-    subBreakdown[q.subjectIndex].total++;
-    if (userAnswers[idx] !== null && q.options[userAnswers[idx]].correct) {
-      subBreakdown[q.subjectIndex].correct++;
-    }
-  });
-
-  let breakdownHtml = Object.keys(subBreakdown).map(sIdx => {
-    const s = SUBJECTS[sIdx];
-    const item = subBreakdown[sIdx];
-    const sPct = Math.round((item.correct / item.total) * 100);
-    return `<div><strong>[${s.week}] ${s.title}:</strong> ${item.correct}/${item.total} (${sPct}%)</div>`;
-  }).join('');
-
-  let feedbackMsg = '';
-  if (pct >= 90) {
-    feedbackMsg = 'Absolute Gigachad. You drained that test dry.';
-  } else if (pct >= 75) {
-    feedbackMsg = 'Solid passing score! Ready for Midterm 2 boards.';
-  } else {
-    feedbackMsg = 'Needs remediation. Review connective tissue diseases, GAG structures, and globin genetics.';
-  }
-
-  $('mainContainer').innerHTML = `
-    <div class="scorecard">
-      <div class="dash-title">Exam Complete!</div>
-      <div class="score-num">${score} / ${total}</div>
-      <div class="score-grade" style="color: ${pct >= 75 ? '#4ade80' : '#ef4444'};">
-        ${pct}% &middot; ${pct >= 75 ? 'Passing Grade (Board Ready)' : 'Needs Remediation'}
-      </div>
-      <p style="color: var(--text-muted); margin-bottom: 20px;">${feedbackMsg}</p>
-      <div class="score-breakdown">
-        <div style="font-weight: 800; margin-bottom: 12px; color: var(--hub-orange);">Subject Performance:</div>
-        ${breakdownHtml}
-      </div>
-      <button class="btn active" style="padding: 10px 24px;" onclick="renderHome()">Return to Topic Dashboard</button>
-    </div>
-  `;
-}
-
-// Initial Boot
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', renderHome);
-} else {
-  renderHome();
-}
-</script>
-</body>
-</html>
+const SUBJECTS=[
+{title:"Hemoglobin Structure, Cooperativity & O2 Curves",week:"Wk 4"},
+{title:"Hemoglobinopathies & Thalassemia",week:"Wk 4"},
+{title:"Collagen & Elastin Structure and Synthesis",week:"Wk 4-5"},
+{title:"Connective Tissue Pathology",week:"Wk 5"},
+{title:"Monosaccharide Chemistry",week:"Wk 6"},
+{title:"Disaccharides, Polysaccharides & GAGs",week:"Wk 6"},
+{title:"Carryover Core: Forces, pKa & Heme",week:"Wk 1-5"}];
+const questionBank=[];
+// Q(subject,difficulty,priority,ref,stem,correct,wrong1,wrong2,wrong3) ; each option = 'text|why' ; display order is shuffled at quiz start
+function Q(s,d,p,r,stem,...o){questionBank.push({id:questionBank.length,subjectIndex:s,week:SUBJECTS[s].week,slideRef:r,difficulty:d,priority:p,stem:stem,
+options:o.map((x,i)=>{const t=x.split('|');return{text:t[0],correct:i===0,why:t[1]+' ['+r+']'}})})}
+// ---- 0 Hemoglobin
+Q(0,'easy',true,'Lec 4.1','Within each alpha-beta dimer of hemoglobin, the two chains are held together mainly by:',
+'hydrophobic interactions between complementary nonpolar domains|The alpha and beta surfaces fit like hand and glove through nonpolar side chains (Val, Leu, Ile, Phe, Trp).',
+'ionic bridges between Lys/Arg and Asp/Glu|Ionic bridges span the gap BETWEEN the two dimers, not within one.',
+'covalent disulfide bonds between Cys residues|Hemoglobin subunits are not disulfide linked.',
+'peptide bonds joining the C-terminus of alpha to the N-terminus of beta|The chains are separate polypeptides; association is non-covalent.');
+Q(0,'medium',true,'Lec 4.1','The tetramer is stabilized across the dimer-dimer gap mainly by _______, which are disrupted if water enters the gap.',
+'ionic bridges|Positive Lys/Arg pair with negative Asp/Glu; water solvates the charges and weakens them.',
+'hydrophobic stacking|Hydrophobic packing is the intra-dimer force and does not depend on charge.',
+'covalent glycosidic bonds|Glycosidic bonds join sugars, not subunits.',
+'disulfide bridges|No interchain disulfides exist in Hb.');
+Q(0,'medium',true,'Lec 4.2','A tissue bed with high CO2 and lower pH shifts the oxygen dissociation curve:',
+'rightward, because protonated His strengthens the T-state ionic bridges and favors O2 release|This is the Bohr effect: more O2 is unloaded at the same PO2.',
+'leftward, because protonated His weakens the T-state and favors O2 binding|Direction is inverted; acid favors the taut form.',
+'leftward, because CO2 displaces 2,3-BPG from the central cavity|CO2 does not displace 2,3-BPG and the shift is right, not left.',
+'rightward, because Fe2+ is oxidized to Fe3+|Oxidation to Fe3+ would abolish O2 binding; Bohr shift keeps Fe2+.');
+Q(0,'hard',true,'Lec 4.2','Red cells in stored transfused blood are depleted of 2,3-BPG. Their oxygen dissociation curve is shifted:',
+'left, so Hb binds O2 tightly and delivers little to tissue|Loss of 2,3-BPG weakens the T-state, raising affinity.',
+'right, so Hb unloads O2 too readily in the lungs|A right shift needs more 2,3-BPG, acid, or CO2.',
+'unchanged, since 2,3-BPG acts only on fetal Hb|2,3-BPG binds adult beta chains in the central cavity.',
+'flattened to a hyperbola like myoglobin|Cooperativity is reduced in degree but the effector is loss of BPG, which causes a left shift.');
+Q(0,'medium',true,'Lec 4.2','Venous blood leaving a resting tissue is about 75% saturated, meaning on average Hb has released about _______ of its four O2 molecules.',
+'one|75% saturated = 3 of 4 sites still loaded.',
+'two|That would be 50% saturation.',
+'three|That would be 25% saturation.',
+'all four|That would be 0% saturation, which is not the normal operating point.');
+// ---- 1 Hemoglobinopathies
+Q(1,'easy',true,'Lec 4.3','Sickle cell anemia results from a point mutation substituting _______ for _______ at position 6 of the beta chain.',
+'valine; glutamate|Nonpolar Val replaces negatively charged Glu.',
+'glutamate; valine|Reversed.',
+'lysine; glutamate|That is HbC, not HbS.',
+'valine; glycine|Not the sickle mutation.');
+Q(1,'medium',true,'Lec 4.3','Deoxygenated HbS aggregates because the substituted residue:',
+'interdigitates hydrophobically with Val on neighboring beta chains|Branched nonpolar side chains interlock, forming stacked fibers.',
+'forms ionic bridges with neighboring Lys and Arg|Valine carries no charge.',
+'repels the same residue on adjacent chains by negative charge|That describes Glu-Glu repulsion, which is lost in HbS.',
+'hydrogen bonds with water in the gap between dimers|Valine is hydrophobic and cannot hydrogen bond.');
+Q(1,'medium',true,'Lec 4.3','Sickle cell trait (heterozygous) is retained in the gene pool because shortened red cell lifespan:',
+'limits Plasmodium maturation inside the red cell, reducing severe malaria|Parasites require time within the RBC to mature.',
+'raises HbF to block parasite entry|HbF is not raised in trait.',
+'increases 2,3-BPG to kill the parasite|2,3-BPG is not antimicrobial.',
+'prevents the spleen from removing infected cells|The spleen removes rigid or abnormal cells; this does not protect against malaria.');
+Q(1,'medium',true,'Lec 4.2','Carbon monoxide is toxic mainly because it:',
+'binds heme Fe about 200 times more tightly than O2 and stabilizes the relaxed form so remaining O2 is not unloaded|Back-bonding makes CO binding very strong.',
+'oxidizes Fe2+ to Fe3+ forming methemoglobin|That is nitrite-type toxicity, not CO.',
+'displaces 2,3-BPG from the central cavity|CO binds iron, not the cavity.',
+'denatures alpha chains by hydrophobic disruption|CO does not denature globin.');
+// ---- 2 Collagen and elastin
+Q(2,'easy',true,'Lec 4.3','Every third residue in collagen is glycine because:',
+'its hydrogen side chain lets the three chains braid tightly enough to form interchain hydrogen bonds|Any bulky side chain would block the close packing.',
+'its charged side chain forms ionic bridges between chains|Glycine is uncharged.',
+'its thiol side chain forms disulfide crosslinks|That describes cysteine.',
+'its ring structure kinks the helix|That describes proline.');
+Q(2,'medium',true,'Lec 5.2','Prolyl and lysyl hydroxylases require O2, Fe, and _______ to keep the iron reduced.',
+'ascorbate (vitamin C)|Deficiency causes scurvy with unstable under-hydroxylated collagen.',
+'tetrahydrobiopterin|BH4 serves aromatic amino acid hydroxylases.',
+'pyridoxal phosphate|PLP serves decarboxylases and transaminases.',
+'S-adenosylmethionine|SAM donates methyl groups.');
+Q(2,'medium',true,'Lec 5.2','Lysyl oxidase, a copper enzyme, strengthens collagen by:',
+'oxidizing lysine side-chain amines to aldehydes that cross-link fibrils|Allysine condenses with another lysine amine.',
+'hydroxylating proline for interchain hydrogen bonding|That is prolyl hydroxylase.',
+'cleaving the terminal propeptides outside the cell|That is procollagen peptidase.',
+'attaching galactose to hydroxylysine|That is glycosylation.');
+Q(2,'medium',true,'Lec 5.2','The staggered arrangement of collagen fibrils improves _______ because a flaw cannot propagate along aligned molecular ends.',
+'fracture toughness|Staggering interrupts crack propagation.',
+'brittleness|Brittleness is the opposite property.',
+'osmotic pressure|Unrelated to fiber packing.',
+'hydroxylation rate|Hydroxylation is chemical, not architectural.');
+Q(2,'medium',true,'Lec 5.2','Stretched elastin recoils when released mainly because its hydrophobic side chains:',
+'prefer to re-associate with each other rather than with water|Hydrophobic recoil, with desmosine cross-links holding the network.',
+'form disulfide bonds that shorten the chains|Disulfides are characteristic of keratin.',
+'carry negative charges that attract Na+|That is GAG behavior.',
+'are hydroxylated by prolyl hydroxylase|That is collagen processing.');
+// ---- 3 Pathology
+Q(3,'hard',true,'Lec 5.2','Osteogenesis imperfecta Type II differs from Type I in that Type II:',
+'replaces glycine with a bulky residue so the braid cannot form, and is lethal perinatally|Severe structural defect.',
+'reduces production of normal alpha1 and alpha2 chains and is survivable|That describes Type I.',
+'results from vitamin C deficiency|OI is genetic, not nutritional.',
+'results from a fibrillin defect|That is Marfan syndrome.');
+Q(3,'medium',true,'Lec 5.2','Non-smoking emphysema from alpha-1 antitrypsin deficiency occurs because uninhibited _______ digests alveolar elastin.',
+'neutrophil elastase|AAT normally inhibits it.',
+'collagenase|Collagen is not the main lung target.',
+'lysyl oxidase|That enzyme cross-links, it does not degrade.',
+'prolyl hydroxylase|A synthesis enzyme.');
+Q(3,'medium',true,'Lec 5.2','Marfan syndrome (skeleton, eye, cardiovascular) results from a defect in:',
+'fibrillin|A microfibril protein distinct from collagen, elastin, and keratin.',
+'type I collagen|That causes OI.',
+'elastin cross-links|Not the defect in Marfan.',
+'keratin disulfides|Unrelated.');
+Q(3,'medium',true,'Lec 5.2','A patient with hyperextensible skin and lax joints from an inherited collagen defect has _______.',
+'Ehlers-Danlos syndrome|Forceful spinal adjustment is risky.',
+'osteogenesis imperfecta Type II|Perinatal lethal, bone fragility.',
+'alpha-1 antitrypsin deficiency|Lung elastin destruction.',
+'scurvy|Nutritional; not inherited.');
+// ---- 4 Monosaccharides
+Q(4,'medium',true,'Lec 6.1','Mannose is the _______ epimer of glucose.',
+'C2|Differs only at carbon 2.',
+'C4|That is galactose.',
+'C3|Not a common dietary epimer.',
+'C5|C5 determines D/L.');
+Q(4,'medium',true,'Lec 6.1','Galactose differs from glucose only at carbon 4. They are:',
+'epimers|Differ at one chiral carbon.',
+'anomers|Differ only at the anomeric carbon after ring closure.',
+'enantiomers|Mirror images at every center.',
+'ketose-aldose isomers|Both are aldoses.');
+Q(4,'medium',true,'Lec 6.1','Alpha and beta D-glucopyranose differ at:',
+'the anomeric carbon C1 created on ring closure|They interconvert through the open chain.',
+'carbon 2|That makes mannose.',
+'carbon 4|That makes galactose.',
+'carbon 6|C6 is not chiral.');
+Q(4,'easy',true,'Lec 6.1','Fructose differs from glucose in that fructose is a(n):',
+'ketose with its carbonyl at C2|Glucose is an aldose with C1 aldehyde.',
+'aldose with its carbonyl at C1|That is glucose.',
+'pentose with five carbons|Fructose is a hexose.',
+'sugar acid with a carboxyl group|Not a sugar acid.');
+// ---- 5 Disaccharides etc.
+Q(5,'medium',true,'Lec 6.2','Lactose intolerance causes osmotic diarrhea because unhydrolyzed lactose:',
+'cannot be absorbed and retains water in the intestinal lumen|Only monosaccharides cross enterocytes.',
+'is converted to glucose-galactose polymers by bacteria|That does not cause the diarrhea.',
+'inhibits sodium absorption directly|Mechanism is osmotic.',
+'precipitates as crystals in the colon|Not the mechanism.');
+Q(5,'easy',true,'Lec 6.2','A glycosidic bond forms by _______ with release of water and is cleaved by _______.',
+'condensation; hydrolysis|Hydrolases add water back.',
+'hydrolysis; condensation|Reversed.',
+'oxidation; reduction|Not the reaction type.',
+'phosphorylation; dephosphorylation|Not the reaction type.');
+Q(5,'medium',true,'Lec 6.2','Sucrose consists of glucose joined to fructose by an:',
+'alpha-1,beta-2 glycosidic bond|Both anomeric carbons are used.',
+'beta-1,4 glycosidic bond|That is lactose and cellobiose.',
+'alpha-1,4 glycosidic bond|That is maltose.',
+'alpha-1,6 glycosidic bond|That is isomaltose.');
+Q(5,'medium',true,'Lec 6.2','Humans cannot digest cellulose because they lack an enzyme for the:',
+'beta-1,4 linkage between glucose units|Ruminants rely on gut bacteria.',
+'alpha-1,4 linkage between glucose units|Amylase cleaves it.',
+'alpha-1,6 branch points|Isomaltase cleaves them.',
+'alpha-1,2 sucrose linkage|Sucrase cleaves it.');
+Q(5,'medium',true,'Lec 6.2','Amylopectin differs from amylose in that amylopectin has:',
+'alpha-1,6 branch points|Amylose is straight alpha-1,4.',
+'beta-1,4 linkages|That is cellulose.',
+'alpha-1,2 linkages|That is sucrose.',
+'no glycosidic bonds|It is a polysaccharide.');
+Q(5,'medium',true,'Lec 6.2','Glycosaminoglycans are built from a repeating disaccharide of an amine sugar and a(n):',
+'acidic sugar|Negative charge retains water and Na+.',
+'neutral hexose|Not the repeat.',
+'pentose phosphate|Not the repeat.',
+'fatty acid|Not carbohydrate.');
+// ---- carried over from original bank (accuracy-checked, Midterm 2 relevant) ----
+Q(0,'easy',true,'Lec 4.1','Adult hemoglobin A (HbA) is composed of which chains?',
+'two alpha and two beta chains|HbA is the alpha2beta2 tetramer.',
+'two alpha and two gamma chains|That is fetal HbF.',
+'two alpha and two delta chains|That is minor HbA2.',
+'four identical beta chains|A beta4 tetramer (HbH) appears when alpha chains are deficient.');
+Q(0,'medium',true,'Lec 4.3','A normal diploid genome carries _______ alpha-globin alleles on chromosome _______ and two beta-globin alleles on chromosome 11.',
+'four; 16|Two from each parent on chromosome 16.',
+'two; 16|Alpha has four alleles, not two.',
+'four; 11|Alpha is on chromosome 16.',
+'two; 11|Alpha is on 16 and has four alleles.');
+Q(0,'medium',true,'Lec 4.1','Which residue coordinates directly to the heme iron on the side opposite bound O2?',
+'proximal histidine|It binds Fe2+ and stays in place when O2 binds; the distal His backs away.',
+'distal histidine|It is pulled back to let O2 bind.',
+'valine-6 on the beta chain|That is the HbS surface mutation.',
+'lysine in the central cavity|Cavity Lys/Arg bind 2,3-BPG.');
+Q(0,'medium',true,'Lec 4.2','Fetal Hb has a higher O2 affinity than adult Hb because HbF:',
+'binds 2,3-BPG less strongly because gamma chains lack a key positively charged His|Less BPG stabilization of the T-state raises affinity.',
+'binds 2,3-BPG more strongly|That would lower affinity.',
+'is a tetramer of four gamma chains|HbF is alpha2gamma2.',
+'contains Fe3+ iron|Only Fe2+ binds O2.');
+Q(0,'easy',false,'Lec 4.2','The effector that sits in the central cavity between the beta chains of hemoglobin is _______.',
+'2,3-bisphosphoglycerate|It is made in the RBC from the glycolytic 3-PG/2-PG step.',
+'inorganic phosphate|Not the physiologic effector.',
+'carbon monoxide|CO binds heme iron.',
+'hemin|An oxidized heme, not an effector.');
+Q(1,'hard',true,'Lec 4.3','HbS polymerization occurs mainly when hemoglobin is:',
+'deoxygenated, exposing a nonpolar Val patch|The taut form lets Val fit into an acceptor site on a neighbor.',
+'fully oxygenated in arterial blood|Oxygenation relaxes the structure and protects against aggregation.',
+'bound to CO|CO locks the relaxed form, which does not polymerize.',
+'in a high-pH environment|Alkalinity shifts toward the relaxed form.');
+Q(1,'medium',true,'Lec 4.3','Beta-thalassemia major produces severe anemia partly because unpaired _______ chains precipitate in red cell precursors.',
+'alpha|Without beta partners, free alpha chains cannot form stable tetramers.',
+'gamma|Gamma chains are not the excess in beta-thal.',
+'beta|Beta chains are the deficient ones.',
+'delta|Not the excess chain.');
+Q(1,'hard',true,'Lec 4.3','Loss of three of the four alpha-globin alleles produces:',
+'HbH disease with excess beta4 tetramers|Severe alpha deficiency.',
+'hydrops fetalis (Hb Barts)|That requires loss of all four.',
+'beta-thalassemia major|That involves chromosome 11 beta genes.',
+'silent carrier state|That is loss of only one allele.');
+Q(2,'hard',true,'Lec 5.2','Hydroxyproline stabilizes the collagen triple helix by:',
+'forming interchain hydrogen bonds through its hydroxyl group|Without it the helix unwinds near body temperature.',
+'forming aldehydes for lysyl oxidase cross-linking|Those come from lysine.',
+'carrying the galactose and glucose attachments|Those attach to hydroxylysine.',
+'cleaving the terminal propeptides|That is done by peptidases.');
+Q(2,'easy',false,'Lec 5.2','The characteristic cross-links of mature elastin are:',
+'desmosine and isodesmosine|Formed from lysine residues via lysyl oxidase aldehydes.',
+'interchain disulfides|Characteristic of keratin.',
+'hydroxylysine glycosides|Collagen feature.',
+'ionic bridges between Asp and Lys|Hemoglobin inter-dimer force.');
+Q(3,'medium',false,'Lec 5.2','Scurvy causes bleeding gums and poor wound healing because:',
+'under-hydroxylated procollagen is unstable|No ascorbate means iron stays oxidized and hydroxylases stall.',
+'clotting factors lack carboxylation|That needs vitamin K.',
+'elastase is overproduced|Not the mechanism.',
+'terminal propeptides cannot be cleaved|Peptidases do not need vitamin C.');
+Q(2,'hard',false,'Lec 5.2','Terminal propeptides of procollagen are cleaved:',
+'in the extracellular space after secretion|This allows tropocollagen to self-assemble only outside the cell.',
+'in the rough ER right after translation|They keep the molecule soluble inside the cell.',
+'in the Golgi during glycosylation|The Golgi does not cleave them.',
+'in the nucleus|Cleavage is post-translational.');
+Q(4,'easy',false,'Lec 6.1','D versus L designation of a sugar is set by the hydroxyl on the:',
+'chiral carbon farthest from the carbonyl|C5 in hexoses.',
+'anomeric carbon|That sets alpha versus beta.',
+'carbonyl carbon|It is not chiral in the open chain.',
+'C6 carbon|C6 has two hydrogens and is not chiral.');
+Q(4,'medium',true,'Lec 6.1','On ring closure of glucose, the new chiral anomeric center is carbon:',
+'1|The C5 hydroxyl attacks the C1 aldehyde to form a hemiacetal.',
+'2|That is the anomeric carbon of fructose.',
+'4|C4 distinguishes galactose.',
+'6|C6 stays exocyclic.');
+Q(5,'medium',true,'Lec 6.2','Sucrose is a non-reducing sugar because:',
+'both anomeric carbons are tied up in the glycosidic bond|Neither ring can open.',
+'it has only beta-1,4 bonds|Lactose has one yet is reducing.',
+'fructose is oxidized to a lactone|Not the case.',
+'it has no hydroxyl groups|It has many.');
+Q(5,'easy',true,'Lec 6.2','Lactose is _______ joined by a _______ glycosidic bond.',
+'galactose and glucose; beta-1,4|Cleaved by lactase.',
+'glucose and glucose; alpha-1,4|That is maltose.',
+'glucose and fructose; alpha-1,2|That is sucrose.',
+'glucose and glucose; beta-1,4|That is cellobiose.');
+Q(5,'medium',false,'Lec 6.2','Maltose, from starch digestion, is two glucose units joined by an:',
+'alpha-1,4 bond|Amylose and amylopectin backbone.',
+'alpha-1,6 bond|That is isomaltose.',
+'beta-1,4 bond|That is cellobiose.',
+'alpha-1,2 bond|That is sucrose.');
+Q(5,'hard',true,'Lec 6.2','Glycosaminoglycans give joints and the vitreous their gel-like resilience because they:',
+'carry dense negative charge that binds Na+ and water|Acidic sugars and sulfates attract hydration.',
+'are hydrophobic and exclude water|They are strongly hydrophilic.',
+'are cross-linked by lysyl oxidase|That is collagen and elastin.',
+'fold into triple helices around glycine|That is collagen.');
+// ---- 6 Carryover core
+Q(6,'medium',true,'Lec 1.3','The histidine imidazole (pKa about 6) is the amino acid side chain most sensitive to small pH changes near 7.4 because it:',
+'switches between protonated and neutral forms near physiologic pH|This underlies the Bohr effect.',
+'is fully protonated at pH 7.4|That describes Lys and Arg.',
+'is fully deprotonated and negative at pH 7.4|That describes Asp and Glu.',
+'forms disulfide bonds at pH 7.4|That is cysteine.');
+Q(6,'easy',false,'Lec 4.1','Which three amino acids have nonpolar branched side chains that interdigitate in hydrophobic contacts?',
+'valine, leucine, isoleucine|Branched aliphatics.',
+'phenylalanine, tyrosine, tryptophan|Aromatic, not branched.',
+'aspartate, glutamate, asparagine|Acidic or polar.',
+'serine, threonine, cysteine|Polar side chains.');
+Q(6,'medium',false,'Lec 4.2','The porphyrin ring of heme is built from succinyl-CoA and _______.',
+'glycine|Glycine is used in heme, collagen, and purines.',
+'alanine|Not a heme precursor.',
+'arginine|Used for creatine and NO.',
+'glutamate|Not the porphyrin precursor.');
+Q(6,'medium',true,'Lec 1.3','At pH 7.4, a Lys side chain (pKa 10.5) is protonated to deprotonated in the approximate ratio:',
+'1000 to 1|Difference of 3 units is a factor of 10^3.',
+'3 to 1|Do not multiply pH units; ratios are powers of 10.',
+'10 to 1|That would be a 1-unit difference.',
+'100000 to 1|That is the ratio for Arg (pKa 12.5, difference 5).');
+Q(6,'hard',true,'Lec 3.2','The Gln side-chain amide nitrogen does not accept H+ because:',
+'its lone pair is delocalized by resonance onto the carbonyl|The same reason peptide bonds are not basic.',
+'it has no lone pair|It does have one but it is shared by resonance.',
+'its pKa is 12.5 like Arg|Gln has no basic pKa.',
+'it is protonated in the stomach|Amides are not basic.');
+// ---------------- state ----------------
+let hist={};try{hist=JSON.parse(localStorage.getItem('quiz_missed_history')||'{}')}catch(e){}
+const saveH=()=>{try{localStorage.setItem('quiz_missed_history',JSON.stringify(hist))}catch(e){}};
+let sel=new Set(SUBJECTS.map((_,i)=>i)),prio=false,qs=[],ans=[],cur=0,score=0,tmo=null,mode='single',muted=false;
+try{muted=localStorage.getItem('stfuErijah')==='1'}catch(e){}
+try{mode=localStorage.getItem('quizViewMode')||'single'}catch(e){}
+const $=i=>document.getElementById(i);
+const L=i=>String.fromCharCode(65+i);
+function shuffle(a){a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function updBtns(){const m=$('modeBtn');m.textContent=mode==='all'?'View: All at Once':'View: One by One';m.classList.toggle('active',mode==='all');
+const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('active',muted);
+if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}clearTimeout(tmo);$('wrongPopup').classList.add('hidden')}}
+function toggleErijah(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}updBtns()}
+function toggleMode(){mode=mode==='all'?'single':'all';try{localStorage.setItem('quizViewMode',mode)}catch(e){}updBtns();qs.length&&ans.length&&cur<qs.length||mode==='all'&&qs.length?draw():renderHome()}
+function pool(){let p=questionBank.filter(q=>sel.has(q.subjectIndex));if(prio){const m=p.filter(q=>(hist[q.id]||0)>0);if(m.length)return m}return p}
+function renderHome(){qs=[];updBtns();$('pp').innerHTML='Q: <span>0/0</span>';$('sp').innerHTML='Score: <span>0/0 (0%)</span>';$('pf').style.width='0';
+const missed=Object.keys(hist).filter(k=>hist[k]>0).length,p=pool();
+$('main').innerHTML=`<div class="dash"><div class="dt">Biochemistry Midterm 2 Preparation Hub</div>
+<div class="lab">Select Topics</div><div class="chips">${SUBJECTS.map((s,i)=>`<div class="chip ${sel.has(i)?'active':''}" onclick="togSub(${i})">[${s.week}] ${s.title} (${questionBank.filter(q=>q.subjectIndex===i).length})</div>`).join('')}</div>
+<div class="row"><button class="btn" onclick="selAll(true)">Select All</button><button class="btn" onclick="selAll(false)">Clear</button>
+<button class="btn ${prio?'active':''}" onclick="prio=!prio;renderHome()">Prioritize Missed (${missed})</button>
+<button class="btn ${mode==='all'?'active':''}" onclick="toggleMode();renderHome()">${mode==='all'?'Mode: All at Once':'Mode: One by One'}</button></div>
+<div class="lab" style="color:var(--or)">${p.length} questions available across ${sel.size} topics selected</div>
+<div class="grid"><button class="lb" onclick="start(15)">Quickie (15 Qs)</button><button class="lb" onclick="start(25)">Standard (25 Qs)</button><button class="lb" onclick="start(35)">Midterm Target (35 Qs)</button><button class="lb" onclick="start(9999)">Entire Bank (${p.length} Qs)</button></div></div>`}
+function togSub(i){sel.has(i)?sel.delete(i):sel.add(i);renderHome()}
+function selAll(a){sel=a?new Set(SUBJECTS.map((_,i)=>i)):new Set();renderHome()}
+function start(n){const p=pool();if(!p.length){alert('Please select at least one topic.');return}
+qs=shuffle(p).slice(0,n).map(q=>({...q,options:shuffle(q.options)}));ans=qs.map(()=>null);cur=0;score=0;draw()}
+function draw(){mode==='all'?drawAll():drawOne()}
+function cardHTML(q,i){const a=ans[i],s=SUBJECTS[q.subjectIndex];
+const o=q.options.map((x,j)=>{let c='opt';if(a!==null){c+=' lk';if(x.correct)c+=' rc';c+=a===j?(x.correct?' sc2':' sw'):' dim'}
+return `<div class="${c}" ${a===null?`onclick="pick(${i},${j})"`:''}><span class="l">${L(j)}.</span><span>${x.text}</span></div>`}).join('');
+let f='';if(a!==null){const ok=q.options[a].correct;f=`<div class="fb"><div class="${ok?'ok':'no'}">${ok?'✓ Correct!':'✗ Incorrect.'}</div><div class="ref">Reference: [${s.week}], ${q.slideRef}</div>${q.options.map((x,j)=>`<div class="ri ${x.correct?'c':''}"><strong>${L(j)}:</strong> ${x.why}</div>`).join('')}</div>`}
+return `<div class="qc" id="card-${i}"><div class="bdg"><span class="b n">Q${i+1}</span><span class="b s">[${s.week}] ${s.title}</span><span class="b ${q.difficulty}">${q.difficulty}</span>${q.priority?'<span class="b p">High Yield</span>':''}<span class="b">${q.slideRef}</span></div><div class="stem">${q.stem}</div>${o}${f}`}
+function stats(label){const n=ans.filter(x=>x!==null).length;$('pp').innerHTML=label;$('sp').innerHTML=`Score: <span>${score}/${n} (${n?Math.round(score/n*100):0}%)</span>`;$('pf').style.width=(n/qs.length*100)+'%'}
+function drawOne(){if(cur>=qs.length){return scoreCard()}stats(`Question: <span>${cur+1} of ${qs.length}</span>`);
+const a=ans[cur]!==null;$('main').innerHTML=cardHTML(qs[cur],cur)+(a?`<div style="text-align:right;margin-top:12px"><button class="btn active" onclick="cur++;drawOne()">${cur===qs.length-1?'Finish Exam':'Next Question'}</button></div>`:'')+'</div>'}
+function drawAll(){const y=window.scrollY,n=ans.filter(x=>x!==null).length;stats(`Answered: <span>${n} of ${qs.length}</span>`);
+$('main').innerHTML=qs.map((q,i)=>cardHTML(q,i)+'</div>').join('')+(n===qs.length?'<div style="text-align:center;margin:28px"><button class="btn active" onclick="scoreCard()">View Final Results Summary</button></div>':'');window.scrollTo(0,y)}
+function pick(i,j){if(ans[i]!==null)return;const q=qs[i];ans[i]=j;
+if(q.options[j].correct){score++;if(hist[q.id])hist[q.id]=Math.max(0,hist[q.id]-1)}else{hist[q.id]=(hist[q.id]||0)+1;wrong()}saveH();draw()}
+function wrong(){if(muted)return;const a=$('wrongAudio');try{a.currentTime=0;a.play().catch(()=>{})}catch(e){}const p=$('wrongPopup');p.classList.remove('hidden');clearTimeout(tmo);tmo=setTimeout(()=>p.classList.add('hidden'),1200)}
+function scoreCard(){const t=qs.length,pc=Math.round(score/t*100),bd={};
+qs.forEach((q,i)=>{const b=bd[q.subjectIndex]||(bd[q.subjectIndex]={t:0,c:0});b.t++;if(ans[i]!==null&&q.options[ans[i]].correct)b.c++});
+$('main').innerHTML=`<div class="sc"><div class="dt">Exam Complete!</div><div class="sn">${score} / ${t}</div><div style="color:${pc>=75?'#4ade80':'#ef4444'};font-weight:700">${pc}% &middot; ${pc>=75?'Passing (Board Ready)':'Needs Remediation'}</div>
+<div class="bk"><div style="color:var(--or);font-weight:800">Subject Performance:</div>${Object.keys(bd).map(k=>`<div><strong>[${SUBJECTS[k].week}] ${SUBJECTS[k].title}:</strong> ${bd[k].c}/${bd[k].t} (${Math.round(bd[k].c/bd[k].t*100)}%)</div>`).join('')}</div>
+<button class="btn active" onclick="renderHome()">Return to Topic Dashboard</button></div>`}
+if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',renderHome)}else{renderHome()}
+</script></body></html>
