@@ -4823,6 +4823,17 @@
     let popupTimeout = null;
     let muted = false;
     let viewMode = 'single';
+    let orderMode = 'random';
+    try { orderMode = localStorage.getItem('quizOrderMode') || 'random'; } catch (e) {}
+    const DIFF_RANK = { easy: 0, medium: 1, hard: 2 };
+    const PHASE_LABEL = ['Phase 1: Basics', 'Phase 2: Core Concepts', 'Phase 3: Application / Hard'];
+    
+    function toggleOrder() {
+      orderMode = orderMode === 'tiered' ? 'random' : 'tiered';
+      try { localStorage.setItem('quizOrderMode', orderMode); } catch (e) {}
+      renderHome();
+    }
+    
 
     try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
     try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
