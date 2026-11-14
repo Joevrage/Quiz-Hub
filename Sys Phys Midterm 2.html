@@ -49,6 +49,11 @@
       justify-content: space-between;
       gap: 12px;
     }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
     .header-title h1 {
       font-size: 1.15rem;
       font-weight: 700;
@@ -74,6 +79,9 @@
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
       transition: all 0.2s ease;
     }
     .btn:hover {
@@ -368,9 +376,12 @@
   <!-- Header -->
   <header>
     <div class="header-content">
-      <div class="header-title">
-        <h1 id="appHeaderTitle">Sys Phys Midterm 2 Mastery Hub</h1>
-        <p id="appHeaderSubtitle">Exhaustive Exam Engine &bull; Wk 4 Wed – Wk 6 Wed</p>
+      <div class="header-left">
+        <a href="index.html" class="btn" id="mainPageBtn">&larr; Main Page</a>
+        <div class="header-title">
+          <h1 id="appHeaderTitle">Sys Phys Midterm 2 Mastery Hub</h1>
+          <p id="appHeaderSubtitle">Exhaustive Exam Engine &bull; Wk 4 Wed – Wk 6 Wed</p>
+        </div>
       </div>
       <div class="header-controls">
         <span class="pill" id="scorePill">Score: 0 / 0 (0%)</span>
@@ -4827,13 +4838,12 @@
     try { orderMode = localStorage.getItem('quizOrderMode') || 'random'; } catch (e) {}
     const DIFF_RANK = { easy: 0, medium: 1, hard: 2 };
     const PHASE_LABEL = ['Phase 1: Basics', 'Phase 2: Core Concepts', 'Phase 3: Application / Hard'];
-    
+
     function toggleOrder() {
       orderMode = orderMode === 'tiered' ? 'random' : 'tiered';
       try { localStorage.setItem('quizOrderMode', orderMode); } catch (e) {}
       renderHome();
     }
-    
 
     try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
     try { viewMode = localStorage.getItem('quizViewMode') || 'single'; } catch (e) {}
@@ -4919,9 +4929,14 @@
             <div style="font-size:0.85rem; color:var(--text-muted)">
               Active Pool: <strong style="color:#fff">${totalFiltered}</strong> high-yield questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
             </div>
-            <button class="btn ${prioritizeMissed ? 'btn-accent' : ''}" onclick="togglePrioritizeMissed()">
-              Prioritize Missed (${missedCount})
-            </button>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn ${orderMode === 'tiered' ? 'btn-accent' : ''}" onclick="toggleOrder()">
+                Order: ${orderMode === 'tiered' ? 'Basics &rarr; Hard' : 'Random'}
+              </button>
+              <button class="btn ${prioritizeMissed ? 'btn-accent' : ''}" onclick="togglePrioritizeMissed()">
+                Prioritize Missed (${missedCount})
+              </button>
+            </div>
           </div>
 
           <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px;">
@@ -4986,6 +5001,13 @@
         };
       });
 
+      if (orderMode === 'tiered') {
+        quizQuestions.sort((a, b) =>
+          DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
+          a.subjectIndex - b.subjectIndex
+        );
+      }
+
       userAnswers = {};
       currentIndex = 0;
       score = 0;
@@ -5029,6 +5051,7 @@
 
       let html = `
         <div class="question-card">
+          ${orderMode === 'tiered' ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
           <div class="card-meta">
             <div class="meta-tags">
               <span class="tag tag-week">[${sub.week}] ${sub.title}</span>
@@ -5128,6 +5151,7 @@
 
         html += `
           <div class="question-card" id="qcard-${qIdx}">
+            ${orderMode === 'tiered' ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
             <div class="card-meta">
               <div class="meta-tags">
                 <span class="tag" style="background:var(--accent); color:#000; font-weight:700;">Q${qIdx + 1}</span>
