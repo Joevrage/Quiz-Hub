@@ -1,1561 +1,486 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Microbiology Week 6: Protozoans &amp; Algae Quiz | Quiz Hub</title>
-    <style>
-        :root {
-            --bg-primary: #0f0f0f;
-            --bg-card: #1a1a1a;
-            --border-color: #282828;
-            --accent: #ff9900;
-            --accent-hover: #e68a00;
-            --text-primary: #ffffff;
-            --text-muted: #888888;
-            --correct-bg: #14532d;
-            --correct-border: #22c55e;
-            --incorrect-bg: #7f1d1d;
-            --incorrect-border: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.5;
-            padding-top: 76px;
-            padding-bottom: 60px;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        /* Sticky Header */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: #000000;
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            padding: 12px 20px;
-        }
-
-        .header-inner {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .brand {
-            font-size: 1.25rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .brand-hub {
-            background-color: var(--accent);
-            color: #000000;
-            padding: 2px 7px;
-            border-radius: 4px;
-            font-weight: 900;
-        }
-
-        .score-pill {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--accent);
-        }
-
-        /* Main Container */
-        main {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 24px 16px;
-        }
-
-        .intro-banner {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent);
-            border-radius: 8px;
-            padding: 18px 20px;
-            margin-bottom: 20px;
-        }
-
-        .intro-banner h1 {
-            font-size: 1.45rem;
-            margin-bottom: 4px;
-        }
-
-        .intro-banner p {
-            color: var(--text-muted);
-            font-size: 0.92rem;
-        }
-
-        /* Mode Toggle */
-        .mode-container {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .mode-btn {
-            padding: 10px 24px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            background-color: #222222;
-            color: #ffffff;
-            border: 1px solid var(--border-color);
-            transition: all 0.2s ease;
-        }
-
-        .mode-btn:hover {
-            border-color: var(--accent);
-        }
-
-        .mode-btn.active {
-            background-color: var(--accent);
-            color: #000000;
-            border-color: var(--accent);
-        }
-
-        /* Question Card */
-        .question-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 22px;
-            margin-bottom: 20px;
-        }
-
-        .question-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .badge {
-            background-color: #262626;
-            color: var(--accent);
-            border: 1px solid #383838;
-            font-size: 0.78rem;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .question-text {
-            font-size: 1.08rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        /* Options */
-        .options-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .option-btn {
-            width: 100%;
-            text-align: left;
-            background-color: #141414;
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 12px 15px;
-            font-size: 0.96rem;
-            cursor: pointer;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            transition: border-color 0.15s, background-color 0.15s;
-            font-family: inherit;
-        }
-
-        .option-btn:hover:not(:disabled) {
-            border-color: var(--accent);
-            background-color: #1f1f1f;
-        }
-
-        .option-btn:disabled {
-            cursor: default;
-        }
-
-        .option-letter {
-            font-weight: 800;
-            color: var(--accent);
-            min-width: 22px;
-        }
-
-        .option-btn.correct {
-            background-color: var(--correct-bg);
-            border-color: var(--correct-border);
-            color: #ffffff;
-        }
-
-        .option-btn.correct .option-letter {
-            color: #86efac;
-        }
-
-        .option-btn.incorrect {
-            background-color: var(--incorrect-bg);
-            border-color: var(--incorrect-border);
-            color: #ffffff;
-        }
-
-        .option-btn.incorrect .option-letter {
-            color: #fca5a5;
-        }
-
-        /* Explanation Box */
-        .explanation-box {
-            margin-top: 16px;
-            background-color: #121212;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 16px;
-        }
-
-        .status-banner {
-            font-weight: 800;
-            font-size: 1.05rem;
-            padding: 8px 12px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-        }
-
-        .status-banner.correct {
-            background-color: var(--correct-bg);
-            border: 1px solid var(--correct-border);
-            color: #dcfce7;
-        }
-
-        .status-banner.incorrect {
-            background-color: var(--incorrect-bg);
-            border: 1px solid var(--incorrect-border);
-            color: #fee2e2;
-        }
-
-        .concept-summary {
-            font-size: 0.93rem;
-            color: #e5e5e5;
-            margin-bottom: 12px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .rationale-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 0.9rem;
-            color: #d4d4d4;
-        }
-
-        .rationale-list li {
-            padding-left: 10px;
-            border-left: 3px solid #333333;
-        }
-
-        .rationale-list li.is-correct {
-            border-left-color: var(--correct-border);
-            color: #ffffff;
-        }
-
-        /* Summary Card */
-        .summary-card {
-            background-color: var(--bg-card);
-            border: 2px solid var(--accent);
-            border-radius: 10px;
-            padding: 28px 22px;
-            text-align: center;
-            margin-top: 28px;
-        }
-
-        .summary-card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
-            color: var(--accent);
-        }
-
-        .summary-score {
-            font-size: 2.2rem;
-            font-weight: 900;
-            margin: 10px 0;
-        }
-
-        .summary-tier {
-            font-size: 1.15rem;
-            font-weight: 700;
-            margin-bottom: 22px;
-            color: #f3f4f6;
-        }
-
-        .summary-actions {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .retake-btn {
-            background-color: var(--accent);
-            color: #000000;
-            border: 1px solid var(--accent);
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 6px;
-            cursor: pointer;
-            font-family: inherit;
-            margin: 4px;
-            display: inline-block;
-            text-decoration: none;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .retake-btn:hover {
-            background-color: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
-        .retake-btn.hub-btn {
-            background-color: #222222;
-            color: #ffffff;
-            border: 1px solid var(--accent);
-        }
-
-        .retake-btn.hub-btn:hover {
-            background-color: var(--accent);
-            color: #000000;
-        }
-
-        /* Wrong Popup Image */
-        .wrong-popup {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 2000;
-            pointer-events: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: popIn 0.15s ease-out;
-        }
-
-        .wrong-popup img {
-            max-width: 80vw;
-            max-height: 55vh;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
-            border: 3px solid var(--incorrect-border);
-            display: block;
-            object-fit: contain;
-            background: #111;
-        }
-
-        @keyframes popIn {
-            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
-            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 600px) {
-            .header-inner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .question-card {
-                padding: 16px;
-            }
-            .retake-btn {
-                width: 100%;
-                margin: 4px 0;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Microbiology Week 6: Protozoans &amp; Algae Quiz</title>
+<style>
+:root{--bg:#0f0f0f;--card:#1a1a1a;--bd:#2c2c2c;--ac:#ff9900;--ok:#14532d;--okb:#22c55e;--no:#7f1d1d;--nob:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;padding:150px 14px 60px}
+.hidden{display:none!important}
+header{position:fixed;top:0;left:0;right:0;background:#000;border-bottom:1px solid var(--bd);z-index:1000;padding:10px 16px}
+.bar{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.btn{background:#222;color:#fff;border:1px solid var(--bd);padding:7px 13px;border-radius:6px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none}
+.btn:hover,.btn.on{border-color:var(--ac)}
+.btn.on{background:var(--ac);color:#000}
+.btn.pri{background:var(--ac);color:#000;border-color:var(--ac);padding:11px 22px;font-size:1rem}
+.score{color:var(--ac);font-weight:800}
+.prog{max-width:900px;margin:8px auto 0;height:6px;background:#262626;border-radius:3px;overflow:hidden}
+.prog div{height:100%;width:0;background:var(--ac);transition:width .25s}
+main{max-width:900px;margin:0 auto}
+.intro{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:8px;padding:16px 18px;margin-bottom:18px}
+.intro h1{font-size:1.35rem}.intro p{color:#999;font-size:.9rem}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:18px}
+.meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.badge{background:#262626;color:var(--ac);border:1px solid #383838;font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:4px;text-transform:uppercase}
+.stem{font-size:1.06rem;font-weight:600;margin-bottom:14px}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{width:100%;text-align:left;background:#141414;color:#fff;border:1px solid var(--bd);border-radius:6px;padding:11px 14px;font:inherit;cursor:pointer;display:flex;gap:10px}
+.opt:hover:not(:disabled){border-color:var(--ac);background:#1f1f1f}
+.opt b{color:var(--ac);min-width:22px}
+.opt.c{background:var(--ok);border-color:var(--okb)}
+.opt.w{background:var(--no);border-color:var(--nob)}
+.opt.dim{opacity:.45}
+.exp{margin-top:14px;background:#121212;border:1px solid var(--bd);border-radius:6px;padding:14px}
+.st{font-weight:800;padding:7px 11px;border-radius:5px;margin-bottom:10px}
+.st.c{background:var(--ok);border:1px solid var(--okb)}.st.w{background:var(--no);border:1px solid var(--nob)}
+.con{font-size:.92rem;color:#e5e5e5;padding-bottom:10px;margin-bottom:10px;border-bottom:1px solid var(--bd)}
+.rat{list-style:none;display:flex;flex-direction:column;gap:7px;font-size:.88rem;color:#d4d4d4}
+.rat li{padding-left:10px;border-left:3px solid #333}.rat li.k{border-left-color:var(--okb);color:#fff}
+.next{margin-top:14px;text-align:right}
+.sum{background:var(--card);border:2px solid var(--ac);border-radius:10px;padding:26px 18px;text-align:center;margin-top:24px}
+.sum h2{color:var(--ac)}.big{font-size:2.1rem;font-weight:900;margin:8px 0}.tier{font-size:1.1rem;font-weight:700;margin-bottom:18px}
+.sum .btn{margin:4px}
+#pop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;pointer-events:none}
+#pop img{max-width:80vw;max-height:55vh;border-radius:12px;border:3px solid var(--nob);box-shadow:0 10px 40px #000}
+</style>
 </head>
 <body>
+<audio id="aud" src="Wrong-answer.m4a" preload="auto"></audio>
+<div id="pop" class="hidden"><img id="popimg" src="Erijah.png" alt="Wrong"></div>
+<header>
+ <div class="bar">
+  <a class="btn" href="index.html">← Hub</a>
+  <span class="score" id="score">Score: 0 / 0 (0%)</span>
+  <div>
+   <button class="btn on" id="mCard" type="button">One by One</button>
+   <button class="btn" id="mList" type="button">All at Once</button>
+   <button class="btn" id="mute" type="button">STFU Erijah</button>
+  </div>
+ </div>
+ <div class="prog"><div id="pg"></div></div>
+</header>
+<main>
+ <div class="intro"><h1>Week 6: Protozoans &amp; Algae</h1><p>Algae toxins, protozoan structure and life cycles, the four protozoan groups, and every major protozoan disease.</p>
+ <div id="sizes" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-n="15" type="button">Quickie 15</button><button class="btn" data-n="25" type="button">25</button><button class="btn" data-n="35" type="button">35</button><button class="btn" data-n="50" type="button">50</button><button class="btn on" data-n="0" type="button" id="fullBtn">Full Bank</button></div></div>
+ <div id="quiz"></div>
+ <div class="sum hidden" id="sum">
+  <h2 id="sT">Quiz Complete</h2><div class="big" id="sS"></div><div class="tier" id="sM"></div>
+  <button class="btn pri" id="retake" type="button">Retake Current Set</button>
+  <button class="btn pri" id="review" type="button">Review Missed</button>
+  <a class="btn pri" href="index.html">Back to Menu</a>
+ </div>
+</main>
+<script>
+const P1="Protozoan Pt1",P2="Protozoan Pt2",W6="Week 6 Lecture",QB="Quiz Bank";
+// Q(topic, stem, concept, source, [[correct, why],[distractor, why],[..],[..]])
+const Q=(t,s,c,src,o)=>({t,s,c,src,o});
+const DATA=[
+Q("Algae","Which statement about the medical significance of algae is accurate?","Algae are photosynthetic autotrophs that use chlorophyll a and are rarely infectious. Their main medical threat is poisoning from toxins that concentrate in seafood. Being photosynthetic is not the threat.",W6+", "+P1,[
+["Their main threat is toxins that accumulate in seafood","Algae are mainly harmful through toxins, as in red tide."],
+["Their main threat is that they are photosynthetic","Photosynthesis is not what harms humans."],
+["Their main threat is invasion of the bloodstream","Algae rarely infect animal tissue."],
+["Their main threat is transmission by insect vectors","Insect vectors belong to protozoan diseases."]]),
+Q("Algae","Which alga is the exception that lacks photosynthesis and can cause skin and subcutaneous infections with blister-like lesions?","Prototheca is the non-photosynthetic alga linked to skin and subcutaneous infection.",W6+", "+P1,[
+["Prototheca","Non-photosynthetic and associated with skin and subcutaneous infection."],
+["Dinophysis","A dinoflagellate genus that produces diarrhetic shellfish toxin."],
+["Alexandrium","A dinoflagellate genus tied to paralytic shellfish poisoning."],
+["Nitzschia","The source of domoic acid, not skin infection."]]),
+Q("Algae","Algae carry out photosynthesis using which pigment?","Algae photosynthesize with chlorophyll a, a fact that has appeared on boards.",W6+", "+P1,[
+["Chlorophyll a","Stated pigment of algae."],
+["Ergosterol","A fungal membrane sterol."],
+["Chitin","A fungal cell wall component."],
+["Mycolic acid","A waxy lipid of acid-fast bacteria."]]),
+Q("Algae","Which algal poisoning comes from eating reef fish, is not destroyed by cooking, and has no antidote?","Ciguatera fish poisoning is caused by dinoflagellate toxins in reef fish. Cooking does not destroy the toxin and there is no antidote.",W6+", "+P1+", "+QB,[
+["Ciguatera fish poisoning","Heat-stable toxin in fish with no antidote."],
+["Amnesic shellfish poisoning","Domoic acid in shellfish."],
+["Neurotoxic shellfish poisoning","Shellfish toxin that is not fatal."],
+["Paralytic shellfish poisoning","Shellfish toxin tied to the Pacific Northwest and Alaska."]]),
+Q("Algae","Which algal poisoning is NOT fatal?","Neurotoxic shellfish poisoning causes GI and neurological distress but is not fatal, and its toxin can be aerosolized and trigger asthma-like symptoms.",QB+", "+P1,[
+["Neurotoxic shellfish poisoning","Not fatal. Source is Ptychodiscus brevis."],
+["Ciguatera fish poisoning","Can cause paralysis and death."],
+["Amnesic shellfish poisoning","Can be fatal."],
+["Paralytic shellfish poisoning","Can be fatal."]]),
+Q("Algae","Domoic acid from Nitzschia pungens causes which poisoning?","Amnesic shellfish poisoning is triggered by domoic acid, causes GI and neurological distress, and can be fatal.",P1,[
+["Amnesic shellfish poisoning","Domoic acid is the toxin."],
+["Diarrhetic shellfish poisoning","Dinophysis toxins causing mild GI upset."],
+["Neurotoxic shellfish poisoning","Ptychodiscus brevis toxin."],
+["Ciguatera fish poisoning","Dinoflagellate toxin in reef fish."]]),
+Q("Algae","Which poisoning predominantly occurs in the Pacific Northwest and Alaska and can be fatal?","Paralytic shellfish poisoning comes from Alexandrium, Gymnodinium, and Pyrodinium toxins and causes neurologic distress.",P1,[
+["Paralytic shellfish poisoning","Regional pattern and potential fatality match."],
+["Diarrhetic shellfish poisoning","Mild GI discomfort only."],
+["Neurotoxic shellfish poisoning","Not fatal."],
+["Amnesic shellfish poisoning","Domoic acid, not tied to this region."]]),
+Q("Protozoan Structure","Which structure do protozoans lack?","Protozoans have a cell membrane but no cell wall. Bacteria use peptidoglycan and fungi use chitin, glucan, or mannan.",P1+", "+QB,[
+["Cell wall","All protozoans lack a cell wall."],
+["Cell membrane","Present in all protozoans."],
+["Ectoplasm","Outer cytoplasmic layer, present."],
+["Endoplasm","Inner cytoplasmic layer, present."]]),
+Q("Protozoan Structure","Which layer of protozoan cytoplasm is involved in locomotion, feeding, and protection?","Ectoplasm is the outer layer for locomotion, feeding, and protection. Endoplasm is the inner layer.",P1+", "+QB,[
+["Ectoplasm","Outer layer with these functions."],
+["Endoplasm","Houses organelles instead."],
+["Both layers","Functions are split between the layers."],
+["Neither layer","One layer performs these functions."]]),
+Q("Protozoan Structure","Which layer of protozoan cytoplasm houses the nucleus and mitochondria?","Endoplasm is the inner layer that holds the nucleus, mitochondria, and food and contractile vacuoles.",P1+", "+QB,[
+["Endoplasm","Inner layer with the organelles."],
+["Ectoplasm","Outer layer for locomotion and feeding."],
+["Both layers","Organelles are in the inner layer only."],
+["Neither layer","The inner layer houses them."]]),
+Q("Life Cycle","Which protozoan stage is the normal motile feeding stage?","The trophozoite is the normal motile feeding stage and needs ample food and moisture. The cyst forms when conditions become unsuitable.",P1+", "+QB,[
+["Trophozoite","Active, motile, feeding."],
+["Cyst","Dormant stage formed in unfavorable conditions."],
+["Both stages","Only one stage is motile and feeding."],
+["Neither stage","The trophozoite fills this role."]]),
+Q("Life Cycle","Which statement about encystment is accurate?","Encystment is the trophozoite rounding into a sphere and secreting a thick cuticle when the environment becomes unsuitable. The reverse change is not encystment.",P1+", "+QB,[
+["A trophozoite rounds up and secretes a thick cuticle","Defines encystment."],
+["A cyst changes into a trophozoite","This is the reverse of encystment."],
+["A cyst divides by multiple fission","Not part of encystment."],
+["A trophozoite fuses with another cell","Describes conjugation, not encystment."]]),
+Q("Life Cycle","A protozoan passed by the fecal-oral route is taken into the body in which form?","Fecal-oral intestinal protozoans such as Giardia, E. histolytica, and Balantidium are ingested as cysts. Cysts are the infectious stage.",QB+", "+P2,[
+["Cyst","Hardy infectious stage for fecal-oral spread."],
+["Trophozoite","Passed in stool but not the infectious form for these organisms."],
+["Both forms","Only the cyst is infectious."],
+["Neither form","The cyst is ingested."]]),
+Q("Life Cycle","Which stage is the infectious stage for Naegleria fowleri?","Naegleria fowleri infects through the nasal passages as a trophozoite.",QB+", "+P2,[
+["Trophozoite","Stated infectious stage."],
+["Cyst","Infectious stage for fecal-oral parasites."],
+["Both stages","Only the trophozoite is listed."],
+["Neither stage","The trophozoite is infectious."]]),
+Q("Taxonomy","Which protozoan group glides via undulating ridges or is non-motile?","Protozoa are grouped by movement. Apicomplexa glide via undulating ridges or are non-motile.",P1+", "+QB,[
+["Apicomplexa","Undulating ridges or non-motile."],
+["Ciliophora","Move by cilia."],
+["Mastigophora","Move by flagella."],
+["Sarcodina","Move by pseudopodia."]]),
+Q("Taxonomy","Which group is known as the whip bearers?","Mastigophora move via flexible flagella.",P1+", "+QB,[
+["Mastigophora","Flagellates."],
+["Ciliophora","Hair bearers."],
+["Apicomplexa","Ridges or non-motile."],
+["Sarcodina","Pseudopodia."]]),
+Q("Taxonomy","Which group performs multiple fission (schizogony) during asexual reproduction?","Multiple fission is performed only by the Sporozoea (Apicomplexa). Other groups use binary fission.",P1+", "+QB,[
+["Sporozoea","Only group using schizogony."],
+["Ciliophora","Transverse binary fission."],
+["Sarcodina","Binary fission with no fixed plane."],
+["Mastigophora","Longitudinal binary fission."]]),
+Q("Taxonomy","Which group does NOT usually participate in sexual reproduction?","Mastigophora do not usually reproduce sexually. Ciliates conjugate, and Sarcodina and Sporozoea can form gametes.",P1+", "+QB,[
+["Mastigophora","Sexual reproduction does not usually occur."],
+["Ciliophora","Conjugation using micronuclei."],
+["Sporozoea","Flagellated gametes."],
+["Sarcodina","Some form flagellated gametes."]]),
+Q("Taxonomy","Which group divides by transverse binary fission?","Ciliophora divide transversely, Mastigophora longitudinally, and Sarcodina along no fixed plane.",P1,[
+["Ciliophora","Transverse fission."],
+["Mastigophora","Longitudinal fission."],
+["Sarcodina","No fixed plane."],
+["Sporozoea","Multiple fission."]]),
+Q("Mastigophora","After drinking untreated stream water, a hiker develops cramping, flatulence, and greasy floating stools. Which organism is responsible?","Giardia lamblia (also called Giardia intestinalis) causes giardiasis, nicknamed beaver fever, from cysts in contaminated water. It infects the duodenum and boiling kills it.",P2+", "+W6,[
+["Giardia lamblia","Beaver fever with greasy stools."],
+["Entamoeba histolytica","Colon infection called amebic dysentery."],
+["Balantidium coli","Ciliate tied to pigs."],
+["Cryptosporidium","Apicomplexan causing enteritis."]]),
+Q("Mastigophora","Which protozoan disease is typically sexually transmitted?","Trichomoniasis is caused by Trichomonas vaginalis, which has no cyst stage. The trophozoite is infectious, and both partners must be treated.",QB+", "+P2,[
+["Trichomoniasis","Sexually transmitted flagellate."],
+["Giardiasis","Fecal-oral."],
+["Malaria","Mosquito-borne."],
+["Cryptosporidiosis","Fecal-oral."]]),
+Q("Mastigophora","Which drug is used to treat trichomoniasis, with both partners treated?","Metronidazole is the treatment for trichomoniasis.",P2,[
+["Metronidazole","Stated treatment."],
+["Benznidazole","Used for Chagas disease."],
+["Nitazoxanide","Used for cryptosporidiosis."],
+["Pyrimethamine","Used for toxoplasmosis."]]),
+Q("Mastigophora","Which condition is caused by a Mastigophora?","Trichomonas vaginalis is a flagellate. Balantidium is a ciliate, Cryptosporidium an apicomplexan, and Entamoeba an ameba.",QB+", "+P2,[
+["Trichomoniasis","Flagellate."],
+["Balantidiasis","Ciliate."],
+["Cryptosporidiosis","Apicomplexan."],
+["Amebiasis","Ameba."]]),
+Q("Mastigophora","Which condition is most likely to be asymptomatic if contracted?","Amebiasis from E. histolytica is asymptomatic about 90% of the time. Giardiasis is also about 90% asymptomatic.",QB+", "+P2,[
+["Amebiasis","About 90% asymptomatic."],
+["Chagas disease","Progresses to cardiac and GI disease."],
+["Cryptosporidiosis","Fatal diarrhea in the immunocompromised."],
+["Malaria","Cyclic fever and hemolysis."]]),
+Q("Mastigophora","Which disease is vectored by the tsetse fly?","African sleeping sickness is caused by Trypanosoma brucei gambiense and rhodesiense. A chancre forms at the bite, then the organism enters the blood and CNS.",QB+", "+P2,[
+["African sleeping sickness","Tsetse fly vector."],
+["Chagas disease","Reduviid bug vector."],
+["Malaria","Anopheles mosquito vector."],
+["Primary amebic meningoencephalitis","No insect vector."]]),
+Q("Mastigophora","Which disease is vectored by reduviid (kissing) bugs?","Chagas disease is caused by Trypanosoma cruzi, spread through bug feces. Chronic disease causes dilated cardiomyopathy and congestive heart failure.",QB+", "+P2,[
+["Chagas disease","Reduviid bug vector."],
+["African sleeping sickness","Tsetse fly vector."],
+["Malaria","Anopheles mosquito vector."],
+["Primary amebic meningoencephalitis","Contaminated water via the nose."]]),
+Q("Mastigophora","Which finding is the swelling around the bite site in acute Chagas disease?","Romana's sign is acute swelling around the bite site in Chagas disease. A chancre belongs to African sleeping sickness.",P2,[
+["Romana's sign","Acute Chagas bite-site swelling."],
+["Primary chancre","Sleeping sickness bite-site lesion."],
+["Granulomatous ulcer","A subcutaneous fungal lesion."],
+["Warty nodule","A subcutaneous fungal lesion."]]),
+Q("Mastigophora","Which vector transmits Leishmania?","Leishmania is spread by female phlebotomine sand flies. Forms are cutaneous, mucosal, and visceral.",P2+", "+W6,[
+["Phlebotomine sand fly","Leishmania vector."],
+["Tsetse fly","Trypanosoma brucei vector."],
+["Triatomine bug","Trypanosoma cruzi vector."],
+["Anopheles mosquito","Plasmodium vector."]]),
+Q("Sarcodina","Which ameba infects the colon, has a trophozoite nucleus with a karyosome, and is spread as cysts?","Entamoeba histolytica causes amebiasis, also called amebic dysentery, and is diagnosed by cysts in stool. Boiling kills the cysts.",P2,[
+["Entamoeba histolytica","Colon ameba with karyosome."],
+["Giardia lamblia","Flagellate infecting the duodenum."],
+["Naegleria fowleri","Brain infection through the nose."],
+["Acanthamoeba","Corneal infection."]]),
+Q("Sarcodina","Which organism enters through the nasal passages and causes primary amebic meningoencephalitis with a roughly 97% fatality rate?","Naegleria fowleri is a free-living soil and water ameba. Patients die within about 10 days, and treatment with amphotericin B and rifampin is usually futile.",P2+", "+QB,[
+["Naegleria fowleri","Nasal entry and rapid brain infection."],
+["Acanthamoeba","Corneal infection."],
+["Entamoeba histolytica","Colonic infection."],
+["Balantidium coli","Intestinal ciliate."]]),
+Q("Sarcodina","A protozoan disease of the cornea is picked up from soil or water contaminated with which organism?","Acanthamoeba causes amebic keratitis with eye pain, redness, blurred vision, light sensitivity, and tearing. The cyst stage complicates treatment.",P2+", "+QB,[
+["Acanthamoeba","Corneal pathogen."],
+["Plasmodium","Blood parasite."],
+["Balantidium coli","Intestinal ciliate."],
+["Cryptosporidium","Intestinal apicomplexan."]]),
+Q("Ciliophora","Which is the only Ciliophora condition?","Balantidiasis is caused by Balantidium coli. Pigs are a reservoir, and untreated cases can perforate the colon.",QB+", "+P2,[
+["Balantidiasis","Caused by the ciliate Balantidium coli."],
+["Amebiasis","Sarcodina."],
+["Trichomoniasis","Mastigophora."],
+["Cryptosporidiosis","Apicomplexa."]]),
+Q("Apicomplexa","Which drug is most commonly used to treat cryptosporidiosis?","Nitazoxanide (Alinia) is the most common drug. Cryptosporidiosis is self-limited in healthy people but causes fatal watery diarrhea in the immunocompromised.",P2,[
+["Nitazoxanide","Stated treatment."],
+["Metronidazole","Used for trichomoniasis."],
+["Pyrimethamine","Used for toxoplasmosis."],
+["Benznidazole","Used for Chagas disease."]]),
+Q("Apicomplexa","Malaria is caused by which organism?","Malaria is caused by Plasmodium, spread mainly by the female Anopheles mosquito.",QB+", "+P2,[
+["Plasmodium","Malaria agent."],
+["Naegleria fowleri","Causes PAM."],
+["Acanthamoeba","Causes keratitis."],
+["Balantidium coli","Causes balantidiasis."]]),
+Q("Apicomplexa","Malaria symptoms recur at 48 or 72 hour intervals because of what?","Synchronous rupture of infected red blood cells releases merozoites on a regular schedule, producing cold, hot, and sweating stages.",QB+", "+P2,[
+["Synchronous rupturing of RBCs","Cause of the cyclic fever."],
+["Changing of the tides","No role in malaria."],
+["Hormone fluctuations","No role in malaria."],
+["Sexual cycle of Plasmodium in humans","The sexual phase occurs in the mosquito."]]),
+Q("Apicomplexa","Which stage of Plasmodium is the infectious stage injected by the mosquito?","Sporozoites are the infectious stage. They travel to the liver and undergo schizogony to make merozoites, which invade red blood cells.",P2,[
+["Sporozoites","Injected into the blood."],
+["Merozoites","Released from liver cells to infect RBCs."],
+["Oocysts","Form in the mosquito stomach wall."],
+["Trophozoites","Not the injected stage."]]),
+Q("Apicomplexa","Where does the sexual phase of the Plasmodium life cycle take place?","The asexual phase occurs in humans and the sexual phase in the mosquito, where fertilization and oocyst formation occur.",P2,[
+["In the female Anopheles mosquito","Fertilization and oocyst formation occur here."],
+["In human liver cells","Site of asexual schizogony."],
+["In human red blood cells","Site of asexual replication."],
+["In the human spleen","Debris accumulates here."]]),
+Q("Apicomplexa","Which form of malaria has the highest acute death rate, especially in children?","Falciparum malaria is the most malignant type, with persistent fever and the highest acute death rate.",P2,[
+["Falciparum malaria","Most malignant."],
+["Vivax malaria","Not the most deadly."],
+["Malariae malaria","Not the most deadly."],
+["Ovale malaria","Not the most deadly."]]),
+Q("Apicomplexa","A veterinarian tells a pregnant client not to change the cat litter box. Which condition is the warning about?","Toxoplasma gondii uses cats as hosts and sheds oocysts in feces. Infection during pregnancy can cause eye or brain damage in the fetus.",QB+", "+P2,[
+["Toxoplasmosis","Cat-associated congenital risk."],
+["Trichomoniasis","Sexually transmitted."],
+["Cryptosporidiosis","Linked to animal feces in water."],
+["Giardiasis","Contaminated drinking water."]]),
+Q("Apicomplexa","Besides cat-contaminated objects, which source is a common route for toxoplasmosis?","Toxoplasmosis is passed by the fecal-oral route, from objects contaminated by animals or undercooked meat such as pork containing cysts.",P2,[
+["Undercooked pork","Contains Toxoplasma cysts."],
+["A kissing bug bite","Transmits Chagas disease."],
+["A sand fly bite","Transmits Leishmania."],
+["A tsetse fly bite","Transmits sleeping sickness."]]),
+Q("Algae","Which poisoning from mussels, oysters, or scallops usually causes only mild GI discomfort?","Diarrhetic shellfish poisoning comes from dinoflagellate toxins (genus Dinophysis) and is mild.",P1+", "+W6,[
+["Diarrhetic shellfish poisoning","Mild GI upset from Dinophysis toxins."],
+["Paralytic shellfish poisoning","Neurologic and can be fatal."],
+["Amnesic shellfish poisoning","Domoic acid, can be fatal."],
+["Ciguatera fish poisoning","Reef fish toxin, no antidote."]]),
+Q("Algae","Ciguatera toxin originates from which organisms?","Ciguatera fish poisoning is triggered by toxins of dinoflagellates that accumulate in fish. Nitzschia pungens produces domoic acid instead.",P1,[
+["Dinoflagellates","Source of ciguatera toxin."],
+["Nitzschia pungens","Source of domoic acid."],
+["Prototheca","Non-photosynthetic skin pathogen."],
+["Plasmodium","Malaria parasite."]]),
+Q("Algae","Which toxin can be aerosolized by wave action and trigger asthma-like symptoms?","Neurotoxic shellfish poisoning (Ptychodiscus brevis) can be aerosolized, though it is not fatal.",P1,[
+["Neurotoxic shellfish toxin","Aerosolizes with waves."],
+["Domoic acid","Causes amnesic poisoning via shellfish."],
+["Ciguatera toxin","Ingested in reef fish."],
+["Paralytic shellfish toxin","Ingested in shellfish."]]),
+Q("Taxonomy","Which group moves via pseudopodia?","Sarcodina (amebas) form pseudopodia, meaning false feet, to move.",P1+", "+W6,[
+["Sarcodina","Amebas."],
+["Mastigophora","Flagella."],
+["Ciliophora","Cilia."],
+["Apicomplexa","Ridges or non-motile."]]),
+Q("Taxonomy","Which group reproduces sexually by conjugation using micronuclei, followed by binary fission?","Ciliophora conjugate using micronuclei and then divide.",P1+", "+W6,[
+["Ciliophora","Conjugation with micronuclei."],
+["Mastigophora","Sexual reproduction not usual."],
+["Sarcodina","Flagellated gametes if any."],
+["Sporozoea","Flagellated gametes."]]),
+Q("Mastigophora","Which description fits the Giardia lamblia trophozoite?","Giardia has a binucleate trophozoite with four flagella and a drug-resistant four-nucleate cyst.",P2,[
+["Binucleate with four flagella","Giardia trophozoite."],
+["Single nucleus with a karyosome","E. histolytica trophozoite."],
+["Four nuclei with chromatoidals","E. histolytica cyst."],
+["Pear-shaped with an undulating membrane","Trichomonas."]]),
+Q("Mastigophora","Which pear-shaped flagellate has undulating membranes and no cyst stage?","Trichomonas vaginalis exists only as a trophozoite and is sexually transmitted.",P2,[
+["Trichomonas vaginalis","No cyst stage."],
+["Giardia lamblia","Has a cyst stage."],
+["Trypanosoma cruzi","Hemoflagellate with insect vector."],
+["Leishmania","Hemoflagellate with sand fly vector."]]),
+Q("Mastigophora","Giardia lamblia infects which site?","Giardia infects the duodenum after an incubation of about 10 days.",P2,[
+["Duodenum","Site of Giardia infection."],
+["Colon","Site of E. histolytica."],
+["Liver","Site of Plasmodium schizogony."],
+["Cornea","Site of Acanthamoeba."]]),
+Q("Mastigophora","Which measure kills Giardia and E. histolytica cysts in water?","Boiling water kills the cysts of both organisms. Cryptosporidium is resistant to chlorine.",P2+", "+W6,[
+["Boiling water","Kills the cysts."],
+["Standard chlorination","Cryptosporidium resists it."],
+["Brief refrigeration","Does not kill cysts."],
+["Rinsing with tap water","Does not kill cysts."]]),
+Q("Mastigophora","Which hemoflagellate stage is infectious for Trypanosoma?","Trypomastigotes are the infectious stage in both sleeping sickness and Chagas disease.",P2,[
+["Trypomastigote","Infectious stage."],
+["Amastigote","Lacks a free flagellum."],
+["Promastigote","Single anterior flagellum."],
+["Epimastigote","Flagellum plus undulating membrane."]]),
+Q("Mastigophora","Which hemoflagellate stage lacks a free flagellum?","The amastigote has no free flagellum. The promastigote has one anterior flagellum, and the epimastigote adds an undulating membrane.",P2,[
+["Amastigote","No free flagellum."],
+["Promastigote","One free anterior flagellum."],
+["Epimastigote","Free flagellum and membrane."],
+["Trypomastigote","Large fully formed stage."]]),
+Q("Mastigophora","Which lesion forms at the tsetse fly bite site?","A primary chancre forms about day 4 at the bite, after which the organism enters the lymphatics and blood.",P2,[
+["Primary chancre","Bite-site lesion of sleeping sickness."],
+["Romana's sign","Chagas bite-site swelling."],
+["Granulomatous ulcer","Sporotrichosis lesion."],
+["Verrucous lesion","Chromoblastomycosis lesion."]]),
+Q("Mastigophora","In African sleeping sickness, when does uncontrollable sleepiness occur?","Sleepiness occurs mainly during the day, followed by sleeplessness at night. The final stage brings convulsions and a sleep-like coma.",P2,[
+["Mainly by day, with insomnia at night","Sleep cycle is inverted."],
+["Mainly at night, with insomnia by day","Reversed pattern."],
+["Only after coma begins","Sleepiness occurs earlier."],
+["Only in the first week","Occurs in later CNS stages."]]),
+Q("Mastigophora","Which drug is used to treat Chagas disease?","Benznidazole or nifurtimox treat Chagas disease, but they fail if the disease has progressed too far and have damaging side effects.",P2,[
+["Benznidazole","Chagas treatment."],
+["Metronidazole","Trichomoniasis treatment."],
+["Nitazoxanide","Cryptosporidiosis treatment."],
+["Pyrimethamine","Toxoplasmosis treatment."]]),
+Q("Mastigophora","Chronic Chagas disease accounts for 30 to 40 percent of which condition in endemic regions?","Chronic Chagas causes abnormal rhythm, dilated cardiomyopathy, and congestive heart failure.",P2,[
+["Heart disease","Chronic cardiac involvement."],
+["Liver disease","Not linked to Chagas."],
+["Kidney disease","Not linked to Chagas."],
+["Lung disease","Not linked to Chagas."]]),
+Q("Mastigophora","Visceral leishmaniasis usually affects which organs?","Visceral leishmaniasis affects the spleen, liver, and bone marrow and can be life threatening.",P2+", "+W6,[
+["Spleen, liver, and bone marrow","Visceral organs."],
+["Heart, esophagus, and colon","Chronic Chagas targets."],
+["Brain, eyes, and muscle","Toxoplasmosis targets."],
+["Skin, nose, and throat","Cutaneous and mucosal forms."]]),
+Q("Sarcodina","Which drug pair is used for primary amebic meningoencephalitis, though treatment is usually futile?","Amphotericin B and rifampin are used, but rapid progression makes treatment usually futile.",P2,[
+["Amphotericin B and rifampin","PAM treatment."],
+["Chlorhexidine and PHMB","Acanthamoeba treatment."],
+["Tetracycline and iodoquinol","Balantidiasis drugs."],
+["Nitazoxanide and benznidazole","Not used for PAM."]]),
+Q("Sarcodina","Which drug pair treats both the trophozoite and cyst stages of Acanthamoeba?","Chlorhexidine 0.02 percent plus PHMB 0.02 percent covers both stages, since the cyst complicates treatment.",P2,[
+["Chlorhexidine and PHMB","Treat both stages."],
+["Amphotericin B and rifampin","PAM treatment."],
+["Tetracycline and iodoquinol","Balantidiasis drugs."],
+["Nitazoxanide and benznidazole","Not used for keratitis."]]),
+Q("Sarcodina","Naegleria fowleri gains access to the brain through which route?","Naegleria enters the nasal passages from contaminated water and travels up the olfactory nerve.",P2+", "+W6,[
+["Nasal passages","Entry route."],
+["Bite wound","Insect-borne diseases."],
+["Swallowed cysts","Fecal-oral route."],
+["Contact lenses","Acanthamoeba route."]]),
+Q("Ciliophora","Which animal is a reservoir for Balantidium coli?","Pigs are a reservoir, and balantidiasis is spread by the fecal-oral route.",P2,[
+["Pigs","Reservoir."],
+["Cats","Hosts of Toxoplasma."],
+["Cattle","Linked to Cryptosporidium."],
+["Birds","Not a reservoir here."]]),
+Q("Ciliophora","Untreated balantidiasis can lead to which complication?","Untreated cases can perforate the colon after dysentery and weight loss.",P2,[
+["Perforation of the colon","Balantidium complication."],
+["Dilated cardiomyopathy","Chronic Chagas."],
+["Pelvic inflammatory disease","Trichomoniasis complication."],
+["Corneal ulceration","Acanthamoeba keratitis."]]),
+Q("Apicomplexa","Which organism is resistant to chlorine and is linked to pools, swim diapers, and calves?","Cryptosporidium oocysts resist chlorine. In immunocompromised patients they cause fatal watery diarrhea.",W6+", "+P2,[
+["Cryptosporidium","Chlorine-resistant."],
+["Giardia lamblia","Boiling kills it."],
+["Entamoeba histolytica","Boiling kills it."],
+["Balantidium coli","Pig reservoir."]]),
+Q("Apicomplexa","Most current malaria treatments are based on which drug?","Most treatments are based on some form of quinine.",P2,[
+["Quinine","Malaria drug base."],
+["Metronidazole","Trichomoniasis."],
+["Benznidazole","Chagas disease."],
+["Pyrimethamine","Toxoplasmosis."]]),
+Q("Apicomplexa","Malaria relapses occur because infected cells of which type can harbor dormant parasites for up to 5 years?","Certain malarias relapse because infected liver cells hold dormant cells.",P2,[
+["Liver cells","Dormant parasites persist here."],
+["Red blood cells","Lysed in each cycle."],
+["Mosquito salivary glands","Sexual phase site."],
+["Lymph nodes","Not stated."]]),
+Q("Apicomplexa","What is the correct order of a malaria paroxysm?","Malaria produces a cold stage, then a hot stage, then a sweating stage.",P2+", "+W6,[
+["Cold, hot, sweating","Stated order."],
+["Hot, cold, sweating","Wrong order."],
+["Sweating, cold, hot","Wrong order."],
+["Cold, sweating, hot","Wrong order."]]),
+Q("Apicomplexa","What is the asexual division of Plasmodium sporozoites inside liver cells called?","Schizogony generates numerous merozoites that invade red blood cells.",P2,[
+["Schizogony","Multiple fission in the liver."],
+["Encystment","Trophozoite forming a cyst."],
+["Conjugation","Ciliate sexual process."],
+["Excystment","Cyst releasing a trophozoite."]]),
+Q("Apicomplexa","Which is the definitive host of Toxoplasma gondii?","Cats shed oocysts in feces after the sexual phase in the intestine.",P2+", "+W6,[
+["Cats","Feline definitive host."],
+["Pigs","Source of cysts in meat."],
+["Humans","Accidental hosts."],
+["Birds","Prey and intermediate hosts."]]),
+Q("Apicomplexa","Which drug treats toxoplasmosis?","Pyrimethamine (Daraprim) treats toxoplasmosis.",P2,[
+["Pyrimethamine","Toxoplasmosis treatment."],
+["Metronidazole","Trichomoniasis."],
+["Nitazoxanide","Cryptosporidiosis."],
+["Benznidazole","Chagas disease."]]),
+Q("Apicomplexa","What do most infants infected with Toxoplasma in the womb show at birth?","Most have no symptoms at birth but may develop them later. A small percentage have serious eye or brain damage.",P2,[
+["No symptoms","Most are asymptomatic at birth."],
+["Severe brain damage","Occurs in a small percentage."],
+["Fatal infection within 10 days","Describes PAM."],
+["Corneal ulcers","Describes Acanthamoeba."]]),
+Q("Sarcodina","How many nuclei does the Entamoeba histolytica cyst contain?","The cyst has four nuclei and chromatoidals. The trophozoite has one nucleus with a karyosome.",P2,[
+["Four","Cyst has four nuclei."],
+["One","Trophozoite nucleus count."],
+["Two","Giardia trophozoite count."],
+["Eight","Not stated."]]),
+Q("Mastigophora","Untreated trichomoniasis in women can lead to which complication?","Trichomoniasis can lead to pelvic inflammatory disease in women, while men are often asymptomatic.",P2,[
+["Pelvic inflammatory disease","Stated complication."],
+["Dilated cardiomyopathy","Chagas."],
+["Fatal coma","Sleeping sickness."],
+["Colon perforation","Balantidiasis."]])
+];
 
-    <!-- Audio Element for Wrong Answers -->
-    <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
-
-    <!-- 2-Second Popup Image on Wrong Answer -->
-    <div id="wrongPopup" class="wrong-popup hidden">
-        <img id="wrongImage" src="Erijah.heic" alt="Wrong Answer" onerror="console.warn('Erijah.heic not found or unsupported in this browser. Consider converting to Erijah.png/jpg.');">
-    </div>
-
-    <header>
-        <div class="header-inner">
-            <div class="brand">Microbio <span class="brand-hub">Quiz Hub</span></div>
-            <div class="score-pill" id="scoreTracker">Score: 0 / 32 (0%)</div>
-        </div>
-    </header>
-
-    <main>
-        <div class="intro-banner">
-            <h1>Week 6: Protozoans &amp; Algae Mastery Quiz</h1>
-            <p>Covers Algae, Protozoan Cellular Anatomy, Life Cycles, Reproduction, Mastigophora, Sarcodina, Ciliophora, Apicomplexa, and Final Review Bank Items.</p>
-        </div>
-
-        <div class="mode-container" id="modeSelector">
-            <button class="mode-btn active" id="fullQuizBtn" type="button">Full Quiz</button>
-            <button class="mode-btn" id="quickQuizBtn" type="button">Quickie</button>
-        </div>
-
-        <div id="quiz"></div>
-
-        <div class="summary-card hidden" id="summary">
-            <h2 id="summaryTitle">Quiz Complete</h2>
-            <div class="summary-score" id="finalScoreText">0 / 32 (0%)</div>
-            <div class="summary-tier" id="finalTierText"></div>
-            <div class="summary-actions">
-                <button class="retake-btn" id="retakeBtn" type="button">Retake Quiz</button>
-                <button class="retake-btn" id="reviewBtn" type="button" style="display:none">Review Missed</button>
-                <a href="index.html" class="retake-btn hub-btn">Back to Main Page</a>
-            </div>
-        </div>
-    </main>
-
-    <script>
-        const quizData = [
-            {
-                id: 1,
-                difficulty: "Algae & Toxins",
-                stem: "What represents the primary medical threat posed by algae to humans?",
-                concept: "Algae are photosynthetic eukaryotes using chlorophyll A that rarely infect humans directly because human tissues lack photosynthetic capability; their primary clinical hazard is the production of potent neurotoxins and gastrointestinal toxins during red tides that bioaccumulate in shellfish and reef fish.",
-                options: [
-                    {
-                        text: "Production of soluble toxins such as domoic acid during algal blooms (red tides) that bioaccumulate in seafood",
-                        correct: true,
-                        rationale: "Correct. Dinoflagellates and other algae release toxins during blooms that concentrate in filter-feeding shellfish and reef fish, causing paralytic, amnesic, neurotoxic, diarrhetic, and ciguatera poisonings [Microbio Week 6, Protozoan_pt1]."
-                    },
-                    {
-                        text: "Direct photosynthetic invasion of human respiratory and gastrointestinal mucosal epithelia",
-                        correct: false,
-                        rationale: "Incorrect. Algae do not directly invade or photosynthesize inside human tissues; humans lack photosynthetic pathways [Microbio Week 6]."
-                    },
-                    {
-                        text: "Obligate intracellular replication inside human red blood cells leading to cyclic hemolytic fevers",
-                        correct: false,
-                        rationale: "Incorrect. Erythrocytic schizogony and cyclic hemolysis characterize Plasmodium species (malaria), which are apicomplexan protozoans rather than algae [Microbio Week 6]."
-                    },
-                    {
-                        text: "Secretion of keratinase enzymes that digest hair shafts, fingernails, and epidermal stratum corneum",
-                        correct: false,
-                        rationale: "Incorrect. Keratinase-mediated superficial cutaneous infections are caused by dermatophytic fungi, not autotrophic algae [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 2,
-                difficulty: "Algae & Toxins",
-                stem: "Which algal genus lacks chlorophyll and represents the rare exception capable of directly causing a subcutaneous blister-like infection in humans?",
-                concept: "While almost all algae are strictly autotrophic and non-infectious to humans, Prototheca lacks chlorophyll/photosynthetic ability and can establish opportunistic subcutaneous infections.",
-                options: [
-                    {
-                        text: "Prototheca",
-                        correct: true,
-                        rationale: "Correct. Prototheca is the non-photosynthetic algal exception that can directly infect human subcutaneous tissue and produce blister-like lesions [Microbio Week 6]."
-                    },
-                    {
-                        text: "Dinoflagellates",
-                        correct: false,
-                        rationale: "Incorrect. Dinoflagellates are photosynthetic marine algae responsible for red tide toxin production (e.g., paralytic and neurotoxic shellfish toxins) rather than direct subcutaneous infection [Microbio Week 6]."
-                    },
-                    {
-                        text: "Balantidium",
-                        correct: false,
-                        rationale: "Incorrect. Balantidium coli is a ciliated intestinal protozoan parasite acquired from pig reservoirs, not an alga [Microbio Week 6]."
-                    },
-                    {
-                        text: "Trichomonas",
-                        correct: false,
-                        rationale: "Incorrect. Trichomonas vaginalis is a sexually transmitted flagellated protozoan, not a non-photosynthetic alga [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 3,
-                difficulty: "Algae & Toxins",
-                stem: "Which algal-associated seafood poisoning is heat-stable (not destroyed by cooking), lacks an antidote, and is acquired primarily from consuming tropical reef fish?",
-                concept: "Among marine algal toxin syndromes, ciguatera fish poisoning originates from dinoflagellate toxins accumulated in tropical reef fish; it resists cooking heat and has no specific antidote, whereas amnesic (domoic acid) and paralytic poisonings are predominantly shellfish-associated.",
-                options: [
-                    {
-                        text: "Ciguatera fish poisoning",
-                        correct: true,
-                        rationale: "Correct. Ciguatera toxin accumulates in reef fish, is not inactivated by cooking, has no antidote, and can be fatal [Microbio Week 6]."
-                    },
-                    {
-                        text: "Diarrhetic shellfish poisoning",
-                        correct: false,
-                        rationale: "Incorrect. Diarrhetic shellfish poisoning causes self-limiting, non-fatal food-poisoning-like GI distress from bivalve shellfish (mussels, oysters, scallops) [Microbio Week 6]."
-                    },
-                    {
-                        text: "Neurotoxic shellfish poisoning",
-                        correct: false,
-                        rationale: "Incorrect. Neurotoxic shellfish poisoning is a non-fatal shellfish syndrome causing dizziness, GI upset, and hot/cold temperature reversal [Microbio Week 6]."
-                    },
-                    {
-                        text: "Amnesic shellfish poisoning",
-                        correct: false,
-                        rationale: "Incorrect. Amnesic shellfish poisoning is caused by domoic acid in shellfish rather than reef fish [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 4,
-                difficulty: "Protozoan Structure",
-                stem: "Which cellular structure is universally absent in protozoans?",
-                concept: "Unlike bacteria (peptidoglycan cell walls) and fungi (chitin, glucan, and mannan cell walls), eukaryotic protozoans completely lack a rigid cell wall and are bounded solely by a flexible cell membrane.",
-                options: [
-                    {
-                        text: "Cell wall",
-                        correct: true,
-                        rationale: "Correct. Protozoans lack a cell wall, relying instead on a cell membrane and outer ectoplasm for structural integrity [Microbio Week 6, Practice Quizzes 2 Q29]."
-                    },
-                    {
-                        text: "Cell membrane",
-                        correct: false,
-                        rationale: "Incorrect. All protozoans possess a plasma (cell) membrane that regulates nutrient absorption and encloses the cytoplasm [Microbio Week 6, Practice Quizzes 2 Q29]."
-                    },
-                    {
-                        text: "Ectoplasm",
-                        correct: false,
-                        rationale: "Incorrect. Protozoans possess an outer ectoplasm layer that facilitates movement, feeding, and protection [Microbio Week 6, Practice Quizzes 2 Q29]."
-                    },
-                    {
-                        text: "Endoplasm",
-                        correct: false,
-                        rationale: "Incorrect. Protozoans possess an inner endoplasm layer containing the nucleus and metabolic organelles [Microbio Week 6, Practice Quizzes 2 Q29]."
-                    }
-                ]
-            },
-            {
-                id: 5,
-                difficulty: "Protozoan Structure",
-                stem: "Which layer of protozoan cytoplasm is primarily responsible for locomotion, feeding, and protection?",
-                concept: "Protozoan cytoplasm is differentiated into a clear, gel-like outer ectoplasm (responsible for pseudopodial extension, motility, feeding, and protection) and a granular inner endoplasm.",
-                options: [
-                    {
-                        text: "Ectoplasm",
-                        correct: true,
-                        rationale: "Correct. Ectoplasm is the outer cytoplasmic zone used to project pseudopodia for locomotion, engulf food, and protect the cell [Microbio Week 6, Practice Quizzes 1 Q7]."
-                    },
-                    {
-                        text: "Endoplasm",
-                        correct: false,
-                        rationale: "Incorrect. Endoplasm is the inner cytoplasmic region that houses the nucleus, mitochondria, and digestive vacuoles rather than driving outer locomotion [Microbio Week 6, Practice Quizzes 1 Q7]."
-                    },
-                    {
-                        text: "Peptidoglycan matrix",
-                        correct: false,
-                        rationale: "Incorrect. Peptidoglycan is a bacterial cell wall polymer and is completely absent in eukaryotic protozoans [Microbio Week 6]."
-                    },
-                    {
-                        text: "Chitinous pellicle",
-                        correct: false,
-                        rationale: "Incorrect. Chitin is a structural polysaccharide found in fungal cell walls, not protozoan cytoplasm [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 6,
-                difficulty: "Protozoan Structure",
-                stem: "Which layer of protozoan cytoplasm houses the nucleus and mitochondria?",
-                concept: "The inner endoplasm contains essential eukaryotic organelles including the nucleus, mitochondria, and vacuoles, whereas the outer ectoplasm mediates mechanical movement and feeding.",
-                options: [
-                    {
-                        text: "Endoplasm",
-                        correct: true,
-                        rationale: "Correct. Endoplasm is the internal cytoplasmic compartment housing the nucleus, mitochondria, and other intracellular organelles [Microbio Week 6, Practice Quizzes 2 Q27]."
-                    },
-                    {
-                        text: "Ectoplasm",
-                        correct: false,
-                        rationale: "Incorrect. Ectoplasm is the peripheral layer responsible for locomotion, feeding, and protection [Microbio Week 6, Practice Quizzes 2 Q27]."
-                    },
-                    {
-                        text: "Periplasmic space",
-                        correct: false,
-                        rationale: "Incorrect. The periplasmic space is an anatomical compartment between the inner and outer membranes of Gram-negative bacteria [Microbio Week 6]."
-                    },
-                    {
-                        text: "Exosporium",
-                        correct: false,
-                        rationale: "Incorrect. The exosporium is an outer proteinaceous layer surrounding certain bacterial endospores, not protozoan organelles [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 7,
-                difficulty: "Life Cycle & Morphology",
-                stem: "Which protozoan life cycle stage represents the active, motile, feeding morphology?",
-                concept: "Many protozoans alternate between two primary morphologies: the active, metabolically feeding and motile trophozoite, and the dormant, thick-walled resistant cyst.",
-                options: [
-                    {
-                        text: "Trophozoite",
-                        correct: true,
-                        rationale: "Correct. The trophozoite is the active, motile feeding stage that requires ample moisture and nutrients to survive and replicate [Microbio Week 6, Protozoan_pt1, Practice Quizzes 1 Q12]."
-                    },
-                    {
-                        text: "Cyst",
-                        correct: false,
-                        rationale: "Incorrect. The cyst is the dormant, metabolically inactive survival stage enclosed in a thick protective cuticle [Microbio Week 6, Protozoan_pt1, Practice Quizzes 1 Q12]."
-                    },
-                    {
-                        text: "Endospore",
-                        correct: false,
-                        rationale: "Incorrect. Endospores are dormant survival structures formed by Gram-positive bacteria (e.g., Bacillus, Clostridium), not eukaryotic protozoans [Microbio Week 6]."
-                    },
-                    {
-                        text: "Sporangiospore",
-                        correct: false,
-                        rationale: "Incorrect. Sporangiospores are asexual reproductive spores formed inside a sac-like sporangium in molds such as Rhizopus [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 8,
-                difficulty: "Life Cycle & Morphology",
-                stem: "Which statement accurately describes the physiological process of encystment in protozoans?",
-                concept: "When environmental moisture and nutrients are depleted, a trophozoite rounds up and secretes a thick protective cuticle to become a cyst (encystment). When moisture and nutrients return, the cyst reverts to a trophozoite (excystment).",
-                options: [
-                    {
-                        text: "A trophozoite rounds up and secretes a thick protective cuticle in response to drying and nutrient depletion to form a dormant cyst",
-                        correct: true,
-                        rationale: "Correct. Encystment is the conversion of an active trophozoite into a resistant cyst when moisture and nutrients are removed [Microbio Week 6, Protozoan_pt1]."
-                    },
-                    {
-                        text: "A dormant cyst sheds its protective wall in the presence of moisture and nutrients to emerge as an active trophozoite",
-                        correct: false,
-                        rationale: "Incorrect. The transition from a cyst back into an active trophozoite is called excystment, not encystment [Microbio Week 6, Review Bank]."
-                    },
-                    {
-                        text: "A parent protozoan cell undergoes autolysis and dies while leaving behind a single dormant spore",
-                        correct: false,
-                        rationale: "Incorrect. Unlike bacterial sporulation where the mother cell lyses, encystment preserves the living protozoan inside a protective barrier wall without cell death [Microbio Week 6]."
-                    },
-                    {
-                        text: "Two ciliated protozoans fuse their pellicles to exchange micronuclear genetic material",
-                        correct: false,
-                        rationale: "Incorrect. Genetic exchange between ciliates is sexual conjugation, not cyst formation [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 9,
-                difficulty: "Life Cycle & Morphology",
-                stem: "If a protozoan pathogen is transmitted via the fecal-oral route, which morphology must be ingested to successfully establish gastrointestinal infection?",
-                concept: "Ingested trophozoites are rapidly destroyed by gastric hydrochloric acid. Therefore, fecal-oral intestinal protozoans must enter the host in the acid-resistant cyst (or oocyst) stage.",
-                options: [
-                    {
-                        text: "Cyst",
-                        correct: true,
-                        rationale: "Correct. The thick protective cuticle of the cyst allows the organism to survive stomach acid and reach the intestines, where it excysts into a trophozoite [Microbio Week 6, Practice Quizzes 2 Q30]."
-                    },
-                    {
-                        text: "Trophozoite",
-                        correct: false,
-                        rationale: "Incorrect. Trophozoites are fragile feeding forms that are killed by stomach acid upon ingestion [Microbio Week 6, Practice Quizzes 2 Q30]."
-                    },
-                    {
-                        text: "Trypomastigote",
-                        correct: false,
-                        rationale: "Incorrect. Trypomastigotes are flagellated bloodstream/tissue forms of Trypanosoma species transmitted by arthropod vectors (tsetse flies or reduviid bugs), not fecal-oral ingestion [Microbio Week 6]."
-                    },
-                    {
-                        text: "Merozoite",
-                        correct: false,
-                        rationale: "Incorrect. Merozoites are released from infected hepatocytes to invade red blood cells during the asexual cycle of malaria [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 10,
-                difficulty: "Taxonomy & Reproduction",
-                stem: "Which group of protozoans glides via undulating ridges or is non-motile as mature obligate intracellular parasites?",
-                concept: "Protozoans are classified into four groups by motility: Mastigophora (flagella), Ciliophora (cilia), Sarcodina (pseudopodia), and Apicomplexa/Sporozoa (undulating ridges or non-motile).",
-                options: [
-                    {
-                        text: "Apicomplexa (Sporozoa)",
-                        correct: true,
-                        rationale: "Correct. Apicomplexa (Sporozoa) lack flagella, cilia, or pseudopodia in mature stages and instead glide via undulating ridges or remain non-motile [Microbio Week 6, Practice Quizzes 1 Q1]."
-                    },
-                    {
-                        text: "Ciliophora",
-                        correct: false,
-                        rationale: "Incorrect. Ciliophora ('hair bearers') propel themselves using coordinated rows of short hair-like cilia [Microbio Week 6, Practice Quizzes 1 Q1]."
-                    },
-                    {
-                        text: "Mastigophora",
-                        correct: false,
-                        rationale: "Incorrect. Mastigophora ('whip bearers') swim using one or more whip-like flagella [Microbio Week 6, Practice Quizzes 1 Q1]."
-                    },
-                    {
-                        text: "Sarcodina",
-                        correct: false,
-                        rationale: "Incorrect. Sarcodina (amebas) move by streaming ectoplasm into temporary false feet called pseudopodia [Microbio Week 6, Practice Quizzes 1 Q1]."
-                    }
-                ]
-            },
-            {
-                id: 11,
-                difficulty: "Taxonomy & Reproduction",
-                stem: "Which group of protozoans is known as the 'whip bearers' because they move via flagella?",
-                concept: "Mastigophora (flagellates) utilize long, whip-like flagella to propel themselves through host fluids, blood, or gastrointestinal contents.",
-                options: [
-                    {
-                        text: "Mastigophora",
-                        correct: true,
-                        rationale: "Correct. Mastigophora are the flagellated ('whip-bearing') protozoans, including Giardia, Trichomonas, Trypanosoma, and Leishmania [Microbio Week 6, Practice Quizzes 1 Q11]."
-                    },
-                    {
-                        text: "Ciliophora",
-                        correct: false,
-                        rationale: "Incorrect. Ciliophora are the 'hair bearers' that use cilia rather than whip-like flagella [Microbio Week 6, Practice Quizzes 1 Q11]."
-                    },
-                    {
-                        text: "Sarcodina",
-                        correct: false,
-                        rationale: "Incorrect. Sarcodina are amebas that move via pseudopodia rather than flagella [Microbio Week 6, Practice Quizzes 1 Q11]."
-                    },
-                    {
-                        text: "Apicomplexa",
-                        correct: false,
-                        rationale: "Incorrect. Apicomplexa move via undulating ridges or are non-motile [Microbio Week 6, Practice Quizzes 1 Q11]."
-                    }
-                ]
-            },
-            {
-                id: 12,
-                difficulty: "Taxonomy & Reproduction",
-                stem: "Which protozoan group performs multiple fission (schizogony) during asexual reproduction to rapidly generate numerous daughter cells?",
-                concept: "While Mastigophora, Ciliophora, and Sarcodina divide asexually via binary fission (splitting into two daughter cells), Apicomplexa/Sporozoa undergo multiple fission (schizogony), producing many offspring simultaneously.",
-                options: [
-                    {
-                        text: "Apicomplexa (Sporozoa)",
-                        correct: true,
-                        rationale: "Correct. Apicomplexa/Sporozoa (such as Plasmodium) reproduce asexually via multiple fission (schizogony), enabling rapid parasite amplification [Microbio Week 6, Practice Quizzes 1 Q4]."
-                    },
-                    {
-                        text: "Mastigophora",
-                        correct: false,
-                        rationale: "Incorrect. Mastigophora divide asexually via longitudinal binary fission into two cells, not multiple fission [Microbio Week 6]."
-                    },
-                    {
-                        text: "Ciliophora",
-                        correct: false,
-                        rationale: "Incorrect. Ciliophora divide asexually via transverse binary fission into two cells [Microbio Week 6]."
-                    },
-                    {
-                        text: "Sarcodina",
-                        correct: false,
-                        rationale: "Incorrect. Sarcodina (amebas) divide asexually via binary fission into two roughly equal halves [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 13,
-                difficulty: "Taxonomy & Reproduction",
-                stem: "Which protozoan group does NOT usually participate in sexual reproduction?",
-                concept: "Ciliates undergo sexual conjugation, and Sarcodina and Sporozoa can form flagellated gametes for sexual reproduction, whereas Mastigophora (flagellates) generally reproduce exclusively by asexual binary fission.",
-                options: [
-                    {
-                        text: "Mastigophora",
-                        correct: true,
-                        rationale: "Correct. Mastigophora generally do not undergo sexual reproduction, relying on longitudinal binary fission [Microbio Week 6, Practice Quizzes 1 Q13]."
-                    },
-                    {
-                        text: "Ciliophora",
-                        correct: false,
-                        rationale: "Incorrect. Ciliophora perform sexual reproduction via conjugation before dividing [Microbio Week 6, Practice Quizzes 1 Q13]."
-                    },
-                    {
-                        text: "Apicomplexa (Sporozoa)",
-                        correct: false,
-                        rationale: "Incorrect. Apicomplexa/Sporozoa undergo a well-defined sexual cycle (e.g., Plasmodium gametocyte fertilization inside the Anopheles mosquito) [Microbio Week 6, Practice Quizzes 1 Q13]."
-                    },
-                    {
-                        text: "Sarcodina",
-                        correct: false,
-                        rationale: "Incorrect. Sarcodina can participate in sexual reproduction (initially forming flagellated gametes) [Microbio Week 6, Practice Quizzes 1 Q13]."
-                    }
-                ]
-            },
-            {
-                id: 14,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "A backpacker drinks unfiltered mountain stream water near a beaver dam and develops abdominal cramping, flatulence, and greasy, foul-smelling diarrhea 10 days later. Microscopic examination reveals binucleate trophozoites resembling a 'smiling face.' Which organism is responsible?",
-                concept: "Giardia lamblia (G. intestinalis) causes giardiasis ('beaver fever'). Cysts are ingested from contaminated water, excyst in the duodenum, and produce symptomatic GI illness in ~10% of infected hosts after a ~10-day incubation.",
-                options: [
-                    {
-                        text: "Giardia lamblia (Giardia intestinalis)",
-                        correct: true,
-                        rationale: "Correct. Giardia lamblia causes 'beaver fever' via fecal-oral waterborne cysts; its binucleate trophozoite has a characteristic 'smiling face' appearance and colonizes the duodenum [Microbio Week 6]."
-                    },
-                    {
-                        text: "Entamoeba histolytica",
-                        correct: false,
-                        rationale: "Incorrect. Entamoeba histolytica is an ameba (Sarcodina) with a single large nucleus containing a prominent karyosome in the trophozoite stage and colonizes the colon rather than the duodenum [Microbio Week 6, Protozoan_pt2]."
-                    },
-                    {
-                        text: "Balantidium coli",
-                        correct: false,
-                        rationale: "Incorrect. Balantidium coli is a large ciliated protozoan (Ciliophora) most commonly linked to pig reservoirs rather than beavers or binucleate flagellated trophozoites [Microbio Week 6]."
-                    },
-                    {
-                        text: "Cryptosporidium",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidium is an apicomplexan (not a binucleate flagellate) most strongly linked to chlorinated swimming pools, calves, and childcare facilities [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 15,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which protozoan disease is typically transmitted from person to person as a sexually transmitted infection (STI) and exists exclusively in the trophozoite stage?",
-                concept: "Trichomonas vaginalis causes trichomoniasis. Because it spreads directly via sexual contact without an external environmental phase, it lacks a cyst stage entirely and exists only as a trophozoite.",
-                options: [
-                    {
-                        text: "Trichomoniasis",
-                        correct: true,
-                        rationale: "Correct. Trichomoniasis (caused by Trichomonas vaginalis) is an STI with no cyst stage; all sexual partners must be treated simultaneously to prevent ping-pong reinfection [Microbio Week 6, Practice Quizzes 1 Q2]."
-                    },
-                    {
-                        text: "Giardiasis",
-                        correct: false,
-                        rationale: "Incorrect. Giardiasis is transmitted fecal-orally via waterborne cysts rather than sexually [Microbio Week 6, Practice Quizzes 1 Q2]."
-                    },
-                    {
-                        text: "Malaria",
-                        correct: false,
-                        rationale: "Incorrect. Malaria is transmitted by the bite of an infected female Anopheles mosquito (or blood/congenital routes), not as an STI [Microbio Week 6, Practice Quizzes 1 Q2]."
-                    },
-                    {
-                        text: "Cryptosporidiosis",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidiosis is acquired by ingesting chlorine-resistant oocysts from contaminated recreational water or feces [Microbio Week 6, Practice Quizzes 1 Q2]."
-                    }
-                ]
-            },
-            {
-                id: 16,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which of the following protozoan conditions is caused by an organism belonging to the group Mastigophora?",
-                concept: "Among common luminal and urogenital protozoa, Trichomonas vaginalis is a flagellate (Mastigophora), whereas Balantidium coli is a ciliate, Cryptosporidium is an apicomplexan, and Entamoeba histolytica is an ameba.",
-                options: [
-                    {
-                        text: "Trichomoniasis",
-                        correct: true,
-                        rationale: "Correct. Trichomonas vaginalis is a flagellated protozoan classified under Mastigophora [Microbio Week 6, Practice Quizzes 1 Q15]."
-                    },
-                    {
-                        text: "Balantidiasis",
-                        correct: false,
-                        rationale: "Incorrect. Balantidiasis is caused by Balantidium coli, which belongs to Ciliophora [Microbio Week 6, Practice Quizzes 1 Q15]."
-                    },
-                    {
-                        text: "Cryptosporidiosis",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidiosis is caused by Cryptosporidium, which belongs to Apicomplexa/Sporozoa [Microbio Week 6, Practice Quizzes 1 Q15]."
-                    },
-                    {
-                        text: "Amebiasis",
-                        correct: false,
-                        rationale: "Incorrect. Amebiasis is caused by Entamoeba histolytica, which belongs to Sarcodina (amebas) [Microbio Week 6, Practice Quizzes 1 Q15]."
-                    }
-                ]
-            },
-            {
-                id: 17,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which statement accurately describes the asymptomatic carrier rate of Entamoeba histolytica and Giardia lamblia?",
-                concept: "Both Entamoeba histolytica and Giardia lamblia are intestinal pathogens acquired via fecal-oral cyst ingestion that remain asymptomatic in approximately 90% of infected individuals.",
-                options: [
-                    {
-                        text: "Both Entamoeba histolytica and Giardia lamblia are likely to be asymptomatic (~90% of cases) if contracted",
-                        correct: true,
-                        rationale: "Correct. Approximately 90% of individuals infected with either E. histolytica or G. lamblia remain asymptomatic carriers while shedding cysts [Microbio Week 6, Review Bank]."
-                    },
-                    {
-                        text: "Both organisms cause fulminant, nearly 100% fatal hemorrhagic colitis within 10 days of ingestion",
-                        correct: false,
-                        rationale: "Incorrect. Rapid 10-day fatality characterizes primary amebic meningoencephalitis (Naegleria fowleri), whereas E. histolytica and G. lamblia are predominantly asymptomatic [Microbio Week 6]."
-                    },
-                    {
-                        text: "Giardia lamblia is 90% asymptomatic, whereas Entamoeba histolytica always produces acute dysentery",
-                        correct: false,
-                        rationale: "Incorrect. Both E. histolytica and G. lamblia are asymptomatic in roughly 90% of infections [Microbio Week 6, Protozoan_pt2]."
-                    },
-                    {
-                        text: "Both organisms are symptomatic in 90% of healthy adults but asymptomatic in infants",
-                        correct: false,
-                        rationale: "Incorrect. This inverts the true epidemiology; ~90% of infections with either organism are asymptomatic [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 18,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which protozoan disease is transmitted by the bite of the Tsetse fly?",
-                concept: "Trypanosoma brucei (T. b. gambiense and T. b. rhodesiense) is a hemoflagellate vectored by the Tsetse fly in Africa, causing African sleeping sickness.",
-                options: [
-                    {
-                        text: "African Sleeping Sickness",
-                        correct: true,
-                        rationale: "Correct. African sleeping sickness (Trypanosoma brucei) is vectored by Tsetse flies, beginning with a bite-site chancre and progressing to CNS invasion, sleep-cycle inversion, coma, and death [Microbio Week 6, Practice Quizzes 1 Q14]."
-                    },
-                    {
-                        text: "Chagas Disease",
-                        correct: false,
-                        rationale: "Incorrect. Chagas disease (Trypanosoma cruzi) is vectored by reduviid/triatomine ('kissing') bugs, not Tsetse flies [Microbio Week 6, Practice Quizzes 1 Q14]."
-                    },
-                    {
-                        text: "Leishmaniasis",
-                        correct: false,
-                        rationale: "Incorrect. Leishmaniasis is vectored by phlebotomine sandflies, not Tsetse flies [Microbio Week 6]."
-                    },
-                    {
-                        text: "Malaria",
-                        correct: false,
-                        rationale: "Incorrect. Malaria is vectored by female Anopheles mosquitoes, not Tsetse flies [Microbio Week 6, Practice Quizzes 1 Q14]."
-                    }
-                ]
-            },
-            {
-                id: 19,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which protozoan disease is vectored by reduviid (triatomine / 'kissing') bugs and is a leading cause of dilated cardiomyopathy and congestive heart failure in endemic regions?",
-                concept: "Trypanosoma cruzi causes Chagas disease (American trypanosomiasis). Reduviid bugs bite near the mouth and defecate trypomastigotes into the wound, causing an acute Romaña sign and chronic cardiac/GI dilation.",
-                options: [
-                    {
-                        text: "Chagas Disease",
-                        correct: true,
-                        rationale: "Correct. Chagas disease (Trypanosoma cruzi) is vectored by reduviid/triatomine bugs and accounts for 30–40% of heart disease (dilated cardiomyopathy/CHF) in endemic regions [Microbio Week 6, Practice Quizzes 1 Q8, Practice Quizzes 2 Q28]."
-                    },
-                    {
-                        text: "African Sleeping Sickness",
-                        correct: false,
-                        rationale: "Incorrect. African sleeping sickness is vectored by Tsetse flies and primarily targets the central nervous system rather than causing chronic cardiomyopathy [Microbio Week 6, Practice Quizzes 2 Q28]."
-                    },
-                    {
-                        text: "Primary Amebic Meningoencephalitis",
-                        correct: false,
-                        rationale: "Incorrect. Primary amebic meningoencephalitis is caused by Naegleria fowleri entering via warm freshwater forced up the nose, with no insect vector [Microbio Week 6, Practice Quizzes 2 Q28]."
-                    },
-                    {
-                        text: "Malaria",
-                        correct: false,
-                        rationale: "Incorrect. Malaria is vectored by female Anopheles mosquitoes rather than reduviid bugs [Microbio Week 6, Practice Quizzes 2 Q28]."
-                    }
-                ]
-            },
-            {
-                id: 20,
-                difficulty: "Mastigophora (Flagellates)",
-                stem: "Which arthropod vector transmits Leishmania species to humans, causing cutaneous, mucosal, or visceral (kala-azar) leishmaniasis?",
-                concept: "Leishmania spp. are flagellated protozoans transmitted by the bite of infected phlebotomine sandflies.",
-                options: [
-                    {
-                        text: "Phlebotomine sandfly",
-                        correct: true,
-                        rationale: "Correct. Phlebotomine sandflies transmit Leishmania species, which can cause localized cutaneous ulcers, mucosal destruction, or fatal visceral infection of the liver, spleen, and bone marrow [Microbio Week 6]."
-                    },
-                    {
-                        text: "Tsetse fly",
-                        correct: false,
-                        rationale: "Incorrect. Tsetse flies vector Trypanosoma brucei (African sleeping sickness), not Leishmania [Microbio Week 6]."
-                    },
-                    {
-                        text: "Triatomine (reduviid) bug",
-                        correct: false,
-                        rationale: "Incorrect. Triatomine bugs vector Trypanosoma cruzi (Chagas disease), not Leishmania [Microbio Week 6]."
-                    },
-                    {
-                        text: "Female Anopheles mosquito",
-                        correct: false,
-                        rationale: "Incorrect. Female Anopheles mosquitoes vector Plasmodium species (malaria), not Leishmania [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 21,
-                difficulty: "Sarcodina (Amebas)",
-                stem: "Which amebic organism infects the human colon via fecal-oral cyst ingestion, possesses a trophozoite with a single large nucleus containing a prominent karyosome, and can erode the intestinal mucosa?",
-                concept: "Entamoeba histolytica causes amebiasis (amebic dysentery). Unlike Giardia (which infects the duodenum and has 2 nuclei), E. histolytica infects the colon and has 1 nucleus with a central karyosome in the trophozoite (and 4 nuclei in the cyst).",
-                options: [
-                    {
-                        text: "Entamoeba histolytica",
-                        correct: true,
-                        rationale: "Correct. Entamoeba histolytica is ingested as a 4-nucleated cyst, excysts into a uninucleate trophozoite in the colon, and can ulcerate/erode the colonic mucosa [Microbio Week 6, Protozoan_pt2]."
-                    },
-                    {
-                        text: "Giardia lamblia",
-                        correct: false,
-                        rationale: "Incorrect. Giardia lamblia is a binucleate flagellate (Mastigophora) that colonizes the duodenum without eroding the colonic wall [Microbio Week 6]."
-                    },
-                    {
-                        text: "Naegleria fowleri",
-                        correct: false,
-                        rationale: "Incorrect. Naegleria fowleri is a free-living ameba that enters via the nasal passages to destroy brain tissue rather than colonizing the GI tract [Microbio Week 6]."
-                    },
-                    {
-                        text: "Acanthamoeba",
-                        correct: false,
-                        rationale: "Incorrect. Acanthamoeba infects the cornea (keratitis) or causes granulomatous encephalitis rather than fecal-oral colonic dysentery [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 22,
-                difficulty: "Sarcodina (Amebas)",
-                stem: "Which free-living ameba enters the body when warm freshwater or unboiled tap water (e.g., via neti pots) is forced up the nasal passages, migrates along the olfactory nerve, and is likely to cause death within ~10 days?",
-                concept: "Naegleria fowleri causes primary amebic meningoencephalitis (PAM). Trophozoites enter through the nasal mucosa, ascend the olfactory nerve into the brain, and cause nearly 100% fatal fulminant meningoencephalitis within about 10 days.",
-                options: [
-                    {
-                        text: "Naegleria fowleri",
-                        correct: true,
-                        rationale: "Correct. Naegleria fowleri ('brain-eating ameba') enters via the nose in warm freshwater/hot springs/neti pots, ascends the olfactory nerve, and causes rapidly fatal PAM (~10 days) [Microbio Week 6, Review Bank]."
-                    },
-                    {
-                        text: "Entamoeba histolytica",
-                        correct: false,
-                        rationale: "Incorrect. Entamoeba histolytica is acquired via fecal-oral ingestion and causes colonic amebiasis, which is asymptomatic in ~90% of cases [Microbio Week 6]."
-                    },
-                    {
-                        text: "Balantidium coli",
-                        correct: false,
-                        rationale: "Incorrect. Balantidium coli is a fecal-oral ciliate associated with pigs that causes intestinal balantidiasis rather than nasal CNS invasion [Microbio Week 6]."
-                    },
-                    {
-                        text: "Cryptosporidium",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidium causes self-limiting watery diarrhea following ingestion of oocysts, not 10-day fatal meningoencephalitis [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 23,
-                difficulty: "Sarcodina (Amebas)",
-                stem: "A protozoan disease that causes severe eye pain, redness, and blurred vision by infecting the cornea is acquired from contact with soil or water sources (including tap water used with contact lenses) contaminated with which organism?",
-                concept: "Acanthamoeba spp. cause amebic keratitis when trophozoites contact the cornea via contaminated water or improperly cleaned contact lenses. Treatment is difficult and requires two drugs to eliminate both trophozoites and cysts.",
-                options: [
-                    {
-                        text: "Acanthamoeba",
-                        correct: true,
-                        rationale: "Correct. Acanthamoeba infects the cornea (amebic keratitis) from contaminated water or soil, particularly in contact lens wearers exposed to tap water [Microbio Week 6, Practice Quizzes 1 Q6]."
-                    },
-                    {
-                        text: "Balantidium coli",
-                        correct: false,
-                        rationale: "Incorrect. Balantidium coli is an intestinal ciliate transmitted fecal-orally, not a corneal pathogen [Microbio Week 6, Practice Quizzes 1 Q6]."
-                    },
-                    {
-                        text: "Plasmodium",
-                        correct: false,
-                        rationale: "Incorrect. Plasmodium species are mosquito-borne blood parasites causing malaria, not corneal keratitis [Microbio Week 6, Practice Quizzes 1 Q6]."
-                    },
-                    {
-                        text: "Cryptosporidium",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidium is an intestinal apicomplexan causing diarrhea, not corneal infection [Microbio Week 6, Practice Quizzes 1 Q6]."
-                    }
-                ]
-            },
-            {
-                id: 24,
-                difficulty: "Ciliophora (Ciliates)",
-                stem: "Which organism is the only ciliated protozoan pathogenic to humans, utilizes pigs as a primary animal reservoir, and can cause colonic dysentery or perforation?",
-                concept: "Balantidium coli (Ciliophora) is the sole ciliated human pathogen. It is transmitted via the fecal-oral route (often near pig farms), is ~90% asymptomatic, and can cause severe dysentery or colon perforation if untreated.",
-                options: [
-                    {
-                        text: "Balantidium coli",
-                        correct: true,
-                        rationale: "Correct. Balantidium coli is the only ciliated human parasite, uses pigs as a major reservoir, and causes balantidiasis [Microbio Week 6]."
-                    },
-                    {
-                        text: "Entamoeba histolytica",
-                        correct: false,
-                        rationale: "Incorrect. Entamoeba histolytica moves via pseudopodia (Sarcodina) rather than cilia and relies on humans as its primary host [Microbio Week 6, Protozoan_pt2]."
-                    },
-                    {
-                        text: "Giardia lamblia",
-                        correct: false,
-                        rationale: "Incorrect. Giardia lamblia moves via flagella (Mastigophora) rather than cilia and infects the duodenum [Microbio Week 6]."
-                    },
-                    {
-                        text: "Cryptosporidium",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidium is an apicomplexan associated with cattle and recreational pools rather than a ciliate from pigs [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 25,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Which intestinal apicomplexan causes outbreaks of watery diarrhea linked to recreational swimming pools, childcare facilities, and cattle feces, and produces oocysts that are resistant to standard chlorine disinfection?",
-                concept: "Cryptosporidium is the primary intestinal apicomplexan. Its thick-walled oocysts resist chlorine treatment, making swimming pools (~35% of outbreaks), daycares, and calf feces classic transmission sources.",
-                options: [
-                    {
-                        text: "Cryptosporidium",
-                        correct: true,
-                        rationale: "Correct. Cryptosporidium is an intestinal apicomplexan transmitted via chlorine-resistant oocysts in pools, daycares, and animal (cow) feces [Microbio Week 6]."
-                    },
-                    {
-                        text: "Giardia lamblia",
-                        correct: false,
-                        rationale: "Incorrect. Giardia lamblia is a flagellate (Mastigophora) rather than an apicomplexan [Microbio Week 6]."
-                    },
-                    {
-                        text: "Toxoplasma gondii",
-                        correct: false,
-                        rationale: "Incorrect. Toxoplasma gondii is a tissue/systemic apicomplexan acquired from cat litter or undercooked meat rather than swimming pool water [Microbio Week 6]."
-                    },
-                    {
-                        text: "Plasmodium falciparum",
-                        correct: false,
-                        rationale: "Incorrect. Plasmodium falciparum is a blood/liver apicomplexan transmitted by female Anopheles mosquitoes, not fecal-oral pool water [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 26,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Which protozoan genus is the causative agent of malaria and is transmitted primarily by the bite of a female Anopheles mosquito?",
-                concept: "Malaria is caused by five Plasmodium species (including P. falciparum, P. vivax, P. ovale, and P. malariae) transmitted by female Anopheles mosquitoes, contaminated needles, blood transfusions, or transplacentally.",
-                options: [
-                    {
-                        text: "Plasmodium",
-                        correct: true,
-                        rationale: "Correct. Plasmodium species cause malaria and are vectored by female Anopheles mosquitoes [Microbio Week 6, Practice Quizzes 1 Q10, Practice Quizzes 2 Q25]."
-                    },
-                    {
-                        text: "Naegleria fowleri",
-                        correct: false,
-                        rationale: "Incorrect. Naegleria fowleri is a free-living ameba causing primary amebic meningoencephalitis, not malaria [Microbio Week 6, Practice Quizzes 2 Q25]."
-                    },
-                    {
-                        text: "Acanthamoeba",
-                        correct: false,
-                        rationale: "Incorrect. Acanthamoeba causes corneal keratitis and granulomatous encephalitis, not malaria [Microbio Week 6, Practice Quizzes 2 Q25]."
-                    },
-                    {
-                        text: "Balantidium coli",
-                        correct: false,
-                        rationale: "Incorrect. Balantidium coli is a fecal-oral ciliate causing intestinal dysentery, not malaria [Microbio Week 6, Practice Quizzes 2 Q25]."
-                    }
-                ]
-            },
-            {
-                id: 27,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Classical malaria symptoms (cyclic paroxysms of fever, sweating, and chills) recur at 48- to 72-hour intervals as a direct result of which event?",
-                concept: "In the human asexual cycle, Plasmodium sporozoites infect liver cells, undergo schizogony to produce merozoites, and invade red blood cells. The synchronous lysis (rupturing) of infected RBCs releases toxins and merozoites every 48–72 hours, triggering cyclic fever paroxysms.",
-                options: [
-                    {
-                        text: "The synchronous rupturing of infected red blood cells (RBCs)",
-                        correct: true,
-                        rationale: "Correct. Synchronous lysis of merozoite-filled erythrocytes every 48–72 hours produces the classic cyclic fever/chills paroxysms and hemolytic anemia of malaria [Microbio Week 6, Practice Quizzes 1 Q9]."
-                    },
-                    {
-                        text: "Completion of the Plasmodium sexual fertilization cycle inside human hepatocytes",
-                        correct: false,
-                        rationale: "Incorrect. The sexual cycle of Plasmodium occurs inside the mosquito vector, whereas humans host the asexual cycle [Microbio Week 6, Practice Quizzes 1 Q9]."
-                    },
-                    {
-                        text: "Periodic migration of adult worms through the hepatic portal circulation",
-                        correct: false,
-                        rationale: "Incorrect. Plasmodium is a unicellular apicomplexan protozoan, not a multicellular helminth [Microbio Week 6]."
-                    },
-                    {
-                        text: "Cyclic encystment and excystment of trophozoites within the duodenal lumen",
-                        correct: false,
-                        rationale: "Incorrect. Plasmodium infects hepatocytes and erythrocytes rather than forming intestinal lumen cysts [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 28,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Which pairing accurately distinguishes the hosts and stages of the Plasmodium life cycle?",
-                concept: "Humans serve as the host for the asexual cycle (sporozoites injected by mosquito -> liver schizogony -> merozoites infect RBCs), whereas the female Anopheles mosquito hosts the sexual cycle (ingested gametocytes fertilize -> oocyst -> sporozoites migrate to salivary glands).",
-                options: [
-                    {
-                        text: "Asexual cycle occurs in humans (infected by sporozoites); sexual cycle occurs in the female Anopheles mosquito",
-                        correct: true,
-                        rationale: "Correct. Humans are infected by sporozoites and host asexual schizogony in liver/RBCs, while sexual gametocyte fusion occurs in the mosquito [Microbio Week 6]."
-                    },
-                    {
-                        text: "Sexual cycle occurs in humans (infected by merozoites); asexual cycle occurs in the female Anopheles mosquito",
-                        correct: false,
-                        rationale: "Incorrect. This inverts the hosts and infectious stages; humans host the asexual phase initiated by sporozoites, and mosquitoes host the sexual phase [Microbio Week 6]."
-                    },
-                    {
-                        text: "Asexual cycle occurs in humans (infected by cysts); sexual cycle occurs in male Anopheles mosquitoes",
-                        correct: false,
-                        rationale: "Incorrect. Male Anopheles mosquitoes lack a proboscis thick enough to pierce skin and do not transmit malaria, and Plasmodium does not enter via cysts [Microbio Week 6]."
-                    },
-                    {
-                        text: "Both sexual and asexual cycles occur exclusively within human red blood cells",
-                        correct: false,
-                        rationale: "Incorrect. Sexual fertilization and oocyst development require the mosquito vector [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 29,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Which Plasmodium species is considered the most malignant form, causing persistent symptoms and the highest acute mortality rate (especially in children)?",
-                concept: "Among the five human malaria species, Plasmodium falciparum causes the most severe, persistent parasitemia and accounts for the highest acute death rate, particularly in pediatric populations.",
-                options: [
-                    {
-                        text: "Plasmodium falciparum",
-                        correct: true,
-                        rationale: "Correct. Plasmodium falciparum is the most malignant malaria species with the highest acute mortality rate [Microbio Week 6]."
-                    },
-                    {
-                        text: "Plasmodium malariae",
-                        correct: false,
-                        rationale: "Incorrect. While P. malariae causes malaria, P. falciparum is specifically noted as the most malignant species with the highest acute death rate [Microbio Week 6]."
-                    },
-                    {
-                        text: "Toxoplasma gondii",
-                        correct: false,
-                        rationale: "Incorrect. Toxoplasma gondii is an apicomplexan that causes toxoplasmosis rather than malaria [Microbio Week 6]."
-                    },
-                    {
-                        text: "Trypanosoma brucei rhodesiense",
-                        correct: false,
-                        rationale: "Incorrect. Trypanosoma brucei rhodesiense is a flagellate causing East African sleeping sickness, not malaria [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 30,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "A veterinarian advises a pregnant patient not to clean the cat litter box because the developing fetus could suffer severe brain or eye damage from a congenital protozoan infection. Which condition is the veterinarian warning about?",
-                concept: "Toxoplasma gondii causes toxoplasmosis. Cats are the definitive host and shed infectious oocysts in feces; humans acquire it via cat litter or undercooked meat containing tissue pseudocysts, posing a major congenital risk to the fetus during pregnancy.",
-                options: [
-                    {
-                        text: "Toxoplasmosis",
-                        correct: true,
-                        rationale: "Correct. Toxoplasma gondii uses cats as its definitive host and can cross the placenta during pregnancy, risking congenital fetal brain and eye damage [Microbio Week 6, Practice Quizzes 2 Q26]."
-                    },
-                    {
-                        text: "Trichomoniasis",
-                        correct: false,
-                        rationale: "Incorrect. Trichomoniasis is a human-to-human STI caused by Trichomonas vaginalis and is not harbored by cats [Microbio Week 6, Practice Quizzes 2 Q26]."
-                    },
-                    {
-                        text: "Cryptosporidiosis",
-                        correct: false,
-                        rationale: "Incorrect. Cryptosporidiosis is a diarrheal illness linked to swimming pools, daycares, and calves rather than cat litter-associated fetal brain damage [Microbio Week 6, Practice Quizzes 2 Q26]."
-                    },
-                    {
-                        text: "Giardiasis",
-                        correct: false,
-                        rationale: "Incorrect. Giardiasis causes duodenal GI symptoms from contaminated water and is not the classic feline litter-box congenital teratogen [Microbio Week 6, Practice Quizzes 2 Q26]."
-                    }
-                ]
-            },
-            {
-                id: 31,
-                difficulty: "Apicomplexa / Sporozoa",
-                stem: "Aside from handling contaminated cat litter, what is the other major route by which humans acquire Toxoplasma gondii infection?",
-                concept: "Cats become infected by eating rodents or birds harboring T. gondii tissue pseudocysts, and humans can similarly ingest tissue pseudocysts by eating undercooked or raw meat (such as pork).",
-                options: [
-                    {
-                        text: "Eating undercooked or raw meat (such as pork) containing tissue pseudocysts",
-                        correct: true,
-                        rationale: "Correct. Toxoplasma gondii forms dormant pseudocysts in the skeletal muscle/tissues of intermediate hosts, transmitting to humans who consume undercooked raw meat [Microbio Week 6]."
-                    },
-                    {
-                        text: "Being bitten by a female Anopheles mosquito at dusk",
-                        correct: false,
-                        rationale: "Incorrect. Female Anopheles mosquitoes transmit Plasmodium (malaria), not Toxoplasma gondii [Microbio Week 6]."
-                    },
-                    {
-                        text: "Diving into warm freshwater hot springs without nose plugs",
-                        correct: false,
-                        rationale: "Incorrect. Warm freshwater forced into the nose transmits Naegleria fowleri, not Toxoplasma gondii [Microbio Week 6]."
-                    },
-                    {
-                        text: "Rinsing soft contact lenses with unsterilized municipal tap water",
-                        correct: false,
-                        rationale: "Incorrect. Contact lens exposure to tap water is the classic risk factor for Acanthamoeba keratitis, not toxoplasmosis [Microbio Week 6]."
-                    }
-                ]
-            },
-            {
-                id: 32,
-                difficulty: "Clinical Synthesis",
-                stem: "Why is boiling water an effective preventive measure against Giardia lamblia and Entamoeba histolytica, whereas distilled or boiled water is specifically recommended for nasal irrigation (neti pots)?",
-                concept: "Boiling kills both the waterborne cysts of fecal-oral intestinal pathogens (Giardia, E. histolytica) and the free-living trophozoites of Naegleria fowleri in tap water that could otherwise enter the brain via the olfactory nerve during nasal rinsing.",
-                options: [
-                    {
-                        text: "Boiling kills fecal-oral cysts of Giardia and E. histolytica in drinking water and eliminates Naegleria fowleri trophozoites in tap water used for nasal rinses",
-                        correct: true,
-                        rationale: "Correct. Heat inactivation destroys waterborne cysts of G. lamblia and E. histolytica as well as free-living Naegleria fowleri trophozoites that cause fatal PAM via nasal passages [Microbio Week 6]."
-                    },
-                    {
-                        text: "Boiling destroys heat-labile ciguatera fish toxins and kills adult Plasmodium sporozoites in freshwater",
-                        correct: false,
-                        rationale: "Incorrect. Ciguatera toxin is heat-stable (not destroyed by cooking/boiling), and Plasmodium sporozoites are transmitted by mosquitoes rather than drinking water [Microbio Week 6]."
-                    },
-                    {
-                        text: "Boiling converts fragile trophozoites into harmless cysts that pass safely through the olfactory nerve",
-                        correct: false,
-                        rationale: "Incorrect. Boiling kills the organisms outright rather than inducing encystment [Microbio Week 6]."
-                    },
-                    {
-                        text: "Boiling neutralizes chlorophyll A in dinoflagellates so they cannot photosynthesize in the human colon",
-                        correct: false,
-                        rationale: "Incorrect. Dinoflagellates do not photosynthesize in the human colon, and boiling does not neutralize algal toxins [Microbio Week 6]."
-                    }
-                ]
-            }
-        ];
-
-        let currentMode = 'full';
-        let currentSet = [];
-        let round = 1;
-        let answers = {};
-        let popupTimeout = null;
-
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        function prepareSet(baseData) {
-            const cloned = baseData.map(q => ({
-                ...q,
-                options: shuffleArray(q.options.map(opt => ({ ...opt })))
-            }));
-            return shuffleArray(cloned);
-        }
-
-        function el(tag, className, textContent) {
-            const node = document.createElement(tag);
-            if (className) node.className = className;
-            if (textContent !== undefined) node.textContent = textContent;
-            return node;
-        }
-
-        function updateScore() {
-            const total = currentSet.length;
-            const correctCount = Object.values(answers).filter(Boolean).length;
-            const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
-            const prefix = round === 1 ? 'Score' : `Review ${round - 1}`;
-            document.getElementById('scoreTracker').textContent = `${prefix}: ${correctCount} / ${total} (${pct}%)`;
-            return { correctCount, total, pct };
-        }
-
-        function getTierMessage(pct) {
-            if (pct >= 90) {
-                return "Absolute Gigachad. You drained that test dry.";
-            } else if (pct >= 70) {
-                return "You lasted less than 30 seconds. Time for a rematch.";
-            } else {
-                return "You really didn’t fucking know that.";
-            }
-        }
-
-        function showSummary(stats) {
-            const summaryCard = document.getElementById('summary');
-            const titleEl = document.getElementById('summaryTitle');
-            const scoreEl = document.getElementById('finalScoreText');
-            const tierEl = document.getElementById('finalTierText');
-            const reviewBtn = document.getElementById('reviewBtn');
-
-            titleEl.textContent = round === 1 ? 'Quiz Complete' : `Review Round ${round - 1} Complete`;
-            scoreEl.textContent = `${stats.correctCount} / ${stats.total} (${stats.pct}%)`;
-            tierEl.textContent = getTierMessage(stats.pct);
-
-            const missedCount = currentSet.filter(q => answers[q.id] === false).length;
-            if (missedCount > 0) {
-                reviewBtn.style.display = 'inline-block';
-                reviewBtn.textContent = `Review Missed (${missedCount})`;
-            } else {
-                reviewBtn.style.display = 'none';
-            }
-
-            summaryCard.classList.remove('hidden');
-            summaryCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        function handleSelect(q, selectedIdx, card) {
-            if (answers[q.id] !== undefined) return;
-
-            const chosen = q.options[selectedIdx];
-            const isCorrect = Boolean(chosen.correct);
-            answers[q.id] = isCorrect;
-
-            const buttons = card.querySelectorAll('.option-btn');
-            buttons.forEach((btn, idx) => {
-                btn.disabled = true;
-                if (q.options[idx].correct) {
-                    btn.classList.add('correct');
-                } else if (idx === selectedIdx && !isCorrect) {
-                    btn.classList.add('incorrect');
-                }
-            });
-
-            if (!isCorrect) {
-                const wrongAudio = document.getElementById('wrongAudio');
-                if (wrongAudio) {
-                    wrongAudio.currentTime = 0;
-                    wrongAudio.play().catch(err => console.log("Audio play blocked:", err));
-                }
-
-                const popup = document.getElementById('wrongPopup');
-                if (popup) {
-                    popup.classList.remove('hidden');
-                    clearTimeout(popupTimeout);
-                    popupTimeout = setTimeout(() => {
-                        popup.classList.add('hidden');
-                    }, 2000);
-                }
-            }
-
-            const expBox = el('div', 'explanation-box');
-            const banner = el(
-                'div',
-                `status-banner ${isCorrect ? 'correct' : 'incorrect'}`,
-                isCorrect ? 'Correct!' : 'Incorrect.'
-            );
-            expBox.appendChild(banner);
-
-            const conceptP = el('p', 'concept-summary', q.concept);
-            expBox.appendChild(conceptP);
-
-            const list = el('ul', 'rationale-list');
-            q.options.forEach((opt, idx) => {
-                const letter = String.fromCharCode(65 + idx);
-                const li = el('li', opt.correct ? 'is-correct' : '');
-                const strong = el('strong', '', `${letter}) ${opt.text}: `);
-                li.appendChild(strong);
-                li.appendChild(document.createTextNode(opt.rationale));
-                list.appendChild(li);
-            });
-            expBox.appendChild(list);
-
-            card.appendChild(expBox);
-
-            const stats = updateScore();
-            if (Object.keys(answers).length === currentSet.length) {
-                showSummary(stats);
-            }
-        }
-
-        function renderQuiz(sourceSet) {
-            answers = {};
-            const base = sourceSet || (currentMode === 'quick' ? shuffleArray([...quizData]).slice(0, 15) : quizData);
-            currentSet = prepareSet(base);
-
-            const container = document.getElementById('quiz');
-            container.innerHTML = '';
-            document.getElementById('summary').classList.add('hidden');
-
-            currentSet.forEach((q, qIdx) => {
-                const card = el('div', 'question-card');
-
-                const meta = el('div', 'question-meta');
-                meta.appendChild(el('span', 'badge', `Question ${qIdx + 1} of ${currentSet.length}`));
-                meta.appendChild(el('span', 'badge', q.difficulty));
-                card.appendChild(meta);
-
-                card.appendChild(el('div', 'question-text', q.stem));
-
-                const opts = el('div', 'options-list');
-                q.options.forEach((opt, i) => {
-                    const btn = el('button', 'option-btn');
-                    btn.type = 'button';
-                    btn.appendChild(el('span', 'option-letter', String.fromCharCode(65 + i) + ')'));
-                    btn.appendChild(el('span', '', opt.text));
-                    btn.addEventListener('click', () => handleSelect(q, i, card));
-                    opts.appendChild(btn);
-                });
-                card.appendChild(opts);
-
-                container.appendChild(card);
-            });
-
-            updateScore();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        document.getElementById('fullQuizBtn').addEventListener('click', () => {
-            currentMode = 'full';
-            round = 1;
-            document.getElementById('fullQuizBtn').classList.add('active');
-            document.getElementById('quickQuizBtn').classList.remove('active');
-            renderQuiz(quizData);
-        });
-
-        document.getElementById('quickQuizBtn').addEventListener('click', () => {
-            currentMode = 'quick';
-            round = 1;
-            document.getElementById('quickQuizBtn').classList.add('active');
-            document.getElementById('fullQuizBtn').classList.remove('active');
-            renderQuiz(shuffleArray([...quizData]).slice(0, 15));
-        });
-
-        document.getElementById('retakeBtn').addEventListener('click', () => {
-            round = 1;
-            if (currentMode === 'quick') {
-                renderQuiz(shuffleArray([...quizData]).slice(0, 15));
-            } else {
-                renderQuiz(quizData);
-            }
-        });
-
-        document.getElementById('reviewBtn').addEventListener('click', () => {
-            const missed = currentSet.filter(q => answers[q.id] === false);
-            if (missed.length > 0) {
-                round++;
-                renderQuiz(missed);
-            }
-        });
-
-        window.onload = () => renderQuiz(quizData);
-    </script>
+const $=id=>document.getElementById(id);
+let base=DATA,set=[],ans={},mode="card",idx=0,muted=false,timer=null;
+const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+function prep(src){return shuf(src.map((q,i)=>({...q,id:q.id??i,o:shuf(q.o.map((x,k)=>({text:x[0],why:x[1],ok:k===0})))})))}
+function start(src){set=prep(src);base=src.map(q=>({...q}));ans={};idx=0;$("sum").classList.add("hidden");render();window.scrollTo(0,0)}
+function el(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+function stats(){const n=set.length,c=Object.values(ans).filter(a=>a.ok).length,d=Object.keys(ans).length;
+ const p=n?Math.round(c/n*100):0;$("score").textContent=`Score: ${c} / ${n} (${p}%)`;$("pg").style.width=(n?d/n*100:0)+"%";return{c,n,p,d}}
+function apply(card,q,a){
+ card.querySelectorAll(".opt").forEach((b,i)=>{b.disabled=true;if(q.o[i].ok)b.classList.add("c");else if(i===a.sel)b.classList.add("w");else b.classList.add("dim")});
+ const e=el("div","exp");e.appendChild(el("div","st "+(a.ok?"c":"w"),a.ok?"Correct!":"Incorrect."));
+ e.appendChild(el("p","con",q.c));const u=el("ul","rat");
+ q.o.forEach((o,i)=>{const li=el("li",o.ok?"k":"");li.appendChild(el("strong","",`${String.fromCharCode(65+i)}) ${o.text}: `));
+  li.appendChild(document.createTextNode(`${o.ok?"Correct.":"Incorrect."} ${o.why} [${q.src}]`));u.appendChild(li)});
+ e.appendChild(u);card.appendChild(e);
+ if(mode==="card"){const n=el("div","next");const b=el("button","btn pri",idx<set.length-1?"Next →":"See Results");b.type="button";
+  b.onclick=()=>{if(idx<set.length-1){idx++;render()}else summary()};n.appendChild(b);card.appendChild(n)}}
+function pick(q,i,card){
+ if(ans[q.id])return;const ok=q.o[i].ok;ans[q.id]={sel:i,ok};
+ if(!ok&&!muted){const a=$("aud");a.currentTime=0;a.play().catch(()=>{});const p=$("pop");p.classList.remove("hidden");
+  clearTimeout(timer);timer=setTimeout(()=>p.classList.add("hidden"),2000)}
+ apply(card,q,ans[q.id]);const s=stats();if(mode==="list"&&s.d===s.n)summary()}
+function render(){
+ const box=$("quiz");box.innerHTML="";const list=mode==="card"?[set[idx]]:set;
+ list.forEach(q=>{const n=set.indexOf(q)+1;const card=el("div","q");const m=el("div","meta");
+  m.appendChild(el("span","badge",`Question ${n} of ${set.length}`));m.appendChild(el("span","badge",q.t));card.appendChild(m);
+  card.appendChild(el("div","stem",q.s));const o=el("div","opts");
+  q.o.forEach((x,i)=>{const b=el("button","opt");b.type="button";b.appendChild(el("b","",String.fromCharCode(65+i)+")"));b.appendChild(el("span","",x.text));b.onclick=()=>pick(q,i,card);o.appendChild(b)});
+  card.appendChild(o);box.appendChild(card);if(ans[q.id])apply(card,q,ans[q.id])});
+ stats()}
+function summary(){
+ const s=stats();$("sT").textContent="Quiz Complete";$("sS").textContent=`${s.c} / ${s.n} (${s.p}%)`;
+ $("sM").textContent=s.p>=90?"Absolute Gigachad. You drained that test dry.":s.p>=70?"You lasted less than 30 seconds. Time for a rematch.":"You really didn’t fucking know that.";
+ const miss=set.filter(q=>ans[q.id]&&!ans[q.id].ok).length;const r=$("review");r.classList.toggle("hidden",miss===0);r.textContent=`Review Missed (${miss})`;
+ $("sum").classList.remove("hidden");$("sum").scrollIntoView({behavior:"smooth",block:"center"})}
+function setMode(m){mode=m;$("mCard").classList.toggle("on",m==="card");$("mList").classList.toggle("on",m==="list");
+ const a=Object.keys(ans).length;if(a<set.length)$("sum").classList.add("hidden");render()}
+$("mCard").onclick=()=>setMode("card");$("mList").onclick=()=>setMode("list");
+$("mute").onclick=()=>{muted=!muted;$("mute").classList.toggle("on",muted);$("mute").textContent=muted?"Unmute Erijah":"STFU Erijah";if(muted){$("pop").classList.add("hidden");$("aud").pause()}};
+$("retake").onclick=()=>start(base);
+$("review").onclick=()=>{const ids=set.filter(q=>ans[q.id]&&!ans[q.id].ok).map(q=>q.id);start(DATA.map((q,i)=>({...q,id:i})).filter(q=>ids.includes(q.id)))};
+$("popimg").onerror=function(){if(!this.dataset.f){this.dataset.f=1;this.src="wrong-answer.png"}};
+function startN(n){document.querySelectorAll("#sizes .btn").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));
+ const all=DATA.map((q,i)=>({...q,id:i}));start(n?shuf(all).slice(0,n):all)}
+document.querySelectorAll("#sizes .btn").forEach(b=>b.onclick=()=>startN(+b.dataset.n));
+$("fullBtn").textContent="Full Bank ("+DATA.length+")";
+startN(0);
+</script>
 </body>
 </html>
