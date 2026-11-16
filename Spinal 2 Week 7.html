@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Spinal Anatomy II – Week 7 Quiz</title><style>
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0f0f0f;color:#fff;font:15px/1.5 system-ui,sans-serif}
+a{text-decoration:none}.hdr{position:sticky;top:0;z-index:9;background:#141414;border-bottom:1px solid #282828;padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.hdr button,.hub-nav-btn,.btn{background:#242424;color:#fff;border:1px solid #2a2a2a;border-radius:6px;padding:6px 10px;cursor:pointer;font:inherit}
+.hub-nav-btn:hover,.btn:hover,.hdr button:hover{border-color:#ff9900}.brand{font-weight:700;color:#ff9900}.pill{background:#1a1a1a;border:1px solid #282828;border-radius:20px;padding:3px 10px;color:#a3a3a3;font-size:13px}
+.bar{height:4px;background:#282828;width:100%}.bar i{display:block;height:100%;background:#ff9900;width:0}.stfu-btn.muted{background:#ff9900!important;color:#000!important}
+main{max-width:820px;margin:16px auto;padding:0 12px}.card{background:#1a1a1a;border:1px solid #282828;border-radius:8px;padding:16px;margin-bottom:16px}
+.tag{display:inline-block;font-size:12px;border:1px solid #2a2a2a;border-radius:4px;padding:1px 7px;margin:0 4px 8px 0;color:#a0a0a0}.tag.hy{color:#ff9900;border-color:#ff9900}
+.opt{display:block;width:100%;text-align:left;background:#242424;color:#fff;border:1px solid #2a2a2a;border-radius:6px;padding:10px;margin:6px 0;cursor:pointer;font:inherit}
+.opt:hover:not(:disabled){border-color:#ff9900}.opt:disabled{cursor:default;color:#fff}.opt.ok{background:#14532d;border-color:#22c55e;color:#e2fbe8}.opt.bad{background:#7f1d1d;border-color:#ef4444;color:#fde8e8}
+.expl{margin-top:10px;padding:10px;border:1px solid #2a2a2a;border-radius:6px;background:#141414}.expl b.g{color:#22c55e}.expl b.r{color:#ef4444}.expl ul{margin:6px 0 0;padding-left:18px;color:#a3a3a3}
+.chip{display:inline-block;background:#242424;border:1px solid #2a2a2a;border-radius:20px;padding:4px 12px;margin:3px;cursor:pointer}.chip.on{background:#ff9900;color:#000;border-color:#ff9900}
+.go{background:#ff9900!important;color:#000!important;font-weight:700}table{width:100%;border-collapse:collapse;margin:8px 0}td,th{border-bottom:1px solid #282828;padding:5px;text-align:left}h3{color:#ff9900;margin:14px 0 4px}
+.wrong-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:20}.wrong-popup img{max-width:260px}.hidden{display:none}
+</style></head><body>
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+<div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
+<div class="hdr"><a href="index.html" class="hub-nav-btn">← Main Page</a><span class="brand">Spinal Anatomy II · Week 7</span><button class="menu-btn" onclick="home()">Menu / Filter Pool</button><button class="mode-btn" id="modeBtn"></button><button class="stfu-btn" id="stfuBtn"></button><span class="pill" id="prog"></span><span class="pill" id="scr"></span></div>
+<div class="bar"><i id="fill"></i></div><main id="app"></main>
+<script>
+const SUBJECTS=["Prevertebral Muscles","SCM & Scalenes","Neck Vasculature & Nerve Roots","Costal Muscles","Diaphragm"];
+// [subject, difficulty, highYield, stem, correct, [wrong x3], core concept]
+const raw=[
+[0,"easy",1,"Longus capitis inserts onto which part of the occipital bone?","Basilar portion","Jugular process","Mastoid process","Inferior nuchal line","Longus capitis (TPs of C3–C6) inserts on the basilar portion of the occiput, very inferior. Jugular process = rectus capitis lateralis."],
+[0,"medium",1,"Longus capitis produces which action?","Flexion of the head (not the neck)","Flexion of the neck","Lateral flexion of the head","Rotation of the head","It attaches to the occiput, so it is a nodding (head) flexor. It can be exercised by pressing the head straight back against a headrest, and helps build/sustain the cervical curve."],
+[0,"easy",0,"Longus capitis is innervated by:","Ventral rami C1–C3","Dorsal rami C1–C3","Ventral rami C2–C6","Spinal accessory nerve","Anterior muscle = ventral rami (ventral = front/anterior). Longus colli is C2–C6."],
+[0,"hard",1,"Which is the only cervical vertebra that longus colli does not touch?","C7","C2","C5","C6","Longus colli runs C2–C5 and T1–T3, skipping C6–C7 as attachments in the inferior oblique portion per lecture; C7 is the flagged exam answer."],
+[0,"medium",1,"Longus colli differs from longus capitis because it:","Ends at C1 (anterior tubercle of atlas) and produces deep cervical flexion","Attaches to the basilar occiput and flexes the head","Attaches to the jugular process","Is supplied by dorsal rami","Longus colli ends at C1 instead of C0, so it acts on the neck (deep cervical flexion), assisting longus capitis. Ventral rami C2–C6."],
+[0,"medium",1,"Rectus capitis anterior runs between:","Anterior surface of the lateral mass of C1 and the basilar occiput","Transverse process of C1 and the jugular process","Posterior tubercle of C1 and the inferior nuchal line","Transverse process of C3 and the mastoid","It is tiny, not visible on lab cadavers, and acts mainly as a stabilizer (head flexion), ventral rami C1–C2."],
+[0,"hard",1,"Rectus capitis lateralis attaches between the transverse process of C1 and the:","Jugular process of the occipital bone","Mastoid process","Basilar process","Superior nuchal line","Not the mastoid and not the basilar process: it sits in between at the jugular process. It is a small stabilizer, ventral rami C1–C2."],
+[0,"hard",1,"Where does most lateral flexion of the head and neck occur?","In the vertebrae below C2","At C0–C1","At C1–C2","Equally at C0–C1 and C1–C2","C0–C1 mainly nods and C1–C2 mainly rotates. Rectus capitis lateralis contributes only a small amount of lateral flexion."],
+[1,"easy",1,"The name sternocleidomastoid lists its attachments. Which is the origin set?","Manubrium of the sternum and the clavicle","Mastoid and clavicle","Sternum and occiput","Clavicle and C7","Sterno = most medial, cleido = clavicle, mastoid = insertion. The stable sternum/clavicle are the origin."],
+[1,"medium",1,"Why does SCM produce contralateral rotation?","One attachment is lateral and one medial, pulling the head the opposite direction","It attaches posterior to the vertebral column","It is supplied by CN X","It inserts on the occiput midline","Having both lateral (mastoid) and medial (sternal) attachment points turns the face away from the contracting side. Also lateral flexion."],
+[1,"medium",1,"SCM can act as both a primary mover and a major stabilizer. Its flexion and extension of the head result from:","Broad attachment with anterior (flexion) and posterior (extension) fibers","Dorsal rami innervation","Attachment to rib 1","Insertion on the hyoid","The large attachment site contains flexion and extension fibers. SCM and trapezius are major neck stabilizers (e.g., football players). CN XI."],
+[1,"easy",0,"SCM is innervated by:","Spinal accessory nerve (CN XI)","Phrenic nerve","Ventral rami C5–C6","Dorsal rami C1","CN XI pierces the sternocleidomastoid."],
+[1,"medium",1,"From a purely anterior view, which scalenes can be seen?","Anterior and middle","Anterior and posterior","Middle and posterior","All three","Orient to the specimen. Anterior view = anterior + middle; posterior view = posterior + middle; purely lateral view = all three."],
+[1,"medium",1,"Anterior scalene: transverse processes of C3–C6 to rib 1, nerve:","Ventral rami C5–C6","Ventral rami C3–C6","Ventral rami C6–C8","Dorsal rami C3–C6","Middle scalene is C2–C7 to rib 1 (ventral rami C3–C6) and is higher and more inclusive. Both laterally flex the neck and elevate rib 1 in forced inspiration."],
+[1,"hard",1,"The posterior scalene differs from the other scalenes in that it:","Inserts on rib 2 (C4–C6 TPs, ventral rami C6–C8)","Inserts on rib 1","Is supplied by C1–C2","Depresses the ribs","Its spasm is unlikely to cause the dramatic thoracic outlet symptoms; it still hurts and restricts motion."],
+[2,"hard",1,"What passes between the anterior and middle scalenes?","Subclavian artery (with brachial plexus)","Subclavian vein","Carotid artery","Spinal accessory nerve","The vein stays anterior to the anterior scalene, out of the squeeze. The artery passes between."],
+[2,"hard",1,"Why can the subclavian artery tolerate scalene tension better than the vein?","Thick tunica media of smooth muscle gives it structure","It has thinner walls","It runs superficial to the scalenes","It has valves","Arteries hold shape (poke and it springs back); a vein is like a deflated balloon with little tunica media."],
+[2,"hard",1,"If the subclavian vein were compressed between the scalenes, the likely result would be:","Swollen arm from impaired return","Fainting from brain hypoperfusion","Loss of radial pulse only","Carotid headache","Venous return stalls, causing swelling. Artery compression gives diffuse tingling/numbness and aching."],
+[2,"medium",1,"Compression of the carotids versus the jugulars causes, respectively:","Blackout/'deep sleep'; major headache","Headache; blackout","Both blackout","Both headache","Carotid = deep sleep; jugular = headache (the brain can't drain blood)."],
+[2,"hard",1,"The C8 spinal nerve exits:","Inferior to C7 (there is no C8 vertebra)","Superior to C8 vertebra","Superior to T1","Through the C7 foramen with C7","C1–C7 exit above their vertebra; from T1 on nerves exit below. C8 is the transition nerve."],
+[3,"medium",1,"External intercostals: attachments and action:","Rib 1–11 to rib 2–12; elevate ribs in forced inspiration","Rib 1–10 to rib 3–12; depress ribs","Vertebrae to ribs; elevate ribs","Rib 1–11 to rib 2–12; depress ribs in forced exhalation","Intercostals go rib to rib and never skip ribs. Intercostal nerve."],
+[3,"medium",1,"Internal intercostals are visible from:","Both external and internal views","External view only","Internal view only","Posterior view only","External = external view only; innermost = internal view only. Internal/innermost depress ribs in forced exhalation at an angle perpendicular to the externals."],
+[3,"hard",1,"Which costal muscle skips ribs and is patchy and inconsistent?","Subcostalis","Innermost intercostals","External intercostals","Transversus thoracis","Subcostalis: ribs 1–10 to 2–3 ribs below, elevates ribs with forced inspiration, visible only internally."],
+[3,"hard",1,"Transversus thoracis (sternocostalis) attaches to the posterior sternal body and the internal surface of ribs:","2–3 ribs above; depression in forced exhalation","2–3 ribs below; elevation","1 rib below; elevation","2–3 ribs above; elevation","Corrected in lecture from 'below' to 'above': it pulls the ribs down."],
+[3,"medium",1,"Levator costarum brevis and longus: TPs of C7–T11, insert on ribs:","1 and 2 ribs below, dorsal rami C8–T11","1 and 2 ribs above, ventral rami","2 and 3 ribs below, intercostal nerve","1 rib below only, phrenic nerve","Brevis goes 1 rib, longus 2 ribs. Elevates ribs in forced inspiration. Dorsal rami, unlike the other costals."],
+[4,"easy",1,"The diaphragm attaches to the xiphoid process, ribs 7–12, and:","Vertebral bodies of L1–L4 (crura)","Vertebral bodies of T1–T4","Transverse processes of L1–L4","Ribs 1–6","Crura ('legs') anchor to L1–L4; insertion is the central tendon, a tendon rather than bone."],
+[4,"medium",1,"Which costal/respiratory muscle has a named nerve from specific spinal levels?","Diaphragm – phrenic nerve C3–C5","Subcostalis – intercostal nerve","Levator costarum – ventral rami","Internal intercostals – phrenic nerve","The others use intercostal nerves or dorsal rami."],
+[4,"hard",0,"When the diaphragm contracts, it:","Flattens and expands the thoracic cavity","Domes upward","Depresses ribs","Reduces thoracic volume","Contraction flattens it (inspiration) and relaxation returns the dome (exhalation); a deep breath in drops the diaphragm."]
+];
+const bank=raw.map((r,i)=>({id:i,week:7,subjectIndex:r[0],difficulty:r[1],priority:!!r[2],stem:r[3],correct:r[4],wrong:[r[5],r[6],r[7]],concept:r[8]}));
+const $=id=>document.getElementById(id),sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){let j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let muted=false;try{muted=localStorage.getItem('stfuErijah')==='1'}catch(e){}
+let mode='one';try{mode=localStorage.getItem('quizViewMode')||'one'}catch(e){}
+let sw=new Set(bank.map(q=>q.week)),ss=new Set(SUBJECTS.map((_,i)=>i)),pool=[],cur=0,res={},pk={},tmr,missed=[];
+const L="ABCD";
+function hist(){try{return JSON.parse(localStorage.getItem('quiz_missed_history')||'[]')}catch(e){return[]}}
+function avail(){return bank.filter(q=>sw.has(q.week)&&ss.has(q.subjectIndex))}
+function tg(set,v){set.has(v)?set.delete(v):set.add(v);home()}
+function home(){pool=[];hdr();const w=[...new Set(bank.map(q=>q.week))],m=hist().length;
+$('app').innerHTML=`<div class="card"><a href="index.html" class="btn hub-btn">← Back to Main Page</a><h2>Spinal Anatomy II – Week 7</h2>
+<h3>Weeks</h3>${w.map(x=>`<span class="chip ${sw.has(x)?'on':''}" onclick="tg(sw,${x})">Week ${x} (${bank.filter(q=>q.week==x).length})</span>`).join('')}
+<button class="btn" onclick="sw=new Set(${JSON.stringify(w)});home()">Select All Weeks</button> <button class="btn" onclick="sw=new Set();home()">Clear Weeks</button>
+<h3>Subjects</h3>${SUBJECTS.map((s,i)=>`<span class="chip ${ss.has(i)?'on':''}" onclick="tg(ss,${i})">${s} (${bank.filter(q=>q.subjectIndex==i).length})</span>`).join('')}
+<div><button class="btn" onclick="ss=new Set(SUBJECTS.map((_,i)=>i));home()">Select All</button> <button class="btn" onclick="ss=new Set();home()">Clear</button> <button class="btn" onclick="start(99,bank.filter(q=>hist().includes(q.id)))">Prioritize Missed (${m})</button></div>
+<h3>View</h3><span class="chip ${mode=='one'?'on':''}" onclick="setMode('one')">One by One</span><span class="chip ${mode=='all'?'on':''}" onclick="setMode('all')">All at Once</span>
+<h3>Pool: ${avail().length} questions</h3>${[15,25,35,50].map(n=>`<button class="btn" onclick="start(${n})">${n==50?'Full Exam (50)':'Quickie ('+n+')'}</button> `).join('')}<button class="btn go" onclick="start(999)">Entire Selected Bank</button></div>`}
+function setMode(m){mode=m;try{localStorage.setItem('quizViewMode',m)}catch(e){}pool.length?draw():home();hdr()}
+function start(n,l){l=sh(l||avail()).slice(0,n);if(!l.length)return;pool=l.map(q=>({...q,opts:sh([{t:q.correct,c:1},...q.wrong.map(t=>({t,c:0}))])}));res={};pk={};missed=[];cur=0;draw()}
+function hdr(){$('modeBtn').textContent='View: '+(mode=='one'?'One by One':'All at Once');$('stfuBtn').textContent=muted?'Bring Back Erijah':'STFU Erijah';$('stfuBtn').classList.toggle('muted',muted);
+const a=Object.keys(pk).length,t=pool.length,s=Object.values(res).filter(Boolean).length;
+$('prog').textContent=!t?'Ready':mode=='one'?`Question ${Math.min(cur+1,t)} of ${t}`:`Answered ${a} of ${t}`;$('scr').textContent=`Score: ${s} / ${a} (${a?Math.round(s/a*100):0}%)`;$('fill').style.width=(t?a/t*100:0)+'%'}
+$('modeBtn').onclick=()=>setMode(mode=='one'?'all':'one');
+$('stfuBtn').onclick=()=>{muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}if(muted){$('wrongAudio').pause();clearTimeout(tmr);$('wrongPopup').classList.add('hidden')}hdr()};
+function card(i){const q=pool[i],p=pk[i],done=p!==undefined;
+let h=`<div class="card" id="c${i}"><span class="tag">${mode=='all'?'Q'+(i+1)+' · ':''}Week ${q.week}</span><span class="tag">${SUBJECTS[q.subjectIndex]}</span><span class="tag">${q.difficulty}</span>${q.priority?'<span class="tag hy">★ High-Yield</span>':''}<p><b>${q.stem}</b></p>`;
+q.opts.forEach((o,k)=>{let c=done?(o.c?'ok':k==p?'bad':''):'';h+=`<button class="opt ${c}" ${done?'disabled':''} onclick="ans(${i},${k})">${L[k]}. ${o.t}</button>`});
+if(done){const ok=q.opts[p].c;h+=`<div class="expl"><b class="${ok?'g':'r'}">${ok?'CORRECT!':'INCORRECT.'}</b> ${q.concept}<ul>${q.opts.map((o,k)=>`<li>${L[k]}. ${o.t} — ${o.c?'Correct.':'Incorrect.'} [Week ${q.week} • Transcript]</li>`).join('')}</ul></div>`;
+if(mode=='one')h+=`<p><button class="btn go" onclick="next()">${i==pool.length-1?'Finish':'Next'}</button></p>`}
+return h+'</div>'}
+function draw(){hdr();let h=mode=='one'?card(cur):pool.map((_,i)=>card(i)).join('');
+if(mode=='all'&&Object.keys(pk).length==pool.length)h+=`<button class="btn go" onclick="summary()">View Final Results Summary</button>`;$('app').innerHTML=h}
+function ans(i,k){if(pk[i]!==undefined)return;const q=pool[i],ok=q.opts[k].c;pk[i]=k;res[q.id]=!!ok;
+if(!ok){missed.push(q.id);try{const h=hist();if(!h.includes(q.id))h.push(q.id);localStorage.setItem('quiz_missed_history',JSON.stringify(h))}catch(e){}
+if(!muted){try{const a=$('wrongAudio');a.currentTime=0;a.play().catch(()=>{})}catch(e){}$('wrongPopup').classList.remove('hidden');clearTimeout(tmr);tmr=setTimeout(()=>$('wrongPopup').classList.add('hidden'),1800)}}
+else{try{const h=hist().filter(x=>x!=q.id);localStorage.setItem('quiz_missed_history',JSON.stringify(h))}catch(e){}}
+if(mode=='one')draw();else{$('c'+i).outerHTML=card(i);hdr();if(Object.keys(pk).length==pool.length)draw()}}
+function next(){cur++;cur>=pool.length?summary():draw()}
+function tbl(t,f,keys){return`<h3>${t}</h3><table><tr><th>Group</th><th>Correct</th><th>%</th></tr>${keys.map(k=>{const g=pool.filter(q=>f(q)==k);if(!g.length)return'';const c=g.filter(q=>res[q.id]).length;return`<tr><td>${typeof k=='number'&&f===sf?SUBJECTS[k]:t=='Week'?'Week '+k:k}</td><td>${c} / ${g.length}</td><td>${Math.round(c/g.length*100)}%</td></tr>`}).join('')}</table>`}
+const sf=q=>q.subjectIndex;
+function summary(){hdr();const n=pool.length,c=pool.filter(q=>res[q.id]).length,p=Math.round(c/n*100);
+const msg=p>=90?'Absolute Gigachad. You drained that test dry.':p>=70?'You lasted less than 30 seconds. Time for a rematch.':'You really didn’t fucking know that.';
+$('app').innerHTML=`<div class="card"><h2>${p}% — ${c} / ${n} correct</h2><p>${msg}</p>${tbl('Week',q=>q.week,[...new Set(pool.map(q=>q.week))])}${tbl('Difficulty',q=>q.difficulty,['easy','medium','hard'])}${tbl('Module',sf,SUBJECTS.map((_,i)=>i))}
+<button class="btn go" onclick="start(999,pool.map(q=>bank[q.id]))">Retake Quiz</button> <button class="btn" onclick="start(999,missed.map(id=>bank[id]))">Review Missed</button> <button class="btn" onclick="home()">Back to Menu</button> <a href="index.html" class="btn hub-btn">Back to Main Page</a></div>`}
+window.onload=home;
+</script></body></html>
