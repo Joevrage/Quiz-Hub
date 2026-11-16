@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reg 1 Lab Exam 2 - Lower Extremity Practical</title>
+    <style>
+        :root {
+            --bg: #0f1115;
+            --card: #181b22;
+            --border: #2a2f3d;
+            --accent: #22c55e;
+            --accent-hover: #16a34a;
+            --gold: #ff9900;
+            --danger: #ef4444;
+            --text: #f3f4f6;
+            --muted: #9ca3af;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container { max-width: 900px; margin: 0 auto; }
+        .top-bar {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--card); border: 2px solid var(--accent);
+            padding: 14px 20px; border-radius: 10px; margin-bottom: 20px;
+            flex-wrap: wrap; gap: 10px;
+        }
+        .back-btn {
+            text-decoration: none; color: #fff; background: #262b36;
+            padding: 8px 14px; border-radius: 6px; font-weight: bold;
+            font-size: 13px; border: 1px solid var(--border);
+        }
+        .back-btn:hover { border-color: var(--accent); }
+        .title-group h1 { font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--accent); }
+        .title-group p { font-size: 12px; color: var(--muted); }
+        
+        .controls-panel {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 10px; padding: 16px; margin-bottom: 20px;
+            display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+        }
+        .control-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        select, button.pill {
+            background: #232732; color: var(--text); border: 1px solid var(--border);
+            padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
+        }
+        button.pill.active { background: var(--accent); color: #052e16; border-color: #fff; font-weight: 800; }
+        button.pill.timer-active { background: var(--danger); color: #fff; border-color: #fff; }
+
+        .quiz-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+        .progress-row {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 14px; font-size: 13px; font-weight: bold; color: var(--muted);
+        }
+        .timer-badge {
+            background: #2a1515; color: var(--danger); border: 1px solid var(--danger);
+            padding: 4px 10px; border-radius: 20px; display: none;
+        }
+        .progress-bar-wrap {
+            width: 100%; height: 8px; background: #262b36; border-radius: 4px;
+            overflow: hidden; margin-bottom: 20px;
+        }
+        .progress-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s; }
+
+        .image-stage {
+            background: #08090c; border: 2px solid var(--border); border-radius: 10px;
+            padding: 12px; text-align: center; margin-bottom: 20px; position: relative;
+        }
+        .image-stage img {
+            max-width: 100%; max-height: 440px; border-radius: 6px; object-fit: contain;
+        }
+        .cat-tag {
+            position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.8);
+            color: var(--gold); border: 1px solid var(--gold); font-size: 11px;
+            padding: 3px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase;
+        }
+
+        .prompt-text { font-size: 17px; font-weight: 700; margin-bottom: 16px; text-align: center; }
+
+        /* Multiple Choice Grid */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
+        .opt-btn {
+            background: #232732; border: 2px solid var(--border); color: var(--text);
+            padding: 14px 16px; border-radius: 8px; font-size: 15px; font-weight: 700;
+            cursor: pointer; text-align: left; transition: all 0.15s;
+        }
+        .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #2a303d; }
+        .opt-btn.correct { background: rgba(34, 197, 94, 0.2); border-color: var(--accent); color: #86efac; }
+        .opt-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
+
+        /* Type-in Mode */
+        .type-box { display: none; gap: 10px; max-width: 550px; margin: 0 auto; }
+        .type-box input {
+            flex: 1; padding: 14px; border-radius: 8px; border: 2px solid var(--border);
+            background: #101318; color: #fff; font-size: 16px; font-weight: 600;
+        }
+        .type-box input:focus { outline: none; border-color: var(--accent); }
+        .submit-btn {
+            background: var(--accent); color: #052e16; border: none; padding: 0 22px;
+            border-radius: 8px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase;
+        }
+
+        .feedback-banner {
+            margin-top: 18px; padding: 14px; border-radius: 8px; font-weight: 700;
+            text-align: center; display: none; font-size: 15px;
+        }
+        .feedback-banner.ok { background: rgba(34, 197, 94, 0.15); border: 1px solid var(--accent); color: #86efac; }
+        .feedback-banner.bad { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
+
+        .next-btn {
+            display: none; width: 100%; margin-top: 16px; padding: 14px;
+            background: linear-gradient(to bottom, #22c55e, #16a34a); color: #fff;
+            border: 1px solid #fff; border-radius: 8px; font-size: 15px; font-weight: 900;
+            text-transform: uppercase; cursor: pointer;
+        }
+
+        /* Results Screen */
+        .results-card { display: none; text-align: center; padding: 30px 20px; }
+        .score-big { font-size: 54px; font-weight: 900; color: var(--accent); margin: 10px 0; }
+        .missed-list {
+            text-align: left; max-width: 600px; margin: 20px auto; background: #12141a;
+            padding: 16px; border-radius: 8px; border: 1px solid var(--border);
+        }
+        .missed-item { padding: 8px 0; border-bottom: 1px solid #222; font-size: 14px; display: flex; justify-content: space-between; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="top-bar">
+        <a href="index.html" class="back-btn">← Quiz Hub</a>
+        <div class="title-group">
+            <h1>🔬 Reg 1 Lab Exam 2</h1>
+            <p>Week 6: Gluteal Region, Thigh &amp; Neurovasculature (44 Pins)</p>
+        </div>
+        <div style="font-weight: 800; font-size: 14px; color: var(--gold);" id="scoreLive">Score: 0 / 0</div>
+    </div>
+
+    <div class="controls-panel">
+        <div class="control-group">
+            <button class="pill active" id="modeMC" onclick="setMode('mc')">Multiple Choice</button>
+            <button class="pill" id="modeType" onclick="setMode('type')">Pin Fill-in-Blank</button>
+            <button class="pill" id="timerToggle" onclick="toggleTimer()">⏱️ 45s Station Timer: OFF</button>
+        </div>
+        <div class="control-group">
+            <select id="catFilter" onchange="startQuiz()">
+                <option value="ALL">All Structures (44)</option>
+                <option value="Gluteal & Hip Rotators">Gluteal &amp; Hip Rotators (9)</option>
+                <option value="Anterior & Medial Thigh">Anterior &amp; Medial Thigh (11)</option>
+                <option value="Posterior Thigh">Posterior Thigh (4)</option>
+                <option value="Nerves">Nerves (8)</option>
+                <option value="Arteries & Veins">Arteries &amp; Veins (8)</option>
+                <option value="Ligaments, Spaces & Fascia">Ligaments, Spaces &amp; Fascia (4)</option>
+            </select>
+            <button class="pill" onclick="startQuiz()">🔀 Shuffle</button>
+        </div>
+    </div>
+
+    <div class="quiz-card" id="quizArea">
+        <div class="progress-row">
+            <span id="qCounter">Station 1 of 44</span>
+            <span class="timer-badge" id="timerDisplay">⏱️ 45s</span>
+            <span id="streakDisplay">🔥 Streak: 0</span>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
+
+        <div class="image-stage">
+            <span class="cat-tag" id="catTag">Category</span>
+            <img id="pinImage" src="" alt="Anatomy Pin">
+        </div>
+
+        <div class="prompt-text">Identify the highlighted structure:</div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+
+        <div class="type-box" id="typeBox">
+            <input type="text" id="typeInput" placeholder="Type exact anatomical name..." autocomplete="off">
+            <button class="submit-btn" onclick="checkTyped()">Pin It</button>
+        </div>
+
+        <div class="feedback-banner" id="feedbackBanner"></div>
+        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Station →</button>
+    </div>
+
+    <div class="quiz-card results-card" id="resultsArea">
+        <h2>🏁 Lab Practical Complete</h2>
+        <div class="score-big" id="finalScore">0%</div>
+        <p id="finalSummary" style="color: var(--muted); margin-bottom: 20px;"></p>
+        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+            <button class="pill active" onclick="startQuiz()">🔄 Restart Full Practical</button>
+            <button class="pill" id="retryMissedBtn" onclick="retryMissed()" style="background: var(--gold); color: #000;">🎯 Drill Missed Pins Only</button>
+        </div>
+        <div class="missed-list" id="missedListContainer"></div>
+    </div>
+</div>
+
+<script>
+const FOLDER = "Images/Reg 1/Week 6/";
+
+const BANK = [
+    // Anterior & Medial Thigh
+    { name: "Adductor Brevis", file: "Adductor brevis.png", cat: "Anterior & Medial Thigh", aliases: ["adductor brevis muscle"] },
+    { name: "Adductor Longus", file: "Adductor longus.png", cat: "Anterior & Medial Thigh", aliases: ["adductor longus muscle"] },
+    { name: "Adductor Magnus", file: "Adductor magnus.png", cat: "Anterior & Medial Thigh", aliases: ["adductor magnus muscle"] },
+    { name: "Gracilis", file: "Gracillis.png", cat: "Anterior & Medial Thigh", aliases: ["gracillis", "gracilis muscle"] },
+    { name: "Iliacus", file: "Iliacus.png", cat: "Anterior & Medial Thigh", aliases: ["iliacus muscle"] },
+    { name: "Pectineus", file: "Pectineus.png", cat: "Anterior & Medial Thigh", aliases: ["pectineus muscle"] },
+    { name: "Psoas Major", file: "Psoas Major.png", cat: "Anterior & Medial Thigh", aliases: ["psoas major muscle", "psoas"] },
+    { name: "Rectus Femoris", file: "Rectus Femoris.png", cat: "Anterior & Medial Thigh", aliases: ["rectus femoris muscle"] },
+    { name: "Sartorius", file: "Sartorius.png", cat: "Anterior & Medial Thigh", aliases: ["sartorius muscle"] },
+    { name: "Vastus Lateralis", file: "Vastus lateralis.png", cat: "Anterior & Medial Thigh", aliases: ["vastus lateralis muscle"] },
+    { name: "Vastus Medialis", file: "Vastus medialis.png", cat: "Anterior & Medial Thigh", aliases: ["vastus medialis muscle"] },
+
+    // Posterior Thigh
+    { name: "Biceps Femoris Long Head", file: "Biceps Femoris Long Head.png", cat: "Posterior Thigh", aliases: ["long head of biceps femoris", "biceps femoris - long head"] },
+    { name: "Biceps Femoris Short Head", file: "Biceps Femoris Short Head.png", cat: "Posterior Thigh", aliases: ["short head of biceps femoris", "biceps femoris - short head"] },
+    { name: "Semimembranosus", file: "Semimembranosus.png", cat: "Posterior Thigh", aliases: ["semimenbranosus", "semimembranosus muscle"] },
+    { name: "Semitendinosus", file: "Semitendinosis.png", cat: "Posterior Thigh", aliases: ["semitendinosis", "semitendinosus muscle"] },
+
+    // Gluteal & Hip Rotators
+    { name: "Gluteus Maximus", file: "Gluteus maximus.png", cat: "Gluteal & Hip Rotators", aliases: ["gluteus maximus muscle"] },
+    { name: "Gluteus Medius", file: "Gluteus medius.png", cat: "Gluteal & Hip Rotators", aliases: ["gluteus medius muscle"] },
+    { name: "Gluteus Minimus", file: "Glute minimus.png", cat: "Gluteal & Hip Rotators", aliases: ["glute minimus", "gluteus minimus muscle"] },
+    { name: "Inferior Gemellus", file: "Inferior Gemellus.png", cat: "Gluteal & Hip Rotators", aliases: ["inferior gemellus muscle", "gemellus inferior"] },
+    { name: "Obturator Externus", file: "Obturator Externus.png", cat: "Gluteal & Hip Rotators", aliases: ["obturator externus muscle"] },
+    { name: "Obturator Internus", file: "Obturator Internus.png", cat: "Gluteal & Hip Rotators", aliases: ["obturator internus muscle"] },
+    { name: "Piriformis", file: "Piriformis.png", cat: "Gluteal & Hip Rotators", aliases: ["piriformis muscle"] },
+    { name: "Quadratus Femoris", file: "Quadratus Femoris.png", cat: "Gluteal & Hip Rotators", aliases: ["quadratus femoris muscle"] },
+    { name: "Superior Gemellus", file: "Superior Gemellus.png", cat: "Gluteal & Hip Rotators", aliases: ["superior gemellus muscle", "gemellus superior"] },
+    { name: "Tensor Fasciae Latae", file: "Tensor Fascia Lata.png", cat: "Gluteal & Hip Rotators", aliases: ["tensor fascia lata", "tfl"] },
+
+    // Nerves
+    { name: "Common Peroneal (Fibular) Nerve", file: "Common Peroneal nerve.png", cat: "Nerves", aliases: ["common peroneal nerve", "common fibular nerve"] },
+    { name: "Femoral Nerve", file: "Femoral nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Inferior Gluteal Nerve", file: "Inferior Gluteal Nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Lateral Femoral Cutaneous Nerve", file: "Lateral femoral cutaneous nerve.png", cat: "Nerves", aliases: ["lateral cutaneous nerve of thigh"] },
+    { name: "Obturator Nerve", file: "Obturator nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Saphenous Nerve", file: "Saphenous nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Sciatic Nerve", file: "Sciatic Nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Superior Gluteal Nerve", file: "Superior Gluteal Nerve.png", cat: "Nerves", aliases: [] },
+    { name: "Tibial Nerve", file: "Tibial nerve.png", cat: "Nerves", aliases: [] },
+
+    // Arteries & Veins
+    { name: "Deep Femoral Artery", file: "Deep Femoral Artery.png", cat: "Arteries & Veins", aliases: ["profunda femoris artery", "profunda femoris"] },
+    { name: "Femoral Artery", file: "Femoral artery.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Femoral Vein", file: "Femoral Vein.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Great Saphenous Vein", file: "Great saphenous vein.png", cat: "Arteries & Veins", aliases: ["greater saphenous vein"] },
+    { name: "Inferior Gluteal Artery", file: "Inferior Gluteal Artery.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Inferior Gluteal Vein", file: "Inferior Gluteal Vein.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Lateral Femoral Circumflex Artery", file: "Lateral femoral circumflex artery.png", cat: "Arteries & Veins", aliases: ["lateral circumflex femoral artery"] },
+    { name: "Medial Femoral Circumflex Artery", file: "Medial femoral circumflex artery.png", cat: "Arteries & Veins", aliases: ["medial circumflex femoral artery"] },
+    { name: "Popliteal Artery", file: "Popliteal artery.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Popliteal Vein", file: "Popliteal vein.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Superior Gluteal Artery", file: "Superior Gluteal Artery.png", cat: "Arteries & Veins", aliases: [] },
+    { name: "Superior Gluteal Vein", file: "Superior Gluteal Vein.png", cat: "Arteries & Veins", aliases: [] },
+
+    // Ligaments, Spaces & Fascia
+    { name: "Femoral Triangle", file: "Femoral triangle.png", cat: "Ligaments, Spaces & Fascia", aliases: ["scarpa's triangle"] },
+    { name: "Iliac Crest", file: "Iliac Crest.png", cat: "Ligaments, Spaces & Fascia", aliases: [] },
+    { name: "Iliotibial Band (Tract)", file: "Iliotibial band.png", cat: "Ligaments, Spaces & Fascia", aliases: ["iliotibial band", "iliotibial tract", "it band"] },
+    { name: "Inguinal Ligament", file: "Inguinal ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: ["poupart's ligament"] },
+    { name: "Patellar Ligament", file: "Petallar Ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: ["petallar ligament", "patellar tendon"] },
+    { name: "Sacrotuberous Ligament", file: "Sacrotuberous Ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: [] }
+];
+
+let mode = 'mc';
+let timerEnabled = false;
+let timerInterval = null;
+let timeLeft = 45;
+let deck = [];
+let idx = 0;
+let score = 0;
+let streak = 0;
+let answered = false;
+let missed = [];
+
+function shuffle(arr) {
+    let a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+function setMode(m) {
+    mode = m;
+    document.getElementById('modeMC').classList.toggle('active', m === 'mc');
+    document.getElementById('modeType').classList.toggle('active', m === 'type');
+    renderQuestion();
+}
+
+function toggleTimer() {
+    timerEnabled = !timerEnabled;
+    const btn = document.getElementById('timerToggle');
+    btn.textContent = `⏱️ 45s Station Timer: ${timerEnabled ? 'ON' : 'OFF'}`;
+    btn.classList.toggle('timer-active', timerEnabled);
+    document.getElementById('timerDisplay').style.display = timerEnabled ? 'inline-block' : 'none';
+    if (timerEnabled && !answered) resetStationTimer();
+    else clearInterval(timerInterval);
+}
+
+function resetStationTimer() {
+    clearInterval(timerInterval);
+    if (!timerEnabled) return;
+    timeLeft = 45;
+    document.getElementById('timerDisplay').textContent = `⏱️ ${timeLeft}s`;
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timerDisplay').textContent = `⏱️ ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            if (!answered) handleTimeout();
+        }
+    }, 1000);
+}
+
+function startQuiz(customDeck = null) {
+    const filter = document.getElementById('catFilter').value;
+    if (customDeck) {
+        deck = shuffle(customDeck);
+    } else {
+        const filtered = filter === 'ALL' ? BANK : BANK.filter(x => x.cat === filter);
+        deck = shuffle(filtered);
+    }
+    idx = 0;
+    score = 0;
+    streak = 0;
+    missed = [];
+    document.getElementById('quizArea').style.display = 'block';
+    document.getElementById('resultsArea').style.display = 'none';
+    updateScoreUI();
+    renderQuestion();
+}
+
+function retryMissed() {
+    if (missed.length > 0) startQuiz(missed);
+}
+
+function updateScoreUI() {
+    document.getElementById('scoreLive').textContent = `Score: ${score} / ${idx}`;
+    document.getElementById('streakDisplay').textContent = `🔥 Streak: ${streak}`;
+}
+
+function renderQuestion() {
+    if (idx >= deck.length) return showResults();
+    answered = false;
+    const item = deck[idx];
+
+    document.getElementById('qCounter').textContent = `Station ${idx + 1} of ${deck.length}`;
+    document.getElementById('progressBar').style.width = `${(idx / deck.length) * 100}%`;
+    document.getElementById('catTag').textContent = item.cat;
+    document.getElementById('pinImage').src = FOLDER + encodeURIComponent(item.file);
+
+    const fb = document.getElementById('feedbackBanner');
+    fb.style.display = 'none';
+    fb.className = 'feedback-banner';
+    document.getElementById('nextBtn').style.display = 'none';
+
+    const optGrid = document.getElementById('optionsGrid');
+    const typeBox = document.getElementById('typeBox');
+
+    if (mode === 'mc') {
+        optGrid.style.display = 'grid';
+        typeBox.style.display = 'none';
+        optGrid.innerHTML = '';
+
+        // Prefer distractors from same category first
+        let sameCat = BANK.filter(x => x.cat === item.cat && x.name !== item.name);
+        let otherCat = BANK.filter(x => x.cat !== item.cat && x.name !== item.name);
+        let distractors = shuffle([...shuffle(sameCat).slice(0, 3), ...shuffle(otherCat)]).slice(0, 3);
+        let choices = shuffle([item, ...distractors]);
+
+        choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.textContent = choice.name;
+            btn.onclick = () => checkMC(btn, choice.name === item.name, item);
+            optGrid.appendChild(btn);
+        });
+    } else {
+        optGrid.style.display = 'none';
+        typeBox.style.display = 'flex';
+        const inp = document.getElementById('typeInput');
+        inp.value = '';
+        inp.disabled = false;
+        setTimeout(() => inp.focus(), 50);
+    }
+
+    resetStationTimer();
+}
+
+function normalize(str) {
+    return str.toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]/g, '').trim();
+}
+
+function checkMC(btn, isCorrect, item) {
+    if (answered) return;
+    answered = true;
+    clearInterval(timerInterval);
+
+    const allBtns = document.querySelectorAll('.opt-btn');
+    allBtns.forEach(b => {
+        b.disabled = true;
+        if (b.textContent === item.name) b.classList.add('correct');
+    });
+
+    if (isCorrect) {
+        score++;
+        streak++;
+        showFeedback(true, `✅ Correct! ${item.name}`);
+    } else {
+        btn.classList.add('wrong');
+        streak = 0;
+        missed.push(item);
+        showFeedback(false, `❌ Incorrect — That pin is: ${item.name}`);
+    }
+    finishStation();
+}
+
+function checkTyped() {
+    if (answered) return;
+    const item = deck[idx];
+    const userVal = normalize(document.getElementById('typeInput').value);
+    if (!userVal) return;
+
+    answered = true;
+    clearInterval(timerInterval);
+    document.getElementById('typeInput').disabled = true;
+
+    const validAnswers = [item.name, ...item.aliases].map(normalize);
+    const isCorrect = validAnswers.includes(userVal);
+
+    if (isCorrect) {
+        score++;
+        streak++;
+        showFeedback(true, `✅ Nailed it! ${item.name}`);
+    } else {
+        streak = 0;
+        missed.push(item);
+        showFeedback(false, `❌ Incorrect — Correct pin: ${item.name}`);
+    }
+    finishStation();
+}
+
+function handleTimeout() {
+    answered = true;
+    const item = deck[idx];
+    streak = 0;
+    missed.push(item);
+    document.querySelectorAll('.opt-btn').forEach(b => {
+        b.disabled = true;
+        if (b.textContent === item.name) b.classList.add('correct');
+    });
+    document.getElementById('typeInput').disabled = true;
+    showFeedback(false, `⏰ Time's up! Station buzzer sounded. Answer: ${item.name}`);
+    finishStation();
+}
+
+function showFeedback(ok, msg) {
+    const fb = document.getElementById('feedbackBanner');
+    fb.textContent = msg;
+    fb.className = 'feedback-banner ' + (ok ? 'ok' : 'bad');
+    fb.style.display = 'block';
+}
+
+function finishStation() {
+    document.getElementById('scoreLive').textContent = `Score: ${score} / ${idx + 1}`;
+    document.getElementById('streakDisplay').textContent = `🔥 Streak: ${streak}`;
+    document.getElementById('nextBtn').style.display = 'block';
+}
+
+function nextQuestion() {
+    idx++;
+    renderQuestion();
+}
+
+function showResults() {
+    clearInterval(timerInterval);
+    document.getElementById('quizArea').style.display = 'none';
+    document.getElementById('resultsArea').style.display = 'block';
+    const pct = Math.round((score / deck.length) * 100);
+    document.getElementById('finalScore').textContent = `${pct}%`;
+    document.getElementById('finalSummary').textContent = `You pinned ${score} out of ${deck.length} structures accurately.`;
+
+    const retryBtn = document.getElementById('retryMissedBtn');
+    const missedBox = document.getElementById('missedListContainer');
+    if (missed.length === 0) {
+        retryBtn.style.display = 'none';
+        missedBox.innerHTML = `<p style="text-align:center; color:#86efac; font-weight:bold;">Flawless run! Zero missed pins.</p>`;
+    } else {
+        retryBtn.style.display = 'inline-block';
+        missedBox.innerHTML = `<h4 style="margin-bottom:10px; color:var(--gold);">Missed Pins (${missed.length}):</h4>` +
+            missed.map(m => `<div class="missed-item"><span>${m.name}</span><span style="color:var(--muted); font-size:12px;">${m.cat}</span></div>`).join('');
+    }
+}
+
+document.getElementById('typeInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        if (!answered) checkTyped();
+        else nextQuestion();
+    }
+});
+
+startQuiz();
+</script>
+</body>
+</html>
