@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Spinal Anatomy II - Neck &amp; Cervical Lab Practical</title>
+    <style>
+        :root {
+            --bg-canvas: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-sub: #a3a3a3;
+            --accent: #ff9900;
+            --border-default: #282828;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --warn-bg: #422006;
+            --warn-border: #eab308;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 880px;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-canvas);
+            border-bottom: 2px solid var(--border-default);
+            padding: 12px 14px;
+            z-index: 1000;
+            margin-bottom: 16px;
+        }
+
+        .header-top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hub-nav-btn {
+            background-color: #242424;
+            color: #ffffff;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 6px 11px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .hub-nav-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .brand {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ctrl-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 6px 11px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .ctrl-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .stfu-btn {
+            border-color: var(--accent);
+        }
+
+        .stfu-btn.muted {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .pill {
+            font-size: 0.85rem;
+            font-weight: 700;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .pill.score-pill {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 5px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.25s ease;
+        }
+
+        /* Launcher Dashboard */
+        .launcher-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .launcher-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-default);
+        }
+
+        .launcher-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .section-block {
+            margin-bottom: 18px;
+        }
+
+        .section-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip-btn {
+            background-color: #242424;
+            color: var(--text-sub);
+            border: 1px solid var(--border-default);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .chip-btn:hover {
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .chip-btn.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
+
+        .utility-btn {
+            background-color: #181818;
+            color: #d4d4d4;
+            border: 1px solid #383838;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .utility-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pool-status {
+            background: #121212;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .quickie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .launch-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.1s ease, opacity 0.2s ease;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .launch-btn:hover:not(:disabled) {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        .launch-btn:disabled {
+            background-color: #333;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .launch-btn.secondary-launch {
+            background-color: #262626;
+            color: #ffffff;
+            border: 1px solid var(--accent);
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .badge {
+            background: #262626;
+            border: 1px solid #383838;
+            color: var(--accent);
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+        }
+
+        .image-wrapper {
+            text-align: center;
+            margin-bottom: 14px;
+            background: #000000;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-default);
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            height: auto;
+            max-height: 480px;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .img-error-box {
+            color: #f87171;
+            background: rgba(127, 29, 29, 0.3);
+            border: 1px dashed var(--incorrect-border);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.45;
+            color: #ffffff;
+        }
+
+        .options-list {
+            list-style: none;
+        }
+
+        .option-item {
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            color: #e5e5e5;
+        }
+
+        .option-item strong {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #2b2b2b;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-item.correct strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Type-In Controls */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 1rem;
+            color: #ffffff;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        .text-input:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .submit-answer-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .submit-answer-btn:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .spelling-warning {
+            background-color: var(--warn-bg);
+            border: 1px solid var(--warn-border);
+            color: #fef08a;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* Explanation Box */
+        .expl {
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin-top: 14px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .expl.show {
+            display: block;
+        }
+
+        .expl.correct {
+            background-color: rgba(20, 83, 45, 0.45);
+            border: 1px solid var(--correct-border);
+            color: #e2fbe8;
+        }
+
+        .expl.incorrect {
+            background-color: rgba(127, 29, 29, 0.45);
+            border: 1px solid var(--incorrect-border);
+            color: #fde8e8;
+        }
+
+        .status-banner {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expl.correct .status-banner {
+            color: #4ade80;
+        }
+
+        .expl.incorrect .status-banner {
+            color: #f87171;
+        }
+
+        .core-concept {
+            margin-bottom: 10px;
+        }
+
+        .rationales-list {
+            list-style: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .rationales-list li {
+            margin-bottom: 5px;
+            font-size: 0.88rem;
+        }
+
+        .next-row {
+            margin-top: 14px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .tier-msg {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin: 12px 0;
+            color: #fff;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .breakdown-table th, .breakdown-table td {
+            border: 1px solid var(--border-default);
+            padding: 9px 12px;
+        }
+
+        .breakdown-table th {
+            background: #242424;
+            color: var(--accent);
+        }
+
+        .summary-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: 1px solid var(--accent);
+            padding: 11px 20px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .btn.hub-btn {
+            background-color: #242424;
+            color: #ffffff;
+        }
+
+        .btn.hub-btn:hover {
+            background-color: var(--accent);
+            color: #000000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Wrong Popup */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            animation: popIn 0.15s ease-out;
+        }
+
+        .wrong-popup img {
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--incorrect-border);
+            background: #111;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+</div>
+
+<div class="quiz-container">
+    <!-- Sticky Top Header -->
+    <div class="sticky-header">
+        <div class="header-top">
+            <div class="header-left">
+                <a href="index.html" class="hub-nav-btn">← Main Page</a>
+                <span class="brand" id="headerBrand">Spinal 2 Lab Practical</span>
+            </div>
+            <div class="header-controls">
+                <button class="ctrl-btn hidden" id="menuBtn" onclick="showLauncher()">Menu / Filter Weeks</button>
+                <button class="ctrl-btn" id="formatToggleBtn" onclick="toggleFormat()">Format: MC</button>
+                <button class="ctrl-btn" id="viewToggleBtn" onclick="toggleViewMode()">View: One by One</button>
+                <button class="ctrl-btn stfu-btn" id="stfuBtn" onclick="toggleStfu()">STFU Erijah</button>
+                <span class="pill hidden" id="progressPill">Question 1 of 14</span>
+                <span class="pill score-pill" id="scorePill">Score: 0 / 0 (0%)</span>
+            </div>
+        </div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <!-- Home / Week Filter & Quickie Launcher -->
+    <div id="launcherView" class="launcher-card">
+        <div class="launcher-header">
+            <div>
+                <div class="launcher-title">Spinal Anatomy II — Visual Lab Practical</div>
+                <div style="color: var(--text-sub); font-size: 0.88rem; margin-top: 3px;">Select weeks to study, choose MC or Type-In spelling mode, and launch a drill.</div>
+            </div>
+            <a href="index.html" class="btn hub-btn">← Back to Main Page</a>
+        </div>
+
+        <!-- Week Filter Section -->
+        <div class="section-block">
+            <span class="section-label">1. Filter by Week (Builds Week-by-Week)</span>
+            <div class="chip-group" id="weekChipsContainer" style="margin-bottom: 10px;"></div>
+            <div class="chip-group">
+                <button class="utility-btn" onclick="selectAllWeeks()">Select All Weeks</button>
+                <button class="utility-btn" onclick="clearAllWeeks()">Clear</button>
+                <button class="utility-btn" id="prioritizeMissedBtn" onclick="launchMissedDrill()">Prioritize Missed (0)</button>
+            </div>
+        </div>
+
+        <!-- Format Selector -->
+        <div class="section-block">
+            <span class="section-label">2. Exam Format</span>
+            <div class="chip-group">
+                <button class="chip-btn active" id="launchFormatMC" onclick="setFormat('mc')">Multiple Choice (4 Options)</button>
+                <button class="chip-btn" id="launchFormatType" onclick="setFormat('typein')">Type-In (Lab Spelling Mode)</button>
+            </div>
+        </div>
+
+        <!-- View Mode Selector -->
+        <div class="section-block">
+            <span class="section-label">3. Display Mode</span>
+            <div class="chip-group">
+                <button class="chip-btn active" id="launchViewOne" onclick="setViewMode('one')">One by One (Card View)</button>
+                <button class="chip-btn" id="launchViewAll" onclick="setViewMode('all')">All at Once (Continuous List)</button>
+            </div>
+        </div>
+
+        <!-- Live Pool Status -->
+        <div class="pool-status" id="poolCounter">Pool: 14 images selected</div>
+
+        <!-- Quickie Launcher Buttons -->
+        <div class="section-block" style="margin-bottom: 0;">
+            <span class="section-label">4. Launch Drill</span>
+            <div class="quickie-grid">
+                <button class="launch-btn" id="btnQ15" onclick="startQuiz(15)">Quickie (15 Qs)</button>
+                <button class="launch-btn" id="btnQ25" onclick="startQuiz(25)">Quickie (25 Qs)</button>
+                <button class="launch-btn" id="btnQ35" onclick="startQuiz(35)">Quickie (35 Qs)</button>
+                <button class="launch-btn" id="btnQ50" onclick="startQuiz(50)">Full Exam (50 Qs)</button>
+                <button class="launch-btn secondary-launch" id="btnQAll" onclick="startQuiz('all')">Entire Selected Bank</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Quiz Area -->
+    <div id="quizArea" class="hidden"></div>
+
+    <!-- Final Summary Card -->
+    <div id="summaryView" class="summary-card hidden">
+        <h2>Lab Practical Complete!</h2>
+        <div id="finalScoreDisplay" style="font-size: 1.35rem; font-weight: 800; color: var(--accent);"></div>
+        <div class="tier-msg" id="tierMessage"></div>
+        <table class="breakdown-table" id="weekBreakdownTable">
+            <thead>
+                <tr>
+                    <th>Week / Module</th>
+                    <th>Correct</th>
+                    <th>Accuracy</th>
+                </tr>
+            </thead>
+            <tbody id="weekBreakdownBody"></tbody>
+        </table>
+        <div class="summary-actions">
+            <button class="btn" onclick="retakeCurrentQuiz()">Retake Quiz</button>
+            <button class="btn hub-btn" id="reviewSessionMissedBtn" onclick="reviewSessionMissed()">Review Missed</button>
+            <button class="btn hub-btn" onclick="showLauncher()">Back to Menu</button>
+            <a href="index.html" class="btn hub-btn">Back to Main Page</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // =========================================================================
+    // MASTER IMAGE BANK (Add Week 2, Week 3, etc. right below Week 1)
+    // =========================================================================
+    const imageBank = [
+        // --- WEEK 1: Cervical & Neck Musculature, Ligaments, Nerves & Vessels ---
+        {
+            id: 1,
+            week: 1,
+            region: "Cervical Ligaments",
+            image: "Anterior longitudinal ligament.png",
+            accepted: ["anterior longitudinal ligament", "all"],
+            stem: "Identify the highlighted ligamentous structure coursing along the anterior vertebral bodies:",
+            options: [
+                { text: "Anterior longitudinal ligament", correct: true, why: "Broad, strong fibrous band running along the anterior surfaces of the vertebral bodies and intervertebral discs, limiting hyperextension." },
+                { text: "Posterior longitudinal ligament", correct: false, why: "Courses inside the vertebral canal along the posterior surfaces of the vertebral bodies." },
+                { text: "Ligamentum nuchae", correct: false, why: "Median posterior cervical fibroelastic septum extending from the external occipital protuberance to C7 SP." },
+                { text: "Anterior atlanto-occipital membrane", correct: false, why: "Spans strictly between the anterior arch of C1 and the anterior margin of the foramen magnum." }
+            ]
+        },
+        {
+            id: 2,
+            week: 1,
+            region: "Scalene Musculature",
+            image: "Anterior scalene.png",
+            accepted: ["anterior scalene", "anterior scalene muscle", "scalenus anterior"],
+            stem: "Identify the highlighted lateral cervical muscle inserting onto the scalene tubercle of rib 1:",
+            options: [
+                { text: "Middle scalene", correct: false, why: "Inserts posterior to the subclavian groove on the superior surface of the first rib." },
+                { text: "Anterior scalene", correct: true, why: "Attaches from C3–C6 anterior tubercles to the scalene tubercle of rib 1, separating the subclavian vein anteriorly from the subclavian artery and brachial plexus posteriorly." },
+                { text: "Posterior scalene", correct: false, why: "Attaches from C4–C6 posterior tubercles to the outer surface of the second rib." },
+                { text: "Longus colli", correct: false, why: "Located medially on the anterior surface of the cervical and upper thoracic vertebral bodies." }
+            ]
+        },
+        {
+            id: 3,
+            week: 1,
+            region: "Cervical Neurovascular",
+            image: "Brachial Plexus.png",
+            accepted: ["brachial plexus"],
+            stem: "Identify the highlighted neural network emerging between the anterior and middle scalene muscles:",
+            options: [
+                { text: "Cervical plexus", correct: false, why: "Formed by C1–C4 ventral rami lying deep to the sternocleidomastoid superior to the brachial plexus." },
+                { text: "Phrenic nerve", correct: false, why: "Single nerve (C3–C5) descending vertically along the anterior surface of the anterior scalene." },
+                { text: "Brachial plexus", correct: true, why: "Formed by C5–T1 ventral rami; its roots and trunks pass through the interscalene triangle alongside the subclavian artery." },
+                { text: "Spinal accessory nerve", correct: false, why: "Cranial nerve XI crossing the posterior cervical triangle obliquely to innervate sternocleidomastoid and trapezius." }
+            ]
+        },
+        {
+            id: 4,
+            week: 1,
+            region: "Prevertebral Musculature",
+            image: "Longus capitis.png",
+            accepted: ["longus capitis", "longus capitis muscle"],
+            stem: "Identify the highlighted prevertebral muscle attaching between C3–C6 transverse processes and the basilar part of the occipital bone:",
+            options: [
+                { text: "Longus colli", correct: false, why: "Spans purely between vertebral bodies and transverse processes (C1–T3) without attaching to the cranium." },
+                { text: "Rectus capitis lateralis", correct: false, why: "Short muscle spanning only between the C1 transverse process and the jugular process of the occipital bone." },
+                { text: "Longus capitis", correct: true, why: "Broad, thick upper prevertebral muscle ascending from C3–C6 anterior tubercles to insert on the inferior basilar occiput." },
+                { text: "Anterior scalene", correct: false, why: "Descends inferolaterally from C3–C6 transverse processes to the first rib." }
+            ]
+        },
+        {
+            id: 5,
+            week: 1,
+            region: "Prevertebral Musculature",
+            image: "Longus coli.png",
+            accepted: ["longus colli", "longus coli", "longus colli muscle"],
+            stem: "Identify the highlighted prevertebral muscle spanning vertically along the anterior cervical and upper thoracic vertebral column:",
+            options: [
+                { text: "Longus capitis", correct: false, why: "Ascends onto the basilar occipital bone rather than remaining confined to the vertebral column." },
+                { text: "Anterior longitudinal ligament", correct: false, why: "Midline fibrous ligament rather than paired oblique/vertical muscular bellies." },
+                { text: "Middle scalene", correct: false, why: "Courses laterally from cervical transverse processes to the first rib." },
+                { text: "Longus colli", correct: true, why: "Composed of superior oblique, vertical, and inferior oblique fibers spanning from the C1 anterior tubercle down to T3 vertebral bodies." }
+            ]
+        },
+        {
+            id: 6,
+            week: 1,
+            region: "Scalene Musculature",
+            image: "Middle scalene.png",
+            accepted: ["middle scalene", "middle scalene muscle", "scalenus medius"],
+            stem: "Identify the highlighted muscle—the largest and longest of the scalene group—forming the posterior border of the interscalene triangle:",
+            options: [
+                { text: "Middle scalene", correct: true, why: "Attaches from C2–C7 posterior tubercles to the superior surface of rib 1 posterior to the subclavian groove." },
+                { text: "Anterior scalene", correct: false, why: "Lies anterior to the brachial plexus and subclavian artery, attaching to the scalene tubercle of rib 1." },
+                { text: "Posterior scalene", correct: false, why: "Smaller, deeper slip attaching inferiorly onto the second rib." },
+                { text: "Levator scapulae", correct: false, why: "Courses posteriorly from C1–C4 transverse processes to the superior angle of the scapula." }
+            ]
+        },
+        {
+            id: 7,
+            week: 1,
+            region: "Cervical Neurovascular",
+            image: "Phrenic nerve.png",
+            accepted: ["phrenic nerve", "phrenic"],
+            stem: "Identify the highlighted nerve descending inferiorly across the anterior surface of the anterior scalene muscle:",
+            options: [
+                { text: "Vagus nerve", correct: false, why: "Descends within the carotid sheath medial to the anterior scalene." },
+                { text: "Spinal accessory nerve", correct: false, why: "Courses obliquely across the posterior triangle deep to the sternocleidomastoid." },
+                { text: "Phrenic nerve", correct: true, why: "Arises primarily from C4 (with C3 and C5 contributions) and descends obliquely from lateral to medial on the anterior scalene deep to the prevertebral fascia." },
+                { text: "Suprascapular nerve", correct: false, why: "Branches from the superior trunk of the brachial plexus laterally toward the scapular notch." }
+            ]
+        },
+        {
+            id: 8,
+            week: 1,
+            region: "Cervical Ligaments",
+            image: "Posterior longitudinal ligament.png",
+            accepted: ["posterior longitudinal ligament", "pll"],
+            stem: "Identify the highlighted ligament running along the posterior aspect of the vertebral bodies inside the vertebral canal:",
+            options: [
+                { text: "Ligamentum flavum", correct: false, why: "Connects adjacent laminae along the posterior wall of the vertebral canal." },
+                { text: "Posterior longitudinal ligament", correct: true, why: "Courses along the posterior surfaces of the vertebral bodies and discs, continuing superiorly as the tectorial membrane." },
+                { text: "Anterior longitudinal ligament", correct: false, why: "Covers the anterior aspect of the vertebral bodies outside the canal." },
+                { text: "Supraspinous ligament", correct: false, why: "Connects the tips of spinous processes posteriorly." }
+            ]
+        },
+        {
+            id: 9,
+            week: 1,
+            region: "Scalene Musculature",
+            image: "Posterior scalene.png",
+            accepted: ["posterior scalene", "posterior scalene muscle", "scalenus posterior"],
+            stem: "Identify the highlighted lateral cervical muscle inserting onto the outer surface of the second rib:",
+            options: [
+                { text: "Anterior scalene", correct: false, why: "Inserts onto the scalene tubercle of the first rib." },
+                { text: "Middle scalene", correct: false, why: "Inserts onto the superior surface of the first rib." },
+                { text: "Posterior scalene", correct: true, why: "Deepest and most posterior scalene muscle, attaching from C4–C6 posterior tubercles to the second rib." },
+                { text: "Serratus posterior superior", correct: false, why: "Posterior thoracic respiratory muscle attaching from C7–T3 SPs to ribs 2–5." }
+            ]
+        },
+        {
+            id: 10,
+            week: 1,
+            region: "Suboccipital & Craniocervical",
+            image: "Rectus capitis lateralis 2.png",
+            accepted: ["rectus capitis lateralis", "rectus capitis lateralis muscle"],
+            stem: "Identify the highlighted short craniocervical muscle bridging the C1 transverse process and the jugular process of the occipital bone (View 2):",
+            options: [
+                { text: "Rectus capitis lateralis", correct: true, why: "Homologous to a posterior intertransversarius muscle; attaches between the C1 transverse process and occipital jugular process to laterally flex the head." },
+                { text: "Obliquus capitis superior", correct: false, why: "Ascends posteriorly from C1 transverse process to the occipital bone between the nuchal lines." },
+                { text: "Longus capitis", correct: false, why: "Long prevertebral muscle ascending from C3–C6 anterior tubercles to the basilar occiput." },
+                { text: "Splenius capitis", correct: false, why: "Broad superficial posterior neck muscle inserting on the mastoid process." }
+            ]
+        },
+        {
+            id: 11,
+            week: 1,
+            region: "Suboccipital & Craniocervical",
+            image: "Rectus capitis lateralis.png",
+            accepted: ["rectus capitis lateralis", "rectus capitis lateralis muscle"],
+            stem: "Identify the highlighted muscle located lateral to the atlanto-occipital joint:",
+            options: [
+                { text: "Rectus capitis anterior", correct: false, why: "Lies anteriorly between the lateral mass of C1 and the basilar occipital bone." },
+                { text: "Rectus capitis lateralis", correct: true, why: "Spans vertically from the superior surface of the C1 transverse process to the inferior jugular process of the occipital bone." },
+                { text: "Longissimus capitis", correct: false, why: "Long erector spinae slip ascending to the posterior margin of the mastoid process." },
+                { text: "Rectus capitis posterior minor", correct: false, why: "Lies posteriorly between the C1 posterior tubercle and medial inferior nuchal line." }
+            ]
+        },
+        {
+            id: 12,
+            week: 1,
+            region: "Cervical Neurovascular",
+            image: "Spinal accessory nerve.png",
+            accepted: ["spinal accessory nerve", "accessory nerve", "cn xi", "cn 11", "cranial nerve xi"],
+            stem: "Identify the highlighted nerve crossing the posterior cervical triangle to innervate sternocleidomastoid and trapezius:",
+            options: [
+                { text: "Phrenic nerve", correct: false, why: "Descends vertically on the anterior scalene muscle toward the diaphragm." },
+                { text: "Dorsal scapular nerve", correct: false, why: "Pierces the middle scalene to run deep to levator scapulae and the rhomboids." },
+                { text: "Spinal accessory nerve", correct: true, why: "Cranial nerve XI emerges along the posterior border of sternocleidomastoid and traverses the posterior triangle obliquely onto the deep surface of trapezius." },
+                { text: "Greater occipital nerve", correct: false, why: "Medial branch of C2 dorsal ramus ascending over the posterior scalp." }
+            ]
+        },
+        {
+            id: 13,
+            week: 1,
+            region: "Superficial Neck Musculature",
+            image: "Sternocleidomastoid.png",
+            accepted: ["sternocleidomastoid", "sternocleidomastoid muscle", "scm"],
+            stem: "Identify the highlighted two-headed muscle separating the anterior and posterior cervical triangles:",
+            options: [
+                { text: "Anterior scalene", correct: false, why: "Deep lateral neck muscle attaching to the first rib rather than the mastoid process and sternum." },
+                { text: "Sternocleidomastoid", correct: true, why: "Attaches inferiorly to the manubrium of the sternum and medial clavicle, and superiorly to the mastoid process and lateral superior nuchal line." },
+                { text: "Splenius capitis", correct: false, why: "Posterior neck muscle originating from the nuchal ligament and C7–T3 spinous processes." },
+                { text: "Platysma", correct: false, why: "Thin superficial subcutaneous sheet in the superficial cervical fascia." }
+            ]
+        },
+        {
+            id: 14,
+            week: 1,
+            region: "Cervical Neurovascular",
+            image: "Subclavian artery.png",
+            accepted: ["subclavian artery"],
+            stem: "Identify the highlighted major arterial trunk passing through the interscalene triangle posterior to the anterior scalene:",
+            options: [
+                { text: "Subclavian vein", correct: false, why: "Courses anterior to the anterior scalene muscle rather than through the interscalene triangle." },
+                { text: "Common carotid artery", correct: false, why: "Ascends vertically within the carotid sheath medial to the scalene muscles." },
+                { text: "Subclavian artery", correct: true, why: "Divided into three parts by the anterior scalene muscle; passes between the anterior and middle scalenes inferior to the brachial plexus trunks." },
+                { text: "Vertebral artery", correct: false, why: "First branch of the subclavian artery ascending through the C6–C1 transverse foramina." }
+            ]
+        }
+    ];
+
+    // =========================================================================
+    // STATE & PERSISTENCE
+    // =========================================================================
+    let selectedWeeks = new Set();
+    let examFormat = 'mc';     // 'mc' or 'typein'
+    let viewMode = 'one';      // 'one' or 'all'
+    let activePool = [];
+    let currentIndex = 0;
+    let userAnswers = [];
+    let sessionMissedIds = [];
+    let popupTimeout = null;
+
+    let muted = false;
+    try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+    function getGlobalMissed() {
+        try {
+            const raw = localStorage.getItem('spinal2_lab_missed');
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
+    }
+
+    function saveGlobalMissed(ids) {
+        try { localStorage.setItem('spinal2_lab_missed', JSON.stringify(Array.from(new Set(ids)))); } catch (e) {}
+        updateMissedButtonCount();
+    }
+
+    function addGlobalMissed(id) {
+        const list = getGlobalMissed();
+        if (!list.includes(id)) {
+            list.push(id);
+            saveGlobalMissed(list);
+        }
+    }
+
+    function removeGlobalMissed(id) {
+        const list = getGlobalMissed().filter(item => item !== id);
+        saveGlobalMissed(list);
+    }
+
+    function updateMissedButtonCount() {
+        const btn = document.getElementById('prioritizeMissedBtn');
+        if (btn) btn.textContent = `Prioritize Missed (${getGlobalMissed().length})`;
+    }
+
+    // =========================================================================
+    // INITIALIZATION & WEEK CHIPS
+    // =========================================================================
+    function initWeekChips() {
+        const weeks = [...new Set(imageBank.map(item => item.week))].sort((a, b) => a - b);
+        weeks.forEach(w => selectedWeeks.add(w));
+
+        const container = document.getElementById('weekChipsContainer');
+        container.innerHTML = '';
+        weeks.forEach(w => {
+            const count = imageBank.filter(item => item.week === w).length;
+            const btn = document.createElement('button');
+            btn.className = 'chip-btn active';
+            btn.dataset.week = w;
+            btn.textContent = `Week ${w} (${count})`;
+            btn.onclick = () => {
+                if (selectedWeeks.has(w)) {
+                    selectedWeeks.delete(w);
+                    btn.classList.remove('active');
+                } else {
+                    selectedWeeks.add(w);
+                    btn.classList.add('active');
+                }
+                updatePoolCounter();
+            };
+            container.appendChild(btn);
+        });
+        updatePoolCounter();
+        updateMissedButtonCount();
+    }
+
+    function selectAllWeeks() {
+        document.querySelectorAll('#weekChipsContainer .chip-btn').forEach(btn => {
+            const w = Number(btn.dataset.week);
+            selectedWeeks.add(w);
+            btn.classList.add('active');
+        });
+        updatePoolCounter();
+    }
+
+    function clearAllWeeks() {
+        selectedWeeks.clear();
+        document.querySelectorAll('#weekChipsContainer .chip-btn').forEach(btn => btn.classList.remove('active'));
+        updatePoolCounter();
+    }
+
+    function getFilteredPool() {
+        return imageBank.filter(item => selectedWeeks.has(item.week));
+    }
+
+    function updatePoolCounter() {
+        const pool = getFilteredPool();
+        const count = pool.length;
+        const wkCount = selectedWeeks.size;
+        document.getElementById('poolCounter').textContent = `Pool: ${count} image${count === 1 ? '' : 's'} across ${wkCount} week${wkCount === 1 ? '' : 's'} selected`;
+
+        const disabled = count === 0;
+        ['btnQ15', 'btnQ25', 'btnQ35', 'btnQ50', 'btnQAll'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = disabled;
+        });
+        document.getElementById('btnQAll').textContent = `Entire Selected Bank (${count})`;
+    }
+
+    // =========================================================================
+    // FORMAT, VIEW & MUTE CONTROLS
+    // =========================================================================
+    function setFormat(fmt) {
+        examFormat = fmt;
+        document.getElementById('launchFormatMC').classList.toggle('active', fmt === 'mc');
+        document.getElementById('launchFormatType').classList.toggle('active', fmt === 'typein');
+        document.getElementById('formatToggleBtn').textContent = fmt === 'mc' ? 'Format: MC' : 'Format: Type-In';
+        if (!document.getElementById('quizArea').classList.contains('hidden')) {
+            renderActiveQuiz();
+        }
+    }
+
+    function toggleFormat() {
+        setFormat(examFormat === 'mc' ? 'typein' : 'mc');
+    }
+
+    function setViewMode(mode) {
+        viewMode = mode;
+        document.getElementById('launchViewOne').classList.toggle('active', mode === 'one');
+        document.getElementById('launchViewAll').classList.toggle('active', mode === 'all');
+        document.getElementById('viewToggleBtn').textContent = mode === 'one' ? 'View: One by One' : 'View: All at Once';
+        if (!document.getElementById('quizArea').classList.contains('hidden')) {
+            renderActiveQuiz();
+        }
+    }
+
+    function toggleViewMode() {
+        setViewMode(viewMode === 'one' ? 'all' : 'one');
+    }
+
+    function updateStfuButton() {
+        const b = document.getElementById('stfuBtn');
+        b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+        b.classList.toggle('muted', muted);
+        if (muted) {
+            const a = document.getElementById('wrongAudio');
+            if (a) { a.pause(); a.currentTime = 0; }
+            clearTimeout(popupTimeout);
+            document.getElementById('wrongPopup').classList.add('hidden');
+        }
+    }
+
+    function toggleStfu() {
+        muted = !muted;
+        try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+        updateStfuButton();
+    }
+
+    function triggerWrongFeedback() {
+        if (!muted) {
+            const audio = document.getElementById('wrongAudio');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+            const popup = document.getElementById('wrongPopup');
+            popup.classList.remove('hidden');
+            clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(() => popup.classList.add('hidden'), 2000);
+        }
+    }
+
+    // =========================================================================
+    // SHUFFLE & LAUNCH ENGINE
+    // =========================================================================
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+
+    function prepareQuestions(rawItems) {
+        const cloned = JSON.parse(JSON.stringify(rawItems));
+        shuffleArray(cloned);
+        cloned.forEach(q => shuffleArray(q.options));
+        return cloned;
+    }
+
+    function startQuiz(limit) {
+        const pool = getFilteredPool();
+        if (pool.length === 0) return;
+
+        let prepared = prepareQuestions(pool);
+        if (typeof limit === 'number' && prepared.length > limit) {
+            prepared = prepared.slice(0, limit);
+        }
+
+        activePool = prepared;
+        beginSession();
+    }
+
+    function launchMissedDrill() {
+        const missedIds = getGlobalMissed();
+        const missedItems = imageBank.filter(item => missedIds.includes(item.id));
+        if (missedItems.length === 0) {
+            alert('No missed images recorded yet!');
+            return;
+        }
+        activePool = prepareQuestions(missedItems);
+        beginSession();
+    }
+
+    function beginSession() {
+        currentIndex = 0;
+        userAnswers = new Array(activePool.length).fill(null);
+        sessionMissedIds = [];
+
+        document.getElementById('launcherView').classList.add('hidden');
+        document.getElementById('summaryView').classList.add('hidden');
+        document.getElementById('quizArea').classList.remove('hidden');
+        document.getElementById('menuBtn').classList.remove('hidden');
+        document.getElementById('progressPill').classList.remove('hidden');
+
+        updateHeaderStats();
+        renderActiveQuiz();
+    }
+
+    function showLauncher() {
+        document.getElementById('quizArea').classList.add('hidden');
+        document.getElementById('summaryView').classList.add('hidden');
+        document.getElementById('menuBtn').classList.add('hidden');
+        document.getElementById('progressPill').classList.add('hidden');
+        document.getElementById('launcherView').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '0%';
+        document.getElementById('scorePill').textContent = 'Score: 0 / 0 (0%)';
+        updatePoolCounter();
+    }
+
+    function retakeCurrentQuiz() {
+        activePool = prepareQuestions(activePool);
+        beginSession();
+    }
+
+    function reviewSessionMissed() {
+        const missedItems = activePool.filter(q => sessionMissedIds.includes(q.id));
+        if (missedItems.length === 0) return;
+        activePool = prepareQuestions(missedItems);
+        beginSession();
+    }
+
+    // =========================================================================
+    // IMAGE FALLBACK LOADER
+    // =========================================================================
+    function handleImageError(imgEl, filename) {
+        const attempt = Number(imgEl.dataset.attempt || 0);
+        const candidates = [
+            `images/${filename}`,
+            `./images/${filename}`,
+            `../images/${filename}`,
+            `Spinal 2 Lab/images/${filename}`,
+            filename
+        ];
+        if (attempt < candidates.length) {
+            imgEl.dataset.attempt = attempt + 1;
+            imgEl.src = candidates[attempt];
+        } else {
+            const wrapper = imgEl.parentElement;
+            wrapper.innerHTML = `<div class="img-error-box">Image file not found on server:<br><strong>${filename}</strong><br><span style="font-size:0.78rem;color:#a3a3a3;">Ensure this exact filename is inside your <code>images/</code> folder.</span></div>`;
+        }
+    }
+
+    // =========================================================================
+    // SPELLING / LEVENSHTEIN CHECKER
+    // =========================================================================
+    function levenshtein(a, b) {
+        const m = [];
+        for (let i = 0; i <= b.length; i++) m[i] = [i];
+        for (let j = 0; j <= a.length; j++) m[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                m[i][j] = b[i - 1] === a[j - 1]
+                    ? m[i - 1][j - 1]
+                    : Math.min(m[i - 1][j - 1] + 1, m[i][j - 1] + 1, m[i - 1][j] + 1);
+            }
+        }
+        return m[b.length][a.length];
+    }
+
+    function evaluateTypedAnswer(input, acceptedList) {
+        const clean = input.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+        if (!clean) return { status: 'empty' };
+
+        let bestDist = 999;
+        let bestMatch = acceptedList[0];
+
+        for (const target of acceptedList) {
+            const cleanTarget = target.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+            if (clean === cleanTarget) {
+                return { status: 'exact', match: target };
+            }
+            const d = levenshtein(clean, cleanTarget);
+            if (d < bestDist) {
+                bestDist = d;
+                bestMatch = target;
+            }
+        }
+
+        const typoThreshold = bestMatch.length > 7 ? 2 : 1;
+        if (bestDist <= typoThreshold) {
+            return { status: 'typo', match: bestMatch };
+        }
+        return { status: 'wrong', match: acceptedList[0] };
+    }
+
+    // =========================================================================
+    // RENDERING & INTERACTION
+    // =========================================================================
+    function updateHeaderStats() {
+        const total = activePool.length;
+        const answered = userAnswers.filter(a => a !== null).length;
+        const correct = userAnswers.filter(a => a && a.isCorrect).length;
+        const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+        document.getElementById('scorePill').textContent = `Score: ${correct} / ${answered} (${pct}%)`;
+
+        if (viewMode === 'one') {
+            document.getElementById('progressPill').textContent = `Question ${Math.min(currentIndex + 1, total)} of ${total}`;
+            document.getElementById('progressFill').style.width = `${(answered / total) * 100}%`;
+        } else {
+            document.getElementById('progressPill').textContent = `Answered ${answered} of ${total}`;
+            document.getElementById('progressFill').style.width = `${(answered / total) * 100}%`;
+        }
+    }
+
+    function buildQuestionCardHTML(q, idx) {
+        const letters = ['A', 'B', 'C', 'D'];
+        const ansState = userAnswers[idx];
+        const isLocked = ansState !== null;
+
+        let inputSectionHTML = '';
+        if (examFormat === 'mc') {
+            const optsHTML = q.options.map((opt, optIdx) => {
+                let cls = 'option-item';
+                if (isLocked) {
+                    cls += ' disabled';
+                    if (opt.correct) cls += ' correct';
+                    else if (ansState.selectedOptIdx === optIdx) cls += ' incorrect';
+                }
+                return `<li class="${cls}" onclick="handleMCSelect(${idx}, ${optIdx})"><strong>${letters[optIdx]}.</strong><span>${opt.text}</span></li>`;
+            }).join('');
+            inputSectionHTML = `<ul class="options-list">${optsHTML}</ul>`;
+        } else {
+            const val = isLocked ? ansState.typedText : '';
+            inputSectionHTML = `
+                <div class="input-group">
+                    <input type="text" class="text-input" id="typeInput-${idx}" placeholder="Type exact anatomical structure name..." value="${val.replace(/"/g, '&quot;')}" ${isLocked ? 'disabled' : ''} onkeydown="if(event.key==='Enter') handleTypeSubmit(${idx})">
+                    <button class="submit-answer-btn" id="typeBtn-${idx}" onclick="handleTypeSubmit(${idx})" ${isLocked ? 'disabled' : ''}>Submit</button>
+                </div>
+                <div class="spelling-warning" id="spellWarn-${idx}"></div>
+            `;
+        }
+
+        const correctOpt = q.options.find(o => o.correct);
+        const rationalesHTML = q.options.map((o, i) => `<li><strong>${letters[i]}) ${o.text}:</strong> ${o.why}</li>`).join('');
+
+        let explClass = 'expl';
+        let bannerText = '';
+        if (isLocked) {
+            explClass += ansState.isCorrect ? ' show correct' : ' show incorrect';
+            bannerText = ansState.isCorrect ? 'CORRECT!' : `INCORRECT. Correct Answer: ${correctOpt.text}`;
+        }
+
+        let navHTML = '';
+        if (viewMode === 'one' && isLocked) {
+            const isLast = idx === activePool.length - 1;
+            navHTML = `<div class="next-row"><button class="btn" onclick="${isLast ? 'showSummary()' : 'nextQuestion()'}">${isLast ? 'Finish & View Results' : 'Next Question →'}</button></div>`;
+        }
+
+        return `
+            <div class="question-card" id="qCard-${idx}">
+                <div class="card-meta">
+                    <span>Question ${idx + 1} of ${activePool.length}</span>
+                    <span class="badge">Week ${q.week} • ${q.region}</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="images/${q.image}" data-attempt="1" onerror="handleImageError(this, '${q.image.replace(/'/g, "\\'")}')" alt="Anatomical Structure">
+                </div>
+                <div class="question-text">${q.stem}</div>
+                ${inputSectionHTML}
+                <div class="${explClass}" id="expl-${idx}">
+                    <div class="status-banner">${bannerText}</div>
+                    <div class="core-concept">${correctOpt.why}</div>
+                    <ul class="rationales-list">${rationalesHTML}</ul>
+                </div>
+                ${navHTML}
+            </div>
+        `;
+    }
+
+    function renderActiveQuiz() {
+        const container = document.getElementById('quizArea');
+        if (viewMode === 'one') {
+            container.innerHTML = buildQuestionCardHTML(activePool[currentIndex], currentIndex);
+        } else {
+            let html = activePool.map((q, idx) => buildQuestionCardHTML(q, idx)).join('');
+            const allAnswered = userAnswers.every(a => a !== null);
+            if (allAnswered) {
+                html += `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`;
+            }
+            container.innerHTML = html;
+        }
+        updateHeaderStats();
+    }
+
+    function handleMCSelect(qIdx, optIdx) {
+        if (userAnswers[qIdx] !== null) return;
+        const q = activePool[qIdx];
+        const isCorrect = q.options[optIdx].correct;
+
+        userAnswers[qIdx] = { isCorrect, selectedOptIdx: optIdx };
+        recordResult(q.id, isCorrect);
+
+        if (viewMode === 'one') {
+            renderActiveQuiz();
+        } else {
+            const card = document.getElementById(`qCard-${qIdx}`);
+            if (card) card.outerHTML = buildQuestionCardHTML(q, qIdx);
+            updateHeaderStats();
+            if (userAnswers.every(a => a !== null)) {
+                const container = document.getElementById('quizArea');
+                container.insertAdjacentHTML('beforeend', `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`);
+            }
+        }
+    }
+
+    function handleTypeSubmit(qIdx) {
+        if (userAnswers[qIdx] !== null) return;
+        const q = activePool[qIdx];
+        const inputEl = document.getElementById(`typeInput-${qIdx}`);
+        const warnEl = document.getElementById(`spellWarn-${qIdx}`);
+        const rawText = inputEl.value;
+
+        const evalRes = evaluateTypedAnswer(rawText, q.accepted);
+        if (evalRes.status === 'empty') return;
+
+        if (evalRes.status === 'typo') {
+            warnEl.style.display = 'block';
+            warnEl.innerHTML = `SPELLING ERROR — TRY AGAIN! Close match to <strong>"${evalRes.match}"</strong>. Fix spelling and resubmit.`;
+            inputEl.focus();
+            return;
+        }
+
+        warnEl.style.display = 'none';
+        const isCorrect = evalRes.status === 'exact';
+        userAnswers[qIdx] = { isCorrect, typedText: rawText };
+        recordResult(q.id, isCorrect);
+
+        if (viewMode === 'one') {
+            renderActiveQuiz();
+        } else {
+            const card = document.getElementById(`qCard-${qIdx}`);
+            if (card) card.outerHTML = buildQuestionCardHTML(q, qIdx);
+            updateHeaderStats();
+            if (userAnswers.every(a => a !== null)) {
+                const container = document.getElementById('quizArea');
+                container.insertAdjacentHTML('beforeend', `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`);
+            }
+        }
+    }
+
+    function recordResult(qId, isCorrect) {
+        if (isCorrect) {
+            removeGlobalMissed(qId);
+        } else {
+            triggerWrongFeedback();
+            addGlobalMissed(qId);
+            if (!sessionMissedIds.includes(qId)) sessionMissedIds.push(qId);
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIndex < activePool.length - 1) {
+            currentIndex++;
+            renderActiveQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quizArea').classList.add('hidden');
+        const summaryEl = document.getElementById('summaryView');
+        summaryEl.classList.remove('hidden');
+
+        const total = activePool.length;
+        const correct = userAnswers.filter(a => a && a.isCorrect).length;
+        const pct = Math.round((correct / total) * 100);
+
+        document.getElementById('finalScoreDisplay').textContent = `${correct} / ${total} Correct (${pct}%)`;
+
+        let tier = '';
+        if (pct >= 90) tier = 'Absolute Gigachad. You drained that test dry.';
+        else if (pct >= 70) tier = 'You lasted less than 30 seconds. Time for a rematch.';
+        else tier = 'You really didn’t fucking know that.';
+        document.getElementById('tierMessage').textContent = tier;
+
+        // Week Breakdown Table
+        const weeksPresent = [...new Set(activePool.map(q => q.week))].sort((a, b) => a - b);
+        const tbody = document.getElementById('weekBreakdownBody');
+        tbody.innerHTML = weeksPresent.map(w => {
+            let wTotal = 0;
+            let wCorr = 0;
+            activePool.forEach((q, idx) => {
+                if (q.week === w) {
+                    wTotal++;
+                    if (userAnswers[idx] && userAnswers[idx].isCorrect) wCorr++;
+                }
+            });
+            const wPct = Math.round((wCorr / wTotal) * 100);
+            return `<tr><td>Week ${w}</td><td>${wCorr} / ${wTotal}</td><td>${wPct}%</td></tr>`;
+        }).join('');
+
+        const reviewBtn = document.getElementById('reviewSessionMissedBtn');
+        if (sessionMissedIds.length === 0) {
+            reviewBtn.classList.add('hidden');
+        } else {
+            reviewBtn.classList.remove('hidden');
+            reviewBtn.textContent = `Review Missed (${sessionMissedIds.length})`;
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+        updateStfuButton();
+        initWeekChips();
+    };
+</script>
+</body>
+</html>
