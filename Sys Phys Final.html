@@ -150,7 +150,7 @@ q(9,"Slide #258","medium",false,"C1 has no dermatome because it usually lacks:",
 const DIFF_RANK={easy:0,medium:1,hard:2},PHASE_LABEL=['Phase 1: Basics','Phase 2: Core Concepts','Phase 3: Application / Hard'],L=['A','B','C','D'];
 const $=id=>document.getElementById(id),ls=(k,d)=>{try{const v=localStorage.getItem(k);return v===null?d:v}catch(e){return d}},sv=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
 let viewMode=ls('quizViewMode','single'),muted=ls('stfuErijah','0')==='1',orderMode=ls('quizOrderMode','random'),prioMissed=false;
-let missed=[];try{missed=JSON.parse(ls('quiz_missed_history','[]'))}catch(e){}
+let missed=[];try{missed=JSON.parse(ls('quiz_missed_history','[]'));if(!Array.isArray(missed))missed=[];}catch(e){missed=[];}
 let selected=new Set(SUBJECTS.map((_,i)=>i)),quizQ=[],ans={},cur=0,lastN=0,score=0;
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function pool(){return questionBank.filter(x=>selected.has(x.subjectIndex))}
