@@ -1211,23 +1211,28 @@
     // IMAGE FALLBACK LOADER
     // =========================================================================
     function handleImageError(imgEl, filename) {
-        const attempt = Number(imgEl.dataset.attempt || 0);
-        const candidates = [
-            encodeURI(`Images/Spinal 2/${filename}`),
-            encodeURI(`./Images/Spinal 2/${filename}`),
-            encodeURI(`../Images/Spinal 2/${filename}`),
-            encodeURI(`images/Spinal 2/${filename}`),
-            encodeURI(`Spinal 2/${filename}`)
-        ];
-        if (attempt < candidates.length) {
-            imgEl.dataset.attempt = attempt + 1;
-            imgEl.src = candidates[attempt];
-        } else {
-            const wrapper = imgEl.parentElement;
-            wrapper.innerHTML = `<div class="img-error-box">Image file not found on server:<br><strong>${filename}</strong><br><span style="font-size:0.78rem;color:#a3a3a3;">Ensure this exact filename (case-sensitive <code>.png</code>) is inside <code>Images/Spinal 2/</code>.</span></div>`;
-        }
-    }
+    const attempt = Number(imgEl.dataset.attempt || 0);
+    const altExt = filename.endsWith('.png')
+        ? filename.replace(/\.png$/, '.PNG')
+        : filename.replace(/\.PNG$/, '.png');
 
+    const candidates = [
+        `Images/Spinal%202/${encodeURIComponent(filename)}`,
+        `Images/Spinal 2/${filename}`,
+        `./Images/Spinal 2/${filename}`,
+        `../Images/Spinal 2/${filename}`,
+        `images/Spinal 2/${filename}`,
+        `Images/Spinal 2/${altExt}`
+    ];
+
+    if (attempt < candidates.length) {
+        imgEl.dataset.attempt = attempt + 1;
+        imgEl.src = candidates[attempt];
+    } else {
+        const wrapper = imgEl.parentElement;
+        wrapper.innerHTML = `<div class="img-error-box">⚠️ Image not found: <code>${filename}</code> in <code>Images/Spinal 2/</code></div>`;
+    }
+}
     // =========================================================================
     // SPELLING / LEVENSHTEIN CHECKER
     // =========================================================================
@@ -1342,7 +1347,7 @@
                     <span class="badge">Week ${q.week} • ${q.region}</span>
                 </div>
                 <div class="image-wrapper">
-                    <img src="${encodeURI(`Images/Spinal 2/${q.image}`)}" data-attempt="1" onerror="handleImageError(this, '${q.image.replace(/'/g, "\\'")}')" alt="Anatomical Structure">
+                    <img src="Images/Spinal 2/${q.image}" data-attempt="0" onerror="handleImageError(this, '${q.image.replace(/'/g, "\\'")}')" alt="Anatomical Structure">
                 </div>
                 <div class="question-text">${q.stem}</div>
                 ${inputSectionHTML}
