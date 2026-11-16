@@ -4983,14 +4983,15 @@
     /* ==========================================================================
        QUIZ LAUNCHER & CONTROLLERS
        ========================================================================== */
-    function launchQuiz(count) {
-      let pool = questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
+    function launchQuiz(count, customPool = null) {
+      let pool = customPool ? [...customPool] : questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
       if (pool.length === 0) return;
 
-      if (prioritizeMissed) {
+      // Always shuffle first so equal-priority items are randomized
+      pool = shuffleArray(pool);
+
+      if (prioritizeMissed && !customPool) {
         pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
-      } else {
-        pool = shuffleArray(pool);
       }
 
       const takeCount = Math.min(count, pool.length);
@@ -5001,7 +5002,8 @@
         };
       });
 
-      if (orderMode === 'tiered') {
+      // Only apply difficulty tier sorting when not explicitly prioritizing missed questions
+      if (orderMode === 'tiered' && !prioritizeMissed && !customPool) {
         quizQuestions.sort((a, b) =>
           DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
           a.subjectIndex - b.subjectIndex
@@ -5051,7 +5053,7 @@
 
       let html = `
         <div class="question-card">
-          ${orderMode === 'tiered' ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
+          ${orderMode === 'tiered' && !prioritizeMissed ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
           <div class="card-meta">
             <div class="meta-tags">
               <span class="tag tag-week">[${sub.week}] ${sub.title}</span>
@@ -5151,7 +5153,7 @@
 
         html += `
           <div class="question-card" id="qcard-${qIdx}">
-            ${orderMode === 'tiered' ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
+            ${orderMode === 'tiered' && !prioritizeMissed ? `<div style="color:var(--accent); font-weight:700; font-size:0.8rem; margin-bottom:10px;">${PHASE_LABEL[DIFF_RANK[q.difficulty]]}</div>` : ''}
             <div class="card-meta">
               <div class="meta-tags">
                 <span class="tag" style="background:var(--accent); color:#000; font-weight:700;">Q${qIdx + 1}</span>
@@ -5275,12 +5277,29 @@
     }
 
     /* ==========================================================================
-       RESULTS SUMMARY
+       RESULTS SUMMARY & MISSED QUESTIONS REVIEW
        ========================================================================== */
+    let lastMissedQuestions = [];
+
+    function retakeMissedOnly() {
+      if (lastMissedQuestions.length === 0) return;
+      launchQuiz(lastMissedQuestions.length, lastMissedQuestions);
+    }
+
     function showSummary() {
       const total = quizQuestions.length;
       const answeredCount = Object.keys(userAnswers).length;
       const pct = answeredCount > 0 ? Math.round((score / total) * 100) : 0;
+
+      // Collect all questions answered incorrectly in this session
+      const missedEntries = [];
+      quizQuestions.forEach((q, idx) => {
+        const chosenIdx = userAnswers[idx];
+        if (chosenIdx !== undefined && !q.shuffledOptions[chosenIdx].correct) {
+          missedEntries.push({ q, qNum: idx + 1, chosenIdx });
+        }
+      });
+      lastMissedQuestions = missedEntries.map(entry => entry.q);
 
       let html = `
         <div class="dashboard-panel" style="text-align:center; padding:36px 20px;">
@@ -5295,11 +5314,84 @@
           </div>
 
           <div style="margin-top:20px; display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
-            <button class="btn btn-accent" onclick="launchQuiz(${total})">Retake Same Exam</button>
+            ${missedEntries.length > 0 ? `<button class="btn btn-accent" onclick="retakeMissedOnly()">Practice Missed Only (${missedEntries.length})</button>` : ''}
+            <button class="btn ${missedEntries.length === 0 ? 'btn-accent' : ''}" onclick="launchQuiz(${total})">Retake Same Exam</button>
             <button class="btn" onclick="renderHome()">Return to Dashboard</button>
           </div>
         </div>
       `;
+
+      if (missedEntries.length > 0) {
+        const keys = ["A", "B", "C", "D"];
+        html += `
+          <div style="margin-top: 28px;">
+            <div class="panel-heading" style="margin-bottom: 16px;">
+              <span>Review Missed Questions (${missedEntries.length})</span>
+            </div>
+        `;
+
+        missedEntries.forEach(({ q, qNum, chosenIdx }) => {
+          const sub = SUBJECTS[q.subjectIndex];
+          html += `
+            <div class="question-card" style="border-color: rgba(239,68,68,0.4);">
+              <div class="card-meta">
+                <div class="meta-tags">
+                  <span class="tag" style="background:var(--incorrect-bg); border-color:var(--incorrect-border); color:#fff; font-weight:700;">Missed Q${qNum}</span>
+                  <span class="tag tag-week">[${sub.week}] ${sub.title}</span>
+                  <span class="tag">Ref: ${q.slideRef}</span>
+                  <span class="tag">${q.difficulty.toUpperCase()}</span>
+                </div>
+              </div>
+
+              <div class="stem-text">${q.stem}</div>
+
+              <div class="options-grid">
+          `;
+
+          q.shuffledOptions.forEach((opt, optIdx) => {
+            let btnClass = "option-btn";
+            if (optIdx === chosenIdx) {
+              btnClass += " selected-incorrect";
+            } else if (opt.correct) {
+              btnClass += " show-correct";
+            }
+
+            html += `
+              <button class="${btnClass}" disabled>
+                <span class="opt-key">${keys[optIdx]}</span>
+                <span>${opt.text}</span>
+              </button>
+            `;
+          });
+
+          html += `
+              </div>
+              <div class="rationale-panel">
+                <div class="status-banner incorrect">&#10008; Your Answer: ${keys[chosenIdx]}</div>
+          `;
+
+          q.shuffledOptions.forEach((opt, optIdx) => {
+            html += `
+              <div class="rationale-item">
+                <strong>${keys[optIdx]}) ${opt.correct ? '[CORRECT]' : '[INCORRECT]'}:</strong> ${opt.why}
+              </div>
+            `;
+          });
+
+          html += `
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+      } else {
+        html += `
+          <div class="dashboard-panel" style="text-align:center; color:#4ade80; font-weight:600;">
+            &#10004; Perfect score! No missed questions to review.
+          </div>
+        `;
+      }
 
       $('appRoot').innerHTML = html;
       window.scrollTo(0, 0);
