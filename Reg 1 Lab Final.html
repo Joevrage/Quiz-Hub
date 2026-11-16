@@ -2,516 +2,2035 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reg 1 Lab Exam 2 - Lower Extremity Practical</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Regional Anatomy I - Lower Extremity Lab Practical</title>
     <style>
         :root {
-            --bg: #0f1115;
-            --card: #181b22;
-            --border: #2a2f3d;
-            --accent: #22c55e;
-            --accent-hover: #16a34a;
-            --gold: #ff9900;
-            --danger: #ef4444;
-            --text: #f3f4f6;
-            --muted: #9ca3af;
+            --bg-canvas: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --text-main: #ffffff;
+            --text-sub: #a3a3a3;
+            --accent: #ff9900;
+            --border-default: #282828;
+            --correct-bg: #14532d;
+            --correct-border: #22c55e;
+            --incorrect-bg: #7f1d1d;
+            --incorrect-border: #ef4444;
+            --warn-bg: #422006;
+            --warn-border: #eab308;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .quiz-container {
+            width: 100%;
+            max-width: 880px;
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background-color: var(--bg-canvas);
+            border-bottom: 2px solid var(--border-default);
+            padding: 12px 14px;
+            z-index: 1000;
+            margin-bottom: 16px;
+        }
+
+        .header-top {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .hub-nav-btn {
+            background-color: #242424;
+            color: #ffffff;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 6px 11px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .hub-nav-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .brand {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ctrl-btn {
+            background: #222;
+            color: #fff;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 6px 11px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.82rem;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .ctrl-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .stfu-btn {
+            border-color: var(--accent);
+        }
+
+        .stfu-btn.muted {
+            background: var(--accent);
+            color: #000;
+        }
+
+        .pill {
+            font-size: 0.85rem;
+            font-weight: 700;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            color: var(--text-main);
+            padding: 5px 12px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .pill.score-pill {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 5px;
+            background: #222;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            transition: width 0.25s ease;
+        }
+
+        /* Launcher Dashboard */
+        .launcher-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
             padding: 20px;
-            min-height: 100vh;
-        }
-        .container { max-width: 900px; margin: 0 auto; }
-        .top-bar {
-            display: flex; justify-content: space-between; align-items: center;
-            background: var(--card); border: 2px solid var(--accent);
-            padding: 14px 20px; border-radius: 10px; margin-bottom: 20px;
-            flex-wrap: wrap; gap: 10px;
-        }
-        .back-btn {
-            text-decoration: none; color: #fff; background: #262b36;
-            padding: 8px 14px; border-radius: 6px; font-weight: bold;
-            font-size: 13px; border: 1px solid var(--border);
-        }
-        .back-btn:hover { border-color: var(--accent); }
-        .title-group h1 { font-size: 20px; font-weight: 900; text-transform: uppercase; color: var(--accent); }
-        .title-group p { font-size: 12px; color: var(--muted); }
-        
-        .controls-panel {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 10px; padding: 16px; margin-bottom: 20px;
-            display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
-        }
-        .control-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-        select, button.pill {
-            background: #232732; color: var(--text); border: 1px solid var(--border);
-            padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
-        }
-        button.pill.active { background: var(--accent); color: #052e16; border-color: #fff; font-weight: 800; }
-        button.pill.timer-active { background: var(--danger); color: #fff; border-color: #fff; }
-
-        .quiz-card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 12px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-        .progress-row {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 14px; font-size: 13px; font-weight: bold; color: var(--muted);
-        }
-        .timer-badge {
-            background: #2a1515; color: var(--danger); border: 1px solid var(--danger);
-            padding: 4px 10px; border-radius: 20px; display: none;
-        }
-        .progress-bar-wrap {
-            width: 100%; height: 8px; background: #262b36; border-radius: 4px;
-            overflow: hidden; margin-bottom: 20px;
-        }
-        .progress-bar-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.25s; }
-
-        .image-stage {
-            background: #08090c; border: 2px solid var(--border); border-radius: 10px;
-            padding: 12px; text-align: center; margin-bottom: 20px; position: relative;
-        }
-        .image-stage img {
-            max-width: 100%; max-height: 440px; border-radius: 6px; object-fit: contain;
-        }
-        .cat-tag {
-            position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.8);
-            color: var(--gold); border: 1px solid var(--gold); font-size: 11px;
-            padding: 3px 8px; border-radius: 4px; font-weight: bold; text-transform: uppercase;
+            margin-bottom: 20px;
         }
 
-        .prompt-text { font-size: 17px; font-weight: 700; margin-bottom: 16px; text-align: center; }
-
-        /* Multiple Choice Grid */
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: 1fr; } }
-        .opt-btn {
-            background: #232732; border: 2px solid var(--border); color: var(--text);
-            padding: 14px 16px; border-radius: 8px; font-size: 15px; font-weight: 700;
-            cursor: pointer; text-align: left; transition: all 0.15s;
-        }
-        .opt-btn:hover:not(:disabled) { border-color: var(--accent); background: #2a303d; }
-        .opt-btn.correct { background: rgba(34, 197, 94, 0.2); border-color: var(--accent); color: #86efac; }
-        .opt-btn.wrong { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #fca5a5; }
-
-        /* Type-in Mode */
-        .type-box { display: none; gap: 10px; max-width: 550px; margin: 0 auto; }
-        .type-box input {
-            flex: 1; padding: 14px; border-radius: 8px; border: 2px solid var(--border);
-            background: #101318; color: #fff; font-size: 16px; font-weight: 600;
-        }
-        .type-box input:focus { outline: none; border-color: var(--accent); }
-        .submit-btn {
-            background: var(--accent); color: #052e16; border: none; padding: 0 22px;
-            border-radius: 8px; font-weight: 900; font-size: 14px; cursor: pointer; text-transform: uppercase;
+        .launcher-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-default);
         }
 
-        .feedback-banner {
-            margin-top: 18px; padding: 14px; border-radius: 8px; font-weight: 700;
-            text-align: center; display: none; font-size: 15px;
-        }
-        .feedback-banner.ok { background: rgba(34, 197, 94, 0.15); border: 1px solid var(--accent); color: #86efac; }
-        .feedback-banner.bad { background: rgba(239, 68, 68, 0.15); border: 1px solid var(--danger); color: #fca5a5; }
-
-        .next-btn {
-            display: none; width: 100%; margin-top: 16px; padding: 14px;
-            background: linear-gradient(to bottom, #22c55e, #16a34a); color: #fff;
-            border: 1px solid #fff; border-radius: 8px; font-size: 15px; font-weight: 900;
-            text-transform: uppercase; cursor: pointer;
+        .launcher-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #fff;
         }
 
-        /* Results Screen */
-        .results-card { display: none; text-align: center; padding: 30px 20px; }
-        .score-big { font-size: 54px; font-weight: 900; color: var(--accent); margin: 10px 0; }
-        .missed-list {
-            text-align: left; max-width: 600px; margin: 20px auto; background: #12141a;
-            padding: 16px; border-radius: 8px; border: 1px solid var(--border);
+        .section-block {
+            margin-bottom: 18px;
         }
-        .missed-item { padding: 8px 0; border-bottom: 1px solid #222; font-size: 14px; display: flex; justify-content: space-between; }
+
+        .section-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .chip-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .chip-btn {
+            background-color: #242424;
+            color: var(--text-sub);
+            border: 1px solid var(--border-default);
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: inherit;
+        }
+
+        .chip-btn:hover {
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .chip-btn.active {
+            background-color: var(--accent);
+            color: #000000;
+            border-color: var(--accent);
+        }
+
+        .utility-btn {
+            background-color: #181818;
+            color: #d4d4d4;
+            border: 1px solid #383838;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .utility-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .pool-status {
+            background: #121212;
+            border: 1px solid var(--border-default);
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .quickie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .launch-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 0.92rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.1s ease, opacity 0.2s ease;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .launch-btn:hover:not(:disabled) {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        .launch-btn:disabled {
+            background-color: #333;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .launch-btn.secondary-launch {
+            background-color: #262626;
+            color: #ffffff;
+            border: 1px solid var(--accent);
+        }
+
+        /* Question Cards */
+        .question-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 18px;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            color: var(--text-sub);
+            font-weight: 700;
+        }
+
+        .badge {
+            background: #262626;
+            border: 1px solid #383838;
+            color: var(--accent);
+            padding: 3px 9px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+        }
+
+        .image-wrapper {
+            text-align: center;
+            margin-bottom: 14px;
+            background: #000000;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--border-default);
+            min-height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .image-wrapper img {
+            max-width: 100%;
+            height: auto;
+            max-height: 480px;
+            border-radius: 4px;
+            display: block;
+        }
+
+        .img-error-box {
+            color: #f87171;
+            background: rgba(127, 29, 29, 0.3);
+            border: 1px dashed var(--incorrect-border);
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 0.88rem;
+        }
+
+        .question-text {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.45;
+            color: #ffffff;
+        }
+
+        .options-list {
+            list-style: none;
+        }
+
+        .option-item {
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: border-color 0.15s ease, background-color 0.15s ease;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: flex-start;
+            color: #e5e5e5;
+        }
+
+        .option-item strong {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+
+        .option-item:hover:not(.disabled) {
+            border-color: var(--accent);
+            background-color: #2b2b2b;
+        }
+
+        .option-item.correct {
+            border-color: var(--correct-border) !important;
+            background-color: var(--correct-bg) !important;
+            color: #ffffff !important;
+            font-weight: 600;
+        }
+
+        .option-item.correct strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect {
+            border-color: var(--incorrect-border) !important;
+            background-color: var(--incorrect-bg) !important;
+            color: #ffffff !important;
+        }
+
+        .option-item.incorrect strong {
+            color: #ffffff !important;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        /* Type-In Controls */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .text-input {
+            flex: 1;
+            background-color: #242424;
+            border: 1.5px solid var(--border-default);
+            border-radius: 6px;
+            padding: 12px 14px;
+            font-size: 1rem;
+            color: #ffffff;
+            outline: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        .text-input:disabled {
+            opacity: 0.75;
+            cursor: not-allowed;
+        }
+
+        .submit-answer-btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            padding: 0 20px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+        }
+
+        .submit-answer-btn:disabled {
+            background-color: #444;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .spelling-warning {
+            background-color: var(--warn-bg);
+            border: 1px solid var(--warn-border);
+            color: #fef08a;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 8px;
+            display: none;
+        }
+
+        /* Explanation Box */
+        .expl {
+            padding: 14px 16px;
+            border-radius: 6px;
+            margin-top: 14px;
+            display: none;
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
+
+        .expl.show {
+            display: block;
+        }
+
+        .expl.correct {
+            background-color: rgba(20, 83, 45, 0.45);
+            border: 1px solid var(--correct-border);
+            color: #e2fbe8;
+        }
+
+        .expl.incorrect {
+            background-color: rgba(127, 29, 29, 0.45);
+            border: 1px solid var(--incorrect-border);
+            color: #fde8e8;
+        }
+
+        .status-banner {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .expl.correct .status-banner {
+            color: #4ade80;
+        }
+
+        .expl.incorrect .status-banner {
+            color: #f87171;
+        }
+
+        .core-concept {
+            margin-bottom: 10px;
+        }
+
+        .rationales-list {
+            list-style: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            padding-top: 8px;
+            margin-top: 8px;
+        }
+
+        .rationales-list li {
+            margin-bottom: 5px;
+            font-size: 0.88rem;
+        }
+
+        .next-row {
+            margin-top: 14px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Summary Card */
+        .summary-card {
+            background: var(--bg-card);
+            border: 2px solid var(--accent);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card h2 {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .tier-msg {
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin: 12px 0;
+            color: #fff;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .breakdown-table th, .breakdown-table td {
+            border: 1px solid var(--border-default);
+            padding: 9px 12px;
+        }
+
+        .breakdown-table th {
+            background: #242424;
+            color: var(--accent);
+        }
+
+        .summary-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            background-color: var(--accent);
+            color: #000000;
+            border: 1px solid var(--accent);
+            padding: 11px 20px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-family: inherit;
+        }
+
+        .btn.hub-btn {
+            background-color: #242424;
+            color: #ffffff;
+        }
+
+        .btn.hub-btn:hover {
+            background-color: var(--accent);
+            color: #000000;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Wrong Popup */
+        .wrong-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            pointer-events: none;
+            animation: popIn 0.15s ease-out;
+        }
+
+        .wrong-popup img {
+            max-width: 80vw;
+            max-height: 55vh;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.9);
+            border: 3px solid var(--incorrect-border);
+            background: #111;
+        }
+
+        @keyframes popIn {
+            from { transform: translate(-50%, -50%) scale(0.85); opacity: 0; }
+            to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="top-bar">
-        <a href="index.html" class="back-btn">← Quiz Hub</a>
-        <div class="title-group">
-            <h1>🔬 Reg 1 Lab Exam 2</h1>
-            <p>Week 6: Gluteal Region, Thigh &amp; Neurovasculature (44 Pins)</p>
+
+<audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
+
+<div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" alt="Wrong Answer">
+</div>
+
+<div class="quiz-container">
+    <!-- Sticky Top Header -->
+    <div class="sticky-header">
+        <div class="header-top">
+            <div class="header-left">
+                <a href="index.html" class="hub-nav-btn">← Main Page</a>
+                <span class="brand" id="headerBrand">Reg 1 Lab Final</span>
+            </div>
+            <div class="header-controls">
+                <button class="ctrl-btn hidden" id="menuBtn" onclick="showLauncher()">Menu / Filter Weeks</button>
+                <button class="ctrl-btn" id="formatToggleBtn" onclick="toggleFormat()">Format: MC</button>
+                <button class="ctrl-btn" id="viewToggleBtn" onclick="toggleViewMode()">View: One by One</button>
+                <button class="ctrl-btn stfu-btn" id="stfuBtn" onclick="toggleStfu()">STFU Erijah</button>
+                <span class="pill hidden" id="progressPill">Question 1 of 44</span>
+                <span class="pill score-pill" id="scorePill">Score: 0 / 0 (0%)</span>
+            </div>
         </div>
-        <div style="font-weight: 800; font-size: 14px; color: var(--gold);" id="scoreLive">Score: 0 / 0</div>
+        <div class="progress-track">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
     </div>
 
-    <div class="controls-panel">
-        <div class="control-group">
-            <button class="pill active" id="modeMC" onclick="setMode('mc')">Multiple Choice</button>
-            <button class="pill" id="modeType" onclick="setMode('type')">Pin Fill-in-Blank</button>
-            <button class="pill" id="timerToggle" onclick="toggleTimer()">⏱️ 45s Station Timer: OFF</button>
+    <!-- Home / Week Filter & Quickie Launcher -->
+    <div id="launcherView" class="launcher-card">
+        <div class="launcher-header">
+            <div>
+                <div class="launcher-title">Regional Anatomy I — Lower Extremity Lab Practical</div>
+                <div style="color: var(--text-sub); font-size: 0.88rem; margin-top: 3px;">Select weeks to study, choose MC or Type-In spelling mode, and launch a drill.</div>
+            </div>
+            <a href="index.html" class="btn hub-btn">← Back to Main Page</a>
         </div>
-        <div class="control-group">
-            <select id="catFilter" onchange="startQuiz()">
-                <option value="ALL">All Structures (44)</option>
-                <option value="Gluteal & Hip Rotators">Gluteal &amp; Hip Rotators (9)</option>
-                <option value="Anterior & Medial Thigh">Anterior &amp; Medial Thigh (11)</option>
-                <option value="Posterior Thigh">Posterior Thigh (4)</option>
-                <option value="Nerves">Nerves (8)</option>
-                <option value="Arteries & Veins">Arteries &amp; Veins (8)</option>
-                <option value="Ligaments, Spaces & Fascia">Ligaments, Spaces &amp; Fascia (4)</option>
-            </select>
-            <button class="pill" onclick="startQuiz()">🔀 Shuffle</button>
+
+        <!-- Week Filter Section -->
+        <div class="section-block">
+            <span class="section-label">1. Filter by Week (Builds Week-by-Week)</span>
+            <div class="chip-group" id="weekChipsContainer" style="margin-bottom: 10px;"></div>
+            <div class="chip-group">
+                <button class="utility-btn" onclick="selectAllWeeks()">Select All Weeks</button>
+                <button class="utility-btn" onclick="clearAllWeeks()">Clear</button>
+                <button class="utility-btn" id="prioritizeMissedBtn" onclick="launchMissedDrill()">Prioritize Missed (0)</button>
+            </div>
+        </div>
+
+        <!-- Format Selector -->
+        <div class="section-block">
+            <span class="section-label">2. Exam Format</span>
+            <div class="chip-group">
+                <button class="chip-btn active" id="launchFormatMC" onclick="setFormat('mc')">Multiple Choice (4 Options)</button>
+                <button class="chip-btn" id="launchFormatType" onclick="setFormat('typein')">Type-In (Lab Spelling Mode)</button>
+            </div>
+        </div>
+
+        <!-- View Mode Selector -->
+        <div class="section-block">
+            <span class="section-label">3. Display Mode</span>
+            <div class="chip-group">
+                <button class="chip-btn active" id="launchViewOne" onclick="setViewMode('one')">One by One (Card View)</button>
+                <button class="chip-btn" id="launchViewAll" onclick="setViewMode('all')">All at Once (Continuous List)</button>
+            </div>
+        </div>
+
+        <!-- Live Pool Status -->
+        <div class="pool-status" id="poolCounter">Pool: 44 images selected</div>
+
+        <!-- Quickie Launcher Buttons -->
+        <div class="section-block" style="margin-bottom: 0;">
+            <span class="section-label">4. Launch Drill</span>
+            <div class="quickie-grid">
+                <button class="launch-btn" id="btnQ15" onclick="startQuiz(15)">Quickie (15 Qs)</button>
+                <button class="launch-btn" id="btnQ25" onclick="startQuiz(25)">Quickie (25 Qs)</button>
+                <button class="launch-btn" id="btnQ35" onclick="startQuiz(35)">Quickie (35 Qs)</button>
+                <button class="launch-btn" id="btnQ50" onclick="startQuiz(50)">Full Exam (50 Qs)</button>
+                <button class="launch-btn secondary-launch" id="btnQAll" onclick="startQuiz('all')">Entire Selected Bank</button>
+            </div>
         </div>
     </div>
 
-    <div class="quiz-card" id="quizArea">
-        <div class="progress-row">
-            <span id="qCounter">Station 1 of 44</span>
-            <span class="timer-badge" id="timerDisplay">⏱️ 45s</span>
-            <span id="streakDisplay">🔥 Streak: 0</span>
+    <!-- Active Quiz Area -->
+    <div id="quizArea" class="hidden"></div>
+
+    <!-- Final Summary Card -->
+    <div id="summaryView" class="summary-card hidden">
+        <h2>Lab Practical Complete!</h2>
+        <div id="finalScoreDisplay" style="font-size: 1.35rem; font-weight: 800; color: var(--accent);"></div>
+        <div class="tier-msg" id="tierMessage"></div>
+        <table class="breakdown-table" id="weekBreakdownTable">
+            <thead>
+                <tr>
+                    <th>Week / Module</th>
+                    <th>Correct</th>
+                    <th>Accuracy</th>
+                </tr>
+            </thead>
+            <tbody id="weekBreakdownBody"></tbody>
+        </table>
+        <div class="summary-actions">
+            <button class="btn" onclick="retakeCurrentQuiz()">Retake Quiz</button>
+            <button class="btn hub-btn" id="reviewSessionMissedBtn" onclick="reviewSessionMissed()">Review Missed</button>
+            <button class="btn hub-btn" onclick="showLauncher()">Back to Menu</button>
+            <a href="index.html" class="btn hub-btn">Back to Main Page</a>
         </div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressBar"></div></div>
-
-        <div class="image-stage">
-            <span class="cat-tag" id="catTag">Category</span>
-            <img id="pinImage" src="" alt="Anatomy Pin">
-        </div>
-
-        <div class="prompt-text">Identify the highlighted structure:</div>
-
-        <div class="options-grid" id="optionsGrid"></div>
-
-        <div class="type-box" id="typeBox">
-            <input type="text" id="typeInput" placeholder="Type exact anatomical name..." autocomplete="off">
-            <button class="submit-btn" onclick="checkTyped()">Pin It</button>
-        </div>
-
-        <div class="feedback-banner" id="feedbackBanner"></div>
-        <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Station →</button>
-    </div>
-
-    <div class="quiz-card results-card" id="resultsArea">
-        <h2>🏁 Lab Practical Complete</h2>
-        <div class="score-big" id="finalScore">0%</div>
-        <p id="finalSummary" style="color: var(--muted); margin-bottom: 20px;"></p>
-        <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-            <button class="pill active" onclick="startQuiz()">🔄 Restart Full Practical</button>
-            <button class="pill" id="retryMissedBtn" onclick="retryMissed()" style="background: var(--gold); color: #000;">🎯 Drill Missed Pins Only</button>
-        </div>
-        <div class="missed-list" id="missedListContainer"></div>
     </div>
 </div>
 
 <script>
-const FOLDER = "Images/Reg 1/Week 6/";
-
-const BANK = [
-    // Anterior & Medial Thigh
-    { name: "Adductor Brevis", file: "Adductor brevis.png", cat: "Anterior & Medial Thigh", aliases: ["adductor brevis muscle"] },
-    { name: "Adductor Longus", file: "Adductor longus.png", cat: "Anterior & Medial Thigh", aliases: ["adductor longus muscle"] },
-    { name: "Adductor Magnus", file: "Adductor magnus.png", cat: "Anterior & Medial Thigh", aliases: ["adductor magnus muscle"] },
-    { name: "Gracilis", file: "Gracillis.png", cat: "Anterior & Medial Thigh", aliases: ["gracillis", "gracilis muscle"] },
-    { name: "Iliacus", file: "Iliacus.png", cat: "Anterior & Medial Thigh", aliases: ["iliacus muscle"] },
-    { name: "Pectineus", file: "Pectineus.png", cat: "Anterior & Medial Thigh", aliases: ["pectineus muscle"] },
-    { name: "Psoas Major", file: "Psoas Major.png", cat: "Anterior & Medial Thigh", aliases: ["psoas major muscle", "psoas"] },
-    { name: "Rectus Femoris", file: "Rectus Femoris.png", cat: "Anterior & Medial Thigh", aliases: ["rectus femoris muscle"] },
-    { name: "Sartorius", file: "Sartorius.png", cat: "Anterior & Medial Thigh", aliases: ["sartorius muscle"] },
-    { name: "Vastus Lateralis", file: "Vastus lateralis.png", cat: "Anterior & Medial Thigh", aliases: ["vastus lateralis muscle"] },
-    { name: "Vastus Medialis", file: "Vastus medialis.png", cat: "Anterior & Medial Thigh", aliases: ["vastus medialis muscle"] },
-
-    // Posterior Thigh
-    { name: "Biceps Femoris Long Head", file: "Biceps Femoris Long Head.png", cat: "Posterior Thigh", aliases: ["long head of biceps femoris", "biceps femoris - long head"] },
-    { name: "Biceps Femoris Short Head", file: "Biceps Femoris Short Head.png", cat: "Posterior Thigh", aliases: ["short head of biceps femoris", "biceps femoris - short head"] },
-    { name: "Semimembranosus", file: "Semimembranosus.png", cat: "Posterior Thigh", aliases: ["semimenbranosus", "semimembranosus muscle"] },
-    { name: "Semitendinosus", file: "Semitendinosis.png", cat: "Posterior Thigh", aliases: ["semitendinosis", "semitendinosus muscle"] },
-
-    // Gluteal & Hip Rotators
-    { name: "Gluteus Maximus", file: "Gluteus maximus.png", cat: "Gluteal & Hip Rotators", aliases: ["gluteus maximus muscle"] },
-    { name: "Gluteus Medius", file: "Gluteus medius.png", cat: "Gluteal & Hip Rotators", aliases: ["gluteus medius muscle"] },
-    { name: "Gluteus Minimus", file: "Glute minimus.png", cat: "Gluteal & Hip Rotators", aliases: ["glute minimus", "gluteus minimus muscle"] },
-    { name: "Inferior Gemellus", file: "Inferior Gemellus.png", cat: "Gluteal & Hip Rotators", aliases: ["inferior gemellus muscle", "gemellus inferior"] },
-    { name: "Obturator Externus", file: "Obturator Externus.png", cat: "Gluteal & Hip Rotators", aliases: ["obturator externus muscle"] },
-    { name: "Obturator Internus", file: "Obturator Internus.png", cat: "Gluteal & Hip Rotators", aliases: ["obturator internus muscle"] },
-    { name: "Piriformis", file: "Piriformis.png", cat: "Gluteal & Hip Rotators", aliases: ["piriformis muscle"] },
-    { name: "Quadratus Femoris", file: "Quadratus Femoris.png", cat: "Gluteal & Hip Rotators", aliases: ["quadratus femoris muscle"] },
-    { name: "Superior Gemellus", file: "Superior Gemellus.png", cat: "Gluteal & Hip Rotators", aliases: ["superior gemellus muscle", "gemellus superior"] },
-    { name: "Tensor Fasciae Latae", file: "Tensor Fascia Lata.png", cat: "Gluteal & Hip Rotators", aliases: ["tensor fascia lata", "tfl"] },
-
-    // Nerves
-    { name: "Common Peroneal (Fibular) Nerve", file: "Common Peroneal nerve.png", cat: "Nerves", aliases: ["common peroneal nerve", "common fibular nerve"] },
-    { name: "Femoral Nerve", file: "Femoral nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Inferior Gluteal Nerve", file: "Inferior Gluteal Nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Lateral Femoral Cutaneous Nerve", file: "Lateral femoral cutaneous nerve.png", cat: "Nerves", aliases: ["lateral cutaneous nerve of thigh"] },
-    { name: "Obturator Nerve", file: "Obturator nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Saphenous Nerve", file: "Saphenous nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Sciatic Nerve", file: "Sciatic Nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Superior Gluteal Nerve", file: "Superior Gluteal Nerve.png", cat: "Nerves", aliases: [] },
-    { name: "Tibial Nerve", file: "Tibial nerve.png", cat: "Nerves", aliases: [] },
-
-    // Arteries & Veins
-    { name: "Deep Femoral Artery", file: "Deep Femoral Artery.png", cat: "Arteries & Veins", aliases: ["profunda femoris artery", "profunda femoris"] },
-    { name: "Femoral Artery", file: "Femoral artery.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Femoral Vein", file: "Femoral Vein.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Great Saphenous Vein", file: "Great saphenous vein.png", cat: "Arteries & Veins", aliases: ["greater saphenous vein"] },
-    { name: "Inferior Gluteal Artery", file: "Inferior Gluteal Artery.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Inferior Gluteal Vein", file: "Inferior Gluteal Vein.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Lateral Femoral Circumflex Artery", file: "Lateral femoral circumflex artery.png", cat: "Arteries & Veins", aliases: ["lateral circumflex femoral artery"] },
-    { name: "Medial Femoral Circumflex Artery", file: "Medial femoral circumflex artery.png", cat: "Arteries & Veins", aliases: ["medial circumflex femoral artery"] },
-    { name: "Popliteal Artery", file: "Popliteal artery.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Popliteal Vein", file: "Popliteal vein.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Superior Gluteal Artery", file: "Superior Gluteal Artery.png", cat: "Arteries & Veins", aliases: [] },
-    { name: "Superior Gluteal Vein", file: "Superior Gluteal Vein.png", cat: "Arteries & Veins", aliases: [] },
-
-    // Ligaments, Spaces & Fascia
-    { name: "Femoral Triangle", file: "Femoral triangle.png", cat: "Ligaments, Spaces & Fascia", aliases: ["scarpa's triangle"] },
-    { name: "Iliac Crest", file: "Iliac Crest.png", cat: "Ligaments, Spaces & Fascia", aliases: [] },
-    { name: "Iliotibial Band (Tract)", file: "Iliotibial band.png", cat: "Ligaments, Spaces & Fascia", aliases: ["iliotibial band", "iliotibial tract", "it band"] },
-    { name: "Inguinal Ligament", file: "Inguinal ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: ["poupart's ligament"] },
-    { name: "Patellar Ligament", file: "Petallar Ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: ["petallar ligament", "patellar tendon"] },
-    { name: "Sacrotuberous Ligament", file: "Sacrotuberous Ligament.png", cat: "Ligaments, Spaces & Fascia", aliases: [] }
-];
-
-let mode = 'mc';
-let timerEnabled = false;
-let timerInterval = null;
-let timeLeft = 45;
-let deck = [];
-let idx = 0;
-let score = 0;
-let streak = 0;
-let answered = false;
-let missed = [];
-
-function shuffle(arr) {
-    let a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-}
-
-function setMode(m) {
-    mode = m;
-    document.getElementById('modeMC').classList.toggle('active', m === 'mc');
-    document.getElementById('modeType').classList.toggle('active', m === 'type');
-    renderQuestion();
-}
-
-function toggleTimer() {
-    timerEnabled = !timerEnabled;
-    const btn = document.getElementById('timerToggle');
-    btn.textContent = `⏱️ 45s Station Timer: ${timerEnabled ? 'ON' : 'OFF'}`;
-    btn.classList.toggle('timer-active', timerEnabled);
-    document.getElementById('timerDisplay').style.display = timerEnabled ? 'inline-block' : 'none';
-    if (timerEnabled && !answered) resetStationTimer();
-    else clearInterval(timerInterval);
-}
-
-function resetStationTimer() {
-    clearInterval(timerInterval);
-    if (!timerEnabled) return;
-    timeLeft = 45;
-    document.getElementById('timerDisplay').textContent = `⏱️ ${timeLeft}s`;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timerDisplay').textContent = `⏱️ ${timeLeft}s`;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            if (!answered) handleTimeout();
+    // =========================================================================
+    // MASTER IMAGE BANK (Week 6 Complete - Add Week 7 & Week 8 below)
+    // =========================================================================
+    const imageBank = [
+        // --- WEEK 6: Gluteal Region, Thigh Musculature, Ligaments, Nerves & Vessels ---
+        {
+            id: 1,
+            week: 6,
+            region: "Medial Thigh",
+            image: "Adductor brevis.png",
+            accepted: ["adductor brevis", "adductor brevis muscle"],
+            stem: "Identify the highlighted deep medial thigh muscle situated between the anterior and posterior divisions of the obturator nerve:",
+            options: [
+                { text: "Adductor brevis", correct: true, why: "Arises from the body and inferior pubic ramus to insert on the pectineal line and proximal linea aspera; separates the anterior and posterior branches of the obturator nerve." },
+                { text: "Adductor longus", correct: false, why: "Lies anteriorly in the superficial adductor layer, forming the medial border of the femoral triangle." },
+                { text: "Pectineus", correct: false, why: "Forms the medial floor of the femoral triangle superior to adductor brevis and is dual-innervated by the femoral and obturator nerves." },
+                { text: "Adductor magnus", correct: false, why: "Massive triangular muscle posterior to adductor brevis with both an adductor part and a hamstring part." }
+            ]
+        },
+        {
+            id: 2,
+            week: 6,
+            region: "Medial Thigh",
+            image: "Adductor longus.png",
+            accepted: ["adductor longus", "adductor longus muscle"],
+            stem: "Identify the highlighted superficial medial thigh muscle forming the medial border of the femoral triangle:",
+            options: [
+                { text: "Adductor longus", correct: true, why: "Originates via a rounded tendon from the anterior pubis below the pubic crest and inserts onto the middle third of the linea aspera." },
+                { text: "Gracilis", correct: false, why: "Thin, strap-like most medial muscle of the thigh crossing both the hip and knee joints to insert at the pes anserinus." },
+                { text: "Sartorius", correct: false, why: "Courses obliquely from the ASIS to the medial tibia, forming the lateral border of the femoral triangle." },
+                { text: "Adductor brevis", correct: false, why: "Lies deep to the pectineus and adductor longus." }
+            ]
+        },
+        {
+            id: 3,
+            week: 6,
+            region: "Medial Thigh",
+            image: "Adductor magnus.png",
+            accepted: ["adductor magnus", "adductor magnus muscle"],
+            stem: "Identify the highlighted large triangular medial compartment muscle containing the adductor hiatus:",
+            options: [
+                { text: "Adductor magnus", correct: true, why: "Possesses an adductor portion (obturator nerve) inserting along the linea aspera and a hamstring portion (tibial nerve) inserting on the adductor tubercle." },
+                { text: "Semimembranosus", correct: false, why: "Posterior compartment hamstring muscle inserting primarily onto the posterior medial tibial condyle." },
+                { text: "Adductor longus", correct: false, why: "Smaller superficial adductor inserting solely onto the middle third of the linea aspera." },
+                { text: "Vastus medialis", correct: false, why: "Anterior compartment quadriceps muscle located medial to rectus femoris." }
+            ]
+        },
+        {
+            id: 4,
+            week: 6,
+            region: "Posterior Thigh",
+            image: "Biceps Femoris Long Head.png",
+            accepted: ["biceps femoris long head", "long head of biceps femoris", "biceps femoris - long head", "biceps femoris"],
+            stem: "Identify the highlighted hamstring muscle head originating from the ischial tuberosity and innervated by the tibial division of the sciatic nerve:",
+            options: [
+                { text: "Biceps femoris long head", correct: true, why: "Arises from the ischial tuberosity (with the sacrotuberous ligament), crosses both hip and knee, and inserts onto the head of the fibula." },
+                { text: "Biceps femoris short head", correct: false, why: "Originates from the linea aspera and lateral supracondylar line of the femur and is innervated by the common fibular (peroneal) division." },
+                { text: "Semitendinosus", correct: false, why: "Courses medially in the posterior thigh to insert into the pes anserinus on the medial tibia." },
+                { text: "Semimembranosus", correct: false, why: "Lies deep to semitendinosus on the medial posterior thigh." }
+            ]
+        },
+        {
+            id: 5,
+            week: 6,
+            region: "Posterior Thigh",
+            image: "Biceps Femoris Short Head.png",
+            accepted: ["biceps femoris short head", "short head of biceps femoris", "biceps femoris - short head"],
+            stem: "Identify the highlighted posterior thigh muscle head originating from the linea aspera and innervated by the common fibular (peroneal) nerve:",
+            options: [
+                { text: "Biceps femoris short head", correct: true, why: "The only hamstring component that does not cross the hip joint; innervated by the common fibular division of the sciatic nerve." },
+                { text: "Biceps femoris long head", correct: false, why: "Originates superiorly from the ischial tuberosity and receives tibial nerve innervation." },
+                { text: "Vastus lateralis", correct: false, why: "Anterior compartment quadriceps muscle wrapping around the lateral femur." },
+                { text: "Adductor magnus", correct: false, why: "Medial compartment muscle attaching medial to the linea aspera and adductor tubercle." }
+            ]
+        },
+        {
+            id: 6,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Common Peroneal nerve.png",
+            accepted: ["common peroneal nerve", "common fibular nerve", "common peroneal", "common fibular"],
+            stem: "Identify the highlighted lateral terminal division of the sciatic nerve coursing toward the neck of the fibula:",
+            options: [
+                { text: "Common peroneal (fibular) nerve", correct: true, why: "Follows the medial border of the biceps femoris tendon along the superolateral popliteal fossa and winds around the fibular neck." },
+                { text: "Tibial nerve", correct: false, why: "Continues straight vertically down the midline of the popliteal fossa into the posterior leg." },
+                { text: "Sciatic nerve", correct: false, why: "Main trunk prior to bifurcating near the apex of the popliteal fossa." },
+                { text: "Saphenous nerve", correct: false, why: "Cutaneous terminal branch of the femoral nerve descending along the medial leg." }
+            ]
+        },
+        {
+            id: 7,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Deep Femoral Artery.png",
+            accepted: ["deep femoral artery", "profunda femoris artery", "profunda femoris", "deep artery of thigh"],
+            stem: "Identify the highlighted major posterolateral branch of the femoral artery supplying the deep thigh compartments:",
+            options: [
+                { text: "Deep femoral artery (Profunda femoris)", correct: true, why: "Largest branch of the femoral artery, giving off the medial and lateral femoral circumflex arteries and perforating branches." },
+                { text: "Femoral artery", correct: false, why: "Main continuation of the external iliac artery passing through the femoral triangle and adductor canal." },
+                { text: "Lateral femoral circumflex artery", correct: false, why: "Branch arising laterally from the profunda femoris to pass deep to sartorius and rectus femoris." },
+                { text: "Popliteal artery", correct: false, why: "Continuation of the femoral artery distal to the adductor hiatus." }
+            ]
+        },
+        {
+            id: 8,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Femoral artery.png",
+            accepted: ["femoral artery"],
+            stem: "Identify the highlighted primary arterial trunk entering the thigh beneath the mid-inguinal point:",
+            options: [
+                { text: "Femoral artery", correct: true, why: "Continuation of the external iliac artery distal to the inguinal ligament; lies lateral to the femoral vein and medial to the femoral nerve." },
+                { text: "Deep femoral artery", correct: false, why: "Branches posterolaterally ~3–4 cm inferior to the inguinal ligament." },
+                { text: "Femoral vein", correct: false, why: "Lies medial to the femoral artery within the femoral sheath." },
+                { text: "External iliac artery", correct: false, why: "Courses proximal/superior to the inguinal ligament inside the pelvic cavity." }
+            ]
+        },
+        {
+            id: 9,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Femoral nerve.png",
+            accepted: ["femoral nerve"],
+            stem: "Identify the highlighted L2–L4 nerve entering the femoral triangle lateral to the femoral sheath:",
+            options: [
+                { text: "Femoral nerve", correct: true, why: "Descends between psoas major and iliacus beneath the inguinal ligament outside the femoral sheath to innervate anterior thigh muscles." },
+                { text: "Obturator nerve", correct: false, why: "Exits the pelvis via the obturator canal to supply the medial adductor compartment." },
+                { text: "Lateral femoral cutaneous nerve", correct: false, why: "Purely sensory nerve passing just medial to the ASIS." },
+                { text: "Saphenous nerve", correct: false, why: "Longest sensory terminal branch of the femoral nerve." }
+            ]
+        },
+        {
+            id: 10,
+            week: 6,
+            region: "Spaces & Landmarks",
+            image: "Femoral triangle.png",
+            accepted: ["femoral triangle", "scarpas triangle", "scarpa's triangle"],
+            stem: "Identify the highlighted subfascial triangular space bounded by the inguinal ligament, sartorius, and adductor longus:",
+            options: [
+                { text: "Femoral triangle", correct: true, why: "Bounded superiorly by the inguinal ligament, laterally by sartorius, and medially by adductor longus; contains NAVEL from lateral to medial." },
+                { text: "Adductor canal", correct: false, why: "Subsartorial tunnel extending from the apex of the femoral triangle to the adductor hiatus." },
+                { text: "Popliteal fossa", correct: false, why: "Diamond-shaped depression posterior to the knee joint." },
+                { text: "Obturator canal", correct: false, why: "Passageway at the superior obturator foramen transmitting the obturator nerve and vessels." }
+            ]
+        },
+        {
+            id: 11,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Femoral Vein.png",
+            accepted: ["femoral vein"],
+            stem: "Identify the highlighted deep vein situated medial to the femoral artery within the intermediate compartment of the femoral sheath:",
+            options: [
+                { text: "Femoral vein", correct: true, why: "Ascends from the adductor hiatus through the femoral triangle to become the external iliac vein deep to the inguinal ligament." },
+                { text: "Great saphenous vein", correct: false, why: "Superficial vein ascending along the medial leg/thigh before piercing the saphenous opening to drain into the femoral vein." },
+                { text: "Femoral artery", correct: false, why: "Lies immediately lateral to the femoral vein." },
+                { text: "Popliteal vein", correct: false, why: "Located posteriorly in the popliteal fossa prior to entering the adductor hiatus." }
+            ]
+        },
+        {
+            id: 12,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Glute minimus.png",
+            accepted: ["gluteus minimus", "glute minimus", "gluteus minimus muscle"],
+            stem: "Identify the highlighted deepest gluteal abductor muscle innervated by the superior gluteal nerve:",
+            options: [
+                { text: "Gluteus minimus", correct: true, why: "Lies deep to gluteus medius from the external ilium (between anterior and inferior gluteal lines) to the anterior greater trochanter." },
+                { text: "Gluteus medius", correct: false, why: "Lies superficial to gluteus minimus, inserting onto the lateral surface of the greater trochanter." },
+                { text: "Piriformis", correct: false, why: "Exits the greater sciatic foramen inferior to gluteus minimus." },
+                { text: "Tensor fasciae latae", correct: false, why: "Located anteriorly from the ASIS/iliac crest into the iliotibial tract." }
+            ]
+        },
+        {
+            id: 13,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Gluteus maximus.png",
+            accepted: ["gluteus maximus", "gluteus maximus muscle"],
+            stem: "Identify the highlighted largest superficial gluteal muscle innervated by the inferior gluteal nerve:",
+            options: [
+                { text: "Gluteus maximus", correct: true, why: "Chief extensor of the flexed thigh and lateral rotator; inserts primarily into the iliotibial tract and gluteal tuberosity." },
+                { text: "Gluteus medius", correct: false, why: "Fan-shaped abductor situated anterosuperiorly and innervated by the superior gluteal nerve." },
+                { text: "Quadratus femoris", correct: false, why: "Deep rectangular lateral rotator spanning from the ischial tuberosity to the intertrochanteric crest." },
+                { text: "Biceps femoris long head", correct: false, why: "Posterior thigh hamstring muscle originating deep to gluteus maximus on the ischial tuberosity." }
+            ]
+        },
+        {
+            id: 14,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Gluteus medius.png",
+            accepted: ["gluteus medius", "gluteus medius muscle"],
+            stem: "Identify the highlighted primary hip abductor preventing contralateral pelvic drop (Trendelenburg sign):",
+            options: [
+                { text: "Gluteus medius", correct: true, why: "Courses from the external ilium (between anterior and posterior gluteal lines) to the lateral greater trochanter; supplied by superior gluteal nerve." },
+                { text: "Gluteus minimus", correct: false, why: "Smaller deeper synergist lying completely underneath gluteus medius." },
+                { text: "Gluteus maximus", correct: false, why: "Superficial hip extensor innervated by the inferior gluteal nerve." },
+                { text: "Piriformis", correct: false, why: "Deep lateral rotator emerging through the greater sciatic foramen." }
+            ]
+        },
+        {
+            id: 15,
+            week: 6,
+            region: "Medial Thigh",
+            image: "Gracillis.png",
+            accepted: ["gracilis", "gracillis", "gracilis muscle"],
+            stem: "Identify the highlighted most superficial and medial muscle of the adductor compartment:",
+            options: [
+                { text: "Gracilis", correct: true, why: "Strap-like muscle descending from the inferior pubic ramus to the medial proximal tibia (pes anserinus), innervated by the obturator nerve." },
+                { text: "Sartorius", correct: false, why: "Crosses obliquely from lateral (ASIS) to medial (pes anserinus) and is innervated by the femoral nerve." },
+                { text: "Adductor longus", correct: false, why: "Fans inferolaterally onto the linea aspera rather than descending to the tibia." },
+                { text: "Semitendinosus", correct: false, why: "Posterior compartment hamstring joining the pes anserinus from behind." }
+            ]
+        },
+        {
+            id: 16,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Great saphenous vein.png",
+            accepted: ["great saphenous vein", "greater saphenous vein"],
+            stem: "Identify the highlighted longest superficial vein in the body ascending along the medial lower limb:",
+            options: [
+                { text: "Great saphenous vein", correct: true, why: "Ascends anterior to the medial malleolus and along the medial thigh to pass through the saphenous hiatus into the femoral vein." },
+                { text: "Femoral vein", correct: false, why: "Deep vein accompanying the femoral artery beneath the fascia lata." },
+                { text: "Small (lesser) saphenous vein", correct: false, why: "Ascends posterior to the lateral malleolus along the posterior calf into the popliteal vein." },
+                { text: "Saphenous nerve", correct: false, why: "Sensory nerve accompanying the great saphenous vein in the leg." }
+            ]
+        },
+        {
+            id: 17,
+            week: 6,
+            region: "Bones & Ligaments",
+            image: "Iliac Crest.png",
+            accepted: ["iliac crest"],
+            stem: "Identify the highlighted superior curved border of the ilium extending from the ASIS to the PSIS:",
+            options: [
+                { text: "Iliac crest", correct: true, why: "Forms the superior margin of the ala of the ilium; the supracristal plane across its highest points marks the L4 spinous process." },
+                { text: "Inguinal ligament", correct: false, why: "Fibrous band spanning inferomedially from the ASIS to the pubic tubercle." },
+                { text: "Ischial tuberosity", correct: false, why: "Posteroinferior weight-bearing prominence of the ischium." },
+                { text: "Sacrotuberous ligament", correct: false, why: "Spans from the sacrum/coccyx to the ischial tuberosity." }
+            ]
+        },
+        {
+            id: 18,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Iliacus.png",
+            accepted: ["iliacus", "iliacus muscle"],
+            stem: "Identify the highlighted fan-shaped muscle lining the iliac fossa that joins psoas major to insert on the lesser trochanter:",
+            options: [
+                { text: "Iliacus", correct: true, why: "Arises from the iliac fossa and ala of the sacrum, merging with psoas major as the iliopsoas tendon; innervated by the femoral nerve." },
+                { text: "Psoas major", correct: false, why: "Fusiform muscle originating from T12–L5 vertebral bodies and discs; innervated by L1–L3 anterior rami." },
+                { text: "Pectineus", correct: false, why: "Quadrilateral muscle arising from the pectineal line of the pubis." },
+                { text: "Gluteus minimus", correct: false, why: "Located on the external gluteal surface of the ilium." }
+            ]
+        },
+        {
+            id: 19,
+            week: 6,
+            region: "Connective Tissues & Fascia",
+            image: "Iliotibial band.png",
+            accepted: ["iliotibial band", "iliotibial tract", "it band", "it tract"],
+            stem: "Identify the highlighted thickened lateral longitudinal band of fascia lata inserting onto Gerdy's tubercle of the tibia:",
+            options: [
+                { text: "Iliotibial band (tract)", correct: true, why: "Receives insertions from both tensor fasciae latae and gluteus maximus, stabilizing the extended knee laterally." },
+                { text: "Sartorius", correct: false, why: "Muscular strap crossing obliquely from the ASIS to the medial proximal tibia." },
+                { text: "Patellar ligament", correct: false, why: "Anterior continuation of the quadriceps tendon from the patellar apex to the tibial tuberosity." },
+                { text: "Biceps femoris long head", correct: false, why: "Posterior thigh muscle inserting onto the head of the fibula." }
+            ]
+        },
+        {
+            id: 20,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Inferior Gemellus.png",
+            accepted: ["inferior gemellus", "inferior gemellus muscle", "gemellus inferior"],
+            stem: "Identify the highlighted deep lateral hip rotator arising from the ischial tuberosity below the obturator internus tendon:",
+            options: [
+                { text: "Inferior gemellus", correct: true, why: "Arises from the ischial tuberosity, blends with the inferior margin of the obturator internus tendon, and is innervated by the nerve to quadratus femoris." },
+                { text: "Superior gemellus", correct: false, why: "Arises superiorly from the ischial spine and is innervated by the nerve to obturator internus." },
+                { text: "Obturator internus", correct: false, why: "Central tendon sandwiched between the superior and inferior gemelli." },
+                { text: "Quadratus femoris", correct: false, why: "Broader rectangular muscle situated immediately inferior to inferior gemellus." }
+            ]
+        },
+        {
+            id: 21,
+            week: 6,
+            region: "Gluteal Vasculature",
+            image: "Inferior Gluteal Artery.png",
+            accepted: ["inferior gluteal artery"],
+            stem: "Identify the highlighted branch of the internal iliac artery exiting the greater sciatic foramen inferior to the piriformis:",
+            options: [
+                { text: "Inferior gluteal artery", correct: true, why: "Emerges below the piriformis alongside the inferior gluteal and sciatic nerves to supply gluteus maximus and contribute to the cruciate anastomosis." },
+                { text: "Superior gluteal artery", correct: false, why: "Exits the greater sciatic foramen superior to the piriformis muscle." },
+                { text: "Medial femoral circumflex artery", correct: false, why: "Branches from the deep femoral artery anteriorly to supply the femoral head and neck." },
+                { text: "Inferior gluteal vein", correct: false, why: "Venous counterpart draining into the internal iliac vein." }
+            ]
+        },
+        {
+            id: 22,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Inferior Gluteal Nerve.png",
+            accepted: ["inferior gluteal nerve"],
+            stem: "Identify the highlighted nerve (L5–S2) emerging inferior to the piriformis to exclusively innervate the gluteus maximus:",
+            options: [
+                { text: "Inferior gluteal nerve", correct: true, why: "Exits the greater sciatic foramen below piriformis and enters the deep surface of gluteus maximus." },
+                { text: "Superior gluteal nerve", correct: false, why: "Emerges above piriformis to innervate gluteus medius, gluteus minimus, and tensor fasciae latae." },
+                { text: "Sciatic nerve", correct: false, why: "Large nerve trunk emerging below piriformis and descending vertically into the posterior thigh." },
+                { text: "Posterior femoral cutaneous nerve", correct: false, why: "Sensory nerve descending inferiorly down the midline posterior thigh." }
+            ]
+        },
+        {
+            id: 23,
+            week: 6,
+            region: "Gluteal Vasculature",
+            image: "Inferior Gluteal Vein.png",
+            accepted: ["inferior gluteal vein"],
+            stem: "Identify the highlighted gluteal vein exiting inferior to the piriformis to drain into the internal iliac vein:",
+            options: [
+                { text: "Inferior gluteal vein", correct: true, why: "Accompanies the inferior gluteal artery below the piriformis through the infrapiriform foramen." },
+                { text: "Superior gluteal vein", correct: false, why: "Exits the pelvis superior to the piriformis muscle." },
+                { text: "Femoral vein", correct: false, why: "Located in the anterior femoral triangle." },
+                { text: "Popliteal vein", correct: false, why: "Located posteriorly behind the knee joint." }
+            ]
+        },
+        {
+            id: 24,
+            week: 6,
+            region: "Bones & Ligaments",
+            image: "Inguinal ligament.png",
+            accepted: ["inguinal ligament", "pouparts ligament", "poupart's ligament"],
+            stem: "Identify the highlighted rolled inferior border of the external oblique aponeurosis spanning from the ASIS to the pubic tubercle:",
+            options: [
+                { text: "Inguinal ligament", correct: true, why: "Forms the superior base of the femoral triangle and bridges over the retro-inguinal space transmitting the iliopsoas, femoral nerve, and femoral sheath." },
+                { text: "Iliac crest", correct: false, why: "Superior bony rim of the iliac wing." },
+                { text: "Sacrotuberous ligament", correct: false, why: "Posterior pelvic ligament spanning from the sacrum to the ischial tuberosity." },
+                { text: "Iliotibial band", correct: false, why: "Lateral longitudinal thickening of the fascia lata." }
+            ]
+        },
+        {
+            id: 25,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Lateral femoral circumflex artery.png",
+            accepted: ["lateral femoral circumflex artery", "lateral circumflex femoral artery"],
+            stem: "Identify the highlighted artery coursing laterally deep to sartorius and rectus femoris to divide into ascending, transverse, and descending branches:",
+            options: [
+                { text: "Lateral femoral circumflex artery", correct: true, why: "Arises from the lateral aspect of the profunda femoris (or femoral) artery to supply the lateral thigh and hip anastomosis." },
+                { text: "Medial femoral circumflex artery", correct: false, why: "Courses posteromedially between pectineus and iliopsoas to provide the main blood supply to the femoral head." },
+                { text: "Deep femoral artery", correct: false, why: "Parent trunk descending deep to adductor longus." },
+                { text: "Femoral artery", correct: false, why: "Superficial main arterial trunk in the femoral triangle." }
+            ]
+        },
+        {
+            id: 26,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Lateral femoral cutaneous nerve.png",
+            accepted: ["lateral femoral cutaneous nerve", "lateral cutaneous nerve of thigh", "lateral cutaneous nerve of the thigh"],
+            stem: "Identify the highlighted purely sensory nerve (L2–L3) passing deep to the inguinal ligament just medial to the ASIS:",
+            options: [
+                { text: "Lateral femoral cutaneous nerve", correct: true, why: "Innervates the anterolateral thigh skin; entrapment beneath the inguinal ligament causes meralgia paresthetica." },
+                { text: "Femoral nerve", correct: false, why: "Large mixed motor/sensory nerve located more medially over the iliopsoas." },
+                { text: "Saphenous nerve", correct: false, why: "Sensory nerve supplying the medial leg and foot." },
+                { text: "Obturator nerve", correct: false, why: "Courses through the obturator canal to the medial thigh." }
+            ]
+        },
+        {
+            id: 27,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Medial femoral circumflex artery.png",
+            accepted: ["medial femoral circumflex artery", "medial circumflex femoral artery"],
+            stem: "Identify the highlighted artery passing posteromedially between pectineus and iliopsoas to provide the primary blood supply to the femoral head:",
+            options: [
+                { text: "Medial femoral circumflex artery", correct: true, why: "Gives off retinacular arteries along the femoral neck; injury during femoral neck fractures risks avascular necrosis." },
+                { text: "Lateral femoral circumflex artery", correct: false, why: "Courses laterally deep to rectus femoris." },
+                { text: "Obturator artery", correct: false, why: "Exits the obturator foramen to supply the medial adductor muscles." },
+                { text: "Deep femoral artery", correct: false, why: "Main parent branch descending posteriorly along the femur." }
+            ]
+        },
+        {
+            id: 28,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Obturator Externus.png",
+            accepted: ["obturator externus", "obturator externus muscle"],
+            stem: "Identify the highlighted deep lateral hip rotator arising from the external obturator membrane and innervated by the obturator nerve:",
+            options: [
+                { text: "Obturator externus", correct: true, why: "Winds posteriorly inferior to the femoral neck to insert into the trochanteric fossa; the only deep lateral rotator innervated by the obturator nerve." },
+                { text: "Obturator internus", correct: false, why: "Originates inside the true pelvis and exits via the lesser sciatic foramen." },
+                { text: "Quadratus femoris", correct: false, why: "Spans horizontally from the ischial tuberosity to the intertrochanteric crest." },
+                { text: "Pectineus", correct: false, why: "Lies anteriorly on the superior pubic ramus." }
+            ]
+        },
+        {
+            id: 29,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Obturator Internus.png",
+            accepted: ["obturator internus", "obturator internus muscle"],
+            stem: "Identify the highlighted muscle making a 90-degree turn through the lesser sciatic foramen to insert onto the medial greater trochanter:",
+            options: [
+                { text: "Obturator internus", correct: true, why: "Lines the lateral pelvic wall, exits the lesser sciatic foramen, and is flanked superiorly and inferiorly by the gemelli." },
+                { text: "Obturator externus", correct: false, why: "Arises from the external surface of the obturator membrane." },
+                { text: "Piriformis", correct: false, why: "Exits superiorly through the greater sciatic foramen." },
+                { text: "Superior gemellus", correct: false, why: "Smaller extrapelvic muscle arising from the ischial spine." }
+            ]
+        },
+        {
+            id: 30,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Obturator nerve.png",
+            accepted: ["obturator nerve"],
+            stem: "Identify the highlighted L2–L4 nerve traversing the obturator canal to supply the medial adductor compartment:",
+            options: [
+                { text: "Obturator nerve", correct: true, why: "Splits into anterior and posterior divisions straddling adductor brevis to innervate the thigh adductors and gracilis." },
+                { text: "Femoral nerve", correct: false, why: "Passes beneath the inguinal ligament to supply the anterior thigh." },
+                { text: "Sciatic nerve", correct: false, why: "Exits the greater sciatic foramen into the posterior compartment." },
+                { text: "Saphenous nerve", correct: false, why: "Sensory branch of the femoral nerve." }
+            ]
+        },
+        {
+            id: 31,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Pectineus.png",
+            accepted: ["pectineus", "pectineus muscle"],
+            stem: "Identify the highlighted flat quadrangular muscle forming the medial floor of the femoral triangle:",
+            options: [
+                { text: "Pectineus", correct: true, why: "Courses from the pectineal line (pecten pubis) to the pectineal line of the femur; typically innervated by the femoral nerve (and sometimes accessory obturator)." },
+                { text: "Adductor longus", correct: false, why: "Lies medial to pectineus, forming the medial border of the femoral triangle." },
+                { text: "Iliacus", correct: false, why: "Forms the lateral floor of the femoral triangle." },
+                { text: "Adductor brevis", correct: false, why: "Lies deep behind pectineus and adductor longus." }
+            ]
+        },
+        {
+            id: 32,
+            week: 6,
+            region: "Connective Tissues & Fascia",
+            image: "Petallar Ligament.png",
+            accepted: ["patellar ligament", "petallar ligament", "patellar tendon"],
+            stem: "Identify the highlighted distal continuation of the quadriceps tendon spanning from the apex of the patella to the tibial tuberosity:",
+            options: [
+                { text: "Patellar ligament", correct: true, why: "Strong central band transmitting quadriceps extension force to the tibial tuberosity; tested during the L3–L4 patellar reflex." },
+                { text: "Quadriceps tendon", correct: false, why: "Attaches superiorly onto the base of the patella." },
+                { text: "Iliotibial band", correct: false, why: "Inserts laterally onto Gerdy's tubercle of the tibia." },
+                { text: "Sartorius", correct: false, why: "Inserts medially into the pes anserinus." }
+            ]
+        },
+        {
+            id: 33,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Piriformis.png",
+            accepted: ["piriformis", "piriformis muscle"],
+            stem: "Identify the highlighted key landmark muscle of the gluteal region exiting the greater sciatic foramen:",
+            options: [
+                { text: "Piriformis", correct: true, why: "Arises from the anterior sacrum and inserts on the superior border of the greater trochanter; separates the superior and inferior gluteal neurovascular bundles." },
+                { text: "Obturator internus", correct: false, why: "Exits inferiorly through the lesser sciatic foramen." },
+                { text: "Gluteus minimus", correct: false, why: "Lies superiorly on the external ilium." },
+                { text: "Superior gemellus", correct: false, why: "Lies immediately inferior to piriformis, arising from the ischial spine." }
+            ]
+        },
+        {
+            id: 34,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Popliteal artery.png",
+            accepted: ["popliteal artery"],
+            stem: "Identify the highlighted deepest neurovascular structure in the popliteal fossa lying directly against the posterior joint capsule:",
+            options: [
+                { text: "Popliteal artery", correct: true, why: "Continuation of the femoral artery after passing through the adductor hiatus; lies deep to the popliteal vein and tibial nerve." },
+                { text: "Popliteal vein", correct: false, why: "Lies superficial (posterior) to the popliteal artery and deep to the tibial nerve." },
+                { text: "Tibial nerve", correct: false, why: "Most superficial neurovascular structure traversing the popliteal fossa." },
+                { text: "Femoral artery", correct: false, why: "Located proximal to the adductor hiatus in the anterior/medial thigh." }
+            ]
+        },
+        {
+            id: 35,
+            week: 6,
+            region: "Thigh Vasculature",
+            image: "Popliteal vein.png",
+            accepted: ["popliteal vein"],
+            stem: "Identify the highlighted vein situated intermediate between the popliteal artery (deep) and tibial nerve (superficial):",
+            options: [
+                { text: "Popliteal vein", correct: true, why: "Ascends through the popliteal fossa and passes through the adductor hiatus to become the femoral vein." },
+                { text: "Popliteal artery", correct: false, why: "Deepest vessel lying directly on the posterior knee capsule." },
+                { text: "Great saphenous vein", correct: false, why: "Superficial vein ascending along the medial knee rather than inside the deep popliteal fossa." },
+                { text: "Femoral vein", correct: false, why: "Located proximal to the adductor hiatus." }
+            ]
+        },
+        {
+            id: 36,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Psoas Major.png",
+            accepted: ["psoas major", "psoas major muscle", "psoas"],
+            stem: "Identify the highlighted long fusiform hip flexor arising from T12–L5 vertebrae and descending beneath the inguinal ligament:",
+            options: [
+                { text: "Psoas major", correct: true, why: "Joins the iliacus tendon to insert onto the lesser trochanter of the femur; innervated by anterior rami of L1–L3." },
+                { text: "Iliacus", correct: false, why: "Fan-shaped muscle lining the iliac fossa lateral to psoas major." },
+                { text: "Pectineus", correct: false, why: "Short quadrilateral muscle arising from the superior pubic ramus." },
+                { text: "Rectus femoris", correct: false, why: "Arises from the AIIS and supra-acetabular ilium." }
+            ]
+        },
+        {
+            id: 37,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Quadratus Femoris.png",
+            accepted: ["quadratus femoris", "quadratus femoris muscle"],
+            stem: "Identify the highlighted flat rectangular muscle—the most inferior of the deep lateral hip rotators:",
+            options: [
+                { text: "Quadratus femoris", correct: true, why: "Spans horizontally from the lateral border of the ischial tuberosity to the quadrate tubercle on the intertrochanteric crest." },
+                { text: "Inferior gemellus", correct: false, why: "Narrow triangular muscle immediately superior to quadratus femoris." },
+                { text: "Obturator externus", correct: false, why: "Lies deep/anterior to quadratus femoris, inserting into the trochanteric fossa." },
+                { text: "Adductor magnus", correct: false, why: "Large medial compartment muscle located inferior to quadratus femoris." }
+            ]
+        },
+        {
+            id: 38,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Rectus Femoris.png",
+            accepted: ["rectus femoris", "rectus femoris muscle"],
+            stem: "Identify the highlighted bipennate quadriceps muscle that crosses both the hip and knee joints:",
+            options: [
+                { text: "Rectus femoris", correct: true, why: "Originates from the AIIS and ilium above the acetabulum; the only quadriceps head that flexes the hip in addition to extending the knee." },
+                { text: "Vastus intermedius", correct: false, why: "Lies directly deep to rectus femoris on the anterior femoral shaft." },
+                { text: "Sartorius", correct: false, why: "Long oblique strap muscle crossing superficial to the quadriceps from ASIS to medial tibia." },
+                { text: "Vastus lateralis", correct: false, why: "Largest quadriceps head located along the lateral shaft of the femur." }
+            ]
+        },
+        {
+            id: 39,
+            week: 6,
+            region: "Bones & Ligaments",
+            image: "Sacrotuberous Ligament.png",
+            accepted: ["sacrotuberous ligament"],
+            stem: "Identify the highlighted strong pelvic ligament extending from the posterior sacrum/coccyx to the ischial tuberosity:",
+            options: [
+                { text: "Sacrotuberous ligament", correct: true, why: "Converts the greater and lesser sciatic notches into foramina and resists posterior nutation/tilting of the sacral apex." },
+                { text: "Sacrospinous ligament", correct: false, why: "Shorter, deeper triangular ligament attaching to the ischial spine." },
+                { text: "Inguinal ligament", correct: false, why: "Anterior ligament spanning from the ASIS to the pubic tubercle." },
+                { text: "Iliac crest", correct: false, why: "Superior bony border of the ilium." }
+            ]
+        },
+        {
+            id: 40,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Saphenous nerve.png",
+            accepted: ["saphenous nerve"],
+            stem: "Identify the highlighted longest cutaneous branch of the femoral nerve accompanying the femoral vessels through the adductor canal:",
+            options: [
+                { text: "Saphenous nerve", correct: true, why: "Pierces the fascial roof of the adductor canal (without passing through the adductor hiatus) to supply skin of the medial leg and foot." },
+                { text: "Femoral nerve", correct: false, why: "Main parent trunk in the proximal femoral triangle prior to branching." },
+                { text: "Obturator nerve", correct: false, why: "Supplies the medial thigh adductors via the obturator canal." },
+                { text: "Tibial nerve", correct: false, why: "Descends posteriorly through the popliteal fossa." }
+            ]
+        },
+        {
+            id: 41,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Sartorius.png",
+            accepted: ["sartorius", "sartorius muscle"],
+            stem: "Identify the highlighted longest muscle in the human body crossing obliquely from the ASIS to the medial proximal tibia:",
+            options: [
+                { text: "Sartorius", correct: true, why: "Flexes, abducts, and laterally rotates the hip while flexing the knee; forms the lateral border of the femoral triangle and roof of the adductor canal." },
+                { text: "Gracilis", correct: false, why: "Descends vertically along the medial border of the thigh from the pubis to the pes anserinus." },
+                { text: "Rectus femoris", correct: false, why: "Courses vertically down the anterior midline of the thigh into the patellar tendon." },
+                { text: "Tensor fasciae latae", correct: false, why: "Short anterolateral muscle inserting into the iliotibial band." }
+            ]
+        },
+        {
+            id: 42,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Sciatic Nerve.png",
+            accepted: ["sciatic nerve", "ischiadic nerve"],
+            stem: "Identify the highlighted largest nerve in the body (L4–S3) descending vertically deep to gluteus maximus:",
+            options: [
+                { text: "Sciatic nerve", correct: true, why: "Exits the greater sciatic foramen inferior to piriformis, crosses posterior to the obturator internus/gemelli/quadratus femoris, and divides into tibial and common fibular nerves." },
+                { text: "Tibial nerve", correct: false, why: "Medial terminal branch distal to the sciatic bifurcation." },
+                { text: "Inferior gluteal nerve", correct: false, why: "Branches immediately into the deep surface of gluteus maximus." },
+                { text: "Femoral nerve", correct: false, why: "Located in the anterior compartment of the thigh." }
+            ]
+        },
+        {
+            id: 43,
+            week: 6,
+            region: "Posterior Thigh",
+            image: "Semimembranosus.png",
+            accepted: ["semimembranosus", "semimenbranosus", "semimembranosus muscle"],
+            stem: "Identify the highlighted deep medial hamstring muscle characterized by a flattened proximal membranous tendon:",
+            options: [
+                { text: "Semimembranosus", correct: true, why: "Lies deep to semitendinosus and inserts primarily onto the posterior aspect of the medial tibial condyle." },
+                { text: "Semitendinosus", correct: false, why: "Lies superficial to semimembranosus with a long cord-like distal tendon inserting into the pes anserinus." },
+                { text: "Adductor magnus", correct: false, why: "Located anterior/medial to the hamstrings in the medial compartment." },
+                { text: "Gracilis", correct: false, why: "Superficial medial adductor muscle." }
+            ]
+        },
+        {
+            id: 44,
+            week: 6,
+            region: "Posterior Thigh",
+            image: "Semitendinosis.png",
+            accepted: ["semitendinosus", "semitendinosis", "semitendinosus muscle"],
+            stem: "Identify the highlighted superficial medial hamstring muscle whose long distal tendon inserts into the pes anserinus:",
+            options: [
+                { text: "Semitendinosus", correct: true, why: "Originates with biceps femoris long head from the ischial tuberosity and joins sartorius and gracilis at the medial proximal tibia." },
+                { text: "Semimembranosus", correct: false, why: "Broader, deeper medial hamstring inserting onto the posterior medial tibial condyle." },
+                { text: "Biceps femoris long head", correct: false, why: "Courses laterally to insert onto the head of the fibula." },
+                { text: "Sartorius", correct: false, why: "Anterior compartment muscle forming the anterior-most tendon of the pes anserinus." }
+            ]
+        },
+        {
+            id: 45,
+            week: 6,
+            region: "Gluteal & Hip Rotators",
+            image: "Superior Gemellus.png",
+            accepted: ["superior gemellus", "superior gemellus muscle", "gemellus superior"],
+            stem: "Identify the highlighted small lateral hip rotator arising from the ischial spine above the obturator internus tendon:",
+            options: [
+                { text: "Superior gemellus", correct: true, why: "Arises from the external surface of the ischial spine, blends with the superior border of obturator internus, and shares the nerve to obturator internus." },
+                { text: "Inferior gemellus", correct: false, why: "Arises inferiorly from the ischial tuberosity." },
+                { text: "Piriformis", correct: false, why: "Larger muscle superior to superior gemellus exiting the greater sciatic foramen." },
+                { text: "Obturator internus", correct: false, why: "Central tendon flanked by both gemelli." }
+            ]
+        },
+        {
+            id: 46,
+            week: 6,
+            region: "Gluteal Vasculature",
+            image: "Superior Gluteal Artery.png",
+            accepted: ["superior gluteal artery"],
+            stem: "Identify the highlighted largest branch of the internal iliac artery exiting the pelvis superior to the piriformis:",
+            options: [
+                { text: "Superior gluteal artery", correct: true, why: "Emerges through the suprapiriform foramen to supply gluteus medius, gluteus minimus, and tensor fasciae latae." },
+                { text: "Inferior gluteal artery", correct: false, why: "Exits inferior to the piriformis muscle." },
+                { text: "Superior gluteal vein", correct: false, why: "Venous counterpart draining into the internal iliac vein." },
+                { text: "Lateral femoral circumflex artery", correct: false, why: "Branches from the profunda femoris in the anterior thigh." }
+            ]
+        },
+        {
+            id: 47,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Superior Gluteal Nerve.png",
+            accepted: ["superior gluteal nerve"],
+            stem: "Identify the highlighted L4–S1 nerve emerging above the piriformis to innervate gluteus medius, gluteus minimus, and TFL:",
+            options: [
+                { text: "Superior gluteal nerve", correct: true, why: "Courses laterally between gluteus medius and minimus; injury causes gluteal gait / positive Trendelenburg sign." },
+                { text: "Inferior gluteal nerve", correct: false, why: "Emerges below piriformis to innervate gluteus maximus." },
+                { text: "Sciatic nerve", correct: false, why: "Emerges below piriformis and descends into the posterior thigh." },
+                { text: "Femoral nerve", correct: false, why: "Innervates anterior thigh muscles." }
+            ]
+        },
+        {
+            id: 48,
+            week: 6,
+            region: "Gluteal Vasculature",
+            image: "Superior Gluteal Vein.png",
+            accepted: ["superior gluteal vein"],
+            stem: "Identify the highlighted gluteal vein exiting superior to the piriformis to drain into the internal iliac vein:",
+            options: [
+                { text: "Superior gluteal vein", correct: true, why: "Accompanies the superior gluteal artery and nerve above the piriformis muscle." },
+                { text: "Inferior gluteal vein", correct: false, why: "Exits inferior to the piriformis muscle." },
+                { text: "Femoral vein", correct: false, why: "Located in the anterior femoral triangle." },
+                { text: "Great saphenous vein", correct: false, why: "Superficial medial lower extremity vein." }
+            ]
+        },
+        {
+            id: 49,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Tensor Fascia Lata.png",
+            accepted: ["tensor fasciae latae", "tensor fascia lata", "tfl", "tensor fasciae latae muscle"],
+            stem: "Identify the highlighted anterolateral hip muscle enclosed between layers of fascia lata inserting into the iliotibial band:",
+            options: [
+                { text: "Tensor fasciae latae", correct: true, why: "Arises from the anterior iliac crest and ASIS, inserts into the IT tract, and is innervated by the superior gluteal nerve." },
+                { text: "Sartorius", correct: false, why: "Courses inferomedially across the thigh to the pes anserinus." },
+                { text: "Gluteus medius", correct: false, why: "Located more posteriorly on the external ilium, inserting onto the greater trochanter." },
+                { text: "Vastus lateralis", correct: false, why: "Deep anterior compartment quadriceps muscle covered by the IT band." }
+            ]
+        },
+        {
+            id: 50,
+            week: 6,
+            region: "Lower Limb Nerves",
+            image: "Tibial nerve.png",
+            accepted: ["tibial nerve"],
+            stem: "Identify the highlighted larger medial terminal division of the sciatic nerve descending vertically through the popliteal fossa:",
+            options: [
+                { text: "Tibial nerve", correct: true, why: "Most superficial structure in the popliteal fossa, lying posterior to the popliteal vein and artery before entering the posterior leg." },
+                { text: "Common peroneal (fibular) nerve", correct: false, why: "Follows the biceps femoris tendon laterally toward the neck of the fibula." },
+                { text: "Saphenous nerve", correct: false, why: "Cutaneous branch of the femoral nerve on the medial side of the knee." },
+                { text: "Obturator nerve", correct: false, why: "Terminates in the medial adductor compartment." }
+            ]
+        },
+        {
+            id: 51,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Vastus lateralis.png",
+            accepted: ["vastus lateralis", "vastus lateralis muscle"],
+            stem: "Identify the highlighted largest component of the quadriceps femoris forming the lateral muscular bulk of the thigh:",
+            options: [
+                { text: "Vastus lateralis", correct: true, why: "Arises from the greater trochanter and lateral lip of the linea aspera, inserting into the quadriceps tendon and lateral patella." },
+                { text: "Vastus medialis", correct: false, why: "Forms the prominent teardrop bulge superomedial to the patella." },
+                { text: "Rectus femoris", correct: false, why: "Central bipennate head descending straight down the anterior thigh." },
+                { text: "Biceps femoris short head", correct: false, why: "Located posteriorly behind the lateral intermuscular septum." }
+            ]
+        },
+        {
+            id: 52,
+            week: 6,
+            region: "Anterior Thigh",
+            image: "Vastus medialis.png",
+            accepted: ["vastus medialis", "vastus medialis muscle", "vmo"],
+            stem: "Identify the highlighted medial quadriceps head whose distal oblique fibers stabilize the patella medially:",
+            options: [
+                { text: "Vastus medialis", correct: true, why: "Originates from the intertrochanteric line and medial lip of the linea aspera; innervated by the femoral nerve." },
+                { text: "Vastus lateralis", correct: false, why: "Located along the lateral aspect of the femoral shaft." },
+                { text: "Adductor longus", correct: false, why: "Lies medially in the adductor compartment rather than inserting into the quadriceps tendon." },
+                { text: "Sartorius", correct: false, why: "Superficial strap muscle passing over the medial knee to the tibia." }
+            ]
         }
-    }, 1000);
-}
+    ];
 
-function startQuiz(customDeck = null) {
-    const filter = document.getElementById('catFilter').value;
-    if (customDeck) {
-        deck = shuffle(customDeck);
-    } else {
-        const filtered = filter === 'ALL' ? BANK : BANK.filter(x => x.cat === filter);
-        deck = shuffle(filtered);
+    // =========================================================================
+    // STATE & PERSISTENCE
+    // =========================================================================
+    let selectedWeeks = new Set();
+    let examFormat = 'mc';     // 'mc' or 'typein'
+    let viewMode = 'one';      // 'one' or 'all'
+    let activePool = [];
+    let currentIndex = 0;
+    let userAnswers = [];
+    let sessionMissedIds = [];
+    let popupTimeout = null;
+
+    let muted = false;
+    try { muted = localStorage.getItem('stfuErijah') === '1'; } catch (e) {}
+
+    function getGlobalMissed() {
+        try {
+            const raw = localStorage.getItem('reg1_lab_missed');
+            return raw ? JSON.parse(raw) : [];
+        } catch (e) { return []; }
     }
-    idx = 0;
-    score = 0;
-    streak = 0;
-    missed = [];
-    document.getElementById('quizArea').style.display = 'block';
-    document.getElementById('resultsArea').style.display = 'none';
-    updateScoreUI();
-    renderQuestion();
-}
 
-function retryMissed() {
-    if (missed.length > 0) startQuiz(missed);
-}
+    function saveGlobalMissed(ids) {
+        try { localStorage.setItem('reg1_lab_missed', JSON.stringify(Array.from(new Set(ids)))); } catch (e) {}
+        updateMissedButtonCount();
+    }
 
-function updateScoreUI() {
-    document.getElementById('scoreLive').textContent = `Score: ${score} / ${idx}`;
-    document.getElementById('streakDisplay').textContent = `🔥 Streak: ${streak}`;
-}
+    function addGlobalMissed(id) {
+        const list = getGlobalMissed();
+        if (!list.includes(id)) {
+            list.push(id);
+            saveGlobalMissed(list);
+        }
+    }
 
-function renderQuestion() {
-    if (idx >= deck.length) return showResults();
-    answered = false;
-    const item = deck[idx];
+    function removeGlobalMissed(id) {
+        const list = getGlobalMissed().filter(item => item !== id);
+        saveGlobalMissed(list);
+    }
 
-    document.getElementById('qCounter').textContent = `Station ${idx + 1} of ${deck.length}`;
-    document.getElementById('progressBar').style.width = `${(idx / deck.length) * 100}%`;
-    document.getElementById('catTag').textContent = item.cat;
-    document.getElementById('pinImage').src = FOLDER + encodeURIComponent(item.file);
+    function updateMissedButtonCount() {
+        const btn = document.getElementById('prioritizeMissedBtn');
+        if (btn) btn.textContent = `Prioritize Missed (${getGlobalMissed().length})`;
+    }
 
-    const fb = document.getElementById('feedbackBanner');
-    fb.style.display = 'none';
-    fb.className = 'feedback-banner';
-    document.getElementById('nextBtn').style.display = 'none';
+    // =========================================================================
+    // INITIALIZATION & WEEK CHIPS
+    // =========================================================================
+    function initWeekChips() {
+        const weeks = [...new Set(imageBank.map(item => item.week))].sort((a, b) => a - b);
+        weeks.forEach(w => selectedWeeks.add(w));
 
-    const optGrid = document.getElementById('optionsGrid');
-    const typeBox = document.getElementById('typeBox');
-
-    if (mode === 'mc') {
-        optGrid.style.display = 'grid';
-        typeBox.style.display = 'none';
-        optGrid.innerHTML = '';
-
-        // Prefer distractors from same category first
-        let sameCat = BANK.filter(x => x.cat === item.cat && x.name !== item.name);
-        let otherCat = BANK.filter(x => x.cat !== item.cat && x.name !== item.name);
-        let distractors = shuffle([...shuffle(sameCat).slice(0, 3), ...shuffle(otherCat)]).slice(0, 3);
-        let choices = shuffle([item, ...distractors]);
-
-        choices.forEach(choice => {
+        const container = document.getElementById('weekChipsContainer');
+        container.innerHTML = '';
+        weeks.forEach(w => {
+            const count = imageBank.filter(item => item.week === w).length;
             const btn = document.createElement('button');
-            btn.className = 'opt-btn';
-            btn.textContent = choice.name;
-            btn.onclick = () => checkMC(btn, choice.name === item.name, item);
-            optGrid.appendChild(btn);
+            btn.className = 'chip-btn active';
+            btn.dataset.week = w;
+            btn.textContent = `Week ${w} (${count})`;
+            btn.onclick = () => {
+                if (selectedWeeks.has(w)) {
+                    selectedWeeks.delete(w);
+                    btn.classList.remove('active');
+                } else {
+                    selectedWeeks.add(w);
+                    btn.classList.add('active');
+                }
+                updatePoolCounter();
+            };
+            container.appendChild(btn);
         });
-    } else {
-        optGrid.style.display = 'none';
-        typeBox.style.display = 'flex';
-        const inp = document.getElementById('typeInput');
-        inp.value = '';
-        inp.disabled = false;
-        setTimeout(() => inp.focus(), 50);
+        updatePoolCounter();
+        updateMissedButtonCount();
     }
 
-    resetStationTimer();
-}
-
-function normalize(str) {
-    return str.toLowerCase().replace(/\(.*?\)/g, '').replace(/[^a-z0-9]/g, '').trim();
-}
-
-function checkMC(btn, isCorrect, item) {
-    if (answered) return;
-    answered = true;
-    clearInterval(timerInterval);
-
-    const allBtns = document.querySelectorAll('.opt-btn');
-    allBtns.forEach(b => {
-        b.disabled = true;
-        if (b.textContent === item.name) b.classList.add('correct');
-    });
-
-    if (isCorrect) {
-        score++;
-        streak++;
-        showFeedback(true, `✅ Correct! ${item.name}`);
-    } else {
-        btn.classList.add('wrong');
-        streak = 0;
-        missed.push(item);
-        showFeedback(false, `❌ Incorrect — That pin is: ${item.name}`);
+    function selectAllWeeks() {
+        document.querySelectorAll('#weekChipsContainer .chip-btn').forEach(btn => {
+            const w = Number(btn.dataset.week);
+            selectedWeeks.add(w);
+            btn.classList.add('active');
+        });
+        updatePoolCounter();
     }
-    finishStation();
-}
 
-function checkTyped() {
-    if (answered) return;
-    const item = deck[idx];
-    const userVal = normalize(document.getElementById('typeInput').value);
-    if (!userVal) return;
-
-    answered = true;
-    clearInterval(timerInterval);
-    document.getElementById('typeInput').disabled = true;
-
-    const validAnswers = [item.name, ...item.aliases].map(normalize);
-    const isCorrect = validAnswers.includes(userVal);
-
-    if (isCorrect) {
-        score++;
-        streak++;
-        showFeedback(true, `✅ Nailed it! ${item.name}`);
-    } else {
-        streak = 0;
-        missed.push(item);
-        showFeedback(false, `❌ Incorrect — Correct pin: ${item.name}`);
+    function clearAllWeeks() {
+        selectedWeeks.clear();
+        document.querySelectorAll('#weekChipsContainer .chip-btn').forEach(btn => btn.classList.remove('active'));
+        updatePoolCounter();
     }
-    finishStation();
-}
 
-function handleTimeout() {
-    answered = true;
-    const item = deck[idx];
-    streak = 0;
-    missed.push(item);
-    document.querySelectorAll('.opt-btn').forEach(b => {
-        b.disabled = true;
-        if (b.textContent === item.name) b.classList.add('correct');
-    });
-    document.getElementById('typeInput').disabled = true;
-    showFeedback(false, `⏰ Time's up! Station buzzer sounded. Answer: ${item.name}`);
-    finishStation();
-}
-
-function showFeedback(ok, msg) {
-    const fb = document.getElementById('feedbackBanner');
-    fb.textContent = msg;
-    fb.className = 'feedback-banner ' + (ok ? 'ok' : 'bad');
-    fb.style.display = 'block';
-}
-
-function finishStation() {
-    document.getElementById('scoreLive').textContent = `Score: ${score} / ${idx + 1}`;
-    document.getElementById('streakDisplay').textContent = `🔥 Streak: ${streak}`;
-    document.getElementById('nextBtn').style.display = 'block';
-}
-
-function nextQuestion() {
-    idx++;
-    renderQuestion();
-}
-
-function showResults() {
-    clearInterval(timerInterval);
-    document.getElementById('quizArea').style.display = 'none';
-    document.getElementById('resultsArea').style.display = 'block';
-    const pct = Math.round((score / deck.length) * 100);
-    document.getElementById('finalScore').textContent = `${pct}%`;
-    document.getElementById('finalSummary').textContent = `You pinned ${score} out of ${deck.length} structures accurately.`;
-
-    const retryBtn = document.getElementById('retryMissedBtn');
-    const missedBox = document.getElementById('missedListContainer');
-    if (missed.length === 0) {
-        retryBtn.style.display = 'none';
-        missedBox.innerHTML = `<p style="text-align:center; color:#86efac; font-weight:bold;">Flawless run! Zero missed pins.</p>`;
-    } else {
-        retryBtn.style.display = 'inline-block';
-        missedBox.innerHTML = `<h4 style="margin-bottom:10px; color:var(--gold);">Missed Pins (${missed.length}):</h4>` +
-            missed.map(m => `<div class="missed-item"><span>${m.name}</span><span style="color:var(--muted); font-size:12px;">${m.cat}</span></div>`).join('');
+    function getFilteredPool() {
+        return imageBank.filter(item => selectedWeeks.has(item.week));
     }
-}
 
-document.getElementById('typeInput').addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-        if (!answered) checkTyped();
-        else nextQuestion();
+    function updatePoolCounter() {
+        const pool = getFilteredPool();
+        const count = pool.length;
+        const wkCount = selectedWeeks.size;
+        document.getElementById('poolCounter').textContent = `Pool: ${count} image${count === 1 ? '' : 's'} across ${wkCount} week${wkCount === 1 ? '' : 's'} selected`;
+
+        const disabled = count === 0;
+        ['btnQ15', 'btnQ25', 'btnQ35', 'btnQ50', 'btnQAll'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.disabled = disabled;
+        });
+        document.getElementById('btnQAll').textContent = `Entire Selected Bank (${count})`;
     }
-});
 
-startQuiz();
+    // =========================================================================
+    // FORMAT, VIEW & MUTE CONTROLS
+    // =========================================================================
+    function setFormat(fmt) {
+        examFormat = fmt;
+        document.getElementById('launchFormatMC').classList.toggle('active', fmt === 'mc');
+        document.getElementById('launchFormatType').classList.toggle('active', fmt === 'typein');
+        document.getElementById('formatToggleBtn').textContent = fmt === 'mc' ? 'Format: MC' : 'Format: Type-In';
+        if (!document.getElementById('quizArea').classList.contains('hidden')) {
+            renderActiveQuiz();
+        }
+    }
+
+    function toggleFormat() {
+        setFormat(examFormat === 'mc' ? 'typein' : 'mc');
+    }
+
+    function setViewMode(mode) {
+        viewMode = mode;
+        document.getElementById('launchViewOne').classList.toggle('active', mode === 'one');
+        document.getElementById('launchViewAll').classList.toggle('active', mode === 'all');
+        document.getElementById('viewToggleBtn').textContent = mode === 'one' ? 'View: One by One' : 'View: All at Once';
+        if (!document.getElementById('quizArea').classList.contains('hidden')) {
+            renderActiveQuiz();
+        }
+    }
+
+    function toggleViewMode() {
+        setViewMode(viewMode === 'one' ? 'all' : 'one');
+    }
+
+    function updateStfuButton() {
+        const b = document.getElementById('stfuBtn');
+        b.textContent = muted ? 'Bring Back Erijah' : 'STFU Erijah';
+        b.classList.toggle('muted', muted);
+        if (muted) {
+            const a = document.getElementById('wrongAudio');
+            if (a) { a.pause(); a.currentTime = 0; }
+            clearTimeout(popupTimeout);
+            document.getElementById('wrongPopup').classList.add('hidden');
+        }
+    }
+
+    function toggleStfu() {
+        muted = !muted;
+        try { localStorage.setItem('stfuErijah', muted ? '1' : '0'); } catch (e) {}
+        updateStfuButton();
+    }
+
+    function triggerWrongFeedback() {
+        if (!muted) {
+            const audio = document.getElementById('wrongAudio');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+            }
+            const popup = document.getElementById('wrongPopup');
+            popup.classList.remove('hidden');
+            clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(() => popup.classList.add('hidden'), 2000);
+        }
+    }
+
+    // =========================================================================
+    // SHUFFLE & LAUNCH ENGINE
+    // =========================================================================
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+    }
+
+    function prepareQuestions(rawItems) {
+        const cloned = JSON.parse(JSON.stringify(rawItems));
+        shuffleArray(cloned);
+        cloned.forEach(q => shuffleArray(q.options));
+        return cloned;
+    }
+
+    function startQuiz(limit) {
+        const pool = getFilteredPool();
+        if (pool.length === 0) return;
+
+        let prepared = prepareQuestions(pool);
+        if (typeof limit === 'number' && prepared.length > limit) {
+            prepared = prepared.slice(0, limit);
+        }
+
+        activePool = prepared;
+        beginSession();
+    }
+
+    function launchMissedDrill() {
+        const missedIds = getGlobalMissed();
+        const missedItems = imageBank.filter(item => missedIds.includes(item.id));
+        if (missedItems.length === 0) {
+            alert('No missed images recorded yet!');
+            return;
+        }
+        activePool = prepareQuestions(missedItems);
+        beginSession();
+    }
+
+    function beginSession() {
+        currentIndex = 0;
+        userAnswers = new Array(activePool.length).fill(null);
+        sessionMissedIds = [];
+
+        document.getElementById('launcherView').classList.add('hidden');
+        document.getElementById('summaryView').classList.add('hidden');
+        document.getElementById('quizArea').classList.remove('hidden');
+        document.getElementById('menuBtn').classList.remove('hidden');
+        document.getElementById('progressPill').classList.remove('hidden');
+
+        updateHeaderStats();
+        renderActiveQuiz();
+    }
+
+    function showLauncher() {
+        document.getElementById('quizArea').classList.add('hidden');
+        document.getElementById('summaryView').classList.add('hidden');
+        document.getElementById('menuBtn').classList.add('hidden');
+        document.getElementById('progressPill').classList.add('hidden');
+        document.getElementById('launcherView').classList.remove('hidden');
+        document.getElementById('progressFill').style.width = '0%';
+        document.getElementById('scorePill').textContent = 'Score: 0 / 0 (0%)';
+        updatePoolCounter();
+    }
+
+    function retakeCurrentQuiz() {
+        activePool = prepareQuestions(activePool);
+        beginSession();
+    }
+
+    function reviewSessionMissed() {
+        const missedItems = activePool.filter(q => sessionMissedIds.includes(q.id));
+        if (missedItems.length === 0) return;
+        activePool = prepareQuestions(missedItems);
+        beginSession();
+    }
+
+    // =========================================================================
+    // IMAGE FALLBACK LOADER (Searches Week Folder + Root Reg 1 Folder)
+    // =========================================================================
+    function handleImageError(imgEl, filename, week) {
+        const attempt = Number(imgEl.dataset.attempt || 0);
+        const altExt = filename.endsWith('.png')
+            ? filename.replace(/\.png$/, '.PNG')
+            : filename.replace(/\.PNG$/, '.png');
+
+        const candidates = [
+            `Images/Reg%201/Week%20${week}/${encodeURIComponent(filename)}`,
+            `Images/Reg 1/Week ${week}/${filename}`,
+            `./Images/Reg 1/Week ${week}/${filename}`,
+            `../Images/Reg 1/Week ${week}/${filename}`,
+            `Images/Reg 1/${filename}`,
+            `Images/Reg 1/Week ${week}/${altExt}`
+        ];
+
+        if (attempt < candidates.length) {
+            imgEl.dataset.attempt = attempt + 1;
+            imgEl.src = candidates[attempt];
+        } else {
+            const wrapper = imgEl.parentElement;
+            wrapper.innerHTML = `<div class="img-error-box">⚠️ Image not found: <code>${filename}</code> in <code>Images/Reg 1/Week ${week}/</code></div>`;
+        }
+    }
+
+    // =========================================================================
+    // SPELLING / LEVENSHTEIN CHECKER
+    // =========================================================================
+    function levenshtein(a, b) {
+        const m = [];
+        for (let i = 0; i <= b.length; i++) m[i] = [i];
+        for (let j = 0; j <= a.length; j++) m[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                m[i][j] = b[i - 1] === a[j - 1]
+                    ? m[i - 1][j - 1]
+                    : Math.min(m[i - 1][j - 1] + 1, m[i][j - 1] + 1, m[i - 1][j] + 1);
+            }
+        }
+        return m[b.length][a.length];
+    }
+
+    function evaluateTypedAnswer(input, acceptedList) {
+        const clean = input.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+        if (!clean) return { status: 'empty' };
+
+        let bestDist = 999;
+        let bestMatch = acceptedList[0];
+
+        for (const target of acceptedList) {
+            const cleanTarget = target.trim().toLowerCase().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, '');
+            if (clean === cleanTarget) {
+                return { status: 'exact', match: target };
+            }
+            const d = levenshtein(clean, cleanTarget);
+            if (d < bestDist) {
+                bestDist = d;
+                bestMatch = target;
+            }
+        }
+
+        const typoThreshold = bestMatch.length > 7 ? 2 : 1;
+        if (bestDist <= typoThreshold) {
+            return { status: 'typo', match: bestMatch };
+        }
+        return { status: 'wrong', match: acceptedList[0] };
+    }
+
+    // =========================================================================
+    // RENDERING & INTERACTION
+    // =========================================================================
+    function updateHeaderStats() {
+        const total = activePool.length;
+        const answered = userAnswers.filter(a => a !== null).length;
+        const correct = userAnswers.filter(a => a && a.isCorrect).length;
+        const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+
+        document.getElementById('scorePill').textContent = `Score: ${correct} / ${answered} (${pct}%)`;
+
+        if (viewMode === 'one') {
+            document.getElementById('progressPill').textContent = `Question ${Math.min(currentIndex + 1, total)} of ${total}`;
+            document.getElementById('progressFill').style.width = `${(answered / total) * 100}%`;
+        } else {
+            document.getElementById('progressPill').textContent = `Answered ${answered} of ${total}`;
+            document.getElementById('progressFill').style.width = `${(answered / total) * 100}%`;
+        }
+    }
+
+    function buildQuestionCardHTML(q, idx) {
+        const letters = ['A', 'B', 'C', 'D'];
+        const ansState = userAnswers[idx];
+        const isLocked = ansState !== null;
+
+        let inputSectionHTML = '';
+        if (examFormat === 'mc') {
+            const optsHTML = q.options.map((opt, optIdx) => {
+                let cls = 'option-item';
+                if (isLocked) {
+                    cls += ' disabled';
+                    if (opt.correct) cls += ' correct';
+                    else if (ansState.selectedOptIdx === optIdx) cls += ' incorrect';
+                }
+                return `<li class="${cls}" onclick="handleMCSelect(${idx}, ${optIdx})"><strong>${letters[optIdx]}.</strong><span>${opt.text}</span></li>`;
+            }).join('');
+            inputSectionHTML = `<ul class="options-list">${optsHTML}</ul>`;
+        } else {
+            const val = isLocked ? ansState.typedText : '';
+            inputSectionHTML = `
+                <div class="input-group">
+                    <input type="text" class="text-input" id="typeInput-${idx}" placeholder="Type exact anatomical structure name..." value="${val.replace(/"/g, '&quot;')}" ${isLocked ? 'disabled' : ''} onkeydown="if(event.key==='Enter') handleTypeSubmit(${idx})">
+                    <button class="submit-answer-btn" id="typeBtn-${idx}" onclick="handleTypeSubmit(${idx})" ${isLocked ? 'disabled' : ''}>Submit</button>
+                </div>
+                <div class="spelling-warning" id="spellWarn-${idx}"></div>
+            `;
+        }
+
+        const correctOpt = q.options.find(o => o.correct);
+        const rationalesHTML = q.options.map((o, i) => `<li><strong>${letters[i]}) ${o.text}:</strong> ${o.why}</li>`).join('');
+
+        let explClass = 'expl';
+        let bannerText = '';
+        if (isLocked) {
+            explClass += ansState.isCorrect ? ' show correct' : ' show incorrect';
+            bannerText = ansState.isCorrect ? 'CORRECT!' : `INCORRECT. Correct Answer: ${correctOpt.text}`;
+        }
+
+        let navHTML = '';
+        if (viewMode === 'one' && isLocked) {
+            const isLast = idx === activePool.length - 1;
+            navHTML = `<div class="next-row"><button class="btn" onclick="${isLast ? 'showSummary()' : 'nextQuestion()'}">${isLast ? 'Finish & View Results' : 'Next Question →'}</button></div>`;
+        }
+
+        return `
+            <div class="question-card" id="qCard-${idx}">
+                <div class="card-meta">
+                    <span>Question ${idx + 1} of ${activePool.length}</span>
+                    <span class="badge">Week ${q.week} • ${q.region}</span>
+                </div>
+                <div class="image-wrapper">
+                    <img src="Images/Reg 1/Week ${q.week}/${q.image}" data-attempt="0" onerror="handleImageError(this, '${q.image.replace(/'/g, "\\'")}', ${q.week})" alt="Anatomical Structure">
+                </div>
+                <div class="question-text">${q.stem}</div>
+                ${inputSectionHTML}
+                <div class="${explClass}" id="expl-${idx}">
+                    <div class="status-banner">${bannerText}</div>
+                    <div class="core-concept">${correctOpt.why}</div>
+                    <ul class="rationales-list">${rationalesHTML}</ul>
+                </div>
+                ${navHTML}
+            </div>
+        `;
+    }
+
+    function renderActiveQuiz() {
+        const container = document.getElementById('quizArea');
+        if (viewMode === 'one') {
+            container.innerHTML = buildQuestionCardHTML(activePool[currentIndex], currentIndex);
+        } else {
+            let html = activePool.map((q, idx) => buildQuestionCardHTML(q, idx)).join('');
+            const allAnswered = userAnswers.every(a => a !== null);
+            if (allAnswered) {
+                html += `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`;
+            }
+            container.innerHTML = html;
+        }
+        updateHeaderStats();
+    }
+
+    function handleMCSelect(qIdx, optIdx) {
+        if (userAnswers[qIdx] !== null) return;
+        const q = activePool[qIdx];
+        const isCorrect = q.options[optIdx].correct;
+
+        userAnswers[qIdx] = { isCorrect, selectedOptIdx: optIdx };
+        recordResult(q.id, isCorrect);
+
+        if (viewMode === 'one') {
+            renderActiveQuiz();
+        } else {
+            const card = document.getElementById(`qCard-${qIdx}`);
+            if (card) card.outerHTML = buildQuestionCardHTML(q, qIdx);
+            updateHeaderStats();
+            if (userAnswers.every(a => a !== null)) {
+                const container = document.getElementById('quizArea');
+                container.insertAdjacentHTML('beforeend', `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`);
+            }
+        }
+    }
+
+    function handleTypeSubmit(qIdx) {
+        if (userAnswers[qIdx] !== null) return;
+        const q = activePool[qIdx];
+        const inputEl = document.getElementById(`typeInput-${qIdx}`);
+        const warnEl = document.getElementById(`spellWarn-${qIdx}`);
+        const rawText = inputEl.value;
+
+        const evalRes = evaluateTypedAnswer(rawText, q.accepted);
+        if (evalRes.status === 'empty') return;
+
+        if (evalRes.status === 'typo') {
+            warnEl.style.display = 'block';
+            warnEl.innerHTML = `SPELLING ERROR — TRY AGAIN! Close match to <strong>"${evalRes.match}"</strong>. Fix spelling and resubmit.`;
+            inputEl.focus();
+            return;
+        }
+
+        warnEl.style.display = 'none';
+        const isCorrect = evalRes.status === 'exact';
+        userAnswers[qIdx] = { isCorrect, typedText: rawText };
+        recordResult(q.id, isCorrect);
+
+        if (viewMode === 'one') {
+            renderActiveQuiz();
+        } else {
+            const card = document.getElementById(`qCard-${qIdx}`);
+            if (card) card.outerHTML = buildQuestionCardHTML(q, qIdx);
+            updateHeaderStats();
+            if (userAnswers.every(a => a !== null)) {
+                const container = document.getElementById('quizArea');
+                container.insertAdjacentHTML('beforeend', `<div style="text-align:center; margin: 20px 0;"><button class="btn" onclick="showSummary()">View Final Results Summary</button></div>`);
+            }
+        }
+    }
+
+    function recordResult(qId, isCorrect) {
+        if (isCorrect) {
+            removeGlobalMissed(qId);
+        } else {
+            triggerWrongFeedback();
+            addGlobalMissed(qId);
+            if (!sessionMissedIds.includes(qId)) sessionMissedIds.push(qId);
+        }
+    }
+
+    function nextQuestion() {
+        if (currentIndex < activePool.length - 1) {
+            currentIndex++;
+            renderActiveQuiz();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }
+
+    function showSummary() {
+        document.getElementById('quizArea').classList.add('hidden');
+        const summaryEl = document.getElementById('summaryView');
+        summaryEl.classList.remove('hidden');
+
+        const total = activePool.length;
+        const correct = userAnswers.filter(a => a && a.isCorrect).length;
+        const pct = Math.round((correct / total) * 100);
+
+        document.getElementById('finalScoreDisplay').textContent = `${correct} / ${total} Correct (${pct}%)`;
+
+        let tier = '';
+        if (pct >= 90) tier = 'Absolute Gigachad. You drained that test dry.';
+        else if (pct >= 70) tier = 'You lasted less than 30 seconds. Time for a rematch.';
+        else tier = 'You really didn’t fucking know that.';
+        document.getElementById('tierMessage').textContent = tier;
+
+        // Week Breakdown Table
+        const weeksPresent = [...new Set(activePool.map(q => q.week))].sort((a, b) => a - b);
+        const tbody = document.getElementById('weekBreakdownBody');
+        tbody.innerHTML = weeksPresent.map(w => {
+            let wTotal = 0;
+            let wCorr = 0;
+            activePool.forEach((q, idx) => {
+                if (q.week === w) {
+                    wTotal++;
+                    if (userAnswers[idx] && userAnswers[idx].isCorrect) wCorr++;
+                }
+            });
+            const wPct = Math.round((wCorr / wTotal) * 100);
+            return `<tr><td>Week ${w}</td><td>${wCorr} / ${wTotal}</td><td>${wPct}%</td></tr>`;
+        }).join('');
+
+        const reviewBtn = document.getElementById('reviewSessionMissedBtn');
+        if (sessionMissedIds.length === 0) {
+            reviewBtn.classList.add('hidden');
+        } else {
+            reviewBtn.classList.remove('hidden');
+            reviewBtn.textContent = `Review Missed (${sessionMissedIds.length})`;
+        }
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.onload = function() {
+        updateStfuButton();
+        initWeekChips();
+    };
 </script>
 </body>
 </html>
