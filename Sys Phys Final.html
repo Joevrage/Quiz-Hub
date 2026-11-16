@@ -35,6 +35,7 @@ main{max-width:900px;margin:0 auto;padding:16px}
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 <div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer"></div>
 <script>
+(function(){try{
 const SUBJECTS=[
 {title:"Body Fluid Compartments & Osmolytes",week:"Wk 1"},
 {title:"Hyperosmolar States, Buffering & ADH/Thirst",week:"Wk 1"},
@@ -191,10 +192,13 @@ if(q.options[k].correct){score++;missed=missed.filter(x=>x!==q.id)}else{if(!miss
 sv('quiz_missed_history',JSON.stringify(missed));renderQuiz();window.scrollTo(0,sy)}
 function wrong(){if(muted)return;try{const a=$('wrongAudio');a.currentTime=0;a.play().catch(()=>{})}catch(e){}const p=$('wrongPopup');p.classList.remove('hidden');setTimeout(()=>p.classList.add('hidden'),1200)}
 function renderSingleQuestion(){const i=cur,n=quizQ.length,d=ans[i]!==undefined;
-$('app').innerHTML=card(quizQ[i],i)+`<div class="row"><button class="btn" ${i===0?'disabled':''} onclick="cur--;renderQuiz()">Previous</button>`+(i<n-1?`<button class="btn pri" onclick="cur++;renderQuiz()">Next Question</button>`:`<button class="btn pri" onclick="showSummary()">Finish &amp; Results</button>`)+'</div>'}
+$('app').innerHTML=card(quizQ[i],i)+`<div class="row"><button class="btn" ${i===0?'disabled':''} onclick="nav(-1)">Previous</button>`+(i<n-1?`<button class="btn pri" onclick="nav(1)">Next Question</button>`:`<button class="btn pri" onclick="showSummary()">Finish &amp; Results</button>`)+'</div>'}
 function renderAllQuestions(){let h='';quizQ.forEach((q,i)=>h+=card(q,i));
 if(Object.keys(ans).length===quizQ.length)h+='<div class="row"><button class="btn pri" onclick="showSummary()">View Complete Performance Analysis &rarr;</button></div>';$('app').innerHTML=h}
 function showSummary(){const n=quizQ.length,a=Object.keys(ans).length,pc=a?Math.round(score/a*100):0;upd();
-$('app').innerHTML=`<div class="card"><h2>Completion Summary</h2><div class="big">${score} / ${n}</div><p>Accuracy: ${pc}% (${a} answered)</p><div class="row"><button class="btn pri" onclick="launchQuiz(lastN)">Retake Same Exam</button><button class="btn" onclick="renderHome()">Return to Dashboard</button><a href="index.html" class="btn">Return to Hub</a></div></div>`;window.scrollTo(0,0)}
+$('app').innerHTML=`<div class="card"><h2>Completion Summary</h2><div class="big">${score} / ${n}</div><p>Accuracy: ${pc}% (${a} answered)</p><div class="row"><button class="btn pri" onclick="retake()">Retake Same Exam</button><button class="btn" onclick="renderHome()">Return to Dashboard</button><a href="index.html" class="btn">Return to Hub</a></div></div>`;window.scrollTo(0,0)}
+function nav(d){cur+=d;renderQuiz()}function retake(){launchQuiz(lastN)}
+Object.assign(window,{toggleMode,toggleMute,toggleOrder,togglePrioritizeMissed,tog,selAll,clr,setMode,renderHome,launchQuiz,pick,showSummary,nav,retake});
 upd();renderHome();
+}catch(e){document.getElementById('app').innerHTML='<div class="card"><b>Script error:</b> '+e.message+'</div>';console.error(e)}})();
 </script></body></html>
