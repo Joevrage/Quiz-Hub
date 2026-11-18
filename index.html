@@ -355,6 +355,66 @@
         .quiz-card-title { font-size: 13px; font-weight: bold; color: #ffffff; margin-bottom: 6px; line-height: 1.3; }
         .quiz-card-meta { font-size: 11px; color: #888888; display: flex; justify-content: space-between; }
         .rating { color: #22c55e; font-weight: bold; }
+
+        /* Mobile-Friendly Reorder Controls */
+        .reorder-toggle-btn {
+            background: #222;
+            color: var(--header-border);
+            border: 1px solid var(--header-border);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .reorder-toggle-btn.active {
+            background: var(--header-border);
+            color: #000000;
+        }
+
+        .move-controls {
+            display: none;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        body.reorder-mode .move-controls {
+            display: flex;
+        }
+
+        body.reorder-mode .drag-hint {
+            display: none;
+        }
+
+        body.reorder-mode .building-card {
+            border-style: dashed;
+            border-color: var(--header-border);
+        }
+
+        .move-btn {
+            background: #2a2a2a;
+            color: #ffffff;
+            border: 1px solid #555;
+            border-radius: 6px;
+            width: 34px;
+            height: 34px;
+            font-size: 16px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .move-btn:active {
+            background: var(--header-border);
+            color: #000000;
+        }
+            
     </style>
 </head>
 <body>
@@ -365,7 +425,9 @@
             <span>Quiz</span>
             <span class="logo-box">Hub</span>
         </div>
-<a href="https://link.clashofclans.com/en?action=OpenClanProfile&tag=#2JCV0CU28" target="_blank" rel="noopener noreferrer" class="clan-banner">🛡️ Join our Clash Clan: LCCW COC Lovers</a>        <div class="builder-stats">
+    <a href="https://link.clashofclans.com/en?action=OpenClanProfile&tag=#2JCV0CU28" target="_blank" rel="noopener noreferrer" class="clan-banner">🛡️ Join our Clash Clan: LCCW COC Lovers</a>
+        <div class="builder-stats">
+            <button class="reorder-toggle-btn" id="reorderToggleBtn">⇅ Reorder</button>
             <div class="stat-badge">🏋️‍♂️ PRs Smashed: 420</div>
             <div class="stat-badge">💀 Subluxations: 0</div>
         </div>
@@ -993,7 +1055,7 @@
 
     </div>
 
-    <script>
+<script>
         const logo = document.getElementById('logoToggle');
         
         if (localStorage.getItem('quizHubTheme') === 'vip') {
@@ -1010,9 +1072,10 @@
         });
 
         // =========================================================
-        // DRAG-AND-DROP TILE REORDERING (SAVED IN LOCALSTORAGE)
+        // DESKTOP DRAG + MOBILE TAP REORDERING (SAVED IN LOCALSTORAGE)
         // =========================================================
         const grid = document.getElementById('clashGrid');
+        const reorderBtn = document.getElementById('reorderToggleBtn');
         const STORAGE_KEY = 'quizHubCardOrder_v2';
 
         // Restore saved user order if present
@@ -1026,6 +1089,42 @@
             }
         } catch (e) {}
 
+        // Inject mobile ▲ / ▼ move buttons into every card header
+        grid.querySelectorAll('.building-card').forEach(card => {
+            const header = card.querySelector('.building-header');
+            const controls = document.createElement('div');
+            controls.className = 'move-controls';
+            controls.innerHTML = `
+                <button type="button" class="move-btn move-up" aria-label="Move earlier">▲</button>
+                <button type="button" class="move-btn move-down" aria-label="Move later">▼</button>
+            `;
+            header.appendChild(controls);
+
+            controls.querySelector('.move-up').addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (card.previousElementSibling) {
+                    grid.insertBefore(card, card.previousElementSibling);
+                    saveCardOrder();
+                }
+            });
+
+            controls.querySelector('.move-down').addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (card.nextElementSibling) {
+                    grid.insertBefore(card.nextElementSibling, card);
+                    saveCardOrder();
+                }
+            });
+        });
+
+        // Toggle Reorder Mode on Mobile/Desktop
+        reorderBtn.addEventListener('click', () => {
+            const active = document.body.classList.toggle('reorder-mode');
+            reorderBtn.classList.toggle('active', active);
+            reorderBtn.textContent = active ? '✓ Done' : '⇅ Reorder';
+        });
+
+        // Desktop Drag-and-Drop
         let draggedCard = null;
 
         grid.addEventListener('dragstart', (e) => {
@@ -1063,6 +1162,5 @@
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
             } catch (e) {}
         }
-    </script>
-</body>
+    </script></body>
 </html>
