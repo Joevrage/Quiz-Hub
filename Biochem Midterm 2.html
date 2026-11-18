@@ -42,821 +42,470 @@ header{position:sticky;top:0;z-index:1000;background:rgba(26,26,26,.96);border-b
 <div id="wrongPopup" class="wp hidden"><img id="wrongImage" src="Erijah.png" alt="Wrong Answer Alert"></div>
 <script>
 const SUBJECTS=[
-{title:"Hemoglobin Structure, Cooperativity & O2 Curves",week:"Wk 4"},
-{title:"Hemoglobinopathies & Thalassemia",week:"Wk 4"},
-{title:"Collagen & Elastin Structure and Synthesis",week:"Wk 4-5"},
-{title:"Connective Tissue Pathology",week:"Wk 5"},
+{title:"Hemoglobin Structure & O2 Curves",week:"Wk 4"},
+{title:"Hemoglobinopathies & Thalassemia",week:"Wk 4-7"},
+{title:"Collagen, Elastin & Keratin",week:"Wk 5-7"},
+{title:"Connective Tissue Pathology",week:"Wk 5-7"},
 {title:"Monosaccharide Chemistry",week:"Wk 6"},
 {title:"Disaccharides, Polysaccharides & GAGs",week:"Wk 6"},
-{title:"Carryover Core: Forces, pKa & Heme",week:"Wk 1-5"},
-{title:"Enzymes & Kinetics (Outline Slide 3)",week:"Wk 7"}];
+{title:"Core Forces, pKa & Heme Chemistry",week:"Wk 1-5"}];
 const questionBank=[];
-// Q(subject,difficulty,priority,ref,stem,correct,wrong1,wrong2,wrong3) ; each option = 'text|why' ; display order is shuffled at quiz start
-function Q(s,d,p,r,stem,...o){questionBank.push({id:questionBank.length,subjectIndex:s,week:SUBJECTS[s].week,slideRef:r,difficulty:d,priority:p,stem:stem,
-options:o.map((x,i)=>{const t=x.split('|');return{text:t[0],correct:i===0,why:t[1]+' ['+r+']'}})})}
-// ---- 0 Hemoglobin
-Q(0,'easy',true,'Lec 4.1','Within each alpha-beta dimer of hemoglobin, the two chains are held together mainly by:',
-'hydrophobic interactions between complementary nonpolar domains|The alpha and beta surfaces fit like hand and glove through nonpolar side chains (Val, Leu, Ile, Phe, Trp).',
-'ionic bridges between Lys/Arg and Asp/Glu|Ionic bridges span the gap BETWEEN the two dimers, not within one.',
-'covalent disulfide bonds between Cys residues|Hemoglobin subunits are not disulfide linked.',
-'peptide bonds joining the C-terminus of alpha to the N-terminus of beta|The chains are separate polypeptides; association is non-covalent.');
-Q(0,'medium',true,'Lec 4.1','The tetramer is stabilized across the dimer-dimer gap mainly by _______, which are disrupted if water enters the gap.',
-'ionic bridges|Positive Lys/Arg pair with negative Asp/Glu; water solvates the charges and weakens them.',
-'hydrophobic stacking|Hydrophobic packing is the intra-dimer force and does not depend on charge.',
-'covalent glycosidic bonds|Glycosidic bonds join sugars, not subunits.',
-'disulfide bridges|No interchain disulfides exist in Hb.');
-Q(0,'medium',true,'Lec 4.2','A tissue bed with high CO2 and lower pH shifts the oxygen dissociation curve:',
-'rightward, because protonated His strengthens the T-state ionic bridges and favors O2 release|This is the Bohr effect: more O2 is unloaded at the same PO2.',
-'leftward, because protonated His weakens the T-state and favors O2 binding|Direction is inverted; acid favors the taut form.',
-'leftward, because CO2 displaces 2,3-BPG from the central cavity|CO2 does not displace 2,3-BPG and the shift is right, not left.',
-'rightward, because Fe2+ is oxidized to Fe3+|Oxidation to Fe3+ would abolish O2 binding; Bohr shift keeps Fe2+.');
-Q(0,'hard',true,'Lec 4.2','Red cells in stored transfused blood are depleted of 2,3-BPG. Their oxygen dissociation curve is shifted:',
-'left, so Hb binds O2 tightly and delivers little to tissue|Loss of 2,3-BPG weakens the T-state, raising affinity.',
-'right, so Hb unloads O2 too readily in the lungs|A right shift needs more 2,3-BPG, acid, or CO2.',
-'unchanged, since 2,3-BPG acts only on fetal Hb|2,3-BPG binds adult beta chains in the central cavity.',
-'flattened to a hyperbola like myoglobin|Cooperativity is reduced in degree but the effector is loss of BPG, which causes a left shift.');
-Q(0,'medium',true,'Lec 4.2','Venous blood leaving a resting tissue is about 75% saturated, meaning on average Hb has released about _______ of its four O2 molecules.',
-'one|75% saturated = 3 of 4 sites still loaded.',
-'two|That would be 50% saturation.',
-'three|That would be 25% saturation.',
-'all four|That would be 0% saturation, which is not the normal operating point.');
-// ---- 1 Hemoglobinopathies
-Q(1,'easy',true,'Lec 4.3','Sickle cell anemia results from a point mutation substituting _______ for _______ at position 6 of the beta chain.',
-'valine; glutamate|Nonpolar Val replaces negatively charged Glu.',
+// Q(subject,difficulty,priority,sourceLabel,stem,...options) ; first option is correct; each option 'text|why'. Correct position is rotated by id so A-D are evenly distributed; the quiz also shuffles at runtime.
+function Q(s,d,p,r,stem,...o){const id=questionBank.length;let ops=o.map((x,i)=>{const t=x.split('|');return{text:t[0],correct:i===0,why:t[1]+' ['+r+']'}});const c=ops.shift();ops.splice(id%4,0,c);
+questionBank.push({id:id,subjectIndex:s,week:SUBJECTS[s].week,slideRef:r,difficulty:d,priority:p,stem:stem,options:ops})}
+// ===== 0 Hemoglobin =====
+Q(0,'easy',true,'Lec 4.1','Adult hemoglobin (HbA) is a tetramer of two _______ chains and two _______ chains.',
+'alpha; beta|Two alpha-beta dimers pair to make alpha2beta2.',
+'alpha; gamma|That is fetal Hb (HbF).',
+'beta; gamma|No such adult tetramer.',
+'alpha; alpha|Hb needs both chain types to form dimers.');
+Q(0,'easy',true,'Lec 7.1','The alpha-globin genes are on chromosome _______ (four alleles), and the beta, gamma, and embryonic genes are on chromosome _______.',
+'16; 11|Alpha 16, beta 11. Two parents give 4 alpha and 2 beta alleles.',
+'11; 16|Reversed.',
+'16; 16|Beta is on 11.',
+'11; 11|Alpha is on 16.');
+Q(0,'medium',true,'Lec 4.1','Within each alpha-beta dimer, the chains are held together mainly by:',
+'hydrophobic interactions between nonpolar domains|Branched and aromatic nonpolar side chains fit together like hand and glove.',
+'ionic bridges between Lys/Arg and Asp/Glu|Those act across the gap between dimers.',
+'covalent disulfide bonds|Hb has no interchain disulfides.',
+'peptide bonds linking the chains|The chains are separate polypeptides.');
+Q(0,'medium',true,'Lec 4.1','The two dimers are linked across their gap mainly by _______, which water in the gap would weaken.',
+'ionic bridges|Positive Lys/Arg pair with negative Asp/Glu.',
+'hydrophobic stacking|That is the intra-dimer force.',
+'glycosidic bonds|Those join sugars.',
+'peptide bonds|Not inter-subunit.');
+Q(0,'easy',false,'Lec 7.1','Which side chain is best suited to the hydrophobic alpha-beta dimer interface?',
+'phenylalanine|Planar aromatic rings stack well.',
+'lysine|Positively charged.',
+'aspartate|Negatively charged.',
+'arginine|Positively charged.');
+Q(0,'easy',false,'Lec 4.3','The embryonic hemoglobin (Gower) is made by the early _______ because bone marrow does not yet exist.',
+'liver|Early erythropoiesis is hepatic.',
+'spleen|Not the early source.',
+'kidney|Makes erythropoietin only.',
+'bone marrow|It has not formed yet.');
+Q(0,'medium',true,'Lec 4.1','Heme iron is held by four porphyrin nitrogens plus the _______ histidine; O2 binds at the sixth site, where the distal histidine is displaced.',
+'proximal|It stays coordinated to Fe2+.',
+'distal|That is the one O2 pushes aside.',
+'terminal valine|Not a heme ligand.',
+'cysteine|Not a heme ligand in Hb.');
+Q(0,'medium',true,'Lec 7.1','Hemoglobin and myoglobin can carry O2 only if the iron stays _______, whereas cytochromes cycle between oxidation states.',
+'Fe2+ (ferrous)|Oxidized Fe3+ binds tightly and cannot carry O2; the spleen removes such Hb.',
+'Fe3+ (ferric)|Cannot carry O2.',
+'Cu2+|Heme contains iron.',
+'Zn2+|Not heme.');
+Q(0,'medium',true,'Lec 4.4','The sigmoidal O2 curve of hemoglobin reflects:'.replace('4.4','4.1'),
+'cooperativity: each O2 bound makes the next one easier to add|Binding loosens the taut structure.',
+'independent binding at four identical sites|That would give a hyperbola.',
+'one high-affinity site per tetramer|Hb has four heme sites.',
+'covalent attachment of O2 to globin|O2 binds the iron weakly.');
+Q(0,'hard',true,'Lec 4.2','On the curve, a tissue lowers local PO2 from 30 to 20 mmHg. Hb in the steep range responds by:',
+'releasing roughly twice as much O2|Reading the curve, about 35% released becomes about 70%.',
+'releasing almost no additional O2|That describes the flat plateau near 80-100 mmHg.',
+'binding more O2|Lower PO2 favors release.',
+'releasing every O2 completely|Saturation is still well above zero.');
+Q(0,'medium',true,'Lec 4.2','Venous blood at about 75% saturation means that on average Hb has released _______ of its four O2.',
+'one|75% means three of four sites remain loaded.',
+'two|That is 50% saturation.',
+'three|That is 25% saturation.',
+'none|That is about 100% saturation.');
+Q(0,'hard',true,'Lec 7.1','The variable that decides whether Hb loads or unloads O2 in a capillary bed is _______; 2,3-BPG only stabilizes the structure that responds.',
+'the local partial pressure of O2|It reflects tissue demand, which is the lever on the x-axis.',
+'the concentration of 2,3-BPG|BPG is always present and holds the structure steady.',
+'nerve signals to the red cell|Communication is chemical, not neural.',
+'the number of dimers|Not the controlling variable.');
+Q(0,'medium',true,'Lec 7.1','2,3-BPG binds in the central cavity between the two dimers and:',
+'stabilizes the taut structure through ionic bonds with Lys/Arg, so O2 can be released on demand|Without it the curve sits far left and O2 is not given up.',
+'binds the heme iron and displaces O2|It binds the cavity, not iron.',
+'is made in the mitochondria|RBCs have none.',
+'oxidizes Fe2+ to Fe3+|It does not change iron state.');
+Q(0,'medium',true,'Lec 4.2','Red cells make 2,3-BPG from an intermediate of _______, since they lack mitochondria and a nucleus.',
+'glycolysis|From the 3-phosphoglycerate / 2-phosphoglycerate step.',
+'the TCA cycle|Needs mitochondria.',
+'the urea cycle|Liver pathway.',
+'beta oxidation|Needs mitochondria.');
+Q(0,'medium',true,'Lec 7.1','A rising lactic acid level in an exercising muscle shifts the Hb curve to the right because:',
+'protonated His adds positive charge that tightens 2,3-BPG and ionic bridge binding, favoring O2 release|Bohr effect: stronger taut structure.',
+'protonated His weakens 2,3-BPG binding so O2 is retained|Direction is inverted.',
+'lactate oxidizes heme iron|Not the mechanism.',
+'acid separates the dimers|The structure is only tightened, not pulled apart.');
+Q(0,'hard',true,'Lec 4.2','Stored transfusion blood is depleted of 2,3-BPG. Its curve shifts _______, so it binds O2 tightly and gives up little.',
+'left|Without BPG the relaxed-like structure dominates.',
+'right|Right shift needs BPG, acid, or CO2.',
+'down only|BPG loss does not lower capacity.',
+'not at all|BPG is needed for the normal structure.');
+Q(0,'hard',true,'Lec 7.1','Fetal Hb binds O2 more tightly than adult Hb because it has fewer _______ in the central cavity, so 2,3-BPG binds it more weakly.',
+'Lys and Arg residues|Less positive charge means a weaker ionic bridge to BPG, so the curve sits left.',
+'Glu and Asp residues|BPG needs positive partners.',
+'His residues|His is irrelevant at pH 7.4.',
+'heme groups|Each chain still has one heme.');
+Q(0,'medium',true,'Lec 4.2','Carbon monoxide is dangerous mainly because it:',
+'binds heme iron far more tightly than O2 and stabilizes the relaxed structure, so remaining O2 is not unloaded|Back-bonding makes it nearly irreversible.',
+'oxidizes Fe2+ to Fe3+|That is methemoglobin formation.',
+'displaces 2,3-BPG|It acts at iron.',
+'denatures globin chains|Not its action.');
+Q(0,'medium',false,'Lec 4.2','Myoglobin has a much _______ P50 than hemoglobin, so it releases O2 only at very low PO2.',
+'lower|It holds O2 as a muscle reserve.',
+'higher|It would unload too early.',
+'equal|They differ greatly.',
+'negative|Not possible.');
+Q(0,'easy',false,'Lec 4.2','A pulse oximeter reports:',
+'the percent of Hb binding sites carrying O2|Normally in the high 90s.',
+'the PO2 of tissue fluid|Not measured.',
+'the 2,3-BPG level|Not measured.',
+'the red cell count|Not measured.');
+Q(0,'medium',false,'Lec 7.1','At pH 7.4, His (pKa about 6) adds little to the inter-dimer ionic bridges because it:',
+'is mostly uncharged until the pH drops|It becomes positive in acidic tissue.',
+'is permanently negative|That is Asp/Glu.',
+'is hydrophobic|It is polar and ionizable.',
+'forms disulfide bonds|That is Cys.');
+// ===== 1 Hemoglobinopathies =====
+Q(1,'easy',true,'Lec 4.3','Sickle cell is caused by a point mutation that puts _______ in place of _______ at position 6 of the beta chain.',
+'valine; glutamate|A nonpolar branched residue replaces a negative one.',
 'glutamate; valine|Reversed.',
-'lysine; glutamate|That is HbC, not HbS.',
-'valine; glycine|Not the sickle mutation.');
-Q(1,'medium',true,'Lec 4.3','Deoxygenated HbS aggregates because the substituted residue:',
-'interdigitates hydrophobically with Val on neighboring beta chains|Branched nonpolar side chains interlock, forming stacked fibers.',
-'forms ionic bridges with neighboring Lys and Arg|Valine carries no charge.',
-'repels the same residue on adjacent chains by negative charge|That describes Glu-Glu repulsion, which is lost in HbS.',
-'hydrogen bonds with water in the gap between dimers|Valine is hydrophobic and cannot hydrogen bond.');
-Q(1,'medium',true,'Lec 4.3','Sickle cell trait (heterozygous) is retained in the gene pool because shortened red cell lifespan:',
-'limits Plasmodium maturation inside the red cell, reducing severe malaria|Parasites require time within the RBC to mature.',
-'raises HbF to block parasite entry|HbF is not raised in trait.',
-'increases 2,3-BPG to kill the parasite|2,3-BPG is not antimicrobial.',
-'prevents the spleen from removing infected cells|The spleen removes rigid or abnormal cells; this does not protect against malaria.');
-Q(1,'medium',true,'Lec 4.2','Carbon monoxide is toxic mainly because it:',
-'binds heme Fe about 200 times more tightly than O2 and stabilizes the relaxed form so remaining O2 is not unloaded|Back-bonding makes CO binding very strong.',
-'oxidizes Fe2+ to Fe3+ forming methemoglobin|That is nitrite-type toxicity, not CO.',
-'displaces 2,3-BPG from the central cavity|CO binds iron, not the cavity.',
-'denatures alpha chains by hydrophobic disruption|CO does not denature globin.');
-// ---- 2 Collagen and elastin
-Q(2,'easy',true,'Lec 4.3','Every third residue in collagen is glycine because:',
-'its hydrogen side chain lets the three chains braid tightly enough to form interchain hydrogen bonds|Any bulky side chain would block the close packing.',
-'its charged side chain forms ionic bridges between chains|Glycine is uncharged.',
-'its thiol side chain forms disulfide crosslinks|That describes cysteine.',
-'its ring structure kinks the helix|That describes proline.');
-Q(2,'medium',true,'Lec 5.2','Prolyl and lysyl hydroxylases require O2, Fe, and _______ to keep the iron reduced.',
-'ascorbate (vitamin C)|Deficiency causes scurvy with unstable under-hydroxylated collagen.',
-'tetrahydrobiopterin|BH4 serves aromatic amino acid hydroxylases.',
-'pyridoxal phosphate|PLP serves decarboxylases and transaminases.',
-'S-adenosylmethionine|SAM donates methyl groups.');
-Q(2,'medium',true,'Lec 5.2','Lysyl oxidase, a copper enzyme, strengthens collagen by:',
-'oxidizing lysine side-chain amines to aldehydes that cross-link fibrils|Allysine condenses with another lysine amine.',
-'hydroxylating proline for interchain hydrogen bonding|That is prolyl hydroxylase.',
-'cleaving the terminal propeptides outside the cell|That is procollagen peptidase.',
-'attaching galactose to hydroxylysine|That is glycosylation.');
-Q(2,'medium',true,'Lec 5.2','The staggered arrangement of collagen fibrils improves _______ because a flaw cannot propagate along aligned molecular ends.',
-'fracture toughness|Staggering interrupts crack propagation.',
-'brittleness|Brittleness is the opposite property.',
-'osmotic pressure|Unrelated to fiber packing.',
-'hydroxylation rate|Hydroxylation is chemical, not architectural.');
-Q(2,'medium',true,'Lec 5.2','Stretched elastin recoils when released mainly because its hydrophobic side chains:',
-'prefer to re-associate with each other rather than with water|Hydrophobic recoil, with desmosine cross-links holding the network.',
-'form disulfide bonds that shorten the chains|Disulfides are characteristic of keratin.',
-'carry negative charges that attract Na+|That is GAG behavior.',
-'are hydroxylated by prolyl hydroxylase|That is collagen processing.');
-// ---- 3 Pathology
-Q(3,'hard',true,'Lec 5.2','Osteogenesis imperfecta Type II differs from Type I in that Type II:',
-'replaces glycine with a bulky residue so the braid cannot form, and is lethal perinatally|Severe structural defect.',
-'reduces production of normal alpha1 and alpha2 chains and is survivable|That describes Type I.',
-'results from vitamin C deficiency|OI is genetic, not nutritional.',
-'results from a fibrillin defect|That is Marfan syndrome.');
-Q(3,'medium',true,'Lec 5.2','Non-smoking emphysema from alpha-1 antitrypsin deficiency occurs because uninhibited _______ digests alveolar elastin.',
-'neutrophil elastase|AAT normally inhibits it.',
-'collagenase|Collagen is not the main lung target.',
-'lysyl oxidase|That enzyme cross-links, it does not degrade.',
-'prolyl hydroxylase|A synthesis enzyme.');
-Q(3,'medium',true,'Lec 5.2','Marfan syndrome (skeleton, eye, cardiovascular) results from a defect in:',
-'fibrillin|A microfibril protein distinct from collagen, elastin, and keratin.',
-'type I collagen|That causes OI.',
-'elastin cross-links|Not the defect in Marfan.',
-'keratin disulfides|Unrelated.');
-Q(3,'medium',true,'Lec 5.2','A patient with hyperextensible skin and lax joints from an inherited collagen defect has _______.',
-'Ehlers-Danlos syndrome|Forceful spinal adjustment is risky.',
-'osteogenesis imperfecta Type II|Perinatal lethal, bone fragility.',
-'alpha-1 antitrypsin deficiency|Lung elastin destruction.',
-'scurvy|Nutritional; not inherited.');
-// ---- 4 Monosaccharides
-Q(4,'medium',true,'Lec 6.1','Mannose is the _______ epimer of glucose.',
-'C2|Differs only at carbon 2.',
-'C4|That is galactose.',
-'C3|Not a common dietary epimer.',
-'C5|C5 determines D/L.');
-Q(4,'medium',true,'Lec 6.1','Galactose differs from glucose only at carbon 4. They are:',
-'epimers|Differ at one chiral carbon.',
-'anomers|Differ only at the anomeric carbon after ring closure.',
-'enantiomers|Mirror images at every center.',
-'ketose-aldose isomers|Both are aldoses.');
-Q(4,'medium',true,'Lec 6.1','Alpha and beta D-glucopyranose differ at:',
-'the anomeric carbon C1 created on ring closure|They interconvert through the open chain.',
-'carbon 2|That makes mannose.',
-'carbon 4|That makes galactose.',
-'carbon 6|C6 is not chiral.');
-Q(4,'easy',true,'Lec 6.1','Fructose differs from glucose in that fructose is a(n):',
-'ketose with its carbonyl at C2|Glucose is an aldose with C1 aldehyde.',
-'aldose with its carbonyl at C1|That is glucose.',
-'pentose with five carbons|Fructose is a hexose.',
-'sugar acid with a carboxyl group|Not a sugar acid.');
-// ---- 5 Disaccharides etc.
-Q(5,'medium',true,'Lec 6.2','Lactose intolerance causes osmotic diarrhea because unhydrolyzed lactose:',
-'cannot be absorbed and retains water in the intestinal lumen|Only monosaccharides cross enterocytes.',
-'is converted to glucose-galactose polymers by bacteria|That does not cause the diarrhea.',
-'inhibits sodium absorption directly|Mechanism is osmotic.',
-'precipitates as crystals in the colon|Not the mechanism.');
+'glycine; glutamate|Not the mutation.',
+'valine; lysine|Not the mutation.');
+Q(1,'medium',true,'Lec 4.3','In normal HbA, deoxygenated Hb does not aggregate because Glu (pKa about 4) is _______ at pH 7.4, so the chains repel.',
+'negatively charged|Same-charge repulsion.',
+'positively charged|Glu is acidic.',
+'neutral and hydrophobic|It is ionized.',
+'bonded by disulfides|It has no sulfur.');
+Q(1,'medium',true,'Lec 4.3','Deoxygenated HbS aggregates because Val side chains:',
+'interdigitate hydrophobically with Val on neighboring beta chains|Branched nonpolar groups interlock and stack.',
+'form ionic bridges with Lys and Arg|Val is uncharged.',
+'repel each other by charge|That is Glu-Glu behavior.',
+'hydrogen bond with water|Val is hydrophobic.');
+Q(1,'hard',true,'Lec 7.1','Sickling occurs when Hb is _______; fully oxygenated HbS does not polymerize, even in sickle disease.',
+'deoxygenated|The taut structure exposes the Val.',
+'oxygenated|The relaxed structure hides it.',
+'bound to CO|CO locks the relaxed form.',
+'in alkaline blood|Alkalinity favors the relaxed form.');
+Q(1,'hard',true,'Lec 7.1','The change in red cell shape in sickle cell disease is caused directly by:',
+'aggregation of deoxygenated HbS through Val-Val contacts|Carrying the allele alone does nothing without this.',
+'the gene mutation itself, independent of Hb structure|Expression and structure matter.',
+'a deficiency of beta chains|That is thalassemia.',
+'oxidation of heme iron|Not the cause.');
+Q(1,'medium',true,'Lec 4.3','Sickle cell trait differs from disease in that the trait is _______ and disease is _______.',
+'heterozygous; homozygous|One or both chromosome 11 alleles carry Val.',
+'homozygous; heterozygous|Reversed.',
+'alpha-chain defect; beta-chain defect|Both involve beta.',
+'acquired; inherited|Both are inherited.');
+Q(1,'medium',true,'Lec 4.3','In the trait, sickling is much milder because:',
+'Glu-containing chains disrupt Val stacking, so aggregates are small|Only some chains carry Val.',
+'all chains are replaced by HbF|Not the reason.',
+'Val is not exposed in any state|It is exposed when deoxygenated.',
+'the spleen is overactive|Not the reason.');
+Q(1,'medium',true,'Lec 4.3','Sickle trait persists in populations because shortened red cell lifespan:',
+'limits Plasmodium maturation inside the cell, reducing severe malaria|The parasite needs time in the RBC.',
+'raises 2,3-BPG, which kills parasites|BPG is not antimicrobial.',
+'increases HbF, blocking entry|Not the mechanism.',
+'stops the spleen from clearing infected cells|Not protective.');
+Q(1,'medium',false,'Lec 4.3','Rigid sickled red cells are cleared mainly by the _______, which tests deformability.',
+'spleen|Cells that cannot squeeze through are phagocytosed.',
+'kidney|Not the main site.',
+'lungs|Gas exchange only.',
+'bone marrow|It produces cells.');
+Q(1,'medium',true,'Lec 7.1','Thalassemia is best described as:',
+'too few functional globin chains, so alpha and beta cannot pair evenly|A numbers game of underproduction.',
+'a Glu-to-Val substitution|That is sickle cell.',
+'a defect in heme synthesis|That is porphyria.',
+'a collagen disorder|Unrelated.');
+Q(1,'hard',true,'Lec 4.3','Beta-thalassemia becomes apparent after birth rather than in utero because the fetus uses _______, which contains no beta chains.',
+'HbF (alpha2gamma2)|Beta chains replace gamma around birth.',
+'HbA (alpha2beta2)|That is the adult form.',
+'HbS|Not the fetal form.',
+'myoglobin|Not a blood Hb.');
+Q(1,'medium',true,'Lec 4.3','With four alpha alleles, loss of one means about _______ of alpha chains made are faulty and the person is usually mildly affected.',
+'one quarter|Three good alleles still supply the rest.',
+'one half|That is one of two beta alleles.',
+'all|Three alleles are normal.',
+'none|A bad allele is still transcribed and wastes resources.');
+Q(1,'medium',true,'Lec 7.1','A child with severe beta-thalassemia needing repeated transfusions is at risk of:',
+'iron overload in the liver (hemosiderosis)|Iron accumulates from transfused cells.',
+'vitamin C deficiency|Unrelated.',
+'copper toxicity|Unrelated.',
+'hyperoxia|Unrelated.');
+Q(1,'medium',true,'Lec 4.3','G6PD deficiency causes hemolysis because red cells cannot make enough _______ to defend against oxidative damage.',
+'NADPH|From the hexose monophosphate pathway.',
+'ATP|Glycolysis still works.',
+'2,3-BPG|Not the defect.',
+'heme|Not the defect.');
+// ===== 2 Fibrous proteins =====
+Q(2,'easy',true,'Lec 4.3','About one third of collagen residues are glycine because:',
+'its tiny hydrogen side chain lets the three chains braid tightly enough for hydrogen bonding|Bulky residues block close packing.',
+'its charge forms ionic bridges|Glycine is uncharged.',
+'its thiol forms disulfides|That is cysteine.',
+'its ring kinks the helix|That is proline.');
+Q(2,'medium',true,'Lec 7.2','Glycine is the only protein amino acid with no L or D form because its alpha carbon:',
+'carries two hydrogens, so it is not a chiral center|A chiral center needs four different groups.',
+'carries a charged side chain|It is uncharged.',
+'is missing|It has an alpha carbon.',
+'forms a ring|That is proline.');
+Q(2,'medium',true,'Lec 5.2','Prolyl and lysyl hydroxylases are post-translational enzymes that require O2, iron, and _______.',
+'vitamin C (ascorbate)|It keeps iron reduced.',
+'vitamin B6|Decarboxylase cofactor.',
+'copper|That serves lysyl oxidase.',
+'biotin|Carboxylase cofactor.');
+Q(2,'medium',true,'Lec 5.2','Hydroxyproline stabilizes the collagen triple helix by:',
+'adding hydroxyl groups for hydrogen bonding with peptide carbonyls|Dipole and hydrogen bonds hold the braid.',
+'forming aldehydes for cross-links|Those come from lysine.',
+'carrying sugars|Those attach to hydroxylysine.',
+'cleaving propeptides|Peptidases do that.');
+Q(2,'medium',false,'Lec 5.2','Hydroxylysine is glycosylated with galactose or glucose to:',
+'provide a handle to grip chains while braiding them|An assembly aid.',
+'form interchain disulfides|No sulfur.',
+'make the aldehyde for cross-links|Lysyl oxidase does that.',
+'raise pKa|Not the purpose.');
+Q(2,'medium',true,'Lec 5.2','Lysyl oxidase, a _______ enzyme, cross-links collagen by oxidizing lysine to an aldehyde that reacts with a neighboring lysine.',
+'copper-dependent|Distinct from the iron/vit C hydroxylases.',
+'iron-dependent|That is the hydroxylases.',
+'zinc-dependent|Not its cofactor.',
+'magnesium-dependent|Not its cofactor.');
+Q(2,'medium',true,'Lec 5.2','Collagen fibrils are staggered like a brick wall to improve:',
+'fracture toughness, since a flaw cannot run through aligned ends|Cracks are interrupted.',
+'brittleness|Opposite effect.',
+'hydroxylation rate|Chemistry, not architecture.',
+'water solubility|Not the purpose.');
+Q(2,'medium',true,'Lec 7.2','Fracture toughness is the ability to:',
+'absorb repeated load by yielding in small spots without breaking apart|Bone and staggered collagen show this.',
+'resist all deformation|That is stiffness.',
+'stretch and recoil|That is elasticity.',
+'form cross-links|A mechanism, not the property.');
+Q(2,'medium',true,'Lec 5.1','The collagen that forms the open mesh network of the basement membrane is type _______.',
+'IV|A network former.',
+'I|Tendon and bone.',
+'II|Cartilage.',
+'III|Vessels and reticular tissue.');
+Q(2,'easy',true,'Lec 5.1','Cartilage is made mainly of type _______ collagen.',
+'II|By chondrocytes.',
+'I|Tendon and bone.',
+'IV|Basement membrane.',
+'VII|Anchoring fibrils.');
+Q(2,'medium',false,'Lec 5.1','Type VII collagen acts like needle and thread, stitching:',
+'type IV basement membrane to type I and III collagen beneath it|Anchoring fibrils.',
+'keratin to elastin|Not its role.',
+'cartilage to bone mineral|Not its role.',
+'hemoglobin dimers|Unrelated.');
+Q(2,'medium',false,'Lec 5.2','Types IX and XII are fibril-associated collagens that:',
+'bridge fibrils to each other and to the matrix, joining dissimilar tissues|Relevant to avulsions.',
+'make up the basement membrane|That is type IV.',
+'make up most of bone|That is type I.',
+'cross-link elastin|Not their role.');
+Q(2,'medium',true,'Lec 7.2','Stretched elastin recoils because its _______ side chains prefer to re-associate with each other rather than water.',
+'hydrophobic|Desmosine cross-links hold the network.',
+'charged|Not elastin-rich.',
+'sulfur-containing|That is keratin.',
+'hydroxylated|That is collagen.');
+Q(2,'medium',false,'Lec 7.2','Elastin cross-links called desmosines form from _______ side chains oxidized by lysyl oxidase.',
+'lysine|The same chemistry as collagen cross-links.',
+'proline|Not the source.',
+'cysteine|Gives disulfides.',
+'glycine|Not the source.');
+Q(2,'easy',true,'Lec 7.2','Keratin is strengthened by disulfide bonds from its high _______ content, which also binds metals such as lead and mercury.',
+'cysteine|Sulfhydryl groups.',
+'glycine|Collagen feature.',
+'proline|Collagen feature.',
+'lysine|Elastin and collagen cross-links.');
+// ===== 3 Pathology =====
+Q(3,'easy',true,'Lec 7.2','Loose teeth and easy bruising point to vitamin C deficiency (scurvy) because it weakens:',
+'collagen, since Pro and Lys are not hydroxylated|The periodontal ligament is collagen.',
+'keratin|Not the cause.',
+'elastin cross-links|Not the cause.',
+'hemoglobin|Not the cause.');
+Q(3,'easy',true,'Lec 7.2','Hyperextensible fingers and stretchy skin suggest _______.',
+'Ehlers-Danlos syndrome|Collagen laxity; caution with spinal adjustments.',
+'osteogenesis imperfecta|Bone fragility.',
+'Marfan syndrome|Long limbs, lens, aorta.',
+'scurvy|Nutritional deficiency.');
+Q(3,'hard',true,'Lec 7.2','Osteogenesis imperfecta Type II is lethal because:',
+'collagen defects, such as bulky residues replacing glycine, prevent tight braiding, and it presents in utero|Type I (tarda) is survivable.',
+'it is a vitamin C deficiency|OI is genetic.',
+'fibrillin is missing|That is Marfan.',
+'elastase is overactive|That is emphysema.');
+Q(3,'medium',true,'Lec 7.2','Which is a feature of OI Type I (tarda)?',
+'fractures from minor trauma, with survival into infancy and beyond|Reduced alpha1 and alpha2 chain production.',
+'death in utero from pulmonary hypoplasia|That is Type II.',
+'lens dislocation and aortic root dilation|That is Marfan.',
+'joint hypermobility only|That is Ehlers-Danlos.');
+Q(3,'medium',true,'Lec 5.2','Marfan syndrome is a defect in fibrillin, which is _______.',
+'neither collagen, elastin, nor keratin|A distinct connective tissue matrix protein.',
+'a collagen type|Not collagen.',
+'a form of elastin|Not elastin.',
+'a keratin|Not keratin.');
+Q(3,'hard',true,'Lec 5.2','A nonsmoker with emphysema may have alpha-1 antitrypsin deficiency, so that _______ is not inhibited.',
+'neutrophil elastase, which then digests lung elastin|The liver makes AAT to restrain it.',
+'collagenase, which digests alveolar collagen|Elastin is the target.',
+'lysyl oxidase, which over-cross-links lung tissue|Not the mechanism.',
+'trypsinogen in the stomach|Not the mechanism.');
+Q(3,'hard',false,'Lec 5.2','Hunting for the cause of a poorly performing connective tissue, a clinician should remember that collagen, elastin, and keratin are different proteins. Which pairing is correct?',
+'scurvy affects collagen, and emphysema from AAT loss affects elastin|Match the protein to the disease.',
+'scurvy affects elastin, and emphysema affects collagen|Swapped.',
+'Marfan affects keratin, and OI affects fibrillin|Both swapped.',
+'Ehlers-Danlos affects hemoglobin, and sickle cell affects collagen|Unrelated.');
+// ===== 4 Monosaccharides =====
+Q(4,'medium',true,'Lec 6.1','Mannose is the _______ epimer of glucose, and galactose is the _______ epimer.',
+'C2; C4|One chiral carbon differs in each.',
+'C4; C2|Reversed.',
+'C1; C6|C1 is the anomeric carbon and C6 is not chiral.',
+'C3; C5|Not the common ones.');
+Q(4,'medium',true,'Lec 6.1','Alpha and beta D-glucopyranose differ at the _______ carbon created when the ring closes.',
+'anomeric (C1)|They interconvert through the open chain.',
+'C2|That makes mannose.',
+'C4|That makes galactose.',
+'C6|Not chiral.');
+Q(4,'easy',true,'Lec 6.1','Glucose is an aldose with its carbonyl at C1, while fructose is a _______ with its carbonyl at C2.',
+'ketose|Both are hexoses.',
+'pentose|Fructose has six carbons.',
+'aldose|That is glucose.',
+'sugar acid|No carboxyl group.');
+Q(4,'medium',true,'Lec 6.1','Which is the correct statement about glucose and fructose?',
+'they are structural isomers with the same formula but different carbonyl position|Aldose versus ketose.',
+'they are epimers|Epimers differ at one carbon only.',
+'they are anomers|Anomers differ at the anomeric carbon only.',
+'they are enantiomers|Not mirror images.');
+Q(4,'medium',true,'Lec 6.1','In this course, a D-sugar rotates plane-polarized light _______ and an L-sugar rotates it _______.',
+'clockwise; counterclockwise|Dextrorotatory versus levorotatory.',
+'counterclockwise; clockwise|Reversed.',
+'upward; downward|Not how rotation is described.',
+'not at all; clockwise|Both rotate light.');
+Q(4,'easy',true,'Lec 6.1','Ribose and ribulose are both five-carbon sugars, but ribose is an _______ and ribulose is a _______.',
+'aldose; ketose|Ribulose comes first in the hexose monophosphate path.',
+'ketose; aldose|Reversed.',
+'hexose; pentose|Both are pentoses.',
+'D-sugar; L-sugar|Both are D.');
+Q(4,'medium',true,'Lec 6.1','Beta-D-glucopyranose is the most stable glucose form because:',
+'all bulky hydroxyl groups sit in equatorial positions|Minimal steric crowding.',
+'all hydroxyls are axial|Unstable.',
+'the ring is a furanose|Glucose forms a pyranose.',
+'C1 is outside the ring|C1 is in the ring.');
+Q(4,'medium',true,'Lec 7.2','Beta-D-glucose is not used in glycolysis because its 3D shape:',
+'does not fit the hexokinase active site, so the liver must convert it to the alpha form|Chirality drives enzyme affinity.',
+'has no anomeric carbon|It does.',
+'is a ketose|It is an aldose.',
+'has five carbons|It is a hexose.');
+Q(4,'easy',true,'Lec 6.1','Carbohydrates contribute to antigenicity mainly because:',
+'their many 3D shapes and linkages create unique recognition surfaces|Along with chiral amino acids.',
+'they are hydrophobic|They are hydrophilic.',
+'they form disulfides|Not carbohydrate chemistry.',
+'they carry a fixed positive charge|Not the basis.');
+Q(4,'hard',false,'Lec 6.1','Excess glucose is inflammatory because its aldehyde:',
+'reacts with protein amine groups, so the modified protein is no longer recognized as self|The idea behind glycation.',
+'oxidizes cysteine|Not the mechanism.',
+'hydrolyzes peptide bonds|Not the mechanism.',
+'phosphorylates serine|A kinase action.');
+// ===== 5 Disaccharides etc =====
 Q(5,'easy',true,'Lec 6.2','A glycosidic bond forms by _______ with release of water and is cleaved by _______.',
 'condensation; hydrolysis|Hydrolases add water back.',
 'hydrolysis; condensation|Reversed.',
-'oxidation; reduction|Not the reaction type.',
-'phosphorylation; dephosphorylation|Not the reaction type.');
-Q(5,'medium',true,'Lec 6.2','Sucrose consists of glucose joined to fructose by an:',
-'alpha-1,beta-2 glycosidic bond|Both anomeric carbons are used.',
-'beta-1,4 glycosidic bond|That is lactose and cellobiose.',
-'alpha-1,4 glycosidic bond|That is maltose.',
-'alpha-1,6 glycosidic bond|That is isomaltose.');
-Q(5,'medium',true,'Lec 6.2','Humans cannot digest cellulose because they lack an enzyme for the:',
-'beta-1,4 linkage between glucose units|Ruminants rely on gut bacteria.',
-'alpha-1,4 linkage between glucose units|Amylase cleaves it.',
-'alpha-1,6 branch points|Isomaltase cleaves them.',
-'alpha-1,2 sucrose linkage|Sucrase cleaves it.');
-Q(5,'medium',true,'Lec 6.2','Amylopectin differs from amylose in that amylopectin has:',
-'alpha-1,6 branch points|Amylose is straight alpha-1,4.',
-'beta-1,4 linkages|That is cellulose.',
-'alpha-1,2 linkages|That is sucrose.',
-'no glycosidic bonds|It is a polysaccharide.');
-Q(5,'medium',true,'Lec 6.2','Glycosaminoglycans are built from a repeating disaccharide of an amine sugar and a(n):',
-'acidic sugar|Negative charge retains water and Na+.',
-'neutral hexose|Not the repeat.',
-'pentose phosphate|Not the repeat.',
-'fatty acid|Not carbohydrate.');
-// ---- carried over from original bank (accuracy-checked, Midterm 2 relevant) ----
-Q(0,'easy',true,'Lec 4.1','Adult hemoglobin A (HbA) is composed of which chains?',
-'two alpha and two beta chains|HbA is the alpha2beta2 tetramer.',
-'two alpha and two gamma chains|That is fetal HbF.',
-'two alpha and two delta chains|That is minor HbA2.',
-'four identical beta chains|A beta4 tetramer (HbH) appears when alpha chains are deficient.');
-Q(0,'medium',true,'Lec 4.3','A normal diploid genome carries _______ alpha-globin alleles on chromosome _______ and two beta-globin alleles on chromosome 11.',
-'four; 16|Two from each parent on chromosome 16.',
-'two; 16|Alpha has four alleles, not two.',
-'four; 11|Alpha is on chromosome 16.',
-'two; 11|Alpha is on 16 and has four alleles.');
-Q(0,'medium',true,'Lec 4.1','Which residue coordinates directly to the heme iron on the side opposite bound O2?',
-'proximal histidine|It binds Fe2+ and stays in place when O2 binds; the distal His backs away.',
-'distal histidine|It is pulled back to let O2 bind.',
-'valine-6 on the beta chain|That is the HbS surface mutation.',
-'lysine in the central cavity|Cavity Lys/Arg bind 2,3-BPG.');
-Q(0,'medium',true,'Lec 4.2','Fetal Hb has a higher O2 affinity than adult Hb because HbF:',
-'binds 2,3-BPG less strongly because gamma chains lack a key positively charged His|Less BPG stabilization of the T-state raises affinity.',
-'binds 2,3-BPG more strongly|That would lower affinity.',
-'is a tetramer of four gamma chains|HbF is alpha2gamma2.',
-'contains Fe3+ iron|Only Fe2+ binds O2.');
-Q(0,'easy',false,'Lec 4.2','The effector that sits in the central cavity between the beta chains of hemoglobin is _______.',
-'2,3-bisphosphoglycerate|It is made in the RBC from the glycolytic 3-PG/2-PG step.',
-'inorganic phosphate|Not the physiologic effector.',
-'carbon monoxide|CO binds heme iron.',
-'hemin|An oxidized heme, not an effector.');
-Q(1,'hard',true,'Lec 4.3','HbS polymerization occurs mainly when hemoglobin is:',
-'deoxygenated, exposing a nonpolar Val patch|The taut form lets Val fit into an acceptor site on a neighbor.',
-'fully oxygenated in arterial blood|Oxygenation relaxes the structure and protects against aggregation.',
-'bound to CO|CO locks the relaxed form, which does not polymerize.',
-'in a high-pH environment|Alkalinity shifts toward the relaxed form.');
-Q(1,'medium',true,'Lec 4.3','Beta-thalassemia major produces severe anemia partly because unpaired _______ chains precipitate in red cell precursors.',
-'alpha|Without beta partners, free alpha chains cannot form stable tetramers.',
-'gamma|Gamma chains are not the excess in beta-thal.',
-'beta|Beta chains are the deficient ones.',
-'delta|Not the excess chain.');
-Q(1,'hard',true,'Lec 4.3','Loss of three of the four alpha-globin alleles produces:',
-'HbH disease with excess beta4 tetramers|Severe alpha deficiency.',
-'hydrops fetalis (Hb Barts)|That requires loss of all four.',
-'beta-thalassemia major|That involves chromosome 11 beta genes.',
-'silent carrier state|That is loss of only one allele.');
-Q(2,'hard',true,'Lec 5.2','Hydroxyproline stabilizes the collagen triple helix by:',
-'forming interchain hydrogen bonds through its hydroxyl group|Without it the helix unwinds near body temperature.',
-'forming aldehydes for lysyl oxidase cross-linking|Those come from lysine.',
-'carrying the galactose and glucose attachments|Those attach to hydroxylysine.',
-'cleaving the terminal propeptides|That is done by peptidases.');
-Q(2,'easy',false,'Lec 5.2','The characteristic cross-links of mature elastin are:',
-'desmosine and isodesmosine|Formed from lysine residues via lysyl oxidase aldehydes.',
-'interchain disulfides|Characteristic of keratin.',
-'hydroxylysine glycosides|Collagen feature.',
-'ionic bridges between Asp and Lys|Hemoglobin inter-dimer force.');
-Q(3,'medium',false,'Lec 5.2','Scurvy causes bleeding gums and poor wound healing because:',
-'under-hydroxylated procollagen is unstable|No ascorbate means iron stays oxidized and hydroxylases stall.',
-'clotting factors lack carboxylation|That needs vitamin K.',
-'elastase is overproduced|Not the mechanism.',
-'terminal propeptides cannot be cleaved|Peptidases do not need vitamin C.');
-Q(2,'hard',false,'Lec 5.2','Terminal propeptides of procollagen are cleaved:',
-'in the extracellular space after secretion|This allows tropocollagen to self-assemble only outside the cell.',
-'in the rough ER right after translation|They keep the molecule soluble inside the cell.',
-'in the Golgi during glycosylation|The Golgi does not cleave them.',
-'in the nucleus|Cleavage is post-translational.');
-Q(4,'easy',false,'Lec 6.1','D versus L designation of a sugar is set by the hydroxyl on the:',
-'chiral carbon farthest from the carbonyl|C5 in hexoses.',
-'anomeric carbon|That sets alpha versus beta.',
-'carbonyl carbon|It is not chiral in the open chain.',
-'C6 carbon|C6 has two hydrogens and is not chiral.');
-Q(4,'medium',true,'Lec 6.1','On ring closure of glucose, the new chiral anomeric center is carbon:',
-'1|The C5 hydroxyl attacks the C1 aldehyde to form a hemiacetal.',
-'2|That is the anomeric carbon of fructose.',
-'4|C4 distinguishes galactose.',
-'6|C6 stays exocyclic.');
-Q(5,'medium',true,'Lec 6.2','Sucrose is a non-reducing sugar because:',
-'both anomeric carbons are tied up in the glycosidic bond|Neither ring can open.',
-'it has only beta-1,4 bonds|Lactose has one yet is reducing.',
-'fructose is oxidized to a lactone|Not the case.',
-'it has no hydroxyl groups|It has many.');
-Q(5,'easy',true,'Lec 6.2','Lactose is _______ joined by a _______ glycosidic bond.',
-'galactose and glucose; beta-1,4|Cleaved by lactase.',
-'glucose and glucose; alpha-1,4|That is maltose.',
-'glucose and fructose; alpha-1,2|That is sucrose.',
-'glucose and glucose; beta-1,4|That is cellobiose.');
-Q(5,'medium',false,'Lec 6.2','Maltose, from starch digestion, is two glucose units joined by an:',
-'alpha-1,4 bond|Amylose and amylopectin backbone.',
-'alpha-1,6 bond|That is isomaltose.',
-'beta-1,4 bond|That is cellobiose.',
-'alpha-1,2 bond|That is sucrose.');
-Q(5,'hard',true,'Lec 6.2','Glycosaminoglycans give joints and the vitreous their gel-like resilience because they:',
-'carry dense negative charge that binds Na+ and water|Acidic sugars and sulfates attract hydration.',
-'are hydrophobic and exclude water|They are strongly hydrophilic.',
-'are cross-linked by lysyl oxidase|That is collagen and elastin.',
-'fold into triple helices around glycine|That is collagen.');
-// ---- 6 Carryover core
-Q(6,'medium',true,'Lec 1.3','The histidine imidazole (pKa about 6) is the amino acid side chain most sensitive to small pH changes near 7.4 because it:',
-'switches between protonated and neutral forms near physiologic pH|This underlies the Bohr effect.',
-'is fully protonated at pH 7.4|That describes Lys and Arg.',
-'is fully deprotonated and negative at pH 7.4|That describes Asp and Glu.',
-'forms disulfide bonds at pH 7.4|That is cysteine.');
-Q(6,'easy',false,'Lec 4.1','Which three amino acids have nonpolar branched side chains that interdigitate in hydrophobic contacts?',
-'valine, leucine, isoleucine|Branched aliphatics.',
-'phenylalanine, tyrosine, tryptophan|Aromatic, not branched.',
-'aspartate, glutamate, asparagine|Acidic or polar.',
-'serine, threonine, cysteine|Polar side chains.');
-Q(6,'medium',false,'Lec 4.2','The porphyrin ring of heme is built from succinyl-CoA and _______.',
-'glycine|Glycine is used in heme, collagen, and purines.',
-'alanine|Not a heme precursor.',
-'arginine|Used for creatine and NO.',
-'glutamate|Not the porphyrin precursor.');
-Q(6,'medium',true,'Lec 1.3','At pH 7.4, a Lys side chain (pKa 10.5) is protonated to deprotonated in the approximate ratio:',
-'1000 to 1|Difference of 3 units is a factor of 10^3.',
-'3 to 1|Do not multiply pH units; ratios are powers of 10.',
-'10 to 1|That would be a 1-unit difference.',
-'100000 to 1|That is the ratio for Arg (pKa 12.5, difference 5).');
-Q(6,'hard',true,'Lec 3.2','The Gln side-chain amide nitrogen does not accept H+ because:',
-'its lone pair is delocalized by resonance onto the carbonyl|The same reason peptide bonds are not basic.',
-'it has no lone pair|It does have one but it is shared by resonance.',
-'its pKa is 12.5 like Arg|Gln has no basic pKa.',
-'it is protonated in the stomach|Amides are not basic.');
-// ---- batch 3: tutoring/lecture-emphasized topics ----
-Q(0,'medium',true,'Lec 4.1','The sigmoidal O2 binding curve of hemoglobin reflects:',
-'cooperativity, where each bound O2 raises the affinity of remaining sites|The first O2 loosens the taut structure.',
-'independent binding at four identical sites|That would give a hyperbola like myoglobin.',
-'a single high-affinity site per tetramer|Hb has four heme sites.',
-'covalent O2 attachment to globin|O2 binds weakly to Fe2+.');
-Q(0,'medium',true,'Lec 4.1','Compared with hemoglobin (P50 about 26 mmHg), myoglobin has a _______ P50 and releases O2 only at very low PO2.',
-'much lower|It holds O2 tightly and gives it up as a reserve in muscle.',
-'much higher|That would release O2 too early.',
-'identical|P50 differs greatly.',
-'negative|P50 is a pressure and cannot be negative.');
-Q(0,'hard',true,'Lec 4.1','On a hemoglobin curve, PO2 falling from 30 to 20 mmHg (steep region) causes:',
-'a large increase in O2 released, roughly doubling it|The steep part of the sigmoid gives a big response to a small PO2 change.',
-'almost no change in O2 released|That describes the flat plateau near 80-100 mmHg.',
-'a decrease in O2 released|Lower PO2 releases more O2.',
-'complete loss of all bound O2|Saturation is still well above zero.');
-Q(0,'medium',false,'Lec 4.1','O2 binding to heme iron is easily reversed mainly because:',
-'the large empty Fe orbital overlaps poorly with the small donor orbitals|Weak overlap makes the bond labile.',
-'O2 forms a covalent disulfide with the globin|No such bond forms.',
-'iron is oxidized to Fe3+ upon binding|Fe3+ cannot carry O2.',
-'binding is blocked by the porphyrin ring|The ring holds the iron and does not block O2.');
-Q(0,'easy',false,'Lec 4.2','A pulse oximeter on a finger reports:',
-'the percent of hemoglobin binding sites carrying O2|Percent saturation, normally in the high 90s.',
-'the PO2 of the interstitial fluid|It reads saturation, not interstitial PO2.',
-'the 2,3-BPG concentration|Not measured.',
-'the number of red cells per microliter|Not measured.');
-Q(0,'medium',true,'Lec 4.2','Red blood cells make 2,3-BPG from an intermediate of _______ because they lack a nucleus and mitochondria.',
-'glycolysis|It branches off the 3-phosphoglycerate / 2-phosphoglycerate step.',
-'the TCA cycle|RBCs have no mitochondria.',
-'the urea cycle|Not an RBC pathway.',
-'beta oxidation|Requires mitochondria.');
-Q(0,'medium',false,'Lec 4.2','In a red blood cell, the main use of glycolytic ATP is to:',
-'run the Na+/K+ pump that preserves water balance and shape|Shape determines whether the spleen keeps the cell.',
-'synthesize new hemoglobin|RBCs cannot make protein.',
-'replicate DNA|There is no nucleus.',
-'drive oxidative phosphorylation|No mitochondria.');
-Q(1,'medium',true,'Lec 4.3','G6PD deficiency causes hemolysis because the cell cannot:',
-'generate NADPH in the hexose monophosphate pathway to defend against oxidative damage|NADPH keeps glutathione reduced.',
-'make 2,3-BPG|Not the defect.',
-'synthesize the porphyrin ring|That is porphyria.',
-'form alpha-beta dimers|Not related.');
-Q(1,'medium',false,'Lec 4.3','Rigid sickled red cells are cleared mainly by the:',
-'spleen, which tests deformability and removes cells that cannot squeeze through|Morphology fails the spleen test.',
-'kidney glomerulus|Not the main site.',
-'bone marrow stroma only|Marrow makes cells, the spleen culls them.',
-'lung alveoli|Gas exchange only.');
-Q(1,'medium',true,'Lec 4.3','Beta-thalassemia is not obvious in utero because the fetus uses _______, and symptoms appear as beta chains replace them.',
-'gamma chains (HbF, alpha2gamma2)|Fetal Hb functions normally.',
-'delta chains (HbA2)|A minor adult Hb.',
-'alpha chains alone|Alpha chains alone cannot form functional Hb.',
-'epsilon chains|Embryonic only.');
-Q(1,'hard',true,'Lec 4.3','Why do Glu-to-Val substitutions on every beta chain matter more than the same change on half of them?',
-'with all chains mutated, abundant Val-Val contacts allow extensive aggregation; with half, Glu on partners disrupts stacking|Homozygotes have far more polymerization than heterozygotes.',
-'Val increases 2,3-BPG binding|Not the mechanism.',
-'Val converts Fe2+ to Fe3+|Not the mechanism.',
-'Val adds a disulfide bond between dimers|Val has no thiol.');
-Q(1,'easy',false,'Lec 4.2','Methemoglobin cannot transport O2 because its heme iron is:',
-'Fe3+, the ferric state|Hemoglobin must stay Fe2+.',
-'Fe2+, the ferrous state|That is the functional state.',
-'bound to histidine|That is normal.',
-'absent from the porphyrin ring|Iron is present.');
-Q(2,'medium',true,'Lec 5.1','Basement membrane collagen, forming an open mesh network, is type:',
-'IV|Type IV, a network former.',
-'I|Tendon, bone, most connective tissue.',
-'II|Cartilage.',
-'III|Vessels and reticular tissue.');
-Q(2,'easy',true,'Lec 5.1','Type _______ collagen is the main collagen of cartilage.',
-'II|Made by chondrocytes.',
-'I|The most common, found in tendon and bone.',
-'IV|Basement membrane.',
-'VII|Anchoring fibrils.');
-Q(2,'medium',true,'Lec 5.1','Type VII collagen functions as:',
-'anchoring fibrils that stitch type IV basement membrane to type I and III collagen in the dermis|Needle and thread analogy.',
-'the mesh network of the basement membrane|That is type IV.',
-'the main cartilage collagen|That is type II.',
-'a keratin cross-linker|Not related.');
-Q(2,'medium',false,'Lec 5.1','Types IX and XII are fibril-associated collagens that:',
-'link fibrils to each other and to the matrix, bridging dissimilar tissues|Relevant to avulsion injuries.',
-'form the basement membrane mesh|That is type IV.',
-'make up most of bone and tendon|That is type I.',
-'cross-link elastin|Not their role.');
-Q(2,'medium',true,'Lec 5.2','Hydroxylysine residues in collagen are glycosylated with galactose or glucose to:',
-'provide a handle for assembly of the three alpha chains|A grip while chains are braided.',
-'form interchain hydrogen bonds with water|The sugar is not for hydration here.',
-'create aldehydes for cross-links|Those arise from lysyl oxidase.',
-'cleave the propeptides|Peptidases do that.');
-Q(2,'medium',true,'Lec 5.2','Keratin is strengthened mainly by:',
-'disulfide bonds from its high cysteine content|Sulfur-sulfur cross-links.',
-'desmosine cross-links|That is elastin.',
-'hydroxyproline hydrogen bonds|That is collagen.',
-'ionic bridges between dimers|That is hemoglobin.');
-Q(2,'medium',false,'Lec 5.2','Mature collagen is degraded by _______, which are matrix metalloproteinases.',
-'collagenases|They cleave specific peptide bonds.',
-'lysyl oxidases|They cross-link.',
-'prolyl hydroxylases|They synthesize.',
-'amylases|They digest starch.');
-Q(3,'easy',false,'Lec 5.2','Alpha-1 antitrypsin is made mainly by the _______ and inhibits neutrophil elastase.',
-'liver|Most of the alpha-1 globulin fraction.',
-'pancreas|Trypsinogen is pancreatic; AAT is not.',
-'spleen|Culls red cells.',
-'kidney|Not the source.');
-Q(4,'hard',true,'Lec 6.1','Chronic hyperglycemia damages proteins because the glucose aldehyde:',
-'reacts with protein amine lone pairs, modifying them so they are no longer recognized as self|The idea behind HbA1c.',
-'oxidizes cysteine to disulfides|Not the glycation mechanism.',
-'hydrolyzes peptide bonds|Not the mechanism.',
-'phosphorylates serine|That is a kinase action.');
-Q(4,'medium',false,'Lec 6.1','Fructose closes into a _______ ring, whereas glucose forms a _______ ring.',
-'five-membered furanose; six-membered pyranose|Furanose is 4 C + O; pyranose is 5 C + O.',
-'six-membered pyranose; five-membered furanose|Reversed.',
-'five-membered pyranose; six-membered furanose|Names are swapped.',
-'four-membered; seven-membered|Not stable rings.');
-Q(4,'medium',false,'Lec 6.1','Glucose has _______ chiral carbons.',
-'four, C2 through C5|C1 carbonyl and C6 are not chiral.',
-'six|Carbonyl and terminal carbons are not chiral.',
-'two|There are four.',
-'five|C1 is not chiral.');
-Q(4,'medium',true,'Lec 6.2','Ruminants live on cellulose because their gut bacteria release beta-D-glucose, which the liver converts to alpha-D-glucose by:',
+'oxidation; reduction|Not the type.',
+'phosphorylation; dephosphorylation|Not the type.');
+Q(5,'medium',true,'Lec 6.2','Lactose intolerance causes diarrhea because unhydrolyzed lactose:',
+'cannot be taken up by enterocytes and holds water in the gut lumen|Only monosaccharides cross.',
+'is toxic to enterocytes|Not the mechanism.',
+'blocks sodium uptake|Not the mechanism.',
+'crystallizes in the colon|Not the mechanism.');
+Q(5,'medium',true,'Lec 6.2','Lactose is galactose joined to glucose by a _______ bond and is a reducing sugar because the glucose anomeric carbon is free.',
+'beta-1,4|Cleaved by lactase.',
+'alpha-1,4|That is maltose.',
+'alpha-1,beta-2|That is sucrose.',
+'alpha-1,6|That is isomaltose.');
+Q(5,'medium',true,'Lec 6.2','Sucrose, glucose joined to fructose by an alpha-1,beta-2 bond, is a non-reducing sugar because:',
+'both anomeric carbons are used in the bond|Neither ring can open.',
+'it has only beta bonds|It has an alpha bond.',
+'fructose is oxidized|Not the reason.',
+'it has no hydroxyls|It has many.');
+Q(5,'medium',false,'Lec 6.2','Maltose is two glucoses joined by an _______ bond, whereas the amylopectin branch point is an _______ bond.',
+'alpha-1,4; alpha-1,6|Isomaltase cleaves the branch.',
+'alpha-1,6; alpha-1,4|Reversed.',
+'beta-1,4; alpha-1,6|Beta-1,4 is cellulose.',
+'alpha-1,2; alpha-1,4|Alpha-1,2 is sucrose.');
+Q(5,'medium',true,'Lec 6.2','Humans cannot digest cellulose because it has _______ glucose linkages and we lack the enzyme.',
+'beta-1,4|Ruminants use gut bacteria.',
+'alpha-1,4|Amylase cleaves it.',
+'alpha-1,6|Isomaltase cleaves it.',
+'alpha-1,2|Sucrase cleaves it.');
+Q(5,'medium',true,'Lec 6.2','Ruminants live on cellulose because gut bacteria release beta-D-glucose, which the liver converts to alpha-D-glucose by:',
 'opening the ring and reclosing it with the opposite anomeric orientation|Rotation about C1-C2 in the open chain.',
 'epimerizing carbon 4|That makes galactose.',
-'hydrolyzing the ring oxygen|Not the mechanism.',
-'oxidizing C1 to a carboxylic acid|That would make gluconic acid.');
-Q(5,'medium',true,'Lec 6.2','Intestinal enterocytes take up only _______ into the blood.',
-'monosaccharides|Disaccharides hold too much water to pass.',
-'disaccharides|They must be hydrolyzed first.',
-'amylose chains|Too large.',
-'oligosaccharides of 5 units|Too large.');
-Q(5,'medium',false,'Lec 6.2','Isomaltase cleaves the _______ bond found at amylopectin branch points.',
-'alpha-1,6|Branch linkage.',
-'alpha-1,4|Amylase and maltase.',
-'beta-1,4|Lactase and cellulose bond.',
-'alpha-1,2|Sucrase.');
-Q(5,'easy',false,'Lec 6.2','Cellobiose, the disaccharide unit of cellulose, is two glucoses joined by a _______ bond.',
-'beta-1,4|Humans lack the enzyme.',
-'alpha-1,4|Maltose.',
-'alpha-1,6|Isomaltose.',
-'alpha-1,2|Sucrose.');
-Q(5,'medium',false,'Lec 6.2','Salivary and pancreatic amylase digests starch by cleaving internal _______ bonds.',
-'alpha-1,4|It produces shorter oligosaccharides and maltose.',
-'beta-1,4|Cellulose bonds.',
-'alpha-1,6|Isomaltase handles them.',
-'peptide|Not a protease.');
-Q(5,'medium',false,'Lec 6.2','Glycogen is a homopolysaccharide of:',
-'alpha-D-glucose|With alpha-1,4 chains and alpha-1,6 branches.',
-'beta-D-glucose|That is cellulose.',
-'fructose|That would be inulin.',
-'galactose|Not glycogen.');
-Q(5,'hard',false,'Lec 3.2','The amine sugars of GAGs are acetylated, which means they:',
-'form amides whose resonance removes basicity so they are not protonated|Same logic as the peptide bond.',
-'become strong bases|Acetylation removes basic character.',
-'form disulfides|No sulfur involved.',
-'become aldehydes|Not the result.');
+'oxidizing C1 to an acid|Makes gluconic acid.',
+'adding a phosphate|Not needed for the switch.');
+Q(5,'easy',true,'Lec 6.2','Amylose is a straight chain of alpha-1,4 glucose, amylopectin adds _______, and glycogen is the most branched.',
+'alpha-1,6 branch points|Same glucose units.',
+'beta-1,4 links|Cellulose.',
+'fructose units|Not glucose polymers.',
+'peptide bonds|Not protein.');
+Q(5,'medium',true,'Lec 6.2','Lactase, sucrase, maltase, and isomaltase are _______ that use water to cleave glycosidic bonds.',
+'hydrolases|Brush border enzymes.',
+'ligases|Join molecules with ATP.',
+'isomerases|Rearrange atoms.',
+'oxidoreductases|Transfer electrons.');
+Q(5,'medium',true,'Lec 6.2','Glycosaminoglycans are built from a repeating disaccharide of an amine sugar and an _______ sugar.',
+'acidic|Negative charge binds Na+ and water.',
+'neutral hexose|Not the repeat.',
+'phosphorylated pentose|Not the repeat.',
+'fatty acid|Not carbohydrate.');
+Q(5,'easy',false,'Lec 6.2','GAGs give gel-like cushioning in the _______.',
+'vitreous humor, nucleus pulposus, and synovial fluid|Fluid-filled compartments.',
+'tendon fibers|Collagen.',
+'hemoglobin cavity|Unrelated.',
+'cell nucleus|Unrelated.');
+Q(5,'easy',false,'Lec 6.1','Which cell has an absolute requirement for glucose?',
+'red blood cell|Glycolysis is its only ATP source.',
+'hepatocyte|Can use other fuels.',
+'adipocyte|Can use other fuels.',
+'resting skeletal muscle|Can burn fat.');
+// ===== 6 Core =====
+Q(6,'medium',true,'Lec 1.3','At pH 7.4, a Lys side chain (pKa 10.5) is protonated to deprotonated in the approximate ratio _______.',
+'1000 to 1|A 3-unit difference is 10^3.',
+'3 to 1|Do not multiply pH units.',
+'10 to 1|That is a 1-unit difference.',
+'100000 to 1|That is Arg (5 units).');
+Q(6,'easy',true,'Lec 2.3','When pH equals pKa, the conjugate base to acid ratio is _______.',
+'1 to 1|Log of 1 is zero.',
+'10 to 1|Needs pH one unit above.',
+'1 to 10|Needs pH one unit below.',
+'100 to 1|Needs two units above.');
+Q(6,'medium',true,'Lec 1.3','Using pH 7.4 and a carbonic acid pKa of 6.4, bicarbonate is _______ times carbonic acid.',
+'10|One unit above pKa.',
+'100|Two units.',
+'1|That is pH = pKa.',
+'0.1|That is one unit below.');
 Q(6,'medium',true,'Lec 4.3','A hydrogen bond requires:',
-'a hydrogen deshielded by an electronegative atom and a nearby electronegative atom with a lone pair|N-H or O-H donor and O or N acceptor.',
+'a hydrogen deshielded by an electronegative atom and a nearby electronegative atom with a lone pair|N-H or O-H donor with O or N acceptor.',
 'two nonpolar side chains|That is hydrophobic contact.',
 'oppositely charged side chains|That is an ionic bridge.',
-'a shared electron pair between sulfurs|That is a disulfide.');
-Q(6,'easy',true,'Lec 2.3','When pH equals pKa, the ratio of conjugate base to acid is:',
-'1 to 1|Log of 1 is zero.',
-'10 to 1|Needs pH one unit above pKa.',
-'1 to 10|Needs pH one unit below pKa.',
-'100 to 1|Needs two units above.');
-Q(6,'medium',true,'Lec 1.1','An enzyme accelerates a reaction by:',
-'lowering the activation barrier without changing delta G or the equilibrium|Kinetics versus thermodynamics.',
-'making delta G more negative|Delta G is fixed by the states.',
-'increasing the equilibrium constant|K is unchanged.',
-'stabilizing the substrate more than the transition state|That would slow the reaction.');
-Q(6,'medium',false,'Lec 1.1','A positive delta G corresponds to an _______ reaction with K _______ 1.',
-'endergonic; less than|Products are less stable.',
-'exergonic; greater than|That is a negative delta G.',
-'endergonic; greater than|Positive delta G gives K below 1.',
-'exergonic; less than|Mismatched pair.');
-Q(6,'easy',false,'Lec 1.1','The major product of mitochondrial fuel oxidation, beyond ATP, is:',
-'heat|Mitochondria are not fully efficient.',
-'urea|Made in the liver from nitrogen.',
-'glycogen|A storage product.',
-'ketone bodies|Made in liver from acetyl-CoA.');
-// ---- batch 4a ----
-Q(0,'medium',true,'Tutor Wk 6','Oxygen binds the heme iron at the _______ coordination position, opposite the proximal histidine.',
-'sixth|Four pyrrole nitrogens and the proximal His fill the other five.',
-'first|Not the open site.',
-'second|Not the open site.',
-'fourth|Not the open site.');
-Q(0,'hard',true,'Tutor Wk 6','O2 binding at one heme transmits to the other subunits because the iron is pulled into the porphyrin plane, which:',
-'drags the proximal His and its helix, loosening the dimer interface and raising affinity|The mechanical basis of cooperativity.',
-'oxidizes the iron to Fe3+, locking the tetramer|Fe3+ cannot carry O2.',
-'breaks the peptide bonds of the helix|Peptide bonds stay intact.',
-'releases 2,3-BPG from the cavity permanently|BPG stays bound in both states.');
-Q(0,'medium',true,'Tutor Wk 6','The three hemoglobins to know are embryonic _______, fetal alpha2gamma2, and adult alpha2beta2.',
-'Gower|Made by the early liver before bone marrow exists.',
-'Barts|Gamma4, seen in alpha-thalassemia.',
-'H|Beta4, seen in alpha-thalassemia.',
-'A2|A minor adult hemoglobin.');
-Q(0,'easy',false,'Tutor Wk 6','Oxygenated hemoglobin is in the _______ state, with fewer inter-dimer ionic bonds.',
-'relaxed (R)|High affinity.',
-'taut (T)|Deoxygenated, low affinity, stabilized by 2,3-BPG.',
-'denatured|Structure is intact.',
-'oxidized (Fe3+)|Iron remains Fe2+.');
-Q(2,'medium',true,'Tutor Wk 6','Mature elastin cross-links, called desmosines, are built from _______ lysine side chains.',
-'four|Combined by lysyl oxidase chemistry.',
-'two|That is the number in a simple collagen cross-link.',
-'six|Not the number.',
-'one|Cannot cross-link alone.');
-Q(3,'hard',false,'Tutor Wk 6','Ehlers-Danlos syndrome can result from defects in collagen synthesis or processing enzymes such as:',
-'lysyl hydroxylase or procollagen peptidase|Hypermobile joints and fragile stretchy skin.',
-'fibrillin-1 and AAT|Those cause Marfan and emphysema.',
-'prolyl hydroxylase absence due to dietary vitamin C|That is scurvy.',
-'hexokinase and PFK-1|Glycolytic enzymes.');
-Q(6,'medium',true,'Tutor Wk 6','Positively charged side chains at physiologic pH are _______, and negatively charged are _______.',
-'Lys and Arg; Asp and Glu|These pair to form ionic bridges.',
+'a shared electron pair between two sulfurs|That is a disulfide.');
+Q(6,'medium',true,'Lec 4.1','Hydrophobic interactions between nonpolar side chains arise from:',
+'temporary dipoles from rapidly moving electrons|Weak individually, strong in large numbers.',
+'permanent charges|That is ionic bonding.',
+'shared electron pairs|That is covalent bonding.',
+'hydrogen donors and acceptors|That is hydrogen bonding.');
+Q(6,'hard',true,'Lec 3.2','The Gln side-chain amide nitrogen and the peptide nitrogen do not accept H+ because their lone pair:',
+'is delocalized by resonance onto the carbonyl|Same reason peptide bonds are not basic.',
+'does not exist|It exists but is shared.',
+'is held by sulfur|No sulfur.',
+'is hydrophobic|Not the reason.');
+Q(6,'medium',false,'Lec 4.1','Positively charged residues at pH 7.4 are _______ and negatively charged residues are _______.',
+'Lys and Arg; Asp and Glu|These form ionic bridges.',
 'Asp and Glu; Lys and Arg|Reversed.',
-'His and Cys; Ser and Thr|Not the charged residues at pH 7.4.',
-'Lys and Tyr; Asp and Gln|Tyr is neutral and Gln is uncharged.');
-Q(6,'medium',false,'Tutor Wk 6','Single bonds about the alpha carbon rotate freely, whereas the peptide bond does not because it:',
-'has partial double-bond character from resonance|Delocalization makes it planar.',
-'is a hydrogen bond|It is covalent.',
-'is a disulfide|No sulfur involved.',
-'is an ionic bridge|It is covalent.');
-Q(6,'easy',false,'Tutor Wk 6','Stomach acid denatures proteins by:',
-'disrupting intermolecular forces and structure without breaking peptide bonds|Function is lost while the chain stays intact.',
-'hydrolyzing every peptide bond|That is digestion, not denaturation.',
-'oxidizing cysteines to cysteic acid|Not the main mechanism.',
+'His and Cys; Ser and Thr|Not charged at 7.4.',
+'Lys and Tyr; Asp and Gln|Tyr and Gln are uncharged.');
+Q(6,'easy',false,'Lec 4.1','Stomach acid denatures proteins by:',
+'disrupting intermolecular forces without breaking peptide bonds|Function is lost; the chain stays intact.',
+'hydrolyzing every peptide bond|That is digestion.',
+'oxidizing cysteines|Not the main action.',
 'phosphorylating side chains|A kinase action.');
-// ---- batch 4: Tutoring Week 6 (fibrous proteins + heme intro) ----
-Q(0,'easy',true,'Tutoring Wk 6','One hemoglobin molecule contains how many globular polypeptide chains?',
-'four, arranged as two alpha-beta dimers|A tetramer; each chain carries one heme.',
-'two, one alpha and one beta|That is a single dimer.',
-'one large folded chain|Hb is a quaternary structure of separate chains.',
-'eight, two per heme|Each chain holds one heme, so four.');
-Q(0,'medium',true,'Tutoring Wk 6','Heme iron is coordinated octahedrally by four porphyrin nitrogens, the _______ histidine, and a sixth site where O2 displaces the distal histidine.',
-'proximal|It stays bound to Fe2+ while the distal His backs away for O2.',
-'distal|The distal His is the one O2 displaces.',
-'terminal valine|Valine is not a heme ligand.',
-'cysteine|Cysteine is not a heme ligand in Hb.');
-Q(0,'medium',true,'Tutoring Wk 6','Phe and Trp suit the alpha-beta hydrophobic interface because they are:',
-'planar, so they stack like books on a shelf over a large surface|Large contact area gives many bonding interactions.',
-'positively charged, forming ionic bridges|Phe and Trp are uncharged.',
-'able to form disulfide bonds|They contain no sulfur.',
-'branched, so they scissor together|That describes Val, Leu, Ile.');
-Q(0,'hard',true,'Tutoring Wk 6','Tyrosine, although planar, is excluded from the hydrophobic dimer interface because:',
-'its hydroxyl group gives a dipole that lets water in|A polar group would loosen a hydrophobic seal.',
-'it is too large to fit|Size is not the issue.',
-'it carries a permanent positive charge|Tyr is uncharged at pH 7.4.',
-'it forms disulfide bonds|It has no thiol.');
-Q(0,'medium',true,'Tutoring Wk 6','Val, Leu, and Ile bond hydrophobically across the interface by:',
-'interdigitating their branched side chains like scissoring fingers|Temporary dipole contacts over many atoms.',
-'forming ionic bridges with each other|They carry no charge.',
-'forming hydrogen bonds with water|They are hydrophobic.',
-'forming covalent bonds between side chains|Interaction is non-covalent.');
-Q(0,'medium',false,'Tutoring Wk 6','The embryonic hemoglobin (Gower) is made before bone marrow exists, by the:',
-'liver|Early erythropoiesis is hepatic.',
-'spleen|Not the primary source.',
-'kidney|Makes erythropoietin only.',
-'bone marrow|It does not yet exist.');
-Q(0,'medium',true,'Tutoring Wk 6','Which O2 binds most easily to a hemoglobin tetramer?',
-'the fourth|Affinity rises with each bound O2.',
-'the first|The taut form binds the first with most difficulty.',
-'the second|Affinity is still intermediate.',
-'all bind equally|That would give a hyperbola.');
-Q(0,'hard',false,'Tutoring Wk 6','Water entering the gap between the two dimers is harmful because it:',
-'solvates the charges and weakens ionic bridges, allowing the tetramer to dissociate|Edema-type states threaten quaternary structure.',
-'oxidizes Fe2+ to Fe3+|Not caused by water.',
-'forms disulfide bonds|No effect.',
-'strengthens hydrophobic bonds|It weakens ionic bonds.');
-Q(0,'easy',false,'Tutoring Wk 6','Which proteins are globular?',
-'ion channels, electron transport chain proteins, and water-soluble enzymes|All are folded, compact structures.',
-'collagen, elastin, and keratin|Those are fibrous.',
-'only extracellular structural proteins|Globular proteins include intracellular ones.',
-'only integral membrane proteins|Enzymes in cytosol are globular too.');
-Q(1,'hard',true,'Tutoring Wk 6','At pH 7.4 the Glu side chain (pKa about 4) is ionized more than 1000-fold over its protonated form, so it:',
-'carries a negative charge and repels another Glu|Charge repulsion discourages aggregation.',
-'carries a positive charge and attracts Val|Glu is negative, and Val is neutral.',
-'is neutral and hydrophobic|It is charged.',
-'forms a disulfide with Val|Neither has sulfur.');
-Q(1,'medium',true,'Tutoring Wk 6','Val-Val contacts in sickle hemoglobin are held by:',
-'temporary dipole (hydrophobic) interactions|Fluctuating electron clouds.',
-'permanent ionic bonds|Val is uncharged.',
-'covalent bonds|The interaction is non-covalent.',
-'hydrogen bonds|Val lacks donor/acceptor groups.');
-Q(1,'medium',true,'Tutoring Wk 6','Sickle cell DISEASE requires that:',
-'both chromosome 11 beta alleles carry the Glu-to-Val mutation|Homozygous, so every beta chain has Val.',
-'one chromosome 11 allele carries it|That is sickle trait.',
-'one chromosome 16 alpha allele carries it|The mutation is in beta globin.',
-'all four alpha alleles are deleted|That is alpha-thalassemia.');
-Q(1,'hard',true,'Tutoring Wk 6','In sickle trait, aggregation is limited because:',
-'Glu-containing chains disrupt Val stacking, giving only small aggregates|Heterozygotes still make some sickling but far less.',
-'Val is replaced by Lys|No such change.',
-'HbF replaces all beta chains|HbF does not account for trait.',
-'the heme iron is oxidized|Not relevant.');
-Q(2,'easy',true,'Tutoring Wk 6','One third of collagen residues are _______, though _______ is the residue that gives the chain occasional kinks.',
-'glycine; proline|Gly is every third residue; Pro has a ring.',
-'proline; glycine|Reversed.',
-'lysine; cysteine|Wrong residues.',
-'alanine; serine|Wrong residues.');
-Q(2,'medium',true,'Tutoring Wk 6','Hydroxylation of collagen is called post-translational because it occurs:',
-'after the chain has been made on the ribosome|The enzymes modify residues in the finished polypeptide.',
-'before transcription|It does not alter the gene.',
-'during splicing|Splicing precedes translation.',
-'only in the nucleus|It happens in the ER lumen.');
-Q(2,'medium',false,'Tutoring Wk 6','Type VII collagen is not cinched tightly because the matrix must still:',
-'permit fluid flow for nutrients in and waste out|Tight packing would starve basal cells.',
-'allow keratin disulfides to form|Not the reason.',
-'let glycine be hydroxylated|Not relevant.',
-'release procollagen propeptides|Not relevant.');
-Q(2,'medium',true,'Tutoring Wk 6','Collagen fibrils are staggered like a brick wall to:',
-'avoid a continuous line of weakness at aligned molecular ends|Flaws then cannot run through the whole fibril.',
-'increase brittleness|Staggering improves toughness.',
-'prevent hydroxylation|Unrelated.',
-'maximize ionic bridge formation|Not the purpose.');
-Q(2,'hard',true,'Tutoring Wk 6','A disulfide bridge forms when two Cys residues are _______, losing hydrogen atoms (not hydrogen ions).',
-'oxidized|S-S formation is oxidation.',
-'reduced|Reduction would break the bridge.',
-'hydrolyzed|No water is added.',
-'phosphorylated|No phosphate is involved.');
-Q(2,'medium',true,'Tutoring Wk 6','Elastin recoils after being stretched in water because:',
-'its hydrophobic side chains re-associate with each other, held by desmosine cross-links|Hydrophobic recoil.',
-'its disulfide bridges snap back|Disulfides characterize keratin.',
-'its hydroxyproline reforms hydrogen bonds|That is collagen.',
-'its glycine residues contract|Not the mechanism.');
-Q(3,'medium',true,'Tutoring Wk 6','Without ascorbate, the hydroxylase iron stays in the _______ state, so Pro and Lys are not hydroxylated.',
-'Fe3+ (oxidized)|Ascorbate keeps iron as Fe2+.',
-'Fe2+ (reduced)|That is the active state.',
-'Cu2+|Copper serves lysyl oxidase.',
-'Zn2+|Not the cofactor.');
-Q(3,'hard',true,'Tutoring Wk 6','Marfan syndrome is a defect in fibrillin, which is:',
-'neither collagen, elastin, nor keratin, but a transition protein joining connective tissue types|A scaffold affecting skeleton, eye, and heart.',
-'a type of collagen|It is not collagen.',
-'a form of elastin|It is not elastin.',
-'a keratin|It is not keratin.');
-Q(3,'hard',true,'Tutoring Wk 6','Osteogenesis imperfecta Type II is lethal because Gly is replaced by a bulky residue that:',
-'blocks tight braiding of the triple helix, so hydrogen bonding is lost|Cannot rotate out of the way.',
-'removes the aldehyde needed for cross-links|Cross-link aldehydes come from Lys.',
-'prevents propeptide cleavage|Not the mechanism.',
-'adds extra disulfides|Collagen has few.');
-// ---- batch 5: Study Guide + Tutoring Wk 7 + instructor PPT ----
-Q(0,'easy',true,'Study Guide','Tertiary structure differs from quaternary structure in that tertiary structure is:',
-'the 3D fold of a single polypeptide chain|Quaternary joins several subunits.',
-'the association of several polypeptide subunits|That is quaternary structure.',
-'the linear amino acid sequence|That is primary structure.',
-'the hydrogen-bonded alpha helix of one segment|That is secondary structure.');
-Q(0,'easy',true,'Study Guide','Which set lists quaternary (multi-subunit) protein examples from the outline?',
-'hemoglobin, protein kinase A, acetyl-CoA carboxylase, caspase|All are assembled from multiple subunits.',
-'myoglobin, collagen, keratin, elastin|Myoglobin is a single chain and the others are fibrous.',
-'cytochrome c, myoglobin, lysozyme, insulin monomer|Mostly single-chain globular proteins.',
-'collagen, fibrillin, amylose, cellulose|Fibrous proteins and carbohydrates.');
-Q(0,'medium',true,'Study Guide','Heme iron in hemoglobin stays Fe2+, whereas heme iron in cytochromes:',
-'cycles between Fe2+ and Fe3+ during electron transfer|Same prosthetic group, different function.',
-'stays Fe3+ permanently|Not true in cytochromes.',
-'is replaced by copper|Iron is retained.',
-'binds O2 reversibly like hemoglobin|Cytochromes transfer electrons.');
-Q(0,'medium',true,'Study Guide','A blood sample averaging 75% saturation means:',
-'on average 75% of heme sites hold O2, not that every Hb carries exactly three|Occupancy is spread across molecules.',
-'every hemoglobin carries exactly three O2|It is an average across binding sites.',
-'25% of hemoglobin is Fe3+|Saturation is not oxidation state.',
-'the sample is 75% HbF|Unrelated.');
-Q(0,'medium',false,'Study Guide','Saturation falling from 95% to 75% corresponds to a decrease of:',
-'20 percentage points|Subtract final from initial.',
-'25 percentage points|That is the unoccupied fraction at 75%.',
-'75 percentage points|That is the final saturation.',
-'95 percentage points|That is the initial saturation.');
-Q(0,'medium',true,'Study Guide','Using pH 7.4 and a carbonic acid pKa of 6.4, the base-to-acid ratio is:',
-'10 to 1 bicarbonate to carbonic acid|One pH unit above pKa gives a ratio of 10.',
-'1 to 10|Inverted.',
-'1 to 1|That occurs when pH equals pKa.',
-'100 to 1|That would be two units above pKa.');
-Q(0,'medium',true,'Tutoring Wk 7','Carbon monoxide lowers the top of the oxygen dissociation curve because it:',
-'occupies heme sites and favors an R-like state, so remaining O2 is released poorly|Both capacity and release suffer.',
-'shifts the curve right by lowering pH|CO is not an acid.',
-'raises 2,3-BPG|Not its mechanism.',
-'converts Fe2+ to Fe3+|That is methemoglobin formation.');
-Q(0,'hard',true,'Tutoring Wk 7','In pregnancy, higher maternal 2,3-BPG helps the fetus because it:',
-'right-shifts maternal Hb so it releases O2, while HbF binds BPG less and keeps O2 tightly|The gradient favors transfer to the fetus.',
-'left-shifts maternal Hb so it holds O2|That would starve the fetus.',
-'mixes maternal and fetal blood to equalize O2|The circulations do not mix.',
-'converts HbF to HbA|Not the mechanism.');
-Q(0,'medium',true,'Tutoring Wk 7','Which combination shifts the hemoglobin curve to the right?',
-'lower pH, higher CO2, higher 2,3-BPG|All favor the T-state and O2 unloading.',
-'higher pH, lower CO2, lower 2,3-BPG|All shift left.',
-'lower pH, lower CO2, lower 2,3-BPG|Mixed directions.',
-'higher pH, higher CO2, higher 2,3-BPG|Mixed directions.');
-Q(0,'easy',false,'Study Guide','A lower P50 indicates:',
-'higher O2 affinity|It takes less PO2 to reach 50% saturation.',
-'lower O2 affinity|That is a higher P50.',
-'a right-shifted curve|A right shift raises P50.',
-'more cooperativity|P50 does not measure cooperativity.');
-Q(1,'medium',true,'Study Guide','Genotype differs from phenotype in that genotype is:',
-'the inherited alleles, while phenotype is the expressed outcome|HbAS and HbSS illustrate this.',
-'the expressed protein, while phenotype is the DNA|Reversed.',
-'identical to phenotype in sickle cell|They differ between trait and disease.',
-'determined only by environment|Genotype is inherited.');
-Q(1,'hard',true,'Tutoring Wk 7','Alpha-thalassemia can affect the fetus, whereas beta-thalassemia appears after birth, because HbF:',
-'contains alpha chains but uses gamma instead of beta|Alpha loss hits fetal Hb; beta loss emerges as gamma is replaced.',
-'contains beta chains but not alpha|HbF is alpha2gamma2.',
-'is made only from delta chains|Not true.',
-'is unaffected by any globin gene|Alpha genes affect HbF.');
-Q(1,'medium',true,'Study Guide','Sickle cell disease differs from thalassemia in that sickle cell is a:',
-'structural beta-globin variant, whereas thalassemia is reduced chain production|Glu to Val versus deficient supply.',
-'reduced-production disorder, whereas thalassemia is a structural variant|Reversed.',
-'heme synthesis defect, whereas thalassemia is a collagen defect|Neither is correct.',
-'defect of fetal Hb only|Sickle involves beta chains.');
-Q(1,'medium',false,'Tutoring Wk 7','Sickle trait protects against malaria because red cells with shortened lifespan:',
-'turn over before the parasite finishes maturing inside them|The parasite needs time within the RBC.',
-'cannot be entered by any microbe|Not the mechanism.',
-'have extra heme that kills parasites|Not the mechanism.',
-'make more HbF|Not the mechanism.');
-Q(2,'medium',true,'Study Guide','Toughness differs from strength in that toughness is resistance to:',
-'damage and crack propagation, while strength is resistance to applied stress|Staggered collagen improves toughness.',
-'applied stress, while strength is resistance to cracks|Reversed.',
-'chemical degradation only|Not the definition.',
-'stretching only|That is elasticity.');
-Q(2,'medium',true,'Study Guide','Match the cofactors: prolyl and lysyl hydroxylases use _______, whereas lysyl oxidase uses _______.',
-'vitamin C and iron; copper|Hydroxylation versus cross-linking.',
-'copper; vitamin C and iron|Reversed.',
-'vitamin B6; zinc|Neither enzyme uses these.',
-'biotin; magnesium|Neither enzyme uses these.');
-Q(2,'medium',true,'Study Guide','Collagen, elastin, and hydrated GAG matrices respectively resist:',
-'tensile load, stretch with recoil, and compression|Each property follows from structure.',
-'compression, tensile load, and recoil|Mismatched.',
-'recoil, compression, and tensile load|Mismatched.',
-'heat, acid, and enzymes|Not their functions.');
-Q(2,'easy',false,'Study Guide','Collagen breakdown is carried out by:',
-'collagenases (matrix metalloproteinases)|They cleave collagen after remodeling.',
-'lysyl oxidase|Forms cross-links.',
-'prolyl hydroxylase|Modifies proline.',
-'lactase|Cleaves lactose.');
-Q(3,'medium',true,'Study Guide','Ehlers-Danlos syndrome presents with:',
-'excess tissue stretch and reduced connective-tissue integrity|Collagen-related defects.',
-'brittle bones after minor trauma as the dominant feature|That is osteogenesis imperfecta.',
-'emphysema in nonsmokers|That is AAT deficiency.',
-'long limbs and lens dislocation|That is Marfan syndrome.');
-Q(3,'medium',true,'Study Guide','Long limbs, lens dislocation, and aortic involvement point to a defect in:',
-'fibrillin|Marfan syndrome.',
-'type I collagen|OI.',
-'alpha-1 antitrypsin|Emphysema.',
-'lysyl oxidase|Cross-linking enzyme.');
-Q(4,'medium',true,'Study Guide','In open-chain fructose, the chiral carbons are:',
-'C3, C4, and C5|C1, C2 (carbonyl), and C6 are not chiral.',
-'C2 through C5|That is glucose.',
-'C1 through C6|C1, C2, and C6 are not chiral.',
-'C2 only|Not the case.');
-Q(4,'medium',true,'Study Guide','D versus L designates _______, whereas plus or minus designates _______.',
-'configuration; measured optical rotation|Separate labels.',
-'optical rotation; configuration|Reversed.',
-'ring size; anomeric position|Not these labels.',
-'aldose versus ketose; hexose versus pentose|Not these labels.');
-Q(4,'medium',false,'Study Guide','Fructose in the furanose form has:',
-'five ring atoms but still six total carbons|Count the ring oxygen.',
-'five total carbons|It is still a hexose.',
-'a six-membered ring|That is pyranose.',
-'no anomeric carbon|C2 is the anomeric carbon.');
-Q(4,'medium',false,'Study Guide','D-glucose and L-glucose are:',
-'enantiomers, nonsuperimposable mirror images|Differ at every chiral center.',
-'C2 epimers|Epimers differ at one center.',
-'anomers|Anomers differ only at the anomeric carbon.',
-'structural isomers of aldose and ketose type|Both are aldoses.');
-Q(4,'easy',false,'Study Guide','Glucose and fructose are examples of:',
-'isomers with the same formula but different carbonyl placement|Aldose versus ketose.',
-'epimers|They differ in more than one center and functional group.',
-'anomers|They are different sugars.',
-'enantiomers|They are not mirror images.');
-Q(5,'medium',true,'Study Guide','Disaccharides must be hydrolyzed at the _______ before the sugars are taken up.',
-'apical brush border|Final disaccharidases act there.',
-'basolateral membrane|Sugars exit there into blood.',
-'stomach lumen|Not the site.',
-'liver sinusoids|Not the site.');
-Q(5,'medium',true,'Study Guide','Maltose and cellobiose contain the same two glucose units but differ in:',
-'linkage, alpha-1,4 versus beta-1,4, so human enzymes recognize only one|Shape controls recognition.',
-'ring size, pyranose versus furanose|Both are pyranoses.',
-'the number of carbons|Both are glucose.',
-'the presence of fructose|Neither has fructose.');
-Q(5,'hard',false,'Study Guide','Glycogen differs from amylopectin by being:',
-'more frequently branched, about every 8 to 10 residues versus 16 to 20|Same bond types.',
-'less branched with beta-1,4 chains|Cellulose has beta-1,4 chains.',
-'made from fructose|Both are glucose polymers.',
-'branched through beta-1,6 bonds|Branches are alpha-1,6.');
-Q(5,'hard',false,'Study Guide','The GAG that contains galactose instead of a uronic acid is:',
-'keratan sulfate|The exception to acidic sugar plus amino sugar.',
-'hyaluronic acid|Contains glucuronic acid.',
-'heparin|Contains uronic acid.',
-'chondroitin sulfate|Contains glucuronic acid.');
-Q(5,'medium',false,'Study Guide','A proteoglycan differs from a GAG in that a proteoglycan is:',
-'a core protein carrying GAG chains|A GAG is the carbohydrate chain itself.',
-'a free GAG chain with no protein|That is a GAG.',
-'a protein with a single sugar|That is a simple glycoprotein.',
-'a lipid with a carbohydrate|That is a glycolipid.');
-Q(5,'easy',false,'Study Guide','Hyaluronic acid and heparin are best classified as:',
-'glycosaminoglycans, carbohydrates rather than proteins|Heparin is an anticoagulant GAG.',
-'proteins that bind sugars|They are carbohydrates.',
-'phospholipids|Not lipids.',
-'collagen types|Not collagens.');
-Q(7,'medium',true,'Study Guide','Hexokinase phosphorylates glucose at carbon:',
-'6|An alcohol group, recognized by exact position.',
-'1|That is the PFK-1 site on fructose 6-phosphate.',
-'2|Not the hexokinase site.',
-'4|Not the hexokinase site.');
-Q(7,'medium',true,'Study Guide','PFK-1 phosphorylates fructose 6-phosphate at carbon _______ and is regulated allosterically by fructose 2,6-bisphosphate.',
-'1|Producing fructose 1,6-bisphosphate.',
-'6|That is already phosphorylated.',
-'2|That is the regulator position.',
-'3|Not the site.');
-Q(7,'medium',true,'Study Guide','Lactate dehydrogenase converts pyruvate to lactate using _______ as the reducing agent.',
-'NADH|It donates hydride and is oxidized to NAD+.',
-'NAD+|That is the oxidized form.',
-'ATP|Not a reductant here.',
-'FAD|Not used by LDH.');
-Q(7,'medium',true,'Study Guide','Lactase, sucrase, maltase, and isomaltase belong to the enzyme class:',
-'hydrolases|They use water to cleave glycosidic bonds.',
-'ligases|Ligases join molecules using ATP.',
-'isomerases|They rearrange atoms.',
-'oxidoreductases|They transfer electrons.');
-Q(7,'medium',false,'Study Guide','Phosphoglucose isomerase, interconverting glucose 6-phosphate and fructose 6-phosphate, is an:',
-'isomerase|It rearranges one isomer into another.',
-'oxidoreductase|No net redox.',
-'ligase|No ATP-driven joining.',
-'hydrolase|No water is used.');
-Q(7,'medium',false,'Study Guide','Aminotransferases require _______ for transamination.',
-'pyridoxal phosphate (vitamin B6)|It carries the amino group.',
-'tetrahydrobiopterin|Hydroxylase cofactor.',
-'biotin|Carboxylase cofactor.',
-'thiamine pyrophosphate|Decarboxylation cofactor.');
-Q(7,'medium',true,'Study Guide','K_M in the Michaelis-Menten model is the substrate concentration at which the rate is:',
-'half of Vmax, with a low K_M meaning high substrate affinity|Standard definition.',
-'equal to Vmax|The rate approaches but does not reach Vmax.',
-'zero|No reaction.',
-'double Vmax|Vmax is the ceiling.');
-Q(7,'medium',true,'Study Guide','Raising temperature increases an enzyme-catalyzed rate through the Arrhenius rate coefficient until:',
-'the enzyme denatures at too high a temperature|Rate then falls.',
-'activation energy becomes zero|Enzymes lower, not remove, the barrier.',
-'delta G becomes negative|Delta G is unchanged by temperature rate effects.',
-'the substrate becomes chiral|Unrelated.');
-Q(7,'medium',false,'Study Guide','Enzyme activity can be regulated by allosteric effectors, covalent modification such as phosphorylation, and:',
-'genetic expression of the enzyme|More or fewer enzyme copies.',
-'changing the free energy change|Enzymes do not alter delta G.',
-'changing the equilibrium constant|Unchanged by enzymes.',
-'removing the substrate chirality|Not a mechanism.');
-Q(7,'medium',false,'Study Guide','The Na+/K+ ATPase, which moves ions across a membrane, is classified as a:',
-'translocase|Class for membrane transport enzymes.',
-'hydrolase only|It is classified by the transport function.',
-'lyase|No bond cleavage by elimination.',
-'isomerase|No rearrangement.');
-// ---------------- state ----------------
+Q(6,'medium',false,'Lec 4.2','Heme is built from succinyl-CoA and _______.',
+'glycine|Also used in collagen and purines.',
+'alanine|Not a precursor.',
+'arginine|Not a precursor.',
+'glutamate|Not a precursor.');
+Q(6,'medium',false,'Outline','An enzyme speeds a reaction by _______ without changing delta G or the equilibrium.',
+'lowering the activation energy|Kinetics, not thermodynamics.',
+'making delta G more negative|Delta G is fixed.',
+'raising the equilibrium constant|K is unchanged.',
+'raising the reactant energy|It would not help the reaction.');
+// ---------------- state & UI ----------------
 let hist={};try{hist=JSON.parse(localStorage.getItem('quiz_missed_history')||'{}')}catch(e){}
 const saveH=()=>{try{localStorage.setItem('quiz_missed_history',JSON.stringify(hist))}catch(e){}};
 let sel=new Set(SUBJECTS.map((_,i)=>i)),prio=false,qs=[],ans=[],cur=0,score=0,tmo=null,mode='single',muted=false;
@@ -869,17 +518,16 @@ function updBtns(){const m=$('modeBtn');m.textContent=mode==='all'?'View: All at
 const b=$('stfuBtn');b.textContent=muted?'Bring Back Erijah':'STFU Erijah';b.classList.toggle('active',muted);
 if(muted){const a=$('wrongAudio');if(a){a.pause();a.currentTime=0}clearTimeout(tmo);$('wrongPopup').classList.add('hidden')}}
 function toggleErijah(){muted=!muted;try{localStorage.setItem('stfuErijah',muted?'1':'0')}catch(e){}updBtns()}
-function toggleMode(){mode=mode==='all'?'single':'all';try{localStorage.setItem('quizViewMode',mode)}catch(e){}updBtns();qs.length&&ans.length&&cur<qs.length||mode==='all'&&qs.length?draw():renderHome()}
+function toggleMode(){mode=mode==='all'?'single':'all';try{localStorage.setItem('quizViewMode',mode)}catch(e){}updBtns();if(qs.length)draw();else renderHome()}
 function pool(){let p=questionBank.filter(q=>sel.has(q.subjectIndex));if(prio){const m=p.filter(q=>(hist[q.id]||0)>0);if(m.length)return m}return p}
 function renderHome(){qs=[];updBtns();$('pp').innerHTML='Q: <span>0/0</span>';$('sp').innerHTML='Score: <span>0/0 (0%)</span>';$('pf').style.width='0';
 const missed=Object.keys(hist).filter(k=>hist[k]>0).length,p=pool();
 $('main').innerHTML=`<div class="dash"><div class="dt">Biochemistry Midterm 2 Preparation Hub</div>
 <div class="lab">Select Topics</div><div class="chips">${SUBJECTS.map((s,i)=>`<div class="chip ${sel.has(i)?'active':''}" onclick="togSub(${i})">[${s.week}] ${s.title} (${questionBank.filter(q=>q.subjectIndex===i).length})</div>`).join('')}</div>
 <div class="row"><button class="btn" onclick="selAll(true)">Select All</button><button class="btn" onclick="selAll(false)">Clear</button>
-<button class="btn ${prio?'active':''}" onclick="prio=!prio;renderHome()">Prioritize Missed (${missed})</button>
-<button class="btn ${mode==='all'?'active':''}" onclick="toggleMode();renderHome()">${mode==='all'?'Mode: All at Once':'Mode: One by One'}</button></div>
+<button class="btn ${prio?'active':''}" onclick="prio=!prio;renderHome()">Prioritize Missed (${missed})</button></div>
 <div class="lab" style="color:var(--or)">${p.length} questions available across ${sel.size} topics selected</div>
-<div class="grid"><button class="lb" onclick="start(15)">Quickie (15 Qs)</button><button class="lb" onclick="start(25)">Standard (25 Qs)</button><button class="lb" onclick="start(35)">Midterm Target (35 Qs)</button><button class="lb" onclick="start(9999)">Entire Bank (${p.length} Qs)</button></div></div>`}
+<div class="grid"><button class="lb" onclick="start(15)">Quickie (15 Qs)</button><button class="lb" onclick="start(25)">Standard (25 Qs)</button><button class="lb" onclick="start(35)">Exam Target (35 Qs)</button><button class="lb" onclick="start(9999)">Entire Bank (${p.length} Qs)</button></div></div>`}
 function togSub(i){sel.has(i)?sel.delete(i):sel.add(i);renderHome()}
 function selAll(a){sel=a?new Set(SUBJECTS.map((_,i)=>i)):new Set();renderHome()}
 function start(n){const p=pool();if(!p.length){alert('Please select at least one topic.');return}
@@ -892,7 +540,7 @@ let f='';if(a!==null){const ok=q.options[a].correct;f=`<div class="fb"><div clas
 return `<div class="qc" id="card-${i}"><div class="bdg"><span class="b n">Q${i+1}</span><span class="b s">[${s.week}] ${s.title}</span><span class="b ${q.difficulty}">${q.difficulty}</span>${q.priority?'<span class="b p">High Yield</span>':''}<span class="b">${q.slideRef}</span></div><div class="stem">${q.stem}</div>${o}${f}`}
 function stats(label){const n=ans.filter(x=>x!==null).length;$('pp').innerHTML=label;$('sp').innerHTML=`Score: <span>${score}/${n} (${n?Math.round(score/n*100):0}%)</span>`;$('pf').style.width=(n/qs.length*100)+'%'}
 function drawOne(){if(cur>=qs.length){return scoreCard()}stats(`Question: <span>${cur+1} of ${qs.length}</span>`);
-const a=ans[cur]!==null;$('main').innerHTML=cardHTML(qs[cur],cur)+(a?`<div style="text-align:right;margin-top:12px"><button class="btn active" onclick="cur++;drawOne()">${cur===qs.length-1?'Finish Exam':'Next Question'}</button></div>`:'')+'</div>'}
+const a=ans[cur]!==null;$('main').innerHTML=cardHTML(qs[cur],cur)+'</div>'+(a?`<div style="text-align:right;margin-top:12px"><button class="btn active" onclick="cur++;drawOne()">${cur===qs.length-1?'Finish Exam':'Next Question'}</button></div>`:'')}
 function drawAll(){const y=window.scrollY,n=ans.filter(x=>x!==null).length;stats(`Answered: <span>${n} of ${qs.length}</span>`);
 $('main').innerHTML=qs.map((q,i)=>cardHTML(q,i)+'</div>').join('')+(n===qs.length?'<div style="text-align:center;margin:28px"><button class="btn active" onclick="scoreCard()">View Final Results Summary</button></div>':'');window.scrollTo(0,y)}
 function pick(i,j){if(ans[i]!==null)return;const q=qs[i];ans[i]=j;
