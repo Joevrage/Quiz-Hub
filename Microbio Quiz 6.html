@@ -11,7 +11,7 @@ body{background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,A
 .hidden{display:none!important}
 header{position:fixed;top:0;left:0;right:0;background:#000;border-bottom:1px solid var(--bd);z-index:1000;padding:10px 16px}
 .bar{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
-.btn{background:#222;color:#fff;border:1px solid var(--bd);padding:7px 13px;border-radius:6px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn{background:#222;color:#fff;border:1px solid var(--bd);padding:7px 13px;border-radius:6px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none}
 .btn:hover,.btn.on{border-color:var(--ac)}
 .btn.on{background:var(--ac);color:#000}
 .btn.pri{background:var(--ac);color:#000;border-color:var(--ac);padding:11px 22px;font-size:1rem}
@@ -21,8 +21,6 @@ header{position:fixed;top:0;left:0;right:0;background:#000;border-bottom:1px sol
 main{max-width:900px;margin:0 auto}
 .intro{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:8px;padding:16px 18px;margin-bottom:18px}
 .intro h1{font-size:1.35rem}.intro p{color:#999;font-size:.9rem}
-.filter-label{font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#888;margin-top:12px;margin-bottom:6px;display:block}
-.filter-row{display:flex;gap:8px;flex-wrap:wrap}
 .q{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:18px}
 .meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .badge{background:#262626;color:var(--ac);border:1px solid #383838;font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:4px;text-transform:uppercase}
@@ -64,391 +62,405 @@ main{max-width:900px;margin:0 auto}
  <div class="prog"><div id="pg"></div></div>
 </header>
 <main>
- <div class="intro" id="menuPanel">
-  <h1>Week 6: Protozoans &amp; Algae</h1>
-  <p>Algae toxins, protozoan structure and life cycles, the four protozoan groups, and every major protozoan disease.</p>
-  <span class="filter-label">1. Filter by Subject</span>
-  <div class="filter-row" id="topics"></div>
-  <span class="filter-label">2. Question Count</span>
-  <div class="filter-row" id="sizes">
-   <button class="btn" data-n="15" type="button">Quickie 15</button>
-   <button class="btn" data-n="25" type="button">25</button>
-   <button class="btn" data-n="35" type="button">35</button>
-   <button class="btn" data-n="50" type="button">50</button>
-   <button class="btn on" data-n="0" type="button" id="fullBtn">All Matching</button>
-  </div>
- </div>
+ <div class="intro"><h1>Week 6: Protozoans &amp; Algae</h1><p>Algae toxins, protozoan structure and life cycles, the four protozoan groups, and every major protozoan disease.</p>
+ <div id="sizes" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-n="15" type="button">Quickie 15</button><button class="btn" data-n="25" type="button">25</button><button class="btn" data-n="35" type="button">35</button><button class="btn" data-n="50" type="button">50</button><button class="btn on" data-n="0" type="button" id="fullBtn">Full Bank</button></div></div>
  <div id="quiz"></div>
  <div class="sum hidden" id="sum">
   <h2 id="sT">Quiz Complete</h2><div class="big" id="sS"></div><div class="tier" id="sM"></div>
   <button class="btn pri" id="retake" type="button">Retake Current Set</button>
   <button class="btn pri" id="review" type="button">Review Missed</button>
-  <button class="btn pri" id="backMenu" type="button">Back to Menu</button>
+  <a class="btn pri" href="index.html">Back to Menu</a>
  </div>
 </main>
 <script>
 const P1="Protozoan Pt1",P2="Protozoan Pt2",W6="Week 6 Lecture",QB="Quiz Bank";
+// Q(topic, stem, concept, source, [[correct, why],[distractor, why],[..],[..]])
 const Q=(t,s,c,src,o)=>({t,s,c,src,o});
 const DATA=[
-Q("Algae","Which statement accurately characterizes the primary medical significance of algae in humans?","Algae are photosynthetic autotrophs using chlorophyll a and are rarely directly infectious. Their primary clinical threat is toxin production during blooms (red tides) that bioaccumulate in shellfish and reef fish.",W6+", "+P1,[
-["Their main medical threat is soluble toxins that bioaccumulate in seafood","Algae release potent toxins during blooms that concentrate in filter-feeding shellfish and reef fish."],
-["Their main medical threat is direct photosynthetic invasion of human mucosa","Algae are not photosynthetic pathogens of human epithelial tissues."],
-["Their main medical threat is obligate intracellular invasion of red blood cells","Erythrocytic invasion characterizes Plasmodium species rather than algae."],
-["Their main medical threat is arthropod-borne transmission via biting flies","Insect vectors transmit hemoflagellate protozoans rather than algae."]]),
-Q("Algae","Which non-photosynthetic algal genus is the rare exception capable of causing skin and subcutaneous infections with blister-like lesions?","Prototheca lacks chlorophyll and photosynthetic ability, allowing it to act as an opportunistic subcutaneous pathogen.",W6+", "+P1,[
-["Prototheca","Lacks photosynthesis and causes skin and subcutaneous blister-like infections."],
-["Dinophysis","A photosynthetic dinoflagellate genus responsible for diarrhetic shellfish toxin."],
-["Alexandrium","A photosynthetic dinoflagellate genus linked to paralytic shellfish poisoning."],
-["Nitzschia","A diatom genus that produces domoic acid in amnesic shellfish poisoning."]]),
-Q("Algae","Algae carry out photosynthesis using which specific chlorophyll pigment?","Algae are autotrophic eukaryotes that perform photosynthesis using chlorophyll a.",W6+", "+P1,[
-["Chlorophyll a","The primary photosynthetic pigment present in algae."],
-["Ergosterol","A sterol component of fungal cell membranes targeted by polyene antifungals."],
-["Peptidoglycan","A structural cross-linked polymer found in bacterial cell walls."],
-["Mycolic acid","A waxy cell wall lipid characteristic of acid-fast mycobacteria."]]),
-Q("Algae","Which algal seafood poisoning is acquired from eating tropical reef fish, resists inactivation by cooking, and has no specific antidote?","Ciguatera fish poisoning is caused by dinoflagellate toxins accumulated in reef fish; the toxin is heat-stable and lacks an antidote.",W6+", "+P1+", "+QB,[
-["Ciguatera fish poisoning","Acquired from reef fish, heat-stable against cooking, and has no antidote."],
-["Amnesic shellfish poisoning","Caused by domoic acid bioaccumulated in bivalve shellfish rather than reef fish."],
-["Neurotoxic shellfish poisoning","A non-fatal shellfish syndrome associated with Ptychodiscus brevis."],
-["Paralytic shellfish poisoning","A shellfish-borne toxin syndrome concentrated in the Pacific Northwest and Alaska."]]),
-Q("Algae","Which algal toxin syndrome is NOT fatal to humans?","Neurotoxic shellfish poisoning (Ptychodiscus brevis) causes gastrointestinal distress, dizziness, and hot/cold sensation reversal, and can aerosolize to trigger asthma-like symptoms, but is not fatal.",QB+", "+P1,[
-["Neurotoxic shellfish poisoning","Causes GI and neurologic symptoms (hot/cold reversal) and aerosol irritation, but is not fatal."],
-["Ciguatera fish poisoning","Heat-stable reef fish poisoning that can progress to paralysis and death."],
-["Amnesic shellfish poisoning","Domoic acid poisoning that causes permanent memory loss and can be fatal."],
-["Paralytic shellfish poisoning","Potent neurotoxic shellfish poisoning that causes respiratory paralysis and can be fatal."]]),
-Q("Algae","Domoic acid produced by Nitzschia pungens is the causative toxin of which seafood poisoning?","Amnesic shellfish poisoning is triggered by domoic acid from Nitzschia pungens, causing gastrointestinal upset, neurologic deficits, and potential fatality.",P1,[
-["Amnesic shellfish poisoning","Directly caused by domoic acid produced by Nitzschia pungens."],
-["Diarrhetic shellfish poisoning","Caused by Dinophysis toxins resulting in mild, self-limiting gastrointestinal upset."],
-["Neurotoxic shellfish poisoning","Caused by brevetoxins from Ptychodiscus brevis rather than domoic acid."],
-["Ciguatera fish poisoning","Caused by dinoflagellate ciguatoxins concentrated in tropical reef fish."]]),
-Q("Algae","Which algal shellfish poisoning occurs predominantly in the Pacific Northwest and Alaska and can be fatal?","Paralytic shellfish poisoning arises from Alexandrium, Gymnodinium, and Pyrodinium toxins concentrated in cold-water shellfish along the Pacific Northwest and Alaska.",P1,[
-["Paralytic shellfish poisoning","Endemic to the Pacific Northwest and Alaska and capable of causing fatal paralysis."],
-["Diarrhetic shellfish poisoning","Causes mild, non-fatal food-poisoning-like gastrointestinal discomfort."],
-["Neurotoxic shellfish poisoning","A non-fatal syndrome linked to warm-water Ptychodiscus brevis blooms."],
-["Amnesic shellfish poisoning","Triggered by domoic acid rather than cold-water Alexandrium/Pyrodinium blooms."]]),
-Q("Algae","Which poisoning acquired from mussels, oysters, or scallops typically causes only mild, self-limiting gastrointestinal discomfort?","Diarrhetic shellfish poisoning stems from Dinophysis dinoflagellate toxins in bivalve shellfish and resolves without fatality.",P1+", "+W6,[
-["Diarrhetic shellfish poisoning","Produces mild, self-limiting GI distress after eating contaminated mussels, oysters, or scallops."],
-["Paralytic shellfish poisoning","Causes severe neurotoxicity and potentially fatal respiratory paralysis."],
-["Amnesic shellfish poisoning","Causes severe neurologic toxicity, amnesia, and potential fatality via domoic acid."],
-["Ciguatera fish poisoning","Acquired from tropical reef fish rather than bivalve shellfish and lacks an antidote."]]),
-Q("Algae","Ciguatera fish poisoning originates from toxins produced by which group of marine organisms?","Ciguatera toxin is synthesized by benthic dinoflagellates and biomagnifies up the food chain into tropical reef fish.",P1,[
-["Dinoflagellates","Synthesize the ciguatoxins that accumulate in predatory tropical reef fish."],
-["Nitzschia pungens","Produces domoic acid responsible for amnesic shellfish poisoning."],
-["Prototheca","A non-photosynthetic alga that causes subcutaneous blister-like skin lesions."],
-["Plasmodium","An apicomplexan protozoan parasite transmitted by female Anopheles mosquitoes."]]),
-Q("Algae","Which marine algal toxin can become aerosolized by ocean wave action and provoke asthma-like respiratory symptoms?","Neurotoxic shellfish toxin from Ptychodiscus brevis can be aerosolized in sea spray, irritating airways and triggering asthma-like symptoms.",P1,[
-["Neurotoxic shellfish toxin","Aerosolizes in breaking surf and triggers acute asthma-like airway irritation."],
-["Domoic acid","Causes amnesic shellfish poisoning through ingestion rather than wave aerosolization."],
-["Ciguatera toxin","Acquired strictly by ingesting contaminated tropical reef fish."],
-["Paralytic shellfish toxin","Acquired by ingesting contaminated bivalve shellfish rather than inhaling sea spray."]]),
-Q("Protozoan Structure","Which cellular structure is universally absent in protozoans?","Protozoans are bounded by a flexible cell membrane and lack a rigid cell wall, whereas bacteria have peptidoglycan and fungi have chitin, glucan, or mannan.",P1+", "+QB,[
-["Cell wall","All protozoans completely lack a rigid cell wall."],
-["Cell membrane","Present in all protozoans as the outer plasma boundary."],
-["Ectoplasm","Present as the outer gel-like cytoplasmic layer."],
-["Endoplasm","Present as the inner organelle-containing cytoplasmic layer."]]),
-Q("Protozoan Structure","Which layer of protozoan cytoplasm is responsible for locomotion, feeding, and protection?","Ectoplasm is the clear outer cytoplasmic layer that forms pseudopodia for movement, engulfs food particles, and protects the cell.",P1+", "+QB,[
-["Ectoplasm","The outer cytoplasmic zone dedicated to locomotion, feeding, and protection."],
-["Endoplasm","The inner cytoplasmic zone that houses the nucleus and mitochondria."],
-["Nuclear envelope","The double membrane enclosing eukaryotic chromatin rather than driving motility."],
-["Contractile vacuole","An osmoregulatory organelle located inside the endoplasm that expels excess water."]]),
-Q("Protozoan Structure","Which layer of protozoan cytoplasm houses the nucleus, mitochondria, and food vacuoles?","Endoplasm is the granular inner cytoplasmic region containing the nucleus, mitochondria, food vacuoles, and contractile vacuoles.",P1+", "+QB,[
-["Endoplasm","The internal cytoplasmic layer housing the nucleus, mitochondria, and vacuoles."],
-["Ectoplasm","The peripheral cytoplasmic layer responsible for pseudopodial locomotion and feeding."],
-["Pellicle cuticle","The tough outer protective wall secreted during cyst formation."],
-["Undulating ridge","A surface motility structure found on apicomplexan protozoans."]]),
-Q("Life Cycle","Which protozoan life cycle stage represents the normal, active, motile feeding morphology?","The trophozoite is the metabolically active, motile feeding stage that requires ample moisture and nutrients to survive and divide.",P1+", "+QB,[
-["Trophozoite","The active, motile feeding stage requiring adequate moisture and nutrients."],
-["Cyst","The dormant, thick-walled survival stage formed under unfavorable conditions."],
-["Endospore","A dormant bacterial survival structure formed by Gram-positive bacilli."],
-["Oocyst","The thick-walled zygote-containing stage shed by coccidian apicomplexans."]]),
-Q("Life Cycle","Which statement accurately defines the process of encystment in protozoans?","Encystment occurs when drying or nutrient depletion triggers a trophozoite to round into a sphere and secrete a thick protective cuticle to become a cyst.",P1+", "+QB,[
-["A trophozoite rounds up and secretes a thick protective cuticle to form a cyst","Defines encystment in response to moisture and nutrient depletion."],
-["A dormant cyst sheds its outer wall to emerge as an active trophozoite","Describes excystment, which is the reverse process when moisture returns."],
-["A parent cell undergoes autolysis and dies while releasing a dormant spore","Describes bacterial endospore formation rather than non-lethal protozoan encystment."],
-["Two ciliated cells fuse pellicles to exchange micronuclear genetic material","Describes sexual conjugation in ciliates rather than cyst formation."]]),
-Q("Life Cycle","When a protozoan is transmitted via the fecal-oral route, which morphology must be ingested to survive stomach acid and initiate infection?","Fecal-oral intestinal protozoans (Giardia, Entamoeba histolytica, Balantidium) are ingested in the hardy cyst stage, which resists gastric acid and excysts in the intestine.",QB+", "+P2,[
-["Cyst","The acid-resistant infectious stage required for successful fecal-oral transmission."],
-["Trophozoite","Destroyed by gastric acid if ingested and therefore non-infectious via the oral route."],
-["Trypomastigote","The flagellated bloodstream form transmitted by arthropod bites rather than ingestion."],
-["Merozoite","The erythrocytic stage of Plasmodium released from infected liver cells."]]),
-Q("Life Cycle","Which developmental stage serves as the infectious stage for Naegleria fowleri?","Naegleria fowleri enters human nasal passages directly from warm freshwater in its active amoeboid trophozoite stage.",QB+", "+P2,[
-["Trophozoite","The active amoeboid stage that invades nasal mucosa and ascends the olfactory nerve."],
-["Cyst","An environmental survival form that is not the nasal invasive stage."],
-["Sporozoite","The mosquito-injected infectious stage of Plasmodium species."],
-["Trypomastigote","The vector-borne flagellated stage of Trypanosoma species."]]),
-Q("Taxonomy","Which protozoan group moves by gliding via undulating ridges or is non-motile as mature obligate intracellular parasites?","Protozoans are classified into four motility groups: Apicomplexa glide via undulating ridges or are non-motile.",P1+", "+QB,[
-["Apicomplexa","Glide via undulating ridges or are non-motile obligate parasites."],
-["Ciliophora","Propel themselves using coordinated rows of hair-like cilia."],
-["Mastigophora","Swim using one or more whip-like flagella."],
-["Sarcodina","Move by extending ectoplasmic pseudopodia."]]),
-Q("Taxonomy","Which protozoan group is referred to as the whip bearers because of their locomotor organelles?","Mastigophora (flagellates) use long, whip-like flagella to propel themselves through host fluids.",P1+", "+QB,[
-["Mastigophora","Known as the whip bearers because they move via flexible flagella."],
-["Ciliophora","Known as the hair bearers because they move via short cilia."],
-["Apicomplexa","Move via undulating ridges or lack mature locomotor organelles."],
-["Sarcodina","Move via temporary cytoplasmic extensions called pseudopodia."]]),
-Q("Taxonomy","Which protozoan group performs multiple fission (schizogony) during asexual reproduction?","Only Sporozoea (Apicomplexa) undergo multiple fission (schizogony) to produce numerous daughter cells at once; the other groups divide by binary fission.",P1+", "+QB,[
-["Sporozoea","The sole protozoan group that reproduces asexually via multiple fission (schizogony)."],
-["Ciliophora","Reproduces asexually via transverse binary fission into two daughter cells."],
-["Sarcodina","Reproduces asexually via binary fission along no fixed division plane."],
-["Mastigophora","Reproduces asexually via longitudinal binary fission into two daughter cells."]]),
-Q("Taxonomy","Which protozoan group does NOT usually participate in sexual reproduction?","Mastigophora generally reproduce exclusively by asexual longitudinal binary fission and do not usually undergo sexual reproduction.",P1+", "+QB,[
-["Mastigophora","Does not usually participate in sexual reproduction."],
-["Ciliophora","Undergoes sexual conjugation using micronuclei prior to binary fission."],
-["Sporozoea","Forms flagellated gametes during a dedicated sexual cycle."],
-["Sarcodina","Can participate in sexual reproduction via flagellated gametes."]]),
-Q("Taxonomy","Which protozoan group divides asexually via transverse binary fission?","Ciliophora divide transversely across the cell equator, whereas Mastigophora divide longitudinally and Sarcodina divide along no fixed plane.",P1,[
-["Ciliophora","Undergoes transverse binary fission across the short axis of the cell."],
-["Mastigophora","Undergoes longitudinal binary fission along the length of the flagellate."],
-["Sarcodina","Undergoes binary fission with no fixed geometric plane."],
-["Sporozoea","Undergoes multiple fission (schizogony) rather than binary fission."]]),
-Q("Taxonomy","Which protozoan group moves by extending temporary false feet called pseudopodia?","Sarcodina (amebas) shift their ectoplasm forward to project pseudopodia for locomotion and phagocytosis.",P1+", "+W6,[
-["Sarcodina","Move by forming temporary ectoplasmic extensions called pseudopodia."],
-["Mastigophora","Move by whipping one or more elongated flagella."],
-["Ciliophora","Move by beating coordinated rows of short cilia."],
-["Apicomplexa","Move by gliding along undulating ridges or remain non-motile."]]),
-Q("Taxonomy","Which protozoan group reproduces sexually via conjugation using micronuclei followed by cell division?","Ciliophora possess both macronuclei and micronuclei and exchange genetic material through sexual conjugation.",P1+", "+W6,[
-["Ciliophora","Performs sexual conjugation using micronuclei before dividing."],
-["Mastigophora","Does not usually undergo sexual reproduction."],
-["Sarcodina","Lacks micronuclear conjugation and uses flagellated gametes when sexual."],
-["Sporozoea","Produces flagellated gametes and oocysts rather than conjugating."]]),
-Q("Mastigophora","After drinking untreated mountain stream water, a hiker develops abdominal cramping, flatulence, and greasy, foul-smelling stools. Which organism is responsible?","Giardia lamblia (also called Giardia intestinalis) causes giardiasis ('beaver fever') via waterborne cysts that excyst in the duodenum.",P2+", "+W6,[
-["Giardia lamblia","Colonizes the duodenum from waterborne cysts, causing beaver fever with greasy stools."],
-["Entamoeba histolytica","An ameba that infects the colon and causes amebic dysentery."],
-["Balantidium coli","A ciliated protozoan linked to pig reservoirs that causes colonic dysentery."],
-["Cryptosporidium","An apicomplexan linked to swimming pools and calves that causes watery diarrhea."]]),
-Q("Mastigophora","Which protozoan disease is typically transmitted from person to person as a sexually transmitted infection?","Trichomoniasis is caused by Trichomonas vaginalis, which lacks a cyst stage, spreads via sexual contact, and requires simultaneous treatment of all partners.",QB+", "+P2,[
-["Trichomoniasis","Passed directly person-to-person as a sexually transmitted infection."],
-["Giardiasis","Transmitted via the fecal-oral route through cyst-contaminated water."],
-["Malaria","Transmitted via the bite of an infected female Anopheles mosquito."],
-["Cryptosporidiosis","Transmitted via fecal-oral ingestion of chlorine-resistant oocysts."]]),
-Q("Mastigophora","Which medication is the standard treatment for trichomoniasis, requiring simultaneous therapy for all sexual partners?","Metronidazole is used to treat Trichomonas vaginalis; all partners must be treated because men are frequently asymptomatic carriers.",P2,[
-["Metronidazole","First-line antiprotozoal agent prescribed to all sexual partners for trichomoniasis."],
-["Benznidazole","An antiparasitic drug used to treat acute Trypanosoma cruzi (Chagas) infection."],
-["Nitazoxanide","An antiprotozoal agent used to treat Cryptosporidium enteritis."],
-["Pyrimethamine","A folate antagonist used in combination therapy for Toxoplasma gondii."]]),
-Q("Mastigophora","Which of the following clinical conditions is caused by a member of the group Mastigophora?","Trichomonas vaginalis is a flagellate (Mastigophora), whereas Balantidium is a ciliate, Cryptosporidium is an apicomplexan, and Entamoeba is an ameba.",QB+", "+P2,[
-["Trichomoniasis","Caused by the flagellated protozoan Trichomonas vaginalis."],
-["Balantidiasis","Caused by the ciliated protozoan Balantidium coli (Ciliophora)."],
-["Cryptosporidiosis","Caused by the intestinal apicomplexan Cryptosporidium (Sporozoea)."],
-["Amebiasis","Caused by the pseudopod-forming ameba Entamoeba histolytica (Sarcodina)."]]),
-Q("Mastigophora","Which statement accurately describes the asymptomatic carrier rate of Entamoeba histolytica and Giardia lamblia?","Both E. histolytica and G. lamblia remain asymptomatic in roughly 90% of infected hosts while shedding infectious cysts.",QB+", "+P2,[
-["Both organisms are asymptomatic in approximately 90 percent of infected individuals","Roughly 90% of E. histolytica and G. lamblia infections produce no clinical symptoms."],
-["Both organisms cause fulminant fatal colitis within 10 days in 90 percent of hosts","Rapid 10-day lethality characterizes Naegleria fowleri rather than luminal intestinal protozoa."],
-["Giardia lamblia is 90 percent asymptomatic whereas Entamoeba histolytica is always symptomatic","Both intestinal pathogens share the same ~90% asymptomatic carriage rate."],
-["Both organisms cause symptomatic dysentery in 90 percent of healthy adults","This inverts the true epidemiology; only ~10% of cases become symptomatic."]]),
-Q("Mastigophora","Which protozoan disease is transmitted by the bite of the tsetse fly?","African sleeping sickness is caused by Trypanosoma brucei gambiense and T. b. rhodesiense, vectored by the tsetse fly.",QB+", "+P2,[
-["African sleeping sickness","Vectored by tsetse flies, progressing from a bite chancre to blood and CNS invasion."],
-["Chagas disease","Vectored by reduviid (triatomine) kissing bugs rather than tsetse flies."],
-["Malaria","Vectored by female Anopheles mosquitoes rather than tsetse flies."],
-["Primary amebic meningoencephalitis","Acquired from warm freshwater forced into the nose without an arthropod vector."]]),
-Q("Mastigophora","Which protozoan disease is vectored by reduviid (triatomine) bugs?","Chagas disease (American trypanosomiasis) is caused by Trypanosoma cruzi when reduviid bugs defecate trypomastigotes near a bite wound.",QB+", "+P2,[
-["Chagas disease","Transmitted by reduviid bugs and causes chronic dilated cardiomyopathy and heart failure."],
-["African sleeping sickness","Transmitted by tsetse flies and causes daytime somnolence and coma."],
-["Malaria","Transmitted by female Anopheles mosquitoes and causes cyclic RBC rupture."],
-["Primary amebic meningoencephalitis","Transmitted via warm freshwater entering the nasal passages."]]),
-Q("Mastigophora","Which acute clinical sign is characterized by unilateral periorbital or bite-site swelling in Chagas disease?","Romana's sign is acute swelling around the bite site (often near the eye) in Trypanosoma cruzi infection, whereas a primary chancre occurs in African sleeping sickness.",P2,[
-["Romana's sign","Acute periorbital or bite-site swelling characteristic of acute Chagas disease."],
-["Primary chancre","The localized ulcerated skin lesion at the tsetse fly bite site in sleeping sickness."],
-["Verrucous nodule","A warty cutaneous lesion characteristic of subcutaneous chromoblastomycosis."],
-["Erythema migrans","An expanding bull's-eye rash associated with Lyme disease spirochetes."]]),
-Q("Mastigophora","Which arthropod vector transmits Leishmania species to humans?","Leishmania species are transmitted by the bite of infected female phlebotomine sand flies, causing cutaneous, mucosal, or visceral disease.",P2+", "+W6,[
-["Phlebotomine sand fly","The insect vector that transmits Leishmania promastigotes during a blood meal."],
-["Tsetse fly","The insect vector for Trypanosoma brucei (African sleeping sickness)."],
-["Triatomine bug","The insect vector for Trypanosoma cruzi (Chagas disease)."],
-["Anopheles mosquito","The insect vector for Plasmodium species (malaria)."]]),
-Q("Mastigophora","Which microscopic morphology characterizes the Giardia lamblia trophozoite?","Giardia lamblia has a pear-shaped, binucleate ('smiling face') trophozoite with four flagella and forms a four-nucleate cyst.",P2,[
-["Binucleate trophozoite with four flagella","Characteristic morphology of the active Giardia lamblia trophozoite."],
-["Uninucleate trophozoite with a central karyosome","Characteristic nuclear morphology of the Entamoeba histolytica trophozoite."],
-["Four-nucleate cyst containing chromatoidal bars","Characteristic morphology of the mature Entamoeba histolytica cyst."],
-["Pear-shaped trophozoite with an undulating membrane and no cyst stage","Characteristic morphology of Trichomonas vaginalis."]]),
-Q("Mastigophora","Which pear-shaped flagellate possesses undulating membranes and lacks a cyst stage entirely?","Trichomonas vaginalis exists solely as a trophozoite and relies on direct sexual contact for transmission.",P2,[
-["Trichomonas vaginalis","Exists exclusively as a trophozoite with undulating membranes and no cyst stage."],
-["Giardia lamblia","Alternates between a binucleate trophozoite and a four-nucleate fecal-oral cyst."],
-["Trypanosoma cruzi","A hemoflagellate transmitted via triatomine bug feces rather than direct STI."],
-["Leishmania donovani","A sand-fly-vectored flagellate that cycles between promastigote and amastigote forms."]]),
-Q("Mastigophora","Which anatomical site of the gastrointestinal tract is primarily colonized by Giardia lamblia?","After excysting, Giardia lamblia trophozoites attach to the mucosa of the duodenum, causing malabsorption and fatty diarrhea.",P2,[
-["Duodenum","The upper small intestinal segment colonized by Giardia lamblia trophozoites."],
-["Colon","The large intestinal segment invaded by Entamoeba histolytica and Balantidium coli."],
-["Hepatocytes","The liver parenchymal cells where Plasmodium sporozoites undergo schizogony."],
-["Corneal stroma","The ocular tissue invaded by Acanthamoeba trophozoites."]]),
-Q("Mastigophora","Which water treatment method reliably kills both Giardia lamblia and Entamoeba histolytica cysts?","Boiling drinking water kills the cysts of Giardia and E. histolytica, whereas standard chlorination fails against Cryptosporidium oocysts.",P2+", "+W6,[
-["Boiling water","Heat-inactivates waterborne cysts of both Giardia lamblia and Entamoeba histolytica."],
-["Standard chlorine disinfection","Fails to inactivate thick-walled Cryptosporidium oocysts in recreational water."],
-["Brief refrigeration","Preserves viable protozoan cysts rather than killing them."],
-["Rinsing with tap water","Introduces free-living amebas such as Acanthamoeba and Naegleria rather than sterilizing."]]),
-Q("Mastigophora","Which developmental stage of Trypanosoma is the fully formed infectious stage transmitted to humans?","Trypomastigotes are the mature, flagellated infectious stage for both Trypanosoma brucei and Trypanosoma cruzi.",P2,[
-["Trypomastigote","The fully formed flagellated stage infective to humans in trypanosomiasis."],
-["Amastigote","The rounded intracellular stage lacking a free external flagellum."],
-["Promastigote","The sand-fly stage bearing a single anterior flagellum without an undulating membrane."],
-["Epimastigote","The midgut vector stage possessing a short undulating membrane."]]),
-Q("Mastigophora","Which hemoflagellate developmental stage lacks a free external flagellum?","The amastigote is a rounded intracellular form lacking a free flagellum, whereas promastigotes, epimastigotes, and trypomastigotes possess external flagella.",P2,[
-["Amastigote","Lacks a free external flagellum and replicates intracellularly."],
-["Promastigote","Possesses a single free anterior flagellum."],
-["Epimastigote","Possesses a free flagellum paired with a short undulating membrane."],
-["Trypomastigote","Possesses a full-length undulating membrane and free anterior flagellum."]]),
-Q("Mastigophora","Which skin lesion develops at the tsetse fly bite site approximately 4 days after inoculation with Trypanosoma brucei?","A localized primary chancre forms at the tsetse fly bite site before parasites disseminate into the lymphatics, bloodstream, and CNS.",P2,[
-["Primary chancre","The localized inflammatory skin lesion at the tsetse fly bite site."],
-["Romana's sign","Unilateral periorbital edema seen in acute Trypanosoma cruzi infection."],
-["Granulomatous ulcer","A chronic subcutaneous nodule/ulcer seen in sporotrichosis."],
-["Verrucous plaque","A wart-like cutaneous lesion seen in chromoblastomycosis."]]),
-Q("Mastigophora","How does central nervous system invasion alter the sleep pattern in African sleeping sickness?","Trypanosoma brucei inverts the circadian rhythm, causing uncontrollable daytime somnolence and nighttime insomnia before progressing to convulsions and coma.",P2,[
-["Uncontrollable sleepiness during the day paired with insomnia at night","Inverts the normal sleep-wake cycle before progressing to terminal coma."],
-["Deep somnolence exclusively at night paired with hyperactivity by day","Reverses the true circadian inversion observed in CNS trypanosomiasis."],
-["Sleep disturbances appear only after terminal coma has resolved","Coma represents the final, often fatal stage following sleep-cycle inversion."],
-["Insomnia occurs exclusively during the first 48 hours after the fly bite","CNS sleep inversion occurs in the late stage after bloodstream dissemination."]]),
-Q("Mastigophora","Which antiparasitic medication is used to treat Chagas disease?","Benznidazole (or nifurtimox) is used to treat acute Chagas disease, though efficacy drops sharply once chronic organ damage develops.",P2,[
-["Benznidazole","Used to treat Trypanosoma cruzi infection, primarily effective in the acute phase."],
-["Metronidazole","Used to treat luminal Giardia, Entamoeba, and Trichomonas infections."],
-["Nitazoxanide","Used to treat Cryptosporidium enteritis."],
-["Pyrimethamine","Used to treat Toxoplasma gondii infection."]]),
-Q("Mastigophora","Chronic Chagas disease is estimated to account for 30 to 40 percent of which organ pathology in endemic regions?","Chronic Trypanosoma cruzi infection destroys cardiac conduction and muscle tissue, causing dilated cardiomyopathy, arrhythmias, and congestive heart failure.",P2,[
-["Heart disease","Causes dilated cardiomyopathy, arrhythmias, and congestive heart failure in endemic areas."],
-["Cirrhosis of the liver","Hepatic fibrosis is characteristic of schistosomiasis rather than Chagas disease."],
-["Glomerulonephritis","Renal immune-complex disease is not the primary chronic burden of Chagas disease."],
-["Pulmonary fibrosis","Chronic lung scarring is not the primary manifestation of Trypanosoma cruzi."]]),
-Q("Mastigophora","Which organs are primarily targeted in visceral leishmaniasis (kala-azar)?","Visceral leishmaniasis disseminates to the reticuloendothelial organs—specifically the spleen, liver, and bone marrow—and is life-threatening if untreated.",P2+", "+W6,[
-["Spleen, liver, and bone marrow","Primary reticuloendothelial organs involved in life-threatening visceral leishmaniasis."],
-["Heart, esophagus, and colon","Classic hollow-organ targets of chronic dilated Chagas disease."],
-["Brain, retina, and skeletal muscle","Classic tissue cyst sites in congenital or reactivated toxoplasmosis."],
-["Epidermis, nasal septum, and soft palate","Anatomical sites affected by localized cutaneous and mucocutaneous leishmaniasis."]]),
-Q("Mastigophora","Untreated trichomoniasis in women can ascend the reproductive tract and lead to which serious complication?","While men are often asymptomatic, untreated Trichomonas vaginalis in women causes vaginitis/cervicitis and can progress to pelvic inflammatory disease (PID) and infertility.",P2,[
-["Pelvic inflammatory disease","Ascending infection can cause PID and subsequent tubal infertility in women."],
-["Dilated cardiomyopathy","A chronic cardiac complication of Trypanosoma cruzi infection."],
-["Terminal coma","The late CNS complication of untreated African sleeping sickness."],
-["Colonic perforation","A severe intestinal complication of untreated Balantidium coli or Entamoeba histolytica."]]),
-Q("Sarcodina","Which ameba infects the human colon, possesses a trophozoite nucleus with a prominent central karyosome, and is transmitted via cysts?","Entamoeba histolytica causes amebiasis (amebic dysentery), colonizes the large intestine, and can erode the colonic mucosa.",P2,[
-["Entamoeba histolytica","Infects the colon via fecal-oral cysts and has a uninucleate trophozoite with a karyosome."],
-["Giardia lamblia","A binucleate flagellate that colonizes the duodenum without eroding colonic mucosa."],
-["Naegleria fowleri","A free-living ameba that enters via the nose to cause fatal meningoencephalitis."],
-["Acanthamoeba","A free-living ameba that causes corneal keratitis or granulomatous encephalitis."]]),
-Q("Sarcodina","Which free-living ameba enters through the nasal passages from warm freshwater and causes primary amebic meningoencephalitis with a ~97% fatality rate?","Naegleria fowleri ascends the olfactory nerve into the brain, causing fulminant meningoencephalitis that is usually fatal within about 10 days.",P2+", "+QB,[
-["Naegleria fowleri","Enters via the nose in warm freshwater/neti pots and causes rapidly fatal brain destruction."],
-["Acanthamoeba","Primarily infects the cornea in contact lens wearers rather than rapid 10-day nasal PAM."],
-["Entamoeba histolytica","Transmitted fecal-orally to the colon rather than via nasal inhalation."],
-["Balantidium coli","A ciliated intestinal parasite acquired from pig-contaminated water or food."]]),
-Q("Sarcodina","A protozoan infection of the cornea causing severe eye pain and blurred vision is acquired from soil or water contaminated with which ameba?","Acanthamoeba causes amebic keratitis, frequently associated with contact lenses exposed to tap water; its resistant cyst stage complicates therapy.",P2+", "+QB,[
-["Acanthamoeba","Invades the cornea from contaminated water or soil, especially in contact lens wearers."],
-["Plasmodium","A mosquito-borne apicomplexan that infects hepatocytes and red blood cells."],
-["Balantidium coli","A fecal-oral ciliate that infects the large intestine rather than the cornea."],
-["Cryptosporidium","A waterborne apicomplexan that causes diarrheal enteritis rather than keratitis."]]),
-Q("Sarcodina","Which drug combination is used to treat primary amebic meningoencephalitis, even though rapid progression makes therapy usually futile?","Amphotericin B combined with rifampin is administered for Naegleria fowleri, though survival remains rare (~3%).",P2,[
-["Amphotericin B and rifampin","Used for Naegleria fowleri PAM, though rapid CNS destruction makes cure rare."],
-["Chlorhexidine and PHMB","Topical antiseptic combination used to treat Acanthamoeba keratitis."],
-["Tetracycline and iodoquinol","Antibiotic/luminal amebicide regimen used to treat Balantidium coli."],
-["Nitazoxanide and benznidazole","Antiprotozoals used for cryptosporidiosis and Chagas disease respectively."]]),
-Q("Sarcodina","Which dual-agent topical regimen is required to eliminate both the trophozoite and resistant cyst stages of Acanthamoeba keratitis?","Chlorhexidine (0.02%) plus polyhexamethylene biguanide (PHMB 0.02%) is required because Acanthamoeba forms highly resistant cysts within the cornea.",P2,[
-["Chlorhexidine and PHMB","Dual topical therapy needed to eradicate both Acanthamoeba trophozoites and cysts."],
-["Amphotericin B and rifampin","Systemic regimen used for Naegleria fowleri meningoencephalitis."],
-["Tetracycline and iodoquinol","Oral regimen used for intestinal balantidiasis."],
-["Metronidazole and quinine","Agents used for luminal flagellates and malaria respectively."]]),
-Q("Sarcodina","Through which anatomical pathway does Naegleria fowleri gain access to the central nervous system?","When contaminated water is forced up the nose, Naegleria fowleri trophozoites penetrate the nasal mucosa and migrate along the olfactory nerve to the brain.",P2+", "+W6,[
-["Nasal passages and olfactory nerve","Water forced up the nose allows trophozoites to ascend the olfactory nerve into the brain."],
-["Arthropod bite wound","Route of entry for vector-borne Trypanosoma and Plasmodium parasites."],
-["Oral ingestion of acid-resistant cysts","Route of entry for luminal intestinal pathogens such as Giardia and E. histolytica."],
-["Microtrauma to the corneal epithelium","Route of entry for Acanthamoeba keratitis in contact lens wearers."]]),
-Q("Sarcodina","How many nuclei are present inside a mature Entamoeba histolytica cyst?","The mature E. histolytica cyst contains four nuclei and chromatoidal bodies, whereas the active trophozoite has a single nucleus with a central karyosome.",P2,[
-["Four","A mature Entamoeba histolytica cyst contains four nuclei and chromatoidal bars."],
-["One","The nucleus count of the active Entamoeba histolytica trophozoite."],
-["Two","The nucleus count of the active Giardia lamblia trophozoite."],
-["Eight","Not a characteristic nuclear count of Entamoeba histolytica stages."]]),
-Q("Ciliophora","Which condition is the only human protozoan disease caused by a member of the group Ciliophora?","Balantidiasis is caused by Balantidium coli, the largest protozoan and sole ciliated pathogen of humans.",QB+", "+P2,[
-["Balantidiasis","Caused by Balantidium coli, the only ciliated protozoan pathogenic to humans."],
-["Amebiasis","Caused by Entamoeba histolytica, a pseudopod-forming ameba (Sarcodina)."],
-["Trichomoniasis","Caused by Trichomonas vaginalis, a flagellated protozoan (Mastigophora)."],
-["Cryptosporidiosis","Caused by Cryptosporidium, an obligate intracellular apicomplexan (Sporozoea)."]]),
-Q("Ciliophora","Which domestic animal serves as the primary reservoir for Balantidium coli?","Pigs are the major animal reservoir for Balantidium coli, and human infections frequently occur via fecal-oral exposure near swine farms.",P2,[
-["Pigs","Primary animal reservoir shedding Balantidium coli cysts in feces."],
-["Cats","Definitive feline host shedding Toxoplasma gondii oocysts."],
-["Cattle","Major animal reservoir associated with Cryptosporidium parvum outbreaks."],
-["Rodents","Intermediate tissue-cyst prey hosts for Toxoplasma gondii."]]),
-Q("Ciliophora","Untreated Balantidium coli dysentery can erode the intestinal wall and lead to which life-threatening complication?","Although ~90% of infections are asymptomatic, severe untreated balantidiasis causes deep colonic ulceration that can perforate the colon.",P2,[
-["Perforation of the colon","Deep mucosal ulceration by Balantidium coli can lead to colonic perforation."],
-["Dilated cardiomyopathy","Chronic myocardial destruction caused by Trypanosoma cruzi."],
-["Pelvic inflammatory disease","Ascending genital tract complication of untreated Trichomonas vaginalis."],
-["Corneal ulceration","Ocular complication caused by Acanthamoeba trophozoites and cysts."]]),
-Q("Apicomplexa","Which medication is most commonly prescribed to treat cryptosporidiosis?","Nitazoxanide is the primary drug for cryptosporidiosis, which is self-limited in immunocompetent hosts but causes severe, potentially fatal watery diarrhea in the immunocompromised.",P2,[
-["Nitazoxanide","Most commonly used antiparasitic treatment for Cryptosporidium enteritis."],
-["Metronidazole","Used for trichomoniasis, giardiasis, and amebiasis rather than Cryptosporidium."],
-["Pyrimethamine","Used to treat Toxoplasma gondii infection."],
-["Benznidazole","Used to treat acute Trypanosoma cruzi (Chagas) infection."]]),
-Q("Apicomplexa","Malaria is caused by protozoan parasites belonging to which genus?","Malaria is caused by five species of Plasmodium, transmitted primarily by the bite of infected female Anopheles mosquitoes.",QB+", "+P2,[
-["Plasmodium","Apicomplexan genus responsible for human malaria."],
-["Naegleria fowleri","Free-living ameba responsible for primary amebic meningoencephalitis."],
-["Acanthamoeba","Free-living ameba responsible for amebic keratitis."],
-["Balantidium coli","Ciliated protozoan responsible for intestinal balantidiasis."]]),
-Q("Apicomplexa","Classic malaria paroxysms recur at 48- or 72-hour intervals as a direct consequence of which event?","Infected red blood cells rupture synchronously at regular 48- or 72-hour intervals, releasing merozoites and pyrogens into the bloodstream.",QB+", "+P2,[
-["Synchronous rupturing of infected red blood cells","Releases merozoites and toxins every 48 to 72 hours, triggering cyclic fever chills."],
-["Completion of sexual fertilization inside human hepatocytes","The sexual cycle of Plasmodium occurs inside the mosquito rather than human hepatocytes."],
-["Periodic encystment of trophozoites within the duodenal lumen","Plasmodium does not form intestinal lumen cysts."],
-["Diurnal migration of hemoflagellates across the blood-brain barrier","Describes CNS trypanosomiasis rather than erythrocytic malaria paroxysms."]]),
-Q("Apicomplexa","Which developmental stage of Plasmodium is injected into the human bloodstream by a feeding female Anopheles mosquito?","Motile sporozoites from the mosquito salivary glands enter human blood, travel to the liver, and undergo schizogony to generate merozoites.",P2,[
-["Sporozoites","The infectious stage injected into human blood by the female Anopheles mosquito."],
-["Merozoites","Produced inside human liver cells and released to invade red blood cells."],
-["Oocysts","Develop on the stomach wall of the mosquito following sexual fertilization."],
-["Gametocytes","Sexual precursor stages ingested by the mosquito from human blood."]]),
-Q("Apicomplexa","Where does the sexual phase of the Plasmodium life cycle occur?","Humans host the asexual cycle (liver and RBC schizogony), whereas the female Anopheles mosquito hosts the sexual phase (gametocyte fertilization and oocyst formation).",P2,[
-["In the female Anopheles mosquito","Gametocytes fuse to form a zygote and oocyst within the mosquito vector."],
-["In human liver cells","Hepatocytes serve as the site of initial asexual schizogony."],
-["In human red blood cells","Erythrocytes host asexual ring-stage growth and merozoite replication."],
-["In the human spleen","The spleen filters and clears damaged, parasitized red blood cells."]]),
-Q("Apicomplexa","Which form of human malaria is the most malignant, causing persistent parasitemia and the highest acute mortality rate (especially in children)?","Plasmodium falciparum causes the most severe, persistent symptoms and carries the highest acute death rate among all malaria species.",P2,[
-["Falciparum malaria","Most malignant form of malaria with the highest acute mortality rate."],
-["Vivax malaria","Capable of dormant liver hypnozoite relapses but less acutely lethal than P. falciparum."],
-["Malariae malaria","Associated with 72-hour quartan cycles and lower acute mortality than P. falciparum."],
-["Ovale malaria","Capable of liver dormancy and milder clinical courses than P. falciparum."]]),
-Q("Apicomplexa","A veterinarian advises a pregnant client not to clean the cat litter box to protect the developing fetus. Which protozoan condition is the veterinarian preventing?","Toxoplasma gondii uses cats as its definitive host and sheds oocysts in feces; maternal infection can cross the placenta and cause fetal brain or eye damage.",QB+", "+P2,[
-["Toxoplasmosis","Feline-associated apicomplexan infection posing congenital brain and eye risks to the fetus."],
-["Trichomoniasis","Human-to-human sexually transmitted flagellate infection not carried by cats."],
-["Cryptosporidiosis","Waterborne diarrheal apicomplexan linked to swimming pools and calves."],
-["Giardiasis","Waterborne intestinal flagellate causing duodenal cramping and fatty diarrhea."]]),
-Q("Apicomplexa","Aside from handling contaminated cat litter, what is another common route by which humans acquire Toxoplasma gondii?","Toxoplasma gondii forms dormant tissue cysts (pseudocysts) in livestock and prey animals; eating undercooked meat such as pork transmits the parasite.",P2,[
-["Eating undercooked pork containing tissue cysts","Ingesting dormant tissue pseudocysts in raw or undercooked meat transmits Toxoplasma."],
-["Being bitten by a reduviid kissing bug","Transmits Trypanosoma cruzi (Chagas disease) rather than Toxoplasma."],
-["Being bitten by a phlebotomine sand fly","Transmits Leishmania species rather than Toxoplasma."],
-["Swimming in warm freshwater hot springs","Transmits Naegleria fowleri rather than Toxoplasma."]]),
-Q("Apicomplexa","Which intestinal apicomplexan produces chlorine-resistant oocysts and is strongly linked to swimming pools, swim diapers, and calves?","Cryptosporidium oocysts resist standard pool chlorination, causing outbreaks in recreational water, daycares, and agricultural settings.",W6+", "+P2,[
-["Cryptosporidium","Chlorine-resistant oocysts cause watery diarrhea outbreaks in pools and daycares."],
-["Giardia lamblia","A flagellate (Mastigophora) rather than an apicomplexan."],
-["Entamoeba histolytica","An ameba (Sarcodina) that infects the colon rather than an apicomplexan."],
-["Balantidium coli","A ciliate (Ciliophora) associated with pig reservoirs."]]),
-Q("Apicomplexa","Most antimalarial pharmacotherapies are structurally derived from which compound?","Quinine and its synthetic derivatives form the historical and clinical backbone of malaria treatment.",P2,[
-["Quinine","Forms the pharmacological basis for most antimalarial drugs."],
-["Metronidazole","Used for anaerobic protozoans such as Trichomonas, Giardia, and Entamoeba."],
-["Benznidazole","Used for acute Trypanosoma cruzi infection."],
-["Pyrimethamine","Used primarily for Toxoplasma gondii infection."]]),
-Q("Apicomplexa","Malaria relapses can occur up to 5 years after initial infection because dormant Plasmodium parasites persist inside which human cells?","Certain Plasmodium species remain dormant inside hepatocytes (liver cells) and reactivate years later to re-seed the bloodstream.",P2,[
-["Liver cells","Hepatocytes harbor dormant parasites capable of triggering relapses years later."],
-["Red blood cells","Infected RBCs rupture acutely every 48 to 72 hours rather than harboring 5-year dormancy."],
-["Alveolar macrophages","Do not serve as the dormant reservoir for relapsing malaria."],
-["Skeletal myocytes","Site of Toxoplasma tissue pseudocysts rather than dormant malaria parasites."]]),
-Q("Apicomplexa","What is the correct sequential progression of symptoms during a classic malaria paroxysm?","Following synchronous RBC rupture, patients experience a cold stage (rigors), followed by a hot stage (high fever), and finally a drenching sweating stage.",P2+", "+W6,[
-["Cold stage, then hot stage, then sweating stage","Follows the classic sequence of rigors, high fever, and defervescent sweating."],
-["Hot stage, then cold stage, then sweating stage","Inverts the initial cold rigors and subsequent febrile phase."],
-["Sweating stage, then cold stage, then hot stage","Places the final defervescent sweating phase at the beginning of the paroxysm."],
-["Cold stage, then sweating stage, then hot stage","Places sweating before the febrile hot stage."]]),
-Q("Apicomplexa","What is the name of the asexual multiple fission process that Plasmodium sporozoites undergo inside human liver cells?","Inside hepatocytes, sporozoites divide by schizogony (multiple fission) to generate thousands of merozoites that subsequently invade red blood cells.",P2,[
-["Schizogony","Asexual multiple fission inside liver cells producing numerous merozoites."],
-["Encystment","Conversion of an active protozoan trophozoite into a dormant cyst."],
-["Conjugation","Sexual exchange of micronuclei between two ciliated protozoans."],
-["Excystment","Emergence of an active trophozoite from a dormant cyst."]]),
-Q("Apicomplexa","Which animal serves as the definitive host in which Toxoplasma gondii completes its sexual cycle and sheds oocysts?","Cats are the definitive host of Toxoplasma gondii, shedding infectious oocysts in their feces after eating infected rodents or birds.",P2+", "+W6,[
-["Cats","Definitive feline host supporting the sexual cycle and shedding fecal oocysts."],
-["Pigs","Intermediate host harboring tissue cysts in meat rather than shedding oocysts."],
-["Humans","Accidental intermediate hosts that do not shed oocysts in feces."],
-["Birds","Intermediate prey hosts harboring tissue cysts eaten by cats."]]),
-Q("Apicomplexa","Which medication is used to treat toxoplasmosis?","Pyrimethamine (often paired with sulfadiazine) is used to treat active Toxoplasma gondii infection.",P2,[
-["Pyrimethamine","First-line antifolate medication used to treat toxoplasmosis."],
-["Metronidazole","Used for trichomoniasis, giardiasis, and amebic dysentery."],
+Q("Algae","Which statement about the medical significance of algae is accurate?","Algae are photosynthetic autotrophs that use chlorophyll a and are rarely infectious. Their main medical threat is poisoning from toxins that concentrate in seafood. Being photosynthetic is not the threat.",W6+", "+P1,[
+["Their main threat is toxins that accumulate in seafood","Algae are mainly harmful through toxins, as in red tide."],
+["Their main threat is that they are photosynthetic","Photosynthesis is not what harms humans."],
+["Their main threat is invasion of the bloodstream","Algae rarely infect animal tissue."],
+["Their main threat is transmission by insect vectors","Insect vectors belong to protozoan diseases."]]),
+Q("Algae","Which alga is the exception that lacks photosynthesis and can cause skin and subcutaneous infections with blister-like lesions?","Prototheca is the non-photosynthetic alga linked to skin and subcutaneous infection.",W6+", "+P1,[
+["Prototheca","Non-photosynthetic and associated with skin and subcutaneous infection."],
+["Dinophysis","A dinoflagellate genus that produces diarrhetic shellfish toxin."],
+["Alexandrium","A dinoflagellate genus tied to paralytic shellfish poisoning."],
+["Nitzschia","The source of domoic acid, not skin infection."]]),
+Q("Algae","Algae carry out photosynthesis using which pigment?","Algae photosynthesize with chlorophyll a, a fact that has appeared on boards.",W6+", "+P1,[
+["Chlorophyll a","Stated pigment of algae."],
+["Ergosterol","A fungal membrane sterol."],
+["Chitin","A fungal cell wall component."],
+["Mycolic acid","A waxy lipid of acid-fast bacteria."]]),
+Q("Algae","Which algal poisoning comes from eating reef fish, is not destroyed by cooking, and has no antidote?","Ciguatera fish poisoning is caused by dinoflagellate toxins in reef fish. Cooking does not destroy the toxin and there is no antidote.",W6+", "+P1+", "+QB,[
+["Ciguatera fish poisoning","Heat-stable toxin in fish with no antidote."],
+["Amnesic shellfish poisoning","Domoic acid in shellfish."],
+["Neurotoxic shellfish poisoning","Shellfish toxin that is not fatal."],
+["Paralytic shellfish poisoning","Shellfish toxin tied to the Pacific Northwest and Alaska."]]),
+Q("Algae","Which algal poisoning is NOT fatal?","Neurotoxic shellfish poisoning causes GI and neurological distress but is not fatal, and its toxin can be aerosolized and trigger asthma-like symptoms.",QB+", "+P1,[
+["Neurotoxic shellfish poisoning","Not fatal. Source is Ptychodiscus brevis."],
+["Ciguatera fish poisoning","Can cause paralysis and death."],
+["Amnesic shellfish poisoning","Can be fatal."],
+["Paralytic shellfish poisoning","Can be fatal."]]),
+Q("Algae","Domoic acid from Nitzschia pungens causes which poisoning?","Amnesic shellfish poisoning is triggered by domoic acid, causes GI and neurological distress, and can be fatal.",P1,[
+["Amnesic shellfish poisoning","Domoic acid is the toxin."],
+["Diarrhetic shellfish poisoning","Dinophysis toxins causing mild GI upset."],
+["Neurotoxic shellfish poisoning","Ptychodiscus brevis toxin."],
+["Ciguatera fish poisoning","Dinoflagellate toxin in reef fish."]]),
+Q("Algae","Which poisoning predominantly occurs in the Pacific Northwest and Alaska and can be fatal?","Paralytic shellfish poisoning comes from Alexandrium, Gymnodinium, and Pyrodinium toxins and causes neurologic distress.",P1,[
+["Paralytic shellfish poisoning","Regional pattern and potential fatality match."],
+["Diarrhetic shellfish poisoning","Mild GI discomfort only."],
+["Neurotoxic shellfish poisoning","Not fatal."],
+["Amnesic shellfish poisoning","Domoic acid, not tied to this region."]]),
+Q("Protozoan Structure","Which structure do protozoans lack?","Protozoans have a cell membrane but no cell wall. Bacteria use peptidoglycan and fungi use chitin, glucan, or mannan.",P1+", "+QB,[
+["Cell wall","All protozoans lack a cell wall."],
+["Cell membrane","Present in all protozoans."],
+["Ectoplasm","Outer cytoplasmic layer, present."],
+["Endoplasm","Inner cytoplasmic layer, present."]]),
+Q("Protozoan Structure","Which layer of protozoan cytoplasm is involved in locomotion, feeding, and protection?","Ectoplasm is the outer layer for locomotion, feeding, and protection. Endoplasm is the inner layer.",P1+", "+QB,[
+["Ectoplasm","Outer layer with these functions."],
+["Endoplasm","Houses organelles instead."],
+["Both layers","Functions are split between the layers."],
+["Neither layer","One layer performs these functions."]]),
+Q("Protozoan Structure","Which layer of protozoan cytoplasm houses the nucleus and mitochondria?","Endoplasm is the inner layer that holds the nucleus, mitochondria, and food and contractile vacuoles.",P1+", "+QB,[
+["Endoplasm","Inner layer with the organelles."],
+["Ectoplasm","Outer layer for locomotion and feeding."],
+["Both layers","Organelles are in the inner layer only."],
+["Neither layer","The inner layer houses them."]]),
+Q("Life Cycle","Which protozoan stage is the normal motile feeding stage?","The trophozoite is the normal motile feeding stage and needs ample food and moisture. The cyst forms when conditions become unsuitable.",P1+", "+QB,[
+["Trophozoite","Active, motile, feeding."],
+["Cyst","Dormant stage formed in unfavorable conditions."],
+["Both stages","Only one stage is motile and feeding."],
+["Neither stage","The trophozoite fills this role."]]),
+Q("Life Cycle","Which statement about encystment is accurate?","Encystment is the trophozoite rounding into a sphere and secreting a thick cuticle when the environment becomes unsuitable. The reverse change is not encystment.",P1+", "+QB,[
+["A trophozoite rounds up and secretes a thick cuticle","Defines encystment."],
+["A cyst changes into a trophozoite","This is the reverse of encystment."],
+["A cyst divides by multiple fission","Not part of encystment."],
+["A trophozoite fuses with another cell","Describes conjugation, not encystment."]]),
+Q("Life Cycle","A protozoan passed by the fecal-oral route is taken into the body in which form?","Fecal-oral intestinal protozoans such as Giardia, E. histolytica, and Balantidium are ingested as cysts. Cysts are the infectious stage.",QB+", "+P2,[
+["Cyst","Hardy infectious stage for fecal-oral spread."],
+["Trophozoite","Passed in stool but not the infectious form for these organisms."],
+["Both forms","Only the cyst is infectious."],
+["Neither form","The cyst is ingested."]]),
+Q("Life Cycle","Which stage is the infectious stage for Naegleria fowleri?","Naegleria fowleri infects through the nasal passages as a trophozoite.",QB+", "+P2,[
+["Trophozoite","Stated infectious stage."],
+["Cyst","Infectious stage for fecal-oral parasites."],
+["Both stages","Only the trophozoite is listed."],
+["Neither stage","The trophozoite is infectious."]]),
+Q("Taxonomy","Which protozoan group glides via undulating ridges or is non-motile?","Protozoa are grouped by movement. Apicomplexa glide via undulating ridges or are non-motile.",P1+", "+QB,[
+["Apicomplexa","Undulating ridges or non-motile."],
+["Ciliophora","Move by cilia."],
+["Mastigophora","Move by flagella."],
+["Sarcodina","Move by pseudopodia."]]),
+Q("Taxonomy","Which group is known as the whip bearers?","Mastigophora move via flexible flagella.",P1+", "+QB,[
+["Mastigophora","Flagellates."],
+["Ciliophora","Hair bearers."],
+["Apicomplexa","Ridges or non-motile."],
+["Sarcodina","Pseudopodia."]]),
+Q("Taxonomy","Which group performs multiple fission (schizogony) during asexual reproduction?","Multiple fission is performed only by the Sporozoea (Apicomplexa). Other groups use binary fission.",P1+", "+QB,[
+["Sporozoea","Only group using schizogony."],
+["Ciliophora","Transverse binary fission."],
+["Sarcodina","Binary fission with no fixed plane."],
+["Mastigophora","Longitudinal binary fission."]]),
+Q("Taxonomy","Which group does NOT usually participate in sexual reproduction?","Mastigophora do not usually reproduce sexually. Ciliates conjugate, and Sarcodina and Sporozoea can form gametes.",P1+", "+QB,[
+["Mastigophora","Sexual reproduction does not usually occur."],
+["Ciliophora","Conjugation using micronuclei."],
+["Sporozoea","Flagellated gametes."],
+["Sarcodina","Some form flagellated gametes."]]),
+Q("Taxonomy","Which group divides by transverse binary fission?","Ciliophora divide transversely, Mastigophora longitudinally, and Sarcodina along no fixed plane.",P1,[
+["Ciliophora","Transverse fission."],
+["Mastigophora","Longitudinal fission."],
+["Sarcodina","No fixed plane."],
+["Sporozoea","Multiple fission."]]),
+Q("Mastigophora","After drinking untreated stream water, a hiker develops cramping, flatulence, and greasy floating stools. Which organism is responsible?","Giardia lamblia (also called Giardia intestinalis) causes giardiasis, nicknamed beaver fever, from cysts in contaminated water. It infects the duodenum and boiling kills it.",P2+", "+W6,[
+["Giardia lamblia","Beaver fever with greasy stools."],
+["Entamoeba histolytica","Colon infection called amebic dysentery."],
+["Balantidium coli","Ciliate tied to pigs."],
+["Cryptosporidium","Apicomplexan causing enteritis."]]),
+Q("Mastigophora","Which protozoan disease is typically sexually transmitted?","Trichomoniasis is caused by Trichomonas vaginalis, which has no cyst stage. The trophozoite is infectious, and both partners must be treated.",QB+", "+P2,[
+["Trichomoniasis","Sexually transmitted flagellate."],
+["Giardiasis","Fecal-oral."],
+["Malaria","Mosquito-borne."],
+["Cryptosporidiosis","Fecal-oral."]]),
+Q("Mastigophora","Which drug is used to treat trichomoniasis, with both partners treated?","Metronidazole is the treatment for trichomoniasis.",P2,[
+["Metronidazole","Stated treatment."],
+["Benznidazole","Used for Chagas disease."],
 ["Nitazoxanide","Used for cryptosporidiosis."],
-["Benznidazole","Used for acute Chagas disease."]]),
-Q("Apicomplexa","What clinical presentation do most infants with congenital Toxoplasma gondii infection exhibit at birth?","Most congenitally infected newborns are asymptomatic at birth and develop ocular or neurologic sequelae later, while a smaller percentage are born with severe brain or eye damage.",P2,[
-["No symptoms at birth, though sequelae may appear later","Most infected infants appear asymptomatic at birth before developing late complications."],
-["Immediate fulminant death within 10 days of delivery","Describes Naegleria fowleri PAM rather than congenital toxoplasmosis."],
-["Acute cyclic fever paroxysms every 48 hours","Describes erythrocytic malaria rather than toxoplasmosis."],
-["Painful corneal ulcers with ring infiltrates","Describes Acanthamoeba keratitis rather than congenital toxoplasmosis."]])
+["Pyrimethamine","Used for toxoplasmosis."]]),
+Q("Mastigophora","Which condition is caused by a Mastigophora?","Trichomonas vaginalis is a flagellate. Balantidium is a ciliate, Cryptosporidium an apicomplexan, and Entamoeba an ameba.",QB+", "+P2,[
+["Trichomoniasis","Flagellate."],
+["Balantidiasis","Ciliate."],
+["Cryptosporidiosis","Apicomplexan."],
+["Amebiasis","Ameba."]]),
+Q("Mastigophora","Which condition is most likely to be asymptomatic if contracted?","Amebiasis from E. histolytica is asymptomatic about 90% of the time. Giardiasis is also about 90% asymptomatic.",QB+", "+P2,[
+["Amebiasis","About 90% asymptomatic."],
+["Chagas disease","Progresses to cardiac and GI disease."],
+["Cryptosporidiosis","Fatal diarrhea in the immunocompromised."],
+["Malaria","Cyclic fever and hemolysis."]]),
+Q("Mastigophora","Which disease is vectored by the tsetse fly?","African sleeping sickness is caused by Trypanosoma brucei gambiense and rhodesiense. A chancre forms at the bite, then the organism enters the blood and CNS.",QB+", "+P2,[
+["African sleeping sickness","Tsetse fly vector."],
+["Chagas disease","Reduviid bug vector."],
+["Malaria","Anopheles mosquito vector."],
+["Primary amebic meningoencephalitis","No insect vector."]]),
+Q("Mastigophora","Which disease is vectored by reduviid (kissing) bugs?","Chagas disease is caused by Trypanosoma cruzi, spread through bug feces. Chronic disease causes dilated cardiomyopathy and congestive heart failure.",QB+", "+P2,[
+["Chagas disease","Reduviid bug vector."],
+["African sleeping sickness","Tsetse fly vector."],
+["Malaria","Anopheles mosquito vector."],
+["Primary amebic meningoencephalitis","Contaminated water via the nose."]]),
+Q("Mastigophora","Which finding is the swelling around the bite site in acute Chagas disease?","Romana's sign is acute swelling around the bite site in Chagas disease. A chancre belongs to African sleeping sickness.",P2,[
+["Romana's sign","Acute Chagas bite-site swelling."],
+["Primary chancre","Sleeping sickness bite-site lesion."],
+["Granulomatous ulcer","A subcutaneous fungal lesion."],
+["Warty nodule","A subcutaneous fungal lesion."]]),
+Q("Mastigophora","Which vector transmits Leishmania?","Leishmania is spread by female phlebotomine sand flies. Forms are cutaneous, mucosal, and visceral.",P2+", "+W6,[
+["Phlebotomine sand fly","Leishmania vector."],
+["Tsetse fly","Trypanosoma brucei vector."],
+["Triatomine bug","Trypanosoma cruzi vector."],
+["Anopheles mosquito","Plasmodium vector."]]),
+Q("Sarcodina","Which ameba infects the colon, has a trophozoite nucleus with a karyosome, and is spread as cysts?","Entamoeba histolytica causes amebiasis, also called amebic dysentery, and is diagnosed by cysts in stool. Boiling kills the cysts.",P2,[
+["Entamoeba histolytica","Colon ameba with karyosome."],
+["Giardia lamblia","Flagellate infecting the duodenum."],
+["Naegleria fowleri","Brain infection through the nose."],
+["Acanthamoeba","Corneal infection."]]),
+Q("Sarcodina","Which organism enters through the nasal passages and causes primary amebic meningoencephalitis with a roughly 97% fatality rate?","Naegleria fowleri is a free-living soil and water ameba. Patients die within about 10 days, and treatment with amphotericin B and rifampin is usually futile.",P2+", "+QB,[
+["Naegleria fowleri","Nasal entry and rapid brain infection."],
+["Acanthamoeba","Corneal infection."],
+["Entamoeba histolytica","Colonic infection."],
+["Balantidium coli","Intestinal ciliate."]]),
+Q("Sarcodina","A protozoan disease of the cornea is picked up from soil or water contaminated with which organism?","Acanthamoeba causes amebic keratitis with eye pain, redness, blurred vision, light sensitivity, and tearing. The cyst stage complicates treatment.",P2+", "+QB,[
+["Acanthamoeba","Corneal pathogen."],
+["Plasmodium","Blood parasite."],
+["Balantidium coli","Intestinal ciliate."],
+["Cryptosporidium","Intestinal apicomplexan."]]),
+Q("Ciliophora","Which is the only Ciliophora condition?","Balantidiasis is caused by Balantidium coli. Pigs are a reservoir, and untreated cases can perforate the colon.",QB+", "+P2,[
+["Balantidiasis","Caused by the ciliate Balantidium coli."],
+["Amebiasis","Sarcodina."],
+["Trichomoniasis","Mastigophora."],
+["Cryptosporidiosis","Apicomplexa."]]),
+Q("Apicomplexa","Which drug is most commonly used to treat cryptosporidiosis?","Nitazoxanide (Alinia) is the most common drug. Cryptosporidiosis is self-limited in healthy people but causes fatal watery diarrhea in the immunocompromised.",P2,[
+["Nitazoxanide","Stated treatment."],
+["Metronidazole","Used for trichomoniasis."],
+["Pyrimethamine","Used for toxoplasmosis."],
+["Benznidazole","Used for Chagas disease."]]),
+Q("Apicomplexa","Malaria is caused by which organism?","Malaria is caused by Plasmodium, spread mainly by the female Anopheles mosquito.",QB+", "+P2,[
+["Plasmodium","Malaria agent."],
+["Naegleria fowleri","Causes PAM."],
+["Acanthamoeba","Causes keratitis."],
+["Balantidium coli","Causes balantidiasis."]]),
+Q("Apicomplexa","Malaria symptoms recur at 48 or 72 hour intervals because of what?","Synchronous rupture of infected red blood cells releases merozoites on a regular schedule, producing cold, hot, and sweating stages.",QB+", "+P2,[
+["Synchronous rupturing of RBCs","Cause of the cyclic fever."],
+["Changing of the tides","No role in malaria."],
+["Hormone fluctuations","No role in malaria."],
+["Sexual cycle of Plasmodium in humans","The sexual phase occurs in the mosquito."]]),
+Q("Apicomplexa","Which stage of Plasmodium is the infectious stage injected by the mosquito?","Sporozoites are the infectious stage. They travel to the liver and undergo schizogony to make merozoites, which invade red blood cells.",P2,[
+["Sporozoites","Injected into the blood."],
+["Merozoites","Released from liver cells to infect RBCs."],
+["Oocysts","Form in the mosquito stomach wall."],
+["Trophozoites","Not the injected stage."]]),
+Q("Apicomplexa","Where does the sexual phase of the Plasmodium life cycle take place?","The asexual phase occurs in humans and the sexual phase in the mosquito, where fertilization and oocyst formation occur.",P2,[
+["In the female Anopheles mosquito","Fertilization and oocyst formation occur here."],
+["In human liver cells","Site of asexual schizogony."],
+["In human red blood cells","Site of asexual replication."],
+["In the human spleen","Debris accumulates here."]]),
+Q("Apicomplexa","Which form of malaria has the highest acute death rate, especially in children?","Falciparum malaria is the most malignant type, with persistent fever and the highest acute death rate.",P2,[
+["Falciparum malaria","Most malignant."],
+["Vivax malaria","Not the most deadly."],
+["Malariae malaria","Not the most deadly."],
+["Ovale malaria","Not the most deadly."]]),
+Q("Apicomplexa","A veterinarian tells a pregnant client not to change the cat litter box. Which condition is the warning about?","Toxoplasma gondii uses cats as hosts and sheds oocysts in feces. Infection during pregnancy can cause eye or brain damage in the fetus.",QB+", "+P2,[
+["Toxoplasmosis","Cat-associated congenital risk."],
+["Trichomoniasis","Sexually transmitted."],
+["Cryptosporidiosis","Linked to animal feces in water."],
+["Giardiasis","Contaminated drinking water."]]),
+Q("Apicomplexa","Besides cat-contaminated objects, which source is a common route for toxoplasmosis?","Toxoplasmosis is passed by the fecal-oral route, from objects contaminated by animals or undercooked meat such as pork containing cysts.",P2,[
+["Undercooked pork","Contains Toxoplasma cysts."],
+["A kissing bug bite","Transmits Chagas disease."],
+["A sand fly bite","Transmits Leishmania."],
+["A tsetse fly bite","Transmits sleeping sickness."]]),
+Q("Algae","Which poisoning from mussels, oysters, or scallops usually causes only mild GI discomfort?","Diarrhetic shellfish poisoning comes from dinoflagellate toxins (genus Dinophysis) and is mild.",P1+", "+W6,[
+["Diarrhetic shellfish poisoning","Mild GI upset from Dinophysis toxins."],
+["Paralytic shellfish poisoning","Neurologic and can be fatal."],
+["Amnesic shellfish poisoning","Domoic acid, can be fatal."],
+["Ciguatera fish poisoning","Reef fish toxin, no antidote."]]),
+Q("Algae","Ciguatera toxin originates from which organisms?","Ciguatera fish poisoning is triggered by toxins of dinoflagellates that accumulate in fish. Nitzschia pungens produces domoic acid instead.",P1,[
+["Dinoflagellates","Source of ciguatera toxin."],
+["Nitzschia pungens","Source of domoic acid."],
+["Prototheca","Non-photosynthetic skin pathogen."],
+["Plasmodium","Malaria parasite."]]),
+Q("Algae","Which toxin can be aerosolized by wave action and trigger asthma-like symptoms?","Neurotoxic shellfish poisoning (Ptychodiscus brevis) can be aerosolized, though it is not fatal.",P1,[
+["Neurotoxic shellfish toxin","Aerosolizes with waves."],
+["Domoic acid","Causes amnesic poisoning via shellfish."],
+["Ciguatera toxin","Ingested in reef fish."],
+["Paralytic shellfish toxin","Ingested in shellfish."]]),
+Q("Taxonomy","Which group moves via pseudopodia?","Sarcodina (amebas) form pseudopodia, meaning false feet, to move.",P1+", "+W6,[
+["Sarcodina","Amebas."],
+["Mastigophora","Flagella."],
+["Ciliophora","Cilia."],
+["Apicomplexa","Ridges or non-motile."]]),
+Q("Taxonomy","Which group reproduces sexually by conjugation using micronuclei, followed by binary fission?","Ciliophora conjugate using micronuclei and then divide.",P1+", "+W6,[
+["Ciliophora","Conjugation with micronuclei."],
+["Mastigophora","Sexual reproduction not usual."],
+["Sarcodina","Flagellated gametes if any."],
+["Sporozoea","Flagellated gametes."]]),
+Q("Mastigophora","Which description fits the Giardia lamblia trophozoite?","Giardia has a binucleate trophozoite with four flagella and a drug-resistant four-nucleate cyst.",P2,[
+["Binucleate with four flagella","Giardia trophozoite."],
+["Single nucleus with a karyosome","E. histolytica trophozoite."],
+["Four nuclei with chromatoidals","E. histolytica cyst."],
+["Pear-shaped with an undulating membrane","Trichomonas."]]),
+Q("Mastigophora","Which pear-shaped flagellate has undulating membranes and no cyst stage?","Trichomonas vaginalis exists only as a trophozoite and is sexually transmitted.",P2,[
+["Trichomonas vaginalis","No cyst stage."],
+["Giardia lamblia","Has a cyst stage."],
+["Trypanosoma cruzi","Hemoflagellate with insect vector."],
+["Leishmania","Hemoflagellate with sand fly vector."]]),
+Q("Mastigophora","Giardia lamblia infects which site?","Giardia infects the duodenum after an incubation of about 10 days.",P2,[
+["Duodenum","Site of Giardia infection."],
+["Colon","Site of E. histolytica."],
+["Liver","Site of Plasmodium schizogony."],
+["Cornea","Site of Acanthamoeba."]]),
+Q("Mastigophora","Which measure kills Giardia and E. histolytica cysts in water?","Boiling water kills the cysts of both organisms. Cryptosporidium is resistant to chlorine.",P2+", "+W6,[
+["Boiling water","Kills the cysts."],
+["Standard chlorination","Cryptosporidium resists it."],
+["Brief refrigeration","Does not kill cysts."],
+["Rinsing with tap water","Does not kill cysts."]]),
+Q("Mastigophora","Which hemoflagellate stage is infectious for Trypanosoma?","Trypomastigotes are the infectious stage in both sleeping sickness and Chagas disease.",P2,[
+["Trypomastigote","Infectious stage."],
+["Amastigote","Lacks a free flagellum."],
+["Promastigote","Single anterior flagellum."],
+["Epimastigote","Flagellum plus undulating membrane."]]),
+Q("Mastigophora","Which hemoflagellate stage lacks a free flagellum?","The amastigote has no free flagellum. The promastigote has one anterior flagellum, and the epimastigote adds an undulating membrane.",P2,[
+["Amastigote","No free flagellum."],
+["Promastigote","One free anterior flagellum."],
+["Epimastigote","Free flagellum and membrane."],
+["Trypomastigote","Large fully formed stage."]]),
+Q("Mastigophora","Which lesion forms at the tsetse fly bite site?","A primary chancre forms about day 4 at the bite, after which the organism enters the lymphatics and blood.",P2,[
+["Primary chancre","Bite-site lesion of sleeping sickness."],
+["Romana's sign","Chagas bite-site swelling."],
+["Granulomatous ulcer","Sporotrichosis lesion."],
+["Verrucous lesion","Chromoblastomycosis lesion."]]),
+Q("Mastigophora","In African sleeping sickness, when does uncontrollable sleepiness occur?","Sleepiness occurs mainly during the day, followed by sleeplessness at night. The final stage brings convulsions and a sleep-like coma.",P2,[
+["Mainly by day, with insomnia at night","Sleep cycle is inverted."],
+["Mainly at night, with insomnia by day","Reversed pattern."],
+["Only after coma begins","Sleepiness occurs earlier."],
+["Only in the first week","Occurs in later CNS stages."]]),
+Q("Mastigophora","Which drug is used to treat Chagas disease?","Benznidazole or nifurtimox treat Chagas disease, but they fail if the disease has progressed too far and have damaging side effects.",P2,[
+["Benznidazole","Chagas treatment."],
+["Metronidazole","Trichomoniasis treatment."],
+["Nitazoxanide","Cryptosporidiosis treatment."],
+["Pyrimethamine","Toxoplasmosis treatment."]]),
+Q("Mastigophora","Chronic Chagas disease accounts for 30 to 40 percent of which condition in endemic regions?","Chronic Chagas causes abnormal rhythm, dilated cardiomyopathy, and congestive heart failure.",P2,[
+["Heart disease","Chronic cardiac involvement."],
+["Liver disease","Not linked to Chagas."],
+["Kidney disease","Not linked to Chagas."],
+["Lung disease","Not linked to Chagas."]]),
+Q("Mastigophora","Visceral leishmaniasis usually affects which organs?","Visceral leishmaniasis affects the spleen, liver, and bone marrow and can be life threatening.",P2+", "+W6,[
+["Spleen, liver, and bone marrow","Visceral organs."],
+["Heart, esophagus, and colon","Chronic Chagas targets."],
+["Brain, eyes, and muscle","Toxoplasmosis targets."],
+["Skin, nose, and throat","Cutaneous and mucosal forms."]]),
+Q("Sarcodina","Which drug pair is used for primary amebic meningoencephalitis, though treatment is usually futile?","Amphotericin B and rifampin are used, but rapid progression makes treatment usually futile.",P2,[
+["Amphotericin B and rifampin","PAM treatment."],
+["Chlorhexidine and PHMB","Acanthamoeba treatment."],
+["Tetracycline and iodoquinol","Balantidiasis drugs."],
+["Nitazoxanide and benznidazole","Not used for PAM."]]),
+Q("Sarcodina","Which drug pair treats both the trophozoite and cyst stages of Acanthamoeba?","Chlorhexidine 0.02 percent plus PHMB 0.02 percent covers both stages, since the cyst complicates treatment.",P2,[
+["Chlorhexidine and PHMB","Treat both stages."],
+["Amphotericin B and rifampin","PAM treatment."],
+["Tetracycline and iodoquinol","Balantidiasis drugs."],
+["Nitazoxanide and benznidazole","Not used for keratitis."]]),
+Q("Sarcodina","Naegleria fowleri gains access to the brain through which route?","Naegleria enters the nasal passages from contaminated water and travels up the olfactory nerve.",P2+", "+W6,[
+["Nasal passages","Entry route."],
+["Bite wound","Insect-borne diseases."],
+["Swallowed cysts","Fecal-oral route."],
+["Contact lenses","Acanthamoeba route."]]),
+Q("Ciliophora","Which animal is a reservoir for Balantidium coli?","Pigs are a reservoir, and balantidiasis is spread by the fecal-oral route.",P2,[
+["Pigs","Reservoir."],
+["Cats","Hosts of Toxoplasma."],
+["Cattle","Linked to Cryptosporidium."],
+["Birds","Not a reservoir here."]]),
+Q("Ciliophora","Untreated balantidiasis can lead to which complication?","Untreated cases can perforate the colon after dysentery and weight loss.",P2,[
+["Perforation of the colon","Balantidium complication."],
+["Dilated cardiomyopathy","Chronic Chagas."],
+["Pelvic inflammatory disease","Trichomoniasis complication."],
+["Corneal ulceration","Acanthamoeba keratitis."]]),
+Q("Apicomplexa","Which organism is resistant to chlorine and is linked to pools, swim diapers, and calves?","Cryptosporidium oocysts resist chlorine. In immunocompromised patients they cause fatal watery diarrhea.",W6+", "+P2,[
+["Cryptosporidium","Chlorine-resistant."],
+["Giardia lamblia","Boiling kills it."],
+["Entamoeba histolytica","Boiling kills it."],
+["Balantidium coli","Pig reservoir."]]),
+Q("Apicomplexa","Most current malaria treatments are based on which drug?","Most treatments are based on some form of quinine.",P2,[
+["Quinine","Malaria drug base."],
+["Metronidazole","Trichomoniasis."],
+["Benznidazole","Chagas disease."],
+["Pyrimethamine","Toxoplasmosis."]]),
+Q("Apicomplexa","Malaria relapses occur because infected cells of which type can harbor dormant parasites for up to 5 years?","Certain malarias relapse because infected liver cells hold dormant cells.",P2,[
+["Liver cells","Dormant parasites persist here."],
+["Red blood cells","Lysed in each cycle."],
+["Mosquito salivary glands","Sexual phase site."],
+["Lymph nodes","Not stated."]]),
+Q("Apicomplexa","What is the correct order of a malaria paroxysm?","Malaria produces a cold stage, then a hot stage, then a sweating stage.",P2+", "+W6,[
+["Cold, hot, sweating","Stated order."],
+["Hot, cold, sweating","Wrong order."],
+["Sweating, cold, hot","Wrong order."],
+["Cold, sweating, hot","Wrong order."]]),
+Q("Apicomplexa","What is the asexual division of Plasmodium sporozoites inside liver cells called?","Schizogony generates numerous merozoites that invade red blood cells.",P2,[
+["Schizogony","Multiple fission in the liver."],
+["Encystment","Trophozoite forming a cyst."],
+["Conjugation","Ciliate sexual process."],
+["Excystment","Cyst releasing a trophozoite."]]),
+Q("Apicomplexa","Which is the definitive host of Toxoplasma gondii?","Cats shed oocysts in feces after the sexual phase in the intestine.",P2+", "+W6,[
+["Cats","Feline definitive host."],
+["Pigs","Source of cysts in meat."],
+["Humans","Accidental hosts."],
+["Birds","Prey and intermediate hosts."]]),
+Q("Apicomplexa","Which drug treats toxoplasmosis?","Pyrimethamine (Daraprim) treats toxoplasmosis.",P2,[
+["Pyrimethamine","Toxoplasmosis treatment."],
+["Metronidazole","Trichomoniasis."],
+["Nitazoxanide","Cryptosporidiosis."],
+["Benznidazole","Chagas disease."]]),
+Q("Apicomplexa","What do most infants infected with Toxoplasma in the womb show at birth?","Most have no symptoms at birth but may develop them later. A small percentage have serious eye or brain damage.",P2,[
+["No symptoms","Most are asymptomatic at birth."],
+["Severe brain damage","Occurs in a small percentage."],
+["Fatal infection within 10 days","Describes PAM."],
+["Corneal ulcers","Describes Acanthamoeba."]]),
+Q("Sarcodina","How many nuclei does the Entamoeba histolytica cyst contain?","The cyst has four nuclei and chromatoidals. The trophozoite has one nucleus with a karyosome.",P2,[
+["Four","Cyst has four nuclei."],
+["One","Trophozoite nucleus count."],
+["Two","Giardia trophozoite count."],
+["Eight","Not stated."]]),
+Q("Mastigophora","Untreated trichomoniasis in women can lead to which complication?","Trichomoniasis can lead to pelvic inflammatory disease in women, while men are often asymptomatic.",P2,[
+["Pelvic inflammatory disease","Stated complication."],
+["Dilated cardiomyopathy","Chagas."],
+["Fatal coma","Sleeping sickness."],
+["Colon perforation","Balantidiasis."]]),
+Q("Mastigophora","Which statement about Entamoeba histolytica and Giardia lamblia is accurate?","Both organisms are asymptomatic in about 90% of infections, and both are spread by the fecal-oral route as cysts.",QB+", "+P2,[
+["Both are asymptomatic in about 90% of infections","Stated for both organisms."],
+["Giardia is mostly asymptomatic, but E. histolytica is always symptomatic","E. histolytica is also about 90% asymptomatic."],
+["E. histolytica is mostly asymptomatic, but Giardia is always symptomatic","Giardia is also about 90% asymptomatic."],
+["Both are symptomatic in about 90% of infections","Reverses the actual rate."]]),
+Q("Sarcodina","Which condition is likely to kill in about 10 days and has yet to be successfully treated?","Primary amebic meningoencephalitis from Naegleria fowleri has a 97% fatality rate. Treatment usually proves futile due to rapid progression.",QB+", "+P2,[
+["Primary amebic meningoencephalitis","Fatal within about 10 days."],
+["Cryptosporidiosis","Self-limited in healthy people."],
+["Chagas disease","Chronic, with treatment available."],
+["Malaria","Treatable with quinine-based drugs."]]),
+Q("Apicomplexa","In malaria, the sexual phase of the life cycle occurs only in the mosquito. What type of vector does this make the mosquito?","A biological vector hosts part of the parasite life cycle. A mechanical vector only carries the organism.",QB+", "+P2,[
+["Biological vector","Hosts the sexual phase."],
+["Mechanical vector","Only carries the organism."],
+["Zoonotic vector","Not the vector type here."],
+["Fomite vector","Fomites are inanimate objects."]]),
+Q("Apicomplexa","Malaria is caused by which organism and vectored by which carrier?","Malaria is caused by Plasmodium and vectored by the female Anopheles mosquito.",QB+", "+P2,[
+["Plasmodium; female Anopheles mosquito","Correct agent and vector."],
+["Plasmodium; tsetse fly","Tsetse flies vector sleeping sickness."],
+["Trypanosoma; female Anopheles mosquito","Wrong agent."],
+["Naegleria; female Anopheles mosquito","Wrong agent."]]),
+Q("Mastigophora","Which condition is likely to be asymptomatic if contracted?","Amebiasis from E. histolytica is about 90% asymptomatic. Chagas disease can be asymptomatic but progresses in 20 to 30% of cases.",QB+", "+P2,[
+["Amebiasis","About 90% asymptomatic."],
+["Chagas disease","Chronic phase involves heart and GI damage."],
+["Cryptosporidiosis","Fatal diarrhea in the immunocompromised."],
+["Blastomycosis","A systemic fungal infection of the lungs."]])
 ];
 
 const $=id=>document.getElementById(id);
-let base=DATA,set=[],ans={},mode="card",idx=0,muted=false,timer=null,activeTopic="ALL";
+let base=DATA,set=[],ans={},mode="card",idx=0,muted=false,timer=null;
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function prep(src){return shuf(src.map((q,i)=>({...q,id:q.id??i,o:shuf(q.o.map((x,k)=>({text:x[0],why:x[1],ok:k===0})))})))}
 function start(src){set=prep(src);base=src.map(q=>({...q}));ans={};idx=0;$("sum").classList.add("hidden");render();window.scrollTo(0,0)}
@@ -488,39 +500,11 @@ $("mCard").onclick=()=>setMode("card");$("mList").onclick=()=>setMode("list");
 $("mute").onclick=()=>{muted=!muted;$("mute").classList.toggle("on",muted);$("mute").textContent=muted?"Unmute Erijah":"STFU Erijah";if(muted){$("pop").classList.add("hidden");$("aud").pause()}};
 $("retake").onclick=()=>start(base);
 $("review").onclick=()=>{const ids=set.filter(q=>ans[q.id]&&!ans[q.id].ok).map(q=>q.id);start(DATA.map((q,i)=>({...q,id:i})).filter(q=>ids.includes(q.id)))};
-$("backMenu").onclick=()=>{$("menuPanel").scrollIntoView({behavior:"smooth",block:"start"})};
 $("popimg").onerror=function(){if(!this.dataset.f){this.dataset.f=1;this.src="wrong-answer.png"}};
-
-function getTopicPool(){
- const all=DATA.map((q,i)=>({...q,id:i}));
- return activeTopic==="ALL"?all:all.filter(q=>q.t===activeTopic);
-}
-function startN(n){
- document.querySelectorAll("#sizes .btn").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));
- const pool=getTopicPool();
- $("fullBtn").textContent=`All Matching (${pool.length})`;
- start(n?shuf([...pool]).slice(0,n):pool);
-}
-function setTopic(t){
- activeTopic=t;
- document.querySelectorAll("#topics .btn").forEach(b=>b.classList.toggle("on",b.dataset.t===t));
- const activeSizeBtn=document.querySelector("#sizes .btn.on");
- startN(activeSizeBtn?+activeSizeBtn.dataset.n:0);
-}
-function buildTopics(){
- const box=$("topics");
- const counts=DATA.reduce((acc,q)=>{acc[q.t]=(acc[q.t]||0)+1;return acc},{});
- const allBtn=el("button","btn on",`All Topics (${DATA.length})`);
- allBtn.type="button";allBtn.dataset.t="ALL";allBtn.onclick=()=>setTopic("ALL");
- box.appendChild(allBtn);
- Object.keys(counts).forEach(t=>{
-  const b=el("button","btn",`${t} (${counts[t]})`);
-  b.type="button";b.dataset.t=t;b.onclick=()=>setTopic(t);
-  box.appendChild(b);
- });
-}
+function startN(n){document.querySelectorAll("#sizes .btn").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));
+ const all=DATA.map((q,i)=>({...q,id:i}));start(n?shuf(all).slice(0,n):all)}
 document.querySelectorAll("#sizes .btn").forEach(b=>b.onclick=()=>startN(+b.dataset.n));
-buildTopics();
+$("fullBtn").textContent="Full Bank ("+DATA.length+")";
 startN(0);
 </script>
 </body>
