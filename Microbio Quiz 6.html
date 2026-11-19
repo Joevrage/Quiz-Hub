@@ -7,11 +7,11 @@
 <style>
 :root{--bg:#0f0f0f;--card:#1a1a1a;--bd:#2c2c2c;--ac:#ff9900;--ok:#14532d;--okb:#22c55e;--no:#7f1d1d;--nob:#ef4444}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;padding:150px 14px 60px}
+body{background:var(--bg);color:#fff;font-family:-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.5;padding:105px 14px 60px}
 .hidden{display:none!important}
 header{position:fixed;top:0;left:0;right:0;background:#000;border-bottom:1px solid var(--bd);z-index:1000;padding:10px 16px}
 .bar{max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
-.btn{background:#222;color:#fff;border:1px solid var(--bd);padding:7px 13px;border-radius:6px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none}
+.btn{background:#222;color:#fff;border:1px solid var(--bd);padding:7px 13px;border-radius:6px;font:inherit;font-weight:700;font-size:.85rem;cursor:pointer;text-decoration:none;transition:all .15s ease}
 .btn:hover,.btn.on{border-color:var(--ac)}
 .btn.on{background:var(--ac);color:#000}
 .btn.pri{background:var(--ac);color:#000;border-color:var(--ac);padding:11px 22px;font-size:1rem}
@@ -21,6 +21,8 @@ header{position:fixed;top:0;left:0;right:0;background:#000;border-bottom:1px sol
 main{max-width:900px;margin:0 auto}
 .intro{background:var(--card);border:1px solid var(--bd);border-left:4px solid var(--ac);border-radius:8px;padding:16px 18px;margin-bottom:18px}
 .intro h1{font-size:1.35rem}.intro p{color:#999;font-size:.9rem}
+.filter-label{font-size:.78rem;font-weight:700;color:var(--ac);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 7px}
+.chip-row{display:flex;gap:8px;flex-wrap:wrap}
 .q{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:20px;margin-bottom:18px}
 .meta{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .badge{background:#262626;color:var(--ac);border:1px solid #383838;font-size:.75rem;font-weight:700;padding:3px 9px;border-radius:4px;text-transform:uppercase}
@@ -62,14 +64,26 @@ main{max-width:900px;margin:0 auto}
  <div class="prog"><div id="pg"></div></div>
 </header>
 <main>
- <div class="intro"><h1>Week 6: Protozoans &amp; Algae</h1><p>Algae toxins, protozoan structure and life cycles, the four protozoan groups, and every major protozoan disease.</p>
- <div id="sizes" style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" data-n="15" type="button">Quickie 15</button><button class="btn" data-n="25" type="button">25</button><button class="btn" data-n="35" type="button">35</button><button class="btn" data-n="50" type="button">50</button><button class="btn on" data-n="0" type="button" id="fullBtn">Full Bank</button></div></div>
+ <div class="intro" id="menuPanel">
+  <h1>Week 6: Protozoans &amp; Algae</h1>
+  <p>Algae toxins, protozoan structure and life cycles, the four protozoan groups, and every major protozoan disease.</p>
+  <div class="filter-label">1. Filter by Subject</div>
+  <div class="chip-row" id="subjects"></div>
+  <div class="filter-label">2. Question Count</div>
+  <div class="chip-row" id="sizes">
+   <button class="btn" data-n="15" type="button">Quickie 15</button>
+   <button class="btn" data-n="25" type="button">25</button>
+   <button class="btn" data-n="35" type="button">35</button>
+   <button class="btn" data-n="50" type="button">50</button>
+   <button class="btn on" data-n="0" type="button" id="fullBtn">All Matching</button>
+  </div>
+ </div>
  <div id="quiz"></div>
  <div class="sum hidden" id="sum">
   <h2 id="sT">Quiz Complete</h2><div class="big" id="sS"></div><div class="tier" id="sM"></div>
   <button class="btn pri" id="retake" type="button">Retake Current Set</button>
   <button class="btn pri" id="review" type="button">Review Missed</button>
-  <a class="btn pri" href="index.html">Back to Menu</a>
+  <button class="btn pri" id="backMenu" type="button">Back to Menu</button>
  </div>
 </main>
 <script>
@@ -461,10 +475,39 @@ Q("Mastigophora","Which condition is likely to be asymptomatic if contracted?","
 
 const $=id=>document.getElementById(id);
 let base=DATA,set=[],ans={},mode="card",idx=0,muted=false,timer=null;
+let activeSub="ALL",activeSize=0;
+
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 function prep(src){return shuf(src.map((q,i)=>({...q,id:q.id??i,o:shuf(q.o.map((x,k)=>({text:x[0],why:x[1],ok:k===0})))})))}
-function start(src){set=prep(src);base=src.map(q=>({...q}));ans={};idx=0;$("sum").classList.add("hidden");render();window.scrollTo(0,0)}
+function start(src){set=prep(src);base=src.map(q=>({...q}));ans={};idx=0;$("sum").classList.add("hidden");render()}
 function el(t,c,x){const n=document.createElement(t);if(c)n.className=c;if(x!==undefined)n.textContent=x;return n}
+
+function getPool(){
+ const all=DATA.map((q,i)=>({...q,id:i}));
+ return activeSub==="ALL"?all:all.filter(q=>q.t===activeSub);
+}
+
+function buildSubjects(){
+ const box=$("subjects");box.innerHTML="";
+ const topics=["ALL",...new Set(DATA.map(q=>q.t))];
+ topics.forEach(t=>{
+  const count=t==="ALL"?DATA.length:DATA.filter(q=>q.t===t).length;
+  const label=t==="ALL"?`All Topics (${count})`:`${t} (${count})`;
+  const b=el("button","btn"+(t===activeSub?" on":""),label);
+  b.type="button";
+  b.onclick=()=>{activeSub=t;buildSubjects();applyFilters()};
+  box.appendChild(b);
+ });
+}
+
+function applyFilters(){
+ const pool=getPool();
+ $("fullBtn").textContent=`All Matching (${pool.length})`;
+ document.querySelectorAll("#sizes .btn").forEach(b=>b.classList.toggle("on",+b.dataset.n===activeSize));
+ const chosen=activeSize&&activeSize<pool.length?shuf([...pool]).slice(0,activeSize):pool;
+ start(chosen);
+}
+
 function stats(){const n=set.length,c=Object.values(ans).filter(a=>a.ok).length,d=Object.keys(ans).length;
  const p=n?Math.round(c/n*100):0;$("score").textContent=`Score: ${c} / ${n} (${p}%)`;$("pg").style.width=(n?d/n*100:0)+"%";return{c,n,p,d}}
 function apply(card,q,a){
@@ -496,16 +539,18 @@ function summary(){
  $("sum").classList.remove("hidden");$("sum").scrollIntoView({behavior:"smooth",block:"center"})}
 function setMode(m){mode=m;$("mCard").classList.toggle("on",m==="card");$("mList").classList.toggle("on",m==="list");
  const a=Object.keys(ans).length;if(a<set.length)$("sum").classList.add("hidden");render()}
-$("mCard").onclick=()=>setMode("card");$("mList").onclick=()=>setMode("list");
+
+$("mCard").onclick=()=>setMode("card");
+$("mList").onclick=()=>setMode("list");
 $("mute").onclick=()=>{muted=!muted;$("mute").classList.toggle("on",muted);$("mute").textContent=muted?"Unmute Erijah":"STFU Erijah";if(muted){$("pop").classList.add("hidden");$("aud").pause()}};
-$("retake").onclick=()=>start(base);
-$("review").onclick=()=>{const ids=set.filter(q=>ans[q.id]&&!ans[q.id].ok).map(q=>q.id);start(DATA.map((q,i)=>({...q,id:i})).filter(q=>ids.includes(q.id)))};
+$("retake").onclick=()=>{start(base);window.scrollTo({top:0,behavior:"smooth"})};
+$("review").onclick=()=>{const ids=set.filter(q=>ans[q.id]&&!ans[q.id].ok).map(q=>q.id);start(DATA.map((q,i)=>({...q,id:i})).filter(q=>ids.includes(q.id)));window.scrollTo({top:0,behavior:"smooth"})};
+$("backMenu").onclick=()=>{$("menuPanel").scrollIntoView({behavior:"smooth",block:"start"})};
 $("popimg").onerror=function(){if(!this.dataset.f){this.dataset.f=1;this.src="wrong-answer.png"}};
-function startN(n){document.querySelectorAll("#sizes .btn").forEach(b=>b.classList.toggle("on",+b.dataset.n===n));
- const all=DATA.map((q,i)=>({...q,id:i}));start(n?shuf(all).slice(0,n):all)}
-document.querySelectorAll("#sizes .btn").forEach(b=>b.onclick=()=>startN(+b.dataset.n));
-$("fullBtn").textContent="Full Bank ("+DATA.length+")";
-startN(0);
+document.querySelectorAll("#sizes .btn").forEach(b=>b.onclick=()=>{activeSize=+b.dataset.n;applyFilters()});
+
+buildSubjects();
+applyFilters();
 </script>
 </body>
 </html>
