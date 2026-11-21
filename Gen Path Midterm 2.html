@@ -11,7 +11,7 @@ a{text-decoration:none}.wrap{max-width:900px;margin:0 auto;padding:16px}
 #hdr .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.pill{background:#2a2a2a;border-radius:20px;padding:4px 10px;font-size:13px}
 #bar{position:absolute;left:0;bottom:0;height:3px;background:#ff9900;width:0;transition:width .3s}
 .opt{display:block;width:100%;text-align:left;background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:10px;margin:6px 0;cursor:pointer;font-size:15px}
-.opt:hover:not(:disabled){border-color:#ff9900}.opt.ok{background:#14532d;border-color:#22c55e}.opt.bad{background:#7f1d1d;border-color:#ef4444}
+.opt:hover:not(:disabled){border-color:#ff9900}.opt.ok{background:#14532d;border-color:#22c55e;color:#fff}.opt.bad{background:#7f1d1d;border-color:#ef4444;color:#fff}
 .ban{font-weight:700;margin:10px 0 4px}.g{color:#22c55e}.r{color:#ef4444}.why{font-size:14px;margin:4px 0;color:#ddd}
 .tag{font-size:12px;color:#000;background:#ff9900;border-radius:4px;padding:1px 6px;margin-right:6px}
 .wrong-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:50;pointer-events:none}.wrong-popup img{max-width:60vw;max-height:60vh}.hidden{display:none}
@@ -24,90 +24,313 @@ a{text-decoration:none}.wrap{max-width:900px;margin:0 auto;padding:16px}
 const SUBJECTS=[
 {title:"Hemostasis & Coagulation",week:"Wk 6"},
 {title:"Clotting Disorders & Bruising",week:"Wk 6"},
-{title:"Injury Terms & Arachidonic Acid Pathway",week:"Wk 6"},
+{title:"Injury Terms & Arachidonic Acid",week:"Wk 6"},
 {title:"Phases of Inflammation & Exudates",week:"Wk 6"},
 {title:"Tissue Repair & Pathological Healing",week:"Wk 6"},
-{title:"Cell Death Mechanisms",week:"Wk 6"}];
-// Q(subject, slideRef, difficulty, priority, stem, [[correctText, why],[wrong, why],[wrong, why],[wrong, why]])
+{title:"Cell Death & Injury",week:"Wk 6"}];
 let _id=0;
+// Q(subject, ref, difficulty, priority, stem, [[correct,why],[wrong,why]x3])
 function Q(s,ref,d,p,stem,o){return{id:_id++,subjectIndex:s,week:"Wk 6",slideRef:ref,difficulty:d,priority:p,stem,
 options:o.map((x,i)=>({text:x[0],correct:i===0,why:x[1]+" ["+ref+"]"}))}}
+const T="Lecture Transcript",S="Slide Deck";
 const questionBank=[
-Q(0,"Slide-6","easy",true,"The fastest response to a bleeding injury is a _______ reflex that produces _______ of arteries.",[
-["sympathetic; vasoconstriction","Neurogenic vascular spasm acts through sympathetic nerves on arterial smooth muscle, slowing flow."],
-["parasympathetic; vasodilation","Vasodilation increases flow and parasympathetic input is not the hemostatic reflex."],
+// ---- Subject 0
+Q(0,S,"easy",true,"The fastest response to a bleeding injury is a _______ reflex producing _______ of arteries.",[
+["neurogenic; vasoconstriction","Vascular spasm works through sympathetic nerves on arterial smooth muscle and slows flow."],
 ["chemical; vasoconstriction","Chemical signaling is slower; the first step is neurogenic."],
-["sympathetic; vasodilation","Right pathway but wrong direction; dilation would increase bleeding."]]),
-Q(0,"Slide-7","medium",true,"A laceration exposes injured tissue. Tissue cells release _______, which activates clotting factor _______ of the extrinsic pathway.",[
-["thromboplastin; VII","Tissue factor (thromboplastin) from injured tissue activates Factor VII."],
-["thromboxane; VII","Thromboxane comes from platelets and enhances spasm/aggregation; it is not tissue factor."],
-["thromboplastin; XII","Factor XII is the intrinsic initiator, activated by medial collagen or glass."],
+["neurogenic; vasodilation","Dilation would increase flow and bleeding."],
+["chemical; vasodilation","Wrong signaling type and wrong direction."]]),
+Q(0,T,"medium",true,"Platelets contact medial collagen and release _______, which _______ vascular spasm and recruits more platelets.",[
+["thromboxane; enhances","Thromboxane from platelets enhances spasm and aggregation."],
+["thromboplastin; enhances","Thromboplastin is tissue factor from injured tissue, not platelets."],
+["thromboxane; inhibits","It enhances, not inhibits, spasm."],
+["plasmin; enhances","Plasmin lyses clots; it does not recruit platelets."]]),
+Q(0,S,"medium",true,"Injured tissue releases _______, which activates clotting Factor _______ of the extrinsic pathway.",[
+["thromboplastin; VII","Tissue factor activates Factor VII."],
+["thromboxane; VII","Thromboxane is platelet-derived, not tissue factor."],
+["thromboplastin; XII","Factor XII initiates the intrinsic pathway via medial collagen or glass."],
 ["thromboxane; XII","Wrong mediator and wrong pathway."]]),
-Q(0,"Slide-8","medium",true,"Which set contains all four vitamin K-dependent clotting factors (the '1972' mnemonic)?",[
-["II, VII, IX, X","Prothrombin, VII, IX and X require vitamin K for synthesis."],
-["I, V, VIII, XII","None of these is vitamin K-dependent in the list."],
-["VIII, IX, XI, XII","Factors VIII, XI and XII are not vitamin K-dependent."],
+Q(0,S,"medium",true,"Which set contains all four vitamin K-dependent clotting factors (the '1972' trick)?",[
+["II, VII, IX, X","Prothrombin, VII, IX and X require vitamin K."],
+["I, V, VIII, XII","None of these are in the vitamin K group."],
+["VIII, IX, XI, XII","Only IX is vitamin K-dependent here."],
 ["III, IV, V, VIII","Tissue factor, calcium, V and VIII are not vitamin K-dependent."]]),
-Q(0,"Slide-9","medium",false,"Hyperinsulinemia of metabolic syndrome inhibits plasminogen activator. The most likely consequence is _______.",[
-["impaired clot lysis and a hypercoagulable state","Less plasmin forms from plasminogen, so fibrin clots persist."],
-["excess plasmin and spontaneous bleeding","Inhibiting the activator lowers plasmin, not raises it."],
+Q(0,T,"hard",true,"A patient with cirrhosis and vitamin K deficiency bruises easily with prolonged bleeding. The best mechanism is _______.",[
+["impaired synthesis of clotting factors","The liver is the source of clotting factors, and vitamin K is needed to make II, VII, IX, X."],
+["excess plasmin from thrombocytosis","Thrombocytosis causes excess clotting, not impaired synthesis."],
+["Factor VIII-only deficiency","That describes hemophilia A, an X-linked disorder."],
+["hyperinsulinemia blocking plasminogen","That would favor clotting, not bleeding."]]),
+Q(0,T,"medium",true,"A clot fragment breaks away, travels, and blocks a coronary artery. This traveling clot is a(n) _______.",[
+["embolus","A moving thrombus is an embolus."],
+["hematoma","Hematoma is blood collected outside a vessel."],
+["aneurysm","Aneurysm is arterial ballooning from wall weakness."],
+["varicosity","Varicosity is a dilated vein."]]),
+Q(0,T,"medium",false,"A clot lodged in a varicose vein producing pooling and redness is a _______ thrombus; in arteries the clot is a _______ thrombus.",[
+["red; white","Red thrombus: slow flow in veins; white: high-pressure arteries with ischemic pallor."],
+["white; red","Reversed."],
+["red; red","Arterial clots cause pallor from lack of perfusion."],
+["white; white","Venous stasis produces red thrombi."]]),
+Q(0,S,"medium",false,"Hyperinsulinemia of metabolic syndrome inhibits plasminogen activator. The likely result is _______.",[
+["impaired clot lysis and a hypercoagulable state","Less plasmin forms, so fibrin persists."],
+["excess plasmin and spontaneous bleeding","Inhibiting the activator lowers plasmin."],
 ["decreased fibrin formation","Fibrin formation is upstream and unaffected."],
-["deficiency of Factor VIII","Factor VIII is not related to plasminogen activation."]]),
-Q(1,"Slide-12","hard",true,"A boy has prolonged bleeding after a minor injury. Labs show Factor IX deficiency. This disorder is _______ and is nicknamed _______.",[
-["hemophilia B; Christmas disease","Factor IX deficiency, X-linked recessive, named for the first patient."],
-["hemophilia A; classic hemophilia","Hemophilia A is Factor VIII deficiency."],
-["hemophilia C; autosomal recessive","Hemophilia C is Factor XI deficiency, autosomal recessive."],
-["von Willebrand disease; Factor IX","Not Factor IX; vWF is related to Factor VIII."]]),
-Q(1,"Slide-11","medium",true,"An elderly patient has numerous flat, purple-brown patches from fragile, sun-damaged vessels and thin skin. These are best termed _______.",[
-["purpura","Purpura reflects age-related vessel fragility with multiple leaking vessels."],
-["petechiae","Petechiae are tiny pinpoint bruises, not larger fragility patches."],
-["ecchymosis","Ecchymosis is a single large deep-purple (often traumatic) bruise."],
-["hematoma","Hematoma is blood collected outside vessels; a general term, not the age pattern."]]),
-Q(2,"Slide-16","easy",true,"A physician-induced injury, such as an adverse effect after treatment, is termed _______.",[
-["iatrogenic","Iatrogenesis means provider-induced injury."],
-["idiopathic","Idiopathic means unknown or poorly understood cause."],
+["Factor VIII deficiency","Unrelated to plasminogen activation."]]),
+// ---- Subject 1
+Q(1,S,"hard",true,"A boy has prolonged bleeding after a minor injury with Factor IX deficiency. This is hemophilia _______, nicknamed _______.",[
+["B; Christmas disease","Factor IX deficiency, X-linked recessive."],
+["A; classic hemophilia","Hemophilia A is Factor VIII deficiency."],
+["C; Christmas disease","Hemophilia C is Factor XI deficiency."],
+["B; classic hemophilia","Classic hemophilia is type A."]]),
+Q(1,T,"medium",true,"Hemophilia A causes bleeding because Factor VIII is needed to make Factor _______, so less _______ forms.",[
+["X; fibrin","Less Factor X means less common-pathway fibrin scaffolding."],
+["XII; fibrin","Factor XII is the intrinsic initiator, upstream of VIII."],
+["X; plasmin","Plasmin lyses clots and is not produced via VIII."],
+["VII; thrombin","VII is extrinsic and does not require VIII."]]),
+Q(1,S,"medium",true,"Hemophilia C (Factor XI) differs from A and B because it is _______ and rarely causes spontaneous bleeding.",[
+["autosomal recessive","Unlike A and B, C is not X-linked."],
+["X-linked recessive","That describes A and B."],
+["autosomal dominant","Not the inheritance pattern."],
+["acquired from vitamin K deficiency","It is genetic."]]),
+Q(1,S,"medium",true,"An elderly patient has multiple flat purple-brown patches from fragile, sun-damaged vessels. These are _______.",[
+["purpura","Age-related vessel fragility with multiple leaking vessels."],
+["petechiae","Petechiae are tiny pinpoint bruises."],
+["ecchymosis","A single large deep-purple bruise, often traumatic."],
+["pallor","Pallor is paleness from vasoconstriction."]]),
+Q(1,T,"hard",false,"A patient with sepsis first forms widespread clots, uses up platelets and clotting factors, then bleeds excessively. This is _______.",[
+["DIC","Disseminated intravascular coagulation goes from excess clotting to depletion and bleeding."],
+["hemophilia A","A single Factor VIII deficiency with bleeding only."],
+["thrombocytosis","Excess platelets with excessive clotting only."],
+["purpura","Age-related vessel fragility."]]),
+// ---- Subject 2
+Q(2,S,"easy",true,"Injury caused by a provider's treatment, such as a missed history leading to fractured ribs, is _______.",[
+["iatrogenic","Provider-induced injury."],
+["idiopathic","Unknown or poorly understood cause."],
 ["etiologic","Etiology is simply the cause."],
-["pathogenic","Pathogenesis is the mechanism of disease."]]),
-Q(2,"Slide-18","hard",true,"A patient needs complete blockade of both prostaglandin and leukotriene production. Which agent and target best accomplish this?",[
-["corticosteroid inhibiting phospholipase A2","Steroids block phospholipase A2, preventing arachidonic acid formation and both pathways."],
-["ibuprofen inhibiting COX","NSAIDs block only the COX (prostaglandin) side."],
-["acetaminophen inhibiting COX","Tylenol is an analgesic without meaningful anti-inflammatory action."],
-["NSAID inhibiting lipoxygenase","NSAIDs do not block the lipoxygenase/leukotriene pathway."]]),
-Q(3,"Slide-23","medium",true,"Histamine is no longer actively released, yet blood flow has not normalized and tissues remain congested at day 4. This is the _______ phase.",[
-["subacute passive congestion","3 to 5 days: histamine inactive but congestion persists."],
+["pathogenic","Pathogenesis is the mechanism."]]),
+Q(2,T,"hard",true,"Which agent and target best block both prostaglandin and leukotriene production?",[
+["corticosteroid inhibiting phospholipase A2","Blocks arachidonic acid formation, so both pathways."],
+["ibuprofen inhibiting COX","NSAIDs block only the prostaglandin (COX) side."],
+["acetaminophen inhibiting COX","Tylenol is an analgesic without anti-inflammatory action."],
+["aspirin inhibiting lipoxygenase","NSAIDs do not block the lipoxygenase side."]]),
+Q(2,T,"medium",false,"For an acutely inflamed sprain, ibuprofen is preferred over acetaminophen because it _______.",[
+["reduces prostaglandin-driven inflammation","NSAIDs block COX; Tylenol only blunts pain perception."],
+["blocks phospholipase A2","That is the steroid target."],
+["is harder on the liver","Tylenol is harder on the liver; ibuprofen on kidneys and stomach."],
+["blocks leukotrienes","NSAIDs leave the lipoxygenase pathway intact."]]),
+Q(2,S,"medium",true,"Tissue injury triggers mast cell degranulation; histamine causes _______ (redness and heat) and _______ (swelling).",[
+["vasodilation; increased capillary permeability","Hyperemia produces erythema and calor; leaking serum produces edema."],
+["vasoconstriction; increased capillary permeability","Histamine dilates vessels."],
+["vasodilation; decreased capillary permeability","Permeability increases."],
+["vasoconstriction; decreased capillary permeability","Both are reversed."]]),
+Q(2,S,"medium",false,"Which is NOT one of the five cardinal signs of inflammation (SHARP)?",[
+["fever","Fever is a sign that can occur but is not always present."],
+["altered function","A cardinal sign."],
+["redness","A cardinal sign (erythema, rubor)."],
+["swelling","A cardinal sign (edema)."]]),
+Q(2,T,"medium",true,"C-reactive protein, a measurable inflammation biomarker, is made by the _______ when stimulated by _______.",[
+["liver; TNF","TNF tells the liver to make CRP."],
+["spleen; IL-10","IL-10 is anti-inflammatory."],
+["liver; thromboxane","Thromboxane is a platelet product."],
+["bone marrow; histamine","CRP is hepatic."]]),
+// ---- Subject 3
+Q(3,S,"medium",true,"Histamine is no longer actively released, yet congestion persists at day 4. This is the _______ phase.",[
+["subacute passive congestion","3 to 5 days: histamine inactive but flow not restored."],
 ["acute active congestion","Active congestion has ongoing histamine release in the first 48 hours."],
-["chronic anabolic","Chronic phase (5+ days) is repair and rebuilding."],
-["exudative","The exudative phase is the acute, histamine-driven phase."]]),
-Q(3,"Slide-22","medium",true,"A patient with pneumonia has a pleural friction rub. The exudate is most likely _______.",[
-["fibrinous","Fibrin clot strands in serous fluid cause friction rubs in pleuritis or pericarditis."],
-["serous","Serous is watery blister-like fluid, the most abundant, not the friction type."],
-["purulent","Purulent exudate is neutrophils plus bacteria (pus)."],
-["transudate","Transudate is non-inflammatory edema."]]),
-Q(4,"Slide-24","hard",true,"After an ankle sprain, a patient rests only and develops a stiff, fibrotic joint. The responsible phenotype is _______, which secretes _______ and activates myofibroblasts.",[
-["M1 macrophage; nitric oxide and TNF","M1 perpetuates inflammation and drives rigid, fibrotic healing."],
-["M2 macrophage; growth factors","M2 promotes normal repair and collagen remodeling."],
-["M1 macrophage; growth factors","M1 secretes NO/TNF, not growth factors."],
-["M2 macrophage; nitric oxide and TNF","NO and TNF are M1 products."]]),
-Q(4,"Slide-27","medium",true,"Normal healing lays down disorganized collagen _______ first, then remodels to _______ in response to fibroblast tensile stress.",[
-["type III; type I","Type III 'haystack' is replaced by stronger type I via movement and M2 activity."],
-["type I; type III","Reversed; type I is the strongest, final collagen."],
-["type II; type I","Type II is cartilage collagen."],
-["type IV; type II","Not the sequence of wound remodeling."]]),
-Q(4,"Slide-28","medium",true,"Unremodeled type III collagen has a negative charge and attracts Ca2+ from tissue fluid, producing _______.",[
-["dystrophic calcification","Calcium deposits in previously damaged tissue; a calcified granuloma is an example."],
-["keloid formation","Keloid is overproduced dense collagen, not calcium deposition."],
-["proud flesh","Excess friable granulation tissue, mostly seen in horses."],
-["Wallerian degeneration","Distal axon degeneration after nerve injury."]]),
-Q(4,"Transcript-6.3","medium",false,"A clean scalpel incision with closely apposed dermal edges and a deep, jagged scrape both heal. Which pairing is correct?",[
-["incision: primary intention; scrape: secondary intention","Primary leaves little scar in regenerative epithelium; wide or deep wounds fill with granulation tissue."],
-["incision: secondary intention; scrape: primary intention","Reversed."],
-["both heal by primary intention","Large surface area wounds need granulation tissue."],
-["both heal by secondary intention","Clean apposed incisions can heal by primary intention."]]),
-Q(5,"Slide-37","medium",true,"Which form of cell death is programmed yet still produces inflammation, primarily in inflammatory cells?",[
+["chronic anabolic","Chronic (5+ days) is repair and rebuilding."],
+["hemostatic","Hemostasis is the bleeding response."]]),
+Q(3,S,"medium",true,"A patient with pneumonia has a pleural friction rub. The exudate is most likely _______.",[
+["fibrinous","Fibrin strands in serous fluid cause friction rubs."],
+["serous","Watery blister-like fluid, the most abundant."],
+["purulent","Neutrophils plus bacteria (pus)."],
+["transudate","Non-inflammatory edema."]]),
+Q(3,T,"medium",false,"Suppurative, purulent and pus all describe an exudate containing _______.",[
+["neutrophils and bacteria","Pus is dead neutrophils and bacteria."],
+["fibrin strands","That is fibrinous."],
+["water only","That is serous."],
+["eosinophils and parasites","Not pus."]]),
+Q(3,T,"hard",true,"During debridement in the subacute phase, a patient with systemic inflammation recruits macrophages that secrete nitric oxide and TNF. This predicts _______.",[
+["chronic inflammation and rigid fibrotic healing","M1 perpetuates inflammation and activates myofibroblasts."],
+["growth factor release and collagen remodeling","M2 effect."],
+["rapid primary-intention closure","Not driven by M1."],
+["resolution without scarring","M1 delays resolution."]]),
+// ---- Subject 4
+Q(4,T,"medium",true,"Normal healing first lays down disorganized collagen type _______, then remodels it to type _______ through tensile stress and M2 activity.",[
+["III; I","Type III 'haystack' is replaced by stronger type I."],
+["I; III","Reversed."],
+["II; I","Type II is cartilage."],
+["IV; II","Not the remodeling sequence."]]),
+Q(4,T,"medium",true,"Unremodeled type III collagen is negatively charged and attracts Ca2+, causing _______.",[
+["dystrophic calcification","Calcium deposits in previously damaged tissue; calcified granulomas are an example."],
+["metastatic calcification","That occurs with hypercalcemia in normal tissue."],
+["keloid formation","Excess dense collagen, not calcium."],
+["proud flesh","Excess friable granulation tissue."]]),
+Q(4,T,"medium",true,"Fibroblasts respond to tensile force by orienting collagen along stress lines. This is the rationale for _______.",[
+["rehab, loading, and adjustments after injury","Motion remodels scar into organized tissue."],
+["prolonged rest only","Rest alone leaves disorganized, fibrotic collagen."],
+["heat in the acute phase","Not the fibroblast rationale."],
+["steroids","They block arachidonic acid, not remodeling."]]),
+Q(4,T,"medium",false,"A clean scalpel incision with apposed dermal edges heals by _______ intention; a deep jagged scrape heals by _______ intention.",[
+["primary; secondary","Primary leaves little scar; wide wounds fill with granulation tissue from the bottom up."],
+["secondary; primary","Reversed."],
+["primary; primary","Large wounds need granulation tissue."],
+["secondary; secondary","Clean apposed edges can heal by primary intention."]]),
+Q(4,T,"medium",false,"Which tissue heals best, allowing primary intention healing?",[
+["epithelium","Full mitotic ability in adulthood."],
+["cardiac muscle","Regenerates about 0.5% per year."],
+["neuron cell bodies","Cannot regenerate."],
+["ligament","Heals with collagen scar."]]),
+Q(4,T,"hard",false,"An unsutured wound forms friable, cauliflower-like granulation tissue that bleeds easily; this occurs most often in _______ and is called _______.",[
+["horses; proud flesh","Excess granulation with many new vessels."],
+["humans; keloid","Keloid is dense collagen, often after piercings."],
+["horses; keloid","Keloid is not this."],
+["humans; proud flesh","Rare in humans."]]),
+// ---- Subject 5
+Q(5,S,"medium",true,"Which cell death is programmed yet still inflammatory, seen primarily in inflammatory cells?",[
 ["pyroptosis","Programmed but inflammatory."],
-["apoptosis","Programmed and non-inflammatory; phagocytes clear packaged fragments."],
-["necrosis","Accidental death, inflammatory but not programmed."],
-["karyolysis","A nuclear change (fading) seen in necrosis, not a death mechanism."]])
+["apoptosis","Programmed and non-inflammatory."],
+["necrosis","Accidental death."],
+["karyolysis","A nuclear change, not a death type."]]),
+Q(5,S,"medium",false,"Hydropic change and cloudy swelling are reversible until the _______ is damaged, with the first visible sign being _______.",[
+["nucleus; pyknosis","Chromatin condensation marks irreversibility."],
+["mitochondria; karyolysis","Karyolysis is a later fading seen in necrosis."],
+["nucleus; karyolysis","Pyknosis comes first."],
+["membrane; karyorrhexis","Fragmentation follows condensation."]]),
+// ---- Batch 2
+Q(0,T,"easy",true,"The three steps of hemostasis, in order, are vascular spasm, _______, and _______.",[
+["platelet plug formation; coagulation","Spasm, then platelet plug, then coagulation."],
+["coagulation; platelet plug formation","Coagulation is the slowest, last step."],
+["clot lysis; coagulation","Lysis follows after hemostasis succeeds."],
+["platelet plug formation; clot lysis","Lysis is a post-hemostasis step."]]),
+Q(0,T,"medium",true,"Platelets release PDGF and FGF to _______, and VEGF to _______.",[
+["promote fibroblast proliferation and collagen; restore blood supply","PDGF/FGF drive collagen repair; VEGF is the angiogenesis factor."],
+["restore blood supply; promote collagen","Reversed."],
+["lyse the clot; form the plug","These are not their roles."],
+["activate Factor XII; activate Factor VII","Not clotting factor activators."]]),
+Q(0,T,"medium",true,"A patient with metabolic syndrome cannot activate plasminogen and is given heparin. Heparin acts as a(n) _______, whereas plasmin is _______.",[
+["anticoagulant; thrombolytic","Heparin prevents clotting; plasmin breaks fibrin."],
+["thrombolytic; anticoagulant","Reversed."],
+["anticoagulant; procoagulant","Plasmin lyses clots."],
+["procoagulant; thrombolytic","Heparin prevents clotting."]]),
+Q(0,T,"medium",false,"Blood flow that is slow or turbulent most directly promotes _______, because it stirs up clotting factors.",[
+["clot formation","Slow or turbulent flow makes clots grow; laminar flow is protective."],
+["vasodilation","Not the described effect."],
+["plasmin activation","Not stimulated by turbulence."],
+["thrombocytopenia","Platelet number is unrelated."]]),
+Q(1,S,"medium",true,"A tiny pinpoint bruise is a(n) _______, while a large deep-purple traumatic bruise is a(n) _______.",[
+["petechia; ecchymosis","Size distinguishes these."],
+["ecchymosis; petechia","Reversed."],
+["purpura; hematoma","Purpura reflects age-related fragility."],
+["hematoma; purpura","Hematoma is any blood collection outside vessels."]]),
+Q(1,S,"medium",false,"Thrombocytopenia causes _______, whereas thrombocytosis causes _______.",[
+["excessive bleeding; excessive clotting","Fewer platelets weaken the plug; more platelets promote clots."],
+["excessive clotting; excessive bleeding","Reversed."],
+["excessive bleeding; excessive bleeding","Excess platelets favor clotting."],
+["excessive clotting; excessive clotting","Low platelets cause bleeding."]]),
+Q(1,T,"hard",true,"A male infant has spontaneous bleeding. Labs show a Factor VIII deficiency that boards associate with a related factor. That factor is _______.",[
+["von Willebrand factor","A cousin of Factor VIII with similar presentation."],
+["Hageman factor","That is Factor XII."],
+["prothrombin","Factor II is vitamin K-dependent."],
+["thromboplastin","Tissue factor for the extrinsic pathway."]]),
+Q(1,T,"medium",false,"Treatment for hemophilia A, B and C is mainly _______.",[
+["IV replacement of the missing clotting factor","Replaces the deficient factor."],
+["oral vitamin K","Vitamin K does not fix a genetic factor deficiency."],
+["plasmin infusion","Plasmin breaks clots."],
+["heparin","An anticoagulant would worsen bleeding."]]),
+Q(2,S,"medium",true,"Which pair is correct?",[
+["idiopathic: unknown cause; etiology: cause","Idiopathic means unknown or poorly understood."],
+["idiopathic: provider-induced; etiology: mechanism","Provider-induced is iatrogenic."],
+["iatrogenic: unknown cause; etiology: mechanism","Mechanism is pathogenesis."],
+["iatrogenic: cause; etiology: provider-induced","Both reversed."]]),
+Q(2,S,"medium",false,"Which mediators are anti-inflammatory?",[
+["lipoxins and cortisol","Listed anti-inflammatory mediators."],
+["bradykinin and leukotrienes","Pro-inflammatory."],
+["TNF and IL-6","Pro-inflammatory cytokines."],
+["nitric oxide and ROS","Inflammatory or damaging."]]),
+Q(2,T,"hard",true,"A patient with chronic low-grade inflammation has elevated CRP. The cytokine most directly driving hepatic CRP output is _______, produced by _______.",[
+["TNF; M1 macrophages","TNF from M1 macrophages stimulates the liver."],
+["IL-10; Treg cells","IL-10 is suppressive."],
+["TNF; M2 macrophages","M2 secretes growth factors."],
+["IL-4; Th2 cells","Drives IgE, not CRP."]]),
+Q(2,T,"medium",false,"Free radical injury occurs when an _______ steals electrons from other molecules, a process called _______.",[
+["unpaired electron; oxidation","Reactive oxygen species oxidize nearby molecules."],
+["paired electron; reduction","Not free radical injury."],
+["unpaired electron; reduction","The victim molecule is oxidized."],
+["paired electron; oxidation","Free radicals have unpaired electrons."]]),
+Q(2,S,"hard",false,"A reflex pathway to the injured area first produces pallor and cool skin, followed hours later by redness and heat. These reflect, respectively, _______.",[
+["sympathetic vasoconstriction, then histamine vasodilation","Neurogenic first, chemical later."],
+["histamine vasodilation, then vasoconstriction","Reversed."],
+["parasympathetic spasm, then thromboxane","Not the sequence."],
+["plasmin release, then CRP","Not related."]]),
+Q(3,S,"medium",true,"The acute phase lasts about _______ for a minor injury, features SHARP, and is where _______ is appropriate.",[
+["48 hours; RICE or POLICE","Limit extent of active congestion."],
+["3 to 5 days; contrast therapy","That is subacute."],
+["5+ days; heat","That is chronic."],
+["48 hours; heat","Heat adds vasodilation to active inflammation."]]),
+Q(3,T,"medium",true,"The most abundant and first exudate to appear, resembling blister fluid, is _______.",[
+["serous","Mostly water."],
+["fibrinous","Clot strands with serous fluid."],
+["purulent","Neutrophils and bacteria."],
+["hemorrhagic","Not one of the three taught."]]),
+Q(3,T,"medium",false,"Fibrinous exudate in the inflamed heart sac, producing a friction rub, is called _______.",[
+["pericarditis","Fibrinous exudate in organs reducing friction."],
+["tendonitis","Inflamed tendon."],
+["vasculitis","Inflamed vessels."],
+["pleuritis","Inflammation of the lung lining."]]),
+Q(3,T,"hard",true,"A patient on day 4 of an ankle sprain has persistent swelling. Which intervention fits the subacute phase?",[
+["passive movement and cautious hot/cold alternation","Pumping effect; start moving tissue."],
+["intense heat applied continuously","Heat can reintroduce inflammation."],
+["complete rest for weeks","Rest alone gives fibrosis."],
+["active strengthening at maximum load","Premature for this phase."]]),
+Q(3,T,"medium",false,"In the chronic phase (5+ days) normal healing is _______ and benefits from _______.",[
+["anabolic; heat and improved circulation","Needs oxygen and nutrients."],
+["catabolic; ice only","Wrong state and therapy."],
+["exudative; rest only","That is acute."],
+["passive congestion; ice","That is subacute."]]),
+Q(3,T,"medium",true,"Tissue damage activates mast cells, which also degranulate with _______ in allergy.",[
+["IgE","Allergen binds mast cell IgE."],
+["IgG","Not the allergy antibody."],
+["IgM","Not bound to mast cells."],
+["IgA","Secretory antibody."]]),
+Q(4,S,"medium",true,"Granulation tissue consists of _______ and _______.",[
+["fibroblasts; new blood vessels","Collagen synthesis and angiogenesis."],
+["neutrophils; pus","That is an exudate."],
+["platelets; fibrin","Clot components."],
+["myofibroblasts; calcium","Not its composition."]]),
+Q(4,T,"hard",true,"In a granuloma, the outer rim of fibrous scar may calcify, which is a form of _______ and is _______.",[
+["dystrophic calcification; both good and bad","Walls off TB but leaves calcified tissue."],
+["metastatic calcification; harmful only","Calcium levels are normal."],
+["keloid; harmful only","Not a keloid."],
+["proud flesh; beneficial only","Not applicable."]]),
+Q(4,S,"medium",false,"Epithelium heals best, whereas neuron cell bodies and cardiac muscle _______.",[
+["regenerate poorly or not at all","Limited mitotic ability."],
+["heal by primary intention","Only regenerative tissue can."],
+["form keloids","Keloids are fibroblastic."],
+["regenerate fastest","Not the case."]]),
+Q(4,S,"medium",false,"Wallerian degeneration is degeneration of the _______ of an axon cut from the cell body.",[
+["distal portion","It cannot reconnect."],
+["proximal portion","Proximal axon may regrow."],
+["cell body only","Not the definition."],
+["myelin only","Not the definition."]]),
+Q(4,S,"medium",false,"Which factor most worsens healing outcomes?",[
+["obesity, sedentary lifestyle and pro-inflammatory diet","Promote M1 and chronic inflammation."],
+["adequate protein and vitamin C","Support collagen."],
+["early controlled motion","Promotes remodeling."],
+["adequate sleep","Supports growth hormone."]]),
+Q(4,T,"medium",true,"A keloid is _______; people with darker skin have a genetic tendency to form them.",[
+["overproduction of dense collagen granulation tissue","Often after piercings."],
+["calcium infiltration of damaged tissue","Dystrophic calcification."],
+["friable granulation in horses","Proud flesh."],
+["distal axon degeneration","Wallerian degeneration."]]),
+Q(5,S,"easy",true,"The preferred, programmed form of cell death that leaves no inflammation is _______.",[
+["apoptosis","Packaged fragments are cleared by phagocytes."],
+["necrosis","Accidental and inflammatory."],
+["pyroptosis","Programmed but inflammatory."],
+["hydropic change","Reversible injury."]]),
+Q(5,S,"hard",false,"A cell with cloudy swelling shows chromatin condensation. This signals _______.",[
+["irreversible injury leading to death","Pyknosis means nuclear damage."],
+["reversible injury","Reversible only until the nucleus is damaged."],
+["hyperplasia","An adaptation."],
+["metaplasia","An adaptation."]])
 ];
 const $=s=>document.querySelector(s),app=$("#app");
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -119,8 +342,8 @@ function pool(){return questionBank.filter(q=>sel.has(q.subjectIndex))}
 function renderHome(){
 const cnt=i=>questionBank.filter(q=>q.subjectIndex===i).length,m=LS.get("quiz_missed_history",[]).length,p=pool();
 const sizes=[["Quickie",15],["Standard",25],["Intense",35],["Full Exam",50]];
-app.innerHTML=`<div class="wrap"><a class="btn" href="index.html">← Back to Main Page</a>
-<h1 style="color:#ff9900">Gen Path: Injury &amp; Inflammation</h1><div class="muted">Week 6 • Hemostasis, inflammation, healing, necrosis</div>
+app.innerHTML=`<div class="wrap"><a class="btn" href="index.html" style="background:#222;border:1px solid #ff9900">← Back to Main Page</a>
+<h1 style="color:#ff9900">Gen Path: Injury &amp; Inflammation</h1><div class="muted">Week 6 • Hemostasis, inflammation, healing, cell death</div>
 <div class="card"><b>Modules</b><div>${SUBJECTS.map((s,i)=>`<span class="chip ${sel.has(i)?"on":""}" onclick="tog(${i})">[${s.week}] ${s.title} (${cnt(i)})</span>`).join("")}</div>
 <button class="btn" onclick="selAll()">Select All</button><button class="btn" onclick="sel.clear();renderHome()">Clear</button>
 <button class="btn ${prio?"act":""}" onclick="prio=!prio;renderHome()">Prioritize Missed (${m})</button></div>
