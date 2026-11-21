@@ -15391,6 +15391,7 @@
     const DECK_SUBJECTS = () => new Set(SUBJECTS.map((s, i) => s.bonus ? -1 : i).filter(i => i >= 0));
     let selectedSubjects = DECK_SUBJECTS();
     let prioritizeMissed = false;
+    let highYieldOnly = false;
     let quizQuestions = [];
     let userAnswers = {};
     let currentIndex = 0;
@@ -15473,7 +15474,7 @@
       updateHeader();
 
       const missedCount = Object.keys(hist).filter(k => hist[k] > 0).length;
-      const totalFiltered = questionBank.filter(q => selectedSubjects.has(q.subjectIndex)).length;
+      const totalFiltered = questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority)).length;
       const allSelected = selectedSubjects.size === SUBJECTS.length;
 
       let html = `
@@ -15522,6 +15523,9 @@
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn ${orderMode === 'tiered' ? 'btn-accent' : ''}" onclick="toggleOrder()">
                 Order: ${orderMode === 'tiered' ? 'Basics &rarr; Hard' : 'Random'}
+              </button>
+              <button class="btn ${highYieldOnly ? 'btn-accent' : ''}" onclick="toggleHighYield()">
+                &#9733; High Yield Only
               </button>
               <button class="btn ${prioritizeMissed ? 'btn-accent' : ''}" onclick="togglePrioritizeMissed()">
                 Prioritize Missed (${missedCount})
@@ -15576,6 +15580,10 @@
       prioritizeMissed = !prioritizeMissed;
       renderHome();
     }
+    function toggleHighYield() {
+      highYieldOnly = !highYieldOnly;
+      renderHome();
+    }
 
     /* ==========================================================================
        QUIZ LAUNCHER & CONTROLLERS
@@ -15583,7 +15591,7 @@
     let currentSet = [];
 
     function launchQuiz(customPool = null) {
-      let pool = customPool ? [...customPool] : questionBank.filter(q => selectedSubjects.has(q.subjectIndex));
+      let pool = customPool ? [...customPool] : questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority));
       if (pool.length === 0) return;
       currentSet = pool.map(q => questionBank.find(b => b.id === q.id) || q);
 
