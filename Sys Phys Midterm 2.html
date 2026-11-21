@@ -15535,7 +15535,17 @@
 
           <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px; text-align:center;">
             <button class="btn btn-accent" style="padding:14px 28px; font-size:1rem; width:100%; max-width:520px; justify-content:center; text-align:center;" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz()">
-              Start Quiz (All ${totalFiltered} Selected Questions)
+              <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px;">
+                <div class="panel-heading" style="margin-bottom:10px;">Select Exam Length &amp; Launch</div>
+                <div class="launcher-grid">
+                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(15)">Quickie (15)</button>
+                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(25)">Foreplay (25)</button>
+                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(35)">Stamina Check (35)</button>
+                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(50)">Marathon (50)</button>
+                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(100)">Sweat (100)</button>
+                  <button class="launcher-btn" style="border-color:var(--accent);" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(${totalFiltered})">Chafing (All ${totalFiltered})</button>
+                </div>
+              </div>
             </button>
           </div>
         </div>
@@ -15590,31 +15600,44 @@
        ========================================================================== */
     let currentSet = [];
 
-    function launchQuiz(customPool = null) {
-      let pool = customPool ? [...customPool] : questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority));
-      if (pool.length === 0) return;
-      currentSet = pool.map(q => questionBank.find(b => b.id === q.id) || q);
-
-      // Fisher-Yates shuffle of the question order AND each question's 4 options
-      quizQuestions = shuffleArray(currentSet).map(q => ({ ...q, shuffledOptions: shuffleArray(q.options) }));
-
-      if (prioritizeMissed) {
-        quizQuestions.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
+    function launchQuiz(limitOrPool = null) {
+        const isCustomArray = Array.isArray(limitOrPool);
+        let pool = isCustomArray
+          ? [...limitOrPool]
+          : questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority));
+  
+        if (pool.length === 0) return;
+  
+        // Shuffle first so shorter runs pull a fresh random subset every time
+        pool = shuffleArray(pool);
+  
+        if (prioritizeMissed) {
+          pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
+        }
+  
+        // Slice to the requested question count if a number was passed
+        if (typeof limitOrPool === 'number') {
+          pool = pool.slice(0, Math.min(limitOrPool, pool.length));
+        }
+  
+        currentSet = pool.map(q => questionBank.find(b => b.id === q.id) || q);
+  
+        quizQuestions = currentSet.map(q => ({ ...q, shuffledOptions: shuffleArray(q.options) }));
+  
+        if (orderMode === 'tiered') {
+          quizQuestions.sort((a, b) =>
+            DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
+            (prioritizeMissed ? (hist[b.id] || 0) - (hist[a.id] || 0) : 0) ||
+            a.subjectIndex - b.subjectIndex
+          );
+        }
+  
+        userAnswers = {};
+        currentIndex = 0;
+        score = 0;
+        window.scrollTo(0, 0);
+        renderActiveQuiz();
       }
-      if (orderMode === 'tiered') {
-        quizQuestions.sort((a, b) =>
-          DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
-          (prioritizeMissed ? (hist[b.id] || 0) - (hist[a.id] || 0) : 0) ||
-          a.subjectIndex - b.subjectIndex
-        );
-      }
-
-      userAnswers = {};
-      currentIndex = 0;
-      score = 0;
-      window.scrollTo(0, 0);
-      renderActiveQuiz();
-    }
 
     function renderActiveQuiz() {
       updateHeader();
