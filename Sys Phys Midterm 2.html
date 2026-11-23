@@ -8890,7 +8890,7 @@ let html = `
       `;
 
       SUBJECTS.forEach((sub, idx) => {
-        const count = questionBank.filter(q => q.subjectIndex === idx).length;
+        const count = questionBank.filter(q => q.subjectIndex === idx && (!highYieldOnly || q.priority)).length;
         const isActive = selectedSubjects.has(idx);
         html += `
           <div class="filter-chip ${isActive ? 'active' : ''}" onclick="toggleSubjectFilter(${idx})">
@@ -8900,7 +8900,7 @@ let html = `
         `;
       });
 
-      html += `
+      html += 
           </div>
 
           <div style="margin-top:20px;">
@@ -8913,7 +8913,7 @@ let html = `
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
             <div style="font-size:0.85rem; color:var(--text-muted)">
-              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
+              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> ${highYieldOnly ? 'high-yield ' : ''}questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn ${orderMode === 'tiered' ? 'btn-accent' : ''}" onclick="toggleOrder()">
@@ -8940,7 +8940,7 @@ let html = `
                 </div>
               </div>
         </div>
-      ;
+      `;
 
       $('appRoot').innerHTML = html;
       updateModeButton();
