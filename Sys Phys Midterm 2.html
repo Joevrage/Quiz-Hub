@@ -8857,30 +8857,13 @@
       let html = `
         <div class="dashboard-panel">
           <div class="panel-heading">
-            <span>Subject Modules t(Week Breakdown)</span>
+            <span>Subject Modules (Week Breakdown)</span>
             <div>
               <button class="btn" onclick="selectDeckOnly()">Test 2 Deck Only</button>
               <button class="btn" onclick="selectAllSubjects(true)">Select All</button>
               <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
             </div>
           </div>
-
-      const weeks = [...new Set(SUBJECTS.map(s => s.week))];
-      html += `<div class="chip-grid" style="margin-bottom:12px;">`;
-      weeks.forEach(wk => {
-        const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
-        const wkCount = questionBank.filter(q => wkIndices.includes(q.subjectIndex) && (!highYieldOnly || q.priority)).length;
-        const wkAllSelected = wkIndices.length > 0 && wkIndices.every(i => selectedSubjects.has(i));
-        html += `
-          <div class="filter-chip ${wkAllSelected ? 'active' : ''}" onclick="toggleWeekFilter('${wk}')">
-            <span>${wk} Only</span>
-            <span class="chip-count">(${wkCount})</span>
-          </div>
-        `;
-      });
-      html += `</div>`;
-
-      html += `
           <div class="chip-grid">
             <div class="filter-chip ${allSelected ? 'active' : ''}" onclick="selectAllSubjects(true)">
               <span>All Topics</span>
@@ -8939,7 +8922,7 @@
                 </div>
               </div>
         </div>
-      ;
+      `;
 
       $('appRoot').innerHTML = html;
       updateModeButton();
@@ -8958,17 +8941,6 @@
         selectedSubjects.delete(idx);
       } else {
         selectedSubjects.add(idx);
-      }
-      renderHome();
-    }
-
-    function toggleWeekFilter(wk) {
-      const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
-      const allSelected = wkIndices.every(i => selectedSubjects.has(i));
-      if (allSelected) {
-        wkIndices.forEach(i => selectedSubjects.delete(i));
-      } else {
-        wkIndices.forEach(i => selectedSubjects.add(i));
       }
       renderHome();
     }
