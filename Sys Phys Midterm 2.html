@@ -8854,7 +8854,7 @@
       const totalFiltered = questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority)).length;
       const allSelected = selectedSubjects.size === SUBJECTS.length;
 
-let html = `
+      let html = `
         <div class="dashboard-panel">
           <div class="panel-heading">
             <span>Subject Modules (Week Breakdown)</span>
@@ -8864,24 +8864,6 @@ let html = `
               <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
             </div>
           </div>
-      `;
-
-      const weeks = [...new Set(SUBJECTS.map(s => s.week))];
-      html += `<div class="chip-grid" style="margin-bottom:12px;">`;
-      weeks.forEach(wk => {
-        const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
-        const wkCount = questionBank.filter(q => wkIndices.includes(q.subjectIndex) && (!highYieldOnly || q.priority)).length;
-        const wkAllSelected = wkIndices.length > 0 && wkIndices.every(i => selectedSubjects.has(i));
-        html += `
-          <div class="filter-chip ${wkAllSelected ? 'active' : ''}" onclick="toggleWeekFilter('${wk}')">
-            <span>${wk} Only</span>
-            <span class="chip-count">(${wkCount})</span>
-          </div>
-        `;
-      });
-      html += `</div>`;
-
-      html += `
           <div class="chip-grid">
             <div class="filter-chip ${allSelected ? 'active' : ''}" onclick="selectAllSubjects(true)">
               <span>All Topics</span>
@@ -8890,7 +8872,7 @@ let html = `
       `;
 
       SUBJECTS.forEach((sub, idx) => {
-        const count = questionBank.filter(q => q.subjectIndex === idx && (!highYieldOnly || q.priority)).length;
+        const count = questionBank.filter(q => q.subjectIndex === idx).length;
         const isActive = selectedSubjects.has(idx);
         html += `
           <div class="filter-chip ${isActive ? 'active' : ''}" onclick="toggleSubjectFilter(${idx})">
@@ -8900,7 +8882,7 @@ let html = `
         `;
       });
 
-      html += '
+      html += `
           </div>
 
           <div style="margin-top:20px;">
@@ -8913,7 +8895,7 @@ let html = `
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
             <div style="font-size:0.85rem; color:var(--text-muted)">
-              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> ${highYieldOnly ? 'high-yield ' : ''}questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
+              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn ${orderMode === 'tiered' ? 'btn-accent' : ''}" onclick="toggleOrder()">
@@ -8959,17 +8941,6 @@ let html = `
         selectedSubjects.delete(idx);
       } else {
         selectedSubjects.add(idx);
-      }
-      renderHome();
-    }
-
-    function toggleWeekFilter(wk) {
-      const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
-      const allSelected = wkIndices.every(i => selectedSubjects.has(i));
-      if (allSelected) {
-        wkIndices.forEach(i => selectedSubjects.delete(i));
-      } else {
-        wkIndices.forEach(i => selectedSubjects.add(i));
       }
       renderHome();
     }
