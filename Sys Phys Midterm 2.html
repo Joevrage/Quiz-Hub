@@ -8758,7 +8758,7 @@
   }
 ];
 
-    /* ==========================================================================
+/* ==========================================================================
        SECTION 3: APPLICATION STATE & CORE CONTROLLERS
        ========================================================================== */
     let hist = {};
@@ -8812,7 +8812,6 @@
       updateModeButton();
       if (quizQuestions.length > 0) {
         if (viewMode === 'single') {
-          // jump to the first unanswered question (or stay on the last one)
           let i = 0;
           while (i < quizQuestions.length - 1 && userAnswers[i] !== undefined) i++;
           currentIndex = i;
@@ -8864,15 +8863,33 @@
               <button class="btn" onclick="selectAllSubjects(false)">Clear</button>
             </div>
           </div>
+      `;
+
+      const weeks = [...new Set(SUBJECTS.map(s => s.week))];
+      html += `<div class="chip-grid" style="margin-bottom:12px;">`;
+      weeks.forEach(wk => {
+        const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
+        const wkCount = questionBank.filter(q => wkIndices.includes(q.subjectIndex) && (!highYieldOnly || q.priority)).length;
+        const wkAllSelected = wkIndices.length > 0 && wkIndices.every(i => selectedSubjects.has(i));
+        html += `
+          <div class="filter-chip ${wkAllSelected ? 'active' : ''}" onclick="toggleWeekFilter('${wk}')">
+            <span>${wk} Only</span>
+            <span class="chip-count">(${wkCount})</span>
+          </div>
+        `;
+      });
+      html += `</div>`;
+
+      html += `
           <div class="chip-grid">
             <div class="filter-chip ${allSelected ? 'active' : ''}" onclick="selectAllSubjects(true)">
               <span>All Topics</span>
-              <span class="chip-count">(${questionBank.length})</span>
+              <span class="chip-count">(${questionBank.filter(q => !highYieldOnly || q.priority).length})</span>
             </div>
       `;
 
       SUBJECTS.forEach((sub, idx) => {
-        const count = questionBank.filter(q => q.subjectIndex === idx).length;
+        const count = questionBank.filter(q => q.subjectIndex === idx && (!highYieldOnly || q.priority)).length;
         const isActive = selectedSubjects.has(idx);
         html += `
           <div class="filter-chip ${isActive ? 'active' : ''}" onclick="toggleSubjectFilter(${idx})">
@@ -8895,7 +8912,7 @@
 
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:16px;">
             <div style="font-size:0.85rem; color:var(--text-muted)">
-              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
+              Active Pool: <strong style="color:#fff">${totalFiltered}</strong> ${highYieldOnly ? 'high-yield ' : ''}questions across <strong style="color:#fff">${selectedSubjects.size}</strong> modules selected.
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <button class="btn ${orderMode === 'tiered' ? 'btn-accent' : ''}" onclick="toggleOrder()">
@@ -8910,17 +8927,17 @@
             </div>
           </div>
 
-          <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px; text-align:center;">
-                <div class="panel-heading" style="margin-bottom:10px;">Select Exam Length &amp; Launch</div>
-                <div class="launcher-grid">
-                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(15)">Quickie (15)</button>
-                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(25)">Foreplay (25)</button>
-                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(35)">Stamina Check (35)</button>
-                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(50)">Marathon (50)</button>
-                  <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(100)">Sweat (100)</button>
-                  <button class="launcher-btn" style="border-color:var(--accent);" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(${totalFiltered})">Chafing (All ${totalFiltered})</button>
-                </div>
-              </div>
+          <div style="margin-top:24px; border-top:1px solid #282828; padding-top:20px;">
+            <div class="panel-heading" style="margin-bottom:10px;">Select Exam Length &amp; Launch</div>
+            <div class="launcher-grid">
+              <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(15)">Quickie (15)</button>
+              <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(25)">Foreplay (25)</button>
+              <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(35)">Stamina Check (35)</button>
+              <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(50)">Marathon (50)</button>
+              <button class="launcher-btn" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(100)">Sweat (100)</button>
+              <button class="launcher-btn" style="border-color:var(--accent);" ${totalFiltered === 0 ? 'disabled' : ''} onclick="launchQuiz(${totalFiltered})">Chafing (All ${totalFiltered})</button>
+            </div>
+          </div>
         </div>
       `;
 
@@ -8945,6 +8962,17 @@
       renderHome();
     }
 
+    function toggleWeekFilter(wk) {
+      const wkIndices = SUBJECTS.map((s, i) => s.week === wk ? i : -1).filter(i => i >= 0);
+      const allSelected = wkIndices.every(i => selectedSubjects.has(i));
+      if (allSelected) {
+        wkIndices.forEach(i => selectedSubjects.delete(i));
+      } else {
+        wkIndices.forEach(i => selectedSubjects.add(i));
+      }
+      renderHome();
+    }
+
     function selectAllSubjects(all) {
       if (all) {
         selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
@@ -8963,6 +8991,7 @@
       prioritizeMissed = !prioritizeMissed;
       renderHome();
     }
+
     function toggleHighYield() {
       highYieldOnly = !highYieldOnly;
       renderHome();
@@ -8974,43 +9003,41 @@
     let currentSet = [];
 
     function launchQuiz(limitOrPool = null) {
-        const isCustomArray = Array.isArray(limitOrPool);
-        let pool = isCustomArray
-          ? [...limitOrPool]
-          : questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority));
-  
-        if (pool.length === 0) return;
-  
-        // Shuffle first so shorter runs pull a fresh random subset every time
-        pool = shuffleArray(pool);
-  
-        if (prioritizeMissed) {
-          pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
-        }
-  
-        // Slice to the requested question count if a number was passed
-        if (typeof limitOrPool === 'number') {
-          pool = pool.slice(0, Math.min(limitOrPool, pool.length));
-        }
-  
-        currentSet = pool.map(q => questionBank.find(b => b.id === q.id) || q);
-  
-        quizQuestions = currentSet.map(q => ({ ...q, shuffledOptions: shuffleArray(q.options) }));
-  
-        if (orderMode === 'tiered') {
-          quizQuestions.sort((a, b) =>
-            DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
-            (prioritizeMissed ? (hist[b.id] || 0) - (hist[a.id] || 0) : 0) ||
-            a.subjectIndex - b.subjectIndex
-          );
-        }
-  
-        userAnswers = {};
-        currentIndex = 0;
-        score = 0;
-        window.scrollTo(0, 0);
-        renderActiveQuiz();
+      const isCustomArray = Array.isArray(limitOrPool);
+      let pool = isCustomArray
+        ? [...limitOrPool]
+        : questionBank.filter(q => selectedSubjects.has(q.subjectIndex) && (!highYieldOnly || q.priority));
+
+      if (pool.length === 0) return;
+
+      pool = shuffleArray(pool);
+
+      if (prioritizeMissed) {
+        pool.sort((a, b) => (hist[b.id] || 0) - (hist[a.id] || 0));
       }
+
+      if (typeof limitOrPool === 'number') {
+        pool = pool.slice(0, Math.min(limitOrPool, pool.length));
+      }
+
+      currentSet = pool.map(q => questionBank.find(b => b.id === q.id) || q);
+
+      quizQuestions = currentSet.map(q => ({ ...q, shuffledOptions: shuffleArray(q.options) }));
+
+      if (orderMode === 'tiered') {
+        quizQuestions.sort((a, b) =>
+          DIFF_RANK[a.difficulty] - DIFF_RANK[b.difficulty] ||
+          (prioritizeMissed ? (hist[b.id] || 0) - (hist[a.id] || 0) : 0) ||
+          a.subjectIndex - b.subjectIndex
+        );
+      }
+
+      userAnswers = {};
+      currentIndex = 0;
+      score = 0;
+      window.scrollTo(0, 0);
+      renderActiveQuiz();
+    }
 
     function renderActiveQuiz() {
       updateHeader();
@@ -9284,7 +9311,6 @@
 
     function reviewMissed() {
       if (lastMissedQuestions.length === 0) return;
-      // Narrows each time: the missed set becomes the new current set
       launchQuiz(lastMissedQuestions);
     }
 
@@ -9296,7 +9322,6 @@
         : pct >= 70 ? 'You lasted less than 30 seconds. Time for a rematch.'
         : 'You really didn’t fucking know that.';
 
-      // Collect all questions answered incorrectly in this session
       const missedEntries = [];
       quizQuestions.forEach((q, idx) => {
         const chosenIdx = userAnswers[idx];
