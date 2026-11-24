@@ -2,20 +2,42 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Gen Path Weeks 6 &amp; 7 Quiz</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#0f0f0f;color:#fff;font-family:system-ui,Arial,sans-serif;line-height:1.45}
-a{text-decoration:none}.wrap{max-width:900px;margin:0 auto;padding:16px}
+*{box-sizing:border-box}
+body{margin:0;background:#0f0f0f;color:#fff;font-family:system-ui,Arial,sans-serif;line-height:1.45}
+a{text-decoration:none}
+.wrap{max-width:900px;margin:0 auto;padding:16px}
 .card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;margin:12px 0}
-.muted{color:#a0a0a0}.btn,.chip{background:#222;color:#fff;border:1px solid #ff9900;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:14px;display:inline-block;margin:3px}
-.btn:hover{background:#ff9900;color:#000}.chip.on,.btn.act{background:#ff9900;color:#000}
-#hdr{position:sticky;top:0;z-index:10;background:#1a1a1a;border-bottom:1px solid #333;padding:8px 12px}
-#hdr .row{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.pill{background:#2a2a2a;border-radius:20px;padding:4px 10px;font-size:13px}
-#bar{position:absolute;left:0;bottom:0;height:3px;background:#ff9900;width:0;transition:width .3s}
-.opt{display:block;width:100%;text-align:left;background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:10px;margin:6px 0;cursor:pointer;font-size:15px}
-.opt:hover:not(:disabled){border-color:#ff9900}.opt.ok{background:#14532d;border-color:#22c55e;color:#fff}.opt.bad{background:#7f1d1d;border-color:#ef4444;color:#fff}
-.ban{font-weight:700;margin:10px 0 4px}.g{color:#22c55e}.r{color:#ef4444}.why{font-size:14px;margin:4px 0;color:#ddd}
-.tag{font-size:12px;color:#000;background:#ff9900;border-radius:4px;padding:1px 6px;margin-right:6px}
-.wrong-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:50;pointer-events:none}.wrong-popup img{max-width:60vw;max-height:60vh}.hidden{display:none}
-.retake-btn.hub-btn{background:#222;color:#fff;border:1px solid #ff9900}.retake-btn.hub-btn:hover{background:#ff9900;color:#000}
+.muted{color:#a0a0a0}
+.btn,.chip{background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:14px;display:inline-block;margin:3px;transition:all .15s}
+.btn{border-color:#ff9900}
+.btn:hover:not(:disabled),.chip:hover{border-color:#ff9900}
+.btn:hover:not(:disabled){background:#ff9900;color:#000}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.chip.on,.btn.act{background:#ff9900;color:#000;border-color:#ff9900;font-weight:600}
+#hdr{position:sticky;top:0;z-index:10;background:#1a1a1a;border-bottom:1px solid #333;padding:10px 14px}
+#hdr .row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pill{background:#2a2a2a;border-radius:20px;padding:4px 10px;font-size:13px}
+#progressBar{position:absolute;left:0;bottom:0;height:3px;background:#ff9900;width:0;transition:width .3s}
+.opt{display:block;width:100%;text-align:left;background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:11px 12px;margin:6px 0;cursor:pointer;font-size:15px}
+.opt:hover:not(:disabled){border-color:#ff9900}
+.opt.ok{background:#14532d;border-color:#22c55e;color:#fff}
+.opt.bad{background:#7f1d1d;border-color:#ef4444;color:#fff}
+.opt.dim{opacity:.65}
+.ban{font-weight:700;font-size:16px;margin:12px 0 6px}
+.g{color:#22c55e}.r{color:#ef4444}
+.why{font-size:14px;margin:5px 0;color:#ddd}
+.tag{font-size:12px;color:#000;background:#ff9900;border-radius:4px;padding:2px 6px;margin-right:6px;font-weight:700}
+.flex-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.launcher-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.launcher-btn{background:#222;color:#fff;border:1px solid #333;border-radius:8px;padding:12px;cursor:pointer;font-size:15px;font-weight:600;text-align:center;transition:all .15s}
+.launcher-btn:hover{border-color:#ff9900;background:#2a2a2a}
+.launcher-btn.chafing{border-color:#ff9900;color:#ff9900}
+.launcher-btn.chafing:hover{background:#ff9900;color:#000}
+.wrong-popup{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:50;pointer-events:none}
+.wrong-popup img{max-width:60vw;max-height:60vh}
+.hidden{display:none}
+.hub-btn{background:#222;color:#fff;border:1px solid #ff9900}
+.hub-btn:hover{background:#ff9900;color:#000}
 </style></head><body>
 <audio id="wrongAudio" src="Wrong-answer.mp3" preload="auto"></audio>
 <div id="wrongPopup" class="wrong-popup hidden"><img id="wrongImage" src="Erijah.png" alt="Incorrect Feedback"></div>
@@ -855,66 +877,209 @@ Q(12,T,"easy",false,"The most common nutrient deficiency in Americans is vitamin
 ];
 const $=s=>document.querySelector(s),app=$("#app");
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let sel=new Set(SUBJECTS.map((_,i)=>i)),prio=false,quiz=[],ans=[],cur=0,score=0,lastN=0;
+let selectedSubjects=new Set(SUBJECTS.map((_,i)=>i));
+let highYieldOnly=false,prioritizeMissed=false;
+let quiz=[],ans=[],cur=0,score=0,currentBasePool=[],popupTimer=null;
 let mode=LS.get("quizViewMode","single"),mute=LS.get("stfuErijah",false);
 const L="ABCD";
+
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function pool(){return questionBank.filter(q=>sel.has(q.subjectIndex))}
+
+function getFilteredPool(){
+  return questionBank.filter(q=>selectedSubjects.has(q.subjectIndex)&&(!highYieldOnly||q.priority));
+}
+
+function toggleWeekFilter(wk){
+  const idxs=SUBJECTS.map((s,i)=>s.week===wk?i:-1).filter(i=>i!==-1);
+  const allOn=idxs.every(i=>selectedSubjects.has(i));
+  idxs.forEach(i=>allOn?selectedSubjects.delete(i):selectedSubjects.add(i));
+  renderHome();
+}
+
+function toggleHighYield(){highYieldOnly=!highYieldOnly;renderHome();}
+function togglePrioritizeMissed(){prioritizeMissed=!prioritizeMissed;renderHome();}
+function tog(i){selectedSubjects.has(i)?selectedSubjects.delete(i):selectedSubjects.add(i);renderHome();}
+function selAll(){selectedSubjects=new Set(SUBJECTS.map((_,i)=>i));renderHome();}
+
 function renderHome(){
-const cnt=i=>questionBank.filter(q=>q.subjectIndex===i).length,m=LS.get("quiz_missed_history",[]).length,p=pool();
-const sizes=[["Quickie",15],["Foreplay",25],["Play",35],["Marathon",50]];
-app.innerHTML=`<div class="wrap"><a class="btn" href="index.html" style="background:#222;border:1px solid #ff9900">← Back to Main Page</a>
-<h1 style="color:#ff9900">Gen Path: Weeks 6 &amp; 7</h1><div class="muted">Week 6 (Injury, Inflammation &amp; Healing) • Week 7 (Necrosis, Accumulations &amp; Deficiencies)</div>
-<div class="card"><b>Modules</b><div>${SUBJECTS.map((s,i)=>`<span class="chip ${sel.has(i)?"on":""}" onclick="tog(${i})">[${s.week}] ${s.title} (${cnt(i)})</span>`).join("")}</div>
-<button class="btn" onclick="selAll()">Select All</button><button class="btn" onclick="sel.clear();renderHome()">Clear</button>
-<button class="btn ${prio?"act":""}" onclick="prio=!prio;renderHome()">Prioritize Missed (${m})</button></div>
-<div class="card"><b>Active Pool: ${p.length} high-yield questions across ${sel.size} modules selected.</b><div style="margin-top:8px">
-${sizes.map(([n,c])=>`<button class="btn" onclick="start(${c})">${n} (${c} Qs)</button>`).join("")}
-<button class="btn" onclick="start(${p.length})">All Selected (${p.length} Qs)</button></div></div></div>`}
-function tog(i){sel.has(i)?sel.delete(i):sel.add(i);renderHome()}
-function selAll(){sel=new Set(SUBJECTS.map((_,i)=>i));renderHome()}
-function start(n){
-let p=shuffle(pool());if(!p.length)return;
-if(prio){const mh=LS.get("quiz_missed_history",[]);p=p.filter(q=>mh.includes(q.id)).concat(p.filter(q=>!mh.includes(q.id)))}
-lastN=n;quiz=p.slice(0,n).map(q=>({...q,options:shuffle(q.options)}));ans=[];cur=0;score=0;renderQuiz()}
+  const weeks=[...new Set(SUBJECTS.map(s=>s.week))];
+  const wkCount=wk=>questionBank.filter(q=>q.week===wk&&(!highYieldOnly||q.priority)).length;
+  const modCount=i=>questionBank.filter(q=>q.subjectIndex===i&&(!highYieldOnly||q.priority)).length;
+  const totalAllCount=questionBank.filter(q=>!highYieldOnly||q.priority).length;
+  const p=getFilteredPool();
+  const mh=LS.get("quiz_missed_history",[]);
+  const missedInPool=p.filter(q=>mh.includes(q.id)).length;
+
+  app.innerHTML=`<div class="wrap">
+    <a class="btn hub-btn" href="index.html">&larr; Hub</a>
+    <h1 style="color:#ff9900;margin:10px 0 4px">Gen Path: Weeks 6 &amp; 7</h1>
+    <div class="muted">Hemostasis, Inflammation, Healing, Necrosis, Cellular Accumulations &amp; Deficiencies</div>
+
+    <div class="card">
+      <b>Quick Week Filter</b>
+      <div style="margin:6px 0 12px">
+        ${weeks.map(wk=>{
+          const idxs=SUBJECTS.map((s,i)=>s.week===wk?i:-1).filter(i=>i!==-1);
+          const allOn=idxs.length>0&&idxs.every(i=>selectedSubjects.has(i));
+          return `<span class="chip ${allOn?"on":""}" onclick="toggleWeekFilter('${wk}')">[${wk} Only (${wkCount(wk)})]</span>`;
+        }).join("")}
+      </div>
+
+      <b>Modules</b>
+      <div style="margin:6px 0">
+        <span class="chip ${selectedSubjects.size===SUBJECTS.length?"on":""}" onclick="selAll()">All Topics (${totalAllCount})</span>
+        ${SUBJECTS.map((s,i)=>`<span class="chip ${selectedSubjects.has(i)?"on":""}" onclick="tog(${i})">[${s.week}] ${s.title} (${modCount(i)})</span>`).join("")}
+      </div>
+      <div class="flex-row">
+        <button class="btn" onclick="selAll()">Select All</button>
+        <button class="btn" onclick="selectedSubjects.clear();renderHome()">Clear</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <b>Display Mode</b>
+      <div style="margin:6px 0 12px">
+        <span class="chip ${mode==="single"?"on":""}" onclick="mode='single';LS.set('quizViewMode',mode);renderHome()">One by One (Card View)</span>
+        <span class="chip ${mode==="all"?"on":""}" onclick="mode='all';LS.set('quizViewMode',mode);renderHome()">All at Once (Continuous List)</span>
+      </div>
+
+      <b>Active Pool: ${p.length} ${highYieldOnly?"high-yield ":""}questions across ${selectedSubjects.size} modules selected.</b>
+      <div class="flex-row">
+        <button class="btn ${highYieldOnly?"act":""}" onclick="toggleHighYield()">&#9733; High Yield Only</button>
+        <button class="btn ${prioritizeMissed?"act":""}" onclick="togglePrioritizeMissed()">Prioritize Missed (${missedInPool})</button>
+      </div>
+
+      <div class="launcher-grid">
+        <button class="launcher-btn" onclick="launchQuiz(15)">Quickie (15)</button>
+        <button class="launcher-btn" onclick="launchQuiz(25)">Foreplay (25)</button>
+        <button class="launcher-btn" onclick="launchQuiz(35)">Play (35)</button>
+        <button class="launcher-btn" onclick="launchQuiz(50)">Marathon (50)</button>
+        <button class="launcher-btn" onclick="launchQuiz(100)">Sweat (100)</button>
+        <button class="launcher-btn chafing" onclick="launchQuiz(${p.length})">Chafing (All ${p.length})</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function launchQuiz(limitOrPool){
+  let p;
+  if(Array.isArray(limitOrPool)){
+    if(!limitOrPool.length)return;
+    currentBasePool=limitOrPool.slice();
+    p=shuffle(currentBasePool);
+  }else{
+    p=shuffle(getFilteredPool());
+    if(!p.length)return;
+    if(prioritizeMissed){
+      const mh=LS.get("quiz_missed_history",[]);
+      p=p.filter(q=>mh.includes(q.id)).concat(p.filter(q=>!mh.includes(q.id)));
+    }
+    p=p.slice(0,Math.min(limitOrPool,p.length));
+    currentBasePool=p.slice();
+  }
+  quiz=p.map(q=>({...q,options:shuffle(q.options)}));
+  ans=[];cur=0;score=0;
+  renderQuiz();
+  window.scrollTo(0,0);
+}
+
 function renderQuiz(){
-const y=window.scrollY,done=ans.filter(a=>a!==undefined).length,tot=quiz.length;
-const pct=done?Math.round(score/done*100):0;
-const list=mode==="single"?[cur]:quiz.map((_,i)=>i);
-app.innerHTML=`<div id="hdr"><div class="row"><b style="color:#ff9900">Gen Path Wks 6–7</b><span class="muted">Inflammation, Necrosis &amp; Accumulations</span>
-<span class="pill">Score: ${score} / ${done} (${pct}%)</span>
-<span class="pill">${mode==="single"?`Q ${cur+1} of ${tot}`:`Answered ${done} of ${tot}`}</span>
-<button class="btn" id="modeBtn" onclick="mode=mode==='single'?'all':'single';LS.set('quizViewMode',mode);renderQuiz()">View: ${mode==="single"?"One by One":"All at Once"}</button>
-<button class="btn" id="stfuBtn" onclick="mute=!mute;LS.set('stfuErijah',mute);renderQuiz()">${mute?"Bring Back Erijah":"STFU Erijah"}</button>
-<button class="btn" onclick="renderHome()">Menu / Filter</button><a class="btn" href="index.html">Main Page</a></div>
-<div id="bar" style="width:${done/tot*100}%"></div></div>
-<div class="wrap">${list.map(qb).join("")}${nav()}</div>`;
-window.scrollTo(0,y)}
+  const y=window.scrollY,done=ans.filter(a=>a!==undefined).length,tot=quiz.length;
+  const pct=done?Math.round(score/done*100):0;
+  const list=mode==="single"?[cur]:quiz.map((_,i)=>i);
+  app.innerHTML=`<div id="hdr">
+    <div class="row">
+      <a href="index.html" class="btn hub-btn" id="hubBtn">&larr; Hub</a>
+      <div><b style="color:#ff9900">Gen Path Wks 6–7</b> <span class="muted">Inflammation, Necrosis &amp; Accumulations</span></div>
+      <span class="pill">Score: ${score} / ${done} (${pct}%)</span>
+      <span class="pill">${mode==="single"?`Q ${cur+1} of ${tot}`:`Answered ${done} of ${tot}`}</span>
+      <button class="btn" id="modeBtn" onclick="mode=mode==='single'?'all':'single';LS.set('quizViewMode',mode);renderQuiz()">View: ${mode==="single"?"One by One":"All at Once"}</button>
+      <button class="btn" id="stfuBtn" onclick="mute=!mute;LS.set('stfuErijah',mute);renderQuiz()">${mute?"Bring Back Erijah":"STFU Erijah"}</button>
+      <button class="btn" id="menuBtn" onclick="renderHome()">Back to Menu / Filter</button>
+    </div>
+    <div id="progressBar" style="width:${tot?done/tot*100:0}%"></div>
+  </div>
+  <div class="wrap">${list.map(qb).join("")}${nav()}</div>`;
+  window.scrollTo(0,y);
+}
+
 function qb(i){
-const q=quiz[i],a=ans[i],s=SUBJECTS[q.subjectIndex];
-let h=`<div class="card"><div><span class="tag">${q.week}</span><span class="muted">${s.title} • ${q.difficulty}${q.priority?" • high-yield":""}</span></div>
-<p style="font-size:17px"><b>${i+1}.</b> ${q.stem}</p>`;
-q.options.forEach((o,j)=>{let c="";if(a!==undefined){if(o.correct)c="ok";else if(j===a)c="bad"}
-h+=`<button class="opt ${c}" ${a!==undefined?"disabled":""} onclick="pick(${i},${j})">${L[j]}) ${o.text}</button>`});
-if(a!==undefined){const ok=q.options[a].correct;
-h+=`<div class="ban ${ok?"g":"r"}">${ok?"Correct!":"Incorrect."}</div>`+q.options.map((o,j)=>`<div class="why"><b>${L[j]}) [${o.correct?"CORRECT":"INCORRECT"}]:</b> ${o.why}</div>`).join("")}
-return h+"</div>"}
+  const q=quiz[i],a=ans[i],s=SUBJECTS[q.subjectIndex];
+  let h=`<div class="card">
+    <div><span class="tag">Q${i+1}</span><span class="tag">${q.week}</span><span class="muted">${s.title} &bull; ${q.difficulty}${q.priority?" &bull; high-yield":""}</span></div>
+    <p style="font-size:17px">${q.stem}</p>`;
+  q.options.forEach((o,j)=>{
+    let c="";
+    if(a!==undefined){
+      if(o.correct)c="ok";
+      else if(j===a)c="bad";
+      else c="dim";
+    }
+    h+=`<button class="opt ${c}" ${a!==undefined?"disabled":""} onclick="pick(${i},${j})">${L[j]}) ${o.text}</button>`;
+  });
+  if(a!==undefined){
+    const ok=q.options[a].correct;
+    h+=`<div class="ban ${ok?"g":"r"}">${ok?"Correct!":"Incorrect."}</div>`+
+      q.options.map((o,j)=>`<div class="why"><b>${L[j]}) [${o.correct?"CORRECT":"INCORRECT"}]:</b> ${o.why}</div>`).join("");
+  }
+  return h+"</div>";
+}
+
 function nav(){
-const all=ans.filter(a=>a!==undefined).length===quiz.length;
-if(mode==="all")return all?`<button class="btn act" onclick="showSummary()">Finish &amp; See Results</button>`:"";
-return `<button class="btn" ${cur?"":"disabled"} onclick="cur--;renderQuiz()">← Prev</button>`+(cur<quiz.length-1?`<button class="btn" onclick="cur++;renderQuiz()">Next →</button>`:"")+(all?`<button class="btn act" onclick="showSummary()">Finish &amp; See Results</button>`:"")}
+  const all=ans.filter(a=>a!==undefined).length===quiz.length;
+  if(mode==="all")return all?`<button class="btn act" onclick="showSummary()">View Complete Performance Analysis &rarr;</button>`:"";
+  return `<div class="flex-row">
+    <button class="btn" ${cur?"":"disabled"} onclick="cur--;renderQuiz()">&larr; Previous</button>
+    ${cur<quiz.length-1?`<button class="btn" onclick="cur++;renderQuiz()">Next Question &rarr;</button>`:""}
+    ${all?`<button class="btn act" onclick="showSummary()">Finish &amp; Results</button>`:""}
+  </div>`;
+}
+
 function pick(i,j){
-if(ans[i]!==undefined)return;ans[i]=j;const q=quiz[i],ok=q.options[j].correct,mh=LS.get("quiz_missed_history",[]);
-if(ok){score++;LS.set("quiz_missed_history",mh.filter(x=>x!==q.id))}
-else{if(!mh.includes(q.id))mh.push(q.id);LS.set("quiz_missed_history",mh);wrongFx()}
-renderQuiz()}
-function wrongFx(){if(mute)return;try{const a=$("#wrongAudio");a.currentTime=0;a.play().catch(()=>{})}catch(e){}
-const p=$("#wrongPopup");p.classList.remove("hidden");setTimeout(()=>p.classList.add("hidden"),1200)}
+  if(ans[i]!==undefined)return;
+  ans[i]=j;
+  const q=quiz[i],ok=q.options[j].correct,mh=LS.get("quiz_missed_history",[]);
+  if(ok){
+    score++;
+    LS.set("quiz_missed_history",mh.filter(x=>x!==q.id));
+  }else{
+    if(!mh.includes(q.id))mh.push(q.id);
+    LS.set("quiz_missed_history",mh);
+    wrongFx();
+  }
+  renderQuiz();
+}
+
+function wrongFx(){
+  if(mute)return;
+  try{const a=$("#wrongAudio");a.currentTime=0;a.play().catch(()=>{})}catch(e){}
+  const p=$("#wrongPopup");
+  p.classList.remove("hidden");
+  if(popupTimer)clearTimeout(popupTimer);
+  popupTimer=setTimeout(()=>p.classList.add("hidden"),2000);
+}
+
 function showSummary(){
-const pct=Math.round(score/quiz.length*100);
-app.innerHTML=`<div class="wrap"><div class="card"><h1 style="color:#ff9900">Exam Complete</h1><h2>${score} / ${quiz.length} (${pct}%)</h2>
-<button class="btn retake-btn" onclick="start(lastN)">Retake Same Exam</button>
-<button class="btn retake-btn" onclick="renderHome()">Return to Dashboard</button>
-<a href="index.html" class="retake-btn hub-btn btn">Back to Main Page</a></div></div>`}
+  const pct=Math.round(score/quiz.length*100);
+  const tierMsg=pct>=90?"Absolute Gigachad. You drained that test dry."
+    :pct>=70?"You lasted less than 30 seconds. Time for a rematch."
+    :"You really didn’t fucking know that.";
+  const tierColor=pct>=90?"#22c55e":pct>=70?"#ff9900":"#ef4444";
+  const missedQs=quiz.filter((q,i)=>!q.options[ans[i]].correct);
+
+  app.innerHTML=`<div class="wrap"><div class="card" style="text-align:center;padding:28px">
+    <h1 style="color:#ff9900;margin-top:0">Exam Complete</h1>
+    <h2 style="font-size:32px;margin:10px 0">${score} / ${quiz.length} (${pct}%)</h2>
+    <p style="font-size:18px;font-weight:700;color:${tierColor};margin:14px 0 22px">${tierMsg}</p>
+    <div class="flex-row" style="justify-content:center">
+      <button class="btn" onclick="launchQuiz(currentBasePool)">Retake Current Set</button>
+      ${missedQs.length?`<button class="btn act" onclick='launchQuiz(${JSON.stringify(missedQs).replace(/'/g,"&#39;")})'>Review Missed (${missedQs.length})</button>`:""}
+      <button class="btn" onclick="renderHome()">Back to Menu</button>
+      <a href="index.html" class="btn hub-btn">Back to Hub</a>
+    </div>
+  </div></div>`;
+  window.scrollTo(0,0);
+}
+
 renderHome();
 </script></body></html>
