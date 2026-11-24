@@ -27,7 +27,7 @@ h1 { font-size: 1rem; color: var(--or); }
 .sub { font-size: .75rem; color: var(--m); }
 .btn { display: inline-block; text-decoration: none; background: #242424; color: #fff; border: 1px solid #3d3d3d; padding: 6px 12px; border-radius: 6px; font-size: .8rem; font-weight: 700; cursor: pointer; transition: .15s; }
 .btn:hover:not(:disabled) { border-color: var(--or); }
-.btn:disabled { opacity: .4; cursor: default; }
+.btn:disabled { opacity: .38; cursor: default; }
 .btn.on { background: var(--or); color: #000; border-color: var(--or); }
 .btn.on:hover { background: var(--or-h); }
 .pill { background: #141414; padding: 4px 11px; border-radius: 99px; border: 1px solid #333; color: var(--m); font-size: .8rem; }
@@ -87,10 +87,10 @@ main { max-width: 920px; margin: 20px auto; padding: 0 14px; }
     <a href="index.html" class="btn" id="hubBtn">&larr; Hub</a>
     <div>
       <h1>CHEM 121: Biochemistry Midterm 2 Mastery Quiz</h1>
-      <div class="sub">Hemoglobin &middot; Fibrous Proteins &middot; Carbohydrates (Wk 8) &middot; Lipids (Wk 8)</div>
+      <div class="sub">Hemoglobin &middot; Fibrous Proteins &middot; Carbohydrates &middot; Lipids &middot; Carryover Core</div>
     </div>
     <div class="row" style="margin:0">
-      <button class="btn" onclick="renderHome()">Back to Menu</button>
+      <button class="btn" onclick="renderHome()">Menu / Topics</button>
       <button class="btn" id="vb" onclick="togView()"></button>
       <button class="btn" id="eb" onclick="togE()"></button>
     </div>
@@ -109,11 +109,14 @@ main { max-width: 920px; margin: 20px auto; padding: 0 14px; }
 
 <script>
 const SUBJECTS = [
-  { week: "Wk 4-7", title: "Hemoglobin & Oxygen Transport" },
-  { week: "Wk 4-7", title: "Hemoglobinopathies & Red Cell Pathology" },
-  { week: "Wk 5-7", title: "Fibrous Proteins & Connective Tissue" },
-  { week: "Wk 6-8", title: "Carbohydrates & Glycosaminoglycans" },
-  { week: "Wk 7-8", title: "Lipids, Eicosanoids & Lipoproteins" }
+  { week: "Wk 4-7", title: "Hemoglobin Structure, Cooperativity & O2 Curves" },
+  { week: "Wk 4-7", title: "Hemoglobinopathies, Thalassemia & RBC Pathology" },
+  { week: "Wk 5-7", title: "Fibrous Proteins, Biomechanics & Cross-Links" },
+  { week: "Wk 5-7", title: "Connective Tissue Pathology (OI, EDS, Marfan, Scurvy, AAT)" },
+  { week: "Wk 6-8", title: "Monosaccharide Chemistry, Epimers & Anomers" },
+  { week: "Wk 6-8", title: "Disaccharides, Polysaccharides, GI Digestion & GAGs" },
+  { week: "Wk 7-8", title: "Lipids, Essential Fatty Acids, Eicosanoids & Lipoproteins" },
+  { week: "Wk 1-7", title: "Carryover Core: Forces, pKa/Buffers, Cofactors & Enzymes" }
 ];
 
 const questionBank = [];
@@ -137,7 +140,7 @@ function addQ(s, d, p, r, st, ...opts) {
   });
 }
 
-// ===================== SUBJECT 0: HEMOGLOBIN & OXYGEN TRANSPORT =====================
+// ===================== 0: HEMOGLOBIN STRUCTURE, COOPERATIVITY & O2 CURVES =====================
 addQ(0, 'easy', 1, 'Lec 4.1',
   'Adult hemoglobin is a quaternary tetramer composed of two _______ chains and two _______ chains.',
   'alpha; beta|Adult hemoglobin (HbA) consists of two alpha-beta dimers forming an alpha2-beta2 tetramer.',
@@ -153,547 +156,781 @@ addQ(0, 'easy', 1, 'Lec 7.1',
   '11; 11|Alpha-globin family genes are located on chromosome 16 rather than chromosome 11.');
 
 addQ(0, 'easy', 1, 'Lec 4.1',
-  'Within a single alpha-beta dimer of hemoglobin, the two subunits are held together primarily by:',
-  'hydrophobic interactions|Complementary nonpolar domains exclude water and lock each alpha-beta dimer tightly together.',
-  'ionic bridges|Ionic bridges and dipole interactions link one alpha-beta dimer to the opposite dimer across the central gap.',
-  'disulfide bonds|Hemoglobin subunits do not rely on inter-chain covalent disulfide bridges.',
-  'peptide bonds|Separate alpha and beta polypeptide chains are not joined by covalent peptide bonds.');
-
-addQ(0, 'easy', 1, 'Lec 4.1',
-  'Across the interface separating the two alpha-beta dimers, hemoglobin is stabilized mainly by:',
-  'ionic bridges|Oppositely charged side chains (Lys/Arg with Asp/Glu) form salt bridges that shift strength during oxygen binding.',
-  'hydrophobic stacking|Hydrophobic contacts hold alpha to beta within each individual dimer rather than between dimers.',
-  'glycosidic linkages|Glycosidic bonds join carbohydrate monomers and do not link globin subunits.',
-  'phosphodiester bonds|Phosphodiester bonds form nucleic acid backbones, not protein quaternary interfaces.');
-
-addQ(0, 'easy', 1, 'Lec 7.1',
-  'To reversibly bind and transport oxygen, the iron atom inside each heme group must remain in the _______ oxidation state.',
-  'ferrous|Ferrous iron (Fe2+) reversibly binds O2; oxidation to ferric iron (Fe3+) creates methemoglobin, which cannot transport oxygen.',
-  'ferric|Ferric iron (Fe3+) binds water or oxygen irreversibly and fails to deliver O2 to tissues.',
-  'elemental|Uncharged elemental iron (Fe0) does not coordinate inside the porphyrin ring.',
-  'cupric|Copper (Cu2+) is a cofactor for enzymes like lysyl oxidase, not the central metal of heme.');
-
-addQ(0, 'easy', 1, 'Lec 4.1',
-  'How many nitrogen atoms coordinate around the central iron ion of a deoxyhemoglobin heme group?',
-  'Six|Four planar porphyrin nitrogens plus two axial histidine nitrogens (proximal and distal) form an octahedral coordination complex.',
-  'Four|Four nitrogens come from the porphyrin ring alone, omitting the two axial histidine side chains.',
-  'Two|Two nitrogens represent only the proximal and distal histidines, ignoring the four pyrrole rings.',
-  'Eight|Iron coordinates six ligands in an octahedral geometry, not eight.');
-
-addQ(0, 'medium', 1, 'Lec 4.1',
-  'When molecular oxygen binds to heme iron in hemoglobin, which structural event occurs first?',
-  'The distal histidine pulls away from its axial coordination site|O2 displaces the distal histidine coordination site, pulling iron into the porphyrin plane and triggering the T-to-R transition.',
-  'The proximal histidine detaches completely from the globin helix|The proximal histidine remains covalently tethered to the F-helix and transmits the conformational pull.',
-  'The porphyrin ring cleaves open into linear biliverdin|Ring cleavage occurs only during senescent red cell heme catabolism in macrophages.',
-  'Iron oxidizes from the +2 state to the +3 state|Reversible oxygenation keeps iron in the ferrous (+2) state.');
-
-addQ(0, 'medium', 1, 'Lec 4.1',
-  'The sigmoidal shape of the oxygen-hemoglobin dissociation curve is a direct consequence of:',
-  'positive cooperativity|Binding the first O2 disrupts inter-dimer ionic bridges, shifting the tetramer toward the high-affinity relaxed state.',
-  'independent non-interacting binding sites|Independent sites produce a hyperbolic curve, as seen in monomeric myoglobin.',
-  'irreversible covalent oxygen attachment|Oxygen binds heme iron reversibly via weak coordination, not covalent bonds.',
-  'a single oxygen-binding site per tetramer|Each hemoglobin tetramer contains four heme groups and binds up to four O2 molecules.');
-
-addQ(0, 'easy', 1, 'Tutoring Wk 7',
-  'The deoxygenated conformation of hemoglobin is designated the _______ state, whereas the oxygenated conformation is the _______ state.',
-  'taut; relaxed|Deoxyhemoglobin is stabilized in the low-affinity taut (T) state; O2 binding shifts it to the high-affinity relaxed (R) state.',
-  'relaxed; taut|The structural states are reversed; relaxed has high O2 affinity and taut has low O2 affinity.',
-  'alpha; beta|Alpha and beta refer to globin subunit types or sugar anomers, not quaternary affinity states.',
-  'cis; trans|Cis and trans describe double-bond or peptide geometry, not hemoglobin conformations.');
-
-addQ(0, 'easy', 1, 'Tutoring Wk 7',
-  'A decrease in local capillary pH shifts the oxygen-hemoglobin dissociation curve to the _______, which _______ oxygen release to active tissues.',
-  'right; increases|Known as the Bohr effect, excess H+ protonates histidine residues to stabilize the taut form and promote O2 unloading.',
-  'left; decreases|A left shift occurs at higher pH and increases oxygen affinity, impairing tissue unloading.',
-  'right; decreases|Shifting the curve to the right lowers oxygen affinity, thereby increasing rather than decreasing O2 release.',
-  'left; increases|A left shift favors oxygen retention rather than unloading.');
+  'Within each single alpha-beta dimer of hemoglobin, the two subunits are held together primarily by:',
+  'hydrophobic interactions|Complementary nonpolar domains (Val, Leu, Ile, Phe, Trp) exclude water and lock each dimer tightly together.',
+  'ionic bridges|Ionic bridges and dipole interactions span the gap between the two dimers, not within one dimer.',
+  'disulfide bonds|Hemoglobin subunits are not linked by interchain covalent disulfide bonds.',
+  'peptide bonds|Separate alpha and beta polypeptides are not joined by covalent peptide bonds.');
 
 addQ(0, 'medium', 1, 'Lec 7.1',
-  'Where does 2,3-bisphosphoglycerate bind on hemoglobin, and what is its physiological effect?',
-  'In the central cavity between beta chains, stabilizing the taut form|Negatively charged 2,3-BPG binds positively charged Lys and Arg residues in the central cavity, shifting the curve right to promote O2 unloading.',
-  'Directly to the ferrous iron atom, blocking oxygen attachment|2,3-BPG is an allosteric effector in the central cavity; carbon monoxide binds directly to heme iron.',
-  'To the proximal histidine, oxidizing heme iron to the ferric state|2,3-BPG does not alter iron oxidation state.',
-  'To the outer surface of alpha chains, locking the relaxed form|Locking the relaxed form would shift the curve left and prevent oxygen delivery.');
+  'Which set of amino acids would be most abundant at the nonpolar hydrophobic interface joining an alpha globin to a beta globin?',
+  'Valine, leucine, isoleucine, phenylalanine, and tryptophan|These nonpolar branched and planar aromatic residues form extensive temporary dipole contacts while excluding water.',
+  'Lysine, arginine, aspartate, and glutamate|These charged residues form electrostatic salt bridges across the dimer-dimer gap rather than the hydrophobic intra-dimer seal.',
+  'Tyrosine, serine, threonine, and asparagine|Polar hydroxyl and amide dipoles attract water into the interface and loosen hydrophobic packing.',
+  'Cysteine, histidine, and glutamine|Ionizable and polar side chains are excluded from the tightly sealed nonpolar dimer interface.');
+
+addQ(0, 'hard', 1, 'Tutoring Wk 6',
+  'Although tyrosine possesses a planar aromatic ring, it is poorly suited for the hydrophobic intra-dimer interface of hemoglobin because:',
+  'its phenolic hydroxyl group creates a dipole that draws water into the seal|Water entering a nonpolar interface disrupts hydrophobic stacking and destabilizes subunit association.',
+  'it carries a permanent positive charge at physiological pH|Tyrosine has a side-chain pKa of ~10.1 and remains uncharged at pH 7.4.',
+  'its ring is non-aromatic and cannot stack with phenylalanine|Tyrosine contains a benzene ring, but its polar -OH group makes it amphipathic.',
+  'it forms covalent disulfide cross-links with alpha-chain cysteines|Tyrosine lacks a sulfhydryl group and cannot form disulfide bonds.');
+
+addQ(0, 'medium', 1, 'Lec 4.1',
+  'Across the gap separating the two alpha-beta dimers, the hemoglobin tetramer is stabilized mainly by _______, which are weakened if excess water enters the gap.',
+  'ionic bridges|Oppositely charged Lys/Arg and Asp/Glu residues form salt bridges that rupture sequentially as oxygen binds.',
+  'hydrophobic stacking|Hydrophobic packing is the intra-dimer force and is not solvated by charge separation.',
+  'covalent glycosidic bonds|Glycosidic bonds join sugars rather than protein subunits.',
+  'disulfide bridges|No interchain disulfide bridges exist in hemoglobin.');
+
+addQ(0, 'easy', 1, 'Lec 7.1',
+  'To reversibly bind and transport oxygen, the iron atom inside each heme porphyrin ring must remain in the _______ oxidation state.',
+  'ferrous|Ferrous iron (Fe2+) reversibly coordinates O2; oxidation to ferric iron (Fe3+) creates methemoglobin, which cannot unload oxygen.',
+  'ferric|Ferric iron (Fe3+) binds water or ligands tightly and fails to transport O2; damaged red cells are cleared by the spleen.',
+  'elemental|Uncharged elemental iron (Fe0) does not coordinate inside the porphyrin ring.',
+  'cupric|Copper (Cu2+) serves enzymes like lysyl oxidase rather than heme.');
+
+addQ(0, 'medium', 1, 'Lec 7.1',
+  'In deoxyhemoglobin, the central iron atom forms an octahedral coordination complex with _______ nitrogen atoms, and O2 binds at the sixth coordination site by displacing the _______ histidine.',
+  'six; distal|Four planar porphyrin nitrogens plus proximal and distal histidines coordinate iron; O2 displaces the distal histidine site while proximal histidine stays attached.',
+  'four; proximal|Iron coordinates six nitrogens in deoxyhemoglobin, and the proximal histidine remains anchored to the F-helix.',
+  'six; proximal|The proximal histidine remains covalently tethered to iron and pulls the helix when O2 binds.',
+  'two; distal|Four nitrogens come from the porphyrin ring itself plus two from the axial histidines.');
+
+addQ(0, 'hard', 1, 'Tutoring Wk 6',
+  'Binding of the first oxygen molecule to deoxyhemoglobin increases the oxygen affinity of the remaining three subunits because:',
+  'iron moves into the porphyrin plane and pulls the proximal histidine, breaking inter-dimer ionic bridges|This mechanical pull shifts the tetramer from the low-affinity taut (T) state toward the high-affinity relaxed (R) state.',
+  'oxygen oxidizes ferrous iron to ferric iron, opening the central cavity|Iron remains Fe2+ during reversible oxygenation; oxidation to Fe3+ abolishes O2 transport.',
+  'oxygen cleaves the covalent peptide bonds linking alpha and beta chains|Subunits are non-covalently associated and remain intact.',
+  'oxygen displaces 2,3-bisphosphoglycerate permanently out of the red blood cell|2,3-BPG remains inside the erythrocyte and equilibrates with the central cavity.');
+
+addQ(0, 'medium', 1, 'Lec 4.1',
+  'The sigmoidal oxygen-hemoglobin dissociation curve contrasts with the hyperbolic curve of myoglobin because hemoglobin exhibits:',
+  'positive cooperativity across four interacting subunits|Monomeric myoglobin has a single heme site and cannot undergo allosteric subunit-to-subunit transitions.',
+  'irreversible covalent oxygen attachment|Oxygen binds heme iron reversibly via weak coordination bonds.',
+  'a higher oxygen affinity than myoglobin at all partial pressures|Myoglobin has a much lower P50 (~2–3 mmHg) than hemoglobin (~26 mmHg), allowing it to extract O2 from blood for muscle storage.',
+  'six heme prosthetic groups per polypeptide chain|Each globin chain holds one heme group (four total per Hb tetramer).');
 
 addQ(0, 'easy', 1, 'Tutoring Wk 7',
-  'In red blood cells, 2,3-bisphosphoglycerate is synthesized as a side-branch intermediate of which metabolic pathway?',
-  'Glycolysis|Because mature erythrocytes lack mitochondria, they generate 2,3-BPG from glycolytic intermediates derived from glucose.',
-  'The citric acid cycle|Mature red blood cells have no mitochondria and cannot run the TCA cycle.',
-  'Beta-oxidation of fatty acids|Fatty acid oxidation occurs in mitochondria and does not produce 2,3-BPG.',
-  'The urea cycle|The urea cycle occurs in hepatocytes to dispose of ammonia.');
+  'The deoxygenated, low-affinity conformation of hemoglobin is the _______ state, whereas the oxygenated, high-affinity conformation is the _______ state.',
+  'taut; relaxed|Deoxyhemoglobin is stabilized in the taut (T) state by inter-dimer salt bridges; oxygenation shifts it to the relaxed (R) state.',
+  'relaxed; taut|The conformational states are reversed; relaxed has high O2 affinity and taut has low O2 affinity.',
+  'alpha; beta|Alpha and beta denote globin chain types or sugar anomers rather than quaternary affinity states.',
+  'cis; trans|Cis and trans describe double-bond or peptide geometry.');
+
+addQ(0, 'medium', 1, 'Lec 4.2',
+  'In active skeletal muscle beds where PO2 drops from 30 mmHg to 20 mmHg along the steep portion of the dissociation curve, hemoglobin:',
+  'unloads a large fraction of its bound oxygen in response to a small drop in partial pressure|The steep middle slope of the sigmoidal curve provides high dynamic sensitivity to tissue metabolic demand.',
+  'retains nearly 100% of its oxygen due to the flat plateau region|The flat plateau occurs at high arterial PO2 (80–100 mmHg), not at 20–30 mmHg.',
+  'switches irreversibly into methemoglobin|Acid and low PO2 promote reversible O2 unloading, not iron oxidation.',
+  'increases its oxygen affinity to prevent tissue extraction|Decreased PO2 and local acidosis reduce affinity to enhance delivery.');
+
+addQ(0, 'medium', 1, 'Lec 7.1',
+  'How do local tissue acidosis (Bohr effect) and 2,3-bisphosphoglycerate work together to promote oxygen unloading?',
+  'Protonated histidines acquire a positive charge that strengthens ionic binding of negatively charged 2,3-BPG in the central cavity|At pH 7.4, His (pKa ~6) is neutral, whereas Lys/Arg bind 2,3-BPG; when pH falls, protonated His+ intensifies BPG stabilization of the T-state.',
+  'Protonated histidines expel 2,3-BPG from the central cavity into blood plasma|Protonation adds positive charge that attracts negatively charged 2,3-BPG more strongly.',
+  '2,3-BPG directly protonates distal histidines to oxidize heme iron|2,3-BPG is a polyanionic glycolytic intermediate that binds basic cavity residues without altering Fe2+.',
+  'Both acid and 2,3-BPG bind directly to the sixth coordination site of heme iron|Neither H+ nor 2,3-BPG binds heme iron; both act allosterically via globin salt bridges.');
+
+addQ(0, 'easy', 1, 'Tutoring Wk 7',
+  'Mature red blood cells synthesize 2,3-bisphosphoglycerate as a side branch of _______ because they lack nuclei and mitochondria.',
+  'glycolysis|2,3-BPG branches off the glycolytic pathway from glucose to regulate hemoglobin oxygen affinity.',
+  'the citric acid cycle|Mature erythrocytes have no mitochondria and cannot run the TCA cycle.',
+  'beta-oxidation|Fatty acid oxidation requires mitochondria.',
+  'the urea cycle|The urea cycle operates in liver hepatocytes.');
 
 addQ(0, 'medium', 1, 'Tutoring Wk 7',
-  'Because maternal and fetal blood do not mix across the placenta, how does fetal hemoglobin extract oxygen from maternal hemoglobin?',
-  'Fetal hemoglobin has a higher intrinsic oxygen affinity and weaker 2,3-BPG binding|Replacing beta chains with gamma chains reduces positive charges in the central cavity, binding 2,3-BPG less tightly so HbF pulls O2 from maternal HbA.',
-  'Fetal capillary blood is kept substantially more acidic than maternal blood|Acidosis shifts the curve right (lower affinity), which would push O2 away from the fetus.',
-  'Fetal red blood cells maintain higher 2,3-BPG levels than maternal red blood cells|Elevated maternal 2,3-BPG shifts maternal HbA right to aid transfer; high fetal 2,3-BPG would block uptake.',
-  'Fetal hemoglobin contains six heme groups per molecule instead of four|Fetal HbF (alpha2-gamma2) is a standard tetramer with four heme groups.');
+  'Because maternal and fetal circulations never mix across the placenta, fetal hemoglobin (alpha2-gamma2) extracts oxygen from maternal hemoglobin (alpha2-beta2) because HbF:',
+  'has fewer positively charged Lys/Arg residues in its central cavity and binds 2,3-BPG less tightly|Weaker 2,3-BPG binding leaves HbF left-shifted (higher affinity) while elevated maternal 2,3-BPG shifts HbA right to drive O2 transfer.',
+  'binds 2,3-BPG with much higher affinity than adult hemoglobin|Stronger 2,3-BPG binding would shift HbF right (lower affinity) and prevent oxygen uptake from the mother.',
+  'operates in a substantially more acidic fetal capillary bed|Low pH shifts the curve right (unloading); fetal blood relies on higher intrinsic HbF affinity.',
+  'contains six heme iron sites per tetramer compared to four in maternal HbA|Both HbF and HbA are tetramers containing four heme groups.');
+
+addQ(0, 'easy', 1, 'Tutoring Wk 6',
+  'Which embryonic hemoglobin is synthesized in the early fetal liver before bone marrow hematopoiesis begins?',
+  'Hemoglobin Gower|Embryonic Gower hemoglobins combine zeta chains (chromosome 16) and epsilon chains (chromosome 11) during early gestation.',
+  'Hemoglobin A2|HbA2 (alpha2-delta2) is a minor adult hemoglobin.',
+  'Hemoglobin H|HbH (beta4) is an abnormal tetramer seen in three-gene deletion alpha-thalassemia.',
+  'Hemoglobin S|HbS is the mutant sickle-cell adult hemoglobin variant.');
 
 addQ(0, 'hard', 1, 'Tutoring Wk 7',
-  'Why is carbon monoxide poisoning particularly lethal even at low partial pressures?',
-  'It binds heme iron with much higher affinity than oxygen and locks remaining subunits in the relaxed state|CO occupies heme sites irreversibly under physiological conditions and prevents the remaining bound O2 molecules from unloading into tissues.',
-  'It rapidly oxidizes all ferrous heme iron into non-functional ferric methemoglobin|Methemoglobinemia is caused by oxidizing agents like nitrites, whereas CO binds Fe2+ directly.',
-  'It competes with 2,3-BPG in the central cavity to stabilize the taut conformation|CO binds directly to the heme iron coordination site rather than the central cavity.',
-  'It accelerates red blood cell lysis within the splenic sinusoids|CO causes acute cellular hypoxia by blocking oxygen transport and unloading, not acute hemolytic anemia.');
+  'Why does carbon monoxide poisoning lower the upper plateau of the oxygen dissociation curve and cause severe tissue hypoxia?',
+  'CO binds heme iron with ~200-fold higher affinity than oxygen, reducing available sites and locking remaining subunits in the relaxed state|Occupied sites cannot carry O2, and the R-like conformation prevents the remaining bound O2 molecules from unloading into tissues.',
+  'CO binds inside the central cavity to displace 2,3-BPG and stabilize the taut form|CO binds directly to heme iron rather than the central cavity.',
+  'CO rapidly oxidizes ferrous heme iron to ferric methemoglobin|Methemoglobin is caused by oxidizing agents like nitrites, whereas CO binds Fe2+.',
+  'CO accelerates splenic destruction of erythrocytes within minutes|CO causes acute cellular hypoxia by blocking O2 transport and release, not acute hemolysis.');
 
-addQ(0, 'easy', 1, 'Outline',
-  'How do cytochromes in the electron transport chain differ functionally from hemoglobin and myoglobin?',
-  'Cytochrome heme iron cycles reversibly between ferrous and ferric states to transfer electrons|Unlike oxygen carriers that keep iron fixed as Fe2+, cytochromes use the Fe2+/Fe3+ redox couple for electron transport.',
-  'Cytochromes lack a porphyrin ring and coordinate copper exclusively|Cytochromes are true heme proteins containing an iron-porphyrin prosthetic group.',
-  'Cytochromes bind molecular oxygen cooperatively across four subunits|Cooperativity and four-subunit O2 transport are properties of hemoglobin.',
-  'Cytochromes store oxygen in resting skeletal muscle fibers|Oxygen storage in skeletal muscle is the role of monomeric myoglobin.');
+addQ(0, 'easy', 1, 'Lec 7.1',
+  'How do cytochromes in the mitochondrial electron transport chain differ functionally from hemoglobin and myoglobin?',
+  'Cytochrome heme iron cycles between ferrous and ferric states to transfer electrons|Oxygen carriers keep iron fixed as Fe2+, whereas cytochromes utilize the Fe2+/Fe3+ redox couple.',
+  'Cytochromes lack an organic porphyrin ring and coordinate copper alone|Cytochromes are hemeproteins containing an iron-porphyrin prosthetic group.',
+  'Cytochromes bind molecular oxygen cooperatively across four subunits|Cooperative O2 transport is the function of hemoglobin.',
+  'Cytochromes store oxygen reserves in resting skeletal muscle|Oxygen storage in muscle is the role of monomeric myoglobin.');
 
 addQ(0, 'easy', 0, 'Lec 7.1',
-  'Myoglobin exhibits a hyperbolic oxygen dissociation curve rather than a sigmoidal curve because it:',
-  'consists of a single polypeptide chain with one heme group|As a tertiary monomer, myoglobin lacks multiple subunits and cannot undergo cooperative allosteric transitions.',
-  'contains ferric iron that binds oxygen irreversibly|Myoglobin uses ferrous (Fe2+) iron to bind and release O2 in muscle tissue.',
-  'is regulated allosterically by 2,3-bisphosphoglycerate|2,3-BPG binds the central cavity of tetrameric hemoglobin, not monomeric myoglobin.',
-  'circulates freely in blood plasma rather than inside cells|Myoglobin is an intracellular muscle protein; its appearance in blood indicates muscle injury.');
+  'A non-amino acid organic molecule or metal ion tightly bound to a protein and required for its biological function—such as heme in hemoglobin—is called a:',
+  'prosthetic group|Prosthetic groups remain permanently associated with the apoprotein to form a functional holoprotein.',
+  'zymogen|A zymogen is an inactive enzyme precursor activated by proteolytic cleavage.',
+  'chylomicron|A chylomicron is a lipoprotein particle transporting dietary triglycerides.',
+  'desmosine|Desmosine is a lysine-derived covalent cross-link in elastin.');
 
-// ===================== SUBJECT 1: HEMOGLOBINOPATHIES & RED CELL PATHOLOGY =====================
+// ===================== 1: HEMOGLOBINOPATHIES, THALASSEMIA & RBC PATHOLOGY =====================
 addQ(1, 'easy', 1, 'Lec 4.3',
-  'Sickle cell disease is caused by a point mutation substituting _______ for _______ at position 6 of the beta-globin chain.',
-  'valine; glutamate|Replacing a negatively charged polar glutamate with a nonpolar branched valine creates a sticky hydrophobic patch.',
-  'glutamate; valine|The substitution is reversed; normal HbA has glutamate at position 6, while HbS has valine.',
-  'glycine; proline|Glycine and proline are the signature repeating residues of collagen, not the sickle cell mutation.',
-  'lysine; aspartate|Replacing aspartate with lysine reverses charge but does not produce HbS.');
+  'Sickle cell disease results from a point mutation substituting _______ for _______ at position 6 of the beta-globin chain.',
+  'valine; glutamate|Replacing a negatively charged glutamate with a nonpolar branched valine creates a sticky hydrophobic patch on the surface.',
+  'glutamate; valine|The substitution is reversed; normal HbA has glutamate at position 6, whereas HbS has valine.',
+  'glycine; proline|Glycine and proline are the signature repeating residues of collagen.',
+  'lysine; aspartate|This substitution does not produce sickle hemoglobin.');
 
 addQ(1, 'medium', 1, 'Lec 4.3',
-  'Why does normal deoxygenated adult hemoglobin remain soluble in red blood cells instead of polymerizing?',
-  'Glutamate side chains carry negative charges at physiological pH that repel neighboring tetramers|With a side-chain pKa near 4, glutamate is deprotonated (COO-) at pH 7.4, preventing tetramers from sticking together.',
-  'Covalent disulfide bonds anchor each tetramer to the plasma membrane|HbA does not rely on inter-tetramer disulfide cross-links to prevent aggregation.',
-  'Oxygen remains permanently bound to beta subunits in venous blood|Deoxygenated HbA releases oxygen in tissues without polymerizing.',
-  '2,3-bisphosphoglycerate coats the exterior surface of every globin chain|2,3-BPG binds inside the central cavity, not on the exterior surface.');
+  'At physiological pH 7.4, normal deoxygenated HbA tetramers remain soluble because the glutamate side chain (pKa ~4) is:',
+  'negatively charged, creating electrostatic repulsion between neighboring tetramers|More than 1,000-fold deprotonated at pH 7.4, glutamate prevents tetramers from stacking together.',
+  'positively charged, forming ionic bridges with plasma proteins|Glutamate is an acidic amino acid carrying a negative carboxylate charge at pH 7.4.',
+  'neutral and buried deep inside the heme pocket|Beta-6 glutamate sits on the exterior surface of the subunit.',
+  'cross-linked by disulfide bonds to the red cell cytoskeleton|Glutamate lacks sulfur and does not form disulfide bonds.');
 
 addQ(1, 'medium', 1, 'Lec 4.3',
-  'Under low oxygen tension, deoxygenated sickle hemoglobin forms rigid fibers because surface valine side chains:',
-  'interdigitate hydrophobically with complementary nonpolar pockets on adjacent tetramers|In the taut deoxy conformation, exposed valine residues interlock with neighboring HbS molecules, distorting the red cell into a sickle shape.',
-  'form strong ionic salt bridges with positively charged lysine residues|Valine has an uncharged hydrocarbon side chain and cannot form ionic bridges.',
-  'create covalent peptide bonds between neighboring hemoglobin molecules|Polymerization is driven by non-covalent hydrophobic interactions and reverses upon reoxygenation.',
-  'attract large hydration shells that swell and burst the erythrocyte|Hydrophobic valine residues exclude water rather than attracting hydration shells.');
+  'When sickle hemoglobin (HbS) becomes deoxygenated in hypoxic capillaries, polymer fibers form because exposed valine side chains:',
+  'interdigitate hydrophobically with complementary nonpolar pockets on adjacent tetramers|In the taut deoxy state, branched valines interlock via temporary dipole forces, stacking HbS into rigid rods.',
+  'form strong ionic salt bridges with neighboring lysine residues|Valine has an uncharged hydrocarbon R-group and cannot form ionic bridges.',
+  'form covalent peptide bonds between adjacent tetramers|Polymerization is driven by non-covalent hydrophobic interactions and reverses upon oxygenation.',
+  'attract thick hydration shells that swell and burst the cell|Valine is hydrophobic and excludes water.');
+
+addQ(1, 'hard', 1, 'Lec 7.1OT',
+  'How do aggregated deoxygenated HbS fibers physically deform the red blood cell into a rigid sickle shape?',
+  'Dense HbS aggregates bind to phosphatidylserine exposed on the inner leaflet of the plasma membrane|Interactions between bulky HbS polymers and the negatively charged inner membrane leaf distort cell morphology.',
+  'HbS fibers digest spectrin and ankyrin via protease activity|HbS has no proteolytic activity; deformation is mechanical and membrane-interactive.',
+  'HbS converts membrane phospholipids into crystalline cholesterol plaques|Membrane distortion results from polymer interaction with inner-leaflet phospholipids.',
+  'HbS pumps potassium and water rapidly into the cell to cause osmotic lysis|Sickled cells become dehydrated, rigid, and deformed rather than osmotically swollen.');
 
 addQ(1, 'easy', 1, 'Lec 4.3',
-  'Individuals with sickle cell trait are _______ for the beta-globin mutation, whereas those with sickle cell disease are _______.',
-  'heterozygous; homozygous|Trait carriers inherit one normal beta allele and one HbS allele on chromosome 11, producing enough HbA to prevent sickling under normal conditions.',
-  'homozygous; heterozygous|The genotypes are reversed; homozygous inheritance produces full sickle cell disease.',
-  'hemizygous; polyploid|Beta-globin is an autosomal gene on chromosome 11, not X-linked.',
-  'somatic; germline|Both sickle cell trait and disease are inherited autosomal recessive germline conditions.');
+  'Individuals with sickle cell trait are _______ for the beta-globin mutation, whereas individuals with sickle cell disease are _______.',
+  'heterozygous; homozygous|Carriers inherit one normal beta allele and one HbS allele on chromosome 11; disease requires two HbS alleles.',
+  'homozygous; heterozygous|The genotypes are reversed; homozygous inheritance produces sickle cell disease.',
+  'hemizygous; polyploid|Beta-globin is an autosomal gene on chromosome 11.',
+  'acquired; inherited|Both sickle cell trait and disease are inherited autosomal recessive conditions.');
+
+addQ(1, 'hard', 1, 'Tutoring Wk 6',
+  'Why do heterozygous sickle cell trait carriers (HbAS) experience minimal sickling under normal daily conditions?',
+  'Normal beta chains retaining negatively charged glutamate disrupt extensive Val-Val fiber stacking|Mixed HbA/HbS populations interrupt continuous hydrophobic polymerization unless extreme hypoxia occurs.',
+  'Carriers express gamma-globin instead of beta-globin throughout adulthood|Adults express beta-globin from their normal chromosome 11 allele.',
+  'Carriers oxidize their mutant beta chains into harmless methemoglobin|Methemoglobin does not protect against sickling.',
+  'Carriers delete the mutant chromosome 11 allele in bone marrow erythroblasts|Both alleles are transcribed and translated in heterozygotes.');
 
 addQ(1, 'medium', 1, 'Lec 4.3',
   'Why has the sickle cell trait remained prevalent in regions where malaria is endemic?',
-  'Accelerated turnover of infected red blood cells prevents the malaria parasite from completing maturation|Plasmodium falciparum requires time inside intact erythrocytes to mature; premature clearance of sickled cells interrupts its life cycle.',
-  'Sickle hemoglobin directly poisons the digestive enzymes of female mosquitoes|The protective advantage occurs within human erythrocytes, not inside the mosquito vector.',
-  'Heterozygous carriers produce anti-malarial antibodies against heme iron|Protection stems from shortened erythrocyte lifespan rather than antibody production.',
-  'Valine substitution prevents parasites from penetrating the plasma membrane|Parasites still enter the cell, but premature red cell clearance halts parasite replication.');
+  'Accelerated clearance of infected red blood cells prevents the malaria parasite from completing maturation|Plasmodium falciparum requires time inside intact erythrocytes to incubate; premature red cell turnover halts replication.',
+  'Sickle hemoglobin directly poisons mosquito salivary glands|The protective advantage occurs inside human erythrocytes, not inside the mosquito.',
+  'Carriers generate high-titer antibodies against Plasmodium heme|Protection stems from shortened erythrocyte lifespan rather than humoral immunity.',
+  'Valine at beta-6 blocks parasite entry across the red cell membrane|Parasites still enter the cell, but premature splenic clearance interrupts maturation.');
 
 addQ(1, 'medium', 1, 'Lec 7.1',
-  'How does thalassemia fundamentally differ from sickle cell disease at the molecular level?',
-  'Thalassemia is a quantitative underproduction of normal globin chains, whereas sickle cell is a qualitative amino acid substitution|Imbalanced alpha-to-beta chain ratios in thalassemia leave unpaired chains that precipitate and damage red cells.',
-  'Thalassemia affects only heme porphyrin rings, whereas sickle cell affects globin proteins|Defects in heme porphyrin synthesis cause porphyrias, whereas thalassemias are globin gene defects.',
-  'Thalassemia increases red cell lifespan to 240 days, whereas sickle cell shortens it|Both thalassemia and sickle cell disease cause premature hemolysis and shortened RBC survival.',
-  'Thalassemia is caused by dietary vitamin C deficiency, whereas sickle cell is genetic|Both thalassemia and sickle cell disease are inherited genetic disorders.');
+  'How does thalassemia fundamentally differ from sickle cell disease?',
+  'Thalassemia is a quantitative underproduction of normal globin chains, whereas sickle cell is a qualitative amino acid substitution|Unequal alpha-to-beta synthesis leaves unpaired globin chains that precipitate and damage red cell precursors.',
+  'Thalassemia is a defect in heme porphyrin synthesis, whereas sickle cell is a globin defect|Heme synthesis defects cause porphyrias; thalassemias are globin gene expression defects.',
+  'Thalassemia prolongs erythrocyte survival to 240 days, whereas sickle cell shortens it|Both thalassemia and sickle cell cause premature hemolysis and shortened RBC survival.',
+  'Thalassemia is caused by dietary iron deficiency, whereas sickle cell is genetic|Both thalassemias and sickle cell disease are inherited genetic disorders.');
 
 addQ(1, 'hard', 1, 'Tutoring Wk 7',
-  'Why is severe alpha-thalassemia generally more devastating in utero than beta-thalassemia?',
-  'Alpha-globin chains are required for both fetal hemoglobin and adult hemoglobin|Because HbF (alpha2-gamma2) relies on alpha chains, losing all four alpha alleles causes fatal hydrops fetalis before birth, whereas beta chains are not needed until after birth.',
-  'Alpha-globin genes are located on the X chromosome and lack a backup copy|Alpha-globin has four alleles on chromosome 16, whereas beta-globin has two alleles on chromosome 11.',
-  'Beta-globin chains can substitute for alpha chains during fetal development|Beta chains cannot form functional tetramers with gamma chains in utero.',
-  'Fetal liver cells cannot synthesize heme rings without beta-globin|Heme synthesis is independent of beta-globin expression.');
+  'Why can severe alpha-thalassemia cause fatal hydrops fetalis in utero, whereas beta-thalassemia manifests several months after birth?',
+  'Alpha-globin chains are required for fetal hemoglobin, whereas beta-globin chains do not replace gamma chains until after birth|Because HbF is alpha2-gamma2, loss of all four alpha alleles impairs oxygen transport in utero.',
+  'Alpha-globin genes are located on the X chromosome without a homologous backup|Alpha-globin has four alleles on chromosome 16; beta-globin has two alleles on chromosome 11.',
+  'Beta-globin chains can pair with gamma chains to compensate for missing alpha chains|Beta chains cannot form functional tetramers with gamma chains.',
+  'Fetal hepatocytes cannot synthesize heme rings in the absence of alpha-globin|Heme biosynthesis occurs independently of globin chain transcription.');
+
+addQ(1, 'medium', 1, 'Lec 4.3',
+  'If one of a diploid individual’s four alpha-globin alleles on chromosome 16 is deleted, roughly what fraction of alpha-globin production is lost?',
+  'One quarter|The three remaining functional alpha alleles produce ~75% of normal alpha chains, resulting in an asymptomatic silent carrier.',
+  'One half|Losing one of two beta-globin alleles on chromosome 11 reduces beta production by one half.',
+  'Three quarters|Three alleles remain intact, so only one quarter is lost.',
+  'All of it|Three functional alleles remain active on chromosome 16.');
 
 addQ(1, 'easy', 1, 'Lec 7.1',
-  'Patients with severe beta-thalassemia major who receive frequent blood transfusions are at high risk for:',
-  'secondary iron overload in the liver and heart|Because the body lacks an active pathway to excrete excess iron from lysed transfused red cells, iron accumulates (hemosiderosis).',
-  'severe copper deficiency anemia|Transfusions overload iron rather than depleting copper.',
-  'acute vitamin K toxicity|Packed red blood cell transfusions do not cause vitamin K excess.',
+  'Patients with beta-thalassemia major who depend on chronic blood transfusions are at high risk for:',
+  'secondary iron overload in the liver and heart|Without an active excretory pathway for excess iron from lysed transfused red cells, iron accumulates (hemosiderosis).',
+  'acute copper deficiency|Transfusions overload iron rather than depleting copper.',
+  'vitamin K toxicity|Packed red cell transfusions do not cause vitamin K excess.',
   'megaloblastic anemia from folate excess|Folate deficiency, not excess, causes megaloblastic anemia.');
 
 addQ(1, 'medium', 1, 'Lec 4.3',
-  'In glucose-6-phosphate dehydrogenase deficiency, exposure to oxidative drugs triggers hemolytic anemia because erythrocytes lack sufficient _______ to regenerate reduced glutathione.',
-  'NADPH|Mature red blood cells depend exclusively on the hexose monophosphate pathway (G6PD) for NADPH to neutralize hydrogen peroxide and prevent Heinz body precipitation.',
-  'NADH|NADH is generated by glycolysis for methemoglobin reductase, not by G6PD for glutathione reduction.',
-  'FADH2|FADH2 is a mitochondrial electron carrier absent in mature erythrocytes.',
-  'ATP|Glycolysis still generates ATP in G6PD deficiency; the failure is antioxidant NADPH production.');
+  'In glucose-6-phosphate dehydrogenase deficiency, exposure to oxidative drugs causes acute hemolysis because red cells lack sufficient _______ to keep glutathione reduced.',
+  'NADPH|Mature erythrocytes rely solely on the hexose monophosphate pathway (G6PD) for NADPH to neutralize hydrogen peroxide and prevent Heinz body formation.',
+  'NADH|NADH is produced by glycolysis for methemoglobin reductase, not by G6PD for glutathione reduction.',
+  'FADH2|FADH2 is a mitochondrial carrier absent in mature red blood cells.',
+  'ATP|Glycolysis still generates ATP in G6PD deficiency; the defect is antioxidant NADPH regeneration.');
 
-// ===================== SUBJECT 2: FIBROUS PROTEINS & CONNECTIVE TISSUE =====================
+addQ(1, 'easy', 0, 'Lec 4.3',
+  'Rigid, non-deformable red blood cells in sickle cell disease or hereditary spherocytosis are recognized and destroyed primarily by macrophages in the:',
+  'spleen|Splenic sinusoids test erythrocyte deformability; rigid cells cannot squeeze through narrow fenestrations and undergo extravascular hemolysis.',
+  'renal glomerulus|The glomerulus filters blood plasma rather than culling rigid red cells.',
+  'pulmonary alveoli|Alveoli perform gas exchange and do not filter red cell morphology.',
+  'pancreas|The pancreas secretes digestive enzymes and hormones.');
+
+// ===================== 2: FIBROUS PROTEINS, BIOMECHANICS & CROSS-LINKS =====================
 addQ(2, 'easy', 1, 'Lec 4.3',
-  'Approximately every third amino acid in a collagen alpha-chain is _______ because its tiny side chain allows three helices to pack tightly together.',
-  'glycine|The repeating Gly-X-Y motif places glycine in the crowded interior core of the triple helix where any larger R-group would sterically disrupt folding.',
-  'proline|Proline introduces rigid kinks on the exterior of the helix rather than fitting inside the central core.',
-  'alanine|Even a single methyl group on alanine is too bulky for the tight central axis of the collagen triple helix.',
-  'cysteine|Cysteine is abundant in keratin disulfide bridges rather than forming every third residue of collagen.');
+  'Approximately one-third of all amino acids in collagen are _______ because its single hydrogen side chain fits inside the crowded central axis of the triple helix.',
+  'glycine|The repeating Gly-X-Y sequence places glycine at every third position; any bulkier R-group prevents tight helical braiding.',
+  'proline|Proline introduces rigid bends along the outer strands rather than occupying the central core.',
+  'alanine|Even a single methyl group on alanine is too bulky for the central axis of the collagen triple helix.',
+  'cysteine|Cysteine forms disulfide bridges in keratin rather than forming every third residue of collagen.');
 
 addQ(2, 'easy', 1, 'Lec 5.2',
-  'Prolyl hydroxylase and lysyl hydroxylase require molecular oxygen, ferrous iron, and _______ to hydroxylate collagen chains.',
-  'vitamin C|Ascorbate (vitamin C) keeps the active-site iron reduced in the Fe2+ state; deficiency causes scurvy.',
-  'vitamin B6|Pyridoxal phosphate (vitamin B6) is a cofactor for transaminases and decarboxylases, not hydroxylases.',
-  'copper|Copper is the required cofactor for extracellular lysyl oxidase during cross-linking, not intracellular hydroxylation.',
-  'biotin|Biotin serves as a CO2 carrier for carboxylase enzymes.');
+  'Post-translational hydroxylation of proline and lysine residues in procollagen requires molecular oxygen, ferrous iron, and _______ to keep iron reduced.',
+  'vitamin C|Ascorbate (vitamin C) maintains iron in the active Fe2+ state; deficiency stalls hydroxylation and causes scurvy.',
+  'vitamin B6|Pyridoxal phosphate (vitamin B6) is a cofactor for decarboxylases and transaminases.',
+  'copper|Copper serves extracellular lysyl oxidase during cross-linking rather than intracellular hydroxylases.',
+  'biotin|Biotin acts as a CO2 carrier for carboxylase enzymes.');
 
 addQ(2, 'medium', 1, 'Lec 5.2',
-  'What is the primary structural role of hydroxyproline residues within the collagen triple helix?',
-  'Forming inter-chain hydrogen bonds that stabilize the triple helix|The added hydroxyl groups form stabilizing hydrogen bonds between the three polypeptide strands, raising the melting temperature of collagen.',
-  'Serving as attachment sites for disaccharide sugar chains|O-linked glycosylation occurs on hydroxylysine residues rather than hydroxyproline.',
-  'Oxidizing spontaneously into reactive aldehyde cross-links|Aldehyde cross-links are formed from lysine and hydroxylysine by lysyl oxidase.',
-  'Cleaving terminal propeptides upon secretion into the extracellular space|Procollagen peptidases remove terminal registration peptides.');
-
-addQ(2, 'medium', 1, 'Lec 5.2',
-  'Covalent cross-linking between adjacent tropocollagen molecules is initiated by the copper-dependent extracellular enzyme:',
-  'lysyl oxidase|Lysyl oxidase deaminates lysine and hydroxylysine side chains into reactive aldehydes (allysine) that condense into strong covalent cross-links.',
-  'lysyl hydroxylase|Lysyl hydroxylase adds hydroxyl groups intracellularly in the rough ER before secretion.',
-  'prolyl hydroxylase|Prolyl hydroxylase modifies proline residues intracellularly to stabilize the triple helix.',
-  'collagenase|Collagenase is a matrix metalloproteinase that degrades collagen during tissue remodeling.');
-
-addQ(2, 'medium', 1, 'Lec 5.2',
-  'Why are tropocollagen molecules arranged in a quarter-staggered overlapping array within collagen fibrils?',
-  'To prevent a microscopic crack from propagating straight across a weak plane|Staggering the molecular ends forces mechanical stress to distribute across covalent cross-links, maximizing fracture toughness.',
-  'To increase the water solubility of mature extracellular tendons|Mature cross-linked collagen fibrils are insoluble in water.',
-  'To allow rapid enzymatic cleavage by intracellular lysosomes|Fibril staggering provides extracellular tensile strength rather than intracellular degradation.',
-  'To eliminate the need for lysyl oxidase cross-linking|Cross-links between staggered molecules are essential for tensile strength.');
-
-addQ(2, 'easy', 1, 'Lec 5.1',
-  'Which type of collagen forms a flexible, sheet-like meshwork in basement membranes rather than thick rope-like fibrils?',
-  'Type IV collagen|Type IV collagen retains non-helical domains that assemble into a planar lattice supporting epithelial basement membranes.',
-  'Type I collagen|Type I collagen forms thick, high-tensile fibrils in bone, tendons, skin, and dentin.',
-  'Type II collagen|Type II collagen forms fine fibrils characteristic of hyaline and articular cartilage.',
-  'Type III collagen|Type III collagen forms thin reticulin fibers in blood vessels, spleen, and granulation tissue.');
-
-addQ(2, 'easy', 1, 'Lec 7.2',
-  'Elastin fibers recoil back to their compact state after stretching primarily because:',
-  'hydrophobic side chains aggregate together to exclude surrounding water|Stretching exposes nonpolar valine, alanine, and glycine chains to water; releasing tension lets hydrophobic forces snap them back.',
-  'covalent disulfide bonds pull the chains back into an alpha-helix|Elastin relies on desmosine cross-links and hydrophobic recoil rather than disulfide bonds.',
-  'negatively charged glutamate residues attract extracellular calcium ions|Elastin is rich in nonpolar residues rather than acidic calcium-binding domains.',
-  'hydroxyproline hydrogen bonds zip the triple helix back together|Elastin lacks a rigid triple helix and contains very little hydroxylysine or glycosylation.');
-
-addQ(2, 'easy', 1, 'Lec 7.2',
-  'Lysine-derived aldehydes from adjacent elastin polypeptides condense to form which unique aromatic cross-link?',
-  'Desmosine|Lysyl oxidase oxidizes lysine residues into aldehydes that condense into the heterocyclic desmosine cross-link holding elastin networks together.',
-  'Cystine|Cystine is a dimer of two cysteine residues linked by a disulfide bond, characteristic of keratin.',
-  'Hydroxyproline|Hydroxyproline is a single hydroxylated amino acid found in collagen.',
-  'Selenocysteine|Selenocysteine is the 21st proteinogenic amino acid incorporated during translation.');
-
-addQ(2, 'easy', 1, 'Lec 7.2',
-  'Hair, nails, and the outer epidermis derive their mechanical toughness and heavy-metal binding capacity from _______, which is rich in _______.',
-  'keratin; cysteine|Abundant cysteine thiol (-SH) groups form extensive disulfide bridges and readily chelate heavy metals like lead and mercury.',
-  'collagen; glycine|Collagen is rich in glycine and proline, not cysteine.',
-  'elastin; desmosine|Elastin is found in lungs and large arteries, not hair and nails.',
-  'fibrillin; aspartate|Fibrillin forms microfibrils in elastic connective tissue.');
-
-addQ(2, 'easy', 1, 'Lec 7.2',
-  'Bleeding gums, loose teeth, and petechial bruising in scurvy result directly from:',
-  'impaired hydroxylation of proline and lysine in collagen|Without vitamin C, prolyl and lysyl hydroxylases fail, producing unstable collagen helices that weaken blood vessels and periodontal ligaments.',
-  'excessive copper accumulation inhibiting lysyl oxidase|Copper deficiency, not excess, impairs lysyl oxidase; scurvy is vitamin C deficiency.',
-  'autoimmune destruction of keratin in gingival epithelium|Scurvy is a nutritional defect in collagen synthesis, not an autoimmune keratin disease.',
-  'replacement of glycine with valine in type I collagen|Glycine substitutions cause osteogenesis imperfecta, whereas scurvy is acquired vitamin C deficiency.');
+  'What is the specific structural role of hydroxyproline versus hydroxylysine during collagen biosynthesis?',
+  'Hydroxyproline forms stabilizing inter-chain hydrogen bonds, whereas hydroxylysine serves as a site for glycosylation and cross-linking|Hydroxyproline raises the thermal stability of the triple helix, while galactose/glucose attach to hydroxylysine.',
+  'Hydroxyproline attaches glucose chains, whereas hydroxylysine forms disulfide bridges|Glycosylation occurs on hydroxylysine, and collagen does not rely on disulfide bridges.',
+  'Hydroxyproline cleaves terminal propeptides, whereas hydroxylysine oxidizes into aldehydes|Procollagen peptidases cleave propeptides, and lysyl oxidase oxidizes lysine/hydroxylysine.',
+  'Hydroxyproline provides hydrophobic recoil, whereas hydroxylysine binds calcium|Hydrophobic recoil is a property of elastin, not collagen.');
 
 addQ(2, 'medium', 1, 'Lec 7.2',
-  'A patient presenting with hyperextensible skin, hypermobile finger joints, and fragile blood vessels most likely has a defect in collagen synthesis or cross-linking known as:',
-  'Ehlers-Danlos syndrome|Defects in procollagen peptidase, lysyl hydroxylase, or type III/V collagen cause joint hypermobility and tissue fragility, requiring caution during spinal manipulation.',
-  'osteogenesis imperfecta|Osteogenesis imperfecta is characterized by brittle bones and blue sclerae rather than hyperelastic skin.',
-  'Marfan syndrome|Marfan syndrome is caused by mutations in fibrillin-1 rather than collagen.',
-  'alpha-1 antitrypsin deficiency|Alpha-1 antitrypsin deficiency causes panacinar emphysema and liver cirrhosis due to unchecked neutrophil elastase.');
+  'Extracellular covalent cross-linking of collagen fibrils is catalyzed by _______, a copper-dependent enzyme that oxidizes lysine amines into reactive _______ while releasing free ammonia.',
+  'lysyl oxidase; aldehydes|Lysyl oxidase converts lysine to allysine aldehydes that condense into covalent cross-links; released NH3 is scavenged onto alpha-ketoglutarate.',
+  'lysyl hydroxylase; alcohols|Lysyl hydroxylase acts intracellularly in the rough ER using vitamin C and iron.',
+  'prolyl hydroxylase; ketones|Prolyl hydroxylase adds hydroxyl groups to proline intracellularly.',
+  'collagenase; carboxylic acids|Collagenase is a metalloproteinase that degrades collagen.');
 
 addQ(2, 'medium', 1, 'Lec 5.2',
-  'Marfan syndrome is caused by mutations in the gene encoding _______, a glycoprotein that forms a scaffold for elastic fibers.',
-  'fibrillin|Fibrillin-1 microfibrils anchor elastin in the aortic media, ocular zonules, and periosteum; defects predispose to aortic dissection.',
+  'Why are tropocollagen molecules staggered like bricks in a wall within mature collagen fibrils?',
+  'To maximize fracture toughness so a microscopic crack cannot propagate straight across aligned molecular ends|Staggering distributes tensile loads across covalent cross-links and prevents catastrophic structural failure.',
+  'To increase water solubility in tendons and ligaments|Cross-linked collagen fibrils are insoluble in water.',
+  'To allow rapid intracellular digestion by lysosomes|Fibril staggering provides extracellular tensile strength.',
+  'To eliminate the need for vitamin C-dependent hydroxylation|Hydroxylation is still required to stabilize each individual triple helix.');
+
+addQ(2, 'easy', 1, 'Lec 5.1',
+  'Match the major collagen types to their primary anatomical locations: Type I is found in _______, Type II in _______, and Type IV in _______.',
+  'bone and tendon; cartilage; basement membranes|Type I forms high-tensile fibrils, Type II forms fine cartilage fibrils, and Type IV forms a sheet-like basement membrane mesh.',
+  'cartilage; bone and tendon; basement membranes|Types I and II are reversed; Type I is bone/tendon and Type II is cartilage.',
+  'basement membranes; bone and tendon; cartilage|Type IV is the basement membrane network former.',
+  'bone and tendon; basement membranes; cartilage|Types II and IV are swapped.');
+
+addQ(2, 'medium', 1, 'Lec 5.1',
+  'Which collagen type forms anchoring fibrils that stitch the Type IV basement membrane meshwork into the underlying Type I and Type III dermal collagen?',
+  'Type VII collagen|Type VII anchoring fibrils weave through the basement membrane and dermis without sealing it so tightly that nutrient diffusion is blocked.',
+  'Type II collagen|Type II collagen is the primary structural collagen of hyaline cartilage.',
+  'Type IX collagen|Types IX and XII are fibril-associated collagens (FACIT) that link fibrils together.',
+  'Type IV collagen|Type IV forms the planar basement membrane meshwork itself.');
+
+addQ(2, 'easy', 1, 'Lec 7.2',
+  'Stretched elastin fibers snap back to their compact conformation upon release primarily because:',
+  'hydrophobic nonpolar side chains re-associate to exclude surrounding water|Stretching exposes nonpolar amino acids to water; releasing tension drives hydrophobic recoil.',
+  'interchain disulfide bonds pull the helices back together|Disulfide cross-links characterize keratin rather than elastin.',
+  'hydroxyproline hydrogen bonds zip the triple helix shut|Elastin does not form a rigid collagen-like triple helix.',
+  'negatively charged side chains attract extracellular sodium ions|Elastin is dominated by nonpolar hydrophobic residues.');
+
+addQ(2, 'medium', 1, 'Lec 7.2',
+  'Four lysine side chains from neighboring elastin strands condense via lysyl oxidase chemistry to form which planar, aromatic cross-link?',
+  'Desmosine|Desmosine (and isodesmosine) forms a stable heterocyclic ring anchoring elastin fibers while allowing hydrophobic segments to stretch.',
+  'Cystine|Cystine is a disulfide-linked dimer of two cysteine residues found in keratin.',
+  'Hydroxyproline|Hydroxyproline is a single modified residue in collagen.',
+  'Allysine alone|Allysine is the single aldehyde intermediate prior to four-chain condensation.');
+
+addQ(2, 'easy', 1, 'Lec 7.2',
+  'Hair, nails, and outer epidermis derive their mechanical strength and ability to bind heavy metals like lead and mercury from _______, which is rich in _______.',
+  'keratin; cysteine|Cysteine sulfhydryl (-SH) groups form abundant covalent disulfide bridges and chelate heavy metals.',
+  'collagen; glycine|Collagen is rich in glycine and proline rather than cysteine.',
+  'elastin; desmosine|Elastin provides elastic recoil in lungs and arteries.',
+  'fibrillin; aspartate|Fibrillin forms elastic microfibrils.');
+
+addQ(2, 'medium', 1, 'Lec 7.2',
+  'In material biomechanics, _______ measures the force applied per unit area, _______ measures the relative change in length (elongation), and _______ is the ability to absorb repeated loads without fracturing.',
+  'stress; strain; fracture toughness|Stress (sigma) is load per area, strain (epsilon) is elongation, and fracture toughness resists crack propagation.',
+  'strain; stress; stiffness|Stress and strain definitions are reversed, and stiffness resists deformation rather than absorbing fracture energy.',
+  'toughness; yield; elasticity|Yield denotes the onset of plastic deformation without complete failure.',
+  'elasticity; stress; brittleness|Brittleness is the inability to absorb energy before fracturing.');
+
+addQ(2, 'hard', 1, 'Tutoring Wk 6',
+  'Why is glycine the only proteinogenic amino acid that lacks D and L optical enantiomers?',
+  'Its alpha-carbon is bonded to two identical hydrogen atoms and is therefore not a chiral center|A chiral center requires four different substituent groups attached to the central carbon.',
+  'It lacks an alpha-carboxyl group in its backbone|Glycine possesses both a standard alpha-amino and alpha-carboxyl group.',
+  'Its side chain forms a cyclic ring with the backbone nitrogen|That describes proline, which has a chiral alpha-carbon.',
+  'It is never incorporated into eukaryotic proteins during translation|Glycine is a standard proteinogenic amino acid making up one-third of collagen.');
+
+// ===================== 3: CONNECTIVE TISSUE PATHOLOGY =====================
+addQ(3, 'easy', 1, 'Lec 7.2',
+  'Loose teeth, bleeding gums, and reopening of old wounds in scurvy result directly from:',
+  'vitamin C deficiency stalling prolyl and lysyl hydroxylases in collagen synthesis|Without ascorbate, iron stays oxidized as Fe3+ and under-hydroxylated collagen triple helices unravel.',
+  'copper deficiency inhibiting extracellular lysyl oxidase|Copper deficiency impairs cross-linking, whereas scurvy is vitamin C deficiency.',
+  'autoimmune destruction of keratin filaments in stratified epithelium|Scurvy is a nutritional defect in collagen hydroxylation.',
+  'substitution of valine for glutamate in type IV collagen|That describes the beta-globin sickle mutation.');
+
+addQ(3, 'hard', 1, 'Lec 5.2',
+  'Why is Osteogenesis Imperfecta Type II perinatally lethal compared to the milder Type I form?',
+  'Type II replaces glycine with a bulky amino acid that prevents triple-helix braiding, whereas Type I reduces the quantity of normal collagen chains|A bulky residue in the Gly-X-Y core ruins the entire triple helix (dominant negative), whereas reduced output leaves intact helices.',
+  'Type II results from dietary vitamin C deficiency, whereas Type I is genetic|Both Type I and Type II OI are inherited genetic disorders of Type I collagen.',
+  'Type II affects only elastin cross-links, whereas Type I affects bone|Both OI types are defects in Type I collagen.',
+  'Type II is caused by excess neutrophil elastase in fetal lungs|Neutrophil elastase causes emphysema in alpha-1 antitrypsin deficiency.');
+
+addQ(3, 'medium', 1, 'Lec 7.2',
+  'A patient presenting with hyperextensible skin, hypermobile finger joints, and fragile tissue integrity most likely has:',
+  'Ehlers-Danlos syndrome|Defects in collagen processing enzymes (such as lysyl hydroxylase or procollagen peptidases) or Type III/V collagen cause joint laxity and contraindicate forceful manipulation.',
+  'osteogenesis imperfecta|Osteogenesis imperfecta is characterized primarily by brittle bones and blue sclerae.',
+  'Marfan syndrome|Marfan syndrome is caused by mutations in fibrillin-1 rather than collagen.',
+  'scurvy|Scurvy is an acquired nutritional vitamin C deficiency.');
+
+addQ(3, 'medium', 1, 'Lec 5.2',
+  'Marfan syndrome—characterized by tall stature, arachnodactyly, lens dislocation, and aortic root dilation—is caused by mutations in:',
+  'fibrillin|Fibrillin-1 is a connective tissue scaffold glycoprotein (distinct from collagen, elastin, and keratin) that anchors elastic fibers.',
   'type I collagen|Type I collagen mutations cause osteogenesis imperfecta.',
-  'alpha-keratin|Keratin mutations cause epidermolysis bullosa simplex.',
-  'elastase|Neutrophil elastase is a protease that degrades elastin in emphysema.');
+  'alpha-1 antitrypsin|Alpha-1 antitrypsin deficiency causes panacinar emphysema and cirrhosis.',
+  'lysyl oxidase|Lysyl oxidase is the copper-dependent cross-linking enzyme.');
 
-addQ(2, 'hard', 1, 'Lec 7.2',
-  'In a non-smoker with early-onset emphysema, deficiency of alpha-1 antitrypsin leads to alveolar destruction because:',
-  'neutrophil elastase degrades alveolar elastin unchecked|Alpha-1 antitrypsin normally inhibits neutrophil elastase in the lungs; without it, alveolar walls lose elastic recoil and collapse.',
-  'lysyl oxidase over-cross-links pulmonary collagen into rigid scars|Emphysema results from proteolytic destruction of elastin, not excess collagen cross-linking.',
-  'pulmonary macrophages fail to hydroxylate type IV collagen|Alveolar destruction in A1AT deficiency is driven by uninhibited serine protease activity.',
-  'surfactant phospholipids undergo rapid peroxidation|Surfactant deficiency causes neonatal respiratory distress syndrome, not A1AT emphysema.');
+addQ(3, 'hard', 1, 'Lec 7.2',
+  'A 34-year-old non-smoker develops early-onset panacinar emphysema due to alpha-1 antitrypsin deficiency because:',
+  'neutrophil elastase digests alveolar elastin unchecked, destroying lung elastic recoil|Alpha-1 antitrypsin normally inhibits neutrophil elastase; without it, alveoli lose recoil and trap air.',
+  'lysyl oxidase over-cross-links alveolar collagen into rigid nodules|Emphysema is driven by proteolytic loss of elastin rather than excess cross-linking.',
+  'pulmonary macrophages fail to hydroxylate Type IV basement membrane collagen|The defect is uninhibited serine protease activity against elastin.',
+  'type II collagen in bronchial cartilage is replaced by keratin|Bronchial cartilage is not replaced by keratin.');
 
-// ===================== SUBJECT 3: CARBOHYDRATES & GLYCOSAMINOGLYCANS (INCL. WEEK 8) =====================
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'What is the general empirical formula for simple monosaccharides?',
-  '(CH2O)n|Carbohydrates represent hydrates of carbon, maintaining a 1:2:1 ratio of carbon, hydrogen, and oxygen.',
-  '(CHO2)n|This ratio doubles the oxygen atoms relative to carbon.',
-  '(C2H2O)n|This ratio doubles the carbon atoms relative to water.',
-  '(CH4O)n|This represents saturated alcohols rather than carbohydrates.');
+addQ(3, 'easy', 0, 'Lec 5.2',
+  'Alpha-1 antitrypsin is synthesized primarily by the _______ and travels through the blood to protect lung alveoli from neutrophil elastase.',
+  'liver|Hepatocytes produce alpha-1 antitrypsin; misfolded mutant A1AT accumulates in the ER of hepatocytes, causing liver cirrhosis alongside emphysema.',
+  'pancreas|The pancreas secretes digestive zymogens like trypsinogen, not alpha-1 antitrypsin.',
+  'spleen|The spleen filters senescent erythrocytes.',
+  'kidney|The kidney produces erythropoietin and renin.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'A linear open-chain representation of a monosaccharide is called a _______ projection, whereas a cyclic ring representation is called a _______ projection.',
-  'Fischer; Haworth|Fischer projections depict carbohydrates as vertical open chains, while Haworth projections depict them as closed rings.',
-  'Haworth; Fischer|The projection names are reversed; Haworth is the ring and Fischer is the linear chain.',
-  'chair; boat|Chair and boat describe three-dimensional conformational puckering of a Haworth ring.',
-  'alpha; beta|Alpha and beta designate anomeric hydroxyl orientation in a closed ring.');
+// ===================== 4: MONOSACCHARIDE CHEMISTRY, EPIMERS & ANOMERS =====================
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'What is the general empirical formula for simple carbohydrates?',
+  '(CH2O)n|Carbohydrates maintain a 1:2:1 ratio of carbon, hydrogen, and oxygen atoms.',
+  '(CHO2)n|This formula doubles the oxygen count relative to carbon.',
+  '(C2H2O)n|This formula doubles the carbon count relative to water.',
+  '(CH4O)n|This formula represents saturated alcohols rather than sugars.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'Glucose, galactose, and mannose are classified as _______ because their carbonyl group is an aldehyde at C1, whereas fructose is a _______ with a ketone at C2.',
-  'aldoses; ketose|Aldoses carry a terminal aldehyde carbonyl bonded to H and C at carbon 1; ketoses carry an internal ketone carbonyl bonded to two carbons at C2.',
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'A straight-chain representation of a monosaccharide is a _______ projection, whereas a closed-ring representation is a _______ projection.',
+  'Fischer; Haworth|Fischer projections show open carbon chains vertically, while Haworth projections depict cyclic pyranose or furanose rings.',
+  'Haworth; Fischer|The projection names are reversed; Haworth is the ring and Fischer is the open chain.',
+  'chair; boat|Chair and boat describe 3D conformational puckering of a six-membered ring.',
+  'alpha; beta|Alpha and beta designate anomeric hydroxyl orientation.');
+
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'Glucose, galactose, and mannose are _______ with an aldehyde group at C1, whereas fructose is a _______ with a ketone group at C2.',
+  'aldoses; ketose|Aldoses carry a terminal aldehyde carbonyl bonded to H and C at C1; ketoses carry an internal ketone carbonyl bonded to two carbons at C2.',
   'ketoses; aldose|The functional group classifications are reversed; fructose is the ketose.',
-  'pentoses; hexose|All four sugars contain six carbons and are therefore hexoses.',
-  'disaccharides; monosaccharide|All four sugars are single monosaccharide units.');
+  'pentoses; hexose|All four sugars contain six carbons and are hexoses.',
+  'disaccharides; monosaccharide|All four sugars are single monosaccharides.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'In a cyclic monosaccharide, the carbonyl carbon that becomes a new chiral center upon ring closure is called the _______ carbon, located at C1 in aldoses and _______ in fructose.',
-  'anomeric; C2|The anomeric carbon is C1 in glucose/galactose/mannose and C2 in fructose; its hydroxyl orientation defines alpha vs. beta anomers.',
-  'anomeric; C5|C5 participates in ring oxygen closure but is not the carbonyl-derived anomeric carbon.',
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'The carbonyl carbon that becomes a new chiral center upon sugar ring closure is called the _______ carbon, which is C1 in aldoses and _______ in fructose.',
+  'anomeric; C2|In cyclic Haworth rings, C1 is the anomeric carbon of aldoses and C2 is the anomeric carbon of fructose.',
+  'anomeric; C5|C5 provides the ring oxygen during closure but is not the carbonyl-derived anomeric carbon.',
   'epimeric; C4|C4 is the epimeric site distinguishing galactose from glucose.',
-  'omega; C6|C6 is the terminal hydroxymethyl group above or below the ring.');
+  'omega; C6|C6 is the terminal exocyclic hydroxymethyl carbon.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'In a standard Haworth ring of a D-hexopyranose, the _______ anomer has the C1 hydroxyl pointing _______ to the C6 group, whereas the _______ anomer has them pointing in the same direction.',
+addQ(4, 'medium', 1, 'Tutoring Wk 8',
+  'In a Haworth projection of a D-hexopyranose, the _______ anomer has the C1 hydroxyl pointing _______ to the C6 group, whereas the _______ anomer has them pointing in the same direction.',
   'alpha; opposite; beta|In D-sugars, C6 points up; alpha has the C1 -OH pointing down (opposite), while beta has C1 -OH pointing up (same).',
-  'beta; opposite; alpha|The anomeric prefixes are reversed; beta means same direction and alpha means opposite direction.',
-  'D; opposite; L|D and L designate enantiomeric family, not anomeric orientation at C1.',
+  'beta; opposite; alpha|The anomeric labels are reversed; beta means same side and alpha means opposite side.',
+  'D; opposite; L|D and L designate enantiomeric configuration at C5 rather than anomeric orientation at C1.',
   'cis; opposite; trans|Cis means same side and trans means opposite side.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
+addQ(4, 'medium', 1, 'Lec 6.1',
   'D-mannose is the _______ epimer of D-glucose, whereas D-galactose is the _______ epimer of D-glucose.',
   'C2; C4|Epimers differ in hydroxyl orientation at exactly one chiral carbon: mannose differs at C2 and galactose differs at C4.',
   'C4; C2|The carbon positions are reversed; mannose is C2 and galactose is C4.',
   'C1; C6|C1 is the anomeric carbon and C6 is achiral.',
-  'C3; C5|C5 determines D vs. L family, not glucose vs. galactose.');
+  'C3; C5|C5 sets D vs. L configuration.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'Glucose and fructose are best classified as _______ because they share the formula C6H12O6 but differ in the position of their carbonyl functional group.',
-  'structural isomers|Aldose-ketose pairs with identical molecular formulas have different covalent connectivity and are structural (constitutional) isomers.',
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'Glucose and fructose are best classified as _______ because they share the molecular formula C6H12O6 but differ in carbonyl functional group placement.',
+  'structural isomers|Aldose-ketose pairs with the same molecular formula have different covalent connectivity and are structural (constitutional) isomers.',
   'epimers|Epimers share identical functional group connectivity and differ at only one chiral center.',
   'anomers|Anomers are cyclic stereoisomers differing solely at the anomeric carbon.',
   'enantiomers|Enantiomers are non-superimposable mirror images (D vs. L forms).');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'Which specific monosaccharide isomer circulates as the primary blood sugar metabolized by hexokinase?',
-  'alpha-D-glucopyranose|Alpha-D-glucopyranose is the physiological six-membered ring form maintained in blood and phosphorylated by hexokinase.',
-  'beta-L-glucopyranose|Human metabolism utilizes D-sugars almost exclusively; L-glucose is not a physiological fuel.',
-  'alpha-D-fructofuranose|Fructose is a five-membered ketose ring metabolized primarily in the liver, not the main blood sugar.',
-  'beta-D-galactopyranose|Galactose must first be converted into glucose derivatives in the liver before entering glycolysis.');
+addQ(4, 'easy', 1, 'Tutoring Wk 8',
+  'Which specific monosaccharide isomer circulates as the primary blood glucose metabolized by hexokinase?',
+  'alpha-D-glucopyranose|Alpha-D-glucopyranose is the physiological six-membered ring form maintained in blood and phosphorylated by hexokinase at C6.',
+  'beta-L-glucopyranose|Human metabolism uses D-sugars almost exclusively; L-glucose is not a physiological fuel.',
+  'alpha-D-fructofuranose|Fructose is a five-membered ketose ring metabolized primarily in the liver, not blood glucose.',
+  'beta-D-galactopyranose|Galactose is a C4 epimer converted into glucose derivatives in the liver.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
+addQ(4, 'medium', 1, 'Outline',
+  'Why is beta-D-glucopyranose the most thermodynamically stable chair conformation of glucose in aqueous solution?',
+  'All of its bulky hydroxyl and hydroxymethyl groups occupy uncrowded equatorial positions|Equatorial placement minimizes steric hindrance around the six-membered pyranose ring.',
+  'All of its hydroxyl groups point straight up and down in axial positions|Axial substituents create severe steric crowding.',
+  'It forms a five-membered furanose ring with no chiral centers|Glucopyranose is a six-membered ring with five chiral carbons.',
+  'Its anomeric carbon is permanently oxidized to a carboxylic acid|Ring closure forms a hemiacetal rather than a carboxylic acid.');
+
+addQ(4, 'medium', 1, 'Outline',
+  'D versus L sugar nomenclature designates _______ at the penultimate chiral carbon, whereas (+) versus (-) designates _______.',
+  'stereochemical configuration; measured optical rotation of plane-polarized light|D-sugars match D-glyceraldehyde configuration at C5, while (+) dextrorotatory and (-) levorotatory are measured experimentally.',
+  'measured optical rotation; stereochemical configuration|The definitions are reversed; D/L is configuration and (+)/(-) is optical rotation.',
+  'five-membered vs. six-membered rings; alpha vs. beta anomers|Ring sizes are furanose vs. pyranose.',
+  'aldose vs. ketose; reducing vs. non-reducing|Functional groups are aldose/ketose.');
+
+addQ(4, 'hard', 1, 'Lec 6.1',
+  'How does chronic hyperglycemia in uncontrolled diabetes damage hemoglobin and vascular proteins (forming HbA1c)?',
+  'The open-chain glucose aldehyde reacts non-enzymatically with free protein amino groups (glycation)|Excess glucose shifts equilibrium toward the reactive open-chain aldehyde, modifying lysine/N-terminal amines.',
+  'Glucose enzymatically phosphorylates serine residues on erythrocyte membranes|Non-enzymatic glycation does not require ATP or kinases.',
+  'Glucose oxidizes cysteine disulfides into sulfonic acid|Glycation targets free amine lone pairs rather than disulfides.',
+  'Glucose cleaves peptide bonds via acid hydrolysis|Blood pH remains buffered near 7.4; damage occurs via Maillard/glycation reactions.');
+
+addQ(4, 'easy', 0, 'Outline',
+  'Ribose and ribulose are both five-carbon pentoses, but ribose is an _______ whereas ribulose is a _______.',
+  'aldose; ketose|Ribose has an aldehyde carbonyl at C1 (used in RNA/nucleotides), while ribulose has a ketone carbonyl at C2 (HMP intermediate).',
+  'ketose; aldose|The classifications are reversed; ribose is an aldose and ribulose is a ketose.',
+  'hexose; triose|Both ribose and ribulose contain five carbons.',
+  'disaccharide; polysaccharide|Both are single monosaccharide units.');
+
+// ===================== 5: DISACCHARIDES, POLYSACCHARIDES, GI DIGESTION & GAGS =====================
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
   'Formation of a glycosidic bond between two monosaccharides occurs via a _______ reaction, whereas enzymatic cleavage requires a _______ reaction.',
-  'condensation; hydrolysis|Joining two sugars releases a molecule of H2O (condensation/dehydration), while breaking the bond consumes H2O (hydrolysis).',
+  'condensation; hydrolysis|Linking two sugars releases H2O (condensation/dehydration), while brush-border hydrolases add H2O back to split them.',
   'hydrolysis; condensation|The reaction directions are reversed; hydrolysis breaks bonds and condensation forms them.',
-  'oxidation; reduction|Glycosidic bond formation is a non-redox dehydration reaction.',
-  'isomerization; phosphorylation|Neither step involves intramolecular rearrangement or ATP phosphate transfer.');
+  'oxidation; reduction|Glycosidic bond formation is not a redox reaction.',
+  'isomerization; phosphorylation|Neither step involves intramolecular rearrangement or ATP transfer.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'The four major disaccharides to master are maltose, sucrose, lactose, and _______, which consists of two beta-D-glucose units.',
-  'cellobiose|Cellobiose is a disaccharide of two beta-D-glucose monomers linked by a beta(1->4) bond, representing the repeating unit of cellulose.',
-  'amylose|Amylose is a long unbranched polysaccharide of alpha-D-glucose units.',
-  'glycogen|Glycogen is a highly branched storage polysaccharide of alpha-D-glucose.',
-  'ribose|Ribose is a five-carbon monosaccharide (pentose) found in RNA.');
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
+  'The four major disaccharides to recognize are lactose, sucrose, maltose, and _______, which consists of two beta-D-glucose units.',
+  'cellobiose|Cellobiose contains two beta-D-glucose monomers joined by a beta(1->4) bond, representing the repeating unit of cellulose.',
+  'amylose|Amylose is an unbranched polysaccharide of alpha-D-glucose.',
+  'glycogen|Glycogen is a branched storage polysaccharide of alpha-D-glucose.',
+  'ribose|Ribose is a five-carbon monosaccharide.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'Lactose is composed of beta-D-galactose linked to D-glucose via a _______ glycosidic bond.',
-  'beta-1,4|Lactase hydrolyzes the beta(1->4) linkage between C1 of galactose and C4 of glucose.',
-  'alpha-1,4|An alpha(1->4) bond between two alpha-D-glucose units forms maltose.',
-  'alpha-1,beta-2|An alpha-1, beta-2 linkage between glucose and fructose forms sucrose.',
-  'alpha-1,6|An alpha(1->6) bond forms branch points in glycogen and amylopectin.');
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
+  'Match each disaccharide to its glycosidic linkage: maltose is _______, lactose is _______, and sucrose is _______.',
+  'alpha-1,4; beta-1,4; alpha-1, beta-2|Maltose joins two alpha-glucoses (alpha-1,4), lactose joins beta-galactose and glucose (beta-1,4), and sucrose joins alpha-glucose and beta-fructose (alpha-1, beta-2).',
+  'beta-1,4; alpha-1,4; alpha-1,6|Maltose and lactose linkages are reversed, and alpha-1,6 is a glycogen branch bond.',
+  'alpha-1,6; beta-1,4; alpha-1,4|Maltose is alpha-1,4 and sucrose is alpha-1, beta-2.',
+  'alpha-1, beta-2; alpha-1,4; beta-1,4|All three linkage assignments are mismatched.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'Why does lactase deficiency cause osmotic diarrhea and flatulence following dairy ingestion?',
-  'Undigested lactose retains water in the intestinal lumen and is fermented by colonic bacteria into gas|Enterocytes can only absorb monosaccharides; unsplit lactose draws water osmotically into the gut and serves as fuel for gas-producing flora.',
-  'Intact lactose molecules enter enterocytes and burst them via hypertonic swelling|Disaccharides cannot cross the enterocyte brush border membrane.',
-  'Lactose inhibits pancreatic lipase, causing severe fat malabsorption|Lactase deficiency specifically affects milk sugar digestion rather than triglycerides.',
-  'Excess galactose accumulates in the blood and triggers renal water loss|Galactose is not absorbed because lactose is never cleaved in the small intestine.');
+addQ(5, 'medium', 1, 'Lec 6.2',
+  'Why is sucrose classified as a non-reducing sugar, whereas lactose and maltose are reducing sugars?',
+  'Both anomeric carbons in sucrose (C1 of glucose and C2 of fructose) are locked in the glycosidic bond|Because neither ring can open into a free reactive aldehyde, sucrose cannot reduce test reagents; lactose and maltose retain one free anomeric carbon.',
+  'Sucrose contains no hydroxyl groups capable of hydrogen bonding|Sucrose has eight hydroxyl groups.',
+  'Sucrose is composed entirely of L-enantiomer sugars|Both glucose and fructose in sucrose are D-sugars.',
+  'Sucrose is a branched polysaccharide rather than a disaccharide|Sucrose is a disaccharide of glucose and fructose.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
-  'Sucrose is composed of alpha-D-glucose and beta-D-fructose joined by an _______ linkage.',
-  'alpha-1, beta-2|Because both anomeric carbons (C1 of glucose and C2 of flipped fructose) are joined in the glycosidic bond, sucrose is a non-reducing sugar.',
-  'alpha-1,4|An alpha(1->4) linkage connects two alpha-D-glucose monomers in maltose.',
-  'beta-1,4|A beta(1->4) linkage connects galactose and glucose in lactose.',
-  'alpha-1,6|An alpha(1->6) linkage forms branch points in glycogen and amylopectin.');
+addQ(5, 'medium', 1, 'Tutoring Wk 8',
+  'Why does lactase deficiency produce osmotic diarrhea, bloating, and flatulence after consuming dairy products?',
+  'Undigested lactose cannot cross enterocytes, retaining water osmotically in the gut lumen while colonic bacteria ferment it into gas|Enterocytes only absorb monosaccharides; unsplit disaccharides draw water into the lumen and feed gas-producing flora.',
+  'Intact lactose enters enterocytes and causes hypertonic cell lysis|Disaccharides cannot cross the apical brush border membrane.',
+  'Lactose inhibits pancreatic amylase and lipase|Lactase deficiency specifically affects lactose cleavage rather than starch or fat enzymes.',
+  'Excess absorbed galactose triggers renal water loss|Galactose is not absorbed because lactose remains unsplit.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
   'Humans cannot digest dietary cellulose because we lack an enzyme capable of hydrolyzing _______ glycosidic bonds between glucose units.',
   'beta-1,4|Human salivary and pancreatic amylases cleave alpha(1->4) linkages in starch but cannot recognize beta(1->4) linkages in cellulose.',
   'alpha-1,4|Human alpha-amylase readily digests alpha(1->4) bonds in amylose and amylopectin.',
   'alpha-1,6|Debranching enzymes cleave alpha(1->6) branch points in starch and glycogen.',
-  'alpha-1,2|Sucrase cleaves the linkage in table sugar.');
+  'alpha-1,2|Sucrase cleaves the linkage in sucrose.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'How does amylose differ structurally from amylopectin and glycogen?',
-  'Amylose is an unbranched linear chain, whereas amylopectin and glycogen are branched polymers|Amylose contains only alpha(1->4) linkages; amylopectin branches every 16-20 residues and glycogen branches every 8-10 residues via alpha(1->6) bonds.',
-  'Amylose is built from beta-glucose, whereas glycogen is built from alpha-glucose|All three storage homopolysaccharides are composed of alpha-D-glucose units.',
-  'Amylose is stored in human skeletal muscle, whereas glycogen is stored in plants|Starch (amylose/amylopectin) is plant energy storage; glycogen is animal energy storage.',
-  'Amylose contains peptide cross-links, whereas glycogen contains ester bonds|All three are pure carbohydrates linked exclusively by glycosidic bonds.');
+addQ(5, 'medium', 1, 'Tutoring Wk 8',
+  'How do amylose, amylopectin, and glycogen differ in branching structure?',
+  'Amylose is unbranched, amylopectin branches every 16–20 residues, and glycogen branches every 8–10 residues via alpha-1,6 bonds|All three are polymers of alpha-D-glucose with alpha(1->4) linear chains, but glycogen is the most densely branched.',
+  'Amylose is heavily branched, whereas glycogen is a linear unbranched chain|The branching patterns are reversed; glycogen is highly branched and amylose is linear.',
+  'Amylose uses beta-1,4 bonds, whereas amylopectin and glycogen use alpha-1,4 bonds|All three use alpha(1->4) backbone linkages; cellulose uses beta(1->4).',
+  'Glycogen is built from beta-D-fructose, whereas amylose is built from alpha-D-glucose|All three homopolysaccharides are composed of alpha-D-glucose.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'What is the primary metabolic advantage of extensive alpha-1,6 branching in glycogen (every 8–10 glucose units)?',
-  'It creates numerous terminal ends so enzymes can mobilize glucose rapidly|Because glycogen phosphorylase cleaves glucose one unit at a time from terminal non-reducing ends, branching allows simultaneous release from many ends.',
-  'It prevents glycogen from dissolving in water inside hepatocytes|Branching actually increases solubility and compact packing compared to linear chains.',
-  'It allows glycogen to be transported intact across the plasma membrane into blood|Intracellular glycogen is broken down to glucose-6-phosphate (and free glucose in liver) before export.',
-  'It converts alpha-D-glucose into higher-calorie fatty acids during storage|Glycogen remains a pure carbohydrate store yielding ~4 kcal/g.');
+addQ(5, 'medium', 1, 'Tutoring Wk 8',
+  'What is the primary physiological advantage of dense alpha-1,6 branching in glycogen?',
+  'It creates many terminal ends so glycogen phosphorylase can cleave and mobilize glucose rapidly|Because enzymes remove glucose one residue at a time from non-reducing ends, branching allows simultaneous release from numerous ends.',
+  'It prevents glycogen from dissolving in hepatocyte cytosol|Branching increases water solubility and compact storage.',
+  'It enables intact glycogen polymers to diffuse directly into blood plasma|Glycogen is degraded intracellularly to glucose-6-phosphate (and free glucose in liver) before export.',
+  'It doubles the caloric yield of glucose from 4 kcal/g to 9 kcal/g|Glycogen remains a carbohydrate yielding ~4 kcal/g.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
   'Approximately how much glycogen is stored in human skeletal muscle compared to the liver?',
-  '400 grams in skeletal muscle; 90 grams in the liver|Muscle holds a larger total mass (~400 g) for local contraction fuel, while liver holds ~90 g to maintain blood glucose.',
-  '90 grams in skeletal muscle; 400 grams in the liver|The storage quantities are reversed; total skeletal muscle mass holds more glycogen than the liver.',
-  '1,500 grams in skeletal muscle; 500 grams in the liver|Total body glycogen reserves are limited to roughly 500 grams combined.',
-  '40 grams in skeletal muscle; 10 grams in the liver|These numbers underestimate physiological glycogen stores by tenfold.');
+  '400 grams in skeletal muscle; 90 grams in the liver|Total skeletal muscle mass stores ~400 g for local contraction fuel, while liver stores ~90 g to buffer blood glucose.',
+  '90 grams in skeletal muscle; 400 grams in the liver|The storage quantities are reversed; total muscle glycogen exceeds liver glycogen.',
+  '1,500 grams in skeletal muscle; 500 grams in the liver|Total human glycogen reserves are roughly 500 g combined.',
+  '40 grams in skeletal muscle; 10 grams in the liver|These numbers underestimate normal glycogen stores tenfold.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'Glycosaminoglycans attract and retain large amounts of water in synovial fluid, nucleus pulposus, and vitreous humor because they consist of repeating disaccharides containing:',
-  'an N-acetylated amino sugar and a negatively charged acidic sugar|Dense negative charges from carboxylate and sulfate groups attract Na+ ions, drawing water osmotically to create a shock-absorbing gel.',
-  'branched chains of neutral beta-D-glucose and fructose|Neutral sugars lack the fixed negative charges needed to trap cations and water.',
-  'long hydrophobic hydrocarbon tails esterified to glycerol|Hydrophobic hydrocarbon tails repel water rather than forming hydrated gels.',
-  'cross-linked cysteine residues forming disulfide meshes|Disulfide meshes are characteristic of insoluble keratin rather than hydrated GAGs.');
+addQ(5, 'easy', 1, 'Outline',
+  'Which human cell type has an absolute metabolic requirement for glucose as its sole energy fuel?',
+  'Mature red blood cells|Because erythrocytes lack mitochondria, they cannot oxidize fatty acids or ketones and depend entirely on anaerobic glycolysis.',
+  'Hepatocytes|Liver cells oxidize fatty acids and amino acids to power gluconeogenesis.',
+  'Adipocytes|Adipocytes readily oxidize fatty acids.',
+  'Resting skeletal muscle fibers|Resting skeletal muscle derives most of its ATP from fatty acid oxidation.');
 
-addQ(3, 'easy', 1, 'Tutoring Wk 8',
+addQ(5, 'medium', 1, 'Tutoring Wk 8',
+  'Glycosaminoglycans attract and retain water in synovial fluid, nucleus pulposus, and vitreous humor because they consist of repeating disaccharides containing:',
+  'an N-acetylated amino sugar and a negatively charged acidic sugar|Dense negative charges from carboxylate and sulfate groups attract Na+ ions, drawing water osmotically into a resilient gel.',
+  'branched chains of neutral beta-D-glucose and fructose|Neutral sugars lack fixed negative charges to trap cations and water.',
+  'hydrophobic hydrocarbon tails esterified to glycerol|Hydrophobic tails repel water.',
+  'cross-linked cysteine residues forming insoluble disulfide meshes|Disulfide meshes characterize keratin rather than hydrated GAGs.');
+
+addQ(5, 'hard', 1, 'Study Guide',
+  'Which glycosaminoglycan is the notable structural exception that contains galactose instead of a uronic acidic sugar?',
+  'Keratan sulfate|Unlike hyaluronic acid, heparin, and chondroitin sulfates, keratan sulfate pairs N-acetylglucosamine with galactose.',
+  'Hyaluronic acid|Hyaluronic acid repeats glucuronic acid and N-acetylglucosamine.',
+  'Heparin|Heparin contains sulfated uronic acid and glucosamine residues.',
+  'Chondroitin 6-sulfate|Chondroitin sulfates repeat glucuronic acid and N-acetylgalactosamine.');
+
+addQ(5, 'easy', 1, 'Tutoring Wk 8',
   'A macromolecule consisting of a central core protein covalently attached to numerous long glycosaminoglycan chains is called a:',
-  'proteoglycan|Proteoglycans (such as aggrecan in cartilage and nucleus pulposus) form resilient hydrated extracellular matrices.',
-  'chylomicron|Chylomicrons are lipoprotein particles that transport dietary triglycerides.',
-  'zymogen|Zymogens are inactive enzyme precursors requiring proteolytic cleavage.',
-  'ceramide|Ceramides are sphingolipid backbones formed from sphingosine and a fatty acid.');
+  'proteoglycan|Proteoglycans (such as aggrecan in articular cartilage and intervertebral discs) form hydrated shock-absorbing matrices.',
+  'chylomicron|Chylomicrons transport dietary lipids.',
+  'zymogen|Zymogens are inactive protease precursors.',
+  'ceramide|Ceramides are sphingolipid backbones.');
 
-addQ(3, 'medium', 1, 'Tutoring Wk 8',
-  'Lysosomal storage diseases (such as mucopolysaccharidoses or Fabry disease) result from:',
-  'inherited deficiency of specific lysosomal hydrolase enzymes causing substrate accumulation|Without functional lysosomal degradation enzymes, glycosaminoglycans or glycosphingolipids accumulate inside lysosomes, damaging tissues.',
-  'overactive ribosomal synthesis of extracellular collagen fibers|Lysosomal storage diseases are catabolic degradation defects rather than overproduction.',
-  'excess dietary intake of essential omega-3 fatty acids|They are inherited genetic enzymopathies, not dietary excesses.',
-  'autoimmune destruction of pancreatic beta cells|Autoimmune beta-cell destruction causes Type 1 diabetes mellitus.');
+addQ(5, 'medium', 1, 'Tutoring Wk 8',
+  'Lysosomal storage diseases (such as mucopolysaccharidoses or Fabry disease) are caused by:',
+  'inherited deficiency of specific lysosomal hydrolase enzymes leading to substrate accumulation|Without functional lysosomal degradation enzymes, GAGs or glycosphingolipids build up inside lysosomes and damage organs.',
+  'excessive ribosomal synthesis of extracellular Type I collagen|They are catabolic lysosomal degradation defects rather than overproduction.',
+  'dietary overconsumption of essential polyunsaturated fatty acids|They are inherited genetic enzymopathies.',
+  'autoimmune destruction of intestinal brush-border lactase|Lactase deficiency is an intestinal brush-border defect, not a lysosomal storage disorder.');
 
-// ===================== SUBJECT 4: LIPIDS, EICOSANOIDS & LIPOPROTEINS (INCL. WEEK 8) =====================
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+// ===================== 6: LIPIDS, ESSENTIAL FATTY ACIDS, EICOSANOIDS & LIPOPROTEINS =====================
+addQ(6, 'easy', 1, 'Lec 7.3',
   'A true storage fat, or triacylglycerol, consists of one glycerol backbone esterified to _______ fatty acid chains.',
-  'three|Free fatty acids are building blocks; attaching three fatty acids via ester bonds forms a neutral triacylglycerol (TAG).',
-  'one|One fatty acid esterified to glycerol is a monoacylglycerol.',
+  'three|Free fatty acids are building blocks; esterifying three fatty acids to glycerol forms a neutral triacylglycerol (TAG).',
+  'one|One fatty acid on glycerol is a monoacylglycerol.',
   'two|Two fatty acids plus a phosphorylated head group form a glycerophospholipid.',
-  'four|Glycerol has only three hydroxyl carbons available for esterification.');
+  'four|Glycerol has only three hydroxyl groups available for esterification.');
 
-addQ(4, 'easy', 1, 'Lec 7.3',
+addQ(6, 'easy', 1, 'Lec 7.3',
+  'Dietary triglycerides yield approximately _______ kilocalories per gram, compared to _______ kilocalories per gram for carbohydrates and proteins.',
+  '9; 4|Reduced hydrocarbon chains in fats store more than twice the energy per gram as hydrated carbohydrates or proteins.',
+  '4; 9|The caloric values are reversed; fat yields 9 kcal/g and carbs/protein yield 4 kcal/g.',
+  '7; 4|7 kcal/g is the caloric yield of ethanol (alcohol), whereas fat yields 9 kcal/g.',
+  '12; 6|These figures overestimate standard physiological caloric yields.');
+
+addQ(6, 'easy', 1, 'Lec 7.3',
   'In membrane glycerophospholipids, the phosphate group at carbon 3 is commonly modified by attachment to serine, choline, inositol, or _______:',
-  'ethanolamine|These four polar adducts differentiate membrane phospholipids and participate in cell signaling and membrane asymmetry.',
-  'glycine|Glycine is a simple amino acid not used as a major phospholipid head-group adduct.',
-  'cholesterol|Cholesterol intercalates between fatty acid tails rather than esterifying to the phosphate head.',
-  'glucose|Simple glucose is not one of the four major phospholipid phosphate adducts.');
+  'ethanolamine|These four polar adducts differentiate membrane phospholipids and support signal transduction and membrane asymmetry.',
+  'glycine|Glycine is not one of the four major phospholipid phosphate adducts.',
+  'cholesterol|Cholesterol intercalates between hydrophobic tails rather than esterifying to the phosphate head.',
+  'glucose|Simple glucose is not one of the four major phosphate head adducts.');
 
-addQ(4, 'medium', 1, 'Tutoring Wk 8',
-  'How do unsaturated fatty acids and cholesterol affect the physical properties of a phospholipid bilayer?',
-  'Double-bond kinks and bulky cholesterol rings prevent tight packing and preserve membrane fluidity|Saturated tails pack tightly like bricks (rigid, like butter), whereas cis double bonds and cholesterol disrupt packing (fluid, like oil).',
-  'Both unsaturated tails and cholesterol pack chains into a rigid crystalline solid|Cis double bonds create steric bends that prevent crystallization.',
-  'Cholesterol eliminates all hydrophobic interactions in the membrane core|Cholesterol is predominantly hydrophobic and reinforces membrane stability while preventing solidification.',
-  'Saturated fatty acids increase membrane fluidity more than polyunsaturated fatty acids|Saturated chains have straight tails with maximal van der Waals packing, making membranes less fluid.');
+addQ(6, 'medium', 1, 'Lec 7.3',
+  'Sphingomyelin, a major lipid component of Schwann cell and oligodendrocyte myelin sheaths, is formed by attaching _______ to a _______ backbone.',
+  'phosphocholine; ceramide|Adding choline (via phosphocholine) to ceramide (sphingosine + fatty acid) generates sphingomyelin.',
+  'serine; glycerol|Serine attached to phosphatidate forms phosphatidylserine, a glycerophospholipid.',
+  'glucose; cholesterol|Cholesterol does not form sphingomyelin.',
+  'inositol; palmitate|Inositol attaches to glycerophospholipids rather than ceramide.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
-  'In standard fatty acid notation, what does the designation 16:0 indicate?',
+addQ(6, 'medium', 1, 'Tutoring Wk 8',
+  'How do cis unsaturated fatty acids and cholesterol affect the physical fluidity of a phospholipid bilayer?',
+  'Cis double-bond kinks and bulky cholesterol rings prevent tight packing and preserve membrane fluidity|Saturated tails pack tightly like bricks (rigid, like butter), whereas cis kinks and cholesterol disrupt tight crystallization (fluid, like oil).',
+  'Both cis unsaturated tails and cholesterol pack chains into a rigid crystalline solid|Cis double bonds introduce bends that prevent tight van der Waals packing.',
+  'Cholesterol eliminates all hydrophobic interactions inside the bilayer core|Cholesterol is predominantly hydrophobic and stabilizes membranes while preventing solidification.',
+  'Saturated fatty acids increase membrane fluidity more than polyunsaturated fatty acids|Straight saturated chains pack tightly, making membranes less fluid.');
+
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
+  'In standard fatty acid shorthand notation, what does 16:0 represent?',
   'A 16-carbon saturated chain with zero double bonds|The number before the colon counts total carbons (palmitic acid = 16) and the number after counts double bonds (0 = saturated).',
   'A 16-carbon chain with a double bond at the omega position|Zero indicates the complete absence of carbon-carbon double bonds.',
-  'Sixteen double bonds across a 20-carbon backbone|The first number always represents chain length, not double-bond count.',
+  'Sixteen double bonds across a 20-carbon chain|The first number always denotes carbon chain length.',
   'A 16-carbon chain containing one trans double bond|Monounsaturated chains are written with a 1 after the colon (e.g., 16:1).');
 
-addQ(4, 'medium', 1, 'Tutoring Wk 8',
-  'Why is the omega numbering system (counting from the terminal methyl carbon) particularly useful when tracking fatty acid elongation?',
-  'Because elongation adds carbons at the carboxyl end, leaving the omega double-bond position unchanged|Adding 2-carbon units to the carboxyl head shifts standard delta numbers, but the distance from the methyl (omega) tail remains constant.',
-  'Because desaturase enzymes always count carbons starting from the methyl end|Human desaturases count from the carboxyl (delta) end, not the methyl end.',
-  'Because saturated fatty acids are always named using omega-1 notation|Saturated fatty acids have no double bonds and do not use omega family designations.',
-  'Because elongation removes carbons exclusively from the terminal methyl group|Chain elongation adds malonyl-CoA carbons at the carboxyl end.');
+addQ(6, 'medium', 1, 'Tutoring Wk 8',
+  'Why does the omega number of an unsaturated fatty acid remain unchanged when the chain is elongated by two carbons?',
+  'Because elongation adds carbons at the carboxyl end, leaving the distance from the terminal methyl (omega) carbon constant|Adding malonyl-CoA carbons to the carboxyl head shifts delta numbers, but the methyl tail end is untouched.',
+  'Because desaturase enzymes always count carbons starting from the methyl end|Human desaturases count from the carboxyl (delta) head, not the methyl end.',
+  'Because elongation removes two carbons from the methyl end simultaneously|Chain elongation adds carbons without shortening the methyl tail.',
+  'Because double bonds migrate down the chain during elongation|Existing double bonds do not move relative to the methyl tail.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
   'Which two polyunsaturated fatty acids are strictly essential in the human diet?',
   'Linoleic acid and alpha-linolenic acid|Humans lack desaturase enzymes capable of inserting double bonds beyond carbon 9 (at the omega-6 and omega-3 positions).',
-  'Palmitic acid and stearic acid|Palmitic (16:0) and stearic (18:0) acids are saturated fats synthesized endogenously from carbohydrates.',
-  'Oleic acid and palmitoleic acid|Humans possess delta-9 desaturase and can synthesize omega-9 and omega-7 monounsaturated fats.',
-  'Arachidonic acid and eicosapentaenoic acid|These 20-carbon derivatives can be synthesized endogenously if dietary linoleic and alpha-linolenic acids are supplied.');
+  'Palmitic acid and stearic acid|Palmitic (16:0) and stearic (18:0) acids are saturated fats synthesized endogenously.',
+  'Oleic acid and palmitoleic acid|Humans express delta-9 desaturase and can synthesize omega-9 and omega-7 monounsaturated fats.',
+  'Arachidonic acid and eicosapentaenoic acid|These 20-carbon derivatives can be synthesized endogenously if dietary linoleic and alpha-linolenic acids are provided.');
 
-addQ(4, 'medium', 1, 'Tutoring Wk 8',
-  'Linoleic acid [18:2(9,12)] is an _______ fatty acid, whereas alpha-linolenic acid [18:3(9,12,15)] is an _______ fatty acid.',
+addQ(6, 'medium', 1, 'Tutoring Wk 8',
+  'Linoleic acid [18:2(9,12)] belongs to the _______ family, whereas alpha-linolenic acid [18:3(9,12,15)] belongs to the _______ family.',
   'omega-6; omega-3|Counting from the terminal methyl end, linoleic acid has its first double bond at C6 (18 - 12 = 6), while alpha-linolenic acid starts at C3 (18 - 15 = 3).',
   'omega-3; omega-6|The omega family designations are reversed; linoleic is omega-6 and alpha-linolenic is omega-3.',
-  'omega-9; omega-6|Oleic acid is omega-9; both essential fatty acids belong to the omega-6 and omega-3 families.',
-  'omega-6; omega-9|Alpha-linolenic acid has a double bond at carbon 15 of an 18-carbon chain (omega-3).');
+  'omega-9; omega-6|Oleic acid (18:1,9) is omega-9.',
+  'omega-6; omega-9|Alpha-linolenic acid has its terminal double bond 3 carbons from the methyl end (omega-3).');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
   'Which four desaturase enzymes are expressed in human cells to introduce double bonds relative to the carboxyl end?',
-  'Delta-4, delta-5, delta-6, and delta-9 desaturases|Humans only insert double bonds at carbons 4, 5, 6, and 9 from the carboxyl head, explaining why omega-3 and omega-6 precursors are essential.',
-  'Delta-3, delta-6, delta-9, and delta-12 desaturases|Humans lack delta-12 and delta-15 desaturases, which are present in plants.',
-  'Delta-1, delta-2, delta-3, and delta-4 desaturases|Desaturases do not insert double bonds adjacent to the carboxyl carbon at C1-C3.',
+  'Delta-4, delta-5, delta-6, and delta-9 desaturases|Humans can only insert double bonds at carbons 4, 5, 6, and 9 from the carboxyl head.',
+  'Delta-3, delta-6, delta-9, and delta-12 desaturases|Humans lack delta-12 and delta-15 desaturases found in plants.',
+  'Delta-1, delta-2, delta-3, and delta-4 desaturases|Human desaturases do not insert double bonds at carbons 1–3.',
   'Delta-5, delta-10, delta-13, and delta-15 desaturases|Humans lack delta-13 and delta-15 desaturases.');
 
-addQ(4, 'hard', 1, 'Tutoring Wk 8',
-  'To convert dietary alpha-linolenic acid (18:3) into eicosapentaenoic acid (20:5), which sequence of enzymatic steps is required?',
-  'Delta-6 desaturation, 2-carbon elongation, and delta-5 desaturation|Adding a bond at C6 before elongating by 2 carbons shifts that bond to C8, allowing delta-5 desaturase to insert the final bond at C5.',
-  '2-carbon elongation followed by delta-8 and delta-5 desaturation|Humans do not possess a delta-8 desaturase enzyme and must desaturate at C6 prior to elongation.',
-  'Delta-9 desaturation followed by 4-carbon elongation|Alpha-linolenic acid already has a bond at C9 and requires only 2-carbon elongation to reach 20 carbons.',
-  'Delta-4 desaturation followed by 2-carbon shortening|EPA synthesis lengthens the chain from 18 to 20 carbons without using delta-4 desaturase.');
+addQ(6, 'hard', 1, 'Tutoring Wk 8',
+  'To synthesize eicosapentaenoic acid (20:5) from dietary alpha-linolenic acid (18:3), which sequence of enzymatic steps is required?',
+  'Delta-6 desaturation, 2-carbon elongation, and delta-5 desaturation|Inserting a double bond at C6 before 2-carbon elongation shifts that bond to C8, allowing delta-5 desaturase to insert the final bond at C5.',
+  '2-carbon elongation followed by delta-8 and delta-5 desaturation|Humans lack a delta-8 desaturase enzyme and must desaturate at C6 prior to elongation.',
+  'Delta-9 desaturation followed by 4-carbon elongation|ALA is elongated by 2 carbons (18 to 20) rather than 4 carbons to form EPA.',
+  'Delta-4 desaturation followed by 2-carbon shortening|Delta-4 desaturase is used in the final step of 22-carbon DHA synthesis, not 20-carbon EPA.');
 
-addQ(4, 'hard', 1, 'Tutoring Wk 8',
+addQ(6, 'hard', 1, 'Tutoring Wk 8',
   'Both eicosapentaenoic acid (20:5) and docosahexaenoic acid (22:6) belong to the _______ family and require _______ as their essential dietary precursor.',
-  'omega-3; alpha-linolenic acid|Starting from 18-carbon alpha-linolenic acid, sequential desaturation (delta-6, delta-5, delta-4) and elongation yield EPA and DHA.',
-  'omega-6; linoleic acid|Linoleic acid is the omega-6 precursor that yields DGLA and arachidonic acid, not EPA or DHA.',
+  'omega-3; alpha-linolenic acid|Sequential desaturation (delta-6, delta-5, delta-4) and elongation of 18-carbon alpha-linolenic acid yield EPA and DHA.',
+  'omega-6; linoleic acid|Linoleic acid is the omega-6 precursor that yields DGLA and arachidonic acid.',
   'omega-9; oleic acid|Oleic acid is a non-essential omega-9 monounsaturated fatty acid.',
-  'saturated; palmitic acid|Saturated palmitic acid cannot be converted into omega-3 polyunsaturated fatty acids in humans.');
+  'saturated; palmitic acid|Saturated palmitic acid cannot be converted into omega-3 PUFAs in humans.');
 
-addQ(4, 'medium', 1, 'Tutoring Wk 8',
-  'During an inflammatory response, which omega-6 fatty acid is hydrolyzed from carbon 2 of membrane phospholipids and converted by cyclooxygenase enzymes into prostaglandins and thromboxanes?',
-  'Arachidonic acid|Derived from linoleic acid via DGLA, arachidonic acid (20:4) is released from the sn-2 position of phospholipids and oxidized by COX-1/COX-2.',
-  'Palmitic acid|Palmitic acid is a saturated fatty acid typically esterified at position 1 and is not an eicosanoid precursor.',
-  'Oleic acid|Oleic acid is a monounsaturated omega-9 fatty acid that does not serve as a COX substrate.',
-  'Stearic acid|Stearic acid is an 18-carbon saturated fatty acid lacking the double bonds needed for prostaglandin synthesis.');
+addQ(6, 'medium', 1, 'Lec 7.3',
+  'Why is docosahexaenoic acid (22:6) clinically significant in infant nutrition and visual physiology?',
+  'It is heavily concentrated in retinal rod outer segments and cerebral cortex, while premature infants express very low delta-4 desaturase|Each phospholipid in retinal rod outer segments contains roughly one molecule of DHA; preterm infants require preformed dietary DHA.',
+  'It is the primary saturated fuel burned by red blood cell mitochondria|Erythrocytes have no mitochondria, and DHA is a polyunsaturated structural lipid.',
+  'It inhibits intestinal calcium absorption in premature infants|Vitamin D promotes calcium absorption; DHA supports neural and retinal membrane function.',
+  'It serves as the direct precursor for hepatic bile salt synthesis|Bile salts are synthesized from cholesterol rather than DHA.');
 
-addQ(4, 'hard', 1, 'Lec 7.3',
-  'Why are polyunsaturated fatty acids like docosahexaenoic acid (22:6) highly susceptible to free-radical lipid peroxidation?',
-  'Methylene (-CH2-) bridges located between adjacent double bonds easily lose a hydrogen atom to form resonance-stabilized radicals|DHA contains five doubly allylic methylene bridges whose C-H bonds are weak, allowing hydroxyl radicals to initiate a self-propagating chain reaction.',
-  'Their carboxylic acid head groups spontaneously split into hydrogen peroxide|Peroxidation attacks the internal bis-allylic methylene carbons along the tail rather than the carboxyl head.',
-  'Trans double bonds force the hydrocarbon tail to point into the aqueous cytosol|Natural PUFAs contain cis double bonds embedded within the hydrophobic membrane interior.',
-  'They lack any carbon-hydrogen bonds along the central hydrocarbon chain|Each methylene bridge has two hydrogens that serve as targets for free-radical abstraction.');
+addQ(6, 'medium', 1, 'Tutoring Wk 8',
+  'During an inflammatory stimulus, which omega-6 fatty acid is hydrolyzed from carbon 2 of membrane phospholipids and converted by cyclooxygenase enzymes into prostaglandins and thromboxanes?',
+  'Arachidonic acid|Derived from linoleic acid via DGLA, arachidonic acid (20:4) is released from the sn-2 position and oxidized by COX-1/COX-2.',
+  'Palmitic acid|Palmitic acid is a saturated fatty acid typically esterified at carbon 1.',
+  'Oleic acid|Oleic acid is a monounsaturated omega-9 fatty acid that does not form prostaglandins.',
+  'Stearic acid|Stearic acid is an 18-carbon saturated fatty acid lacking double bonds.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+addQ(6, 'hard', 1, 'Lec 7.3',
+  'Why are polyunsaturated fatty acids like DHA and arachidonic acid highly vulnerable to free-radical lipid peroxidation?',
+  'Methylene (-CH2-) bridges located between adjacent double bonds easily lose a hydrogen atom to form resonance-stabilized radicals|Doubly allylic C-H bonds are weak, allowing hydroxyl radicals to abstract H and trigger a self-propagating chain reaction.',
+  'Their carboxylic acid head groups spontaneously split into hydrogen peroxide|Radical abstraction targets the internal bis-allylic methylene carbons along the chain.',
+  'Trans double bonds force the hydrocarbon tail into the aqueous cytosol|Natural PUFAs have cis double bonds embedded within the membrane interior.',
+  'They lack any carbon-hydrogen bonds along the central hydrocarbon chain|Each methylene bridge has two hydrogens that serve as targets for radical attack.');
+
+addQ(6, 'medium', 1, 'Lec 7.3',
+  'Overheating olive oil or polyunsaturated vegetable oils at high temperatures in air is harmful because thermal energy and oxygen:',
+  'isomerize cis double bonds into trans fats and cleave chains into toxic aldehydes|Heat rotates double bonds from cis to trans and oxidizes fragmented chains into reactive aldehydes.',
+  'convert unsaturated fatty acids into essential fat-soluble vitamins|High heat destroys unsaturated lipids rather than generating vitamins.',
+  'polymerize fatty acids into water-soluble glycogen|Lipids cannot be converted into carbohydrates by cooking.',
+  'reduce double bonds into fully saturated stearic acid|Heating in air causes oxidative cleavage rather than catalytic hydrogenation.');
+
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
   'Which four vitamins constitute the fat-soluble vitamins absorbed alongside dietary lipids?',
-  'Vitamins A, D, E, and K|Vitamins D, E, A, and K are hydrophobic lipids requiring bile emulsification and chylomicron packaging for absorption.',
-  'Vitamins B1, B2, B6, and B12|B-complex vitamins are water-soluble cofactors rather than fat-soluble lipids.',
-  'Vitamins C, B9, B12, and biotin|Vitamin C and B vitamins are water-soluble and excreted in urine when in excess.',
-  'Vitamins A, C, D, and E|Vitamin C (ascorbate) is water-soluble, whereas vitamin K is fat-soluble.');
+  'Vitamins A, D, E, and K|Vitamins D, E, A, and K are hydrophobic lipids requiring bile emulsification and chylomicron packaging.',
+  'Vitamins B1, B2, B6, and B12|B-complex vitamins are water-soluble cofactors.',
+  'Vitamins C, B9, B12, and biotin|Vitamin C and B vitamins are water-soluble.',
+  'Vitamins A, C, D, and E|Vitamin C is water-soluble, whereas vitamin K is fat-soluble.');
 
-addQ(4, 'easy', 1, 'Lec 7.3',
-  'Which fat-soluble vitamin is required as a cofactor to activate blood clotting factors?',
-  'Vitamin K|Vitamin K acts as a pro-oxidant cofactor needed to carboxylate glutamate residues on clotting factors so they can bind calcium.',
-  'Vitamin E|Vitamin E (tocopherol) functions as a lipid-phase antioxidant protecting membranes from peroxidation.',
-  'Vitamin D|Vitamin D (cholecalciferol/calcitriol) regulates intestinal calcium absorption and bone mineralization.',
-  'Vitamin A|Vitamin A (retinol/retinoic acid) supports visual rhodopsin and epithelial cell differentiation.');
+addQ(6, 'medium', 1, 'Lec 7.3',
+  'Match each fat-soluble vitamin to its primary physiological role: Vitamin A supports _______, Vitamin D supports _______, Vitamin E acts as a _______, and Vitamin K activates _______.',
+  'epithelial differentiation and vision; gut calcium absorption; lipid antioxidant; clotting factors|Retinoic acid/retinol drives epithelium & rhodopsin, calcitriol drives Ca2+ uptake, tocopherol prevents peroxidation, and Vit K activates coagulation.',
+  'clotting factors; vision; gut calcium absorption; lipid antioxidant|All four vitamin roles are mismatched.',
+  'lipid antioxidant; clotting factors; vision; gut calcium absorption|Vitamin E is the antioxidant and Vitamin K activates clotting.',
+  'gut calcium absorption; epithelial differentiation; clotting factors; lipid antioxidant|Vitamin D regulates calcium and Vitamin A regulates epithelial differentiation.');
 
-addQ(4, 'easy', 1, 'Lec 7.3',
-  'Which fat-soluble vitamin functions primarily as a lipid-soluble antioxidant within cell membranes?',
-  'Vitamin E|Tocopherol scavenges lipid peroxyl radicals inside the hydrophobic bilayer to terminate free-radical chain reactions.',
-  'Vitamin K|Vitamin K is required for hepatic activation of coagulation factors.',
-  'Vitamin A|Vitamin A regulates epithelial differentiation and visual phototransduction.',
-  'Vitamin D|Vitamin D promotes intestinal calcium uptake.');
-
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
   'Cholesterol is characterized by a four-ring sterol nucleus attached to an _______ functional group and serves as the precursor for _______ and steroid hormones.',
-  'alcohol; bile salts|Cholesterol contains a hydroxyl (-OH) group at C3 and is synthesized into steroid hormones (testosterone, estrogen) and bile salts.',
-  'aldehyde; glycogen|Glycogen is polymerized from glucose, not cholesterol.',
-  'amine; catecholamines|Catecholamines are synthesized from the amino acid tyrosine.',
-  'phosphate; nucleic acids|Nucleic acids are built from ribose/deoxyribose, nitrogenous bases, and phosphate.');
+  'alcohol; bile salts|Cholesterol has a hydroxyl (-OH) group at C3 and is converted into steroid hormones (testosterone, estradiol) and bile salts.',
+  'aldehyde; glycogen|Glycogen is polymerized from glucose.',
+  'amine; catecholamines|Catecholamines are derived from tyrosine.',
+  'phosphate; nucleic acids|Nucleic acids are built from nucleotides.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
-  'Bile is synthesized from cholesterol in the _______ and stored/concentrated in the _______ before release into the duodenum.',
-  'liver; gallbladder|Hepatocytes synthesize primary bile salts from cholesterol, which are stored in the gallbladder and secreted to emulsify dietary fats.',
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
+  'Bile is synthesized from cholesterol in the _______ and stored/concentrated in the _______ before secretion into the duodenum.',
+  'liver; gallbladder|Hepatocytes synthesize primary bile salts from cholesterol, which are stored in the gallbladder to emulsify dietary fats.',
   'gallbladder; liver|The gallbladder stores and concentrates bile, while hepatocytes synthesize it.',
-  'pancreas; stomach|The pancreas secretes digestive lipases and bicarbonate, not bile salts.',
+  'pancreas; stomach|The pancreas secretes digestive lipases and bicarbonate.',
   'enterocytes; spleen|Enterocytes absorb digested lipids and package chylomicrons.');
 
-addQ(4, 'medium', 1, 'Lec 7.3',
-  'How do bile salts secreted into the duodenum facilitate the digestion of dietary triglycerides?',
-  'They emulsify large water-insoluble fat globules into tiny droplets to increase surface area for pancreatic lipase|Amphipathic bile salts act like detergents, dispersing hydrophobic fat globs so water-soluble lipases can hydrolyze ester bonds.',
-  'They directly hydrolyze ester linkages without requiring pancreatic enzymes|Bile salts have no catalytic activity; they physically emulsify fats so pancreatic lipase can act.',
-  'They convert saturated fatty acids into essential omega-3 fatty acids|Bile salts do not alter fatty acid saturation or chain length.',
-  'They transport intact triglycerides directly through the portal vein to the liver|Digested monoglycerides and fatty acids are re-esterified in enterocytes and packaged into chylomicrons.');
+addQ(6, 'medium', 1, 'Lec 7.3',
+  'How do bile salts facilitate the digestion of dietary triglycerides and fat-soluble vitamins in the small intestine?',
+  'They emulsify large water-insoluble fat globules into tiny droplets to increase surface area for pancreatic lipase|Amphipathic bile salts act as detergents so water-soluble lipases can hydrolyze ester bonds; without bile, steatorrhea and ADEK deficiency occur.',
+  'They directly hydrolyze ester linkages without needing pancreatic enzymes|Bile salts have no catalytic activity; they physically emulsify fats for pancreatic lipase.',
+  'They convert saturated fatty acids into essential omega-3 fatty acids|Bile salts do not alter fatty acid saturation.',
+  'They transport intact triglycerides directly through the portal vein to the liver|Digested products are re-esterified in enterocytes and packaged into chylomicrons.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
   'Which lipoprotein particle is assembled by intestinal enterocytes to transport dietary triglycerides and fat-soluble vitamins into the lymphatic system?',
-  'Chylomicron|Chylomicrons are the largest, lowest-density lipoproteins carrying exogenous dietary lipids and essential fatty acids from enterocytes to tissues and the liver.',
-  'Very-low-density lipoprotein|VLDL is synthesized by the liver to export endogenous triglycerides.',
-  'Low-density lipoprotein|LDL is formed in the circulation from VLDL remnants to deliver cholesterol to peripheral tissues.',
+  'Chylomicron|Chylomicrons are the largest, lowest-density lipoproteins carrying exogenous dietary lipids from enterocytes to peripheral tissues and the liver.',
+  'Very-low-density lipoprotein|VLDL is produced by the liver to export endogenous triglycerides.',
+  'Low-density lipoprotein|LDL delivers cholesterol from the liver to peripheral tissues.',
   'High-density lipoprotein|HDL mediates reverse cholesterol transport from peripheral tissues back to the liver.');
 
-addQ(4, 'easy', 1, 'Tutoring Wk 8',
-  'Which lipoprotein particle delivers cholesterol from the liver to peripheral tissues, and which particle returns excess peripheral cholesterol back to the liver?',
-  'Low-density lipoprotein delivers to tissues; high-density lipoprotein returns to the liver|LDL supplies tissue cholesterol (elevated levels promote atherogenesis), while HDL performs reverse cholesterol transport for liver disposal.',
-  'High-density lipoprotein delivers to tissues; low-density lipoprotein returns to the liver|The transport directions are reversed; HDL removes excess cholesterol from tissues.',
-  'Chylomicrons deliver to the liver; very-low-density lipoproteins return to enterocytes|VLDL exports endogenous triglycerides from the liver to peripheral tissues.',
-  'High-density lipoprotein delivers dietary fats; chylomicrons return reverse cholesterol|Chylomicrons carry exogenous dietary fats from enterocytes.');
+addQ(6, 'easy', 1, 'Tutoring Wk 8',
+  'Which lipoprotein particle is produced by the _______ to export endogenous triglycerides, while _______ returns excess peripheral cholesterol back to the liver?',
+  'liver (VLDL); high-density lipoprotein|VLDL distributes liver-synthesized triglycerides to tissues (becoming LDL), while HDL performs reverse cholesterol transport back to the liver.',
+  'intestine (chylomicron); low-density lipoprotein|LDL delivers cholesterol to peripheral tissues rather than returning it to the liver.',
+  'adipose tissue (LDL); chylomicron|Adipose tissue stores triglycerides; chylomicrons are made by enterocytes.',
+  'liver (HDL); very-low-density lipoprotein|VLDL exports lipids from the liver, whereas HDL returns cholesterol to the liver.');
 
-addQ(4, 'easy', 0, 'Tutoring Wk 8',
+addQ(6, 'easy', 0, 'Lec 7.3',
   'Excess dietary calories are stored long-term in adipose tissue primarily in the form of:',
-  'triacylglycerols|Adipocytes pack hydrophobic triglycerides into anhydrous lipid droplets yielding ~9 kcal per gram.',
+  'triacylglycerols|Adipocytes store hydrophobic triglycerides in anhydrous lipid droplets yielding ~9 kcal/g.',
   'glycogen|Glycogen storage is limited (~490 g total in muscle and liver) and binds substantial water.',
-  'phospholipids|Phospholipids are structural membrane components rather than bulk energy reserves.',
-  'free fatty acids|Unesterified fatty acids are amphipathic detergents that are toxic to membranes in high concentrations.');
+  'phospholipids|Phospholipids are structural membrane lipids rather than bulk energy stores.',
+  'free fatty acids|Unesterified fatty acids are amphipathic detergents that are toxic to membranes in bulk.');
+
+// ===================== 7: CARRYOVER CORE (FORCES, pKa/BUFFERS, COFACTORS & ENZYMES) =====================
+addQ(7, 'medium', 1, 'Lec 1.3',
+  'The histidine imidazole side chain (pKa ~6.0) is uniquely sensitive to small pH shifts near physiological pH 7.4 because it:',
+  'switches between protonated and neutral forms near physiologic pH|This reversible protonation drives the Bohr effect in hemoglobin.',
+  'remains 100% positively charged at pH 7.4|Lysine (pKa 10.5) and arginine (pKa 12.5) remain constitutively protonated.',
+  'remains 100% negatively charged at pH 7.4|Aspartate (pKa ~3.9) and glutamate (pKa ~4.3) are negatively charged.',
+  'forms covalent disulfide bridges when pH drops|Disulfide bridges are formed by cysteine sulfhydryls.');
+
+addQ(7, 'medium', 1, 'Lec 1.3',
+  'At blood pH 7.4, a lysine side chain (pKa 10.4) is protonated to deprotonated in an approximate ratio of:',
+  '1,000 to 1|A 3.0-unit pH difference corresponds to 10^3 = 1,000-fold predominance of the protonated NH3+ form.',
+  '3 to 1|pH units are logarithmic powers of 10, never linear multipliers.',
+  '30 to 1|A 3-unit difference is 10^3, not 10 x 3.',
+  '1 to 1,000|Because pH 7.4 is below pKa 10.4, the protonated acid form predominates.');
+
+addQ(7, 'medium', 1, 'Study Guide',
+  'At arterial blood pH 7.4, given a carbonic acid pKa of 6.4, the ratio of bicarbonate (HCO3-) to carbonic acid (H2CO3) is:',
+  '10 to 1|One pH unit above pKa yields 10^1 = 10 parts conjugate base to 1 part conjugate acid.',
+  '1 to 10|Inverted; with pH above pKa, the conjugate base predominates.',
+  '1 to 1|A 1:1 equimolar ratio occurs only when pH equals pKa.',
+  '100 to 1|A 100:1 ratio requires a 2.0-unit difference between pH and pKa.');
+
+addQ(7, 'easy', 1, 'Study Guide',
+  'Which conjugate acid-base pair serves as the primary chemical buffer inside the intracellular cytosol?',
+  'Dihydrogen phosphate and monohydrogen phosphate|The H2PO4- / HPO4^2- system buffers the cell interior, whereas H2CO3 / HCO3- buffers blood plasma.',
+  'Carbonic acid and bicarbonate|The H2CO3 / HCO3- system is the primary extracellular blood buffer regulated by the lungs.',
+  'Hydrochloric acid and chloride|Strong acids dissociate completely and cannot act as physiological buffers.',
+  'Acetic acid and acetate|Acetate is not the primary intracellular buffer system.');
+
+addQ(7, 'hard', 1, 'Lec 3.2',
+  'Why does the side-chain amide nitrogen of glutamine or asparagine fail to accept a proton at physiological pH?',
+  'Its nitrogen lone pair is delocalized by resonance into the adjacent carbonyl oxygen|Resonance delocalization (as in peptide bonds) removes basicity and makes the amide planar.',
+  'The nitrogen atom has no valence lone pair of electrons|Nitrogen possesses a lone pair, but it is tied up in pi-resonance overlap.',
+  'Its pKa is 12.5, keeping it permanently neutral|A pKa of 12.5 (like arginine) keeps a group protonated and positive, whereas amides have no basic pKa in water.',
+  'It is covalently cross-linked to heme iron|Amide side chains do not coordinate heme iron.');
+
+addQ(7, 'medium', 1, 'Lec 3.2',
+  'Rotation in a polypeptide backbone is restricted around the _______ bond due to partial double-bond character, whereas rotation occurs freely around the single bonds flanking the _______.',
+  'peptide C-N; alpha-carbon|Amide resonance locks the peptide bond into a rigid plane, allowing secondary structure folding via phi/psi rotation around the alpha-carbon.',
+  'alpha-carbon; peptide C-N|The rotational freedom is reversed; peptide bonds are rigid and alpha-carbon bonds rotate.',
+  'disulfide; carbonyl|Disulfide bonds link side chains rather than forming the repeating backbone.',
+  'glycosidic; beta-carbon|Glycosidic bonds link carbohydrates.');
+
+addQ(7, 'medium', 1, 'Lec 4.2',
+  'During catecholamine biosynthesis from tyrosine, tetrahydrobiopterin (BH4) is required by hydroxylase enzymes primarily to:',
+  'reduce the second atom of molecular oxygen into harmless water to prevent free-radical damage|BH4 acts as a reducing cofactor for aromatic amino acid hydroxylases and is regenerated using NADPH.',
+  'remove the carboxyl group as carbon dioxide from L-DOPA|Decarboxylation of L-DOPA to dopamine requires pyridoxal phosphate (vitamin B6).',
+  'donate a methyl group to norepinephrine to form epinephrine|Methylation of norepinephrine requires S-adenosylmethionine (SAM).',
+  'hydroxylate dopamine into norepinephrine inside synaptic vesicles|Dopamine beta-hydroxylase requires vitamin C (ascorbate) and copper.');
+
+addQ(7, 'easy', 1, 'Lec 4.2',
+  'The porphyrin ring of heme is synthesized starting from succinyl-CoA and _______, whereas creatine is synthesized from _______, arginine, and methionine (SAM).',
+  'glycine; glycine|Glycine is a versatile building block required for heme porphyrins, creatine, purines, and collagen.',
+  'alanine; valine|Neither heme nor creatine synthesis starts with alanine or valine.',
+  'tyrosine; tryptophan|Tyrosine forms catecholamines/melanin, and tryptophan forms serotonin/melatonin.',
+  'leucine; lysine|Leucine and lysine are purely ketogenic amino acids.');
+
+addQ(7, 'medium', 1, 'Lec 1.1',
+  'A biological enzyme accelerates a reversible metabolic reaction by:',
+  'lowering the activation energy barrier without altering delta G or the equilibrium constant|Enzymes alter kinetics (reaction speed) for both forward and reverse directions without changing thermodynamics.',
+  'making delta G more negative to shift equilibrium toward products|Delta G and Keq are fixed by reactant and product free energies.',
+  'stabilizing the ground-state substrate more than the transition state|Stabilizing the substrate increases the activation barrier and slows the reaction.',
+  'converting endergonic reactions into exergonic reactions without ATP coupling|An enzyme alone cannot change the sign of delta G.');
+
+addQ(7, 'medium', 1, 'Study Guide',
+  'In Michaelis-Menten enzyme kinetics, KM represents the substrate concentration at which reaction velocity reaches _______, with a lower KM indicating _______ substrate affinity.',
+  'half of Vmax; higher|A low KM means the enzyme achieves half-maximal velocity at a very low substrate concentration (high binding affinity).',
+  '100% of Vmax; lower|Velocity asymptotically approaches Vmax, and low KM indicates higher affinity.',
+  'half of Vmax; lower|A low KM signifies higher affinity, whereas a high KM signifies lower affinity.',
+  'zero; infinite|At [S] = KM, velocity is 50% of Vmax.');
+
+addQ(7, 'medium', 1, 'Study Guide',
+  'Phosphofructokinase-1 (PFK-1) phosphorylates fructose-6-phosphate at carbon _______ and is potently activated by _______ in the fed state.',
+  '1; fructose 2,6-bisphosphate|PFK-1 is the committed rate-limiting step of glycolysis, producing fructose 1,6-bisphosphate.',
+  '6; citrate|Carbon 6 is already phosphorylated, and citrate inhibits PFK-1.',
+  '2; ATP|High ATP allosterically inhibits PFK-1, whereas AMP and fructose 2,6-bisphosphate activate it.',
+  '3; glucagon|Glucagon lowers fructose 2,6-bisphosphate in the liver to inhibit glycolysis.');
+
+addQ(7, 'easy', 0, 'Lec 1.1',
+  'Beyond ATP synthesis, what is the major energetic byproduct of mitochondrial fuel oxidation that helps maintain body temperature and cellular order?',
+  'Heat|Because mitochondrial energy conversion is not 100% efficient, released heat maintains ~310 K body temperature and exports entropy.',
+  'Urea|Urea is synthesized in the liver to dispose of toxic ammonia from amino acid catabolism.',
+  'Glycogen|Glycogen is an anabolic glucose polymer rather than an oxidative byproduct.',
+  'Lactic acid|Lactate is produced during anaerobic glycolysis in the cytosol.');
 
 // ---------------- UI & STATE ----------------
 const $ = i => document.getElementById(i);
@@ -783,7 +1020,7 @@ function renderHome() {
   $('main').innerHTML = `
     <div class="card">
       <div class="t">Biochemistry Midterm 2 Preparation Hub</div>
-      <div class="dash-sub">Tutor-Prioritized Exam Blueprint &middot; Updated with Week 8 Carbs &amp; Lipids</div>
+      <div class="dash-sub">Complete Tutoring (Wks 4–8) &amp; Lecture Mastery Bank &middot; Structure &rarr; Function &rarr; Pathology</div>
       
       <div class="lab">1. Select Topics</div>
       <div class="row">
@@ -812,10 +1049,10 @@ function renderHome() {
       <div class="lab">3. Launch Practice Exam</div>
       <div class="launcher-grid">
         <button class="launch-btn" onclick="go(getPool(), 15)">Quickie (15 Qs)</button>
-        <button class="launch-btn" onclick="go(getPool(), 25)">Standard (25 Qs)</button>
-        <button class="launch-btn" onclick="go(getPool(), 35)">Exam Target (35 Qs)</button>
-        <button class="launch-btn" onclick="go(getPool(), 50)">Full Exam (50 Qs)</button>
-        <button class="launch-btn primary" onclick="go(getPool(), getPool().length)">All Selected (${p.length} Qs)</button>
+        <button class="launch-btn" onclick="go(getPool(), 25)">Foreplay (25 Qs)</button>
+        <button class="launch-btn" onclick="go(getPool(), 35)">Stamina Check (35 Qs)</button>
+        <button class="launch-btn" onclick="go(getPool(), 50)">Marathon (50 Qs)</button>
+        <button class="launch-btn primary" onclick="go(getPool(), getPool().length)">Chafing (${p.length} Qs)</button>
       </div>
     </div>
   `;
