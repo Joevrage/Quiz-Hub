@@ -1,1039 +1,1621 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Microbio Week 7: Helminths and Prions</title>
-<meta name="color-scheme" content="dark">
-<style>
-:root{--bg:#0f0f0f;--card:#1a1a1a;--ac:#ff9900;--tx:#fff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-*{box-sizing:inherit}
-body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,sans-serif}
-#bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--card);padding:8px 12px;z-index:5;border-bottom:1px solid #333}
-#bar .r{display:flex;flex-wrap:wrap;gap:8px;align-items:center}#bar b{color:var(--ac)}
-.pg{height:6px;background:#333;margin-top:8px;border-radius:3px}.pg i{display:block;height:100%;width:0;background:var(--ac);border-radius:3px;transition:width .3s}
-button{background:#2a2a2a;color:var(--tx);border:1px solid #444;border-radius:8px;padding:7px 12px;cursor:pointer;font:inherit}
-button:hover{border-color:var(--ac)}.pr{background:var(--ac);color:#000;border-color:var(--ac);font-weight:700}
-main{max-width:820px;margin:0 auto;padding:14px}
-.chip{margin:4px;border-radius:20px;opacity:.55}.chip.on{background:var(--ac);color:#000;opacity:1;border-color:var(--ac)}
-.q{background:var(--card);border-radius:12px;padding:16px;margin:14px 0}.q h3{margin:0 0 4px;font-size:16px}
-.tag{color:var(--ac);font-size:12px}
-.o{display:block;width:100%;text-align:left;margin:8px 0;padding:10px 12px}
-.o.ok{background:#14532d;border-color:#22c55e}.o.no{background:#7f1d1d;border-color:#ef4444}.o.dim{opacity:.45}
-.ex{margin-top:10px;padding:10px;border-top:1px solid #333}
-.ban{font-weight:700;font-size:18px}.g{color:#22c55e}.rd{color:#ef4444}
-.ex li{margin:4px 0;list-style:none}.ex ul{padding:0}
-#pop{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:#000a;z-index:20}
-#pop img{max-width:70vw;max-height:70vh;border-radius:12px}
-.sum{text-align:center;padding:28px}.sum h2{color:var(--ac)}.sum button{margin:5px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Microbiology Week 7: Helminths &amp; Prions Practice Quiz</title>
+  <style>
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-card: #1a1a1a;
+      --bg-elevated: #242424;
+      --border-subtle: #2e2e2e;
+      --text-primary: #ffffff;
+      --text-muted: #a3a3a3;
+      --accent: #ff9900;
+      --accent-hover: #e08600;
+      --correct-bg: #14532d;
+      --correct-border: #22c55e;
+      --incorrect-bg: #7f1d1d;
+      --incorrect-border: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.55;
+      padding-bottom: 4rem;
+    }
+
+    /* Sticky Top Header */
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: rgba(15, 15, 15, 0.96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.75rem 1.25rem;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hub-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--accent);
+      padding: 0.4rem 0.85rem;
+      border-radius: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .hub-link:hover {
+      background-color: var(--accent);
+      color: #000000;
+    }
+
+    .quiz-title-badge {
+      font-weight: 800;
+      font-size: 1rem;
+      letter-spacing: 0.02em;
+    }
+
+    .quiz-title-badge span {
+      color: var(--accent);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .score-pill {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--accent);
+    }
+
+    .mute-btn {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mute-btn.muted {
+      background-color: #7f1d1d;
+      border-color: #ef4444;
+      color: #ffffff;
+    }
+
+    .progress-track {
+      max-width: 960px;
+      margin: 0.6rem auto 0;
+      height: 6px;
+      background-color: var(--bg-elevated);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    /* Main Container & Controls */
+    .container {
+      max-width: 960px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.25rem;
+    }
+
+    .control-bar {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+    }
+
+    .control-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .pill-btn {
+      background-color: var(--bg-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .pill-btn.active {
+      background-color: var(--accent);
+      color: #000000;
+      border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    .mode-toggles {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* Question Cards */
+    .question-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 1.4rem;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+    }
+
+    .q-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .q-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      background-color: var(--bg-elevated);
+      border: 1px solid var(--border-subtle);
+      padding: 0.18rem 0.55rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .tag.high-yield {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .q-stem {
+      font-size: 1.08rem;
+      font-weight: 600;
+      margin-bottom: 1.15rem;
+      color: var(--text-primary);
+    }
+
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-size: 0.96rem;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background-color: #2c2c2c;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.dimmed {
+      opacity: 0.55;
+    }
+
+    .option-btn.correct-choice {
+      background-color: var(--correct-bg);
+      border-color: var(--correct-border);
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .option-btn.incorrect-choice {
+      background-color: var(--incorrect-bg);
+      border-color: var(--incorrect-border);
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    .opt-letter {
+      font-weight: 800;
+      color: var(--accent);
+      min-width: 1.35rem;
+    }
+
+    .option-btn.correct-choice .opt-letter,
+    .option-btn.incorrect-choice .opt-letter {
+      color: #ffffff;
+    }
+
+    /* Explanation Reveal Box */
+    .explanation-box {
+      margin-top: 1.15rem;
+      background-color: #141414;
+      border: 1px solid var(--border-subtle);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.1rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .status-banner {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-banner.pass {
+      color: #22c55e;
+    }
+
+    .status-banner.fail {
+      color: #ef4444;
+    }
+
+    .concept-summary {
+      font-size: 0.94rem;
+      color: #e5e5e5;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .rationale-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-size: 0.89rem;
+      color: #d4d4d4;
+    }
+
+    .rationale-list li strong {
+      color: var(--text-primary);
+    }
+
+    .rationale-list li.is-right strong {
+      color: #4ade80;
+    }
+
+    /* Card View Navigation */
+    .card-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      gap: 0.75rem;
+    }
+
+    /* Action Buttons */
+    .btn {
+      background-color: var(--accent);
+      color: #000000;
+      border: 1px solid var(--accent);
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      border-color: var(--accent);
+      background-color: #2a2a2a;
+    }
+
+    /* Summary Card */
+    .summary-card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--accent);
+      border-radius: 12px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .summary-card h2 {
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .summary-score {
+      font-size: 2.5rem;
+      font-weight: 900;
+      color: var(--accent);
+      margin: 0.5rem 0;
+    }
+
+    .summary-tier {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+
+    .summary-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+    }
+
+    /* Wrong Answer Popup */
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .wrong-popup img {
+      max-width: 80vw;
+      max-height: 55vh;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.92);
+      border: 3px solid var(--incorrect-border);
+      background: #111111;
+      object-fit: contain;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body>
-<div id="bar">
-  <div class="r">
-    <a href="index.html"><button>← Hub</button></a>
-    <button onclick="menu()">Back to Menu</button>
-    <span id="sc">Score: 0 / 0 (0%)</span>
-    <span id="pc"></span>
-    <button id="md" onclick="tmode()">Mode: One by One (Card View)</button>
-    <button id="mu" onclick="tmute()"></button>
+
+  <!-- Audio & Visual Incorrect Feedback -->
+  <audio id="wrongAudio" src="Wrong-answer.m4a" preload="auto"></audio>
+  <div id="wrongPopup" class="wrong-popup hidden">
+    <img id="wrongImage" src="Erijah.png" onerror="this.onerror=null;this.src='wrong-answer.png';" alt="Wrong Answer Feedback" />
   </div>
-  <div class="pg"><i id="pb"></i></div>
-</div>
-<div id="pop"><img id="pi" src="Erijah.png" alt="" onerror="this.onerror=null;this.src='wrong-answer.png'"></div>
-<main id="app"></main>
-<script>
-const SUBJECTS = [
-  { title: "Helminth Overview", week: "Wk 7" },
-  { title: "Cestodes", week: "Wk 7" },
-  { title: "Trematodes", week: "Wk 7" },
-  { title: "Roundworms: Larval Route", week: "Wk 7" },
-  { title: "Roundworms: Egg Route", week: "Wk 7" },
-  { title: "Prion Biology", week: "Wk 7" },
-  { title: "Prion Transmission", week: "Wk 7" },
-  { title: "Human Prion Diseases", week: "Wk 7" },
-  { title: "Animal Prion Diseases", week: "Wk 7" }
-];
 
-const questionBank = [
-  {
-    id: 1001,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which phylum includes the tapeworms and flukes?",
-    options: [
-      { text: "Platyhelminthes", correct: true, why: "Flatworms belong to Platyhelminthes and include cestodes and trematodes. Roundworms belong to Aschelminthes. [Lecture Transcript]" },
-      { text: "Aschelminthes", correct: false, why: "Roundworm phylum. [Lecture Transcript]" },
-      { text: "Annelida", correct: false, why: "Segmented worms are not medically covered here. [Lecture Transcript]" },
-      { text: "Arthropoda", correct: false, why: "Arthropods are insects and relatives, not worms. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1002,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Roundworms are also known as which group?",
-    options: [
-      { text: "Nematodes", correct: true, why: "Roundworms are Aschelminthes, also called nematodes. [Lecture Transcript]" },
-      { text: "Cestodes", correct: false, why: "Cestodes are tapeworms. [Lecture Transcript]" },
-      { text: "Trematodes", correct: false, why: "Trematodes are flukes. [Lecture Transcript]" },
-      { text: "Schistosomes", correct: false, why: "Schistosomes are blood flukes. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1003,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "The host in which adulthood and mating occur is the:",
-    options: [
-      { text: "Definitive host", correct: true, why: "The definitive (final) host harbors the adult worm. For most worms covered, this is the human. [Lecture Transcript]" },
-      { text: "Transport host", correct: false, why: "A transport host has no parasite development. [Lecture Transcript]" },
-      { text: "Intermediate host", correct: false, why: "Intermediate hosts house larval development. [Lecture Transcript]" },
-      { text: "Accidental host", correct: false, why: "Not the host of adult mating. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1004,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which host experiences no parasitic development but is an essential link in completing the cycle?",
-    options: [
-      { text: "Transport host", correct: true, why: "A transport host carries the parasite without development; a true intermediate (secondary) host supports larval development. [Lecture Transcript]" },
-      { text: "Definitive host", correct: false, why: "Adult mating occurs here. [Lecture Transcript]" },
-      { text: "Final host", correct: false, why: "Final host is the definitive host. [Lecture Transcript]" },
-      { text: "True intermediate host", correct: false, why: "True intermediate hosts support larval development. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1005,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which description fits flatworms?",
-    options: [
-      { text: "Bilaterally symmetrical with no body cavity other than a gut", correct: true, why: "Flatworms are the simplest animals, lack a true digestive system, take in food through pharyngeal openings, and respire by diffusion. [Lecture Transcript]" },
-      { text: "Cylindrical, nonsegmented with a complete digestive system", correct: false, why: "Roundworm trait. [Lecture Transcript]" },
-      { text: "Tough cuticle with separate distinct sexes", correct: false, why: "Roundworm trait. [Lecture Transcript]" },
-      { text: "Simple body with a true anus and digestive tract", correct: false, why: "Flatworms lack an anus and true digestive system. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1006,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which description fits roundworms?",
-    options: [
-      { text: "Cylindrical, nonsegmented with a complete digestive system", correct: true, why: "Roundworms are cylindrical and nonsegmented, with a complete digestive system and tough cuticle. [Lecture Transcript]" },
-      { text: "Thin with a segmented body plan", correct: false, why: "Flatworm trait. [Lecture Transcript]" },
-      { text: "Ribbon-like with proglottids", correct: false, why: "Tapeworm trait. [Lecture Transcript]" },
-      { text: "Leaf-like with pharyngeal openings", correct: false, why: "Fluke trait. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1007,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which group is ribbon-like and segmented, acquired by the fecal-oral route?",
-    options: [
-      { text: "Cestodes", correct: true, why: "Cestodes (tapeworms) are ribbon-like segmented intestinal parasites. Trematodes (flukes) are leaf-like. [Lecture Transcript]" },
-      { text: "Trematodes", correct: false, why: "Flukes are leaf-like. [Lecture Transcript]" },
-      { text: "Nematodes", correct: false, why: "Roundworms are nonsegmented. [Lecture Transcript]" },
-      { text: "Schistosomes", correct: false, why: "Schistosomes are blood flukes. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1008,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which tapeworm is the most common globally and passes human to human?",
-    options: [
-      { text: "Hymenolepis nana", correct: true, why: "Hymenolepis nana, the dwarf tapeworm, causes hymenolepiasis and is most common where sanitation is poor. [Lecture Transcript]" },
-      { text: "Taenia solium", correct: false, why: "Pork tapeworm. [Lecture Transcript]" },
-      { text: "Taenia saginata", correct: false, why: "Beef tapeworm. [Lecture Transcript]" },
-      { text: "Diphyllobothrium latum", correct: false, why: "Fish tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1009,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Cysticercosis is caused by which tapeworm?",
-    options: [
-      { text: "Taenia solium", correct: true, why: "The pork tapeworm from undercooked pork forms cysticerci in skeletal tissue. [Lecture Transcript]" },
-      { text: "Taenia saginata", correct: false, why: "Beef tapeworm, from undercooked beef. [Lecture Transcript]" },
-      { text: "Hymenolepis nana", correct: false, why: "Dwarf tapeworm. [Lecture Transcript]" },
-      { text: "Diphyllobothrium latum", correct: false, why: "Fish tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1010,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "A patient ate undercooked beef and now has a tapeworm. Which is the likely species?",
-    options: [
-      { text: "Taenia saginata", correct: true, why: "Taenia saginata is the beef tapeworm; Taenia solium is the pork tapeworm. [Lecture Transcript]" },
-      { text: "Taenia solium", correct: false, why: "Pork tapeworm. [Lecture Transcript]" },
-      { text: "Echinococcus granulosus", correct: false, why: "Dog tapeworm. [Lecture Transcript]" },
-      { text: "Hymenolepis nana", correct: false, why: "Dwarf tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1011,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Raw fish is the source of which tapeworm?",
-    options: [
-      { text: "Diphyllobothrium latum", correct: true, why: "Diphyllobothrium latum, the fish tapeworm, causes diphyllobothriasis. [Lecture Transcript]" },
-      { text: "Taenia solium", correct: false, why: "Pork. [Lecture Transcript]" },
-      { text: "Taenia saginata", correct: false, why: "Beef. [Lecture Transcript]" },
-      { text: "Echinococcus granulosus", correct: false, why: "Dogs and livestock. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1012,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "A fluid-filled liver cyst is associated with which tapeworm, whose definitive host is the dog?",
-    options: [
-      { text: "Echinococcus granulosus", correct: true, why: "Echinococcus granulosus causes hydatid disease. Sheep, cattle, goats and pigs are intermediate hosts. [Lecture Transcript]" },
-      { text: "Diphyllobothrium latum", correct: false, why: "Fish tapeworm. [Lecture Transcript]" },
-      { text: "Taenia solium", correct: false, why: "Pork tapeworm. [Lecture Transcript]" },
-      { text: "Hymenolepis nana", correct: false, why: "Dwarf tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1013,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which tapeworm structure is the crown of hooks plus sucker at the very top?",
-    options: [
-      { text: "Rostellum", correct: true, why: "The rostellum tops the scolex (nominal head), which holds suckers and pharyngeal slits. The strobila is the whole body. [Lecture Transcript]" },
-      { text: "Scolex", correct: false, why: "Scolex is the head below the rostellum. [Lecture Transcript]" },
-      { text: "Strobila", correct: false, why: "Strobila is the entire body. [Lecture Transcript]" },
-      { text: "Proglottid", correct: false, why: "Proglottids are body segments. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1014,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "What is the term for the entire tapeworm body?",
-    options: [
-      { text: "Strobila", correct: true, why: "The strobila comprises the scolex, neck and proglottids (immature, mature, egg). [Lecture Transcript]" },
-      { text: "Scolex", correct: false, why: "Head only. [Lecture Transcript]" },
-      { text: "Rostellum", correct: false, why: "Crown at top of head. [Lecture Transcript]" },
-      { text: "Cysticerci", correct: false, why: "Cysts in skeletal tissue. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1015,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Hermaphroditic flukes use which intermediate hosts?",
-    options: [
-      { text: "Snail then fish", correct: true, why: "Hermaphroditic flukes pass through a snail, then a fish or second snail, and infect humans via raw or undercooked fish. Schistosomes use only a snail. [Lecture Transcript]" },
-      { text: "Snail only", correct: false, why: "That is the schistosome pattern. [Lecture Transcript]" },
-      { text: "Fish only", correct: false, why: "Snail is always first. [Lecture Transcript]" },
-      { text: "Snail then dog", correct: false, why: "Not the cycle. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1016,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Blood flukes with separate sexes, where the female lives in the male's groove, are:",
-    options: [
-      { text: "Schistosomes", correct: true, why: "Schistosomes live in abdominal veins, use only the snail as intermediate host, and can penetrate skin in contaminated water. [Lecture Transcript]" },
-      { text: "Clonorchis", correct: false, why: "Hermaphroditic liver fluke. [Lecture Transcript]" },
-      { text: "Paragonimus", correct: false, why: "Hermaphroditic lung fluke. [Lecture Transcript]" },
-      { text: "Taenia", correct: false, why: "A tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1017,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which condition is the lung fluke infection?",
-    options: [
-      { text: "Paragonimiasis", correct: true, why: "Paragonimiasis causes abdominal pain, diarrhea and fever and can reach the brain. [Lecture Transcript]" },
-      { text: "Clonorchiasis", correct: false, why: "Oriental liver fluke. [Lecture Transcript]" },
-      { text: "Schistosomiasis", correct: false, why: "Blood fluke. [Lecture Transcript]" },
-      { text: "Loiasis", correct: false, why: "Eye worm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1018,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which fluke dwells in the bile duct and may cause jaundice?",
-    options: [
-      { text: "Clonorchis sinensis", correct: true, why: "Clonorchiasis (oriental liver fluke) is usually asymptomatic but may cause abdominal pain and jaundice. [Lecture Transcript]" },
-      { text: "Paragonimus", correct: false, why: "Lung fluke. [Lecture Transcript]" },
-      { text: "Schistosoma", correct: false, why: "Blood fluke. [Lecture Transcript]" },
-      { text: "Echinococcus", correct: false, why: "Tapeworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1019,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Schistosomiasis symptoms are primarily caused by:",
-    options: [
-      { text: "The body's reaction to eggs", correct: true, why: "Eggs lodge in tissues; long infection can cause organ enlargement, bladder cancer and granulomas. [Lecture Transcript]" },
-      { text: "Adult worm blockage", correct: false, why: "Not the primary mechanism. [Lecture Transcript]" },
-      { text: "Toxins from larvae", correct: false, why: "Not the primary mechanism. [Lecture Transcript]" },
-      { text: "Nutrient sequestration", correct: false, why: "Tapeworm-type symptom. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1020,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "River blindness is caused by which worm?",
-    options: [
-      { text: "Onchocerca volvulus", correct: true, why: "Onchocerciasis is spread by black flies near rivers and invades cornea, retina and optic nerve. [Lecture Transcript]" },
-      { text: "Loa loa", correct: false, why: "River eye worm. [Lecture Transcript]" },
-      { text: "Wuchereria bancrofti", correct: false, why: "Elephantiasis. [Lecture Transcript]" },
-      { text: "Trichinella spiralis", correct: false, why: "Trichinosis. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1021,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Loiasis is spread by which vector?",
-    options: [
-      { text: "Dipteran flies", correct: true, why: "Loa loa causes calabar swellings and migrates beneath skin and conjunctiva; it can be removed from the conjunctiva under local anesthesia. [Lecture Transcript]" },
-      { text: "Black flies", correct: false, why: "Vector of Onchocerca. [Lecture Transcript]" },
-      { text: "Mosquitoes", correct: false, why: "Vector of Wuchereria. [Lecture Transcript]" },
-      { text: "Reduviid bugs", correct: false, why: "Vector of Chagas disease. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1022,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Elephantiasis is caused by which worm?",
-    options: [
-      { text: "Wuchereria bancrofti", correct: true, why: "Filariasis follows a mosquito bite; adults block lymphatic channels and lymph accumulates in extremities. [Lecture Transcript]" },
-      { text: "Onchocerca volvulus", correct: false, why: "River blindness. [Lecture Transcript]" },
-      { text: "Loa loa", correct: false, why: "River eye worm. [Lecture Transcript]" },
-      { text: "Trichuris trichiura", correct: false, why: "Whipworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1023,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which roundworm is acquired from undercooked pork and encysts in skeletal muscle, making humans dead-end hosts?",
-    options: [
-      { text: "Trichinella spiralis", correct: true, why: "Trichinosis (trichinellosis) is prevented by cooking, freezing or smoking meat. [Lecture Transcript]" },
-      { text: "Ascaris lumbricoides", correct: false, why: "Egg route roundworm. [Lecture Transcript]" },
-      { text: "Enterobius vermicularis", correct: false, why: "Pinworm. [Lecture Transcript]" },
-      { text: "Necator americanus", correct: false, why: "Hookworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1024,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "hard",
-    priority: true,
-    stem: "All of these are roundworm diseases of the larval route EXCEPT:",
-    options: [
-      { text: "Trichuris trichiura", correct: true, why: "Whipworm is acquired by egg ingestion. [Lecture Transcript]" },
-      { text: "Wuchereria bancrofti", correct: false, why: "Larval route. [Lecture Transcript]" },
-      { text: "Onchocerca volvulus", correct: false, why: "Larval route. [Lecture Transcript]" },
-      { text: "Trichinella spiralis", correct: false, why: "Larval route. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1025,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which worm causes the most common nematode infection in US children, detected by the tape test?",
-    options: [
-      { text: "Enterobius vermicularis", correct: true, why: "Pinworm eggs are sticky and spread by scratching; usually asymptomatic with itching and disturbed sleep. [Lecture Transcript]" },
-      { text: "Ascaris lumbricoides", correct: false, why: "Giant roundworm. [Lecture Transcript]" },
-      { text: "Trichuris trichiura", correct: false, why: "Whipworm. [Lecture Transcript]" },
-      { text: "Necator americanus", correct: false, why: "Hookworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1026,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which worm produces up to 200,000 eggs a day, migrates through lungs, and may exit the body under anesthesia?",
-    options: [
-      { text: "Ascaris lumbricoides", correct: true, why: "Ascariasis follows an odyssey through tissues and can cause intestinal blockage. [Lecture Transcript]" },
-      { text: "Trichuris trichiura", correct: false, why: "3,000 to 5,000 eggs daily. [Lecture Transcript]" },
-      { text: "Enterobius vermicularis", correct: false, why: "Pinworm. [Lecture Transcript]" },
-      { text: "Necator americanus", correct: false, why: "Hookworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1027,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which worm resembles a buggy whip and can cause rectal prolapse?",
-    options: [
-      { text: "Trichuris trichiura", correct: true, why: "Whipworm burrows into mucosa, causing hemorrhage and secondary bacterial infection. [Lecture Transcript]" },
-      { text: "Ascaris lumbricoides", correct: false, why: "Blocks the intestine. [Lecture Transcript]" },
-      { text: "Necator americanus", correct: false, why: "Hookworm. [Lecture Transcript]" },
-      { text: "Enterobius vermicularis", correct: false, why: "Pinworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1028,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Ground itch and iron-deficiency anemia are associated with which worm?",
-    options: [
-      { text: "Necator americanus", correct: true, why: "Hookworm larvae penetrate bare skin, travel through the lungs, and anchor in the intestine with cutting plates. [Lecture Transcript]" },
-      { text: "Trichuris trichiura", correct: false, why: "Whipworm. [Lecture Transcript]" },
-      { text: "Ascaris lumbricoides", correct: false, why: "Roundworm. [Lecture Transcript]" },
-      { text: "Loa loa", correct: false, why: "Eye worm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1029,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Prions are best described as:",
-    options: [
-      { text: "Naked proteins with no nucleic acid", correct: true, why: "Prion means proteinaceous infectious particle; resistant to disinfection, radiation and sterilization. [Lecture Transcript]" },
-      { text: "Viruses with protein capsids", correct: false, why: "Prions are not viruses. [Lecture Transcript]" },
-      { text: "Bacteria lacking a cell wall", correct: false, why: "Not cellular. [Lecture Transcript]" },
-      { text: "Viroids made of single-stranded RNA", correct: false, why: "Viroids contain RNA. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1030,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "The normal and infectious prion isoforms are, respectively:",
-    options: [
-      { text: "PrPC and PrPSc", correct: true, why: "PRNP is the gene. PrPC is mostly alpha helix; PrPSc is rich in beta-pleated sheets. [Lecture Transcript]" },
-      { text: "PrPSc and PrPC", correct: false, why: "Reversed. [Lecture Transcript]" },
-      { text: "PRNP and PrPC", correct: false, why: "PRNP is the gene. [Lecture Transcript]" },
-      { text: "PrPSc and PRNP", correct: false, why: "PRNP is the gene. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1031,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Compared with the normal protein, the infectious prion has more:",
-    options: [
-      { text: "Beta-pleated sheets", correct: true, why: "The isoforms share primary sequence and differ at the secondary level; PrPSc self-propagates and forms amyloids. [Lecture Transcript]" },
-      { text: "Alpha helices", correct: false, why: "Normal form feature. [Lecture Transcript]" },
-      { text: "Nucleic acid", correct: false, why: "Prions lack nucleic acid. [Lecture Transcript]" },
-      { text: "Primary sequence changes", correct: false, why: "Same amino acid sequence. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1032,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which is NOT a characteristic of prion diseases?",
-    options: [
-      { text: "Curable", correct: true, why: "Prion diseases are incurable, always fatal, spongiform, and evoke no antibody or inflammatory response. [Lecture Transcript]" },
-      { text: "Long incubation period", correct: false, why: "Years to decades. [Lecture Transcript]" },
-      { text: "Always fatal", correct: false, why: "Always fatal. [Lecture Transcript]" },
-      { text: "No inflammatory response", correct: false, why: "Correctly characteristic. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1033,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Prion disease causes which type of encephalopathy?",
-    options: [
-      { text: "Spongiform", correct: true, why: "Prion diseases are transmissible spongiform encephalopathies (TSEs). [Lecture Transcript]" },
-      { text: "Coliform", correct: false, why: "Not a pathology term here. [Lecture Transcript]" },
-      { text: "Terraform", correct: false, why: "Not a pathology term here. [Lecture Transcript]" },
-      { text: "Uniform", correct: false, why: "Not a pathology term here. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1034,
-    subjectIndex: 6,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "A patient inherits a prion disease from a parent. This is which transmission type?",
-    options: [
-      { text: "Vertical", correct: true, why: "Prion modes: spontaneous conversion, acquired (corneal transplant, contaminated instrument, growth hormone, ingestion) and inherited. [Lecture Transcript]" },
-      { text: "Horizontal", correct: false, why: "Not parent to offspring. [Lecture Transcript]" },
-      { text: "Nosocomial", correct: false, why: "Healthcare-acquired. [Lecture Transcript]" },
-      { text: "Indirect", correct: false, why: "Via fomite or vector. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1035,
-    subjectIndex: 6,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which practice caused kuru?",
-    options: [
-      { text: "Ritual cannibalism", correct: true, why: "Kuru, the laughing death, affected the Fore people of New Guinea and means shivering or trembling. [Lecture Transcript]" },
-      { text: "Contaminated beef", correct: false, why: "That is variant CJD. [Lecture Transcript]" },
-      { text: "Contaminated surgical instruments", correct: false, why: "That is iatrogenic CJD. [Lecture Transcript]" },
-      { text: "Spontaneous mutation", correct: false, why: "Not the cause. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1036,
-    subjectIndex: 7,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which prion disease classically affects the elderly, with a median age at death of 68?",
-    options: [
-      { text: "Classic CJD", correct: true, why: "Classic CJD can be spontaneous, inherited (up to 15%) or acquired; death usually within one year. [Lecture Transcript]" },
-      { text: "Variant CJD", correct: false, why: "Younger patients, median 28. [Lecture Transcript]" },
-      { text: "Kuru", correct: false, why: "Cannibalism-linked. [Lecture Transcript]" },
-      { text: "Scrapie", correct: false, why: "Animal disease. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1037,
-    subjectIndex: 7,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Variant CJD is acquired by eating meat from cattle with:",
-    options: [
-      { text: "Bovine spongiform encephalopathy", correct: true, why: "Variant CJD affects younger individuals and emerged in the 1990s; risk is about 1 case per 10 billion servings. [Lecture Transcript]" },
-      { text: "Chronic wasting disease", correct: false, why: "Deer and elk. [Lecture Transcript]" },
-      { text: "Scrapie", correct: false, why: "Sheep and goats. [Lecture Transcript]" },
-      { text: "Feline spongiform encephalopathy", correct: false, why: "Cats. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1038,
-    subjectIndex: 7,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "An autosomal dominant prion disease causing progressive insomnia is:",
-    options: [
-      { text: "Fatal familial insomnia", correct: true, why: "Fatal familial insomnia builds prions in the thalamus. GSS is also autosomal dominant but affects very few families. [Lecture Transcript]" },
-      { text: "Gerstmann-Straussler-Scheinker syndrome", correct: false, why: "Inherited, average 5-year survival, no insomnia hallmark. [Lecture Transcript]" },
-      { text: "Kuru", correct: false, why: "Acquired by cannibalism. [Lecture Transcript]" },
-      { text: "Variant CJD", correct: false, why: "Acquired by ingestion. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1039,
-    subjectIndex: 8,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which animal prion disease is called mad cow disease and followed meat-and-bone meal feeding?",
-    options: [
-      { text: "Bovine spongiform encephalopathy", correct: true, why: "BSE peaked at about 1,000 cases per week in 1993 and fell to 2 cases in 2015. [Lecture Transcript]" },
-      { text: "Scrapie", correct: false, why: "Sheep and goats. [Lecture Transcript]" },
-      { text: "Chronic wasting disease", correct: false, why: "Deer, elk and moose. [Lecture Transcript]" },
-      { text: "Transmissible mink encephalopathy", correct: false, why: "Ranch mink. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1040,
-    subjectIndex: 8,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which prion disease affects deer, elk and moose, with no reported human cases?",
-    options: [
-      { text: "Chronic wasting disease", correct: true, why: "Chronic wasting disease causes weight loss and stumbling. [Lecture Transcript]" },
-      { text: "Scrapie", correct: false, why: "Sheep and goats. [Lecture Transcript]" },
-      { text: "Feline spongiform encephalopathy", correct: false, why: "Cats. [Lecture Transcript]" },
-      { text: "Bovine spongiform encephalopathy", correct: false, why: "Cattle. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1041,
-    subjectIndex: 8,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which is the oldest known transmissible spongiform encephalopathy, affecting sheep and goats?",
-    options: [
-      { text: "Scrapie", correct: true, why: "Scrapie has been recognized for over 250 years and is not transmissible to humans. [Lecture Transcript]" },
-      { text: "Chronic wasting disease", correct: false, why: "Cervids. [Lecture Transcript]" },
-      { text: "Exotic ungulate encephalopathy", correct: false, why: "Zoo hoofed mammals. [Lecture Transcript]" },
-      { text: "Feline spongiform encephalopathy", correct: false, why: "Cats. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1042,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "What is true about platyhelminths?",
-    options: [
-      { text: "Thin and bilaterally symmetric with a segmented body plan", correct: true, why: "Flatworms are thin, bilaterally symmetric and segmented, with no true digestive system. [Lecture Transcript]" },
-      { text: "Elongated cylindrical nonsegmented body plan", correct: false, why: "Roundworm description. [Lecture Transcript]" },
-      { text: "Able to change shape like an ameba", correct: false, why: "Not a helminth trait. [Lecture Transcript]" },
-      { text: "Possess a true digestive system", correct: false, why: "Roundworms have a complete digestive system; flatworms do not. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1043,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which of the following is not a flatworm?",
-    options: [
-      { text: "Nematode", correct: true, why: "Nematodes are roundworms. Cestodes and trematodes, including schistosomes, are flatworms. [Lecture Transcript]" },
-      { text: "Trematode", correct: false, why: "Fluke, a flatworm. [Lecture Transcript]" },
-      { text: "Cestode", correct: false, why: "Tapeworm, a flatworm. [Lecture Transcript]" },
-      { text: "Schistosome", correct: false, why: "Blood fluke, a flatworm. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1044,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "What is the most accurate name for a host that experiences no parasitic development but is an essential link in the cycle?",
-    options: [
-      { text: "Transport host", correct: true, why: "A transport host has no parasitic development. A true intermediate host supports larval development. [Lecture Transcript]" },
-      { text: "Accidental host", correct: false, why: "Not the defined term. [Lecture Transcript]" },
-      { text: "Intermediate host", correct: false, why: "Supports larval development. [Lecture Transcript]" },
-      { text: "Definitive host", correct: false, why: "Adult worm and mating occur here. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1045,
-    subjectIndex: 0,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "What is the most accurate description of the host in which adulthood and mating occur?",
-    options: [
-      { text: "Definitive host", correct: true, why: "The definitive host, also called the final host, harbors the adult worm. [Lecture Transcript]" },
-      { text: "Transport host", correct: false, why: "No parasitic development. [Lecture Transcript]" },
-      { text: "Intermediate host", correct: false, why: "Larval development host. [Lecture Transcript]" },
-      { text: "Accidental host", correct: false, why: "Not the defined term. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1046,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which structure is the nominal head of a tapeworm containing suckers and pharyngeal slits?",
-    options: [
-      { text: "Scolex", correct: true, why: "The scolex is the nominal head. The rostellum is the hooked crown at its tip. [Lecture Transcript]" },
-      { text: "Cysticerci", correct: false, why: "Cysts in skeletal tissue. [Lecture Transcript]" },
-      { text: "Mature proglottids", correct: false, why: "Segments containing male and female organs. [Lecture Transcript]" },
-      { text: "Rostellum", correct: false, why: "Sucker and crown of hooks at the very top. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1047,
-    subjectIndex: 1,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "A hydatid cyst in the liver or other tissues comes from which worm?",
-    options: [
-      { text: "Echinococcus granulosus", correct: true, why: "Echinococcus granulosus uses dogs as definitive hosts and causes hydatid disease in humans. [Lecture Transcript]" },
-      { text: "Hymenolepis nana", correct: false, why: "Dwarf tapeworm. [Lecture Transcript]" },
-      { text: "Taenia saginata", correct: false, why: "Beef tapeworm. [Lecture Transcript]" },
-      { text: "Taenia solium", correct: false, why: "Pork tapeworm causing cysticercosis. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1048,
-    subjectIndex: 2,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which small flat leaf-like worm uses only snails as the intermediate host with humans as the definitive host?",
-    options: [
-      { text: "Schistosomes", correct: true, why: "Schistosomes use only a snail. Hermaphroditic flukes use a snail then a fish or second snail. [Lecture Transcript]" },
-      { text: "Cestodes", correct: false, why: "Tapeworms are ribbon-like. [Lecture Transcript]" },
-      { text: "Hermaphroditic flukes", correct: false, why: "Require a second intermediate host. [Lecture Transcript]" },
-      { text: "Nematodes", correct: false, why: "Roundworms. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1049,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which of the following do you get from black flies?",
-    options: [
-      { text: "Onchocerca volvulus", correct: true, why: "Onchocerca volvulus causes river blindness and is transmitted by black flies. [Lecture Transcript]" },
-      { text: "Loiasis", correct: false, why: "Dipteran flies. [Lecture Transcript]" },
-      { text: "Filariasis", correct: false, why: "Mosquitoes. [Lecture Transcript]" },
-      { text: "Trichinosis", correct: false, why: "Undercooked meat. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1050,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which of the following can give you loiasis?",
-    options: [
-      { text: "Dipteran fly", correct: true, why: "Loa loa is spread by dipteran flies. Tsetse flies transmit African sleeping sickness. [Lecture Transcript]" },
-      { text: "Tsetse fly", correct: false, why: "Vector of sleeping sickness. [Lecture Transcript]" },
-      { text: "Anopheles mosquito", correct: false, why: "Malaria vector. [Lecture Transcript]" },
-      { text: "Black fly", correct: false, why: "Onchocerca vector. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1051,
-    subjectIndex: 3,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which larval route nematode infection makes humans dead-end hosts because larvae encyst in skeletal muscle?",
-    options: [
-      { text: "Trichinosis", correct: true, why: "Trichinella spiralis is acquired from undercooked meat and encysts in muscle. [Lecture Transcript]" },
-      { text: "Trichuriasis", correct: false, why: "Whipworm, egg route. [Lecture Transcript]" },
-      { text: "Ascariasis", correct: false, why: "Giant roundworm, egg route. [Lecture Transcript]" },
-      { text: "Filariasis", correct: false, why: "Lymphatic infection via mosquito. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1052,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Which nematode is named for adult oral cutting plates that anchor to intestinal villi?",
-    options: [
-      { text: "Hookworm", correct: true, why: "Hookworm anchors to the intestine, can enter through skin, and causes ground itch and iron-deficiency anemia. [Lecture Transcript]" },
-      { text: "Pin worm", correct: false, why: "Perianal itching, tape test. [Lecture Transcript]" },
-      { text: "Loa loa", correct: false, why: "Eye worm. [Lecture Transcript]" },
-      { text: "Whipworm", correct: false, why: "Named for buggy whip shape. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1053,
-    subjectIndex: 4,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Which is the most common nematode infection in US children?",
-    options: [
-      { text: "Pin worm", correct: true, why: "Pinworm is the most common worm disease of children in temperate zones. [Lecture Transcript]" },
-      { text: "Hookworm", correct: false, why: "Tropical and subtropical. [Lecture Transcript]" },
-      { text: "Whipworm", correct: false, why: "Tropical and subtropical. [Lecture Transcript]" },
-      { text: "Trichinosis", correct: false, why: "From undercooked meat. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1054,
-    subjectIndex: 6,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "hard",
-    priority: true,
-    stem: "Humans can get transmissible spongiform encephalopathies from which of the following?",
-    options: [
-      { text: "All of the above", correct: true, why: "Prion diseases arise by spontaneous conversion, inheritance, or acquisition via transplant, instruments, growth hormone or ingestion. [Lecture Transcript]" },
-      { text: "Corneal transplants", correct: false, why: "True but incomplete. [Lecture Transcript]" },
-      { text: "Eating infected animal meat", correct: false, why: "True but incomplete. [Lecture Transcript]" },
-      { text: "Spontaneous prion protein mutation", correct: false, why: "True but incomplete. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1055,
-    subjectIndex: 6,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "easy",
-    priority: true,
-    stem: "Cannibalism as a common practice would most increase the incidence of which disease type?",
-    options: [
-      { text: "Prion", correct: true, why: "Kuru spread through ingestion of infected human tissue. [Lecture Transcript]" },
-      { text: "Rhinovirus", correct: false, why: "Respiratory virus. [Lecture Transcript]" },
-      { text: "Cestode", correct: false, why: "Fecal-oral or meat-borne worm. [Lecture Transcript]" },
-      { text: "Rhabdovirus", correct: false, why: "Rabies group. [Lecture Transcript]" }
-    ]
-  },
-  {
-    id: 1056,
-    subjectIndex: 5,
-    week: "Wk 7",
-    slideRef: "Lecture Transcript",
-    difficulty: "medium",
-    priority: true,
-    stem: "Conversion of a normal prion protein to the abnormal form shifts which level of protein structure?",
-    options: [
-      { text: "Secondary", correct: true, why: "PrPC and PrPSc share amino acid sequence but differ in folding, alpha helix versus beta sheet. [Lecture Transcript]" },
-      { text: "Primary", correct: false, why: "Sequence is unchanged. [Lecture Transcript]" },
-      { text: "Tertiary", correct: false, why: "Not the defined shift. [Lecture Transcript]" },
-      { text: "All of these", correct: false, why: "Only secondary changes. [Lecture Transcript]" }
-    ]
-  }
-];
+  <!-- Sticky Header -->
+  <header class="sticky-header">
+    <div class="header-inner">
+      <div class="nav-left">
+        <a href="index.html" class="hub-link">&larr; Hub</a>
+        <div class="quiz-title-badge">Microbio <span>Week 7</span>: Helminths &amp; Prions</div>
+      </div>
+      <div class="header-right">
+        <div class="score-pill" id="scoreCounter">Score: 0 / 0 (0%)</div>
+        <button type="button" class="mute-btn" id="muteToggleBtn">STFU Erijah</button>
+      </div>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progressBar"></div>
+    </div>
+  </header>
 
-let sel = new Set(SUBJECTS.map((_, idx) => idx));
-let P = [], i = 0, sc = 0, dn = 0, mode = 'card', missed = [], curSet = [];
-const $ = id => document.getElementById(id);
-const sh = a => {
-  a = a.slice();
-  for (let k = a.length - 1; k > 0; k--) {
-    const j = Math.floor(Math.random() * (k + 1));
-    [a[k], a[j]] = [a[j], a[k]];
-  }
-  return a;
-};
-let mute = localStorage.getItem('stfuErijah') === '1';
+  <main class="container">
+    <!-- Controls -->
+    <section class="control-bar" id="controlBar">
+      <div class="control-row">
+        <div class="filter-pills" id="subjectFilters"></div>
+      </div>
+      <div class="control-row">
+        <div class="mode-toggles">
+          <button type="button" class="pill-btn active" id="setFullBtn">Full Bank</button>
+          <button type="button" class="pill-btn" id="setQuickBtn">Quick 15</button>
+        </div>
+        <div class="mode-toggles">
+          <button type="button" class="pill-btn active" id="viewListBtn">All at Once (Continuous List)</button>
+          <button type="button" class="pill-btn" id="viewCardBtn">One by One (Card View)</button>
+        </div>
+      </div>
+    </section>
 
-function tmute() {
-  mute = !mute;
-  localStorage.setItem('stfuErijah', mute ? '1' : '0');
-  bar();
-}
+    <!-- Quiz Mount -->
+    <section id="quizContainer"></section>
 
-function tmode() {
-  mode = mode === 'card' ? 'list' : 'card';
-  if (P.length && !$('app').querySelector('.chip')) draw();
-  bar();
-}
+    <!-- Summary Card -->
+    <section class="summary-card hidden" id="summaryCard">
+      <h2 id="summaryHeading">Quiz Complete</h2>
+      <div class="summary-score" id="summaryScore">0 / 0 (0%)</div>
+      <div class="summary-tier" id="summaryTier"></div>
+      <div class="summary-actions">
+        <button type="button" class="btn" id="retakeCurrentBtn">Retake Current Set</button>
+        <button type="button" class="btn btn-secondary hidden" id="reviewMissedBtn">Review Missed</button>
+        <button type="button" class="btn btn-secondary" id="backToMenuBtn">Back to Menu</button>
+        <a href="index.html" class="btn btn-secondary">&larr; Hub</a>
+      </div>
+    </section>
+  </main>
 
-function bar() {
-  const t = dn ? Math.round(sc / dn * 100) : 0;
-  $('sc').textContent = `Score: ${sc} / ${P.length || 0} (${t}%)`;
-  $('pc').textContent = P.length ? `Answered ${dn}/${P.length}` : '';
-  $('pb').style.width = (P.length ? dn / P.length * 100 : 0) + '%';
-  $('md').textContent = 'Mode: ' + (mode === 'card' ? 'One by One (Card View)' : 'All at Once (Continuous List)');
-  $('mu').textContent = mute ? 'Bring Back Erijah' : 'STFU Erijah';
-}
+  <script>
+    const SUBJECTS = [
+      { title: "Helminth General & Hosts", week: "Wk 7" },
+      { title: "Platyhelminthes: Cestodes", week: "Wk 7" },
+      { title: "Platyhelminthes: Trematodes", week: "Wk 7" },
+      { title: "Nematodes: Larval Route", week: "Wk 7" },
+      { title: "Nematodes: Egg Route", week: "Wk 7" },
+      { title: "Prions & TSEs", week: "Wk 7" }
+    ];
 
-function menu() {
-  P = [];
-  sc = dn = 0;
-  bar();
-  const n = questionBank.filter(q => sel.has(q.subjectIndex)).length;
-  $('app').innerHTML = `<h1>Week 7: Helminths and Prions</h1><p>Select one or more topics, then start.</p>
-<button class="pr" onclick="sel=new Set(SUBJECTS.map((_,idx)=>idx));menu()">Select All (${questionBank.length})</button> <button onclick="sel.clear();menu()">Clear</button><div>` +
-    SUBJECTS.map((subj, idx) => `<button class="chip ${sel.has(idx) ? 'on' : ''}" onclick="tg(${idx})">${subj.title} (${subj.week}) (${questionBank.filter(q => q.subjectIndex === idx).length})</button>`).join('') +
-    `</div><p><b>Active Pool: ${n} questions across ${sel.size} topics selected</b></p><button class="pr" onclick="go()">Start Quiz</button>`;
-}
+    const questionBank = [
+      /* =========================================================
+         SUBJECT 0: HELMINTH GENERAL & HOSTS
+         ========================================================= */
+      {
+        id: 7001,
+        subjectIndex: 0,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #2",
+        difficulty: "easy",
+        priority: true,
+        summary: "Definitive host: The final host organism in which a parasite reaches sexual maturity and mates; for board-tested human helminth conditions, humans serve as the definitive host.",
+        stem: "In a parasitic helminth life cycle, the organism in which the worm reaches adulthood and undergoes sexual mating is designated as the _______ host.",
+        options: [
+          { text: "Definitive host", correct: true, why: "Correct. The definitive (final) host harbors the adult, sexually reproducing stage of the helminth. [Helminths Slide #2]" },
+          { text: "Intermediate host", correct: false, why: "Incorrect. An intermediate host harbors larval or asexual stages that undergo essential development prior to reaching the final host. [Helminths Slide #2]" },
+          { text: "Transport host", correct: false, why: "Incorrect. A transport (paratenic) host carries the parasite without any biological development occurring inside it. [Helminths Slide #2]" },
+          { text: "Reservoir host", correct: false, why: "Incorrect. A reservoir host maintains an infectious agent in nature as a continuous source of infection rather than defining the sexual maturation stage. [Helminths Slide #2]" }
+        ]
+      },
+      {
+        id: 7002,
+        subjectIndex: 0,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #2",
+        difficulty: "medium",
+        priority: true,
+        summary: "Intermediate host vs. Transport host: An intermediate host supports active larval development, whereas a transport host merely carries the parasite without developmental progression.",
+        stem: "Which host classification describes an organism that harbors an immature parasite and supports active larval development before transmission to the final host?",
+        options: [
+          { text: "Intermediate host", correct: true, why: "Correct. Secondary or intermediate hosts (such as snails or fish) are required for actual developmental progression of the larval stage. [Helminths Slide #2]" },
+          { text: "Transport host", correct: false, why: "Incorrect. A transport host mechanically carries the parasite without supporting any developmental changes. [Helminths Slide #2]" },
+          { text: "Definitive host", correct: false, why: "Incorrect. The definitive host harbors the sexually mature adult worm rather than developing larval stages. [Helminths Slide #2]" },
+          { text: "Dead-end host", correct: false, why: "Incorrect. A dead-end host prevents further transmission of the parasite lifecycle to subsequent hosts. [Helminths Slide #2]" }
+        ]
+      },
+      {
+        id: 7003,
+        subjectIndex: 0,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #2",
+        difficulty: "medium",
+        priority: false,
+        summary: "Dead-end host: Humans act as dead-end hosts when encysted larvae in human skeletal tissue cannot progress onward unless human muscle tissue is consumed.",
+        stem: "When humans harbor encysted larvae in skeletal muscle tissue that cannot continue the parasite life cycle under normal circumstances, humans act as a:",
+        options: [
+          { text: "Dead-end host", correct: true, why: "Correct. Because human skeletal tissue is not normally eaten by another host, the parasite reaches a transmission dead end. [Helminths Slide #2]" },
+          { text: "Primary vector", correct: false, why: "Incorrect. A primary vector actively transmits infectious stages between hosts, typically via arthropod bites. [Helminths Slide #2]" },
+          { text: "Transport host", correct: false, why: "Incorrect. A transport host passes an unchanged parasite onward to a definitive host. [Helminths Slide #2]" },
+          { text: "Intermediate vector", correct: false, why: "Incorrect. Vectors are transmitting organisms (like flies or mosquitoes), not dead-end tissue sites in humans. [Helminths Slide #2]" }
+        ]
+      },
+      {
+        id: 7004,
+        subjectIndex: 0,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #4",
+        difficulty: "easy",
+        priority: true,
+        summary: "Platyhelminthes (flatworms): Simplest bilateral animals, possessing a flat body plan, simple diffusion respiration, and an incomplete gut without a true body cavity.",
+        stem: "Which anatomical feature characterizes members of the phylum Platyhelminthes compared to roundworms?",
+        options: [
+          { text: "Bilaterally symmetrical with no body cavity other than a gut", correct: true, why: "Correct. Flatworms (Platyhelminthes) lack a true coelom and complete digestive tract, relying on pharyngeal openings and simple diffusion. [Helminths Slide #4]" },
+          { text: "Cylindrical non-segmented body with a complete digestive tract", correct: false, why: "Incorrect. A cylindrical, unsegmented body with a complete mouth-to-anus digestive tube describes nematodes (roundworms). [Helminths Slide #10]" },
+          { text: "Prokaryotic cellular organization lacking membrane-bound nuclei", correct: false, why: "Incorrect. All helminths are multicellular eukaryotic animals with complete organ systems. [Helminths Slide #1]" },
+          { text: "Chitinous exoskeleton with jointed locomotor appendages", correct: false, why: "Incorrect. Chitinous exoskeletons and jointed appendages are features of arthropods, not flatworms. [Helminths Slide #4]" }
+        ]
+      },
+      {
+        id: 7005,
+        subjectIndex: 0,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #1",
+        difficulty: "easy",
+        priority: false,
+        summary: "Helminth identification: Although adult helminths can be macroscopic (up to 25 yards for tapeworms), definitive clinical identification requires microscopic examination of eggs, larvae, or segments.",
+        stem: "Although several adult parasitic helminths are visible to the naked eye, definitive clinical diagnosis relies primarily on:",
+        options: [
+          { text: "Microscopic examination of eggs, larvae, or segments", correct: true, why: "Correct. Microscopic observation is required to distinguish true helminth structures from sloughed intestinal mucus or debris. [Helminths Slide #1]" },
+          { text: "Gram staining of peripheral blood smears", correct: false, why: "Incorrect. Gram staining differentiates bacterial cell wall peptidoglycan layers rather than eukaryotic helminths. [Helminths Slide #1]" },
+          { text: "Anaerobic blood agar culture at body temperature", correct: false, why: "Incorrect. Multicellular parasitic worms are not diagnosed by standard bacterial agar plate culturing. [Helminths Slide #1]" },
+          { text: "Serologic detection of viral capsid antigens", correct: false, why: "Incorrect. Viral capsid testing applies to non-cellular viruses rather than macroscopic multicellular worms. [Helminths Slide #1]" }
+        ]
+      },
 
-function tg(idx) {
-  sel.has(idx) ? sel.delete(idx) : sel.add(idx);
-  menu();
-}
+      /* =========================================================
+         SUBJECT 1: PLATYHELMINTHES — CESTODES (TAPEWORMS)
+         ========================================================= */
+      {
+        id: 7006,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #5",
+        difficulty: "easy",
+        priority: true,
+        summary: "Cestodes (tapeworms): Ribbon-like, segmented flatworms acquired via the fecal-oral route or undercooked meat/fish, causing nutrient sequestration, toxic waste irritation, and mechanical intestinal blockage.",
+        stem: "Which helminth group consists of ribbon-like, segmented flatworms that inhabit the host intestine and cause mechanical blockage and nutrient sequestration?",
+        options: [
+          { text: "Cestodes", correct: true, why: "Correct. Cestodes (tapeworms) are ribbon-like segmented Platyhelminthes that absorb nutrients across their body surface and can obstruct the bowel. [Helminths Slide #5]" },
+          { text: "Trematodes", correct: false, why: "Incorrect. Trematodes (flukes) are small, leaf-like flatworms rather than long ribbon-like segmented worms. [Helminths Slide #8]" },
+          { text: "Nematodes", correct: false, why: "Incorrect. Nematodes (Aschelminthes / roundworms) are cylindrical and non-segmented with a complete digestive tract. [Helminths Slide #10]" },
+          { text: "Apicomplexa", correct: false, why: "Incorrect. Apicomplexa (Sporozoa) are unicellular obligate intracellular protozoans rather than multicellular helminths. [Helminths Slide #5]" }
+        ]
+      },
+      {
+        id: 7007,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #6",
+        difficulty: "medium",
+        priority: true,
+        summary: "Tapeworm anatomy: The scolex is the nominal head equipped with suckers (and a crown-like rostellum with hooks), followed by the neck and a chain of segments (proglottids) forming the strobila.",
+        stem: "On a cestode, the crown-like apical structure bearing hooks atop the scolex that assists in anchoring to the intestinal wall is the:",
+        options: [
+          { text: "Rostellum", correct: true, why: "Correct. The rostellum sits at the very apex of the scolex (nominal head) and features a sucker ringed by attachment hooks. [Helminths Slide #6]" },
+          { text: "Proglottid", correct: false, why: "Incorrect. Proglottids are the individual body segments (immature, mature, and gravid/egg-filled) extending behind the neck. [Helminths Slide #6]" },
+          { text: "Strobila", correct: false, why: "Incorrect. The strobila refers to the entire segmented body chain of the tapeworm rather than the apical hook crown. [Helminths Slide #6]" },
+          { text: "Cysticercus", correct: false, why: "Incorrect. A cysticercus is a larval pseudocyst formed when tapeworm larvae encyst inside host skeletal tissue. [Helminths Slide #6]" }
+        ]
+      },
+      {
+        id: 7008,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #6",
+        difficulty: "easy",
+        priority: true,
+        summary: "Proglottids: Individual tapeworm segments progressing from narrow immature segments near the scolex to wide mature segments and terminal egg-filled (gravid) segments that detach in feces.",
+        stem: "Which term describes the individual body segments of a tapeworm that mature distally and detach when filled with eggs?",
+        options: [
+          { text: "Proglottids", correct: true, why: "Correct. Proglottids grow wider as they move away from the scolex, progressing from immature to mature to egg-laden segments that break off. [Helminths Slide #6]" },
+          { text: "Scoleces", correct: false, why: "Incorrect. The scolex is the small anterior attachment head equipped with suckers and pharyngeal openings. [Helminths Slide #6]" },
+          { text: "Cercariae", correct: false, why: "Incorrect. Cercariae are free-swimming larval stages associated with trematode (fluke) life cycles, not cestode segments. [Helminths Slide #8]" },
+          { text: "Amyloids", correct: false, why: "Incorrect. Amyloids are misfolded protein aggregates deposited in neural tissue during prion diseases. [Prions Slide #3]" }
+        ]
+      },
+      {
+        id: 7009,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #7",
+        difficulty: "easy",
+        priority: true,
+        summary: "Hymenolepis nana (Dwarf tapeworm): The most common human tapeworm globally because it spreads directly human-to-human via the fecal-oral route in areas lacking clean sanitation.",
+        stem: "Which cestode is the most common human tapeworm worldwide due to direct human-to-human fecal-oral transmission?",
+        options: [
+          { text: "Hymenolepis nana", correct: true, why: "Correct. Hymenolepis nana (dwarf tapeworm) causes hymenolepiasis and predominates globally where sanitation and clean water are limited. [Helminths Slide #7]" },
+          { text: "Taenia saginata", correct: false, why: "Incorrect. Taenia saginata (beef tapeworm) requires cattle as an intermediate host and is acquired by eating raw or undercooked beef. [Helminths Slide #7]" },
+          { text: "Diphyllobothrium latum", correct: false, why: "Incorrect. Diphyllobothrium latum (fish tapeworm) is transmitted via ingestion of raw or unfrozen freshwater fish. [Helminths Slide #7]" },
+          { text: "Echinococcus granulosus", correct: false, why: "Incorrect. Echinococcus granulosus (dog tapeworm) is typically acquired from canine definitive hosts or livestock environments. [Helminths Slide #7]" }
+        ]
+      },
+      {
+        id: 7010,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #7",
+        difficulty: "medium",
+        priority: true,
+        summary: "Taenia solium (pork tapeworm) vs. Taenia saginata (beef tapeworm): Taenia solium can invade human skeletal muscle and tissues to form painful pseudocysts (cysticerci), causing cysticercosis.",
+        stem: "Consumption of undercooked pork contaminated with Taenia solium can lead to larvae migrating into human skeletal muscle to form painful pseudocysts, a complication called:",
+        options: [
+          { text: "Cysticercosis", correct: true, why: "Correct. Taenia solium (pork tapeworm) forms cysticerci in skeletal tissue, causing localized redness, swelling, and pain. [Helminths Slide #7]" },
+          { text: "Hydatid disease", correct: false, why: "Incorrect. Hydatid disease is caused by Echinococcus granulosus forming massive fluid-filled cysts in the liver or brain. [Helminths Slide #7]" },
+          { text: "Elephantiasis", correct: false, why: "Incorrect. Elephantiasis results from lymphatic obstruction by the filarial nematode Wuchereria bancrofti. [Helminths Slide #11]" },
+          { text: "Visceral larva migrans", correct: false, why: "Incorrect. Cysticercosis is the specific pseudocyst tissue invasion associated with Taenia solium pork tapeworm infection. [Helminths Slide #7]" }
+        ]
+      },
+      {
+        id: 7011,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #7",
+        difficulty: "easy",
+        priority: true,
+        summary: "Taenia saginata: The beef tapeworm, acquired by ingesting raw or undercooked beef.",
+        stem: "Which organism is classified as the beef tapeworm and is acquired through eating raw or undercooked beef?",
+        options: [
+          { text: "Taenia saginata", correct: true, why: "Correct. Taenia saginata is the beef tapeworm (contrasted with Taenia solium, the pork tapeworm). [Helminths Slide #7]" },
+          { text: "Taenia solium", correct: false, why: "Incorrect. Taenia solium is the pork tapeworm responsible for taeniasis and cysticercosis. [Helminths Slide #7]" },
+          { text: "Diphyllobothrium latum", correct: false, why: "Incorrect. Diphyllobothrium latum is the broad fish tapeworm acquired from raw fish. [Helminths Slide #7]" },
+          { text: "Hymenolepis nana", correct: false, why: "Incorrect. Hymenolepis nana is the dwarf tapeworm transmitted directly human-to-human. [Helminths Slide #7]" }
+        ]
+      },
+      {
+        id: 7012,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #7",
+        difficulty: "easy",
+        priority: true,
+        summary: "Diphyllobothrium latum (fish tapeworm): Prevented in the United States by mandatory freezing regulations for commercial sushi-grade fish.",
+        stem: "Commercial fish sold for raw consumption in the United States must undergo mandatory freezing primarily to prevent infection by which cestode?",
+        options: [
+          { text: "Diphyllobothrium latum", correct: true, why: "Correct. Diphyllobothrium latum (fish tapeworm) causes diphyllobothriasis when unfrozen raw fish is consumed. [Helminths Slide #7]" },
+          { text: "Echinococcus granulosus", correct: false, why: "Incorrect. Echinococcus granulosus is the dog tapeworm associated with canines, sheep, and hydatid liver cysts. [Helminths Slide #7]" },
+          { text: "Hymenolepis nana", correct: false, why: "Incorrect. Hymenolepis nana is transmitted via human-to-human fecal-oral contamination rather than fish. [Helminths Slide #7]" },
+          { text: "Taenia saginata", correct: false, why: "Incorrect. Taenia saginata is transmitted via undercooked beef rather than fish. [Helminths Slide #7]" }
+        ]
+      },
+      {
+        id: 7013,
+        subjectIndex: 1,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #7",
+        difficulty: "medium",
+        priority: true,
+        summary: "Echinococcus granulosus (dog tapeworm): Dogs are the typical definitive host; in humans, larvae form large, fluid-filled hydatid cysts (most commonly in the liver) that must not be ruptured during surgical removal.",
+        stem: "Infection with Echinococcus granulosus results in large, fluid-filled cysts most commonly located in the human liver, a condition known as:",
+        options: [
+          { text: "Hydatid disease", correct: true, why: "Correct. Echinococcus granulosus (dog tapeworm) produces massive fluid-filled hydatid cysts in organs such as the liver. [Helminths Slide #7]" },
+          { text: "Cysticercosis", correct: false, why: "Incorrect. Cysticercosis is caused by Taenia solium forming small pseudocysts in skeletal muscle. [Helminths Slide #7]" },
+          { text: "Trichinosis", correct: false, why: "Incorrect. Trichinosis is caused by the roundworm Trichinella spiralis encysting in striated muscle. [Helminths Slide #11]" },
+          { text: "Schistosomiasis", correct: false, why: "Incorrect. Schistosomiasis is caused by sexual blood flukes (trematodes) residing in intestinal or bladder veins. [Helminths Slide #9]" }
+        ]
+      },
 
-function go() {
-  if (!sel.size) return alert('Select at least one topic.');
-  begin(questionBank.filter(q => sel.has(q.subjectIndex)));
-}
+      /* =========================================================
+         SUBJECT 2: PLATYHELMINTHES — TREMATODES (FLUKES)
+         ========================================================= */
+      {
+        id: 7014,
+        subjectIndex: 2,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #8",
+        difficulty: "medium",
+        priority: true,
+        summary: "Hermaphroditic flukes (Paragonimus and Clonorchis): Require two intermediate hosts—first a snail, then a fish (or crustacean)—before humans acquire them by eating raw or undercooked fish.",
+        stem: "Which trematode group requires two sequential intermediate hosts (first a snail, then a fish) and infects humans as the definitive host?",
+        options: [
+          { text: "Hermaphroditic flukes", correct: true, why: "Correct. Hermaphroditic (asexual) flukes such as Paragonimus and Clonorchis develop first in a snail and second in a fish before human ingestion. [Helminths Slide #8]" },
+          { text: "Schistosomes", correct: false, why: "Incorrect. Schistosomes (sexual blood flukes) use only a single snail intermediate host and penetrate human skin directly. [Helminths Slide #9]" },
+          { text: "Cestodes", correct: false, why: "Incorrect. Cestodes are ribbon-like tapeworms rather than leaf-like trematodes with a snail-fish cycle. [Helminths Slide #5]" },
+          { text: "Nematodes", correct: false, why: "Incorrect. Nematodes are cylindrical roundworms rather than flat leaf-like trematodes. [Helminths Slide #10]" }
+        ]
+      },
+      {
+        id: 7015,
+        subjectIndex: 2,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #8",
+        difficulty: "medium",
+        priority: true,
+        summary: "Paragonimus westermani (lung fluke): Causes paragonimiasis with pulmonary symptoms, abdominal pain, diarrhea, fever, and potential migration into the brain.",
+        stem: "Which hermaphroditic trematode primarily embeds in human pulmonary tissue and can occasionally migrate upward into the brain?",
+        options: [
+          { text: "Paragonimus westermani", correct: true, why: "Correct. Paragonimus westermani is the lung fluke causing paragonimiasis, featuring respiratory symptoms and potential CNS migration. [Helminths Slide #8]" },
+          { text: "Clonorchis sinensis", correct: false, why: "Incorrect. Clonorchis sinensis is the liver fluke that dwells in the bile ducts and causes jaundice. [Helminths Slide #8]" },
+          { text: "Schistosoma mansoni", correct: false, why: "Incorrect. Schistosoma species are sexual blood flukes that inhabit the venous plexuses of the intestine or bladder. [Helminths Slide #9]" },
+          { text: "Enterobius vermicularis", correct: false, why: "Incorrect. Enterobius vermicularis is the pinworm, an intestinal roundworm of children. [Helminths Slide #12]" }
+        ]
+      },
+      {
+        id: 7016,
+        subjectIndex: 2,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #8",
+        difficulty: "medium",
+        priority: true,
+        summary: "Clonorchis sinensis (liver fluke): Dwells in the biliary ducts; often asymptomatic, but heavy infection produces abdominal pain and obstructive jaundice.",
+        stem: "A patient who regularly consumes raw freshwater fish develops biliary duct obstruction and jaundice due to a hermaphroditic fluke. Which organism is responsible?",
+        options: [
+          { text: "Clonorchis sinensis", correct: true, why: "Correct. Clonorchis sinensis (the liver fluke, formerly termed oriental liver fluke) resides in the bile ducts and produces jaundice. [Helminths Slide #8]" },
+          { text: "Paragonimus westermani", correct: false, why: "Incorrect. Paragonimus westermani is the lung fluke that embeds in pulmonary tissue rather than the biliary tree. [Helminths Slide #8]" },
+          { text: "Diphyllobothrium latum", correct: false, why: "Incorrect. Diphyllobothrium latum is an intestinal fish tapeworm (cestode) rather than a biliary trematode. [Helminths Slide #7]" },
+          { text: "Trichuris trichiura", correct: false, why: "Incorrect. Trichuris trichiura is the whipworm, a soil-transmitted intestinal nematode. [Helminths Slide #12]" }
+        ]
+      },
+      {
+        id: 7017,
+        subjectIndex: 2,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #9",
+        difficulty: "medium",
+        priority: true,
+        summary: "Schistosomes (blood flukes): Separate male and female sexes (the female resides in the male's gynecophoric groove/schist); require only one intermediate host (a snail) and penetrate human skin in water.",
+        stem: "Which characteristic distinguishes schistosomes from hermaphroditic trematodes?",
+        options: [
+          { text: "Separate sexes using only a snail intermediate host and penetrating skin", correct: true, why: "Correct. Schistosomes (blood flukes) have distinct male and female worms, require only a snail intermediate host, and burrow directly through skin in water. [Helminths Slide #9]" },
+          { text: "Self-fertilizing segments acquired by ingesting undercooked pork", correct: false, why: "Incorrect. Self-fertilizing proglottid segments acquired from undercooked pork describe Taenia solium, a cestode. [Helminths Slide #7]" },
+          { text: "Sequential development in both a snail and a freshwater fish", correct: false, why: "Incorrect. Requiring both a snail and a fish intermediate host characterizes hermaphroditic flukes like Clonorchis and Paragonimus. [Helminths Slide #8]" },
+          { text: "Transmission via black fly bites with migration to the optic nerve", correct: false, why: "Incorrect. Black fly transmission and ocular migration describe the filarial nematode Onchocerca volvulus. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7018,
+        subjectIndex: 2,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #9",
+        difficulty: "hard",
+        priority: false,
+        summary: "Schistosomiasis pathogenesis: Blood flukes lodge in the venules of the small intestine or venous plexus of the bladder, causing swimmer's itch at entry, organomegaly, and chronic granulomatous lesions.",
+        stem: "Adult blood flukes in schistosomiasis primarily reside within which anatomical structures of the human definitive host?",
+        options: [
+          { text: "Venules of the small intestine or venous plexus of the bladder", correct: true, why: "Correct. Schistosomes localize to the mesenteric venules of the small intestine or the vesical venous plexus of the bladder. [Helminths Slide #9]" },
+          { text: "Alveolar sacs and bronchioles of the upper lung lobes", correct: false, why: "Incorrect. Pulmonary parenchyma is the target site of the lung fluke Paragonimus westermani. [Helminths Slide #8]" },
+          { text: "Striated skeletal muscle fibers of the diaphragm and tongue", correct: false, why: "Incorrect. Striated skeletal muscle encystment is characteristic of Trichinella spiralis and Taenia solium. [Helminths Slide #11]" },
+          { text: "Subcutaneous lymphatic channels of the lower extremities", correct: false, why: "Incorrect. Subcutaneous lymphatic obstruction is caused by the nematode Wuchereria bancrofti. [Helminths Slide #11]" }
+        ]
+      },
 
-function begin(src) {
-  curSet = src;
-  P = sh(src).map(q => ({
-    q,
-    o: sh(q.options.map(opt => ({ t: opt.text, r: opt.why, ok: opt.correct }))),
-    a: null
-  }));
-  i = 0;
-  sc = dn = 0;
-  missed = [];
-  draw();
-  bar();
-}
+      /* =========================================================
+         SUBJECT 3: NEMATODES — LARVAL ROUTE
+         ========================================================= */
+      {
+        id: 7019,
+        subjectIndex: 3,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #11",
+        difficulty: "medium",
+        priority: true,
+        summary: "Larval-route vs. Egg-route nematodes: The four larval-route roundworms are Onchocerca volvulus, Loa loa, Wuchereria bancrofti, and Trichinella spiralis; Trichuris trichiura is an egg-route nematode.",
+        stem: "Which of the following nematodes is transmitted via the egg route rather than the larval route?",
+        options: [
+          { text: "Trichuris trichiura", correct: true, why: "Correct. Trichuris trichiura (whipworm) is an egg-route nematode, whereas Wuchereria, Onchocerca, and Trichinella are larval-route nematodes. [Helminths Slide #11, #12]" },
+          { text: "Wuchereria bancrofti", correct: false, why: "Incorrect. Wuchereria bancrofti is a larval-route nematode transmitted via mosquito bite. [Helminths Slide #11]" },
+          { text: "Onchocerca volvulus", correct: false, why: "Incorrect. Onchocerca volvulus is a larval-route nematode transmitted via black fly bite. [Helminths Slide #11]" },
+          { text: "Trichinella spiralis", correct: false, why: "Incorrect. Trichinella spiralis is a larval-route nematode acquired by eating encysted larvae in undercooked meat. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7020,
+        subjectIndex: 3,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #11",
+        difficulty: "easy",
+        priority: true,
+        summary: "Onchocerca volvulus: Transmitted by black flies breeding near fast-flowing rivers; larvae migrate to the cornea, retina, and optic nerve, causing onchocerciasis (river blindness).",
+        stem: "Which vector transmits Onchocerca volvulus, the causative agent of river blindness?",
+        options: [
+          { text: "Black fly", correct: true, why: "Correct. Black flies along rivers with overhanging vegetation transmit Onchocerca volvulus, leading to corneal, retinal, and optic nerve damage. [Helminths Slide #11]" },
+          { text: "Dipteran deer fly", correct: false, why: "Incorrect. Dipteran flies (mango/deer flies) transmit Loa loa, the African eyeworm. [Helminths Slide #11]" },
+          { text: "Female Anopheles mosquito", correct: false, why: "Incorrect. Mosquitos transmit Wuchereria bancrofti (filariasis), whereas black flies specifically transmit Onchocerca volvulus. [Helminths Slide #11]" },
+          { text: "Reduviid kissing bug", correct: false, why: "Incorrect. Reduviid bugs transmit the protozoan Trypanosoma cruzi (Chagas disease), not helminths. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7021,
+        subjectIndex: 3,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #11",
+        difficulty: "medium",
+        priority: true,
+        summary: "Loa loa (eyeworm): Transmitted by Dipteran flies; adult worms migrate across the subconjunctiva of the eye, moving closer to the surface in response to warmth where they are extracted under local anesthesia.",
+        stem: "Spread by Dipteran flies, which larval-route nematode migrates across the subconjunctiva of the eye and moves toward the surface when warmed?",
+        options: [
+          { text: "Loa loa", correct: true, why: "Correct. Loa loa causes loiasis (eyeworm) and is pulled from the subconjunctiva after warming draws it toward the ocular surface. [Helminths Slide #11]" },
+          { text: "Onchocerca volvulus", correct: false, why: "Incorrect. Onchocerca volvulus is spread by black flies and causes progressive optic nerve blindness rather than visible subconjunctival worm extraction. [Helminths Slide #11]" },
+          { text: "Ancylostoma duodenale", correct: false, why: "Incorrect. Hookworms penetrate skin and migrate through the lungs to the small intestine, causing iron-deficiency anemia. [Helminths Slide #12]" },
+          { text: "Ascaris lumbricoides", correct: false, why: "Incorrect. Ascaris lumbricoides is a large egg-route intestinal roundworm that migrates through the lungs and throat. [Helminths Slide #12]" }
+        ]
+      },
+      {
+        id: 7022,
+        subjectIndex: 3,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #11",
+        difficulty: "easy",
+        priority: true,
+        summary: "Wuchereria bancrofti: Transmitted by mosquitoes; adult worms lodge in and obstruct lymphatic channels, producing severe chronic lymphedema known as elephantiasis (filariasis).",
+        stem: "Mosquito-borne transmission of Wuchereria bancrofti leads to severe swelling of the extremities and genitalia because adult worms obstruct:",
+        options: [
+          { text: "Lymphatic channels", correct: true, why: "Correct. Wuchereria bancrofti blocks lymphatic drainage vessels, resulting in lymphatic filariasis (elephantiasis). [Helminths Slide #11]" },
+          { text: "Hepatic bile ducts", correct: false, why: "Incorrect. Hepatic bile duct obstruction is caused by the liver fluke Clonorchis sinensis. [Helminths Slide #8]" },
+          { text: "Cerebral ventricles", correct: false, why: "Incorrect. Cerebral ventricular obstruction is not the primary mechanism of Wuchereria bancrofti elephantiasis. [Helminths Slide #11]" },
+          { text: "Renal glomeruli", correct: false, why: "Incorrect. Renal glomerular damage is not the hallmark obstructive pathology of lymphatic filariasis. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7023,
+        subjectIndex: 3,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #11",
+        difficulty: "medium",
+        priority: true,
+        summary: "Trichinella spiralis: Acquired by eating undercooked meat (such as wild game or pork) containing encysted larvae; causes initial GI symptoms followed by painful migration and encystment in skeletal muscle.",
+        stem: "A hunter develops acute gastrointestinal distress followed by severe myalgias, periorbital swelling, and larvae encysting in striated muscle after eating undercooked bear meat. Which organism is responsible?",
+        options: [
+          { text: "Trichinella spiralis", correct: true, why: "Correct. Trichinella spiralis causes trichinosis, featuring an intestinal phase followed by painful larval encystment in skeletal muscle. [Helminths Slide #11]" },
+          { text: "Taenia saginata", correct: false, why: "Incorrect. Taenia saginata is the beef tapeworm and remains confined to the intestinal lumen without muscle encystment. [Helminths Slide #7]" },
+          { text: "Enterobius vermicularis", correct: false, why: "Incorrect. Enterobius vermicularis is the pinworm, transmitted via fecal-oral eggs and causing perianal pruritus. [Helminths Slide #12]" },
+          { text: "Schistosoma haematobium", correct: false, why: "Incorrect. Schistosomes are waterborne blood flukes that penetrate skin rather than encysting from game meat. [Helminths Slide #9]" }
+        ]
+      },
 
-function qh(n) {
-  const p = P[n];
-  const L = 'ABCD';
-  const subj = SUBJECTS[p.q.subjectIndex];
-  const correctOpt = p.o.find(o => o.ok);
-  return `<div class="q" id="q${n}"><div class="tag">${subj.title} · ${p.q.week} · ${p.q.difficulty.toUpperCase()} · Question ${n + 1}/${P.length}</div><h3>${p.q.stem}</h3>` +
-    p.o.map((o, k) => `<button class="o ${p.a === null ? '' : o.ok ? 'ok' : k === p.a ? 'no' : 'dim'}" ${p.a === null ? `onclick="ans(${n},${k})"` : 'disabled'}>${L[k]}) ${o.t}</button>`).join('') +
-    (p.a === null ? '' : `<div class="ex"><div class="ban ${p.o[p.a].ok ? 'g' : 'rd'}">${p.o[p.a].ok ? 'Correct!' : 'Incorrect.'}</div><p>${correctOpt ? correctOpt.r : ''}</p><ul>` + p.o.map((o, k) => `<li><b>${L[k]}) ${o.t}:</b> ${o.r}</li>`).join('') + '</ul></div>') + '</div>';
-}
+      /* =========================================================
+         SUBJECT 4: NEMATODES — EGG ROUTE
+         ========================================================= */
+      {
+        id: 7024,
+        subjectIndex: 4,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #12",
+        difficulty: "easy",
+        priority: true,
+        summary: "Enterobius vermicularis (pinworm): The most common helminth infection in U.S. children; females lay sticky eggs around the anus at night, diagnosed via the perianal adhesive tape test.",
+        stem: "Which organism is the most common nematode infection among children in the United States and temperate regions?",
+        options: [
+          { text: "Enterobius vermicularis", correct: true, why: "Correct. Enterobius vermicularis (pinworm) spreads easily in daycares via sticky perianal eggs and is diagnosed with the Scotch tape test. [Helminths Slide #12]" },
+          { text: "Trichuris trichiura", correct: false, why: "Incorrect. Trichuris trichiura (whipworm) predominates in tropical and subtropical regions with soil fecal contamination. [Helminths Slide #12]" },
+          { text: "Necator americanus", correct: false, why: "Incorrect. Hookworms enter via skin penetration and cause iron-deficiency anemia rather than nocturnal perianal itching in U.S. daycares. [Helminths Slide #12]" },
+          { text: "Trichinella spiralis", correct: false, why: "Incorrect. Trichinella spiralis is acquired from undercooked meat and is rare due to commercial meat processing regulations. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7025,
+        subjectIndex: 4,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #12",
+        difficulty: "easy",
+        priority: true,
+        summary: "Pinworm diagnosis: Clear adhesive tape applied to the perianal skin in the morning picks up sticky Enterobius vermicularis eggs for microscopic identification.",
+        stem: "Nocturnal perianal pruritus in a daycare child is best confirmed by applying clear adhesive tape to the perianal skin and examining it microscopically for eggs of:",
+        options: [
+          { text: "Enterobius vermicularis", correct: true, why: "Correct. Female Enterobius vermicularis (pinworms) migrate to the anus to deposit sticky eggs, making the adhesive tape test diagnostic. [Helminths Slide #12]" },
+          { text: "Ascaris lumbricoides", correct: false, why: "Incorrect. Ascaris lumbricoides eggs are shed in bulk stool (up to 200,000/day) rather than deposited externally on perianal skin. [Helminths Slide #12]" },
+          { text: "Diphyllobothrium latum", correct: false, why: "Incorrect. Diphyllobothrium latum is a large fish tapeworm diagnosed by stool examination for operculated eggs or proglottids. [Helminths Slide #7]" },
+          { text: "Onchocerca volvulus", correct: false, why: "Incorrect. Onchocerca volvulus is a black-fly-borne filarial worm diagnosed via skin snips or ocular exam. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7026,
+        subjectIndex: 4,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #12",
+        difficulty: "medium",
+        priority: true,
+        summary: "Ascaris lumbricoides: Giant intestinal roundworm producing up to 200,000 eggs/day; larvae migrate through lymphatics, heart, lungs, and throat before being swallowed, and adult worms flee anesthesia out of body orifices.",
+        stem: "Which giant egg-route nematode produces up to 200,000 eggs daily, undergoes pulmonary-to-throat larval migration, and tends to exit body openings when exposed to surgical anesthesia?",
+        options: [
+          { text: "Ascaris lumbricoides", correct: true, why: "Correct. Ascaris lumbricoides is a massive roundworm that causes intestinal obstruction and migrates out of openings when irritated by anesthetics. [Helminths Slide #12]" },
+          { text: "Enterobius vermicularis", correct: false, why: "Incorrect. Enterobius vermicularis is a tiny pinworm that migrates to the anus at night rather than exiting orifices under anesthesia. [Helminths Slide #12]" },
+          { text: "Trichuris trichiura", correct: false, why: "Incorrect. Trichuris trichiura (whipworm) embeds into the colonic mucosa and produces 3,000 to 5,000 eggs per day. [Helminths Slide #12]" },
+          { text: "Loa loa", correct: false, why: "Incorrect. Loa loa is a Dipteran-fly-borne eyeworm rather than a prolific soil-transmitted intestinal roundworm. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7027,
+        subjectIndex: 4,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #12",
+        difficulty: "medium",
+        priority: true,
+        summary: "Trichuris trichiura (whipworm): Shaped like a buggy whip; burrows into the intestinal mucosa in tropical regions, causing localized hemorrhage, secondary bacterial infection, dysentery, and rectal prolapse.",
+        stem: "Burrowing of Trichuris trichiura into the colonic mucosa causes localized hemorrhage, secondary bacterial infection, dysentery, and:",
+        options: [
+          { text: "Rectal prolapse", correct: true, why: "Correct. Heavy whipworm (Trichuris trichiura) mucosal burrowing causes loss of rectal muscle tone and rectal prolapse. [Helminths Slide #12]" },
+          { text: "Elephantiasis", correct: false, why: "Incorrect. Elephantiasis is caused by lymphatic blockage from Wuchereria bancrofti. [Helminths Slide #11]" },
+          { text: "Hydatid liver cysts", correct: false, why: "Incorrect. Hydatid liver cysts are caused by the dog tapeworm Echinococcus granulosus. [Helminths Slide #7]" },
+          { text: "River blindness", correct: false, why: "Incorrect. River blindness is caused by black fly transmission of Onchocerca volvulus. [Helminths Slide #11]" }
+        ]
+      },
+      {
+        id: 7028,
+        subjectIndex: 4,
+        week: "Wk 7",
+        slideRef: "Helminths Slide #12",
+        difficulty: "medium",
+        priority: true,
+        summary: "Hookworms (Ancylostoma / Necator): Enter via skin penetration (or fecal-oral route), migrate via blood to lungs and throat to reach the small intestine, attach with oral cutting plates, and cause iron-deficiency anemia.",
+        stem: "Hookworms attach to the small intestinal mucosa using oral cutting plates to feed on host blood, frequently resulting in:",
+        options: [
+          { text: "Iron-deficiency anemia", correct: true, why: "Correct. Chronic blood loss from hookworm oral cutting plates leads to iron-deficiency anemia and potential hemorrhagic shock in infants. [Helminths Slide #12]" },
+          { text: "Spongiform encephalopathy", correct: false, why: "Incorrect. Spongiform encephalopathy is caused by misfolded prion proteins in the central nervous system. [Prions Slide #3]" },
+          { text: "Obstructive biliary jaundice", correct: false, why: "Incorrect. Obstructive biliary jaundice is associated with the liver fluke Clonorchis sinensis. [Helminths Slide #8]" },
+          { text: "Progressive fatal insomnia", correct: false, why: "Incorrect. Progressive fatal insomnia is an inherited human prion disease (Fatal Familial Insomnia). [Prions Slide #6]" }
+        ]
+      },
 
-function draw() {
-  const a = $('app');
-  if (mode === 'card') {
-    a.innerHTML = qh(i) + (P[i].a !== null ? `<button class="pr" onclick="nx()">${i < P.length - 1 ? 'Next' : 'Finish'}</button>` : '');
-  } else {
-    a.innerHTML = P.map((_, n) => qh(n)).join('') + `<button class="pr" onclick="summ()">Finish</button>`;
-  }
-}
+      /* =========================================================
+         SUBJECT 5: PRIONS & TSEs
+         ========================================================= */
+      {
+        id: 7029,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #1",
+        difficulty: "easy",
+        priority: true,
+        summary: "Prion composition: Proteinaceous infectious particles composed solely of naked misfolded protein without any DNA or RNA nucleic acid genome.",
+        stem: "Which biochemical composition characterizes a prion particle?",
+        options: [
+          { text: "Naked infectious protein lacking nucleic acid", correct: true, why: "Correct. Prions (proteinaceous infectious particles) consist exclusively of abnormal protein without DNA or RNA. [Prions Slide #1]" },
+          { text: "Single-stranded circular RNA lacking a capsid", correct: false, why: "Incorrect. Naked circular RNA molecules that infect plants are viroids, not prions. [Prions Slide #1]" },
+          { text: "Double-stranded DNA enclosed in an icosahedral capsid", correct: false, why: "Incorrect. Nucleic acid genomes enclosed in protein capsids describe viruses rather than prions. [Prions Slide #1]" },
+          { text: "Prokaryotic cell wall rich in peptidoglycan", correct: false, why: "Incorrect. Peptidoglycan cell walls belong to bacteria, whereas prions are acellular proteins. [Prions Slide #1]" }
+        ]
+      },
+      {
+        id: 7030,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #1",
+        difficulty: "medium",
+        priority: true,
+        summary: "Prion resistance: Prions are not destroyed by standard disinfection, radiation, or routine autoclaving; contaminated surgical instruments and tissues must be incinerated.",
+        stem: "Because prions resist standard chemical disinfection, radiation, and routine sterilization, surgical instruments exposed to prion-infected neural tissue must be:",
+        options: [
+          { text: "Incinerated", correct: true, why: "Correct. Standard sterilization fails against prions, requiring incineration of contaminated tools and infected remains. [Prions Slide #1]" },
+          { text: "Autoclaved at standard pressure", correct: false, why: "Incorrect. Routine autoclaving techniques fail to inactivate infectious prion proteins. [Prions Slide #1]" },
+          { text: "Irradiated with ultraviolet light", correct: false, why: "Incorrect. Radiation is ineffective because prions lack nucleic acids to cross-link or damage. [Prions Slide #1]" },
+          { text: "Soaked in isopropyl alcohol", correct: false, why: "Incorrect. Standard alcohol disinfection does not denature infectious beta-pleated prion aggregates. [Prions Slide #1]" }
+        ]
+      },
+      {
+        id: 7031,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #2",
+        difficulty: "medium",
+        priority: true,
+        summary: "PrPC vs. PrPSc protein folding: Both share the identical primary amino acid sequence encoded by the PRNP gene, but conversion from normal PrPC to infectious PrPSc shifts secondary structure from alpha-helices to beta-pleated sheets.",
+        stem: "Conversion of normal cellular prion protein (PrPC) into the infectious isoform (PrPSc) alters which level of protein structure?",
+        options: [
+          { text: "Secondary structure from alpha-helices to beta-pleated sheets", correct: true, why: "Correct. PrPC and PrPSc share the same primary amino acid sequence, but PrPSc refolds into a high proportion of beta-pleated sheets. [Prions Slide #2]" },
+          { text: "Primary structure via deletion of terminal amino acids", correct: false, why: "Incorrect. Both normal and infectious prion isoforms possess the exact same primary amino acid sequence encoded by PRNP. [Prions Slide #2]" },
+          { text: "Genetic sequence via reverse transcription of viral RNA", correct: false, why: "Incorrect. Prions contain no RNA and do not utilize reverse transcriptase. [Prions Slide #1, #2]" },
+          { text: "Quaternary assembly of ribosomal RNA subunits", correct: false, why: "Incorrect. Prions are single host-encoded proteins that misfold at the secondary structural level, not ribosomal complexes. [Prions Slide #2]" }
+        ]
+      },
+      {
+        id: 7032,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #3",
+        difficulty: "medium",
+        priority: true,
+        summary: "TSE pathology: Self-propagating PrPSc forms amyloid plaques and vacuolated spongiform lesions in the brain with a 5–15 year incubation period, zero inflammatory or antibody response, and 100% fatality.",
+        stem: "Which pathophysiological hallmark distinguishes transmissible spongiform encephalopathies from viral encephalitis?",
+        options: [
+          { text: "Failure to provoke an inflammatory or antibody immune response", correct: true, why: "Correct. Because PrPSc shares the host's own amino acid sequence, prions are non-antigenic and trigger no inflammation or antibodies. [Prions Slide #3]" },
+          { text: "Rapid 48-hour onset with high fever and neutrophilic pleocytosis", correct: false, why: "Incorrect. TSEs have a prolonged 5-to-15-year incubation period and lack acute neutrophilic inflammation. [Prions Slide #3]" },
+          { text: "Complete resolution following early antiviral therapy", correct: false, why: "Incorrect. No known cure or treatment exists for prion diseases; supportive care only is available and all cases are fatal. [Prions Slide #3]" },
+          { text: "Formation of multinucleated giant cells in peripheral lymph nodes", correct: false, why: "Incorrect. Prion pathology is restricted to CNS amyloid accumulation and spongiform vacuolation rather than peripheral lymphadenitis. [Prions Slide #3]" }
+        ]
+      },
+      {
+        id: 7033,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #4",
+        difficulty: "medium",
+        priority: true,
+        summary: "Prion transmission routes: Prion diseases can arise spontaneously, be inherited via PRNP mutations, or be acquired via contaminated neurosurgical instruments, corneal transplants, cadaveric/bovine growth hormone, or ingesting infected brain tissue.",
+        stem: "Which medical procedure carries a documented risk of iatrogenic prion transmission due to proximity to the optic nerve and central nervous system?",
+        options: [
+          { text: "Corneal transplantation", correct: true, why: "Correct. Because the cornea lies directly adjacent to the optic nerve, corneal transplants from infected donors can transmit prions. [Prions Slide #4]" },
+          { text: "Autologous platelet-rich plasma injection", correct: false, why: "Incorrect. Autologous blood-derived injections from the patient's own blood do not introduce exogenous CNS prion proteins. [Prions Slide #4]" },
+          { text: "Subcutaneous insulin administration", correct: false, why: "Incorrect. Recombinant insulin injections do not carry the prion risk associated with contaminated neurosurgical tools or bovine growth hormone. [Prions Slide #4]" },
+          { text: "Routine dental prophylaxis", correct: false, why: "Incorrect. Iatrogenic transmission is linked to neurosurgical instruments, corneal grafts, and pituitary growth hormone rather than routine cleanings. [Prions Slide #4]" }
+        ]
+      },
+      {
+        id: 7034,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #5",
+        difficulty: "medium",
+        priority: true,
+        summary: "Classic Creutzfeldt-Jakob Disease (CJD) vs. Variant CJD (vCJD): Classic CJD primarily affects elderly patients (average age ~68) via spontaneous conversion, inheritance, or iatrogenic exposure, whereas variant CJD affects younger individuals who ingested beef contaminated with bovine spongiform encephalopathy.",
+        stem: "How does variant Creutzfeldt-Jakob disease differ clinically from classic Creutzfeldt-Jakob disease?",
+        options: [
+          { text: "Variant CJD affects younger individuals after eating BSE-contaminated beef", correct: true, why: "Correct. Variant CJD occurs in younger patients exposed to bovine spongiform encephalopathy (mad cow) tissue, whereas classic CJD peaks around age 68. [Prions Slide #5]" },
+          { text: "Variant CJD is transmitted exclusively by mosquito vectors in the tropics", correct: false, why: "Incorrect. Prions are non-vector-borne proteins acquired via contaminated beef, surgical tools, inheritance, or spontaneous misfolding. [Prions Slide #5]" },
+          { text: "Variant CJD responds rapidly to high-dose intravenous antibiotics", correct: false, why: "Incorrect. Both classic and variant CJD are untreatable and uniformly fatal neurodegenerative conditions. [Prions Slide #3, #5]" },
+          { text: "Variant CJD occurs exclusively in elderly patients over age 80", correct: false, why: "Incorrect. Classic CJD affects older adults (~68 years old), whereas variant CJD targets younger individuals. [Prions Slide #5]" }
+        ]
+      },
+      {
+        id: 7035,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #6",
+        difficulty: "easy",
+        priority: true,
+        summary: "Kuru: A human transmissible spongiform encephalopathy historically endemic to the highlands of New Guinea, transmitted through ritualistic mortuary cannibalism of brain tissue and characterized by trembling and uncontrollable laughter.",
+        stem: "Which human prion disease was historically transmitted via ritualistic mortuary cannibalism among tribes in the highlands of New Guinea?",
+        options: [
+          { text: "Kuru", correct: true, why: "Correct. Kuru (meaning trembling/shivering, also called laughing death) spread via funerary consumption of human brain tissue in New Guinea. [Prions Slide #6]" },
+          { text: "Scrapie", correct: false, why: "Incorrect. Scrapie is the oldest known animal prion disease affecting sheep and goats, with no established human transmission. [Prions Slide #7]" },
+          { text: "Fatal Familial Insomnia", correct: false, why: "Incorrect. Fatal Familial Insomnia is an autosomal dominant inherited human prion disorder rather than an acquired cannibalism disease. [Prions Slide #6]" },
+          { text: "Chronic Wasting Disease", correct: false, why: "Incorrect. Chronic Wasting Disease is an animal prion encephalopathy affecting deer, elk, and reindeer. [Prions Slide #7]" }
+        ]
+      },
+      {
+        id: 7036,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #6",
+        difficulty: "medium",
+        priority: true,
+        summary: "Inherited human TSEs: Gerstmann-Straussler-Scheinker syndrome (GSS) and Fatal Familial Insomnia (FFI) are rare autosomal dominant genetic prion disorders.",
+        stem: "Which pair of human prion disorders is inherited in an autosomal dominant genetic pattern?",
+        options: [
+          { text: "Gerstmann-Straussler-Scheinker syndrome and Fatal Familial Insomnia", correct: true, why: "Correct. Both Gerstmann-Straussler-Scheinker syndrome (GSS) and Fatal Familial Insomnia (FFI) are autosomal dominant inherited TSEs. [Prions Slide #6]" },
+          { text: "Kuru and Variant Creutzfeldt-Jakob disease", correct: false, why: "Incorrect. Both Kuru and variant CJD are acquired via ingestion of prion-contaminated tissue rather than autosomal dominant inheritance. [Prions Slide #5, #6]" },
+          { text: "Scrapie and Bovine Spongiform Encephalopathy", correct: false, why: "Incorrect. Scrapie (sheep/goats) and BSE (cattle) are animal prion diseases rather than inherited human syndromes. [Prions Slide #7]" },
+          { text: "Chronic Wasting Disease and Transmissible Mink Encephalopathy", correct: false, why: "Incorrect. Both are animal prion diseases affecting cervids and ranched mink respectively. [Prions Slide #7]" }
+        ]
+      },
+      {
+        id: 7037,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #7",
+        difficulty: "easy",
+        priority: true,
+        summary: "Animal prion diseases: Scrapie affects sheep and goats (oldest known TSE, documented in the 1940s); BSE affects cattle; Chronic Wasting Disease affects deer, elk, and reindeer.",
+        stem: "Which animal transmissible spongiform encephalopathy affects sheep and goats and represents the oldest documented prion disease?",
+        options: [
+          { text: "Scrapie", correct: true, why: "Correct. Scrapie occurs in sheep and goats, has been documented since the 1940s, and has no known transmission to humans. [Prions Slide #7]" },
+          { text: "Bovine Spongiform Encephalopathy", correct: false, why: "Incorrect. Bovine Spongiform Encephalopathy (mad cow disease) affects cattle and is linked to variant CJD in humans. [Prions Slide #7]" },
+          { text: "Chronic Wasting Disease", correct: false, why: "Incorrect. Chronic Wasting Disease affects cervids including deer, elk, and reindeer. [Prions Slide #7]" },
+          { text: "Transmissible Mink Encephalopathy", correct: false, why: "Incorrect. Transmissible Mink Encephalopathy occurs in ranched mink fed contaminated feed. [Prions Slide #7]" }
+        ]
+      },
+      {
+        id: 7038,
+        subjectIndex: 5,
+        week: "Wk 7",
+        slideRef: "Prions Slide #7",
+        difficulty: "medium",
+        priority: false,
+        summary: "BSE transmission in cattle: Bovine spongiform encephalopathy outbreaks in the 1990s were driven by feeding cattle bone meal derived from infected animal tissues.",
+        stem: "The 1990s epidemic of bovine spongiform encephalopathy in cattle was primarily driven by feeding livestock:",
+        options: [
+          { text: "Contaminated bone meal feed supplements", correct: true, why: "Correct. Grinding infected neural and bone tissues into cattle feed spread BSE until feed regulations eliminated contaminated bone meal. [Prions Slide #7]" },
+          { text: "Aflatoxin-contaminated raw peanuts", correct: false, why: "Incorrect. Aflatoxin is a hepatotoxic fungal mycotoxin produced by Aspergillus species rather than a prion agent. [Prions Slide #7]" },
+          { text: "Freshwater fish harboring fluke metacercariae", correct: false, why: "Incorrect. Raw freshwater fish transmit trematodes and fish tapeworms rather than cattle prions. [Helminths Slide #7, #8]" },
+          { text: "Soil contaminated with whipworm eggs", correct: false, why: "Incorrect. Soil-contaminated eggs transmit intestinal nematodes like Trichuris trichiura rather than prions. [Helminths Slide #12]" }
+        ]
+      }
+    ];
 
-function ans(n, k) {
-  const p = P[n];
-  if (p.a !== null) return;
-  p.a = k;
-  dn++;
-  if (p.o[k].ok) sc++;
-  else {
-    missed.push(p.q);
-    wrong();
-  }
-  if (mode === 'card') draw();
-  else $('q' + n).outerHTML = qh(n);
-  bar();
-}
+    /* =========================================================
+       STATE & UTILITIES
+       ========================================================= */
+    let selectedSubject = "all";
+    let setMode = "full";     // "full" | "quick"
+    let viewMode = "list";    // "list" | "card"
+    let isMuted = false;
 
-function nx() {
-  if (i < P.length - 1) {
-    i++;
-    draw();
-    scrollTo(0, 0);
-  } else {
-    summ();
-  }
-}
+    let activeQuestions = [];
+    let userAnswers = {};     // { [q.id]: { selectedIndex, correct } }
+    let round = 1;
+    let currentCardIndex = 0;
+    let popupTimer = null;
 
-function wrong() {
-  if (mute) return;
-  const a = new Audio('Wrong-answer.m4a');
-  a.onerror = () => {
-    new Audio('Wrong-answer.mp3').play().catch(() => {});
-  };
-  a.play().catch(() => {});
-  $('pop').style.display = 'flex';
-  setTimeout(() => $('pop').style.display = 'none', 2000);
-}
+    function fisherYates(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
 
-function summ() {
-  const t = P.length ? Math.round(sc / P.length * 100) : 0;
-  const m = t >= 90 ? 'Absolute Gigachad. You drained that test dry.' : t >= 70 ? 'You lasted less than 30 seconds. Time for a rematch.' : 'You really didn’t fucking know that.';
-  $('app').innerHTML = `<div class="q sum"><h2>${sc} / ${P.length} (${t}%)</h2><p>${m}</p><button class="pr" onclick="begin(curSet)">Retake Current Set</button><button onclick="rev()">Review Missed (${missed.length})</button><button onclick="menu()">Back to Menu</button><a href="index.html"><button>Back to Hub</button></a></div>`;
-}
+    function prepareQuestion(rawQ) {
+      return {
+        ...rawQ,
+        options: fisherYates(rawQ.options)
+      };
+    }
 
-function rev() {
-  if (!missed.length) return alert('No missed questions.');
-  begin(missed.slice());
-}
+    /* =========================================================
+       AUDIO & POPUP FEEDBACK
+       ========================================================= */
+    const wrongAudio = document.getElementById("wrongAudio");
+    const wrongPopup = document.getElementById("wrongPopup");
+    const muteToggleBtn = document.getElementById("muteToggleBtn");
 
-menu();
-</script>
+    muteToggleBtn.addEventListener("click", () => {
+      isMuted = !isMuted;
+      muteToggleBtn.classList.toggle("muted", isMuted);
+      muteToggleBtn.textContent = isMuted ? "Erijah Muted" : "STFU Erijah";
+      if (isMuted) {
+        wrongAudio.pause();
+        wrongAudio.currentTime = 0;
+        wrongPopup.classList.add("hidden");
+      }
+    });
+
+    function triggerWrongFeedback() {
+      if (isMuted) return;
+      try {
+        wrongAudio.currentTime = 0;
+        wrongAudio.play().catch(() => {});
+      } catch (e) {}
+
+      wrongPopup.classList.remove("hidden");
+      if (popupTimer) clearTimeout(popupTimer);
+      popupTimer = setTimeout(() => {
+        wrongPopup.classList.add("hidden");
+      }, 2000);
+    }
+
+    /* =========================================================
+       SUBJECT FILTERS & INITIALIZATION
+       ========================================================= */
+    function renderSubjectFilters() {
+      const container = document.getElementById("subjectFilters");
+      container.innerHTML = "";
+
+      const allBtn = document.createElement("button");
+      allBtn.type = "button";
+      allBtn.className = "pill-btn" + (selectedSubject === "all" ? " active" : "");
+      allBtn.textContent = `All Week 7 Topics (${questionBank.length})`;
+      allBtn.onclick = () => {
+        selectedSubject = "all";
+        startNewSession();
+      };
+      container.appendChild(allBtn);
+
+      SUBJECTS.forEach((sub, idx) => {
+        const count = questionBank.filter(q => q.subjectIndex === idx).length;
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "pill-btn" + (selectedSubject === idx ? " active" : "");
+        btn.textContent = `${sub.title} (${count})`;
+        btn.onclick = () => {
+          selectedSubject = idx;
+          startNewSession();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function startNewSession(customPool = null) {
+      round = 1;
+      userAnswers = {};
+      currentCardIndex = 0;
+
+      let pool = customPool
+        ? customPool
+        : (selectedSubject === "all"
+            ? questionBank
+            : questionBank.filter(q => q.subjectIndex === selectedSubject));
+
+      let shuffled = fisherYates(pool).map(prepareQuestion);
+      if (!customPool && setMode === "quick") {
+        shuffled = shuffled.slice(0, 15);
+      }
+
+      activeQuestions = shuffled;
+      document.getElementById("summaryCard").classList.add("hidden");
+      document.getElementById("quizContainer").classList.remove("hidden");
+      renderSubjectFilters();
+      updateHeaderStats();
+      renderQuiz();
+    }
+
+    function startReviewMissedRound() {
+      const missedIds = new Set(
+        activeQuestions
+          .filter(q => !userAnswers[q.id] || !userAnswers[q.id].correct)
+          .map(q => q.id)
+      );
+      const missedPool = questionBank.filter(q => missedIds.has(q.id));
+      if (missedPool.length === 0) return;
+
+      round++;
+      userAnswers = {};
+      currentCardIndex = 0;
+      activeQuestions = fisherYates(missedPool).map(prepareQuestion);
+
+      document.getElementById("summaryCard").classList.add("hidden");
+      document.getElementById("quizContainer").classList.remove("hidden");
+      updateHeaderStats();
+      renderQuiz();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* =========================================================
+       SCORE & PROGRESS TRACKING
+       ========================================================= */
+    function updateHeaderStats() {
+      const total = activeQuestions.length;
+      const answeredCount = Object.keys(userAnswers).length;
+      const correctCount = Object.values(userAnswers).filter(a => a.correct).length;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+      const label = round === 1 ? "Score" : `Review ${round - 1}`;
+
+      document.getElementById("scoreCounter").textContent =
+        `${label}: ${correctCount} / ${total} (${pct}%)`;
+
+      const progressPct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
+      document.getElementById("progressBar").style.width = `${progressPct}%`;
+    }
+
+    /* =========================================================
+       RENDERING ENGINE
+       ========================================================= */
+    function buildQuestionCard(q, index) {
+      const card = document.createElement("article");
+      card.className = "question-card";
+
+      const meta = document.createElement("div");
+      meta.className = "q-meta";
+
+      const tags = document.createElement("div");
+      tags.className = "q-tags";
+
+      const numTag = document.createElement("span");
+      numTag.className = "tag";
+      numTag.textContent = `Q${index + 1} of ${activeQuestions.length}`;
+      tags.appendChild(numTag);
+
+      const subTag = document.createElement("span");
+      subTag.className = "tag";
+      subTag.textContent = SUBJECTS[q.subjectIndex].title;
+      tags.appendChild(subTag);
+
+      if (q.priority) {
+        const hyTag = document.createElement("span");
+        hyTag.className = "tag high-yield";
+        hyTag.textContent = "High-Yield";
+        tags.appendChild(hyTag);
+      }
+
+      const refSpan = document.createElement("span");
+      refSpan.textContent = `${q.week} • ${q.slideRef}`;
+
+      meta.appendChild(tags);
+      meta.appendChild(refSpan);
+      card.appendChild(meta);
+
+      const stemEl = document.createElement("div");
+      stemEl.className = "q-stem";
+      stemEl.textContent = q.stem;
+      card.appendChild(stemEl);
+
+      const optsGrid = document.createElement("div");
+      optsGrid.className = "options-grid";
+
+      const savedAnswer = userAnswers[q.id];
+      const letters = ["A", "B", "C", "D"];
+
+      q.options.forEach((opt, optIdx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+
+        if (savedAnswer) {
+          btn.disabled = true;
+          if (opt.correct) {
+            btn.classList.add("correct-choice");
+          } else if (savedAnswer.selectedIndex === optIdx) {
+            btn.classList.add("incorrect-choice");
+          } else {
+            btn.classList.add("dimmed");
+          }
+        }
+
+        const letterSpan = document.createElement("span");
+        letterSpan.className = "opt-letter";
+        letterSpan.textContent = `${letters[optIdx]})`;
+
+        const textSpan = document.createElement("span");
+        textSpan.textContent = opt.text;
+
+        btn.appendChild(letterSpan);
+        btn.appendChild(textSpan);
+
+        if (!savedAnswer) {
+          btn.onclick = () => handleOptionSelect(q, optIdx);
+        }
+
+        optsGrid.appendChild(btn);
+      });
+
+      card.appendChild(optsGrid);
+
+      if (savedAnswer) {
+        const expBox = document.createElement("div");
+        expBox.className = "explanation-box";
+
+        const banner = document.createElement("div");
+        banner.className = "status-banner " + (savedAnswer.correct ? "pass" : "fail");
+        banner.textContent = savedAnswer.correct ? "Correct!" : "Incorrect.";
+        expBox.appendChild(banner);
+
+        const summaryEl = document.createElement("div");
+        summaryEl.className = "concept-summary";
+        summaryEl.textContent = q.summary;
+        expBox.appendChild(summaryEl);
+
+        const list = document.createElement("ul");
+        list.className = "rationale-list";
+
+        q.options.forEach((opt, optIdx) => {
+          const li = document.createElement("li");
+          if (opt.correct) li.classList.add("is-right");
+          const strong = document.createElement("strong");
+          strong.textContent = `${letters[optIdx]}) ${opt.text}: `;
+          li.appendChild(strong);
+          li.appendChild(document.createTextNode(opt.why));
+          list.appendChild(li);
+        });
+
+        expBox.appendChild(list);
+        card.appendChild(expBox);
+      }
+
+      return card;
+    }
+
+    function handleOptionSelect(q, optIdx) {
+      if (userAnswers[q.id]) return;
+      const chosen = q.options[optIdx];
+      userAnswers[q.id] = {
+        selectedIndex: optIdx,
+        correct: Boolean(chosen.correct)
+      };
+
+      if (!chosen.correct) {
+        triggerWrongFeedback();
+      }
+
+      updateHeaderStats();
+      renderQuiz();
+
+      if (Object.keys(userAnswers).length === activeQuestions.length) {
+        showSummaryCard();
+      }
+    }
+
+    function renderQuiz() {
+      const container = document.getElementById("quizContainer");
+      container.innerHTML = "";
+
+      if (activeQuestions.length === 0) {
+        container.innerHTML = `<div class="question-card">No questions found for this filter.</div>`;
+        return;
+      }
+
+      if (viewMode === "list") {
+        activeQuestions.forEach((q, idx) => {
+          container.appendChild(buildQuestionCard(q, idx));
+        });
+      } else {
+        const q = activeQuestions[currentCardIndex];
+        container.appendChild(buildQuestionCard(q, currentCardIndex));
+
+        const nav = document.createElement("div");
+        nav.className = "card-nav";
+
+        const prevBtn = document.createElement("button");
+        prevBtn.type = "button";
+        prevBtn.className = "btn btn-secondary";
+        prevBtn.textContent = "Previous";
+        prevBtn.disabled = currentCardIndex === 0;
+        prevBtn.onclick = () => {
+          if (currentCardIndex > 0) {
+            currentCardIndex--;
+            renderQuiz();
+          }
+        };
+
+        const indicator = document.createElement("span");
+        indicator.style.color = "var(--text-muted)";
+        indicator.style.fontWeight = "600";
+        indicator.textContent = `Card ${currentCardIndex + 1} / ${activeQuestions.length}`;
+
+        const nextBtn = document.createElement("button");
+        nextBtn.type = "button";
+        nextBtn.className = "btn";
+        nextBtn.textContent = currentCardIndex === activeQuestions.length - 1 ? "Finish Review" : "Next";
+        nextBtn.onclick = () => {
+          if (currentCardIndex < activeQuestions.length - 1) {
+            currentCardIndex++;
+            renderQuiz();
+          } else {
+            showSummaryCard();
+          }
+        };
+
+        nav.appendChild(prevBtn);
+        nav.appendChild(indicator);
+        nav.appendChild(nextBtn);
+        container.appendChild(nav);
+      }
+    }
+
+    function showSummaryCard() {
+      const total = activeQuestions.length;
+      const correctCount = Object.values(userAnswers).filter(a => a.correct).length;
+      const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
+      const missedCount = total - correctCount;
+
+      const summaryCard = document.getElementById("summaryCard");
+      const heading = document.getElementById("summaryHeading");
+      const scoreEl = document.getElementById("summaryScore");
+      const tierEl = document.getElementById("summaryTier");
+      const reviewBtn = document.getElementById("reviewMissedBtn");
+
+      heading.textContent = round === 1 ? "Quiz Complete" : `Review Round ${round - 1} Complete`;
+      scoreEl.textContent = `${correctCount} / ${total} (${pct}%)`;
+
+      if (pct >= 90) {
+        tierEl.textContent = "Absolute Gigachad. You drained that test dry.";
+        tierEl.style.color = "#22c55e";
+      } else if (pct >= 70) {
+        tierEl.textContent = "You lasted less than 30 seconds. Time for a rematch.";
+        tierEl.style.color = "#ff9900";
+      } else {
+        tierEl.textContent = "You really didn’t fucking know that.";
+        tierEl.style.color = "#ef4444";
+      }
+
+      if (missedCount > 0) {
+        reviewBtn.classList.remove("hidden");
+        reviewBtn.textContent = `Review Missed (${missedCount})`;
+      } else {
+        reviewBtn.classList.add("hidden");
+      }
+
+      summaryCard.classList.remove("hidden");
+      summaryCard.scrollIntoView({ behavior: "smooth" });
+    }
+
+    /* =========================================================
+       EVENT BINDINGS
+       ========================================================= */
+    document.getElementById("setFullBtn").addEventListener("click", () => {
+      setMode = "full";
+      document.getElementById("setFullBtn").classList.add("active");
+      document.getElementById("setQuickBtn").classList.remove("active");
+      startNewSession();
+    });
+
+    document.getElementById("setQuickBtn").addEventListener("click", () => {
+      setMode = "quick";
+      document.getElementById("setQuickBtn").classList.add("active");
+      document.getElementById("setFullBtn").classList.remove("active");
+      startNewSession();
+    });
+
+    document.getElementById("viewListBtn").addEventListener("click", () => {
+      viewMode = "list";
+      document.getElementById("viewListBtn").classList.add("active");
+      document.getElementById("viewCardBtn").classList.remove("active");
+      renderQuiz();
+    });
+
+    document.getElementById("viewCardBtn").addEventListener("click", () => {
+      viewMode = "card";
+      document.getElementById("viewCardBtn").classList.add("active");
+      document.getElementById("viewListBtn").classList.remove("active");
+      renderQuiz();
+    });
+
+    document.getElementById("retakeCurrentBtn").addEventListener("click", () => {
+      const currentPoolIds = new Set(activeQuestions.map(q => q.id));
+      const samePool = questionBank.filter(q => currentPoolIds.has(q.id));
+      startNewSession(samePool);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.getElementById("reviewMissedBtn").addEventListener("click", () => {
+      startReviewMissedRound();
+    });
+
+    document.getElementById("backToMenuBtn").addEventListener("click", () => {
+      selectedSubject = "all";
+      setMode = "full";
+      document.getElementById("setFullBtn").classList.add("active");
+      document.getElementById("setQuickBtn").classList.remove("active");
+      startNewSession();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    // Boot
+    startNewSession();
+  </script>
 </body>
 </html>
