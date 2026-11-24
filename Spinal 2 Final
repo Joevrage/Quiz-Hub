@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Spinal Anatomy II — Weeks 7 & 8 Mastery Quiz</title>
+<style>
+  :root {
+    --bg: #0f0f0f;
+    --surface: #1a1a1a;
+    --surface-hover: #242424;
+    --border: #2e2e2e;
+    --text: #f5f5f5;
+    --muted: #a3a3a3;
+    --accent: #ff9900;
+    --accent-dim: rgba(255, 153, 0, 0.15);
+    --green: #22c55e;
+    --green-bg: rgba(34, 197, 94, 0.14);
+    --red: #ef4444;
+    --red-bg: rgba(239, 68, 68, 0.14);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.55;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(15, 15, 15, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+  }
+  .header-inner {
+    max-width: 980px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .title-block h1 {
+    margin: 0;
+    font-size: 1.15rem;
+    color: var(--accent);
+    letter-spacing: 0.3px;
+  }
+  .title-block span {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .stats-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .score-pill {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+  }
+  .controls {
+    max-width: 980px;
+    margin: 18px auto 0;
+    padding: 0 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  select, button {
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  select:hover, button:hover {
+    border-color: var(--accent);
+    background: var(--surface-hover);
+  }
+  button.primary {
+    background: var(--accent);
+    color: #0f0f0f;
+    font-weight: 700;
+    border-color: var(--accent);
+  }
+  button.primary:hover {
+    filter: brightness(1.08);
+  }
+  main {
+    max-width: 980px;
+    margin: 18px auto 60px;
+    padding: 0 20px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+  .q-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-size: 0.75rem;
+  }
+  .badge {
+    padding: 3px 9px;
+    border-radius: 6px;
+    background: #262626;
+    color: var(--muted);
+    font-weight: 600;
+  }
+  .badge.week { background: var(--accent-dim); color: var(--accent); }
+  .badge.priority { background: rgba(234, 179, 8, 0.16); color: #facc15; }
+  .q-stem {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .opt-btn {
+    text-align: left;
+    padding: 12px 14px;
+    border-radius: 9px;
+    border: 1px solid var(--border);
+    background: #141414;
+    color: var(--text);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .opt-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: #1f1f1f;
+  }
+  .opt-btn:disabled { cursor: default; }
+  .opt-btn.correct {
+    border-color: var(--green);
+    background: var(--green-bg);
+  }
+  .opt-btn.incorrect {
+    border-color: var(--red);
+    background: var(--red-bg);
+  }
+  .opt-key {
+    font-weight: 700;
+    color: var(--accent);
+    min-width: 22px;
+  }
+  .rationale-box {
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 9px;
+    background: #121212;
+    border-left: 3px solid var(--accent);
+    font-size: 0.88rem;
+  }
+  .rationale-item {
+    margin-bottom: 8px;
+  }
+  .rationale-item:last-child { margin-bottom: 0; }
+  .rationale-item.is-right { color: #86efac; }
+  .rationale-item.is-wrong { color: #fca5a5; }
+  .nav-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+  }
+  .summary-panel {
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="title-block">
+      <h1>Spinal Anatomy II — Weeks 7 & 8 Mastery</h1>
+      <span>NBCE Part 1 Board-Style Practice • Lateral Neck, Thoracic Wall, Posterior Abdominal Wall & Meningeal Spaces</span>
+    </div>
+    <div class="stats-bar">
+      <div class="score-pill" id="scorePill">Score: 0 / 0 (0%)</div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <select id="weekFilter">
+    <option value="all">All Weeks (Weeks 7 & 8)</option>
+    <option value="7">Week 7 Only (Lateral Neck, Suboccipital & Thorax)</option>
+    <option value="8">Week 8 Only (Posterior Abdominal Wall & Meninges)</option>
+  </select>
+  <select id="subjectFilter">
+    <option value="all">All Modules</option>
+  </select>
+  <select id="diffFilter">
+    <option value="all">All Difficulties</option>
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select>
+  <button id="viewToggle">View: All at Once</button>
+  <button id="shuffleBtn">Shuffle Questions</button>
+  <button id="resetBtn" class="primary">Reset Quiz</button>
+</div>
+
+<main id="quizContainer"></main>
+
+<script>
+const SUBJECTS = [
+  "Lateral Neck & Scalene Musculature",
+  "Suboccipital Triangle & Craniovertebral Junction",
+  "Thoracic Wall & Diaphragmatic Mechanics",
+  "Posterior Abdominal Wall & Iliopsoas Complex",
+  "Anterior Abdominal Wall & Trunk Stabilizers",
+  "Spinal Meningeal Layers & Clinical Spaces"
+];
+
+const questionBank = [
+  // ================= WEEK 7 =================
+  {
+    id: 1,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which bony landmarks serve as the inferior attachments of the sternocleidomastoid muscle?",
+    options: [
+      { text: "Manubrium of the sternum and medial clavicle", correct: true, why: "Sternocleidomastoid attaches inferiorly to the manubrium of the sternum and the clavicle, and superiorly to the mastoid process. [Week 7 • Slide/Transcript #2]" },
+      { text: "First rib and transverse processes of C3–C6", correct: false, why: "Rib 1 and the transverse processes of C3–C6 are the attachment sites for the anterior scalene muscle. [Week 7 • Slide #2]" },
+      { text: "Acromion process and lateral third of the clavicle", correct: false, why: "The acromion and lateral third of the clavicle serve as attachments for the trapezius rather than sternocleidomastoid. [Week 7 • Transcript #4]" },
+      { text: "Jugular process and anterior surface of C1 lateral mass", correct: false, why: "These cranial and atlantal landmarks correspond to rectus capitis lateralis rather than sternocleidomastoid. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 2,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 4,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which cranial nerve provides motor innervation to and directly pierces the sternocleidomastoid muscle?",
+    options: [
+      { text: "Hypoglossal nerve", correct: false, why: "The hypoglossal nerve (CN XII) supplies intrinsic and extrinsic tongue musculature, not the sternocleidomastoid. [Week 7 • Transcript #4]" },
+      { text: "Spinal accessory nerve", correct: true, why: "The spinal accessory nerve (CN XI) directly pierces and provides motor innervation to the sternocleidomastoid muscle. [Week 7 • Transcript #4]" },
+      { text: "Vagus nerve", correct: false, why: "The vagus nerve (CN X) travels within the carotid sheath without piercing or innervating sternocleidomastoid. [Week 7 • Transcript #4]" },
+      { text: "Dorsal scapular nerve", correct: false, why: "The dorsal scapular nerve (C5) supplies the rhomboids and levator scapulae rather than lateral neck muscles. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 3,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 4,
+    difficulty: "medium",
+    priority: true,
+    stem: "Assuming the sternum and clavicle are fixed, unilateral contraction of the right sternocleidomastoid produces which combined head movement?",
+    options: [
+      { text: "Left lateral flexion with ipsilateral rotation to the right", correct: false, why: "Unilateral contraction pulls the mastoid process inferiorly and anteriorly toward the right sternoclavicular region, turning the chin to the opposite side. [Week 7 • Transcript #4]" },
+      { text: "Right lateral flexion with contralateral rotation to the left", correct: true, why: "Unilateral sternocleidomastoid contraction produces ipsilateral lateral flexion (right) and contralateral rotation (to the left). [Week 7 • Transcript #4]" },
+      { text: "Pure cervical extension with contralateral lateral flexion", correct: false, why: "Sternocleidomastoid laterally flexes ipsilaterally rather than contralaterally. [Week 7 • Transcript #4]" },
+      { text: "Ipsilateral rotation to the right with pure upper cervical flexion", correct: false, why: "Rotation produced by sternocleidomastoid is contralateral rather than ipsilateral. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 4,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which pair of lateral neck muscles both attach inferiorly onto the first rib?",
+    options: [
+      { text: "Middle scalene and posterior scalene", correct: false, why: "The posterior scalene bypasses the first rib to attach onto the second rib. [Week 7 • Slide #2]" },
+      { text: "Anterior scalene and sternocleidomastoid", correct: false, why: "Sternocleidomastoid attaches to the manubrium and clavicle rather than the first rib. [Week 7 • Slide/Transcript #2]" },
+      { text: "Anterior scalene and middle scalene", correct: true, why: "Both the anterior scalene (from C3–C6 TPs) and middle scalene (from C2–C7 TPs) insert onto Rib 1. [Week 7 • Slide #2]" },
+      { text: "Posterior scalene and levator scapulae", correct: false, why: "Levator scapulae attaches to the superior angle of the scapula, not the first rib. [Week 7 • Slide #2]" }
+    ]
+  },
+  {
+    id: 5,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: false,
+    stem: "Which cervical transverse processes serve as the vertebral attachments for the anterior scalene muscle?",
+    options: [
+      { text: "Transverse processes of C3 through C6", correct: true, why: "Anterior scalene attaches to the transverse processes of C3–C6 and descends to Rib 1. [Week 7 • Slide #2]" },
+      { text: "Transverse processes of C1 through C4", correct: false, why: "C1–C4 transverse processes are attachments for levator scapulae and splenius cervicis. [Week 7 • Slide #2]" },
+      { text: "Transverse processes of C2 through C7", correct: false, why: "C2–C7 transverse processes correspond to the broader vertebral attachment of the middle scalene. [Week 7 • Slide #2]" },
+      { text: "Transverse processes of C5 through T1", correct: false, why: "Anterior scalene does not extend down to T1. [Week 7 • Slide #2]" }
+    ]
+  },
+  {
+    id: 6,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: false,
+    stem: "Which spinal nerve rami innervate the anterior scalene muscle?",
+    options: [
+      { text: "Dorsal rami of C3 through C6", correct: false, why: "Scalene muscles are hypaxial lateral neck muscles supplied by ventral rami rather than dorsal rami. [Week 7 • Slide #2]" },
+      { text: "Ventral rami of C5 through C6", correct: true, why: "The anterior scalene is innervated by the ventral rami of C5–C6, whereas middle scalene receives C3–C6 ventral rami. [Week 7 • Slide #2]" },
+      { text: "Dorsal rami of C1 through C4", correct: false, why: "Dorsal rami of upper cervical nerves supply posterior intrinsic and suboccipital muscles. [Week 7 • Slide #2]" },
+      { text: "Ventral rami of T1 through T4", correct: false, why: "Upper thoracic ventral rami form intercostal nerves rather than supplying the cervical scalenes. [Week 7 • Slide #2]" }
+    ]
+  },
+  {
+    id: 7,
+    week: 7,
+    subjectIndex: 0,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: true,
+    stem: "When the cervical spine is stabilized during forced inspiration, contraction of the anterior and middle scalenes produces which respiratory action?",
+    options: [
+      { text: "Depression of the lower ribs during forced expiration", correct: false, why: "Depressing lower ribs during forced expiration is performed by serratus posterior inferior and internal intercostals. [Week 7 • Slide #2]" },
+      { text: "Elevation of the first rib to assist inspiratory reserve volume", correct: true, why: "With the cervical vertebrae fixed, anterior and middle scalenes elevate Rib 1 during forced inspiration (inspiratory reserve volume). [Week 7 • Slide #2]" },
+      { text: "Flattening of the central tendon to decrease intrathoracic pressure", correct: false, why: "Flattening of the central tendon is the mechanical action of the diaphragm. [Week 7 • Slide #2]" },
+      { text: "Inferior rotation of the glenoid cavity", correct: false, why: "Inferior rotation of the glenoid is performed by scapular muscles such as the rhomboids and levator scapulae. [Week 7 • Slide #2]" }
+    ]
+  },
+  {
+    id: 8,
+    week: 7,
+    subjectIndex: 2,
+    quarter: 3,
+    slideRef: 4,
+    difficulty: "medium",
+    priority: true,
+    stem: "During a thoracic radiograph, a patient is instructed to take a deep breath in and hold it. What mechanical change occurs in the diaphragm during this contraction?",
+    options: [
+      { text: "It elevates into a high dome to compress the lungs", correct: false, why: "Doming upward occurs when the diaphragm relaxes during full exhalation. [Week 7 • Transcript #4]" },
+      { text: "It pulls downward and flattens, pulling on its central tendon", correct: true, why: "A contracted diaphragm flattens downward by pulling on its central tendon rather than between two bones, dropping the dome during inspiration. [Week 7 • Transcript #4]" },
+      { text: "It contracts eccentrically to pull the twelfth rib superiorly", correct: false, why: "The diaphragm pulls its central tendon inferiorly during active contraction. [Week 7 • Transcript #4]" },
+      { text: "It remains isometric while external intercostals depress the sternum", correct: false, why: "The diaphragm actively shortens and flattens during inspiration. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 9,
+    week: 7,
+    subjectIndex: 2,
+    quarter: 3,
+    slideRef: 4,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which statement accurately describes the attachment pattern of the external intercostal muscles?",
+    options: [
+      { text: "They span across three to four ribs per fascicle", correct: false, why: "External intercostals do not skip ribs; they run strictly from one rib to the adjacent rib below. [Week 7 • Transcript #4]" },
+      { text: "They attach directly from each rib above to the immediately adjacent rib below without skipping", correct: true, why: "External intercostals run rib-to-rib from Rib 1 to 2 down to Rib 11 to 12 without skipping levels. [Week 7 • Transcript #4]" },
+      { text: "They connect thoracic transverse processes to costal angles", correct: false, why: "Muscles connecting transverse processes to ribs are levatores costarum, not external intercostals. [Week 7 • Transcript #4]" },
+      { text: "They anchor the costal cartilages directly to the iliac crest", correct: false, why: "External intercostals are confined entirely between adjacent ribs in the intercostal spaces. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 10,
+    week: 7,
+    subjectIndex: 2,
+    quarter: 3,
+    slideRef: 4,
+    difficulty: "medium",
+    priority: true,
+    stem: "How do the fiber orientation and respiratory role of the internal intercostals compare to those of the external intercostals?",
+    options: [
+      { text: "Internal intercostals run parallel to externals and elevate ribs during quiet breathing", correct: false, why: "Internal intercostals run perpendicular to external intercostals and depress ribs rather than elevating them. [Week 7 • Transcript #4]" },
+      { text: "Internal intercostals run perpendicular to externals and depress ribs during forced exhalation", correct: true, why: "Internal intercostals run at a perpendicular angle to external intercostals and pull ribs downward during forced exhalation. [Week 7 • Transcript #4]" },
+      { text: "Internal intercostals are innervated by dorsal rami and contract simultaneously with externals", correct: false, why: "Both groups are supplied by intercostal nerves (ventral rami) and act antagonistically during forced breathing rather than contracting simultaneously. [Week 7 • Transcript #4]" },
+      { text: "Internal intercostals skip two ribs per segment to stabilize the floating ribs", correct: false, why: "Internal intercostals attach between adjacent ribs 1–12 without skipping segments. [Week 7 • Transcript #4]" }
+    ]
+  },
+  {
+    id: 11,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which suboccipital muscle lacks any direct attachment to the cranium?",
+    options: [
+      { text: "Rectus capitis posterior minor", correct: false, why: "Rectus capitis posterior minor attaches superiorly to the inferior nuchal line of the occipital bone. [Week 7 • Transcript #7]" },
+      { text: "Oblique capitis superior", correct: false, why: "Oblique capitis superior inserts onto the occipital bone between the superior and inferior nuchal lines. [Week 7 • Transcript #7]" },
+      { text: "Oblique capitis inferior", correct: true, why: "Despite the word 'capitis' in its name, oblique capitis inferior runs strictly between the C2 spinous process and C1 transverse process with no cranial attachment. [Week 7 • Transcript #7]" },
+      { text: "Rectus capitis posterior major", correct: false, why: "Rectus capitis posterior major attaches superiorly to the lateral portion of the inferior nuchal line. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 12,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which bony landmark of the atlas serves as the inferior attachment for rectus capitis posterior minor?",
+    options: [
+      { text: "Transverse process of C1", correct: false, why: "The transverse process of C1 serves as an attachment for oblique capitis superior and oblique capitis inferior. [Week 7 • Transcript #7]" },
+      { text: "Posterior tubercle of C1", correct: true, why: "Rectus capitis posterior minor attaches between the posterior tubercle of C1 and the medial inferior nuchal line. [Week 7 • Transcript #7]" },
+      { text: "Anterior tubercle of C1", correct: false, why: "The anterior tubercle of C1 receives superior oblique fibers of longus colli, not suboccipital muscles. [Week 7 • Transcript #7]" },
+      { text: "Spinous process of C2", correct: false, why: "C1 lacks a spinous process, and the C2 spinous process belongs to rectus capitis posterior major. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 13,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "hard",
+    priority: true,
+    stem: "Why does unilateral contraction of rectus capitis posterior major produce ipsilateral head rotation whereas rectus capitis posterior minor acts primarily as a head extensor?",
+    options: [
+      { text: "Rectus capitis posterior major attaches laterally onto the C1 transverse process", correct: false, why: "Rectus capitis posterior major attaches to the C2 spinous process, not the C1 transverse process. [Week 7 • Transcript #7]" },
+      { text: "Rectus capitis posterior major runs at an increased oblique angle from the C2 spinous process to the lateral inferior nuchal line", correct: true, why: "Rectus capitis posterior minor sits near the midline for pure extension, whereas major courses at a wider angle from C2 SP to the inferior nuchal line, adding ipsilateral rotation. [Week 7 • Transcript #7]" },
+      { text: "Rectus capitis posterior minor is innervated by the greater occipital nerve", correct: false, why: "Both rectus capitis posterior major and minor are innervated by the suboccipital nerve (C1 dorsal ramus). [Week 7 • Transcript #7]" },
+      { text: "Rectus capitis posterior major inserts above the superior nuchal line", correct: false, why: "Both muscles insert onto the inferior nuchal line; major simply attaches more laterally along it. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 14,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which nerve provides motor innervation to all four muscles of the suboccipital group?",
+    options: [
+      { text: "Greater occipital nerve", correct: false, why: "The greater occipital nerve (C2 dorsal ramus) is primarily cutaneous and emerges inferior to oblique capitis inferior rather than innervating the suboccipital group. [Week 7 • Transcript #7]" },
+      { text: "Suboccipital nerve", correct: true, why: "All four suboccipital muscles are motor-innervated by the suboccipital nerve (dorsal ramus of C1). [Week 7 • Transcript #7]" },
+      { text: "Third occipital nerve", correct: false, why: "The third occipital nerve arises from C3 dorsal ramus and does not supply the suboccipital muscles. [Week 7 • Transcript #7]" },
+      { text: "Lesser occipital nerve", correct: false, why: "The lesser occipital nerve arises from the cervical plexus (ventral rami) and provides sensory innervation behind the ear. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 15,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "hard",
+    priority: true,
+    stem: "Which combination of attachments accurately defines oblique capitis superior?",
+    options: [
+      { text: "Spinous process of C2 to transverse process of C1", correct: false, why: "C2 spinous process to C1 transverse process describes oblique capitis inferior. [Week 7 • Transcript #7]" },
+      { text: "Transverse process of C1 to the occipital bone between the superior and inferior nuchal lines", correct: true, why: "Oblique capitis superior originates on the C1 transverse process and inserts between the superior and inferior nuchal lines. [Week 7 • Transcript #7]" },
+      { text: "Posterior tubercle of C1 to the inferior nuchal line", correct: false, why: "Posterior tubercle of C1 to inferior nuchal line describes rectus capitis posterior minor. [Week 7 • Transcript #7]" },
+      { text: "Transverse processes of C1–C4 to the mastoid process", correct: false, why: "Oblique capitis superior attaches to the occipital bone between nuchal lines, not the mastoid process. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 16,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "hard",
+    priority: true,
+    stem: "How does oblique capitis inferior contribute to head rotation despite having no direct attachment to the occipital bone?",
+    options: [
+      { text: "It pulls the mastoid process anteriorly through fascial slips", correct: false, why: "Oblique capitis inferior acts directly on the bony atlantoaxial joint rather than through mastoid fascial slips. [Week 7 • Transcript #7]" },
+      { text: "It ipsilaterally rotates C1 around the dens of C2, which biomechanically carries the cranium with it", correct: true, why: "Because the atlanto-occipital condyles do not allow independent horizontal rotation, rotating C1 ipsilaterally on C2 necessarily rotates the head to the same side. [Week 7 • Transcript #7]" },
+      { text: "It contralaterally rotates C2 beneath a fixed atlas", correct: false, why: "C2 serves as the stabilized anchor via the dens while C1 rotates ipsilaterally toward the contracting side. [Week 7 • Transcript #7]" },
+      { text: "It flexes the atlanto-occipital joint to unlock cranial rotation", correct: false, why: "Oblique capitis inferior does not cross the atlanto-occipital joint. [Week 7 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 17,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 13,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which two muscles attach to the occipital bone specifically in the area between the superior and inferior nuchal lines?",
+    options: [
+      { text: "Trapezius and splenius capitis", correct: false, why: "Trapezius and splenius capitis attach along the superior nuchal line itself. [Week 7 • Slide #12–13]" },
+      { text: "Rectus capitis posterior major and rectus capitis posterior minor", correct: false, why: "Both rectus capitis posterior muscles attach onto the inferior nuchal line. [Week 7 • Slide #13]" },
+      { text: "Semispinalis capitis and oblique capitis superior", correct: true, why: "Both semispinalis capitis and oblique capitis superior insert into the occipital bone between the superior and inferior nuchal lines. [Week 7 • Slide #12–13]" },
+      { text: "Longissimus capitis and sternocleidomastoid", correct: false, why: "Longissimus capitis and sternocleidomastoid insert onto the mastoid process. [Week 7 • Slide #12]" }
+    ]
+  },
+  {
+    id: 18,
+    week: 7,
+    subjectIndex: 1,
+    quarter: 3,
+    slideRef: 13,
+    difficulty: "hard",
+    priority: true,
+    stem: "Which of the following muscles attaches directly to the transverse process of the atlas (C1)?",
+    options: [
+      { text: "Rectus capitis posterior minor", correct: false, why: "Rectus capitis posterior minor attaches to the posterior tubercle of C1, not the transverse process. [Week 7 • Slide #13]" },
+      { text: "Rectus capitis posterior major", correct: false, why: "Rectus capitis posterior major attaches to the spinous process of C2. [Week 7 • Slide #13]" },
+      { text: "Oblique capitis inferior", correct: true, why: "Oblique capitis inferior attaches between the spinous process of C2 and the transverse process of C1 (along with oblique capitis superior, splenius cervicis, and levator scapulae). [Week 7 • Transcript #7]" },
+      { text: "Semispinalis cervicis", correct: false, why: "Semispinalis cervicis forms an arrowhead inserting onto the spinous processes of C2–C5, bypassing C1. [Week 7 • Transcript #3]" }
+    ]
+  },
+
+  // ================= WEEK 8 =================
+  {
+    id: 19,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which femoral landmark serves as the distal insertion site for the psoas major muscle?",
+    options: [
+      { text: "Greater trochanter of the femur", correct: false, why: "The greater trochanter receives gluteal and deep lateral hip rotators, whereas psoas major inserts medially on the lesser trochanter. [Week 8 • Slide #2 / Transcript #5]" },
+      { text: "Lesser trochanter of the femur", correct: true, why: "Psoas major descends across the hip joint to insert onto the lesser trochanter of the femur. [Week 8 • Slide #2 / Transcript #5]" },
+      { text: "Iliopubic eminence", correct: false, why: "The iliopubic eminence is the distal attachment of psoas minor, not psoas major. [Week 8 • Transcript #5]" },
+      { text: "Linea aspera of the femur", correct: false, why: "Psoas major inserts proximally on the lesser trochanter rather than the femoral shaft. [Week 8 • Transcript #5]" }
+    ]
+  },
+  {
+    id: 20,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which spinal attachment sites belong to the psoas major muscle?",
+    options: [
+      { text: "Transverse processes of L1–L5 and vertebral bodies of T12–L5", correct: true, why: "Psoas major originates from the transverse processes of L1–L5 and the vertebral bodies of T12–L5, with greater leverage from higher levels. [Week 8 • Transcript #5]" },
+      { text: "Spinous processes of T11–L5 and posterior sacrum", correct: false, why: "Posterior spinous processes belong to intrinsic back muscles, whereas psoas major lies anterior on vertebral bodies and transverse processes. [Week 8 • Transcript #5]" },
+      { text: "Iliac crest and iliolumbar ligament only", correct: false, why: "Iliac crest and iliolumbar ligament represent the inferior attachment of quadratus lumborum. [Week 8 • Slide #2]" },
+      { text: "Mammillary processes of L1–L5 and PSIS", correct: false, why: "Mammillary processes and PSIS belong to the lumbar multifidus. [Week 8 • Slide #12]" }
+    ]
+  },
+  {
+    id: 21,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "medium",
+    priority: false,
+    stem: "Which nerve roots supply motor innervation to the psoas major muscle?",
+    options: [
+      { text: "Ventral rami of L2 through L4", correct: true, why: "Psoas major is supplied directly by ventral rami of L2–L4 (whereas psoas minor is supplied by L1). [Week 8 • Transcript #5]" },
+      { text: "Ventral ramus of L1 exclusively", correct: false, why: "Ventral ramus of L1 exclusively innervates the smaller psoas minor muscle. [Week 8 • Transcript #5]" },
+      { text: "Dorsal rami of T12 through L4", correct: false, why: "Psoas major is an anterior/posterior abdominal wall flexor innervated by ventral rami, not dorsal rami. [Week 8 • Transcript #5]" },
+      { text: "Obturator nerve", correct: false, why: "The obturator nerve innervates the medial adductor compartment of the thigh, not psoas major. [Week 8 • Transcript #5]" }
+    ]
+  },
+  {
+    id: 22,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "hard",
+    priority: true,
+    stem: "Why is psoas minor biomechanically unable to assist psoas major in flexing the hip joint?",
+    options: [
+      { text: "It inserts onto the greater trochanter posterior to the hip axis", correct: false, why: "Psoas minor does not attach to the femur at all. [Week 8 • Transcript #5]" },
+      { text: "It inserts onto the iliopubic eminence of the pelvis and therefore does not cross the hip joint", correct: true, why: "Psoas minor runs from T12–L1 vertebral bodies to the iliopubic eminence, stopping on the pelvis without crossing the hip joint, limiting it to weak trunk flexion. [Week 8 • Transcript #5]" },
+      { text: "It is innervated solely by dorsal rami of T12", correct: false, why: "Psoas minor is innervated by the ventral ramus of L1. [Week 8 • Transcript #5]" },
+      { text: "It is absent in 95% of the human population", correct: false, why: "Psoas minor is present in approximately 60% of individuals (absent in ~40%). [Week 8 • Transcript #5]" }
+    ]
+  },
+  {
+    id: 23,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "easy",
+    priority: true,
+    stem: "Approximately what percentage of individuals possess a psoas minor muscle?",
+    options: [
+      { text: "20%", correct: false, why: "Psoas minor is present in roughly 60% of people rather than 20%. [Week 8 • Transcript #5]" },
+      { text: "40%", correct: false, why: "Approximately 40% of individuals lack psoas minor, meaning 60% possess it. [Week 8 • Transcript #5]" },
+      { text: "60%", correct: true, why: "Approximately 60% of people have a psoas minor muscle, while roughly 40% lack it. [Week 8 • Transcript #5]" },
+      { text: "100%", correct: false, why: "Psoas minor is a classic variable muscle absent in roughly 40% of cadavers. [Week 8 • Transcript #5]" }
+    ]
+  },
+  {
+    id: 24,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which pelvic and sacral structures serve as the proximal attachments of the iliacus muscle?",
+    options: [
+      { text: "Upper two-thirds of the iliac fossa, sacral ala, and anterior sacroiliac ligament", correct: true, why: "Iliacus arises broadly from the upper two-thirds of the iliac fossa, the sacral ala, and the anterior sacroiliac ligament before joining psoas major on the lesser trochanter. [Week 8 • Transcript #5]" },
+      { text: "Ischial tuberosity and sacrotuberous ligament", correct: false, why: "The ischial tuberosity is the attachment for the hamstring compartment, not iliacus. [Week 8 • Transcript #5]" },
+      { text: "Posterior superior iliac spine and thoracolumbar fascia", correct: false, why: "PSIS and thoracolumbar fascia are posterior attachments for multifidus and latissimus dorsi. [Week 8 • Transcript #5]" },
+      { text: "Pubic crest and pectineal line", correct: false, why: "The pubic crest belongs to rectus abdominis rather than iliacus. [Week 8 • Transcript #5]" }
+    ]
+  },
+  {
+    id: 25,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which peripheral nerve innervates the iliacus muscle?",
+    options: [
+      { text: "Femoral nerve", correct: true, why: "Iliacus is innervated by the femoral nerve as it traverses the iliac fossa toward the lesser trochanter. [Week 8 • Slide #2]" },
+      { text: "Iliohypogastric nerve", correct: false, why: "The iliohypogastric nerve supplies abdominal wall musculature and skin, not iliacus. [Week 8 • Slide #2]" },
+      { text: "Superior gluteal nerve", correct: false, why: "The superior gluteal nerve supplies gluteus medius, minimus, and tensor fasciae latae. [Week 8 • Slide #2]" },
+      { text: "Subcostal nerve", correct: false, why: "The subcostal nerve (T12) contributes to quadratus lumborum and abdominal wall muscles rather than iliacus. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 26,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which bony and ligamentous structures serve as the attachments of quadratus lumborum?",
+    options: [
+      { text: "Iliac crest, iliolumbar ligament, transverse processes of L1–L5, and rib 12", correct: true, why: "Quadratus lumborum attaches inferiorly to the iliac crest and iliolumbar ligament, and superiorly to the L1–L5 transverse processes and Rib 12. [Week 8 • Slide #2 / Transcript #5]" },
+      { text: "Sacral promontory, arcuate line, and lesser trochanter", correct: false, why: "Quadratus lumborum does not cross the hip joint to the lesser trochanter. [Week 8 • Slide #2]" },
+      { text: "Spinous processes of L1–L5 and lower six ribs", correct: false, why: "Quadratus lumborum attaches to lumbar transverse processes and Rib 12 rather than spinous processes. [Week 8 • Slide #2]" },
+      { text: "Pubic symphysis, xiphoid process, and costal cartilages 5–7", correct: false, why: "These anterior midline structures belong to rectus abdominis. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 27,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: false,
+    stem: "Which nerve supply innervates the quadratus lumborum muscle?",
+    options: [
+      { text: "Ventral rami of T12 through L4", correct: true, why: "Quadratus lumborum is innervated by the ventral rami of T12–L4. [Week 8 • Slide #2]" },
+      { text: "Dorsal rami of L1 through L5", correct: false, why: "Quadratus lumborum is an anterior/posterior abdominal wall muscle innervated by ventral rami, not dorsal rami. [Week 8 • Slide #2]" },
+      { text: "Femoral nerve", correct: false, why: "The femoral nerve innervates iliacus rather than quadratus lumborum. [Week 8 • Slide #2]" },
+      { text: "Thoracodorsal nerve", correct: false, why: "The thoracodorsal nerve innervates latissimus dorsi. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 28,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "hard",
+    priority: true,
+    stem: "How does quadratus lumborum contribute to respiratory mechanics during contraction?",
+    options: [
+      { text: "It elevates the first two ribs during forced inspiration", correct: false, why: "Elevating Ribs 1–2 is the function of the cervical scalene muscles. [Week 8 • Slide #2]" },
+      { text: "It stabilizes and fixes the twelfth rib to provide a stable anchor for the diaphragm", correct: true, why: "Quadratus lumborum stabilizes Rib 12 (reinforced from above by intercostals) during respiration so the diaphragm can contract efficiently without pulling the floating rib upward. [Week 8 • Slide #2 / Transcript #5]" },
+      { text: "It compresses the abdominal viscera to force air through the glottis", correct: false, why: "Abdominal compression is primarily driven by transversus abdominis and the abdominal obliques. [Week 8 • Slide #2]" },
+      { text: "It elevates the central tendon directly via costal slips", correct: false, why: "Quadratus lumborum attaches to Rib 12, not the central tendon. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 29,
+    week: 8,
+    subjectIndex: 4,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "easy",
+    priority: true,
+    stem: "Which set of four muscles comprises the anterior abdominal wall group?",
+    options: [
+      { text: "External abdominal oblique, internal abdominal oblique, transversus abdominis, and rectus abdominis", correct: true, why: "The four anterior abdominal wall muscles are external abdominal oblique, internal abdominal oblique, transversus abdominis, and rectus abdominis. [Week 8 • Slide #2]" },
+      { text: "Quadratus lumborum, psoas major, psoas minor, and iliacus", correct: false, why: "These four muscles form the posterior abdominal wall group rather than the anterior wall. [Week 8 • Slide #2]" },
+      { text: "External intercostal, internal intercostal, innermost intercostal, and transversus thoracis", correct: false, why: "These muscles comprise the thoracic wall musculature. [Week 8 • Slide #2]" },
+      { text: "Iliocostalis, longissimus, spinalis, and multifidus", correct: false, why: "These muscles belong to the intrinsic posterior back musculature. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 30,
+    week: 8,
+    subjectIndex: 5,
+    quarter: 3,
+    slideRef: 7,
+    difficulty: "hard",
+    priority: true,
+    stem: "Why can severe meningeal inflammation rapidly become fatal when inflammatory fluid builds up within the spinal and cranial meninges?",
+    options: [
+      { text: "It triggers immediate systemic vasodilation of the external carotid tree", correct: false, why: "The danger of meningitis stems from mechanical pressure inside the closed craniospinal vault, not external carotid vasodilation. [Week 8 • Transcript #7]" },
+      { text: "Increased fluid pressure inside the rigid bony canal directly compresses the spinal cord and brain", correct: true, why: "Because the meningeal layers surround the central nervous system within a non-expansile bony enclosure, inflammatory pressure directly compresses the spinal cord and brain, leading to death. [Week 8 • Transcript #7]" },
+      { text: "It causes irreversible ossification of the ligamentum flavum within hours", correct: false, why: "Acute meningitis produces dangerous mechanical pressure on neural tissue rather than rapid ligament ossification. [Week 8 • Transcript #7]" },
+      { text: "It selectively severs the ventral rami of the phrenic nerve", correct: false, why: "Compression of the brain and spinal cord itself is the primary life-threatening mechanism. [Week 8 • Transcript #7]" }
+    ]
+  },
+  {
+    id: 31,
+    week: 8,
+    subjectIndex: 5,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: true,
+    stem: "Which meningeal layer lies immediately superficial to the spinal arachnoid mater and forms the tough outer dural sac?",
+    options: [
+      { text: "Dura mater spinalis", correct: true, why: "The spinal dura mater forms the tough outer fibrous meningeal tube surrounding the arachnoid mater and subarachnoid space. [Week 8 • Slide #2]" },
+      { text: "Pia mater spinalis", correct: false, why: "Pia mater lies deep to the arachnoid mater, adhering directly to the surface of the spinal cord. [Week 8 • Slide #2]" },
+      { text: "Posterior longitudinal ligament", correct: false, why: "The posterior longitudinal ligament is a vertebral column ligament located anterior to the epidural space, not a meningeal layer. [Week 8 • Slide #2]" },
+      { text: "Denticulate ligament", correct: false, why: "Denticulate ligaments are lateral extensions of pia mater anchoring the cord to the dura, not the outer meningeal layer itself. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 32,
+    week: 8,
+    subjectIndex: 5,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "hard",
+    priority: true,
+    stem: "Which venous structure is located within the spinal epidural space external to the dura mater?",
+    options: [
+      { text: "Internal vertebral venous plexus", correct: true, why: "The posterior and anterior internal vertebral venous plexuses reside within the fatty epidural space outside the spinal dura mater. [Week 8 • Slide #2]" },
+      { text: "Great radicular artery of Adamkiewicz", correct: false, why: "Radicular arteries travel along nerve roots within the subarachnoid/pial space to supply the cord, whereas the internal vertebral venous plexus occupies the epidural space. [Week 8 • Slide #2]" },
+      { text: "External jugular vein", correct: false, why: "The external jugular vein runs superficially in the neck outside the vertebral column. [Week 8 • Slide #2]" },
+      { text: "Basilar venous plexus of the anterior clivus only", correct: false, why: "Within the vertebral canal, the valveless venous network in the epidural space is the internal vertebral venous plexus. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 33,
+    week: 8,
+    subjectIndex: 5,
+    quarter: 3,
+    slideRef: 2,
+    difficulty: "medium",
+    priority: false,
+    stem: "Which two neural roots unite immediately medial to the intervertebral foramen to form a mixed spinal nerve?",
+    options: [
+      { text: "Dorsal root and ventral root", correct: true, why: "The sensory dorsal root (bearing the spinal ganglion) and motor ventral root join to form the mixed spinal nerve before dividing into dorsal and ventral rami. [Week 8 • Slide #2]" },
+      { text: "Gray ramus communicans and white ramus communicans", correct: false, why: "Rami communicantes connect the mixed spinal nerve to the sympathetic trunk rather than forming the spinal nerve trunk. [Week 8 • Slide #2]" },
+      { text: "Medial branch and lateral branch of the dorsal ramus", correct: false, why: "Medial and lateral branches are distal divisions of the dorsal ramus after the spinal nerve has already split. [Week 8 • Slide #2]" },
+      { text: "Anterior intercostal nerve and phrenic nerve", correct: false, why: "These are peripheral nerves rather than intraspinal nerve roots. [Week 8 • Slide #2]" }
+    ]
+  },
+  {
+    id: 34,
+    week: 8,
+    subjectIndex: 3,
+    quarter: 3,
+    slideRef: 5,
+    difficulty: "medium",
+    priority: true,
+    stem: "Assuming the lower extremities and feet are planted and fixed on the floor, bilateral contraction of the psoas major muscles produces which primary movement?",
+    options: [
+      { text: "Flexion of the trunk at the lumbar spine and hip", correct: true, why: "When the lower limbs are stabilized, the origin and insertion functionally reverse so psoas major pulls the lumbar spine anteriorly to flex the trunk. [Week 8 • Transcript #5]" },
+      { text: "Extension of the lumbar spine", correct: false, why: "Psoas major lies anterior to the hip axis and acts as a trunk/hip flexor rather than a lumbar extensor. [Week 8 • Transcript #5]" },
+      { text: "External rotation and abduction of the pelvis", correct: false, why: "Bilateral psoas major contraction produces symmetrical flexion in the sagittal plane. [Week 8 • Transcript #5]" },
+      { text: "Elevation of the twelfth rib", correct: false, why: "Psoas major does not attach to Rib 12; that attachment belongs to quadratus lumborum. [Week 8 • Transcript #5]" }
+    ]
+  }
+];
+
+let currentFilterWeek = "all";
+let currentFilterSubject = "all";
+let currentFilterDiff = "all";
+let singleView = false;
+let currentIndex = 0;
+let userAnswers = {}; // id -> selected option index
+
+const subjectSelect = document.getElementById("subjectFilter");
+SUBJECTS.forEach((s, idx) => {
+  const opt = document.createElement("option");
+  opt.value = idx;
+  opt.textContent = s;
+  subjectSelect.appendChild(opt);
+});
+
+function getFilteredQuestions() {
+  return questionBank.filter(q => {
+    if (currentFilterWeek !== "all" && String(q.week) !== currentFilterWeek) return false;
+    if (currentFilterSubject !== "all" && String(q.subjectIndex) !== currentFilterSubject) return false;
+    if (currentFilterDiff !== "all" && q.difficulty !== currentFilterDiff) return false;
+    return true;
+  });
+}
+
+function updateScore() {
+  const filtered = getFilteredQuestions();
+  let answered = 0;
+  let correct = 0;
+  filtered.forEach(q => {
+    if (userAnswers[q.id] !== undefined) {
+      answered++;
+      if (q.options[userAnswers[q.id]].correct) correct++;
+    }
+  });
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById("scorePill").textContent = `Score: ${correct} / ${filtered.length} (${pct}% answered accuracy)`;
+}
+
+function render() {
+  const container = document.getElementById("quizContainer");
+  container.innerHTML = "";
+  const list = getFilteredQuestions();
+  updateScore();
+
+  if (list.length === 0) {
+    container.innerHTML = `<div class="summary-panel"><h3>No questions match your current filters.</h3></div>`;
+    return;
+  }
+
+  if (currentIndex >= list.length) currentIndex = 0;
+  const toRender = singleView ? [list[currentIndex]] : list;
+
+  toRender.forEach((q, renderIdx) => {
+    const displayNum = singleView ? currentIndex + 1 : renderIdx + 1;
+    const card = document.createElement("div");
+    card.className = "q-card";
+
+    const chosen = userAnswers[q.id];
+    const isAnswered = chosen !== undefined;
+
+    let optionsHtml = "";
+    const keys = ["A", "B", "C", "D"];
+    q.options.forEach((opt, idx) => {
+      let cls = "opt-btn";
+      if (isAnswered) {
+        if (opt.correct) cls += " correct";
+        else if (idx === chosen) cls += " incorrect";
+      }
+      optionsHtml += `
+        <button class="${cls}" ${isAnswered ? "disabled" : ""} onclick="selectOption(${q.id}, ${idx})">
+          <span class="opt-key">${keys[idx]}.</span>
+          <span>${opt.text}</span>
+        </button>
+      `;
+    });
+
+    let rationaleHtml = "";
+    if (isAnswered) {
+      rationaleHtml = `<div class="rationale-box">` +
+        q.options.map((opt, idx) => `
+          <div class="rationale-item ${opt.correct ? "is-right" : "is-wrong"}">
+            <strong>${keys[idx]} (${opt.correct ? "Correct" : "Incorrect"}):</strong> ${opt.why}
+          </div>
+        `).join("") +
+      `</div>`;
+    }
+
+    let navHtml = "";
+    if (singleView) {
+      navHtml = `
+        <div class="nav-row">
+          <button onclick="prevQ()" ${currentIndex === 0 ? "disabled" : ""}>← Previous</button>
+          <span style="color:var(--muted);font-size:0.85rem;">Question ${displayNum} of ${list.length}</span>
+          <button onclick="nextQ()" ${currentIndex === list.length - 1 ? "disabled" : ""}>Next →</button>
+        </div>
+      `;
+    }
+
+    card.innerHTML = `
+      <div class="q-meta">
+        <span class="badge week">Week ${q.week}</span>
+        <span class="badge">${SUBJECTS[q.subjectIndex]}</span>
+        <span class="badge">Difficulty: ${q.difficulty.toUpperCase()}</span>
+        ${q.priority ? `<span class="badge priority">★ High-Yield Board</span>` : ""}
+      </div>
+      <div class="q-stem">${displayNum}. ${q.stem}</div>
+      <div class="options-list">${optionsHtml}</div>
+      ${rationaleHtml}
+      ${navHtml}
+    `;
+    container.appendChild(card);
+  });
+}
+
+window.selectOption = function(qId, optIdx) {
+  if (userAnswers[qId] !== undefined) return;
+  userAnswers[qId] = optIdx;
+  render();
+};
+
+window.prevQ = function() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    render();
+  }
+};
+
+window.nextQ = function() {
+  const list = getFilteredQuestions();
+  if (currentIndex < list.length - 1) {
+    currentIndex++;
+    render();
+  }
+};
+
+document.getElementById("weekFilter").addEventListener("change", e => {
+  currentFilterWeek = e.target.value;
+  currentIndex = 0;
+  render();
+});
+
+document.getElementById("subjectFilter").addEventListener("change", e => {
+  currentFilterSubject = e.target.value;
+  currentIndex = 0;
+  render();
+});
+
+document.getElementById("diffFilter").addEventListener("change", e => {
+  currentFilterDiff = e.target.value;
+  currentIndex = 0;
+  render();
+});
+
+document.getElementById("viewToggle").addEventListener("click", e => {
+  singleView = !singleView;
+  e.target.textContent = singleView ? "View: One by One" : "View: All at Once";
+  render();
+});
+
+document.getElementById("shuffleBtn").addEventListener("click", () => {
+  for (let i = questionBank.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questionBank[i], questionBank[j]] = [questionBank[j], questionBank[i]];
+  }
+  currentIndex = 0;
+  render();
+});
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  userAnswers = {};
+  currentIndex = 0;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
