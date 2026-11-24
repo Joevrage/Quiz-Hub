@@ -22,570 +22,836 @@ a{text-decoration:none}.wrap{max-width:900px;margin:0 auto;padding:16px}
 <div id="app"></div>
 <script>
 const SUBJECTS=[
-{title:"Hemostasis & Coagulation",week:"Wk 6"},
+{title:"Hemostasis & Neurogenic vs Chemical Signaling",week:"Wk 6"},
+{title:"Coagulation Pathways & Fates of a Thrombus",week:"Wk 6"},
 {title:"Clotting Disorders & Bruising",week:"Wk 6"},
-{title:"Injury Terms & Arachidonic Acid",week:"Wk 6"},
+{title:"Injury Terms, Mediators & Arachidonic Acid",week:"Wk 6"},
 {title:"Phases of Inflammation & Exudates",week:"Wk 6"},
-{title:"Tissue Repair & Pathological Healing",week:"Wk 6"},
-{title:"Cell Death & Injury",week:"Wk 6"},
-{title:"Necrosis & Cellular Injury",week:"Wk 7"},
+{title:"Macrophages, Collagen & Tissue Repair",week:"Wk 6"},
+{title:"Wound Healing & Pathological Healing",week:"Wk 6"},
+{title:"Cell Death & Necrotic Patterns",week:"Wk 7"},
 {title:"Starling's Forces & Edema",week:"Wk 7"},
-{title:"Lipid, Mineral & Heavy Metal Accumulations",week:"Wk 7"},
+{title:"Lipid Accumulations",week:"Wk 7"},
+{title:"Mineral & Heavy Metal Accumulations",week:"Wk 7"},
 {title:"Amyloidosis & Multiple Myeloma",week:"Wk 7"},
 {title:"Vitamin & Mineral Deficiencies",week:"Wk 7"}];
 let _id=0;
 function Q(s,ref,d,p,stem,o){const w=SUBJECTS[s].week;return{id:_id++,subjectIndex:s,week:w,slideRef:ref,difficulty:d,priority:p,stem,
 options:o.map((x,i)=>({text:x[0],correct:i===0,why:x[1]+" ["+ref+"]"}))}}
+// NOTE: correct answer is always written first; the launcher's Fisher-Yates option shuffle randomizes A-D position.
 const T="Lecture Transcript",S="Slide Deck";
 const questionBank=[
-// ---- Subject 0 (Wk 6)
-Q(0,S,"easy",true,"The fastest response to a bleeding injury is a _______ reflex producing _______ of arteries.",[
-["neurogenic; vasoconstriction","Vascular spasm works through sympathetic nerves on arterial smooth muscle and slows flow."],
+
+// ================= SUBJECT 0: Hemostasis & Signaling (Wk 6) =================
+Q(0,S,"easy",true,"The three steps of hemostasis, in order, are vascular spasm, _______, and _______.",[
+["platelet plug formation; coagulation","Spasm comes first, the platelet plug second, and the slower chemical coagulation last."],
+["coagulation; platelet plug formation","Coagulation is the slowest, final step of hemostasis."],
+["clot lysis; coagulation","Lysis happens after hemostasis succeeds."],
+["platelet plug formation; clot lysis","Lysis and vessel healing follow hemostasis; they are not part of it."]]),
+Q(0,T,"medium",true,"Compared with chemical signaling, neurogenic signaling after injury is _______ acting and _______ lasting.",[
+["faster; shorter","Reflex pathways are rapid but brief; chemical signals are slower but more sustained."],
+["faster; longer","Reflex effects do not last as long as chemical effects."],
+["slower; shorter","Nerves are the rapid pathway."],
+["slower; longer","That describes chemical signaling."]]),
+Q(0,S,"medium",true,"The fastest response to a bleeding injury is a _______ reflex producing _______ of arteries.",[
+["neurogenic; vasoconstriction","Sympathetic nerves tighten arterial smooth muscle to slow flow."],
 ["chemical; vasoconstriction","Chemical signaling is slower; the first step is neurogenic."],
 ["neurogenic; vasodilation","Dilation would increase flow and bleeding."],
 ["chemical; vasodilation","Wrong signaling type and wrong direction."]]),
+Q(0,T,"medium",true,"Vasoconstriction during vascular spasm helps platelets by _______.",[
+["slowing flow so they can grip the damaged wall and aggregate","Slower flow gives platelets a better hold on the injured area."],
+["converting fibrinogen into fibrin","That is thrombin's action in the common pathway."],
+["lysing the clot to prevent embolism","Plasmin lyses clots, and only after hemostasis."],
+["activating Factor VII directly","Factor VII is activated by tissue factor, not by spasm."]]),
 Q(0,T,"medium",true,"Platelets contact medial collagen and release _______, which _______ vascular spasm and recruits more platelets.",[
-["thromboxane; enhances","Thromboxane from platelets enhances spasm and aggregation."],
+["thromboxane; enhances","Platelet-derived thromboxane enhances spasm and aggregation."],
 ["thromboplastin; enhances","Thromboplastin is tissue factor from injured tissue, not platelets."],
-["thromboxane; inhibits","It enhances, not inhibits, spasm."],
-["plasmin; enhances","Plasmin lyses clots; it does not recruit platelets."]]),
-Q(0,S,"medium",true,"Injured tissue releases _______, which activates clotting Factor _______ of the extrinsic pathway.",[
+["thromboxane; inhibits","It enhances spasm rather than inhibiting it."],
+["plasmin; enhances","Plasmin lyses clots and does not recruit platelets."]]),
+Q(0,S,"medium",false,"Platelets release PDGF and FGF to promote _______, and VEGF to restore _______.",[
+["fibroblast proliferation and collagen; blood supply","PDGF and FGF drive collagen repair; VEGF is the angiogenesis factor."],
+["blood supply; fibroblast proliferation and collagen","The functions are reversed."],
+["clot lysis; platelet aggregation","These growth factors do not do either."],
+["Factor XII activation; Factor VII activation","Growth factors do not activate clotting factors."]]),
+Q(0,T,"hard",true,"Seconds after a deep laceration, the skin blanches and bleeding slows before any fibrin has formed. This initial response is mediated by _______.",[
+["sympathetic activation of arterial smooth muscle","The neurogenic vascular spasm is the first and fastest response."],
+["histamine from degranulating mast cells","Histamine dilates vessels and drives inflammation later."],
+["thromboplastin activating Factor VII","Tissue factor starts the slower chemical coagulation step."],
+["plasmin cleaving fibrin strands","Plasmin lyses an already formed clot."]]),
+Q(0,T,"hard",true,"A patient with severe thrombocytopenia has an intact vascular spasm but bleeds persistently from a small cut. Which step of hemostasis is primarily impaired?",[
+["platelet plug formation","Too few platelets cannot seal the vessel injury."],
+["vascular spasm","The reflex is neurogenic and intact."],
+["sympathetic innervation of arteries","The nerve reflex is unaffected."],
+["plasmin generation","Lysis follows clot formation and is not the problem."]]),
+
+// ================= SUBJECT 1: Coagulation & Thrombus Fates (Wk 6) =================
+Q(1,S,"medium",true,"Damage to the vessel interior exposes medial collagen, which activates Factor _______, also called _______ factor, to start the _______ pathway.",[
+["XII; Hageman; intrinsic","Factor XII contacts negatively charged medial collagen."],
+["VII; Hageman; intrinsic","Factor VII starts the extrinsic pathway and is not Hageman factor."],
+["XII; Christmas; extrinsic","Christmas factor is Factor IX, and collagen contact is intrinsic."],
+["X; Hageman; extrinsic","Factor X is the common pathway entry point."]]),
+Q(1,S,"medium",true,"Injured tissue releases _______, which activates clotting Factor _______ of the extrinsic pathway.",[
 ["thromboplastin; VII","Tissue factor activates Factor VII."],
 ["thromboxane; VII","Thromboxane is platelet-derived, not tissue factor."],
-["thromboplastin; XII","Factor XII initiates the intrinsic pathway via medial collagen or glass."],
+["thromboplastin; XII","Factor XII is the intrinsic initiator."],
 ["thromboxane; XII","Wrong mediator and wrong pathway."]]),
-Q(0,S,"medium",true,"Which set contains all four vitamin K-dependent clotting factors (the '1972' trick)?",[
+Q(1,T,"medium",true,"Plasma left in a glass tube clots because Factor XII contacts a negatively charged surface, mimicking _______.",[
+["medial collagen","Collagen and glass are both negatively charged and activate Factor XII."],
+["thromboplastin","Tissue factor activates the extrinsic pathway."],
+["plasminogen","Plasminogen is converted to plasmin for clot lysis."],
+["thromboxane","Thromboxane is a platelet product."]]),
+Q(1,S,"medium",true,"Both pathways converge at Factor _______; prothrombin becomes _______, which cleaves fibrinogen into _______.",[
+["X; thrombin; fibrin","Common pathway, with fibrin as the basic clot scaffolding."],
+["VIII; plasmin; fibrin","Factor VIII is needed to make X, and plasmin lyses clots."],
+["X; plasmin; fibrinogen","Plasmin breaks down fibrin; it does not form it."],
+["XII; thrombin; plasminogen","Factor XII is intrinsic only."]]),
+Q(1,S,"medium",true,"Which set contains all four vitamin K-dependent clotting factors, the 1972 trick?",[
 ["II, VII, IX, X","Prothrombin, VII, IX and X require vitamin K."],
-["I, V, VIII, XII","None of these are in the vitamin K group."],
+["I, V, VIII, XII","None of these are vitamin K-dependent."],
 ["VIII, IX, XI, XII","Only IX is vitamin K-dependent here."],
-["III, IV, V, VIII","Tissue factor, calcium, V and VIII are not vitamin K-dependent."]]),
-Q(0,T,"hard",true,"A patient with cirrhosis and vitamin K deficiency bruises easily with prolonged bleeding. The best mechanism is _______.",[
-["impaired synthesis of clotting factors","The liver is the source of clotting factors, and vitamin K is needed to make II, VII, IX, X."],
-["excess plasmin from thrombocytosis","Thrombocytosis causes excess clotting, not impaired synthesis."],
-["Factor VIII-only deficiency","That describes hemophilia A, an X-linked disorder."],
-["hyperinsulinemia blocking plasminogen","That would favor clotting, not bleeding."]]),
-Q(0,T,"medium",true,"A clot fragment breaks away, travels, and blocks a coronary artery. This traveling clot is a(n) _______.",[
-["embolus","A moving thrombus is an embolus."],
+["III, IV, V, VIII","Tissue factor, calcium, V and VIII are not in the group."]]),
+Q(1,T,"medium",true,"A clot fragment breaks away, travels, and blocks a coronary artery. This traveling clot is a(n) _______.",[
+["embolus","A moving thrombus is an embolus and can cause infarction or stroke."],
 ["hematoma","Hematoma is blood collected outside a vessel."],
-["aneurysm","Aneurysm is arterial ballooning from wall weakness."],
+["aneurysm","Aneurysm is arterial ballooning."],
 ["varicosity","Varicosity is a dilated vein."]]),
-Q(0,T,"medium",false,"A clot lodged in a varicose vein producing pooling and redness is a _______ thrombus; in arteries the clot is a _______ thrombus.",[
-["red; white","Red thrombus: slow flow in veins; white: high-pressure arteries with ischemic pallor."],
-["white; red","Reversed."],
+Q(1,S,"medium",false,"A thrombus filled with collagenous scar and permanently attached to the injured vessel wall has undergone _______.",[
+["organization","Scar replacement of the clot, which can alter flow and promote more clots."],
+["lysis","Lysis would dissolve the clot with plasmin."],
+["embolization","Embolization means the clot travels."],
+["debridement","Debridement is macrophage cleanup of debris."]]),
+Q(1,T,"medium",false,"Ballooning from structural weakness of an artery is a(n) _______, whereas the dilated vein that traps clots is a(n) _______.",[
+["aneurysm; varicosity","Aneurysm in arteries, varicosity in veins."],
+["varicosity; aneurysm","The terms are reversed."],
+["embolus; aneurysm","An embolus is a traveling clot."],
+["hematoma; varicosity","A hematoma is a collection of blood outside a vessel."]]),
+Q(1,T,"medium",false,"A thrombus lodged in a varicose vein producing pooling and redness is a _______ thrombus; in arteries the clot is a _______ thrombus.",[
+["red; white","Slow venous flow gives red; arterial blockage causes ischemic pallor."],
+["white; red","The colors are reversed."],
 ["red; red","Arterial clots cause pallor from lack of perfusion."],
 ["white; white","Venous stasis produces red thrombi."]]),
-Q(0,S,"medium",false,"Hyperinsulinemia of metabolic syndrome inhibits plasminogen activator. The likely result is _______.",[
+Q(1,T,"medium",false,"Slow or turbulent blood flow most directly promotes _______, because it stirs up clotting factors.",[
+["clot formation","Slow flow or turbulence makes clots grow; laminar flow is protective."],
+["vasodilation","That is not the described effect."],
+["plasmin activation","Turbulence does not stimulate plasmin."],
+["thrombocytopenia","Platelet number is unrelated."]]),
+Q(1,S,"medium",true,"Heparin acts as a(n) _______, whereas plasmin, derived from plasminogen, is _______.",[
+["anticoagulant; thrombolytic","Heparin prevents clotting; plasmin breaks up fibrin."],
+["thrombolytic; anticoagulant","The roles are reversed."],
+["anticoagulant; procoagulant","Plasmin lyses clots."],
+["procoagulant; thrombolytic","Heparin prevents clotting."]]),
+Q(1,T,"hard",true,"A hypertensive patient with atherosclerosis forms an intravascular clot with no tissue trauma, while a stabbing victim clots at the wound. The initiating factors are, respectively, _______.",[
+["XII and VII","Interior damage exposes collagen for XII; tissue trauma releases tissue factor for VII."],
+["VII and XII","The initiating factors are swapped."],
+["VIII and X","VIII is needed to make X, and X is the common pathway."],
+["II and IX","These are vitamin K-dependent factors, not pathway initiators."]]),
+Q(1,S,"hard",true,"A patient with metabolic syndrome has hyperinsulinemia that inhibits plasminogen activator. The expected result is _______.",[
 ["impaired clot lysis and a hypercoagulable state","Less plasmin forms, so fibrin persists."],
 ["excess plasmin and spontaneous bleeding","Inhibiting the activator lowers plasmin."],
 ["decreased fibrin formation","Fibrin formation is upstream and unaffected."],
-["Factor VIII deficiency","Unrelated to plasminogen activation."]]),
-// ---- Subject 1 (Wk 6)
-Q(1,S,"hard",true,"A boy has prolonged bleeding after a minor injury with Factor IX deficiency. This is hemophilia _______, nicknamed _______.",[
-["B; Christmas disease","Factor IX deficiency, X-linked recessive."],
-["A; classic hemophilia","Hemophilia A is Factor VIII deficiency."],
-["C; Christmas disease","Hemophilia C is Factor XI deficiency."],
-["B; classic hemophilia","Classic hemophilia is type A."]]),
-Q(1,T,"medium",true,"Hemophilia A causes bleeding because Factor VIII is needed to make Factor _______, so less _______ forms.",[
+["Factor VIII deficiency","This is unrelated to plasminogen activation."]]),
+
+// ================= SUBJECT 2: Clotting Disorders & Bruising (Wk 6) =================
+Q(2,S,"medium",true,"Hemophilia A causes bleeding because Factor VIII is needed to make Factor _______, so less _______ forms.",[
 ["X; fibrin","Less Factor X means less common-pathway fibrin scaffolding."],
 ["XII; fibrin","Factor XII is the intrinsic initiator, upstream of VIII."],
 ["X; plasmin","Plasmin lyses clots and is not produced via VIII."],
-["VII; thrombin","VII is extrinsic and does not require VIII."]]),
-Q(1,S,"medium",true,"Hemophilia C (Factor XI) differs from A and B because it is _______ and rarely causes spontaneous bleeding.",[
-["autosomal recessive","Unlike A and B, C is not X-linked."],
+["VII; thrombin","Factor VII is extrinsic and does not require VIII."]]),
+Q(2,S,"medium",true,"Hemophilia A is inherited as _______ and is therefore far more common in _______.",[
+["X-linked recessive; males","Males have one X and no second allele to compensate."],
+["autosomal recessive; females","That is the pattern of hemophilia C, not A."],
+["X-linked recessive; females","Females carry two X chromosomes and are rarely affected."],
+["autosomal dominant; males","Not the inheritance pattern."]]),
+Q(2,S,"hard",true,"A boy has prolonged bleeding after a minor injury and a Factor IX deficiency. This is hemophilia _______, nicknamed _______.",[
+["B; Christmas disease","Factor IX deficiency, X-linked recessive, named after the first patient."],
+["A; classic hemophilia","Hemophilia A is Factor VIII deficiency."],
+["C; Christmas disease","Hemophilia C is Factor XI deficiency."],
+["B; classic hemophilia","Classic hemophilia is type A."]]),
+Q(2,S,"medium",true,"Hemophilia C, a Factor XI deficiency, differs from A and B because it is _______ and rarely causes spontaneous bleeding.",[
+["autosomal recessive","Unlike A and B, hemophilia C is not X-linked."],
 ["X-linked recessive","That describes A and B."],
-["autosomal dominant","Not the inheritance pattern."],
-["acquired from vitamin K deficiency","It is genetic."]]),
-Q(1,S,"medium",true,"An elderly patient has multiple flat purple-brown patches from fragile, sun-damaged vessels. These are _______.",[
-["purpura","Age-related vessel fragility with multiple leaking vessels."],
-["petechiae","Petechiae are tiny pinpoint bruises."],
-["ecchymosis","A single large deep-purple bruise, often traumatic."],
-["pallor","Pallor is paleness from vasoconstriction."]]),
-Q(1,T,"hard",false,"A patient with sepsis first forms widespread clots, uses up platelets and clotting factors, then bleeds excessively. This is _______.",[
-["DIC","Disseminated intravascular coagulation goes from excess clotting to depletion and bleeding."],
-["hemophilia A","A single Factor VIII deficiency with bleeding only."],
-["thrombocytosis","Excess platelets with excessive clotting only."],
-["purpura","Age-related vessel fragility."]]),
-// ---- Subject 2 (Wk 6)
-Q(2,S,"easy",true,"Injury caused by a provider's treatment, such as a missed history leading to fractured ribs, is _______.",[
-["iatrogenic","Provider-induced injury."],
-["idiopathic","Unknown or poorly understood cause."],
-["etiologic","Etiology is simply the cause."],
-["pathogenic","Pathogenesis is the mechanism."]]),
-Q(2,T,"hard",true,"Which agent and target best block both prostaglandin and leukotriene production?",[
-["corticosteroid inhibiting phospholipase A2","Blocks arachidonic acid formation, so both pathways."],
-["ibuprofen inhibiting COX","NSAIDs block only the prostaglandin (COX) side."],
-["acetaminophen inhibiting COX","Tylenol is an analgesic without anti-inflammatory action."],
-["aspirin inhibiting lipoxygenase","NSAIDs do not block the lipoxygenase side."]]),
-Q(2,T,"medium",false,"For an acutely inflamed sprain, ibuprofen is preferred over acetaminophen because it _______.",[
-["reduces prostaglandin-driven inflammation","NSAIDs block COX; Tylenol only blunts pain perception."],
-["blocks phospholipase A2","That is the steroid target."],
-["is harder on the liver","Tylenol is harder on the liver; ibuprofen on kidneys and stomach."],
-["blocks leukotrienes","NSAIDs leave the lipoxygenase pathway intact."]]),
-Q(2,S,"medium",true,"Tissue injury triggers mast cell degranulation; histamine causes _______ (redness and heat) and _______ (swelling).",[
-["vasodilation; increased capillary permeability","Hyperemia produces erythema and calor; leaking serum produces edema."],
-["vasoconstriction; increased capillary permeability","Histamine dilates vessels."],
-["vasodilation; decreased capillary permeability","Permeability increases."],
-["vasoconstriction; decreased capillary permeability","Both are reversed."]]),
-Q(2,S,"medium",false,"Which is NOT one of the five cardinal signs of inflammation (SHARP)?",[
-["fever","Fever is a sign that can occur but is not always present."],
-["altered function","A cardinal sign."],
-["redness","A cardinal sign (erythema, rubor)."],
-["swelling","A cardinal sign (edema)."]]),
-Q(2,T,"medium",true,"C-reactive protein, a measurable inflammation biomarker, is made by the _______ when stimulated by _______.",[
-["liver; TNF","TNF tells the liver to make CRP."],
-["spleen; IL-10","IL-10 is anti-inflammatory."],
-["liver; thromboxane","Thromboxane is a platelet product."],
-["bone marrow; histamine","CRP is hepatic."]]),
-// ---- Subject 3 (Wk 6)
-Q(3,S,"medium",true,"Histamine is no longer actively released, yet congestion persists at day 4. This is the _______ phase.",[
-["subacute passive congestion","3 to 5 days: histamine inactive but flow not restored."],
-["acute active congestion","Active congestion has ongoing histamine release in the first 48 hours."],
-["chronic anabolic","Chronic (5+ days) is repair and rebuilding."],
-["hemostatic","Hemostasis is the bleeding response."]]),
-Q(3,S,"medium",true,"A patient with pneumonia has a pleural friction rub. The exudate is most likely _______.",[
-["fibrinous","Fibrin strands in serous fluid cause friction rubs."],
-["serous","Watery blister-like fluid, the most abundant."],
-["purulent","Neutrophils plus bacteria (pus)."],
-["transudate","Non-inflammatory edema."]]),
-Q(3,T,"medium",false,"Suppurative, purulent and pus all describe an exudate containing _______.",[
-["neutrophils and bacteria","Pus is dead neutrophils and bacteria."],
-["fibrin strands","That is fibrinous."],
-["water only","That is serous."],
-["eosinophils and parasites","Not pus."]]),
-Q(3,T,"hard",true,"During debridement in the subacute phase, a patient with systemic inflammation recruits macrophages that secrete nitric oxide and TNF. This predicts _______.",[
-["chronic inflammation and rigid fibrotic healing","M1 perpetuates inflammation and activates myofibroblasts."],
-["growth factor release and collagen remodeling","M2 effect."],
-["rapid primary-intention closure","Not driven by M1."],
-["resolution without scarring","M1 delays resolution."]]),
-// ---- Subject 4 (Wk 6)
-Q(4,T,"medium",true,"Normal healing first lays down disorganized collagen type _______, then remodels it to type _______ through tensile stress and M2 activity.",[
-["III; I","Type III 'haystack' is replaced by stronger type I."],
-["I; III","Reversed."],
-["II; I","Type II is cartilage."],
-["IV; II","Not the remodeling sequence."]]),
-Q(4,T,"medium",true,"Unremodeled type III collagen is negatively charged and attracts Ca2+, causing _______.",[
-["dystrophic calcification","Calcium deposits in previously damaged tissue; calcified granulomas are an example."],
-["metastatic calcification","That occurs with hypercalcemia in normal tissue."],
-["keloid formation","Excess dense collagen, not calcium."],
-["proud flesh","Excess friable granulation tissue."]]),
-Q(4,T,"medium",true,"Fibroblasts respond to tensile force by orienting collagen along stress lines. This is the rationale for _______.",[
-["rehab, loading, and adjustments after injury","Motion remodels scar into organized tissue."],
-["prolonged rest only","Rest alone leaves disorganized, fibrotic collagen."],
-["heat in the acute phase","Not the fibroblast rationale."],
-["steroids","They block arachidonic acid, not remodeling."]]),
-Q(4,T,"medium",false,"A clean scalpel incision with apposed dermal edges heals by _______ intention; a deep jagged scrape heals by _______ intention.",[
-["primary; secondary","Primary leaves little scar; wide wounds fill with granulation tissue from the bottom up."],
-["secondary; primary","Reversed."],
-["primary; primary","Large wounds need granulation tissue."],
-["secondary; secondary","Clean apposed edges can heal by primary intention."]]),
-Q(4,T,"medium",false,"Which tissue heals best, allowing primary intention healing?",[
-["epithelium","Full mitotic ability in adulthood."],
-["cardiac muscle","Regenerates about 0.5% per year."],
-["neuron cell bodies","Cannot regenerate."],
-["ligament","Heals with collagen scar."]]),
-Q(4,T,"hard",false,"An unsutured wound forms friable, cauliflower-like granulation tissue that bleeds easily; this occurs most often in _______ and is called _______.",[
-["horses; proud flesh","Excess granulation with many new vessels."],
-["humans; keloid","Keloid is dense collagen, often after piercings."],
-["horses; keloid","Keloid is not this."],
-["humans; proud flesh","Rare in humans."]]),
-// ---- Subject 5 (Wk 6)
-Q(5,S,"medium",true,"Which cell death is programmed yet still inflammatory, seen primarily in inflammatory cells?",[
-["pyroptosis","Programmed but inflammatory."],
-["apoptosis","Programmed and non-inflammatory."],
-["necrosis","Accidental death."],
-["karyolysis","A nuclear change, not a death type."]]),
-Q(5,S,"medium",false,"Hydropic change and cloudy swelling are reversible until the _______ is damaged, with the first visible sign being _______.",[
-["nucleus; pyknosis","Chromatin condensation marks irreversibility."],
-["mitochondria; karyolysis","Karyolysis is a later fading seen in necrosis."],
-["nucleus; karyolysis","Pyknosis comes first."],
-["membrane; karyorrhexis","Fragmentation follows condensation."]]),
-// ---- Subject 0-5 Batch 2 (Wk 6)
-Q(0,T,"easy",true,"The three steps of hemostasis, in order, are vascular spasm, _______, and _______.",[
-["platelet plug formation; coagulation","Spasm, then platelet plug, then coagulation."],
-["coagulation; platelet plug formation","Coagulation is the slowest, last step."],
-["clot lysis; coagulation","Lysis follows after hemostasis succeeds."],
-["platelet plug formation; clot lysis","Lysis is a post-hemostasis step."]]),
-Q(0,T,"medium",true,"Platelets release PDGF and FGF to _______, and VEGF to _______.",[
-["promote fibroblast proliferation and collagen; restore blood supply","PDGF/FGF drive collagen repair; VEGF is the angiogenesis factor."],
-["restore blood supply; promote collagen","Reversed."],
-["lyse the clot; form the plug","These are not their roles."],
-["activate Factor XII; activate Factor VII","Not clotting factor activators."]]),
-Q(0,T,"medium",true,"A patient with metabolic syndrome cannot activate plasminogen and is given heparin. Heparin acts as a(n) _______, whereas plasmin is _______.",[
-["anticoagulant; thrombolytic","Heparin prevents clotting; plasmin breaks fibrin."],
-["thrombolytic; anticoagulant","Reversed."],
-["anticoagulant; procoagulant","Plasmin lyses clots."],
-["procoagulant; thrombolytic","Heparin prevents clotting."]]),
-Q(0,T,"medium",false,"Blood flow that is slow or turbulent most directly promotes _______, because it stirs up clotting factors.",[
-["clot formation","Slow or turbulent flow makes clots grow; laminar flow is protective."],
-["vasodilation","Not the described effect."],
-["plasmin activation","Not stimulated by turbulence."],
-["thrombocytopenia","Platelet number is unrelated."]]),
-Q(1,S,"medium",true,"A tiny pinpoint bruise is a(n) _______, while a large deep-purple traumatic bruise is a(n) _______.",[
-["petechia; ecchymosis","Size distinguishes these."],
-["ecchymosis; petechia","Reversed."],
-["purpura; hematoma","Purpura reflects age-related fragility."],
-["hematoma; purpura","Hematoma is any blood collection outside vessels."]]),
-Q(1,S,"medium",false,"Thrombocytopenia causes _______, whereas thrombocytosis causes _______.",[
-["excessive bleeding; excessive clotting","Fewer platelets weaken the plug; more platelets promote clots."],
-["excessive clotting; excessive bleeding","Reversed."],
-["excessive bleeding; excessive bleeding","Excess platelets favor clotting."],
-["excessive clotting; excessive clotting","Low platelets cause bleeding."]]),
-Q(1,T,"hard",true,"A male infant has spontaneous bleeding. Labs show a Factor VIII deficiency that boards associate with a related factor. That factor is _______.",[
+["autosomal dominant","Not its inheritance pattern."],
+["acquired from vitamin K deficiency","Hemophilia C is genetic."]]),
+Q(2,T,"hard",true,"A male infant has spontaneous bleeding. Labs show a Factor VIII deficiency that boards associate with a related factor. That factor is _______.",[
 ["von Willebrand factor","A cousin of Factor VIII with similar presentation."],
 ["Hageman factor","That is Factor XII."],
 ["prothrombin","Factor II is vitamin K-dependent."],
 ["thromboplastin","Tissue factor for the extrinsic pathway."]]),
-Q(1,T,"medium",false,"Treatment for hemophilia A, B and C is mainly _______.",[
-["IV replacement of the missing clotting factor","Replaces the deficient factor."],
+Q(2,T,"medium",false,"Treatment for hemophilia A, B and C is mainly _______.",[
+["IV replacement of the missing clotting factor","The deficient factor is replaced directly."],
 ["oral vitamin K","Vitamin K does not fix a genetic factor deficiency."],
-["plasmin infusion","Plasmin breaks clots."],
+["plasmin infusion","Plasmin breaks clots down."],
 ["heparin","An anticoagulant would worsen bleeding."]]),
-Q(2,S,"medium",true,"Which pair is correct?",[
+Q(2,S,"hard",true,"A patient with cirrhosis and vitamin K deficiency bruises easily with prolonged bleeding. The best mechanism is _______.",[
+["impaired synthesis of clotting factors","The liver makes clotting factors, and vitamin K is needed for II, VII, IX and X."],
+["excess plasmin from thrombocytosis","Thrombocytosis causes excess clotting."],
+["isolated Factor VIII deficiency","That describes hemophilia A, an X-linked disorder."],
+["hyperinsulinemia blocking plasminogen","That would favor clotting, not bleeding."]]),
+Q(2,S,"medium",false,"Thrombocytopenia causes _______, whereas thrombocytosis causes _______.",[
+["excessive bleeding; excessive clotting","Fewer platelets weaken the plug; more promote clots."],
+["excessive clotting; excessive bleeding","The effects are reversed."],
+["excessive bleeding; excessive bleeding","Excess platelets favor clotting."],
+["excessive clotting; excessive clotting","Low platelets cause bleeding."]]),
+Q(2,S,"medium",false,"A tendency to form abnormal clots, producing a hypercoagulable state, is called _______.",[
+["thrombophilia","Abnormal clot formation with hypercoagulability."],
+["thrombocytopenia","Low platelets with bleeding."],
+["purpura","Vessel fragility bruising."],
+["hemophilia","Factor deficiency with bleeding."]]),
+Q(2,S,"hard",false,"A patient with sepsis first forms widespread clots, uses up platelets and clotting factors, then bleeds excessively. This is _______.",[
+["disseminated intravascular coagulation","Excess clotting is followed by depletion and bleeding."],
+["hemophilia A","A single Factor VIII deficiency with bleeding only."],
+["thrombocytosis","Excess platelets with clotting only."],
+["purpura","Age-related vessel fragility."]]),
+Q(2,S,"medium",true,"An elderly patient has flat purple-brown patches from fragile, sun-damaged vessels. These are _______.",[
+["purpura","Age-related fragility with many leaking vessels."],
+["petechiae","Petechiae are tiny pinpoint bruises."],
+["ecchymosis","A single large deep-purple bruise, often traumatic."],
+["pallor","Pallor is paleness from vasoconstriction."]]),
+Q(2,S,"medium",true,"A pinpoint bruise is a(n) _______, while a large deep-purple traumatic bruise is a(n) _______.",[
+["petechia; ecchymosis","Size distinguishes them."],
+["ecchymosis; petechia","The terms are reversed."],
+["purpura; hematoma","Purpura reflects age-related fragility."],
+["hematoma; purpura","A hematoma is any blood collection outside vessels."]]),
+
+// ================= SUBJECT 3: Injury Terms, Mediators & Arachidonic Acid (Wk 6) =================
+Q(3,S,"easy",true,"Injury caused by a provider's treatment, such as a missed history leading to fractured ribs, is _______.",[
+["iatrogenic","Provider-induced injury."],
+["idiopathic","Unknown or poorly understood cause."],
+["etiologic","Etiology is simply the cause."],
+["pathogenic","Pathogenesis is the mechanism."]]),
+Q(3,S,"medium",true,"Which pair is correct?",[
 ["idiopathic: unknown cause; etiology: cause","Idiopathic means unknown or poorly understood."],
-["idiopathic: provider-induced; etiology: mechanism","Provider-induced is iatrogenic."],
-["iatrogenic: unknown cause; etiology: mechanism","Mechanism is pathogenesis."],
-["iatrogenic: cause; etiology: provider-induced","Both reversed."]]),
-Q(2,S,"medium",false,"Which mediators are anti-inflammatory?",[
-["lipoxins and cortisol","Listed anti-inflammatory mediators."],
-["bradykinin and leukotrienes","Pro-inflammatory."],
+["idiopathic: provider-induced; etiology: mechanism","Provider-induced is iatrogenic, and mechanism is pathogenesis."],
+["iatrogenic: unknown cause; etiology: mechanism","Both definitions are wrong."],
+["iatrogenic: cause; etiology: provider-induced","Both definitions are swapped."]]),
+Q(3,S,"medium",true,"Which is NOT one of the five cardinal signs of inflammation, SHARP?",[
+["fever","Fever can occur but is not always present, so it is not cardinal."],
+["altered function","A cardinal sign."],
+["redness","A cardinal sign, also called erythema or rubor."],
+["swelling","A cardinal sign, also called edema."]]),
+Q(3,S,"medium",true,"Tissue injury triggers mast cell degranulation, and histamine causes _______ producing redness and heat, and _______ producing swelling.",[
+["vasodilation; increased capillary permeability","Hyperemia gives erythema and calor; leaking serum gives edema."],
+["vasoconstriction; increased capillary permeability","Histamine dilates vessels."],
+["vasodilation; decreased capillary permeability","Permeability increases."],
+["vasoconstriction; decreased capillary permeability","Both effects are reversed."]]),
+Q(3,T,"medium",true,"Mast cells degranulate in allergy through bound _______, but in tissue injury through _______ from damaged cells.",[
+["IgE; cytokine signals","Injured tissue releases cytokines that trigger degranulation."],
+["IgG; complement C3b","Neither is the usual trigger."],
+["IgM; thromboxane","IgM is not bound to mast cells."],
+["IgA; fibrin strands","IgA is a secretory antibody."]]),
+Q(3,S,"medium",true,"Phospholipase A2 converts membrane phospholipids to arachidonic acid, whose COX pathway yields _______ and whose lipoxygenase pathway yields _______.",[
+["prostaglandins; leukotrienes","Both are pro-inflammatory eicosanoids."],
+["leukotrienes; prostaglandins","The pathways are reversed."],
+["lipoxins; histamine","Lipoxins are anti-inflammatory, and histamine is not an arachidonate product."],
+["thromboxane; bradykinin","Bradykinin is a kinin made from plasma proteins."]]),
+Q(3,T,"hard",true,"Which agent and target block both prostaglandin and leukotriene production?",[
+["corticosteroid inhibiting phospholipase A2","Blocks arachidonic acid formation, so both pathways."],
+["ibuprofen inhibiting COX","NSAIDs block only the prostaglandin side."],
+["acetaminophen inhibiting COX","Tylenol is an analgesic without anti-inflammatory action."],
+["aspirin inhibiting lipoxygenase","NSAIDs do not block the lipoxygenase side."]]),
+Q(3,T,"medium",false,"For an acutely inflamed sprain, ibuprofen is preferred over acetaminophen because it _______.",[
+["reduces prostaglandin-driven inflammation","NSAIDs block COX, while Tylenol only blunts pain perception."],
+["blocks phospholipase A2","That is the steroid target."],
+["is harder on the liver","Tylenol is harder on the liver; ibuprofen affects kidneys and stomach."],
+["blocks leukotrienes","NSAIDs leave the lipoxygenase pathway intact."]]),
+Q(3,S,"medium",false,"Which pair is anti-inflammatory?",[
+["lipoxins and cortisol","The listed anti-inflammatory mediators."],
+["bradykinin and leukotrienes","Both are pro-inflammatory."],
 ["TNF and IL-6","Pro-inflammatory cytokines."],
-["nitric oxide and ROS","Inflammatory or damaging."]]),
-Q(2,T,"hard",true,"A patient with chronic low-grade inflammation has elevated CRP. The cytokine most directly driving hepatic CRP output is _______, produced by _______.",[
-["TNF; M1 macrophages","TNF from M1 macrophages stimulates the liver."],
+["nitric oxide and ROS","Inflammatory or damaging mediators."]]),
+Q(3,T,"hard",true,"A patient with chronic low-grade inflammation has elevated C-reactive protein. The cytokine most directly driving hepatic CRP output is _______, produced by _______.",[
+["TNF; M1 macrophages","TNF from inflammatory macrophages stimulates the liver."],
 ["IL-10; Treg cells","IL-10 is suppressive."],
-["TNF; M2 macrophages","M2 secretes growth factors."],
-["IL-4; Th2 cells","Drives IgE, not CRP."]]),
-Q(2,T,"medium",false,"Free radical injury occurs when an _______ steals electrons from other molecules, a process called _______.",[
-["unpaired electron; oxidation","Reactive oxygen species oxidize nearby molecules."],
-["paired electron; reduction","Not free radical injury."],
+["TNF; M2 macrophages","M2 macrophages secrete growth factors."],
+["IL-4; Th2 cells","IL-4 drives IgE, not CRP."]]),
+Q(3,T,"medium",false,"Free radical injury occurs when an _______ steals electrons from other molecules, a process called _______.",[
+["unpaired electron; oxidation","Reactive oxygen species oxidize neighboring molecules."],
+["paired electron; reduction","This is not free radical injury."],
 ["unpaired electron; reduction","The victim molecule is oxidized."],
 ["paired electron; oxidation","Free radicals have unpaired electrons."]]),
-Q(2,S,"hard",false,"A reflex pathway to the injured area first produces pallor and cool skin, followed hours later by redness and heat. These reflect, respectively, _______.",[
-["sympathetic vasoconstriction, then histamine vasodilation","Neurogenic first, chemical later."],
-["histamine vasodilation, then vasoconstriction","Reversed."],
-["parasympathetic spasm, then thromboxane","Not the sequence."],
-["plasmin release, then CRP","Not related."]]),
-Q(3,S,"medium",true,"The acute phase lasts about _______ for a minor injury, features SHARP, and is where _______ is appropriate.",[
-["48 hours; RICE or POLICE","Limit extent of active congestion."],
-["3 to 5 days; contrast therapy","That is subacute."],
-["5+ days; heat","That is chronic."],
+Q(3,S,"hard",false,"A reflex first produces pallor and cool skin at an injury, followed hours later by redness and heat. These reflect, respectively, _______.",[
+["sympathetic vasoconstriction, then histamine vasodilation","Neurogenic response first, chemical response later."],
+["histamine vasodilation, then sympathetic vasoconstriction","The order is reversed."],
+["parasympathetic spasm, then thromboxane release","Not the sequence."],
+["plasmin release, then CRP production","These are unrelated to the described signs."]]),
+
+// ================= SUBJECT 4: Phases of Inflammation & Exudates (Wk 6) =================
+Q(4,S,"medium",true,"Edema leaving capillaries with inflammatory material is _______, whereas non-inflammatory edema from Starling imbalance is _______.",[
+["exudate; transudate","Exudate carries inflammatory material; transudate does not."],
+["transudate; exudate","The terms are reversed."],
+["exudate; exudate","Non-inflammatory edema is transudate."],
+["transudate; transudate","Inflammatory edema is exudate."]]),
+Q(4,S,"medium",true,"The acute phase lasts about _______ for a minor injury, shows SHARP, and is when _______ is appropriate.",[
+["48 hours; RICE or POLICE","The goal is to limit the extent of active congestion."],
+["3 to 5 days; contrast therapy","That is the subacute phase."],
+["5 or more days; heat","That is the chronic phase."],
 ["48 hours; heat","Heat adds vasodilation to active inflammation."]]),
-Q(3,T,"medium",true,"The most abundant and first exudate to appear, resembling blister fluid, is _______.",[
+Q(4,S,"medium",true,"Active congestion differs from passive congestion in that _______.",[
+["histamine is still actively released","Histamine release ends by the subacute passive phase."],
+["histamine is no longer released","That describes passive congestion."],
+["plasmin is actively released","Plasmin is not the mediator."],
+["Factor XII is no longer active","Unrelated to congestion."]]),
+Q(4,S,"medium",true,"Histamine is no longer actively released, yet congestion persists at day 4. This is the _______ phase.",[
+["subacute passive congestion","3 to 5 days: histamine inactive but normal flow not restored."],
+["acute active congestion","Active congestion has ongoing histamine release in the first 48 hours."],
+["chronic anabolic","Chronic is repair and rebuilding."],
+["hemostatic","Hemostasis is the bleeding response."]]),
+Q(4,T,"medium",true,"The most abundant and first exudate, resembling blister fluid, is _______.",[
 ["serous","Mostly water."],
 ["fibrinous","Clot strands with serous fluid."],
 ["purulent","Neutrophils and bacteria."],
-["hemorrhagic","Not one of the three taught."]]),
-Q(3,T,"medium",false,"Fibrinous exudate in the inflamed heart sac, producing a friction rub, is called _______.",[
-["pericarditis","Fibrinous exudate in organs reducing friction."],
-["tendonitis","Inflamed tendon."],
-["vasculitis","Inflamed vessels."],
-["pleuritis","Inflammation of the lung lining."]]),
-Q(3,T,"hard",true,"A patient on day 4 of an ankle sprain has persistent swelling. Which intervention fits the subacute phase?",[
-["passive movement and cautious hot/cold alternation","Pumping effect; start moving tissue."],
-["intense heat applied continuously","Heat can reintroduce inflammation."],
-["complete rest for weeks","Rest alone gives fibrosis."],
-["active strengthening at maximum load","Premature for this phase."]]),
-Q(3,T,"medium",false,"In the chronic phase (5+ days) normal healing is _______ and benefits from _______.",[
-["anabolic; heat and improved circulation","Needs oxygen and nutrients."],
+["transudate","Non-inflammatory edema is not an exudate."]]),
+Q(4,S,"medium",true,"A patient with pneumonia has a pleural friction rub. The exudate is most likely _______.",[
+["fibrinous","Fibrin strands cause friction rubs in pleuritis or pericarditis."],
+["serous","Watery blister-like fluid does not cause friction."],
+["purulent","Neutrophils plus bacteria are called pus."],
+["transudate","Non-inflammatory edema."]]),
+Q(4,T,"medium",false,"Suppurative, purulent and pus all describe an exudate containing _______.",[
+["neutrophils and bacteria","Pus is dead neutrophils and bacteria."],
+["fibrin strands","That is fibrinous."],
+["water only","That is serous."],
+["eosinophils and parasites","Not pus."]]),
+Q(4,T,"medium",true,"Debridement in the subacute phase is performed by _______, and the preferred type is _______.",[
+["macrophages; M2","M2 cleans debris while releasing growth factors."],
+["neutrophils; M1","Neutrophils form pus, and M1 sustains inflammation."],
+["macrophages; M1","M1 secretes nitric oxide and delays healing."],
+["platelets; M2","Platelets form plugs; they do not debride."]]),
+Q(4,T,"medium",false,"POLICE improves on RICE by adding _______ to rest.",[
+["optimal loading","Controlled loading stimulates remodeling."],
+["complete immobilization","This is the opposite of loading."],
+["continuous heat","Heat is not part of the acronym."],
+["corticosteroid injection","Not part of POLICE."]]),
+Q(4,T,"hard",true,"On day 1 of an ankle sprain a patient applies heat, and the swelling worsens. The likely reason is _______.",[
+["heat adds vasodilation to ongoing histamine release","More flow and fluid worsen active congestion."],
+["heat suppresses phospholipase A2","Heat does not block arachidonic acid formation."],
+["heat activates plasmin","Not the mechanism."],
+["heat converts M1 to M2 macrophages","No such effect."]]),
+Q(4,T,"hard",true,"A patient on day 4 of an ankle sprain still has swelling and stiffness. Which intervention fits the subacute phase?",[
+["passive movement with cautious hot and cold alternation","Starts moving tissue while pumping out congestion."],
+["continuous intense heat","Heat can reintroduce inflammation."],
+["complete rest for weeks","Rest alone causes fibrosis."],
+["maximal active strengthening","Premature for this phase."]]),
+Q(4,T,"medium",false,"In the chronic phase of normal healing the tissue is in an _______ state and benefits from _______.",[
+["anabolic; heat and improved circulation","Healing needs oxygen and nutrients."],
 ["catabolic; ice only","Wrong state and therapy."],
-["exudative; rest only","That is acute."],
-["passive congestion; ice","That is subacute."]]),
-Q(3,T,"medium",true,"Tissue damage activates mast cells, which also degranulate with _______ in allergy.",[
-["IgE","Allergen binds mast cell IgE."],
-["IgG","Not the allergy antibody."],
-["IgM","Not bound to mast cells."],
-["IgA","Secretory antibody."]]),
-Q(4,S,"medium",true,"Granulation tissue consists of _______ and _______.",[
+["exudative; rest only","Exudation is the acute phase."],
+["passive congested; ice","That is the subacute phase."]]),
+
+// ================= SUBJECT 5: Macrophages, Collagen & Repair (Wk 6) =================
+Q(5,T,"medium",true,"Whether M1 or M2 macrophages dominate repair depends mainly on whether _______ is already present.",[
+["systemic inflammation or fight-or-flight","Stressed cells favor inflammatory M1 cells."],
+["a high platelet count","Not the deciding factor."],
+["elevated albumin","Albumin sets oncotic pressure."],
+["Factor VIII","Unrelated to macrophage type."]]),
+Q(5,S,"hard",true,"During debridement in a patient with systemic inflammation, macrophages secrete nitric oxide and TNF. This predicts _______.",[
+["chronic inflammation and rigid fibrotic healing","M1 perpetuates inflammation and activates myofibroblasts."],
+["growth factor release and collagen remodeling","That is the M2 effect."],
+["rapid primary-intention closure","M1 does not drive this."],
+["resolution without scarring","M1 delays resolution."]]),
+Q(5,S,"medium",true,"M1 macrophages activate _______, which contract the area and promote _______.",[
+["myofibroblasts; fibrosis and stiffness","Rigid healing can lead to adhesive capsulitis."],
+["osteoclasts; bone resorption","Not an M1 effect in healing."],
+["plasma cells; IgE secretion","Plasma cells make antibodies."],
+["platelets; thromboxane release","Platelets are not activated by M1."]]),
+Q(5,T,"medium",true,"Normal healing first lays down disorganized collagen type _______, then remodels it to type _______ through tensile stress and M2 activity.",[
+["III; I","The haystack type III is replaced by stronger type I."],
+["I; III","The order is reversed."],
+["II; I","Type II is cartilage collagen."],
+["IV; II","Not the remodeling sequence."]]),
+Q(5,T,"medium",true,"Fibroblasts orient collagen along lines of tensile force, which is the rationale for _______.",[
+["rehab, loading and adjustments after injury","Motion remodels scar into organized tissue."],
+["prolonged rest only","Rest alone leaves disorganized fibrotic collagen."],
+["heat in the acute phase","Not the fibroblast rationale."],
+["corticosteroids","They block arachidonic acid, not remodeling."]]),
+Q(5,S,"medium",true,"Granulation tissue consists of _______ and _______.",[
 ["fibroblasts; new blood vessels","Collagen synthesis and angiogenesis."],
 ["neutrophils; pus","That is an exudate."],
-["platelets; fibrin","Clot components."],
+["platelets; fibrin","Those are clot components."],
 ["myofibroblasts; calcium","Not its composition."]]),
-Q(4,T,"hard",true,"In a granuloma, the outer rim of fibrous scar may calcify, which is a form of _______ and is _______.",[
-["dystrophic calcification; both good and bad","Walls off TB but leaves calcified tissue."],
-["metastatic calcification; harmful only","Calcium levels are normal."],
-["keloid; harmful only","Not a keloid."],
-["proud flesh; beneficial only","Not applicable."]]),
-Q(4,S,"medium",false,"Epithelium heals best, whereas neuron cell bodies and cardiac muscle _______.",[
-["regenerate poorly or not at all","Limited mitotic ability."],
-["heal by primary intention","Only regenerative tissue can."],
-["form keloids","Keloids are fibroblastic."],
-["regenerate fastest","Not the case."]]),
-Q(4,S,"medium",false,"Wallerian degeneration is degeneration of the _______ of an axon cut from the cell body.",[
-["distal portion","It cannot reconnect."],
-["proximal portion","Proximal axon may regrow."],
-["cell body only","Not the definition."],
-["myelin only","Not the definition."]]),
-Q(4,S,"medium",false,"Which factor most worsens healing outcomes?",[
-["obesity, sedentary lifestyle and pro-inflammatory diet","Promote M1 and chronic inflammation."],
-["adequate protein and vitamin C","Support collagen."],
-["early controlled motion","Promotes remodeling."],
-["adequate sleep","Supports growth hormone."]]),
-Q(4,T,"medium",true,"A keloid is _______; people with darker skin have a genetic tendency to form them.",[
+Q(5,S,"medium",false,"VEGF released by new tissue growth acts as a(n) _______ factor, causing new capillary _______.",[
+["angiogenesis; buds to form","VEGF restores blood supply to healing tissue."],
+["fibrinolysis; clots to dissolve","Plasmin does that."],
+["chemotactic; pus to form","Not VEGF's role."],
+["anticoagulant; plugs to dissolve","Not its function."]]),
+Q(5,T,"medium",false,"Compared with muscle, a torn ligament heals mostly by _______ because it regenerates _______.",[
+["collagen scar; poorly","Ligament tissue is permanently altered after repair."],
+["new ligament cells; well","Ligaments are not good at regenerating."],
+["collagen scar; well","Collagen scar forms because regeneration is poor."],
+["new ligament cells; poorly","Poor regeneration leads to scar, not new ligament."]]),
+Q(5,S,"medium",false,"Which factor most worsens healing outcomes?",[
+["obesity, a sedentary lifestyle and a pro-inflammatory diet","These promote M1 and chronic inflammation."],
+["adequate protein and vitamin C","These support collagen."],
+["early controlled motion","This promotes remodeling."],
+["adequate sleep and growth hormone","These support healing."]]),
+Q(5,T,"hard",true,"After an ankle sprain, a patient is told to rest completely for eight weeks and now has a stiff, fibrotic joint. The underlying problem is _______.",[
+["type III collagen never remodeled to type I without tensile loading","Lack of movement leaves disorganized collagen and fibrosis."],
+["excess M2 macrophage growth factors","M2 supports remodeling."],
+["plasmin overactivity","Plasmin lyses clots and does not cause stiffness."],
+["Factor VIII deficiency","That causes bleeding, not stiffness."]]),
+Q(5,T,"hard",false,"A chiropractic adjustment contributes to tissue remodeling mainly by _______.",[
+["providing motion and tensile force that orients fibroblast collagen","Fibroblasts respond to stress and force."],
+["blocking phospholipase A2","That is the steroid mechanism."],
+["raising plasma albumin","Albumin comes from the liver."],
+["inhibiting platelet aggregation","Not a healing mechanism."]]),
+
+// ================= SUBJECT 6: Wound Healing & Pathological Healing (Wk 6) =================
+Q(6,T,"medium",true,"A clean scalpel incision with apposed dermal edges heals by _______ intention; a deep jagged scrape heals by _______ intention.",[
+["primary; secondary","Primary leaves little scar; wide wounds fill from the bottom up with granulation tissue."],
+["secondary; primary","The terms are reversed."],
+["primary; primary","Large wounds need granulation tissue."],
+["secondary; secondary","Clean apposed edges can heal by primary intention."]]),
+Q(6,S,"medium",false,"Secondary intention healing, also called organization, depends on collagen type _______, the strongest type.",[
+["I","Type I gives the healing tissue its tensile strength."],
+["II","Type II is cartilage collagen."],
+["III","Type III is the weaker primitive collagen."],
+["IV","Type IV is basement membrane collagen."]]),
+Q(6,T,"medium",false,"Which tissue heals best, allowing primary intention healing?",[
+["epithelium","Full mitotic ability in adulthood."],
+["cardiac muscle","It regenerates about 0.5 percent per year."],
+["neuron cell bodies","They cannot regenerate."],
+["ligament","It heals with collagen scar."]]),
+Q(6,S,"medium",false,"Wallerian degeneration is degeneration of the _______ axon cut from the cell body.",[
+["distal portion","It cannot reconnect to the cell body."],
+["proximal portion","The proximal axon may regrow."],
+["entire cell body","The cell body cannot regenerate but is not what degenerates."],
+["myelin sheath only","Not the definition."]]),
+Q(6,T,"medium",true,"Unremodeled type III collagen is negatively charged and attracts Ca2+, causing _______.",[
+["dystrophic calcification","Calcium deposits in previously damaged tissue."],
+["metastatic calcification","That occurs with hypercalcemia in normal tissue."],
+["keloid formation","Excess dense collagen, not calcium."],
+["proud flesh","Excess friable granulation tissue."]]),
+Q(6,T,"medium",true,"A keloid is _______, and people with darker skin have a genetic tendency to form them.",[
 ["overproduction of dense collagen granulation tissue","Often after piercings."],
-["calcium infiltration of damaged tissue","Dystrophic calcification."],
-["friable granulation in horses","Proud flesh."],
-["distal axon degeneration","Wallerian degeneration."]]),
-Q(5,S,"easy",true,"The preferred, programmed form of cell death that leaves no inflammation is _______.",[
+["calcium infiltration of damaged tissue","That is dystrophic calcification."],
+["friable granulation tissue in horses","That is proud flesh."],
+["distal axon degeneration","That is Wallerian degeneration."]]),
+Q(6,T,"hard",false,"An unsutured wound forms friable, cauliflower-like granulation tissue that bleeds easily. This is most common in _______ and is called _______.",[
+["horses; proud flesh","Excess granulation with many fragile new vessels."],
+["humans; keloid","A keloid is dense collagen, often after piercings."],
+["horses; keloid","A keloid is not this."],
+["humans; proud flesh","It is rare in humans."]]),
+Q(6,T,"hard",true,"A tuberculous granuloma has a fibrous outer rim that eventually calcifies. This is a form of _______ and is considered _______.",[
+["dystrophic calcification; both good and bad","It walls off TB but leaves calcified tissue."],
+["metastatic calcification; harmful only","Serum calcium is normal here."],
+["keloid formation; harmful only","This is not a keloid."],
+["proud flesh; beneficial only","Not applicable."]]),
+Q(6,S,"medium",false,"In a granuloma, fused macrophages are _______ cells, whereas macrophages that successfully digested TB are _______ cells.",[
+["multinucleated giant; epithelioid","These are the two characteristic cell types of a granuloma."],
+["epithelioid; multinucleated giant","The terms are reversed."],
+["plasma; epithelioid","Plasma cells are not part of a granuloma."],
+["multinucleated giant; mast","Mast cells are not the digesting cell type."]]),
+
+// ================= SUBJECT 7: Cell Death & Necrotic Patterns (Wk 7) =================
+Q(7,S,"easy",true,"The preferred, programmed form of cell death that leaves no inflammation is _______.",[
 ["apoptosis","Packaged fragments are cleared by phagocytes."],
 ["necrosis","Accidental and inflammatory."],
 ["pyroptosis","Programmed but inflammatory."],
-["hydropic change","Reversible injury."]]),
-Q(5,S,"hard",false,"A cell with cloudy swelling shows chromatin condensation. This signals _______.",[
-["irreversible injury leading to death","Pyknosis means nuclear damage."],
-["reversible injury","Reversible only until the nucleus is damaged."],
-["hyperplasia","An adaptation."],
-["metaplasia","An adaptation."]]),
+["hydropic change","This is reversible injury."]]),
+Q(7,S,"medium",true,"Pyroptosis differs from apoptosis because it is programmed but occurs mainly in _______ cells and _______ inflammation.",[
+["inflammatory; creates","Programmed death that still produces inflammation."],
+["inflammatory; avoids","Avoiding inflammation describes apoptosis."],
+["epithelial; creates","It is seen primarily in inflammatory cells."],
+["epithelial; avoids","Wrong cell type and wrong effect."]]),
+Q(7,S,"medium",true,"The nuclear changes of irreversible injury, in order, are _______, _______ and _______.",[
+["pyknosis; karyorrhexis; karyolysis","Chromatin condenses, fragments, then fades."],
+["karyorrhexis; pyknosis; karyolysis","Condensation precedes fragmentation."],
+["karyolysis; pyknosis; karyorrhexis","Nuclear fading comes last."],
+["pyknosis; karyolysis; karyorrhexis","Fragmentation occurs before fading."]]),
+Q(7,T,"medium",true,"Which nuclear change is seen only in necrosis and not in apoptosis?",[
+["karyolysis","Nuclear fading occurs only in necrosis."],
+["pyknosis","Chromatin condensation occurs in both."],
+["karyorrhexis","Chromatin fragmentation occurs in both."],
+["hydropic change","This is reversible injury before the nucleus is affected."]]),
+Q(7,S,"medium",false,"Hydropic change and cloudy swelling are reversible until the _______ is damaged, and programmed death is dictated by the _______.",[
+["nucleus; mitochondria","Nuclear damage marks irreversibility; mitochondria dictate apoptosis."],
+["mitochondria; nucleus","The organelles are swapped."],
+["nucleus; lysosome","Lysosomes do not dictate programmed death."],
+["membrane; mitochondria","Membrane leakiness is part of reversible injury."]]),
+Q(7,S,"hard",true,"After an acute myocardial infarction, histology shows dead cardiomyocytes with preserved cell outlines. This is _______ necrosis caused by _______.",[
+["coagulative; ischemia","Ischemia preserves the basic cell outline."],
+["liquefactive; enzymatic lysis","Liquefactive necrosis dissolves cell membranes."],
+["caseous; hypersensitivity","Caseous necrosis is cheesy, as in TB."],
+["fibrinoid; immune complexes","Fibrinoid necrosis occurs in vessel walls in type III vasculitis."]]),
+Q(7,T,"medium",true,"Brain infarction produces _______ necrosis because lipid-rich tissue undergoes _______.",[
+["liquefactive; cell lysis","The cell membranes dissolve and the tissue melts away."],
+["coagulative; ischemic preservation","Coagulative necrosis preserves cell outlines."],
+["caseous; granuloma formation","Caseous necrosis is seen in TB."],
+["enzymatic fat; lipase release","That is pancreatic injury."]]),
+Q(7,S,"hard",true,"A patient with pulmonary tuberculosis has a lung lesion with a cheesy necrotic center combining ischemia and cell lysis. This is _______ necrosis.",[
+["caseous","Combined coagulative and liquefactive features within a granuloma."],
+["gangrenous","Gangrenous necrosis combines ischemia with bacterial lysis."],
+["coagulative","Pure ischemic necrosis lacks cheesy liquefaction."],
+["fibrinoid","Fibrinoid necrosis affects vessel walls in type III vasculitis."]]),
+Q(7,T,"medium",false,"A granuloma with a necrotic cheesy center is called _______, always seen in _______.",[
+["caseating; tuberculosis","TB always forms caseous necrosis."],
+["non-caseating; tuberculosis","TB granulomas are caseating."],
+["caseating; allergy","Allergy is a type I hypersensitivity, not granulomatous."],
+["non-caseating; lupus","Lupus causes fibrinoid necrosis in vessels."]]),
+Q(7,S,"medium",true,"Dry gangrene is predominantly _______ necrosis, whereas wet gangrene adds _______.",[
+["coagulative; bacterial lysis","Wet gangrene is ischemia plus liquefactive bacterial lysis."],
+["liquefactive; ischemia","The pattern is reversed."],
+["fibrinoid; complement activation","Not the gangrene mechanism."],
+["caseous; granuloma formation","Not the gangrene mechanism."]]),
+Q(7,T,"hard",true,"A diabetic patient has a blackened, foul-smelling foot ulcer with poor sensation and poor perfusion. Which combination explains the wet gangrene?",[
+["ischemia, neuropathy and bacterial infection","Poor flow, no sensation to detect wounds, and no white cell delivery."],
+["metastatic calcification and hypercalcemia","Not the mechanism."],
+["transudate from low oncotic pressure","Not the mechanism of gangrene."],
+["fibrinoid vasculitis and complement activation","That is type III hypersensitivity, not diabetic gangrene."]]),
+Q(7,T,"hard",false,"A hiker with severe frostbite develops a blackened, dry, non-infected fingertip. The pattern most resembles _______ necrosis.",[
+["coagulative","Dry gangrene is predominantly ischemic and uninfected."],
+["liquefactive","Infection is absent."],
+["caseous","This is a TB pattern."],
+["enzymatic fat","This is a pancreatic pattern."]]),
+Q(7,S,"hard",true,"Acute pancreatitis causes chalky deposits in peripancreatic fat. The mechanism is _______.",[
+["digestive lipases spilling into supportive fat tissue","This is enzymatic fat necrosis."],
+["immune complexes depositing in vessel walls","That is fibrinoid necrosis."],
+["ischemia preserving adipocyte outlines","That is coagulative necrosis."],
+["neutrophil pus inside the duct","That is liquefactive necrosis."]]),
+Q(7,S,"hard",true,"A patient with lupus develops vasculitis with vessel wall bleeding, complement activation and fibrin deposition. This is _______ necrosis.",[
+["fibrinoid","Type III hypersensitivity vasculitis, as in lupus and rheumatoid arthritis."],
+["coagulative","Ischemic necrosis of solid organs."],
+["liquefactive","Enzymatic or bacterial dissolution of tissue."],
+["caseous","Cheesy TB necrosis."]]),
+Q(7,S,"easy",true,"Injury at the cell level is often characterized by _______.",[
+["cloudy swelling","Hydropic change (water influx) produces cloudy swelling during reversible cellular injury."],
+["steatotic change","Steatosis is abnormal intracellular triglyceride accumulation, not general acute cell injury."],
+["pyroptosis","Pyroptosis is a form of programmed inflammatory cell death, not reversible cell injury."],
+["chemotaxis","Chemotaxis is leukocyte migration along a chemical gradient."]]),
+Q(7,S,"medium",true,"Cloudy swelling is most significant when _______.",[
+["it disrupts the nucleus","Cellular injury remains reversible until nuclear damage occurs (beginning with pyknosis)."],
+["it follows viral infection","Reversibility depends on nuclear integrity rather than viral etiology."],
+["it appears in the ankles","Ankle swelling is interstitial edema rather than intracellular cloudy swelling."],
+["it happens in the interstitium","Cloudy swelling is an intracellular fluid compartment change, not interstitial."]]),
+Q(7,T,"easy",true,"Which cellular organelle is the most critical to the determination of cellular resilience?",[
+["mitochondria","Mitochondria pump excess water out of injured cells to maintain homeostasis and regulate apoptosis."],
+["smooth ER","Smooth ER swells during hydropic change but does not govern cellular survival."],
+["Golgi apparatus","The Golgi apparatus packages proteins rather than dictating cellular resilience."],
+["rough ER","Rough ER swells with water influx but does not control cell survival."]]),
+Q(7,S,"easy",true,"Pyknosis means there is degeneration of _______.",[
+["the nucleus","Pyknosis is chromatin condensation marking the onset of irreversible nuclear destruction."],
+["the cell membrane","Membrane blebbing or rupture involves the plasma membrane, not pyknosis."],
+["the endoplasmic reticulum","ER swelling occurs during reversible hydropic change."],
+["lysosomes","Lysosomal rupture occurs later during autolysis and necrosis."]]),
+Q(7,T,"medium",true,"Which of the following enzymes is critical to apoptosis?",[
+["caspase enzymes","Caspases dismantle the nucleus and cellular proteins into membrane-wrapped apoptotic bodies."],
+["cytochrome oxidase","Cytochrome oxidase is a mitochondrial electron transport enzyme, not the executioner protease of apoptosis."],
+["glucose 6 phosphate dehydrogenase","G6PD functions in the pentose phosphate pathway to protect against oxidative stress."],
+["collagenase","Collagenase degrades extracellular collagen during tissue remodeling."]]),
+Q(7,S,"medium",true,"Diabetics frequently experience _______ necrosis due to vascular occlusive complications.",[
+["gangrenous","Vascular ischemia combined with neuropathy and bacterial infection predisposes diabetics to wet gangrene."],
+["coagulative","Pure coagulative necrosis occurs in solid organs like the heart without diabetic foot putrefaction."],
+["caseous","Caseous necrosis is characteristic of tuberculosis granulomas."],
+["liquefactive","Pure liquefactive necrosis occurs in brain infarcts and abscesses."]]),
+Q(7,S,"easy",true,"Gangrene involves two processes: _______ and _______.",[
+["bacterial lysis; ischemia","Gangrenous necrosis combines ischemic coagulative death with microbial putrefaction (liquefactive lysis)."],
+["bacterial lysis of cells; dystrophic calcification","Dystrophic calcification is calcium deposition in damaged tissue, not part of gangrene."],
+["solidification of blood serum; activation of complement","These processes describe coagulation and immune-complex vasculitis."],
+["complex mediated hypersensitivity; cell lysis","Immune-complex vasculitis causes fibrinoid necrosis rather than gangrene."]]),
 
-// ==================== WEEK 7 MATERIAL ====================
-// ---- Subject 6: Necrosis & Cellular Injury (Wk 7)
-Q(6,S,"easy",true,"The three progressive nuclear changes of irreversible cell injury, in sequential order, are _______, _______, and _______.",[
-["pyknosis; karyorrhexis; karyolysis","Chromatin condenses (pyknosis), fragments (karyorrhexis), and then fades (karyolysis)."],
-["karyorrhexis; pyknosis; karyolysis","Chromatin condensation precedes fragmentation."],
-["karyolysis; pyknosis; karyorrhexis","Nuclear fading is the final step, occurring after condensation and fragmentation."],
-["pyknosis; karyolysis; karyorrhexis","Fragmentation occurs before complete nuclear fading."]]),
-Q(6,T,"medium",true,"Which nuclear change is seen exclusively in necrosis and NOT in apoptosis?",[
-["karyolysis","In necrosis the nucleus fades away chaotically, whereas apoptosis packages nuclear fragments into apoptotic bodies."],
-["pyknosis","Chromatin condensation occurs in both apoptosis and necrosis."],
-["karyorrhexis","Chromatin fragmentation occurs in both apoptosis and necrosis."],
-["membrane blebbing","Membrane blebbing occurs during early reversible injury and apoptotic packaging."]]),
-Q(6,S,"medium",true,"Programmed cell death is dictated primarily by the _______ and avoids inflammation by forming _______.",[
-["mitochondria; apoptotic bodies","Mitochondria regulate programmed cell death, packaging debris into membrane-wrapped apoptotic bodies for phagocytosis."],
-["nucleus; myelin figures","Myelin figures are phospholipid whorls seen in reversible injury and necrosis."],
-["lysosome; pus","Lysosomal rupture and neutrophil pus characterize liquefactive necrosis."],
-["endoplasmic reticulum; transudate","ER swelling is a reversible hydropic change; transudate is non-inflammatory edema."]]),
-Q(6,S,"hard",true,"Following an acute myocardial infarction, histology reveals dead cardiomyocytes with preserved basic cellular outlines and lost nuclei. This represents _______ necrosis caused by _______.",[
-["coagulative; ischemia","Ischemic injury denatures structural proteins while preserving cell outlines, classic for myocardial infarction."],
-["liquefactive; enzymatic lysis","Liquefactive necrosis dissolves cell membranes into liquid pus, typical of brain infarcts and abscesses."],
-["caseous; hypersensitivity","Caseous necrosis produces cheese-like debris in tuberculosis granulomas."],
-["fibrinoid; immune complexes","Fibrinoid necrosis involves fibrin and complement deposition in vasculitic vessel walls."]]),
-Q(6,T,"medium",true,"Cerebral infarction produces _______ necrosis because brain tissue is rich in lipids and undergoes rapid _______.",[
-["liquefactive; autolysis","High lipid content and enzymatic autolysis dissolve neural membranes into a liquid mass."],
-["coagulative; protein denaturation","Coagulative necrosis preserves tissue architecture in solid organs like the heart, not the brain."],
-["caseous; granuloma formation","Caseous necrosis is a cheesy blend of ischemia and lysis seen in tuberculosis."],
-["enzymatic fat; lipase release","Enzymatic fat necrosis occurs when pancreatic lipases spill into peripancreatic fat."]]),
-Q(6,S,"hard",true,"A patient with active pulmonary tuberculosis develops a lung lesion with a cheese-like necrotic center combining ischemia and cell lysis. This pattern is _______ necrosis.",[
-["caseous","Caseous necrosis combines coagulative ischemia and liquefactive lysis, creating friable cheesy debris in tuberculosis."],
-["gangrenous","Gangrenous necrosis combines ischemia with bacterial putrefaction, typically in extremities."],
-["coagulative","Pure coagulative necrosis preserves cell outlines without cheesy liquefaction."],
-["fibrinoid","Fibrinoid necrosis affects blood vessel walls in immune-complex vasculitis."]]),
-Q(6,T,"medium",true,"A diabetic patient develops a blackened, foul-smelling foot ulcer complicated by bacterial infection. Compared with dry gangrene, wet gangrene adds _______.",[
-["liquefactive necrosis from bacterial lysis","Dry gangrene is predominantly ischemic coagulative necrosis, whereas wet gangrene adds microbial putrefaction."],
-["fibrinoid necrosis from complement activation","Fibrinoid necrosis occurs in autoimmune vasculitis, not diabetic limb infection."],
-["enzymatic fat necrosis from pancreatic lipases","Enzymatic fat necrosis is driven by pancreatic enzymes, not bacterial putrefaction."],
-["caseous necrosis from epithelioid macrophages","Caseous necrosis is characteristic of mycobacterial granulomas."]]),
-Q(6,S,"hard",true,"Acute pancreatitis causes chalky white deposits in peripancreatic adipose tissue. The underlying mechanism is _______.",[
-["digestive lipases spilling into supportive fat tissue","Pancreatic injury releases lipases that digest surrounding adipocytes in enzymatic fat necrosis."],
-["immune complexes depositing in arterial walls","That mechanism causes fibrinoid necrosis in Type III hypersensitivity vasculitis."],
-["ischemic denaturation preserving adipocyte outlines","Ischemic preservation describes coagulative necrosis, not pancreatic lipase digestion."],
-["neutrophilic pus formation inside the pancreatic duct","Suppurative pus characterizes liquefactive abscesses rather than enzymatic fat necrosis."]]),
-Q(6,S,"hard",true,"A patient with systemic lupus erythematosus develops necrotizing vasculitis with vessel-wall bleeding. Biopsy shows complement activation and fibrin deposition, indicating _______ necrosis.",[
-["fibrinoid","Type III hypersensitivity vasculitis (e.g., lupus, rheumatoid arthritis) deposits immune complexes, complement, and fibrin in vessel walls."],
-["coagulative","Coagulative necrosis results from ischemia in solid organs rather than immune-complex vasculitis."],
-["liquefactive","Liquefactive necrosis dissolves tissues into pus via bacterial or autolytic enzymes."],
-["caseous","Caseous necrosis forms cheesy granuloma centers in tuberculosis."]]),
-Q(6,T,"medium",false,"Which statement correctly distinguishes intracellular from interstitial cellular accumulations?",[
-["intracellular buildup is more severe because the cell fails to maintain internal constancy","When the cell itself cannot maintain homeostasis, dysfunction is more symptomatic than interstitial accumulation."],
-["interstitial buildup is always fatal because it ruptures plasma membranes","Interstitial accumulations are generally less severe or asymptomatic."],
-["intracellular buildup occurs exclusively during acute inflammation","Cellular accumulations can occur with or without inflammation."],
-["interstitial buildup only involves heavy metals and misfolded amyloid","Both fluid and insoluble substances can accumulate interstitially or intracellularly."]]),
+// ================= SUBJECT 8: Starling's Forces & Edema (Wk 7) =================
+Q(8,S,"easy",true,"In normal capillaries, _______ pressure pushes fluid out and is slightly stronger than _______ pressure, so the _______ system drains the excess.",[
+["hydrostatic; oncotic; lymphatic","Net outward filtration is returned by lymphatics to the subclavian veins."],
+["oncotic; hydrostatic; venous","Oncotic pressure pulls fluid inward."],
+["hydrostatic; lymphatic; arterial","Lymphatic is a drainage system, not a pressure."],
+["oncotic; hydrostatic; hepatic","Oncotic pressure does not push fluid out."]]),
+Q(8,T,"medium",true,"Hydrostatic pressure is driven by the presence of _______, whereas oncotic pressure is driven by _______ made in the liver.",[
+["water; albumin","More water raises hydrostatic pressure; albumin draws fluid back in."],
+["albumin; water","The drivers are swapped."],
+["globulin; sodium","Not the primary drivers."],
+["fibrinogen; calcium","Not the primary drivers."]]),
+Q(8,S,"medium",true,"Non-inflammatory edema, or transudate, forms by increased hydrostatic pressure, decreased _______ pressure, or _______ obstruction.",[
+["oncotic; lymphatic","The three causes of transudate."],
+["hydrostatic; venous","Hydrostatic increase is already listed."],
+["oncotic; arterial","Arterial obstruction is not a cause."],
+["osmotic; histamine","Histamine causes inflammatory exudate."]]),
+Q(8,T,"hard",true,"Failure of the left ventricle backs blood up through the left atrium into the _______, producing _______ with exertional dyspnea.",[
+["pulmonary veins; pulmonary edema","Fluid accumulates in the lungs."],
+["inferior vena cava; pitting ankle edema","That follows right ventricular failure."],
+["aorta; ascites","The aorta is the forward direction."],
+["hepatic vein; steatosis","Not the described mechanism."]]),
+Q(8,T,"hard",true,"A patient with right ventricular failure has bilateral pitting ankle edema without inflammation. The fluid is a _______ driven by raised _______ pressure.",[
+["transudate; hydrostatic","Venous backflow raises capillary hydrostatic pressure, and gravity sends it to the legs."],
+["exudate; oncotic","No inflammatory material is present."],
+["transudate; oncotic","Oncotic pressure would be lowered, not raised."],
+["exudate; hydrostatic","Edema without inflammation is transudate."]]),
+Q(8,T,"medium",true,"Kidney disease causes pitting edema because retained sodium and water increase _______, raising capillary _______ pressure.",[
+["total body water; hydrostatic","More volume pushes fluid out of capillaries."],
+["albumin synthesis; oncotic","The kidney does not make albumin."],
+["lymph flow; oncotic","Lymph obstruction is a separate cause."],
+["histamine; osmotic","Histamine causes inflammatory edema."]]),
+Q(8,T,"medium",true,"Liver disease causes _______ edema concentrated in the abdomen, called _______, because albumin synthesis falls.",[
+["ascites; hypoalbuminemic","Low oncotic pressure causes fluid to leave capillaries."],
+["pitting ankle; hypoalbuminemic","Ankle pitting edema is the hydrostatic pattern."],
+["ascites; hypervolemic","Not the mechanism in liver disease."],
+["pitting ankle; hypervolemic","Not the mechanism in liver disease."]]),
+Q(8,T,"hard",true,"A malnourished child has a distended abdomen with a diet severely lacking protein. This is _______, whereas total caloric starvation is _______.",[
+["kwashiorkor; marasmus","Kwashiorkor is protein deficiency; marasmus is total caloric malnutrition."],
+["marasmus; kwashiorkor","The conditions are reversed."],
+["kwashiorkor; myxedema","Myxedema is severe hypothyroidism."],
+["marasmus; elephantiasis","Elephantiasis is parasitic lymph obstruction."]]),
+Q(8,T,"hard",true,"A patient with metastatic breast cancer has severe arm swelling after tumor cells invade axillary nodes. This shares a mechanism with _______, namely _______.",[
+["elephantiasis; lymphatic obstruction","Both block lymphatic drainage of interstitial fluid."],
+["cirrhosis; decreased oncotic pressure","Cirrhosis lowers albumin."],
+["heart failure; increased hydrostatic pressure","Heart failure raises venous pressure."],
+["cellulitis; increased capillary permeability","Cellulitis is inflammatory exudate."]]),
+Q(8,S,"medium",false,"Elephantiasis results from a mosquito-borne _______ that obstructs _______.",[
+["parasitic worm; lymphatic vessels","This causes massive lymphedema, often of one leg."],
+["bacterium; veins","Not the cause."],
+["virus; arteries","Not the cause."],
+["fungus; bile ducts","Not the cause."]]),
+Q(8,S,"medium",false,"Anasarca is _______, whereas myxedema is _______.",[
+["extreme generalized edema; severe hypothyroidism with skin thickening","Both are edema-related conditions."],
+["isolated abdominal fluid; parasitic lymph blockage","Those are ascites and elephantiasis."],
+["blister fluid; heart failure edema","Blister fluid is serous exudate."],
+["bruise swelling; albumin excess","Neither matches the definitions."]]),
+Q(8,S,"easy",true,"Fluid accumulating in the interstitial compartment in general is called _______.",[
+["edema","General fluid accumulation in the interstitial space is edema (classified as exudate or transudate)."],
+["ascites","Ascites is fluid accumulation specifically within the peritoneal/abdominal cavity."],
+["purpura","Purpura is purplish bruising caused by fragile, leaking blood vessels."],
+["hydropic change","Hydropic change is intracellular water accumulation causing cell swelling."]]),
+Q(8,S,"medium",true,"Under normal capillary conditions, how do plasma oncotic pressure and hydrostatic pressure compare?",[
+["oncotic pressure is less than hydrostatic pressure","Outward hydrostatic filtration slightly exceeds inward oncotic pull, leaving net fluid for lymphatics to drain."],
+["oncotic pressure exceeds hydrostatic pressure","If oncotic exceeded hydrostatic pressure, fluid would not filter out to nourish tissues."],
+["oncotic pressure equals hydrostatic pressure","Net filtration is positive because hydrostatic pressure is slightly stronger overall."],
+["oncotic pressure is too variable to measure","Plasma albumin maintains a steady oncotic pull in healthy individuals."]]),
+Q(8,T,"medium",true,"What is the source of all fluid contained within the lymphatic drainage?",[
+["excess tissue fluid","Because hydrostatic filtration exceeds oncotic reabsorption, lymphatics collect and cleanse the remaining interstitial fluid."],
+["lysosomal granules","Lysosomal granules are intracellular digestive vesicles, not lymph fluid."],
+["liquefactive necrosis","Liquefactive necrosis produces pus or liquefied dead tissue, not normal lymph."],
+["hydropic change","Hydropic change is intracellular water swelling rather than interstitial fluid."]]),
 
-// ---- Subject 7: Starling's Forces & Edema (Wk 7)
-Q(7,S,"easy",true,"In normal capillaries, _______ pressure pushes fluid out of vessels and is slightly stronger than _______ pressure, requiring the _______ system to drain excess interstitial fluid.",[
-["hydrostatic; osmotic; lymphatic","Hydrostatic pressure exceeds plasma albumin oncotic pull, so lymphatics clear the net outward filtration."],
-["osmotic; hydrostatic; venous","Osmotic pressure pulls fluid inward; hydrostatic pressure pushes outward."],
-["hydrostatic; lymphatic; arterial","Lymphatic drainage is a return vessel system, not an inward capillary pressure."],
-["osmotic; oncotic; hepatic","Osmotic and oncotic pressure refer to the same plasma protein pull."]]),
-Q(7,T,"medium",true,"Plasma oncotic pressure is generated primarily by _______ synthesized in the _______.",[
-["albumin; liver","Hepatic albumin keeps water inside capillaries; liver failure lowers oncotic pull and causes transudate."],
-["fibrinogen; bone marrow","Fibrinogen is a clotting protein made by the liver, not the main oncotic determinant."],
-["immunoglobulin; spleen","Immunoglobulins are made by plasma cells and contribute far less to oncotic pressure than albumin."],
-["hemoglobin; kidney","Hemoglobin is inside red blood cells and does not generate plasma oncotic pressure."]]),
-Q(7,S,"hard",true,"A patient with congestive heart failure develops bilateral pitting ankle edema without signs of local inflammation. The fluid accumulation is a _______ driven by _______.",[
-["transudate; increased capillary hydrostatic pressure","Venous backflow from heart failure raises capillary hydrostatic pressure, pushing protein-poor transudate out."],
-["exudate; increased capillary permeability","Exudate requires inflammatory mediators increasing vascular permeability."],
-["transudate; decreased capillary hydrostatic pressure","Lower hydrostatic pressure would reduce outward filtration rather than cause edema."],
-["exudate; lymphatic obstruction","Lymphatic blockage produces non-inflammatory transudate, not inflammatory exudate."]]),
-Q(7,T,"medium",true,"Chronic kidney disease causes generalized pitting edema primarily because fluid retention _______.",[
-["increases total body water and capillary hydrostatic pressure","Impaired renal filtration increases intravascular volume, raising hydrostatic filtration pressure."],
-["increases hepatic albumin synthesis and oncotic pull","Higher oncotic pull would draw fluid into capillaries rather than out."],
-["triggers widespread mast cell histamine degranulation","Histamine produces inflammatory exudate, whereas renal volume overload produces transudate."],
-["obstructs thoracic duct lymphatic drainage","Renal edema stems from volume-driven hydrostatic pressure, not mechanical lymph blockage."]]),
-Q(7,T,"hard",true,"A child with severe protein malnutrition (kwashiorkor) presents with a markedly distended abdomen from fluid accumulation. This abdominal fluid is called _______ and results from _______.",[
-["ascites; hypoalbuminemia lowering plasma oncotic pressure","Lack of dietary protein prevents hepatic albumin synthesis, dropping oncotic pull and causing abdominal transudate."],
-["anasarca; elevated hydrostatic pressure","Anasarca is extreme generalized whole-body edema; isolated abdominal fluid is ascites."],
-["myxedema; lymphatic parasite obstruction","Myxedema is severe hypothyroidism with skin thickening, not protein malnutrition."],
-["exudate; bacterial peritonitis","Malnutrition edema is a non-inflammatory transudate due to low albumin."]]),
-Q(7,T,"medium",false,"How do kwashiorkor and marasmus differ in nutritional etiology?",[
-["kwashiorkor is protein deficiency; marasmus is total caloric malnutrition","Both reduce hepatic albumin and cause transudate, but kwashiorkor lacks protein specifically while marasmus lacks total calories."],
-["kwashiorkor is total caloric malnutrition; marasmus is protein deficiency","The definitions are reversed."],
-["kwashiorkor raises hydrostatic pressure; marasmus blocks lymphatics","Both cause edema by lowering plasma albumin and oncotic pressure."],
-["kwashiorkor causes inflammatory exudate; marasmus causes myxedema","Neither is an inflammatory exudate or thyroid disorder."]]),
-Q(7,S,"hard",true,"A patient with metastatic breast cancer develops severe arm swelling after tumor cells invade axillary lymph nodes. This edema shares a mechanism with _______, namely _______.",[
-["elephantiasis; lymphatic obstruction","Both metastatic tumor cells and mosquito-borne parasitic worms block lymphatic drainage of interstitial fluid."],
-["cirrhosis; decreased oncotic pressure","Cirrhosis lowers albumin synthesis rather than mechanically obstructing lymph vessels."],
-["congestive heart failure; increased hydrostatic pressure","Heart failure increases venous hydrostatic pressure rather than blocking lymphatics."],
-["acute cellulitis; increased capillary permeability","Cellulitis produces inflammatory exudate via vascular permeability."]]),
-Q(7,S,"medium",false,"Which pairing correctly matches an edema term with its defining clinical feature?",[
-["anasarca: extreme generalized edema; myxedema: severe hypothyroidism with skin thickening","Anasarca is massive whole-body fluid accumulation; myxedema is doughy skin thickening in hypothyroidism."],
-["anasarca: isolated abdominal fluid; myxedema: parasitic lymph blockage","Isolated abdominal fluid is ascites; parasitic lymph blockage is elephantiasis."],
-["anasarca: inflammatory blister fluid; myxedema: pitting ankle edema from heart failure","Blister fluid is serous exudate; heart failure causes hydrostatic transudate."],
-["anasarca: localized bruise swelling; myxedema: hepatic albumin excess","Neither matches the clinical definitions."]]),
+// ================= SUBJECT 9: Lipid Accumulations (Wk 7) =================
+Q(9,S,"medium",true,"Fat accumulation outside an adipocyte is always pathological; intracellular triglyceride buildup is called _______, most commonly in the _______.",[
+["steatosis; liver","The liver synthesizes and distributes fats and is often injured."],
+["lipofuscinosis; spleen","Lipofuscin is oxidized age pigment."],
+["amyloidosis; kidney","Amyloid is misfolded protein."],
+["hemosiderosis; marrow","Hemosiderosis is iron buildup."]]),
+Q(9,T,"medium",false,"The liver is the usual site of steatosis because it _______ and is frequently injured by _______.",[
+["synthesizes and distributes fats; alcohol and viruses","Injury impairs fat export."],
+["stores fat as adipocytes; metastasis","Adipocytes store fat, not liver cells."],
+["synthesizes albumin only; iron","Not the explanation."],
+["filters blood; mercury","Not the explanation."]]),
+Q(9,S,"medium",false,"The most common type of fatty liver disease is _______, and its progression to inflammation and cirrhosis is _______.",[
+["non-alcoholic fatty liver disease; NASH","NAFLD is most common, and NASH is its inflammatory progression."],
+["alcoholic fatty liver disease; NAFLD","Alcoholic is less common."],
+["NASH; alcoholic fatty liver disease","NASH is a progression, not the most common type."],
+["alcoholic fatty liver disease; NASH","Alcoholic is less common than non-alcoholic."]]),
+Q(9,S,"hard",true,"An infant with progressive neurodegeneration has a cherry-red macular spot. The cause is lysosomal accumulation of _______ in _______.",[
+["gangliosides; Tay-Sachs disease","An enzyme deficiency causes accumulation in neurons and retina."],
+["lipofuscin; hemochromatosis","Lipofuscin is age pigment."],
+["copper; Wilson disease","Wilson disease causes corneal rings."],
+["amyloid fibrils; multiple myeloma","Amyloid is misfolded protein."]]),
+Q(9,S,"medium",false,"Tay-Sachs disease is a(n) _______ disorder and a _______.",[
+["autosomal recessive; sphingolipidosis","An enzyme deficiency leads to ganglioside accumulation."],
+["autosomal dominant; sphingolipidosis","Tay-Sachs is recessive."],
+["X-linked; amyloidosis","Not the pattern."],
+["autosomal recessive; steatosis","It is not steatosis."]]),
+Q(9,S,"medium",true,"Lipofuscin is the brown pigment of age, called liver spots; it harms cells mainly by _______.",[
+["generating reactive oxygen species","It is oxidized lipids, proteins and metals in lysosomes."],
+["activating complement","That is vasculitis."],
+["neutralizing red cell charge","That is rouleaux in myeloma."],
+["blocking intrinsic factor","That is pernicious anemia."]]),
+Q(9,T,"medium",false,"Liver spots on the hands of an older adult reflect _______, which is unrelated to _______.",[
+["lipofuscin accumulation; liver disease","The name comes from the pigment's color."],
+["steatosis; the skin","Steatosis is fat buildup."],
+["hemosiderosis; the spleen","Hemosiderosis is iron buildup."],
+["amyloidosis; the brain","Not the cause of liver spots."]]),
+Q(9,S,"easy",true,"The accumulation of lipids (fats) is pathological if it occurs in any cell type EXCEPT in _______.",[
+["an adipocyte","Adipocytes are specialized fat-storage cells; lipid accumulation elsewhere is pathological steatosis."],
+["astrocytes","Glial cells in the CNS do not normally store triglyceride droplets."],
+["hepatocytes","Triglyceride accumulation in hepatocytes represents fatty liver (steatosis)."],
+["cardiac muscle","Lipid buildup in cardiomyocytes indicates pathological fatty change."]]),
 
-// ---- Subject 8: Lipid, Mineral & Heavy Metal Accumulations (Wk 7)
-Q(8,S,"medium",true,"Intracellular triglyceride accumulation outside of adipocytes is called _______ and occurs most commonly in the _______.",[
-["steatosis; liver","Pathological fat accumulation outside fat cells is steatosis; the liver is most susceptible because it metabolizes fats and is exposed to alcohol and toxins."],
-["lipofuscinosis; spleen","Lipofuscin is oxidized wear-and-tear pigment in aging skin, brain, and heart."],
-["amyloidosis; kidney","Amyloidosis is extracellular deposition of misfolded beta-pleated proteins."],
-["hemosiderosis; bone marrow","Hemosiderosis is localized iron accumulation from red blood cell breakdown."]]),
-Q(8,S,"easy",false,"What is the most common cause of fatty liver disease in the general population?",[
-["non-alcoholic fatty liver disease","NAFLD is the most common form of hepatic steatosis, ahead of alcoholic fatty liver disease."],
-["Wilson disease","Wilson disease causes hepatic copper accumulation, not triglyceride steatosis."],
-["primary hemochromatosis","Hemochromatosis causes systemic iron overload rather than primary fatty liver."],
-["Tay-Sachs disease","Tay-Sachs causes lysosomal ganglioside accumulation in neurons."]]),
-Q(8,S,"hard",true,"An infant with progressive neurodegeneration exhibits a cherry-red spot on the macula during fundoscopic exam. This finding reflects lysosomal accumulation of _______ in _______.",[
-["gangliosides; Tay-Sachs disease","Enzyme deficiency in Tay-Sachs prevents ganglioside breakdown, causing buildup in brain and retinal nerve cells."],
-["lipofuscin; primary hemochromatosis","Lipofuscin causes age spots in older adults; hemochromatosis causes iron overload."],
-["copper; Wilson disease","Wilson disease produces corneal Kayser-Fleischer rings rather than a retinal cherry-red spot."],
-["amyloid fibrils; multiple myeloma","Amyloid fibrils are misfolded proteins rather than sphingolipid gangliosides."]]),
-Q(8,T,"medium",true,"Lipofuscin ('liver spots' or the brown pigment of age) accumulates in lysosomes as people age and harms cells primarily by _______.",[
-["generating reactive oxygen species from oxidized proteins and lipids","Lipofuscin consists of oxidized lipids, proteins, and metals that generate toxic ROS and impair cell function."],
-["activating complement and fibrin deposition in arterioles","That describes fibrinoid necrosis in vasculitis."],
-["neutralizing negative charges on red blood cell membranes","That describes monoclonal immunoglobulins causing rouleaux formation."],
-["blocking intrinsic factor absorption in the stomach","Intrinsic factor deficiency causes pernicious anemia, unrelated to lipofuscin."]]),
-Q(8,S,"medium",true,"A patient with hyperparathyroidism and elevated serum calcium develops calcium deposits in previously normal renal and vascular tissues. This is _______ calcification.",[
-["metastatic","Metastatic calcification occurs in normal tissues due to systemic hypercalcemia (e.g., hyperparathyroidism, hypervitaminosis D)."],
-["dystrophic","Dystrophic calcification occurs in previously damaged or necrotic tissues despite normal serum calcium."],
-["iatrogenic","Iatrogenic refers to provider-induced injury."],
-["caseous","Caseous refers to cheese-like necrosis in tuberculosis."]]),
-Q(8,T,"medium",true,"Heavy metals such as lead and mercury disrupt cellular metabolism primarily by _______.",[
-["replacing normal mineral coenzymes and inhibiting enzymes","Heavy metals mimic essential mineral cofactors, displacing them on enzymes and blocking enzymatic function while generating free radicals."],
-["increasing hepatic albumin synthesis and plasma oncotic pressure","Heavy metals impair cellular enzymes rather than raising albumin."],
-["promoting alpha-helix folding of extracellular amyloid","Amyloid pathology involves beta-pleated sheet misfolding, not heavy metal coenzyme substitution."],
-["stimulating osteoclasts to form punched-out bone lesions","Osteolytic punched-out lesions are characteristic of multiple myeloma."]]),
-Q(8,T,"medium",false,"Chronic lead exposure most characteristically accumulates in _______ and can contribute to _______.",[
-["bones and teeth; osteoporosis","Lead deposits in calcified bone and dental tissues, weakening bone matrix and promoting osteoporosis."],
-["retinal ganglion cells; cherry-red macula","Ganglioside buildup in Tay-Sachs produces the retinal cherry-red spot."],
-["corneal Descemet membrane; Kayser-Fleischer rings","Corneal copper rings occur in Wilson disease."],
-["renal tubules; Bence Jones proteinuria","Bence Jones proteinuria consists of immunoglobulin light chains in multiple myeloma."]]),
-Q(8,T,"hard",true,"A patient who consumes large amounts of contaminated fish develops tremors, numbness, ataxia, and vision loss. Which heavy metal is responsible, and how does it differ from thimerosal?",[
-["methylmercury; it crosses the blood-brain barrier whereas ethylmercury clears rapidly","Methylmercury bioaccumulates in fish and acts as a potent neurotoxin, whereas ethylmercury (thimerosal) is rapidly excreted."],
-["ethylmercury; it bioaccumulates in seafood whereas methylmercury is rapidly excreted","The properties of methylmercury and ethylmercury are reversed."],
-["lead; it crosses the blood-brain barrier whereas methylmercury stays in bone","Lead accumulates mainly in bones and teeth; methylmercury is the seafood neurotoxin."],
-["copper; it is cleared in urine whereas ethylmercury causes Kayser-Fleischer rings","Copper causes Wilson disease; ethylmercury is rapidly cleared."]]),
-Q(8,T,"medium",true,"Local iron accumulation inside macrophages within a resolving skin bruise or in the spleen during normal red blood cell turnover is called _______.",[
-["hemosiderosis","Hemosiderosis is a mild, localized, physiological iron buildup from dying red blood cells."],
-["primary hemochromatosis","Primary hemochromatosis is a severe genetic disorder of systemic iron overload."],
-["steatosis","Steatosis is abnormal intracellular triglyceride accumulation."],
-["myxedema","Myxedema is severe adult hypothyroidism."]]),
-Q(8,T,"hard",true,"A patient of Eastern European descent presents with new-onset diabetes, liver dysfunction, and metallic grayish-bronze skin pigmentation. How is the underlying iron overload managed?",[
-["periodic therapeutic phlebotomy to force bone marrow iron consumption","Removing blood stimulates erythropoiesis, pulling excess stored iron out of organs to build new red blood cells."],
-["oral iron supplementation with vitamin C to bind free ferritin","Adding iron would worsen severe iron overload in primary hemochromatosis."],
-["high-dose vitamin D to promote metastatic iron calcification","Vitamin D increases calcium absorption and does not clear systemic iron."],
-["intravenous albumin to increase renal iron filtration","Albumin restores oncotic pressure and does not treat genetic iron storage disease."]]),
-Q(8,S,"hard",true,"A young adult presents with jaundice, neurological tremors, and rusty-brown rings encircling the outer iris. This condition is caused by impaired excretion of _______.",[
-["copper","Wilson disease is a genetic defect in copper transport causing hepatic and neural damage plus corneal Kayser-Fleischer rings."],
-["iron","Iron overload causes hemochromatosis (bronze diabetes), not Kayser-Fleischer rings."],
-["lead","Lead accumulates in bones and teeth rather than forming corneal copper rings."],
-["gangliosides","Ganglioside accumulation causes Tay-Sachs disease with a retinal cherry-red spot."]]),
+// ================= SUBJECT 10: Mineral & Heavy Metal Accumulations (Wk 7) =================
+Q(10,S,"medium",true,"Calcium infiltrating previously damaged tissue with a normal serum level is _______ calcification, whereas calcium deposition in normal tissue due to hypercalcemia is _______.",[
+["dystrophic; metastatic","The two types of calcification."],
+["metastatic; dystrophic","The terms are reversed."],
+["dystrophic; iatrogenic","Iatrogenic means provider-induced."],
+["metastatic; caseous","Caseous is a necrosis pattern."]]),
+Q(10,S,"medium",true,"A patient with hyperparathyroidism has calcium deposits in normal kidney and vascular tissue. Hypervitaminosis D can cause the same _______ calcification.",[
+["metastatic","Systemic hypercalcemia deposits calcium in normal tissue."],
+["dystrophic","This requires damaged tissue and normal serum calcium."],
+["coagulative","This is a necrosis pattern."],
+["fibrinoid","This is a necrosis pattern in vessels."]]),
+Q(10,T,"hard",false,"A dachshund has calcified intervertebral discs on X-ray after chronic disc degeneration. This is _______ calcification because _______.",[
+["dystrophic; the degenerated disc attracts calcium","Previously damaged tissue leaches calcium out of the blood."],
+["metastatic; serum calcium is elevated","Serum calcium is normal here."],
+["dystrophic; serum calcium is elevated","Hypercalcemia does not apply."],
+["metastatic; the disc is normal","The disc is damaged."]]),
+Q(10,T,"medium",true,"Heavy metals disrupt metabolism mainly by _______.",[
+["replacing mineral coenzymes and inhibiting enzymes","They displace essential cofactors and generate free radicals."],
+["raising hepatic albumin","Not their effect."],
+["promoting alpha-helix folding","Amyloid has beta sheets."],
+["activating osteoclasts","That is myeloma."]]),
+Q(10,T,"medium",false,"Chronic lead exposure accumulates most characteristically in _______ and can contribute to _______.",[
+["bones and teeth; osteoporosis","Lead deposits in calcified tissue."],
+["retinal ganglion cells; cherry-red macula","That is Tay-Sachs."],
+["corneal membrane; Kayser-Fleischer rings","That is Wilson disease."],
+["renal tubules; Bence Jones proteinuria","That is myeloma."]]),
+Q(10,T,"hard",true,"A patient eating contaminated fish develops tremors, numbness, ataxia and vision loss. The metal is _______, which differs from thimerosal in that it _______.",[
+["methylmercury; crosses the blood-brain barrier","Methylmercury is a neurotoxin; ethylmercury clears rapidly."],
+["ethylmercury; bioaccumulates in fish","The properties are reversed."],
+["lead; stays in bone","Lead accumulates in bones and teeth."],
+["copper; clears in urine","Copper causes Wilson disease."]]),
+Q(10,T,"medium",true,"Local iron accumulation in a bruise or in the spleen is _______, a mild physiological buildup from dying red cells.",[
+["hemosiderosis","Localized and physiological."],
+["primary hemochromatosis","A severe genetic iron overload."],
+["steatosis","Fat accumulation."],
+["myxedema","Severe hypothyroidism."]]),
+Q(10,T,"hard",true,"A patient of Eastern European descent has diabetes, liver dysfunction and bronze skin. How is the iron overload managed?",[
+["periodic phlebotomy to force marrow iron use","Removing red cells makes the marrow consume stored iron."],
+["oral iron with vitamin C","This would worsen overload."],
+["high-dose vitamin D","It does not clear iron."],
+["intravenous albumin","Albumin does not treat iron storage."]]),
+Q(10,S,"hard",true,"A young adult has jaundice, tremors and rusty-brown rings around the iris. This is caused by impaired excretion of _______.",[
+["copper","Wilson disease damages the liver and nerves."],
+["iron","Iron overload causes bronzed skin."],
+["lead","Lead accumulates in bone and teeth."],
+["gangliosides","These accumulate in Tay-Sachs."]]),
+Q(10,S,"medium",false,"Primary hemochromatosis is a _______ disorder, called _______, because of its skin and endocrine findings.",[
+["genetic iron overload; bronze diabetes","Excess iron is stored in cells."],
+["genetic copper overload; bronze diabetes","Copper overload is Wilson disease."],
+["acquired iron overload; lead poisoning","Not the described condition."],
+["genetic iron overload; Christmas disease","Christmas disease is hemophilia B."]]),
+Q(10,S,"easy",true,"Which mineral accumulation is characterized by Kayser-Fleischer rings?",[
+["copper","Wilson disease impairs copper excretion, causing hepatic and neural injury plus corneal Kayser-Fleischer rings."],
+["iron","Iron overload causes hemosiderosis or primary hemochromatosis (bronze diabetes), not Kayser-Fleischer rings."],
+["lead","Lead accumulates in bones and teeth rather than forming corneal rings."],
+["calcium","Calcium forms dystrophic or metastatic calcifications rather than Kayser-Fleischer rings."]]),
+Q(10,T,"medium",true,"Which industrial pollutant accumulates in tissues and causes neurotoxicity?",[
+["methyl mercury","Methylmercury bioaccumulates in aquatic food chains and crosses the blood-brain barrier as a potent neurotoxin."],
+["thimerosal","Thimerosal (ethylmercury) clears rapidly from the body and is not considered neurotoxic at low doses."],
+["copper","Copper overload in Wilson disease is an inherited transport disorder rather than an industrial pollutant."],
+["iron","Iron overload occurs physiologically (hemosiderosis) or genetically (hemochromatosis)."]]),
+Q(10,S,"medium",true,"Calcium can accumulate in the soft tissues due to an imbalance in _______. This widespread calcium accumulation is called _______.",[
+["serum calcium; metastatic","Elevated blood calcium deposits calcium into otherwise normal tissues in metastatic calcification."],
+["dietary intake; dystrophic","Dystrophic calcification occurs in damaged tissue with normal serum calcium."],
+["serum calcium; malignant","Widespread hypercalcemic tissue calcification is termed metastatic, not malignant."],
+["vitamin D; ascites","Hypervitaminosis D causes metastatic calcification, whereas ascites is peritoneal fluid accumulation."]]),
 
-// ---- Subject 9: Amyloidosis & Multiple Myeloma (Wk 7)
-Q(9,S,"medium",true,"Amyloidosis causes tissue degeneration because misfolded proteins adopt _______ conformations instead of _______, stacking into insoluble fibrils.",[
-["beta-pleated sheet; alpha-helix","Beta-pleated sheets stack flatly into insoluble, toxic fibrils that tissues cannot clear; brain deposition drives Alzheimer disease."],
-["alpha-helix; beta-pleated sheet","Normal proteins often use alpha-helices; pathological amyloid stacks as beta-pleated sheets."],
-["quaternary globulin; monomeric light chain","Amyloid fibrils form from stacked beta-pleated sheets rather than intact globulins."],
-["collagen type I; collagen type III","Collagen remodeling relates to wound healing, not amyloid protein misfolding."]]),
-Q(9,S,"easy",true,"What is the most common primary malignant neoplasm originating in the spine?",[
-["multiple myeloma","Multiple myeloma arises from malignant bone marrow plasma cells in vertebrae and flat bones."],
-["osteosarcoma","Multiple myeloma is the most common primary cancer originating in the spine."],
-["metastatic breast carcinoma","Metastatic breast cancer is a secondary tumor, not a primary bone cancer."],
-["Ewing sarcoma","Multiple myeloma is emphasized as the most common primary spinal malignancy."]]),
-Q(9,T,"hard",true,"A 65-year-old patient presents to a chiropractic clinic with persistent low back pain. Urinalysis reveals light-chain immunoglobulin fragments, and skull X-rays show multiple punched-out lucencies. Which cells are proliferating abnormally?",[
-["plasma cells","Multiple myeloma is a bone marrow plasma cell cancer secreting excessive monoclonal light chains (Bence Jones proteins) and activating osteoclasts."],
-["osteoblasts","Myeloma activates bone-resorbing osteoclasts, producing lytic 'raindrop skull' lesions rather than blastic bone."],
-["cytotoxic T-lymphocytes","Myeloma derives from B-cell lineage plasma cells, not CD8+ T-cells."],
-["macrophages","Macrophages form granulomas; malignant plasma cells drive multiple myeloma."]]),
-Q(9,T,"medium",true,"In multiple myeloma, red blood cells stack together like a roll of coins on a peripheral blood smear. This _______ formation occurs because _______.",[
-["rouleaux; monoclonal light chains neutralize negative RBC surface charges","Excess M-proteins neutralize the normal negative charge repulsion between red blood cells, causing coin-stack rouleaux."],
-["sickle; mutant hemoglobin polymerizes under low oxygen","Sickle cells are crescent-shaped from mutated beta-globin, not stacked like coins."],
-["hemolytic; vitamin E deficiency oxidizes RBC membranes","Vitamin E deficiency causes membrane fragility and hemolysis, not rouleaux stacking."],
-["microcytic; iron deficiency reduces hemoglobin synthesis","Iron deficiency produces small pale RBCs rather than stacked rouleaux chains."]]),
-Q(9,S,"medium",true,"Which triad of diagnostic findings is characteristic of multiple myeloma?",[
-["Bence Jones proteinuria, M-spike on electrophoresis, and raindrop skull lesions","Urine light chains, serum monoclonal protein spike, and lytic 'punched-out' bone lesions define multiple myeloma."],
-["Kayser-Fleischer rings, jaundice, and low serum ceruloplasmin","Those findings characterize Wilson disease (copper overload)."],
-["bronze skin, hyperglycemia, and elevated serum ferritin","Those findings characterize primary hemochromatosis (iron overload)."],
-["cherry-red macula, macrocephaly, and motor regression","Those findings characterize Tay-Sachs disease."]]),
-Q(9,T,"medium",false,"Why are the lytic skull and vertebral lesions in multiple myeloma visible as dark 'punched-out' spots on X-ray?",[
-["tumor factors activate osteoclasts to resorb bone","Osteoclast activation breaks down bone matrix, decreasing bone density so lesions appear radiolucent (darker)."],
-["malignant plasma cells deposit dense calcium crystals in marrow","Calcium deposition would appear whiter (radiopaque), whereas myeloma causes lytic bone loss."],
-["excess albumin increases hydrostatic pressure inside marrow cavities","Bone destruction is mediated by osteoclast activation, not Starling hydrostatic forces."],
-["thromboxane causes arterial spasm and coagulative bone infarct","The radiographic lucencies result from osteoclast-mediated bone lysis."]]),
+// ================= SUBJECT 11: Amyloidosis & Multiple Myeloma (Wk 7) =================
+Q(11,S,"medium",true,"Amyloid forms when proteins adopt _______ conformations instead of _______, stacking into insoluble fibrils that cannot be cleared.",[
+["beta-pleated sheet; alpha-helix","Beta sheets stack into toxic fibrils."],
+["alpha-helix; beta-pleated sheet","The conformations are reversed."],
+["quaternary globulin; light chain","Not the mechanism."],
+["collagen type I; collagen type III","Collagen is a healing issue."]]),
+Q(11,T,"medium",false,"Amyloid deposition in the brain causes inflammation and dementia, specifically _______.",[
+["Alzheimer disease","Amyloid in the brain leads to neurodegeneration."],
+["Tay-Sachs disease","Caused by ganglioside accumulation."],
+["Wilson disease","Caused by copper accumulation."],
+["kwashiorkor","A protein deficiency."]]),
+Q(11,S,"easy",true,"What is the most common primary malignant neoplasm originating in the spine?",[
+["multiple myeloma","A bone marrow plasma cell cancer."],
+["osteosarcoma","Not the most common primary spinal cancer."],
+["metastatic breast carcinoma","This is secondary, not primary."],
+["Ewing sarcoma","Not the most common primary spinal cancer."]]),
+Q(11,T,"hard",true,"A 65-year-old has persistent low back pain, light-chain fragments in urine and punched-out skull lucencies. Which cells proliferate abnormally?",[
+["plasma cells","Myeloma is a plasma cell cancer secreting light chains."],
+["osteoblasts","Myeloma causes lytic bone loss."],
+["cytotoxic T cells","Myeloma is B-cell lineage."],
+["macrophages","Macrophages form granulomas."]]),
+Q(11,S,"medium",true,"In multiple myeloma, light chains appearing in urine are called _______, and the serum finding is an _______.",[
+["Bence Jones proteins; M spike","The monoclonal protein spike."],
+["Bence Jones proteins; Kayser-Fleischer ring","That ring is seen in Wilson disease."],
+["Reed-Sternberg cells; M spike","That cell is seen in Hodgkin lymphoma."],
+["Bence Jones proteins; cherry-red spot","That is seen in Tay-Sachs."]]),
+Q(11,T,"medium",true,"Red blood cells in myeloma stack in rouleaux because monoclonal protein _______ their negative surface charge.",[
+["neutralizes","Reduced repulsion lets cells stack like coins."],
+["amplifies","That would repel them."],
+["oxidizes","Not the mechanism."],
+["calcifies","Not the mechanism."]]),
+Q(11,S,"medium",true,"Which findings are characteristic of multiple myeloma?",[
+["Bence Jones proteinuria, M spike and raindrop skull","Urine, serum and X-ray hallmarks."],
+["Kayser-Fleischer rings, jaundice and tremors","That is Wilson disease."],
+["bronze skin, diabetes and liver damage","That is hemochromatosis."],
+["cherry-red macula and neurodegeneration","That is Tay-Sachs."]]),
+Q(11,T,"medium",false,"Punched-out lesions on X-ray appear dark because tumor factors activate _______ to resorb bone.",[
+["osteoclasts","Bone loss decreases density, giving lytic lesions."],
+["osteoblasts","They form bone, which appears whiter."],
+["mast cells","Not involved in bone loss."],
+["platelets","Not involved in bone loss."]]),
+Q(11,T,"medium",false,"Multiple myeloma tends to occur in people over _______ and may cause _______ fractures.",[
+["50; pathological","Lytic lesions weaken bone."],
+["20; traumatic","Not the typical age or cause."],
+["50; iatrogenic","Not provider-induced."],
+["20; pathological","Not the typical age."]]),
 
-// ---- Subject 10: Vitamin & Mineral Deficiencies (Wk 7)
-Q(10,T,"medium",true,"Why are patients much more likely to develop toxicity from fat-soluble vitamins (A, D, E, K) than from water-soluble vitamins (B-complex, C)?",[
-["fat-soluble vitamins are absorbed and stored with lipids rather than excreted rapidly in urine","Excess water-soluble vitamins are easily cleared in urine, whereas excess ADEK vitamins accumulate and cause toxicity such as nausea and vomiting."],
-["water-soluble vitamins are converted into insoluble amyloid fibrils in the liver","Water-soluble vitamins are readily excreted by the kidneys without forming amyloid."],
-["fat-soluble vitamins directly displace iron from hemoglobin","ADEK toxicity stems from lipid storage and poor urinary clearance, not iron displacement."],
-["water-soluble vitamins cannot cross intestinal enterocyte membranes","Water-soluble vitamins are readily absorbed and excreted."]]),
-Q(10,T,"hard",true,"A patient with chronic alcoholism presents with confusion, psychosis, and ophthalmoplegia, while another thiamine-deficient patient has symmetric peripheral neuropathy without edema. These represent _______ and _______, respectively.",[
-["Wernicke-Korsakoff syndrome; dry beriberi","Severe vitamin B1 (thiamine) deficiency causes psychosis in Wernicke-Korsakoff syndrome and non-edematous neuropathy in dry beriberi."],
-["wet beriberi; pellagra","Wet beriberi involves cardiovascular heart failure with pitting edema; pellagra is niacin (B3) deficiency."],
-["dry beriberi; pernicious anemia","Dry beriberi is peripheral neuropathy without psychosis; pernicious anemia is B12 malabsorption."],
-["pellagra; Wernicke-Korsakoff syndrome","Pellagra causes dermatitis, diarrhea, and dementia from B3 deficiency."]]),
-Q(10,T,"medium",true,"Wet beriberi is distinguished from dry beriberi by the presence of _______ due to involvement of the _______ system.",[
-["pitting edema; cardiovascular","Wet beriberi impairs cardiac function, leading to heart failure and peripheral pitting edema, whereas dry beriberi affects nerves without edema."],
-["seborrheic dermatitis; integumentary","Seborrheic dermatitis, cheilosis, and glossitis occur in riboflavin (vitamin B2) deficiency."],
-["hemolytic anemia; hematologic","Hemolytic anemia occurs in vitamin E deficiency."],
-["keratomalacia; ocular","Corneal softening occurs in vitamin A deficiency."]]),
-Q(10,T,"medium",true,"A patient presents with cracked fissures at the corners of the mouth (cheilosis), an inflamed sore tongue (glossitis), and a scaly scalp (seborrheic dermatitis). Deficiency of _______ is most likely.",[
-["vitamin B2","Riboflavin (vitamin B2) deficiency classically produces cheilosis, glossitis, and seborrheic dermatitis."],
-["vitamin B1","Thiamine (B1) deficiency causes dry/wet beriberi and Wernicke-Korsakoff syndrome."],
-["vitamin B9","Folate (B9) deficiency causes megaloblastic anemia and neural tube defects."],
-["vitamin K","Vitamin K deficiency causes bleeding disorders."]]),
-Q(10,T,"easy",true,"Niacin (vitamin B3) deficiency causes pellagra, which is characterized clinically by the '4 Ds': _______, _______, _______, and _______.",[
-["diarrhea; dermatitis; dementia; death","Pellagra from vitamin B3 deficiency progresses through dermatitis, diarrhea, dementia, and death."],
-["dysphagia; diplopia; dysarthria; death","These bulbar motor signs are not the 4 Ds of pellagra."],
-["dehydration; delirium; diabetes; death","Diabetes is linked to hemochromatosis, not niacin deficiency."],
-["dystrophy; dysuria; dyspnea; death","These do not represent the classic pellagra triad/tetrad."]]),
-Q(10,T,"hard",true,"A pregnant patient with inadequate dietary intake of vitamin B9 (folate) is at increased risk for fetal _______ as well as maternal _______ anemia.",[
-["neural tube defects; megaloblastic","Folate is required for DNA synthesis and neural tube closure (preventing spina bifida); deficiency produces large, immature megaloblastic RBCs."],
-["hemorrhagic disease; microcytic","Hemorrhagic disease of the newborn is vitamin K deficiency; microcytic anemia is iron deficiency."],
-["cretinism; hemolytic","Cretinism is infant iodine deficiency; hemolytic anemia is vitamin E deficiency."],
-["rickets; pernicious","Rickets is vitamin D deficiency; pernicious anemia is B12 intrinsic factor deficiency."]]),
-Q(10,T,"hard",true,"A patient presents to a chiropractic clinic complaining of numbness and tingling in both hands and feet that mimics cervical or lumbar radiculopathy, but spinal imaging is normal. Deficiency of _______ should be suspected.",[
-["vitamin B12","Cobalamin (vitamin B12) deficiency causes peripheral paresthesias (numbness/tingling) that frequently mimic spinal radiculopathy or entrapment."],
-["vitamin C","Ascorbic acid deficiency causes scurvy (bleeding gums, poor wound healing), not isolated paresthesias."],
-["vitamin A","Vitamin A deficiency causes night blindness, dry eyes, and corneal softening."],
-["iodine","Iodine deficiency causes hypothyroidism, goiter, and myxedema."]]),
-Q(10,T,"medium",true,"Historically seen in sailors on long sea voyages without fresh produce, scurvy results from _______ deficiency and impairs _______.",[
-["vitamin C; collagen synthesis and wound healing","Ascorbic acid (vitamin C) is an essential cofactor for collagen synthesis; deficiency causes bleeding gums, loose teeth, and poor wound healing."],
-["vitamin D; intestinal calcium absorption","Vitamin D deficiency causes rickets in children and osteomalacia in adults."],
-["vitamin B3; hepatic albumin production","Niacin deficiency causes pellagra rather than scurvy."],
-["iron; hemoglobin oxygen transport","Iron deficiency causes microcytic hypochromic anemia, not scurvy."]]),
-Q(10,T,"medium",true,"Progression of vitamin A deficiency causes night blindness (_______), dry eyes (_______), and softening of the cornea (_______).",[
-["nyctalopia; xerophthalmia; keratomalacia","Vitamin A supports ocular epithelium and vision; deficiency progresses from nyctalopia to xerophthalmia and keratomalacia."],
-["xerophthalmia; keratomalacia; nyctalopia","Night blindness (nyctalopia) is the earliest sign, followed by dry eyes and corneal softening."],
-["keratomalacia; nyctalopia; xerophthalmia","Softening of the cornea is the late destructive stage, not the initial sign."],
-["cheilosis; glossitis; myxedema","Cheilosis and glossitis are vitamin B2 deficiency; myxedema is hypothyroidism."]]),
-Q(10,T,"medium",true,"Vitamin D requires _______ as a cofactor to convert into active D3, and deficiency leads to _______ in children and _______ in adults.",[
-["magnesium; rickets; osteomalacia","Magnesium converts vitamin D to active D3 for calcium absorption; deficiency causes bowed bones (rickets) in children and soft bones (osteomalacia) in adults."],
-["calcium; osteomalacia; rickets","Rickets occurs in growing children and osteomalacia in adults, not the reverse."],
-["iron; scurvy; osteoporosis","Scurvy is vitamin C deficiency; magnesium is the cofactor for D3 activation."],
-["iodine; cretinism; myxedema","Cretinism and myxedema result from iodine deficiency."]]),
-Q(10,T,"medium",false,"Vitamin E acts as a lipid-soluble antioxidant; deficiency leaves red blood cell membranes vulnerable to oxidation, causing _______.",[
-["hemolytic anemia","Without vitamin E antioxidant protection, RBC membranes oxidize, become fragile, and lyse prematurely."],
-["microcytic hypochromic anemia","Microcytic hypochromic anemia is caused by iron deficiency."],
-["megaloblastic anemia","Megaloblastic anemia is caused by folate (B9) or B12 deficiency."],
-["hemorrhagic disease of the newborn","Newborn bleeding is caused by vitamin K deficiency."]]),
-Q(10,T,"hard",true,"An adult living in an iodine-deficient region develops a large anterior neck mass (goiter) alongside generalized non-pitting skin thickening (myxedema). The thyroid gland enlarges because _______.",[
-["low thyroid hormone stimulates pituitary TSH release to increase thyroid surface area","Lack of iodine reduces T3/T4 synthesis, triggering negative-feedback TSH elevation that hypertrophies the thyroid in an effort to capture more iodine."],
-["excess iodine activates osteoclasts and colloid cyst formation","The patient is iodine-deficient, not iodine-overloaded."],
-["autoimmune IgE cross-links mast cells in the anterior neck","Goiter in iodine deficiency is driven by compensatory TSH stimulation, not IgE allergy."],
-["parathyroid hormone deposits metastatic calcium in thyroid follicles","Metastatic calcification results from hypercalcemia, not iodine deficiency."]]),
-Q(10,T,"medium",true,"Iron deficiency produces _______ anemia, and oral iron supplements should NOT be taken within 2 hours of _______ or _______ because they block absorption.",[
-["microcytic hypochromic; dairy calcium; caffeine","Iron deficiency yields small, pale RBCs; calcium and caffeine inhibit gut iron absorption, which is best on an empty stomach."],
-["macrocytic normochromic; vitamin C; magnesium","Macrocytic anemia is B9/B12 deficiency; dairy and caffeine are the noted absorption inhibitors."],
-["hemolytic; folic acid; intrinsic factor","Hemolytic anemia is vitamin E deficiency; calcium and caffeine block iron uptake."],
-["pernicious; ascorbic acid; thiamine","Pernicious anemia is B12 malabsorption; calcium and caffeine inhibit iron."]])
+// ================= SUBJECT 12: Vitamin & Mineral Deficiencies (Wk 7) =================
+Q(12,T,"medium",true,"Fat-soluble vitamins are more likely than water-soluble vitamins to cause toxicity because they _______.",[
+["are absorbed and stored with lipids rather than excreted in urine","Excess ADEK accumulates and causes nausea and vomiting."],
+["are converted to amyloid","Not the explanation."],
+["displace iron from hemoglobin","Not the explanation."],
+["cannot be absorbed","They are absorbed with fat."]]),
+Q(12,T,"hard",true,"A patient with chronic alcoholism has confusion, psychosis and confabulation, while another thiamine-deficient patient has neuropathy without edema. These are _______ and _______.",[
+["Wernicke-Korsakoff syndrome; dry beriberi","Severe B1 deficiency causes psychosis, and dry beriberi is neuropathy."],
+["wet beriberi; pellagra","Wet beriberi causes edema, and pellagra is niacin deficiency."],
+["dry beriberi; pernicious anemia","Pernicious anemia is B12 malabsorption."],
+["pellagra; Wernicke-Korsakoff syndrome","Pellagra is niacin deficiency."]]),
+Q(12,T,"medium",true,"Wet beriberi differs from dry beriberi by _______, due to involvement of the _______ system.",[
+["pitting edema; cardiovascular","Heart failure causes edema."],
+["seborrheic dermatitis; integumentary","That is riboflavin deficiency."],
+["hemolytic anemia; hematologic","That is vitamin E deficiency."],
+["keratomalacia; ocular","That is vitamin A deficiency."]]),
+Q(12,T,"medium",true,"Cheilosis, glossitis and seborrheic dermatitis indicate deficiency of vitamin _______.",[
+["B2","Riboflavin deficiency."],
+["B1","Thiamine causes beriberi."],
+["B9","Folate causes megaloblastic anemia."],
+["K","Vitamin K causes bleeding."]]),
+Q(12,T,"easy",true,"Niacin deficiency causes pellagra with the four Ds: _______, _______, _______ and _______.",[
+["diarrhea; dermatitis; dementia; death","The classic niacin deficiency tetrad."],
+["dysphagia; diplopia; dysarthria; death","Not the four Ds."],
+["dehydration; delirium; diabetes; death","Not the four Ds."],
+["dystrophy; dysuria; dyspnea; death","Not the four Ds."]]),
+Q(12,T,"hard",true,"A pregnant patient with inadequate folate is at risk for fetal _______ and maternal _______ anemia.",[
+["neural tube defects; megaloblastic","Folate supports DNA synthesis and neural tube closure."],
+["hemorrhagic disease; microcytic","These relate to vitamin K and iron."],
+["cretinism; hemolytic","These relate to iodine and vitamin E."],
+["rickets; pernicious","These relate to vitamin D and B12."]]),
+Q(12,T,"hard",true,"A patient has numbness and tingling in the hands and feet mimicking radiculopathy, with normal spinal imaging. Deficiency of _______ should be suspected.",[
+["vitamin B12","Cobalamin deficiency causes paresthesias that mimic radiculopathy."],
+["vitamin C","Causes scurvy."],
+["vitamin A","Causes night blindness."],
+["iodine","Causes hypothyroidism."]]),
+Q(12,T,"medium",true,"Scurvy results from deficiency of _______, which is required for _______.",[
+["vitamin C; collagen synthesis and wound healing","Bleeding gums and loose teeth."],
+["vitamin D; calcium absorption","That causes rickets."],
+["vitamin B3; albumin production","That causes pellagra."],
+["iron; hemoglobin transport","That causes microcytic anemia."]]),
+Q(12,T,"medium",true,"Vitamin A deficiency progresses from night blindness called _______ to dry eyes called _______ to corneal softening called _______.",[
+["nyctalopia; xerophthalmia; keratomalacia","Eye-related stages of vitamin A deficiency."],
+["xerophthalmia; keratomalacia; nyctalopia","The order is wrong."],
+["keratomalacia; nyctalopia; xerophthalmia","The order is wrong."],
+["cheilosis; glossitis; myxedema","Not vitamin A."]]),
+Q(12,T,"medium",true,"Vitamin D needs _______ for conversion to active D3, and deficiency causes _______ in children and _______ in adults.",[
+["magnesium; rickets; osteomalacia","Low calcium absorption weakens bone."],
+["calcium; osteomalacia; rickets","The age groups are reversed."],
+["iron; scurvy; osteoporosis","Scurvy is vitamin C."],
+["iodine; cretinism; myxedema","Those are iodine deficiency."]]),
+Q(12,T,"medium",false,"Vitamin E deficiency leaves red cell membranes vulnerable to oxidation, causing _______.",[
+["hemolytic anemia","Membranes become fragile and lyse."],
+["microcytic anemia","That is iron deficiency."],
+["megaloblastic anemia","That is folate or B12 deficiency."],
+["newborn hemorrhage","That is vitamin K deficiency."]]),
+Q(12,T,"medium",false,"Vitamin K deficiency in newborns causes _______ because vitamin K is a cofactor for _______.",[
+["hemorrhagic disease; clotting factor synthesis","Newborns bleed because they cannot form clots."],
+["rickets; calcium absorption","Rickets is vitamin D."],
+["hemolytic anemia; antioxidant defense","Vitamin E does that."],
+["scurvy; collagen synthesis","Vitamin C does that."]]),
+Q(12,T,"hard",true,"An adult in an iodine-deficient region has a goiter and myxedema. The thyroid enlarges because low thyroid hormone _______.",[
+["raises TSH, increasing thyroid size to capture iodine","A negative-feedback loop."],
+["lowers TSH, shrinking the gland","TSH rises."],
+["activates mast cells","Not the mechanism."],
+["raises PTH","Not the mechanism."]]),
+Q(12,T,"medium",true,"Iron deficiency causes _______ anemia, and absorption is blocked by _______ and _______.",[
+["microcytic hypochromic; dairy calcium; caffeine","Vitamin C helps absorption."],
+["macrocytic; vitamin C; magnesium","Vitamin C helps."],
+["hemolytic; folic acid; intrinsic factor","Not the inhibitors."],
+["pernicious; ascorbic acid; thiamine","Pernicious anemia is B12."]]),
+Q(12,T,"easy",false,"The most common nutrient deficiency in Americans is vitamin _______, whose best natural source is _______.",[
+["D; sunlight","The top deficiency."],
+["C; citrus","Not the most common."],
+["K; leafy greens","Not the most common."],
+["A; carrots","Not the most common."]])
 ];
 const $=s=>document.querySelector(s),app=$("#app");
 const LS={get:(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
@@ -596,7 +862,7 @@ function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor
 function pool(){return questionBank.filter(q=>sel.has(q.subjectIndex))}
 function renderHome(){
 const cnt=i=>questionBank.filter(q=>q.subjectIndex===i).length,m=LS.get("quiz_missed_history",[]).length,p=pool();
-const sizes=[["Quickie",15],["Standard",25],["Intense",35],["Full Exam",50]];
+const sizes=[["Quickie",15],["Foreplay",25],["Play",35],["Marathon",50]];
 app.innerHTML=`<div class="wrap"><a class="btn" href="index.html" style="background:#222;border:1px solid #ff9900">← Back to Main Page</a>
 <h1 style="color:#ff9900">Gen Path: Weeks 6 &amp; 7</h1><div class="muted">Week 6 (Injury, Inflammation &amp; Healing) • Week 7 (Necrosis, Accumulations &amp; Deficiencies)</div>
 <div class="card"><b>Modules</b><div>${SUBJECTS.map((s,i)=>`<span class="chip ${sel.has(i)?"on":""}" onclick="tog(${i})">[${s.week}] ${s.title} (${cnt(i)})</span>`).join("")}</div>
