@@ -471,6 +471,51 @@
       from { opacity: 0; transform: translateY(-4px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    .launcher-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 0.5rem;
+    }
+
+    .launcher-btn {
+      background-color: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .launcher-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      background-color: #2c2c2c;
+    }
+
+    .launcher-btn.accent-launcher {
+      border: 2px solid var(--accent);
+      color: var(--accent);
+    }
+
+    .launcher-btn.accent-launcher:hover:not(:disabled) {
+      background-color: var(--accent);
+      color: #000000;
+    }
+
+    .launcher-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .toggles-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+    }
   </style>
 </head>
 <body>
@@ -481,16 +526,22 @@
     <img id="wrongImage" src="Erijah.png" onerror="this.onerror=null;this.src='wrong-answer.png';" alt="Wrong Answer Feedback" />
   </div>
 
-  <!-- Sticky Header -->
+<!-- Sticky Header -->
   <header class="sticky-header">
     <div class="header-inner">
       <div class="nav-left">
-        <a href="index.html" class="hub-link">&larr; Hub</a>
-        <div class="quiz-title-badge">Microbio <span>Week 7</span>: Helminths &amp; Prions</div>
+        <a href="index.html" class="btn hub-link" id="hubBtn">&larr; Hub</a>
+        <div>
+          <div class="quiz-title-badge">Microbio <span>Week 7</span></div>
+          <div style="font-size: 0.78rem; color: var(--text-muted);">Helminths &amp; Prions</div>
+        </div>
       </div>
       <div class="header-right">
-        <div class="score-pill" id="scoreCounter">Score: 0 / 0 (0%)</div>
-        <button type="button" class="mute-btn" id="muteToggleBtn">STFU Erijah</button>
+        <div class="score-pill" id="scorePill">Score: 0 / 0 (0%)</div>
+        <div class="score-pill" id="progressPill">Q 0 of 0</div>
+        <button type="button" class="mute-btn" id="modeBtn">View: All at Once</button>
+        <button type="button" class="mute-btn" id="stfuBtn">STFU Erijah</button>
+        <button type="button" class="mute-btn" id="menuBtn">Back to Menu</button>
       </div>
     </div>
     <div class="progress-track">
@@ -499,25 +550,11 @@
   </header>
 
   <main class="container">
-    <!-- Controls -->
-    <section class="control-bar" id="controlBar">
-      <div class="control-row">
-        <div class="filter-pills" id="subjectFilters"></div>
-      </div>
-      <div class="control-row">
-        <div class="mode-toggles">
-          <button type="button" class="pill-btn active" id="setFullBtn">Full Bank</button>
-          <button type="button" class="pill-btn" id="setQuickBtn">Quick 15</button>
-        </div>
-        <div class="mode-toggles">
-          <button type="button" class="pill-btn active" id="viewListBtn">All at Once (Continuous List)</button>
-          <button type="button" class="pill-btn" id="viewCardBtn">One by One (Card View)</button>
-        </div>
-      </div>
-    </section>
+    <!-- Home Dashboard (renderHome) -->
+    <section id="homeScreen" class="control-bar"></section>
 
     <!-- Quiz Mount -->
-    <section id="quizContainer"></section>
+    <section id="quizContainer" class="hidden"></section>
 
     <!-- Summary Card -->
     <section class="summary-card hidden" id="summaryCard">
@@ -527,8 +564,8 @@
       <div class="summary-actions">
         <button type="button" class="btn" id="retakeCurrentBtn">Retake Current Set</button>
         <button type="button" class="btn btn-secondary hidden" id="reviewMissedBtn">Review Missed</button>
-        <button type="button" class="btn btn-secondary" id="backToMenuBtn">Back to Menu</button>
-        <a href="index.html" class="btn btn-secondary">&larr; Hub</a>
+        <button type="button" class="btn btn-secondary" id="summaryMenuBtn">Back to Menu</button>
+        <a href="index.html" class="btn hub-btn">Back to Hub</a>
       </div>
     </section>
   </main>
@@ -1178,18 +1215,37 @@
     ];
 
     /* =========================================================
-       STATE & UTILITIES
+       STATE & STORAGE KEYS
        ========================================================= */
-    let selectedSubject = "all";
-    let setMode = "full";     // "full" | "quick"
-    let viewMode = "list";    // "list" | "card"
-    let isMuted = false;
+    const VIEW_KEY = "quizViewMode";
+    const STFU_KEY = "stfuErijah";
+    const MISSED_KEY = "quiz_missed_history";
+
+    let selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
+    let highYieldOnly = false;
+    let prioritizeMissed = false;
+    let viewMode = localStorage.getItem(VIEW_KEY) || "all"; // "single" | "all"
+    let isMuted = localStorage.getItem(STFU_KEY) === "1";
 
     let activeQuestions = [];
-    let userAnswers = {};     // { [q.id]: { selectedIndex, correct } }
+    let userAnswers = {}; // { [q.id]: { selectedIndex, correct } }
     let round = 1;
     let currentCardIndex = 0;
     let popupTimer = null;
+
+    function getMissedHistory() {
+      try {
+        return new Set(JSON.parse(localStorage.getItem(MISSED_KEY)) || []);
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function saveMissedHistory(set) {
+      try {
+        localStorage.setItem(MISSED_KEY, JSON.stringify(Array.from(set)));
+      } catch (e) {}
+    }
 
     function fisherYates(arr) {
       const copy = arr.slice();
@@ -1208,28 +1264,37 @@
     }
 
     /* =========================================================
-       AUDIO & POPUP FEEDBACK
+       AUDIO & VISUAL FEEDBACK (STFU ERIJAH)
        ========================================================= */
     const wrongAudio = document.getElementById("wrongAudio");
     const wrongPopup = document.getElementById("wrongPopup");
-    const muteToggleBtn = document.getElementById("muteToggleBtn");
+    const stfuBtn = document.getElementById("stfuBtn");
 
-    muteToggleBtn.addEventListener("click", () => {
-      isMuted = !isMuted;
-      muteToggleBtn.classList.toggle("muted", isMuted);
-      muteToggleBtn.textContent = isMuted ? "Erijah Muted" : "STFU Erijah";
+    function syncStfuUI() {
+      stfuBtn.classList.toggle("muted", isMuted);
+      stfuBtn.textContent = isMuted ? "Bring Back Erijah" : "STFU Erijah";
       if (isMuted) {
         wrongAudio.pause();
         wrongAudio.currentTime = 0;
         wrongPopup.classList.add("hidden");
       }
+    }
+
+    stfuBtn.addEventListener("click", () => {
+      isMuted = !isMuted;
+      try { localStorage.setItem(STFU_KEY, isMuted ? "1" : "0"); } catch (e) {}
+      syncStfuUI();
     });
 
     function triggerWrongFeedback() {
       if (isMuted) return;
       try {
+        wrongAudio.src = "Wrong-answer.m4a";
         wrongAudio.currentTime = 0;
-        wrongAudio.play().catch(() => {});
+        wrongAudio.play().catch(() => {
+          wrongAudio.src = "Wrong-answer.mp3";
+          wrongAudio.play().catch(() => {});
+        });
       } catch (e) {}
 
       wrongPopup.classList.remove("hidden");
@@ -1240,84 +1305,273 @@
     }
 
     /* =========================================================
-       SUBJECT FILTERS & INITIALIZATION
+       VIEW MODE TOGGLE (PERSISTED IN LOCALSTORAGE)
        ========================================================= */
-    function renderSubjectFilters() {
-      const container = document.getElementById("subjectFilters");
-      container.innerHTML = "";
+    const modeBtn = document.getElementById("modeBtn");
 
-      const allBtn = document.createElement("button");
-      allBtn.type = "button";
-      allBtn.className = "pill-btn" + (selectedSubject === "all" ? " active" : "");
-      allBtn.textContent = `All Week 7 Topics (${questionBank.length})`;
-      allBtn.onclick = () => {
-        selectedSubject = "all";
-        startNewSession();
-      };
-      container.appendChild(allBtn);
+    function syncModeUI() {
+      modeBtn.textContent = viewMode === "single" ? "View: One by One" : "View: All at Once";
+    }
 
-      SUBJECTS.forEach((sub, idx) => {
-        const count = questionBank.filter(q => q.subjectIndex === idx).length;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "pill-btn" + (selectedSubject === idx ? " active" : "");
-        btn.textContent = `${sub.title} (${count})`;
-        btn.onclick = () => {
-          selectedSubject = idx;
-          startNewSession();
-        };
-        container.appendChild(btn);
+    modeBtn.addEventListener("click", () => {
+      viewMode = viewMode === "single" ? "all" : "single";
+      try { localStorage.setItem(VIEW_KEY, viewMode); } catch (e) {}
+      syncModeUI();
+      if (!document.getElementById("quizContainer").classList.contains("hidden")) {
+        renderQuiz();
+      } else {
+        renderHome();
+      }
+    });
+
+    /* =========================================================
+       HOME DASHBOARD & FILTERING (renderHome)
+       ========================================================= */
+    function getFilteredPool() {
+      return questionBank.filter(q => {
+        if (!selectedSubjects.has(q.subjectIndex)) return false;
+        if (highYieldOnly && !q.priority) return false;
+        return true;
       });
     }
 
-    function startNewSession(customPool = null) {
-      round = 1;
-      userAnswers = {};
-      currentCardIndex = 0;
-
-      let pool = customPool
-        ? customPool
-        : (selectedSubject === "all"
-            ? questionBank
-            : questionBank.filter(q => q.subjectIndex === selectedSubject));
-
-      let shuffled = fisherYates(pool).map(prepareQuestion);
-      if (!customPool && setMode === "quick") {
-        shuffled = shuffled.slice(0, 15);
+    function toggleWeekFilter(wk) {
+      const weekIndices = SUBJECTS
+        .map((s, idx) => (s.week === wk ? idx : -1))
+        .filter(idx => idx !== -1);
+      const allSelected = weekIndices.every(idx => selectedSubjects.has(idx));
+      if (allSelected) {
+        weekIndices.forEach(idx => selectedSubjects.delete(idx));
+      } else {
+        weekIndices.forEach(idx => selectedSubjects.add(idx));
       }
-
-      activeQuestions = shuffled;
-      document.getElementById("summaryCard").classList.add("hidden");
-      document.getElementById("quizContainer").classList.remove("hidden");
-      renderSubjectFilters();
-      updateHeaderStats();
-      renderQuiz();
+      renderHome();
     }
 
-    function startReviewMissedRound() {
-      const missedIds = new Set(
-        activeQuestions
-          .filter(q => !userAnswers[q.id] || !userAnswers[q.id].correct)
-          .map(q => q.id)
-      );
-      const missedPool = questionBank.filter(q => missedIds.has(q.id));
-      if (missedPool.length === 0) return;
+    function toggleHighYield() {
+      highYieldOnly = !highYieldOnly;
+      renderHome();
+    }
 
-      round++;
+    function togglePrioritizeMissed() {
+      prioritizeMissed = !prioritizeMissed;
+      renderHome();
+    }
+
+    function renderHome() {
+      document.getElementById("homeScreen").classList.remove("hidden");
+      document.getElementById("quizContainer").classList.add("hidden");
+      document.getElementById("summaryCard").classList.add("hidden");
+      document.getElementById("progressBar").style.width = "0%";
+      document.getElementById("scorePill").textContent = "Score: 0 / 0 (0%)";
+      document.getElementById("progressPill").textContent = "Menu";
+
+      const home = document.getElementById("homeScreen");
+      home.innerHTML = "";
+
+      const basePool = questionBank.filter(q => !highYieldOnly || q.priority);
+      const activePool = getFilteredPool();
+      const missedSet = getMissedHistory();
+      const missedInPoolCount = activePool.filter(q => missedSet.has(q.id)).length;
+
+      // 1. Quick Week Filter Row
+      const uniqueWeeks = [...new Set(SUBJECTS.map(s => s.week))];
+      const weekRow = document.createElement("div");
+      weekRow.className = "filter-pills";
+
+      uniqueWeeks.forEach(wk => {
+        const weekIndices = SUBJECTS
+          .map((s, i) => (s.week === wk ? i : -1))
+          .filter(i => i !== -1);
+        const wkCount = basePool.filter(q => weekIndices.includes(q.subjectIndex)).length;
+        const isWkActive = weekIndices.length > 0 && weekIndices.every(i => selectedSubjects.has(i));
+
+        const wkBtn = document.createElement("button");
+        wkBtn.type = "button";
+        wkBtn.className = "pill-btn" + (isWkActive ? " active" : "");
+        wkBtn.textContent = `${wk} Only (${wkCount})`;
+        wkBtn.onclick = () => toggleWeekFilter(wk);
+        weekRow.appendChild(wkBtn);
+      });
+
+      const allTopicsBtn = document.createElement("button");
+      allTopicsBtn.type = "button";
+      allTopicsBtn.className = "pill-btn" + (selectedSubjects.size === SUBJECTS.length ? " active" : "");
+      allTopicsBtn.textContent = `All Topics (${basePool.length})`;
+      allTopicsBtn.onclick = () => {
+        selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
+        renderHome();
+      };
+      weekRow.appendChild(allTopicsBtn);
+
+      const selectAllBtn = document.createElement("button");
+      selectAllBtn.type = "button";
+      selectAllBtn.className = "pill-btn";
+      selectAllBtn.textContent = "Select All";
+      selectAllBtn.onclick = () => {
+        selectedSubjects = new Set(SUBJECTS.map((_, i) => i));
+        renderHome();
+      };
+      weekRow.appendChild(selectAllBtn);
+
+      const clearBtn = document.createElement("button");
+      clearBtn.type = "button";
+      clearBtn.className = "pill-btn";
+      clearBtn.textContent = "Clear";
+      clearBtn.onclick = () => {
+        selectedSubjects.clear();
+        renderHome();
+      };
+      weekRow.appendChild(clearBtn);
+
+      home.appendChild(weekRow);
+
+      // 2. Module Chips
+      const modGrid = document.createElement("div");
+      modGrid.className = "filter-pills";
+      SUBJECTS.forEach((sub, idx) => {
+        const count = basePool.filter(q => q.subjectIndex === idx).length;
+        const chip = document.createElement("button");
+        chip.type = "button";
+        chip.className = "pill-btn" + (selectedSubjects.has(idx) ? " active" : "");
+        chip.textContent = `[${sub.week}] ${sub.title} (${count})`;
+        chip.onclick = () => {
+          if (selectedSubjects.has(idx)) {
+            selectedSubjects.delete(idx);
+          } else {
+            selectedSubjects.add(idx);
+          }
+          renderHome();
+        };
+        modGrid.appendChild(chip);
+      });
+      home.appendChild(modGrid);
+
+      // 3. Display Mode Pre-Selector & Filter Toggles
+      const controlsRow = document.createElement("div");
+      controlsRow.className = "control-row";
+
+      const displayGroup = document.createElement("div");
+      displayGroup.className = "toggles-row";
+
+      const singleChip = document.createElement("button");
+      singleChip.type = "button";
+      singleChip.className = "pill-btn" + (viewMode === "single" ? " active" : "");
+      singleChip.textContent = "One by One (Card View)";
+      singleChip.onclick = () => {
+        viewMode = "single";
+        try { localStorage.setItem(VIEW_KEY, viewMode); } catch (e) {}
+        syncModeUI();
+        renderHome();
+      };
+
+      const allChip = document.createElement("button");
+      allChip.type = "button";
+      allChip.className = "pill-btn" + (viewMode === "all" ? " active" : "");
+      allChip.textContent = "All at Once (Continuous List)";
+      allChip.onclick = () => {
+        viewMode = "all";
+        try { localStorage.setItem(VIEW_KEY, viewMode); } catch (e) {}
+        syncModeUI();
+        renderHome();
+      };
+
+      displayGroup.appendChild(singleChip);
+      displayGroup.appendChild(allChip);
+      controlsRow.appendChild(displayGroup);
+
+      const filterToggles = document.createElement("div");
+      filterToggles.className = "toggles-row";
+
+      const hyBtn = document.createElement("button");
+      hyBtn.type = "button";
+      hyBtn.className = "pill-btn" + (highYieldOnly ? " active" : "");
+      hyBtn.textContent = "★ High Yield Only";
+      hyBtn.onclick = toggleHighYield;
+
+      const missedBtn = document.createElement("button");
+      missedBtn.type = "button";
+      missedBtn.className = "pill-btn" + (prioritizeMissed ? " active" : "");
+      missedBtn.textContent = `Prioritize Missed (${missedInPoolCount})`;
+      missedBtn.onclick = togglePrioritizeMissed;
+
+      filterToggles.appendChild(hyBtn);
+      filterToggles.appendChild(missedBtn);
+      controlsRow.appendChild(filterToggles);
+
+      home.appendChild(controlsRow);
+
+      // 4. Live Active Pool Counter
+      const counter = document.createElement("div");
+      counter.style.fontWeight = "700";
+      counter.style.fontSize = "0.95rem";
+      counter.style.color = "var(--accent)";
+      const labelType = highYieldOnly ? "high-yield questions" : "questions";
+      counter.textContent = `Active Pool: ${activePool.length} ${labelType} across ${selectedSubjects.size} modules selected.`;
+      home.appendChild(counter);
+
+      // 5. 6-Button Exam Length Launcher Grid
+      const grid = document.createElement("div");
+      grid.className = "launcher-grid";
+      const totalFiltered = activePool.length;
+      const presets = [
+        { label: "Quickie (15)", limit: 15, accent: false },
+        { label: "Foreplay (25)", limit: 25, accent: false },
+        { label: "Play (35)", limit: 35, accent: false },
+        { label: "Marathon (50)", limit: 50, accent: false },
+        { label: "Sweat (100)", limit: 100, accent: false },
+        { label: `Chafing (All ${totalFiltered})`, limit: totalFiltered, accent: true }
+      ];
+
+      presets.forEach(p => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "launcher-btn" + (p.accent ? " accent-launcher" : "");
+        btn.textContent = p.label;
+        btn.disabled = totalFiltered === 0;
+        btn.onclick = () => launchQuiz(p.limit);
+        grid.appendChild(btn);
+      });
+
+      home.appendChild(grid);
+    }
+
+    /* =========================================================
+       QUIZ LAUNCH & EXECUTION
+       ========================================================= */
+    function launchQuiz(limitOrPool, isReviewRound = false) {
+      let pool = [];
+
+      if (Array.isArray(limitOrPool)) {
+        pool = fisherYates(limitOrPool).map(prepareQuestion);
+      } else {
+        const filtered = getFilteredPool();
+        if (filtered.length === 0) return;
+
+        let shuffled = fisherYates(filtered);
+        if (prioritizeMissed) {
+          const missedSet = getMissedHistory();
+          shuffled.sort((a, b) => (missedSet.has(b.id) ? 1 : 0) - (missedSet.has(a.id) ? 1 : 0));
+        }
+
+        const sliceCount = Math.min(limitOrPool, shuffled.length);
+        pool = shuffled.slice(0, sliceCount).map(prepareQuestion);
+      }
+
+      if (!isReviewRound) round = 1;
       userAnswers = {};
       currentCardIndex = 0;
-      activeQuestions = fisherYates(missedPool).map(prepareQuestion);
+      activeQuestions = pool;
 
+      document.getElementById("homeScreen").classList.add("hidden");
       document.getElementById("summaryCard").classList.add("hidden");
       document.getElementById("quizContainer").classList.remove("hidden");
+
       updateHeaderStats();
       renderQuiz();
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    /* =========================================================
-       SCORE & PROGRESS TRACKING
-       ========================================================= */
     function updateHeaderStats() {
       const total = activeQuestions.length;
       const answeredCount = Object.keys(userAnswers).length;
@@ -1325,16 +1579,16 @@
       const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
       const label = round === 1 ? "Score" : `Review ${round - 1}`;
 
-      document.getElementById("scoreCounter").textContent =
-        `${label}: ${correctCount} / ${total} (${pct}%)`;
+      document.getElementById("scorePill").textContent = `${label}: ${correctCount} / ${total} (${pct}%)`;
+      document.getElementById("progressPill").textContent =
+        viewMode === "single"
+          ? `Q ${Math.min(currentCardIndex + 1, total)} of ${total}`
+          : `Answered ${answeredCount} of ${total}`;
 
       const progressPct = total > 0 ? Math.round((answeredCount / total) * 100) : 0;
       document.getElementById("progressBar").style.width = `${progressPct}%`;
     }
 
-    /* =========================================================
-       RENDERING ENGINE
-       ========================================================= */
     function buildQuestionCard(q, index) {
       const card = document.createElement("article");
       card.className = "question-card";
@@ -1352,18 +1606,18 @@
 
       const subTag = document.createElement("span");
       subTag.className = "tag";
-      subTag.textContent = SUBJECTS[q.subjectIndex].title;
+      subTag.textContent = `[${q.week}] ${SUBJECTS[q.subjectIndex].title}`;
       tags.appendChild(subTag);
 
       if (q.priority) {
         const hyTag = document.createElement("span");
         hyTag.className = "tag high-yield";
-        hyTag.textContent = "High-Yield";
+        hyTag.textContent = "★ High-Yield";
         tags.appendChild(hyTag);
       }
 
       const refSpan = document.createElement("span");
-      refSpan.textContent = `${q.week} • ${q.slideRef}`;
+      refSpan.textContent = `${q.difficulty.toUpperCase()} • ${q.slideRef}`;
 
       meta.appendChild(tags);
       meta.appendChild(refSpan);
@@ -1407,7 +1661,7 @@
         btn.appendChild(textSpan);
 
         if (!savedAnswer) {
-          btn.onclick = () => handleOptionSelect(q, optIdx);
+          btn.onclick = () => handleOptionSelect(q, optIdx, card);
         }
 
         optsGrid.appendChild(btn);
@@ -1415,6 +1669,7 @@
 
       card.appendChild(optsGrid);
 
+      // Streamlined Revealed Explanation Box (Status Banner + Option Rationales ONLY)
       if (savedAnswer) {
         const expBox = document.createElement("div");
         expBox.className = "explanation-box";
@@ -1424,19 +1679,15 @@
         banner.textContent = savedAnswer.correct ? "Correct!" : "Incorrect.";
         expBox.appendChild(banner);
 
-        const summaryEl = document.createElement("div");
-        summaryEl.className = "concept-summary";
-        summaryEl.textContent = q.summary;
-        expBox.appendChild(summaryEl);
-
         const list = document.createElement("ul");
         list.className = "rationale-list";
 
         q.options.forEach((opt, optIdx) => {
           const li = document.createElement("li");
           if (opt.correct) li.classList.add("is-right");
+          const statusTag = opt.correct ? "[CORRECT]" : "[INCORRECT]";
           const strong = document.createElement("strong");
-          strong.textContent = `${letters[optIdx]}) ${opt.text}: `;
+          strong.textContent = `${letters[optIdx]}) ${opt.text} ${statusTag}: `;
           li.appendChild(strong);
           li.appendChild(document.createTextNode(opt.why));
           list.appendChild(li);
@@ -1449,39 +1700,78 @@
       return card;
     }
 
-    function handleOptionSelect(q, optIdx) {
+    function handleOptionSelect(q, optIdx, cardEl) {
       if (userAnswers[q.id]) return;
       const chosen = q.options[optIdx];
+      const isCorrect = Boolean(chosen.correct);
+
       userAnswers[q.id] = {
         selectedIndex: optIdx,
-        correct: Boolean(chosen.correct)
+        correct: isCorrect
       };
 
-      if (!chosen.correct) {
+      const missedSet = getMissedHistory();
+      if (isCorrect) {
+        missedSet.delete(q.id);
+      } else {
+        missedSet.add(q.id);
         triggerWrongFeedback();
       }
+      saveMissedHistory(missedSet);
+
+      // Lock card in-place without losing scroll position
+      const idx = activeQuestions.findIndex(item => item.id === q.id);
+      const updatedCard = buildQuestionCard(q, idx);
+      cardEl.replaceWith(updatedCard);
 
       updateHeaderStats();
-      renderQuiz();
 
-      if (Object.keys(userAnswers).length === activeQuestions.length) {
-        showSummaryCard();
+      if (viewMode === "all" && Object.keys(userAnswers).length === activeQuestions.length) {
+        const container = document.getElementById("quizContainer");
+        if (!document.getElementById("completeAnalysisBtn")) {
+          const wrap = document.createElement("div");
+          wrap.style.textAlign = "center";
+          wrap.style.marginTop = "1.5rem";
+          const finBtn = document.createElement("button");
+          finBtn.type = "button";
+          finBtn.id = "completeAnalysisBtn";
+          finBtn.className = "btn";
+          finBtn.textContent = "View Complete Performance Analysis →";
+          finBtn.onclick = showSummary;
+          wrap.appendChild(finBtn);
+          container.appendChild(wrap);
+        }
       }
     }
 
     function renderQuiz() {
       const container = document.getElementById("quizContainer");
       container.innerHTML = "";
+      updateHeaderStats();
 
       if (activeQuestions.length === 0) {
-        container.innerHTML = `<div class="question-card">No questions found for this filter.</div>`;
+        container.innerHTML = `<div class="question-card">No questions available.</div>`;
         return;
       }
 
-      if (viewMode === "list") {
+      if (viewMode === "all") {
         activeQuestions.forEach((q, idx) => {
           container.appendChild(buildQuestionCard(q, idx));
         });
+
+        if (Object.keys(userAnswers).length === activeQuestions.length) {
+          const wrap = document.createElement("div");
+          wrap.style.textAlign = "center";
+          wrap.style.marginTop = "1.5rem";
+          const finBtn = document.createElement("button");
+          finBtn.type = "button";
+          finBtn.id = "completeAnalysisBtn";
+          finBtn.className = "btn";
+          finBtn.textContent = "View Complete Performance Analysis →";
+          finBtn.onclick = showSummary;
+          wrap.appendChild(finBtn);
+          container.appendChild(wrap);
+        }
       } else {
         const q = activeQuestions[currentCardIndex];
         container.appendChild(buildQuestionCard(q, currentCardIndex));
@@ -1501,32 +1791,27 @@
           }
         };
 
-        const indicator = document.createElement("span");
-        indicator.style.color = "var(--text-muted)";
-        indicator.style.fontWeight = "600";
-        indicator.textContent = `Card ${currentCardIndex + 1} / ${activeQuestions.length}`;
-
+        const isLast = currentCardIndex === activeQuestions.length - 1;
         const nextBtn = document.createElement("button");
         nextBtn.type = "button";
         nextBtn.className = "btn";
-        nextBtn.textContent = currentCardIndex === activeQuestions.length - 1 ? "Finish Review" : "Next";
+        nextBtn.textContent = isLast ? "Finish & Results" : "Next Question";
         nextBtn.onclick = () => {
-          if (currentCardIndex < activeQuestions.length - 1) {
+          if (!isLast) {
             currentCardIndex++;
             renderQuiz();
           } else {
-            showSummaryCard();
+            showSummary();
           }
         };
 
         nav.appendChild(prevBtn);
-        nav.appendChild(indicator);
         nav.appendChild(nextBtn);
         container.appendChild(nav);
       }
     }
 
-    function showSummaryCard() {
+    function showSummary() {
       const total = activeQuestions.length;
       const correctCount = Object.values(userAnswers).filter(a => a.correct).length;
       const pct = total > 0 ? Math.round((correctCount / total) * 100) : 0;
@@ -1564,58 +1849,33 @@
     }
 
     /* =========================================================
-       EVENT BINDINGS
+       NAVIGATION & RETAKE LISTENERS
        ========================================================= */
-    document.getElementById("setFullBtn").addEventListener("click", () => {
-      setMode = "full";
-      document.getElementById("setFullBtn").classList.add("active");
-      document.getElementById("setQuickBtn").classList.remove("active");
-      startNewSession();
-    });
-
-    document.getElementById("setQuickBtn").addEventListener("click", () => {
-      setMode = "quick";
-      document.getElementById("setQuickBtn").classList.add("active");
-      document.getElementById("setFullBtn").classList.remove("active");
-      startNewSession();
-    });
-
-    document.getElementById("viewListBtn").addEventListener("click", () => {
-      viewMode = "list";
-      document.getElementById("viewListBtn").classList.add("active");
-      document.getElementById("viewCardBtn").classList.remove("active");
-      renderQuiz();
-    });
-
-    document.getElementById("viewCardBtn").addEventListener("click", () => {
-      viewMode = "card";
-      document.getElementById("viewCardBtn").classList.add("active");
-      document.getElementById("viewListBtn").classList.remove("active");
-      renderQuiz();
-    });
+    document.getElementById("menuBtn").addEventListener("click", renderHome);
+    document.getElementById("summaryMenuBtn").addEventListener("click", renderHome);
 
     document.getElementById("retakeCurrentBtn").addEventListener("click", () => {
-      const currentPoolIds = new Set(activeQuestions.map(q => q.id));
-      const samePool = questionBank.filter(q => currentPoolIds.has(q.id));
-      startNewSession(samePool);
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const currentIds = new Set(activeQuestions.map(q => q.id));
+      const sameSet = questionBank.filter(q => currentIds.has(q.id));
+      launchQuiz(sameSet, false);
     });
 
     document.getElementById("reviewMissedBtn").addEventListener("click", () => {
-      startReviewMissedRound();
-    });
-
-    document.getElementById("backToMenuBtn").addEventListener("click", () => {
-      selectedSubject = "all";
-      setMode = "full";
-      document.getElementById("setFullBtn").classList.add("active");
-      document.getElementById("setQuickBtn").classList.remove("active");
-      startNewSession();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      const missedIds = new Set(
+        activeQuestions
+          .filter(q => !userAnswers[q.id] || !userAnswers[q.id].correct)
+          .map(q => q.id)
+      );
+      const missedPool = questionBank.filter(q => missedIds.has(q.id));
+      if (missedPool.length === 0) return;
+      round++;
+      launchQuiz(missedPool, true);
     });
 
     // Boot
-    startNewSession();
+    syncStfuUI();
+    syncModeUI();
+    renderHome();
   </script>
 </body>
 </html>
