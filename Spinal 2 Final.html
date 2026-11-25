@@ -245,6 +245,14 @@
     <option value="medium">Medium</option>
     <option value="hard">Hard</option>
   </select>
+  <select id="lengthFilter">
+    <option value="all">Length: Chafing (All)</option>
+    <option value="15">Length: Quickie (15 Qs)</option>
+    <option value="25">Length: Foreplay (25 Qs)</option>
+    <option value="35">Length: Play (35 Qs)</option>
+    <option value="50">Length: Marathon (50 Qs)</option>
+    <option value="100">Length: Sweat (100 Qs)</option>
+  </select>
   <button id="viewToggle">View: All at Once</button>
   <button id="shuffleBtn">Shuffle Questions</button>
   <button id="resetBtn" class="primary">Reset Quiz</button>
@@ -911,9 +919,11 @@ const questionBank = [
 let currentFilterWeek = "all";
 let currentFilterSubject = "all";
 let currentFilterDiff = "all";
+let currentLengthLimit = "all";
 let singleView = false;
 let currentIndex = 0;
 let userAnswers = {}; // id -> selected option index
+let activeQuizList = [];
 
 const subjectSelect = document.getElementById("subjectFilter");
 SUBJECTS.forEach((s, idx) => {
@@ -923,33 +933,39 @@ SUBJECTS.forEach((s, idx) => {
   subjectSelect.appendChild(opt);
 });
 
-function getFilteredQuestions() {
-  return questionBank.filter(q => {
+function rebuildActivePool() {
+  const filtered = questionBank.filter(q => {
     if (currentFilterWeek !== "all" && String(q.week) !== currentFilterWeek) return false;
     if (currentFilterSubject !== "all" && String(q.subjectIndex) !== currentFilterSubject) return false;
     if (currentFilterDiff !== "all" && q.difficulty !== currentFilterDiff) return false;
     return true;
   });
+
+  if (currentLengthLimit === "all") {
+    activeQuizList = filtered;
+  } else {
+    const limit = parseInt(currentLengthLimit, 10);
+    activeQuizList = filtered.slice(0, Math.min(limit, filtered.length));
+  }
 }
 
 function updateScore() {
-  const filtered = getFilteredQuestions();
   let answered = 0;
   let correct = 0;
-  filtered.forEach(q => {
+  activeQuizList.forEach(q => {
     if (userAnswers[q.id] !== undefined) {
       answered++;
       if (q.options[userAnswers[q.id]].correct) correct++;
     }
   });
   const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
-  document.getElementById("scorePill").textContent = `Score: ${correct} / ${filtered.length} (${pct}% answered accuracy)`;
+  document.getElementById("scorePill").textContent = `Score: ${correct} / ${activeQuizList.length} (${pct}% answered accuracy)`;
 }
 
 function render() {
   const container = document.getElementById("quizContainer");
   container.innerHTML = "";
-  const list = getFilteredQuestions();
+  const list = activeQuizList;
   updateScore();
 
   if (list.length === 0) {
@@ -1036,8 +1052,7 @@ window.prevQ = function() {
 };
 
 window.nextQ = function() {
-  const list = getFilteredQuestions();
-  if (currentIndex < list.length - 1) {
+  if (currentIndex < activeQuizList.length - 1) {
     currentIndex++;
     render();
   }
@@ -1046,18 +1061,28 @@ window.nextQ = function() {
 document.getElementById("weekFilter").addEventListener("change", e => {
   currentFilterWeek = e.target.value;
   currentIndex = 0;
+  rebuildActivePool();
   render();
 });
 
 document.getElementById("subjectFilter").addEventListener("change", e => {
   currentFilterSubject = e.target.value;
   currentIndex = 0;
+  rebuildActivePool();
   render();
 });
 
 document.getElementById("diffFilter").addEventListener("change", e => {
   currentFilterDiff = e.target.value;
   currentIndex = 0;
+  rebuildActivePool();
+  render();
+});
+
+document.getElementById("lengthFilter").addEventListener("change", e => {
+  currentLengthLimit = e.target.value;
+  currentIndex = 0;
+  rebuildActivePool();
   render();
 });
 
@@ -1073,15 +1098,18 @@ document.getElementById("shuffleBtn").addEventListener("click", () => {
     [questionBank[i], questionBank[j]] = [questionBank[j], questionBank[i]];
   }
   currentIndex = 0;
+  rebuildActivePool();
   render();
 });
 
 document.getElementById("resetBtn").addEventListener("click", () => {
   userAnswers = {};
   currentIndex = 0;
+  rebuildActivePool();
   render();
 });
 
+rebuildActivePool();
 render();
 </script>
 </body>
