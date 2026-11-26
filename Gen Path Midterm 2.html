@@ -256,6 +256,15 @@
     border-radius: 12px;
     color: var(--muted);
   }
+  .q-card.unanswered {
+    border-left: 4px solid var(--accent);
+  }
+  .controls button.unanswered-btn {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
 </style>
 </head>
 <body>
@@ -289,6 +298,7 @@
     <option value="100">Length: Sweat (100 Qs)</option>
   </select>
   <button id="viewToggle">View: All at Once</button>
+  <button id="unansweredBtn" class="unanswered-btn">Unanswered: 0</button>
   <button id="shuffleBtn">Shuffle Questions</button>
   <button id="resetBtn" class="primary">Reset Quiz</button>
 </div>
@@ -2079,6 +2089,8 @@ const shuffleBtn = document.getElementById("shuffleBtn");
 const resetBtn = document.getElementById("resetBtn");
 const scorePillEl = document.getElementById("scorePill");
 const quizContainerEl = document.getElementById("quizContainer");
+const unansweredBtn = document.getElementById("unansweredBtn");
+let showUnansweredOnly = false;
 
 function initFilters() {
   const uniqueWeeks = [...new Set(questionBank.map(q => q.week))].sort((a, b) => a - b);
@@ -2097,6 +2109,15 @@ function fisherYatesShuffle(arr) {
   return arr;
 }
 
+resetBtn.addEventListener("click", () => {
+  userAnswers = {};
+  currentIndex = 0;
+  showUnansweredOnly = false;
+  rebuildActivePool();
+  updateScorePill();
+  render();
+});
+  
 function randomizeOptionsOnce() {
   questionBank.forEach(q => {
     fisherYatesShuffle(q.options);
@@ -2115,6 +2136,11 @@ function updateScorePill() {
   });
   const pct = totalAnswered > 0 ? Math.round((correctCount / totalAnswered) * 100) : 0;
   scorePillEl.textContent = `Score: ${correctCount} / ${totalAnswered} (${pct}%)`;
+
+  const remaining = activeQuizList.filter(q => userAnswers[q.id] === undefined).length;
+  unansweredBtn.textContent = showUnansweredOnly
+    ? `Show All (${activeQuizList.length})`
+    : `Unanswered: ${remaining}`;
 }
 
 function rebuildActivePool() {
@@ -2137,14 +2163,16 @@ function rebuildActivePool() {
     activeQuizList = filtered.slice(0, Math.min(limit, filtered.length));
   }
 
-  if (currentIndex >= activeQuizList.length) {
+if (currentIndex >= activeQuizList.length) {
     currentIndex = Math.max(0, activeQuizList.length - 1);
   }
+  updateScorePill();
 }
 
 function createQuestionCard(q, displayNumber) {
   const card = document.createElement("div");
-  card.className = "q-card";
+  card.id = `q-card-${q.id}`;
+  card.className = "q-card" + (userAnswers[q.id] === undefined ? " unanswered" : "");
 
   const meta = document.createElement("div");
   meta.className = "q-meta";
@@ -2242,8 +2270,16 @@ function render() {
 
   if (viewMode === "all") {
     activeQuizList.forEach((q, idx) => {
+      if (showUnansweredOnly && userAnswers[q.id] !== undefined) return;
       quizContainerEl.appendChild(createQuestionCard(q, idx + 1));
     });
+    
+  if (quizContainerEl.children.length === 0) {
+      const doneMsg = document.createElement("div");
+      doneMsg.className = "empty-state";
+      doneMsg.textContent = "All questions in this set have been answered!";
+      quizContainerEl.appendChild(doneMsg);
+    }
   } else {
     const q = activeQuizList[currentIndex];
     quizContainerEl.appendChild(createQuestionCard(q, currentIndex + 1));
@@ -2323,14 +2359,19 @@ shuffleBtn.addEventListener("click", () => {
   render();
 });
 
-resetBtn.addEventListener("click", () => {
-  userAnswers = {};
-  currentIndex = 0;
+unansweredBtn.addEventListener("click", () => {
+  if (viewMode === "single") {
+    const nextUnanswered = activeQuizList.findIndex(q => userAnswers[q.id] === undefined);
+    if (nextUnanswered !== -1) {
+      currentIndex = nextUnanswered;
+      render();
+    }
+    return;
+  }
+  showUnansweredOnly = !showUnansweredOnly;
   updateScorePill();
-  rebuildActivePool();
   render();
 });
-
 randomizeOptionsOnce();
 initFilters();
 rebuildActivePool();
