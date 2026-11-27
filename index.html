@@ -6,7 +6,7 @@
     <title>Quiz Hub - Alpha Chiro Edition</title>
     <style>
         /* =========================================================
-1. GYM GAINZ THEME (DEFAULT)
+           1. GYM GAINZ THEME (DEFAULT)
            ========================================================= */
         :root {
             --bg-color: #121212;
@@ -28,7 +28,7 @@
         }
 
         /* =========================================================
-2. VIP LOUNGE THEME (TOGGLED)
+           2. VIP LOUNGE THEME (TOGGLED)
            ========================================================= */
         body.hub-mode {
             --bg-color: #0b0b0f;
@@ -414,7 +414,6 @@
             background: var(--header-border);
             color: #000000;
         }
-            
     </style>
 </head>
 <body>
@@ -425,7 +424,7 @@
             <span>Quiz</span>
             <span class="logo-box">Hub</span>
         </div>
-    <a href="https://link.clashofclans.com/en?action=OpenClanProfile&tag=#2JCV0CU28" target="_blank" rel="noopener noreferrer" class="clan-banner">🛡️ Join our Clash Clan: LCCW COC Lovers</a>
+        <a href="https://link.clashofclans.com/en?action=OpenClanProfile&tag=#2JCV0CU28" target="_blank" rel="noopener noreferrer" class="clan-banner">🛡️ Join our Clash Clan: LCCW COC Lovers</a>
         <div class="builder-stats">
             <button class="reorder-toggle-btn" id="reorderToggleBtn">⇅ Reorder</button>
             <div class="stat-badge">🏋️‍♂️ PRs Smashed: 420</div>
@@ -487,6 +486,7 @@
                     </div>
                 </div>
                 <div class="multi-btn-group">
+                    <a href="Reg%201%20Final.html" class="full-width"><div class="attack-btn final-btn-highlight">🔥 Reg 1 Final</div></a>
                     <a href="Reg%201%20Midterm.html" class="full-width"><div class="attack-btn practice-btn-highlight">⚡ Reg 1 Midterm Exam</div></a>
                 </div>
             </div>
@@ -672,6 +672,19 @@
             <div class="course-section">
                 <h2 class="course-title">Regional Anatomy 1</h2>
                 <div class="quiz-grid">
+                    <a href="Reg%201%20Final.html" class="hub-card final-hub-highlight">
+                        <div class="card-thumbnail">
+                            <span class="thumbnail-icon">🔥</span>
+                            <span class="duration-badge final-badge">Final Exam</span>
+                        </div>
+                        <div class="card-info">
+                            <div class="quiz-card-title">Reg 1 Final: Deep Fascial Compartments &amp; Tight Plexus Cords Stretched Raw (Uncensored)</div>
+                            <div class="quiz-card-meta">
+                                <span>By Step-Joe</span>
+                                <span class="rating">100% rating</span>
+                            </div>
+                        </div>
+                    </a>
                     <a href="Reg%201%20Midterm.html" class="hub-card practice-hub-highlight">
                         <div class="card-thumbnail">
                             <span class="thumbnail-icon">⚡</span>
@@ -1072,110 +1085,4 @@
 <script>
         const logo = document.getElementById('logoToggle');
         
-        if (localStorage.getItem('quizHubTheme') === 'vip') {
-            document.body.classList.add('hub-mode');
-        }
-
-        logo.addEventListener('click', () => {
-            document.body.classList.toggle('hub-mode');
-            if (document.body.classList.contains('hub-mode')) {
-                localStorage.setItem('quizHubTheme', 'vip');
-            } else {
-                localStorage.setItem('quizHubTheme', 'gainz');
-            }
-        });
-
-        // =========================================================
-        // DESKTOP DRAG + MOBILE TAP REORDERING (SAVED IN LOCALSTORAGE)
-        // =========================================================
-        const grid = document.getElementById('clashGrid');
-        const reorderBtn = document.getElementById('reorderToggleBtn');
-        const STORAGE_KEY = 'quizHubCardOrder_v2';
-
-        // Restore saved user order if present
-        try {
-            const savedOrder = JSON.parse(localStorage.getItem(STORAGE_KEY));
-            if (Array.isArray(savedOrder)) {
-                savedOrder.forEach(id => {
-                    const card = grid.querySelector(`[data-card-id="${id}"]`);
-                    if (card) grid.appendChild(card);
-                });
-            }
-        } catch (e) {}
-
-        // Inject mobile ▲ / ▼ move buttons into every card header
-        grid.querySelectorAll('.building-card').forEach(card => {
-            const header = card.querySelector('.building-header');
-            const controls = document.createElement('div');
-            controls.className = 'move-controls';
-            controls.innerHTML = `
-                <button type="button" class="move-btn move-up" aria-label="Move earlier">▲</button>
-                <button type="button" class="move-btn move-down" aria-label="Move later">▼</button>
-            `;
-            header.appendChild(controls);
-
-            controls.querySelector('.move-up').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (card.previousElementSibling) {
-                    grid.insertBefore(card, card.previousElementSibling);
-                    saveCardOrder();
-                }
-            });
-
-            controls.querySelector('.move-down').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (card.nextElementSibling) {
-                    grid.insertBefore(card.nextElementSibling, card);
-                    saveCardOrder();
-                }
-            });
-        });
-
-        // Toggle Reorder Mode on Mobile/Desktop
-        reorderBtn.addEventListener('click', () => {
-            const active = document.body.classList.toggle('reorder-mode');
-            reorderBtn.classList.toggle('active', active);
-            reorderBtn.textContent = active ? '✓ Done' : '⇅ Reorder';
-        });
-
-        // Desktop Drag-and-Drop
-        let draggedCard = null;
-
-        grid.addEventListener('dragstart', (e) => {
-            const card = e.target.closest('.building-card');
-            if (!card) return;
-            draggedCard = card;
-            card.classList.add('dragging');
-            e.dataTransfer.effectAllowed = 'move';
-        });
-
-        grid.addEventListener('dragend', () => {
-            if (draggedCard) draggedCard.classList.remove('dragging');
-            grid.querySelectorAll('.building-card').forEach(c => c.classList.remove('drag-over'));
-            draggedCard = null;
-            saveCardOrder();
-        });
-
-        grid.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            const targetCard = e.target.closest('.building-card');
-            if (!targetCard || targetCard === draggedCard) return;
-
-            const rect = targetCard.getBoundingClientRect();
-            const midpoint = rect.left + rect.width / 2;
-            if (e.clientX < midpoint) {
-                grid.insertBefore(draggedCard, targetCard);
-            } else {
-                grid.insertBefore(draggedCard, targetCard.nextSibling);
-            }
-        });
-
-        function saveCardOrder() {
-            try {
-                const order = Array.from(grid.querySelectorAll('.building-card')).map(c => c.dataset.cardId);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(order));
-            } catch (e) {}
-        }
-    </script>
-</body>
-</html>
+        if (localStorage.getItem('quizHubTheme
