@@ -232,9 +232,7 @@
 
 <div class="controls">
   <select id="weekFilter">
-    <option value="all">All Weeks (Weeks 7 & 8)</option>
-    <option value="7">Week 7 Only (Lateral Neck, Suboccipital & Thorax)</option>
-    <option value="8">Week 8 Only (Abdominal Wall & Meningeal Spaces)</option>
+    <option value="all">All Weeks</option>
   </select>
   <select id="subjectFilter">
     <option value="all">All Modules</option>
@@ -244,6 +242,11 @@
     <option value="easy">Easy</option>
     <option value="medium">Medium</option>
     <option value="hard">Hard</option>
+  </select>
+  <select id="statusFilter">
+    <option value="all">Status: All Questions</option>
+    <option value="unanswered">Unanswered Only</option>
+    <option value="missed">Missed Only</option>
   </select>
   <select id="lengthFilter">
     <option value="all">Length: Chafing (All)</option>
@@ -269,6 +272,24 @@ const SUBJECTS = [
   "Anterior Abdominal Wall & Trunk Stabilizers",
   "Spinal Meningeal Layers & Clinical Spaces"
 ];
+
+function mk(id, week, subjectIndex, difficulty, priority, slideRef, stem, rawOpts, correctIdx) {
+  return {
+    id,
+    week,
+    subjectIndex,
+    quarter: 3,
+    slideRef,
+    difficulty,
+    priority,
+    stem,
+    options: rawOpts.map(([text, why], i) => ({
+      text,
+      correct: i === correctIdx,
+      why: `${why} [Week ${week} • Slide #${slideRef}]`
+    }))
+  };
+}
 
 const questionBank = [
   // ================= WEEK 7 =================
@@ -416,22 +437,12 @@ const questionBank = [
       { text: "They anchor the costal cartilages directly to the iliac crest", correct: false, why: "External intercostals are confined entirely between adjacent ribs in the intercostal spaces. [Week 7 • Transcript #4]" }
     ]
   },
-  {
-    id: 10,
-    week: 7,
-    subjectIndex: 2,
-    quarter: 3,
-    slideRef: 4,
-    difficulty: "medium",
-    priority: true,
-    stem: "How do the fiber orientation and respiratory role of the internal intercostals compare to those of the external intercostals?",
-    options: [
-      { text: "Internal intercostals run parallel to externals and elevate ribs during quiet breathing", correct: false, why: "Internal intercostals run perpendicular to external intercostals and depress ribs rather than elevating them. [Week 7 • Transcript #4]" },
-      { text: "Internal intercostals run perpendicular to externals and depress ribs during forced exhalation", correct: true, why: "Internal intercostals run at a perpendicular angle to external intercostals and pull ribs downward during forced exhalation. [Week 7 • Transcript #4]" },
-      { text: "Internal intercostals are innervated by dorsal rami and contract simultaneously with externals", correct: false, why: "Both groups are supplied by intercostal nerves (ventral rami) and act antagonistically during forced breathing rather than contracting simultaneously. [Week 7 • Transcript #4]" },
-      { text: "Internal intercostals skip two ribs per segment to stabilize the floating ribs", correct: false, why: "Internal intercostals attach between adjacent ribs 1–12 without skipping segments. [Week 7 • Transcript #4]" }
-    ]
-  },
+  // Patch 2 replacement for ID 10
+  mk(10, 7, 2, "medium", true, 19, "How do the internal intercostals compare with the external intercostals?",
+    [["Parallel fibers that elevate ribs in quiet breathing", "Fibers are perpendicular, not parallel, and the action is depression."],
+     ["Perpendicular fibers that depress ribs in forced exhalation", "Internals run at a perpendicular angle to externals and depress ribs with forced exhalation."],
+     ["Parallel fibers that depress ribs in forced exhalation", "The action is correct but the fibers run perpendicular to the externals."],
+     ["Perpendicular fibers that elevate ribs in forced inspiration", "Elevation in forced inspiration is the external intercostal action."]], 1),
   {
     id: 11,
     week: 7,
@@ -608,6 +619,52 @@ const questionBank = [
       { text: "Between the parietal pleura and visceral pleura", correct: false, why: "The pleural cavity contains serous fluid rather than the intercostal neurovascular bundle. [Week 7 • Slide #4]" }
     ]
   },
+  // Patch 2 additions (Week 7)
+  mk(60, 7, 5, "easy", true, 3, "Which ventral rami innervate longus capitis?",
+    [["C1–C2", "These supply rectus capitis anterior and lateralis."],
+     ["C1–C3", "Longus capitis is supplied by ventral rami C1–C3."],
+     ["C2–C6", "These supply longus colli."],
+     ["C5–C6", "These supply anterior scalene."]], 1),
+  mk(61, 7, 5, "medium", true, 4, "Which prevertebral muscle is innervated by ventral rami C2–C6?",
+    [["Longus capitis", "It is supplied by C1–C3."],
+     ["Rectus capitis anterior", "It is supplied by C1–C2."],
+     ["Rectus capitis lateralis", "It is supplied by C1–C2."],
+     ["Longus colli", "Longus colli receives C2–C6 ventral rami and performs cervical flexion."]], 3),
+  mk(62, 7, 5, "medium", false, 5, "Which pair of prevertebral muscles are the primary movers rather than small stabilizers?",
+    [["Longus capitis and longus colli", "The longus muscles are the larger, motion-producing flexors."],
+     ["Rectus capitis anterior and rectus capitis lateralis", "These are tiny stabilizers."],
+     ["Longus capitis and rectus capitis lateralis", "Rectus capitis lateralis is a stabilizer."],
+     ["Longus colli and rectus capitis anterior", "Rectus capitis anterior is a stabilizer."]], 0),
+  mk(63, 7, 2, "medium", true, 18, "Which intercostal layer is visible only from an external view of the thorax?",
+    [["Innermost intercostals", "Innermost intercostals are seen only from an internal view."],
+     ["Internal intercostals", "Internals are visible from both external and internal views."],
+     ["External intercostals", "Externals cannot be seen from the internal side."],
+     ["Subcostalis", "Subcostalis is seen only from an internal view."]], 2),
+  mk(64, 7, 2, "hard", false, 20, "Innermost intercostals share a fiber angle with which muscle?",
+    [["External intercostals", "Externals run at the perpendicular angle."],
+     ["Internal intercostals", "Innermost intercostals are simply another layer at the same angle as internals."],
+     ["Levator costarum", "Levatores run from transverse processes to ribs."],
+     ["Diaphragm", "Diaphragm fibers converge on the central tendon."]], 1),
+  mk(65, 7, 2, "medium", true, 24, "Which set lists the origin of the diaphragm?",
+    [["Xiphoid process, ribs 1–6, and bodies of T10–T12", "The costal origin is ribs 7–12."],
+     ["Manubrium, ribs 7–12, and bodies of L1–L4", "The sternal origin is the xiphoid process."],
+     ["Xiphoid process, ribs 7–12, and transverse processes of L1–L4", "The vertebral origin is the bodies (crura)."],
+     ["Xiphoid process, ribs 7–12, and bodies of L1–L4", "The crura attach to the bodies of L1–L4."]], 3),
+  mk(66, 7, 2, "easy", true, 24, "The diaphragm inserts onto which structure?",
+    [["Central tendon", "It is one of the few muscles with a tendon insertion rather than a bony one."],
+     ["Xiphoid process", "This is an origin."],
+     ["Costal cartilages 5–7", "These are not diaphragm insertions."],
+     ["Rib 12", "Ribs 7–12 are origins."]], 0),
+  mk(67, 7, 2, "medium", false, 23, "Levator costarum longus attaches how many ribs below its transverse process origin?",
+    [["One", "One rib below describes levator costarum brevis."],
+     ["Three", "Neither levator attaches three ribs below."],
+     ["Two", "Longus spans two ribs; brevis spans one."],
+     ["Four", "Neither levator attaches four ribs below."]], 2),
+  mk(68, 7, 2, "easy", false, 22, "Transversus thoracis originates from the posterior surface of which structure?",
+    [["Manubrium", "The manubrium is not the origin."],
+     ["Xiphoid process", "The xiphoid is not the origin."],
+     ["Clavicle", "The clavicle is not an origin."],
+     ["Sternal body", "It originates on the posterior sternal body and depresses ribs in forced exhalation."]], 3),
 
   // ================= WEEK 8 =================
   {
@@ -658,22 +715,12 @@ const questionBank = [
       { text: "Obturator nerve", correct: false, why: "The obturator nerve innervates the medial adductor compartment of the thigh, not psoas major. [Week 8 • Transcript #5]" }
     ]
   },
-  {
-    id: 25,
-    week: 8,
-    subjectIndex: 3,
-    quarter: 3,
-    slideRef: 5,
-    difficulty: "hard",
-    priority: true,
-    stem: "Why is psoas minor biomechanically unable to assist psoas major in flexing the hip joint?",
-    options: [
-      { text: "It inserts onto the greater trochanter posterior to the hip axis", correct: false, why: "Psoas minor does not attach to the femur at all. [Week 8 • Transcript #5]" },
-      { text: "It inserts onto the iliopubic eminence of the pelvis and therefore does not cross the hip joint", correct: true, why: "Psoas minor runs from T12–L1 vertebral bodies to the iliopubic eminence, stopping on the pelvis without crossing the hip joint, limiting it to weak trunk flexion. [Week 8 • Transcript #5]" },
-      { text: "It is innervated solely by dorsal rami of T12", correct: false, why: "Psoas minor is innervated by the ventral ramus of L1. [Week 8 • Transcript #5]" },
-      { text: "It is absent in 95% of the human population", correct: false, why: "Psoas minor is present in approximately 60% of individuals (absent in ~40%). [Week 8 • Transcript #5]" }
-    ]
-  },
+  // Patch 2 replacement for ID 25
+  mk(25, 8, 3, "hard", true, 27, "Why can psoas minor not assist psoas major in hip flexion?",
+    [["It inserts on the greater trochanter behind the hip axis", "Psoas minor has no femoral attachment."],
+     ["It inserts on the iliopubic eminence without crossing the hip", "It runs T12–L1 to the iliopubic eminence, never crossing the hip joint, so it only assists trunk flexion."],
+     ["It is supplied only by the dorsal rami of T12", "Psoas minor is supplied by the ventral ramus of L1."],
+     ["It is absent in the majority of the population", "It is present in about 60% of people."]], 1),
   {
     id: 26,
     week: 8,
@@ -913,17 +960,75 @@ const questionBank = [
       { text: "Posterolateral sulcus", correct: false, why: "The posterolateral sulcus marks the entry zone of dorsal sensory rootlets rather than the anterior midline. [Week 8 • Slide #2]" },
       { text: "Suboccipital groove", correct: false, why: "The suboccipital groove is a bony sulcus on the posterior arch of C1 housing the vertebral artery. [Week 8 • Slide #2]" }
     ]
-  }
+  },
+  // Patch 2 additions (Week 8)
+  mk(69, 8, 3, "medium", true, 28, "Excess iliacus tension compresses which joint?",
+    [["Femoroacetabular joint", "The hip is the iliacus insertion path but not the compressed joint described."],
+     ["Sacroiliac joint", "Iliacus attaches to the sacral ala and anterior sacroiliac ligament, so tightness compresses the SI joint."],
+     ["Pubic symphysis", "It has no iliacus attachment."],
+     ["Lumbar facet joints", "Iliacus does not attach to the lumbar spine."]], 1),
+  mk(70, 8, 3, "medium", false, 27, "Psoas minor originates from which vertebral bodies?",
+    [["T12–L1", "Psoas minor arises from T12–L1 and attaches to the iliopubic eminence."],
+     ["L1–L3", "These are not its origin."],
+     ["L4–L5", "These are not its origin."],
+     ["T10–T11", "These are not its origin."]], 0),
+  mk(71, 8, 3, "hard", false, 26, "Which vertebral levels contribute the most fibers to psoas major because of leverage?",
+    [["L5", "Little of the muscle arises here."],
+     ["L4", "Less than the upper levels."],
+     ["T12–L1", "The longer lever from the upper levels gives the greatest fiber contribution."],
+     ["L3", "Less than the uppermost levels."]], 2),
+
+  // ================= WEEK 9 (Patch 2) =================
+  mk(72, 9, 4, "easy", true, 31, "External abdominal oblique originates from which ribs?",
+    [["Ribs 1–4", "Not its origin."],
+     ["Ribs 5–12", "It arises from the external surfaces of ribs 5–12."],
+     ["Ribs 7–10", "Not its origin."],
+     ["Ribs 10–12", "These are internal oblique insertions."]], 1),
+  mk(73, 9, 4, "medium", true, 32, "Which muscle inserts on the inferior borders of ribs 10–12?",
+    [["External abdominal oblique", "It originates from ribs 5–12."],
+     ["Transversus abdominis", "It originates from costal cartilages 7–12."],
+     ["Rectus abdominis", "It inserts on the xiphoid and costal cartilages 5–7."],
+     ["Internal abdominal oblique", "It also inserts on the linea alba and pecten pubis."]], 3),
+  mk(74, 9, 4, "hard", false, 33, "Which muscle originates from costal cartilages 7–12 and the lateral third of the inguinal ligament?",
+    [["Transversus abdominis", "It originates from costal cartilages 7–12, thoracolumbar fascia, iliac crest, and the lateral third of the inguinal ligament."],
+     ["Internal abdominal oblique", "It uses the lateral half of the inguinal ligament."],
+     ["External abdominal oblique", "It originates from external surfaces of ribs 5–12."],
+     ["Rectus abdominis", "It originates from the pubic symphysis and crest."]], 0),
+  mk(75, 9, 4, "medium", false, 34, "Rectus abdominis is innervated by which nerves?",
+    [["Femoral and genitofemoral nerves", "These are lumbar plexus nerves to the thigh and groin."],
+     ["Iliohypogastric and ilioinguinal nerves", "These supply other abdominal wall muscles."],
+     ["Subcostal and thoracoabdominal nerves", "Rectus abdominis receives the subcostal nerve and thoracoabdominal nerves T7–T11."],
+     ["Obturator and lateral femoral cutaneous nerves", "These supply the thigh."]], 2)
 ];
 
 let currentFilterWeek = "all";
 let currentFilterSubject = "all";
 let currentFilterDiff = "all";
+let currentFilterStatus = "all";
 let currentLengthLimit = "all";
 let singleView = false;
 let currentIndex = 0;
 let userAnswers = {}; // id -> selected option index
 let activeQuizList = [];
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+// Shuffle options on load to eliminate any key bias in legacy items
+questionBank.forEach(q => shuffleArray(q.options));
+
+// Populate Week and Module filters dynamically
+const weekSelect = document.getElementById("weekFilter");
+[...new Set(questionBank.map(q => q.week))].sort((a, b) => a - b).forEach(w => {
+  const opt = document.createElement("option");
+  opt.value = String(w);
+  opt.textContent = `Week ${w} Only`;
+  weekSelect.appendChild(opt);
+});
 
 const subjectSelect = document.getElementById("subjectFilter");
 SUBJECTS.forEach((s, idx) => {
@@ -938,6 +1043,8 @@ function rebuildActivePool() {
     if (currentFilterWeek !== "all" && String(q.week) !== currentFilterWeek) return false;
     if (currentFilterSubject !== "all" && String(q.subjectIndex) !== currentFilterSubject) return false;
     if (currentFilterDiff !== "all" && q.difficulty !== currentFilterDiff) return false;
+    if (currentFilterStatus === "unanswered" && userAnswers[q.id] !== undefined) return false;
+    if (currentFilterStatus === "missed" && (userAnswers[q.id] === undefined || q.options[userAnswers[q.id]].correct)) return false;
     return true;
   });
 
@@ -1052,6 +1159,12 @@ window.prevQ = function() {
 };
 
 window.nextQ = function() {
+  if (currentFilterStatus !== "all") {
+    rebuildActivePool();
+    if (currentIndex >= activeQuizList.length) currentIndex = Math.max(0, activeQuizList.length - 1);
+    render();
+    return;
+  }
   if (currentIndex < activeQuizList.length - 1) {
     currentIndex++;
     render();
@@ -1079,6 +1192,13 @@ document.getElementById("diffFilter").addEventListener("change", e => {
   render();
 });
 
+document.getElementById("statusFilter").addEventListener("change", e => {
+  currentFilterStatus = e.target.value;
+  currentIndex = 0;
+  rebuildActivePool();
+  render();
+});
+
 document.getElementById("lengthFilter").addEventListener("change", e => {
   currentLengthLimit = e.target.value;
   currentIndex = 0;
@@ -1093,10 +1213,8 @@ document.getElementById("viewToggle").addEventListener("click", e => {
 });
 
 document.getElementById("shuffleBtn").addEventListener("click", () => {
-  for (let i = questionBank.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [questionBank[i], questionBank[j]] = [questionBank[j], questionBank[i]];
-  }
+  shuffleArray(questionBank);
+  questionBank.forEach(q => shuffleArray(q.options));
   currentIndex = 0;
   rebuildActivePool();
   render();
